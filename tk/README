@@ -1,5 +1,5 @@
 README:  Tk
-    This is the Tk 8.4a1 source distribution.
+    This is the Tk 8.3.2 source distribution.
     You can get any release of Tcl from:
         http://dev.scriptics.com/registration/<version>.html
     Tcl/Tk is also available through NetCVS:
@@ -14,9 +14,9 @@ This directory contains the sources and documentation for Tk, an X11
 toolkit implemented with the Tcl scripting language.
 
 For details on features, incompatibilities, and potential problems with
-this release, see the Tcl/Tk 8.4 Web page at
+this release, see the Tcl/Tk 8.3 Web page at
 
-	http://dev.scriptics.com/software/tcltk/8.4.html
+	http://dev.scriptics.com/software/tcltk/8.3.html
 
 or refer to the "changes" file in this directory, which contains a
 historical record of all changes to Tk.
