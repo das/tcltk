@@ -1744,7 +1744,7 @@ DrawMenuUnderline(
  *	This procedure is invoked when keys related to pulling
  *	down menus is pressed. The corresponding Windows events
  *	are generated and passed to DefWindowProc if appropriate.
- *	This cmd is registered as tk::tkWinMenuKey in the interp.
+ *	This cmd is registered as tk::WinMenuKey in the interp.
  *
  * Results:
  *	Always returns TCL_OK.
@@ -1899,56 +1899,56 @@ TkpInitializeMenuBindings(interp, bindingTable)
      * we may want to modify the binding in Tcl code.
      */
 
-    (void) Tcl_CreateObjCommand(interp, "tk::tkWinMenuKey",
+    (void) Tcl_CreateObjCommand(interp, "tk::WinMenuKey",
 	    TkWinMenuKeyObjCmd,
 	    (ClientData) Tk_MainWindow(interp), (Tcl_CmdDeleteProc *) NULL);
 
     (void) Tk_CreateBinding(interp, bindingTable,
         (ClientData) uid,
         "<Alt_L>",
-        "tk::tkWinMenuKey %W %N",
+        "tk::WinMenuKey %W %N",
         0);
 
     (void) Tk_CreateBinding(interp, bindingTable,
         (ClientData) uid,
         "<KeyRelease-Alt_L>",
-        "tk::tkWinMenuKey %W %N",
+        "tk::WinMenuKey %W %N",
         0);
 
     (void) Tk_CreateBinding(interp, bindingTable,
         (ClientData) uid,
         "<Alt_R>",
-        "tk::tkWinMenuKey %W %N",
+        "tk::WinMenuKey %W %N",
         0);
 
     (void) Tk_CreateBinding(interp, bindingTable,
         (ClientData) uid,
         "<KeyRelease-Alt_R>",
-        "tk::tkWinMenuKey %W %N",
+        "tk::WinMenuKey %W %N",
         0);
 
     (void) Tk_CreateBinding(interp, bindingTable,
         (ClientData) uid,
         "<Alt-KeyPress>",
-        "tk::tkWinMenuKey %W %N",
+        "tk::WinMenuKey %W %N",
         0);
 
     (void) Tk_CreateBinding(interp, bindingTable,
         (ClientData) uid,
         "<Alt-KeyRelease>",
-        "tk::tkWinMenuKey %W %N",
+        "tk::WinMenuKey %W %N",
         0);
 
     (void) Tk_CreateBinding(interp, bindingTable,
         (ClientData) uid,
         "<KeyPress-F10>",
-        "tk::tkWinMenuKey %W %N",
+        "tk::WinMenuKey %W %N",
         0);
 
     (void) Tk_CreateBinding(interp, bindingTable,
         (ClientData) uid,
         "<KeyRelease-F10>",
-        "tk::tkWinMenuKey %W %N",
+        "tk::WinMenuKey %W %N",
         0);
 }
 
