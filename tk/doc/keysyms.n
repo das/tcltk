@@ -15,13 +15,13 @@ keysyms \- keysyms recognized by Tk
 
 .SH DESCRIPTION
 .PP
-Tk recognizes many keysyms when specifying key bindings (eg, 
+Tk recognizes many keysyms when specifying key bindings (e.g. 
 \fBbind . <Key-\fR\fIkeysym\fR\fB>\fR).  The following list enumerates the
 keysyms that will be recognized by Tk.  Note that not all keysyms will
 be valid on all platforms.  For example, on Unix systems, the presence
 of a particular keysym is dependant on the configuration of the
 keyboard modifier map.  This list shows keysyms along with their
-decimal and hexidecimal values.
+decimal and hexadecimal values.
 .PP
 .CS
 space                               32     0x0020

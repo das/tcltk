@@ -60,6 +60,14 @@ of the buttons, then -1 is returned.
 While waiting for the user to respond, \fBtk_dialog\fR sets a local
 grab.  This prevents the user from interacting with the application
 in any way except to invoke the dialog box.
+.SH EXAMPLE
+.CS
+set reply [\fBtk_dialog\fR .foo "The Title" "Do you want to say yes?" \\
+        questhead 0 Yes No "I'm not sure"]
+.CE
+
+.SH "SEE ALSO"
+tk_messageBox(n)
 
 .SH KEYWORDS
 bitmap, dialog, modal
