@@ -16,7 +16,7 @@
 if {[info commands package] == ""} {
     error "version mismatch: library\nscripts expect Tcl version 7.5b1 or later but the loaded version is\nonly [info patchlevel]"
 }
-package require -exact Tcl 8.4
+package require -exact Tcl 8.3
 
 # Compute the auto path to use in this interpreter.
 # The values on the path come from several locations:
@@ -454,6 +454,12 @@ proc auto_qualify {cmd namespace} {
 
 proc auto_import {pattern} {
     global auto_index
+
+    # If no namespace is specified, this will be an error case
+
+    if {![string match *::* $pattern]} {
+	return
+    }
 
     set ns [uplevel namespace current]
     set patternList [auto_qualify $pattern $ns]
