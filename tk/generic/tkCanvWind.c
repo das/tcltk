@@ -845,7 +845,6 @@ CanvasPsWindow(interp, tkwin, canvas, x, y, width, height)
     int width, height;			/* width/height of window. */
 {
     char buffer[256];
-    TkWindow *winPtr;
     XImage *ximage;
     int result;
     Tcl_DString buffer1, buffer2;
@@ -885,12 +884,6 @@ CanvasPsWindow(interp, tkwin, canvas, x, y, width, height)
 		(char *) NULL);
 	Tcl_DStringFree(&buffer1);
 
-	for (winPtr = ((TkWindow *) tkwin)->childList; winPtr != NULL;
-		winPtr = winPtr->nextPtr) {
-	    if (Tk_IsMapped(winPtr)) {
-/*		printf("child window: %s\n", winPtr->pathName);*/
-	    }
-	}
 	return result;
     }
     Tcl_DStringFree(&buffer1);
