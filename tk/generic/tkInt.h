@@ -911,6 +911,7 @@ extern Tcl_ObjType tkCursorObjType;
 extern Tcl_ObjType tkFontObjType;
 extern Tcl_ObjType tkOptionObjType;
 extern Tcl_ObjType tkStateKeyObjType;
+extern Tcl_ObjType tkTextIndexType;
 
 /*
  * Miscellaneous variables shared among Tk modules but not exported

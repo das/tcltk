@@ -56,7 +56,7 @@ static void		UpdateStringOfTextIndex _ANSI_ARGS_((Tcl_Obj *objPtr));
  * Define the 'textindex' object type, which Tk uses to represent
  * indices in text widgets internally.
  */
-Tcl_ObjType tclTextIndexType = {
+Tcl_ObjType tkTextIndexType = {
     "textindex",			/* name */
     FreeTextIndexInternalRep,		/* freeIntRepProc */
     DupTextIndexInternalRep,	        /* dupIntRepProc */
@@ -165,7 +165,7 @@ MakeObjIndex(textPtr, objPtr, origPtr)
     indexPtr->linePtr = origPtr->linePtr;
     indexPtr->byteIndex = origPtr->byteIndex;
     SET_TEXTINDEX(objPtr, indexPtr);
-    objPtr->typePtr = &tclTextIndexType;
+    objPtr->typePtr = &tkTextIndexType;
     indexPtr->textPtr = textPtr;
 
     if (textPtr != NULL) {
@@ -187,7 +187,7 @@ TkTextGetIndexFromObj(interp, textPtr, objPtr)
     TkTextIndex *indexPtr = NULL;
     int cache;
     
-    if (objPtr->typePtr == &tclTextIndexType) {
+    if (objPtr->typePtr == &tkTextIndexType) {
 	int epoch;
 	
 	indexPtr = GET_TEXTINDEX(objPtr);
