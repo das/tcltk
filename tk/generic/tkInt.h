@@ -738,7 +738,7 @@ EXTERN unsigned long	TkCreateBindingProcedure _ANSI_ARGS_((
 			    TkBindEvalProc *evalProc, TkBindFreeProc *freeProc,
 			    ClientData clientData));
 EXTERN Pixmap		TkCreateBitmapFromData _ANSI_ARGS_((Display* display,
-			    Drawable d, _Xconst char* data,
+			    Drawable d, CONST char* data,
 			    unsigned int width, unsigned int height));
 EXTERN TkCursor *	TkCreateCursorFromData _ANSI_ARGS_((Tk_Window tkwin,
 			    char *source, char *mask, int width, int height,
@@ -936,7 +936,7 @@ EXTERN void		TkQueueEventForAllChildren _ANSI_ARGS_((
 			    TkWindow *winPtr, XEvent *eventPtr));
 #ifndef TkRectInRegion
 EXTERN int		TkReadBitmapFile _ANSI_ARGS_((Display* display,
-			    Drawable d, _Xconst char* filename,
+			    Drawable d, CONST char* filename,
 			    unsigned int* width_return,
 			    unsigned int* height_return,
 			    Pixmap* bitmap_return,
