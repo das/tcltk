@@ -482,6 +482,7 @@ typedef struct TkDisplay {
 #ifdef TK_USE_INPUT_METHODS
     XIM inputMethod;		/* Input method for this display */
 #endif /* TK_USE_INPUT_METHODS */
+    int useInputMethods;	/* Whether to use input methods */
     Tcl_HashTable winTable;	/* Maps from X window ids to TkWindow ptrs. */
 
     int refCount;		/* Reference count of how many Tk applications

@@ -458,6 +458,7 @@ GetScreen(interp, screenName, screenPtr)
             dispPtr->refCount = 0;
 	    strncpy(dispPtr->name, screenName, length);
 	    dispPtr->name[length] = '\0';
+	    dispPtr->useInputMethods = 0;
 	    OpenIM(dispPtr);
 	    TkInitXId(dispPtr);
 

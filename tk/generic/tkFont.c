@@ -310,6 +310,7 @@ static char *globalFontClass[] = {
     "symbol",			/* All platforms. */
 				/* Unix. */
     "lucida sans unicode",	/* Windows. */
+    "bitstream cyberbit",	/* Windows popular CJK font */
     "chicago",			/* Mac. */
     NULL
 };

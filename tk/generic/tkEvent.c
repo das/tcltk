@@ -669,19 +669,20 @@ Tk_HandleEvent(eventPtr)
      * input context for the window if it hasn't already been done
      * (XFilterEvent needs this context).
      */
-
-    if (!(winPtr->flags & TK_CHECKED_IC)) {
-	if (winPtr->dispPtr->inputMethod != NULL) {
-	    winPtr->inputContext = XCreateIC(
+    if (winPtr->dispPtr->useInputMethods) {
+	if (!(winPtr->flags & TK_CHECKED_IC)) {
+	    if (winPtr->dispPtr->inputMethod != NULL) {
+		winPtr->inputContext = XCreateIC(
 		    winPtr->dispPtr->inputMethod, XNInputStyle,
 		    XIMPreeditNothing|XIMStatusNothing,
 		    XNClientWindow, winPtr->window,
 		    XNFocusWindow, winPtr->window, NULL);
+	    }
+	    winPtr->flags |= TK_CHECKED_IC;
 	}
-	winPtr->flags |= TK_CHECKED_IC;
-    }
-    if (XFilterEvent(eventPtr, None)) {
-        goto done;
+	if (XFilterEvent(eventPtr, None)) {
+	    goto done;
+	}
     }
 #endif /* TK_USE_INPUT_METHODS */
 
