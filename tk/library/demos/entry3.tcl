@@ -1,4 +1,4 @@
-# entry2.tcl --
+# entry3.tcl --
 #
 # This demonstration script creates several entry widgets whose
 # permitted input is constrained in some way.  It also shows off a
