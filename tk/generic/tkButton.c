@@ -1129,6 +1129,16 @@ ConfigureButton(interp, butPtr, objc, objv)
 			== NULL) {
 		    continue;
 		}
+
+		/*
+		 * If a radiobutton has the empty string as value
+		 * it should be selected.
+		 */
+
+ 		if ((butPtr->type == TYPE_RADIO_BUTTON) &&
+			(*Tcl_GetString(butPtr->onValuePtr) == 0)) {
+		    butPtr->flags |= SELECTED;
+		}
 	    }
 	}
 
