@@ -37,6 +37,11 @@ proc ::tk::TearOffMenu {w {x 0} {y 0}} {
     }
     if {$y == 0} {
     	set y [winfo rooty $w]
+	if {[tk windowingsystem] eq "macintosh" \
+		|| [tk windowingsystem] eq "aqua"} {
+	    # Avoid the native menu bar which sits on top of everything.
+	    if {$y < 20} { set y 20 }
+	}
     }
 
     set parent [winfo parent $w]
