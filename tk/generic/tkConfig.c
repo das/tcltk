@@ -918,7 +918,8 @@ DoObjConfig(interp, recordPtr, optionPtr, valuePtr, tkwin, savedOptionPtr)
 	case TK_OPTION_CUSTOM: {
 	    Tk_ObjCustomOption *custom = optionPtr->extra.custom;
 	    if (custom->setProc(custom->clientData, interp, tkwin,
-		    &valuePtr, (char *)internalPtr, (char *)oldInternalPtr,
+		    &valuePtr, recordPtr, optionPtr->specPtr->internalOffset,
+		    (char *)oldInternalPtr,
 		    optionPtr->specPtr->flags) != TCL_OK) {
 		return TCL_ERROR;
 	    }
@@ -1939,7 +1940,8 @@ GetObjectForOption(recordPtr, optionPtr, tkwin)
 	}
 	case TK_OPTION_CUSTOM: {
 	    Tk_ObjCustomOption *custom = optionPtr->extra.custom;
-	    objPtr = custom->getProc(custom->clientData, tkwin, internalPtr);
+	    objPtr = custom->getProc(custom->clientData, tkwin, recordPtr,
+		    optionPtr->specPtr->internalOffset);
 	    break;
 	}
 	default: {

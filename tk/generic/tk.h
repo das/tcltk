@@ -212,10 +212,10 @@ typedef struct Tk_OptionSpec {
  */
 
 typedef int (Tk_CustomOptionSetProc) _ANSI_ARGS_((ClientData clientData,
-	Tcl_Interp *interp, Tk_Window tkwin, Tcl_Obj **value,
-	char *internalPtr, char *saveInternalPtr, int flags));
+	Tcl_Interp *interp, Tk_Window tkwin, Tcl_Obj **value, char *widgRec,
+	int offset, char *saveInternalPtr, int flags));
 typedef Tcl_Obj *(Tk_CustomOptionGetProc) _ANSI_ARGS_((ClientData clientData,
-	Tk_Window tkwin, char *internalPtr));
+	Tk_Window tkwin, char *widgRec, int offset));
 typedef void (Tk_CustomOptionRestoreProc) _ANSI_ARGS_((ClientData clientData,
 	Tk_Window tkwin, char *internalPtr, char *saveInternalPtr));
 typedef void (Tk_CustomOptionFreeProc) _ANSI_ARGS_((ClientData clientData,
