@@ -1075,6 +1075,14 @@ rSASvJTGhnhcV3EJlo3kh53ltF5nAhQAOw==}]
     #
     cd $appPWD
 
+    # Restore the Open/Save Button
+    #
+    if {![string compare $data(type) open]} {
+        $data(okBtn) config -text "Open"
+    } else {
+        $data(okBtn) config -text "Save"
+    }
+
     # turn off the busy cursor.
     #
     $data(ent) config -cursor $entCursor
