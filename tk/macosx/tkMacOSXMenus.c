@@ -189,9 +189,15 @@ TkMacOSXInitMenus(
     InsertMenu(tkFileMenu, 0);
     AppendMenu(tkFileMenu, "\pSource…");
     AppendMenu(tkFileMenu, "\pClose/W");
+
+    /*
+     * These don't belong in the File menu on Mac OS X. 
+     */
+     
+#if 0
     AppendMenu(tkFileMenu, "\p(-");
     AppendMenu(tkFileMenu, "\pQuit/Q");
-
+#endif
     if (TkMacOSXUseMenuID(kEditMenu) != TCL_OK) {
             panic("Menu ID %d is already in use!", kEditMenu);
     }
