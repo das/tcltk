@@ -588,7 +588,8 @@ NB: Keep this commented code for a moment for reference.
  * Results:
  *      Fills an XEvent, sets the member xkey.keycode with a keycode
  *      formatted the same as XKeysymToKeycode and the member xkey.state with
- *      the modifiers implied by the keysym.
+ *      the modifiers implied by the keysym.  Also fills in xkey.trans_chars,
+ *      so that the actual characters can be retrieved later.
  *
  * Side effects:
  *      None.
@@ -624,6 +625,13 @@ TkpSetKeycodeAndState(
         }
         if (optionKey & macKeycode) {
             eventPtr->xkey.state |= OPTION_MASK;
+        }
+
+        if (keysym <= LATIN1_MAX) {
+            eventPtr->xkey.trans_chars[0] = keysym;
+            eventPtr->xkey.trans_chars[1] = 0;
+        } else {
+            eventPtr->xkey.trans_chars[0] = 0;
         }
     }
 }
