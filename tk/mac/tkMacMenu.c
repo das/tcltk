@@ -4387,3 +4387,28 @@ TkpMenuInit(void)
     Tcl_ExternalToUtf(NULL, NULL, "É", -1, 0, NULL, elipsisString,
 	    TCL_UTF_MAX + 1, NULL, NULL, NULL);
 }
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkpMenuThreadInit --
+ *
+ *	Does platform-specific initialization of thread-specific
+ *      menu state.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TkpMenuThreadInit()
+{
+    /*
+     * Nothing to do.
+     */
+}
