@@ -331,7 +331,8 @@ TK_OBJS = \
 	tkWindow.$(OBJEXT)
 
 STUB_OBJS = \
-	tkStubLib.$(OBJEXT)
+	tkStubLib.$(OBJEXT) \
+	tkStubImg.$(OBJEXT)
 
 TCL_DOCS = "$(TCL_SRC_DIR_NATIVE)"/../doc/*.[13n]
 TK_DOCS = "$(ROOT_DIR_NATIVE)"/doc/*.[13n]

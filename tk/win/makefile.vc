@@ -216,6 +216,7 @@ TKOBJS = \
 	$(TMPDIR)\tkWindow.obj
 
 TKSTUBOBJS = $(TMPDIR)\tkStubLib.obj \
+	$(TMPDIR)\tkStubImg.obj
 
 
 cc32		= "$(TOOLS32)\bin\cl.exe"
