@@ -148,6 +148,14 @@ XKeycodeToKeysym(
     if (!initialized) {
 	InitKeyMaps();
     }
+    if (keycode == 0) {
+        /* 
+         * This means we had a pure modifier keypress or
+         * something similar which is a TO DO.
+         */
+        return NoSymbol;
+    }
+    
     virtualKey = (char) (keycode >> 16);    
     c = (keycode) & 0xffff;
     if (c > 255) {
@@ -240,7 +248,7 @@ TkpGetString(
      * Just return NULL if the character is a function key or another
      * non-printing key.
      */
-    if (c == 0x10) {
+    if (c == 0x10 || (eventPtr->xany.send_event == -1)) {
 	len = 0;
     } else {
 	hPtr = Tcl_FindHashEntry(&keycodeTable, (char *) virtualKey);
@@ -486,6 +494,30 @@ TkpGetKeySym(dispPtr, eventPtr)
 	    || ((dispPtr->lockUsage != LU_IGNORE)
 	    && (eventPtr->xkey.state & LockMask))) {
 	index += 1;
+    }
+    if (eventPtr->xany.send_event == -1) {
+	/* We use -1 as a special signal for a pure modifier */
+	int modifier = eventPtr->xkey.keycode;
+	if (modifier == cmdKey) {
+	    return XK_Alt_L;
+	} else if (modifier == shiftKey) {
+	    return XK_Shift_L;
+	} else if (modifier == alphaLock) {
+	    return XK_Caps_Lock;
+	} else if (modifier == optionKey) {
+	    return XK_Meta_L;
+	} else if (modifier == controlKey) {
+	    return XK_Control_L;
+	} else if (modifier == rightShiftKey) {
+	    return XK_Shift_R;
+	} else if (modifier == rightOptionKey) {
+	    return XK_Meta_R;
+	} else if (modifier == rightControlKey) {
+	    return XK_Control_R;
+	} else {
+	    /* If we get here, we probably need to implement something new */
+	    return NoSymbol;
+	} 
     }
     sym = XKeycodeToKeysym(dispPtr->display, eventPtr->xkey.keycode, index);
 

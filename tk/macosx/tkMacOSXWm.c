@@ -763,6 +763,7 @@ configArgs:
         Tcl_AppendResult(interp, "wrong # arguments: must be \"",
                          Tcl_GetStringFromObj (objv[0], NULL), " attributes window",
                          " ?-modified ?bool??",
+                         " ?-titlepath ?path??",
                          "\"", (char *) NULL);
         return TCL_ERROR;
     }
@@ -2544,7 +2545,8 @@ Tcl_Obj *CONST objv[];	/* Argument objects. */
 
         wmPtr2 = ((TkWindow *) master)->wmInfoPtr;
 
-        if (wmPtr2->iconFor != NULL) {
+        /* Under some circumstances, wmPtr2 is NULL here */
+        if (wmPtr2 != NULL && wmPtr2->iconFor != NULL) {
             Tcl_AppendResult(interp, "can't make \"",
                              Tcl_GetString(objv[3]),
                              "\" a master: it is an icon for ",
@@ -4755,6 +4757,14 @@ TkUnsupported1Cmd(
 	            } else if ((*attrArgv[i] == 's') 
 	                    && (strcmp(attrArgv[i], "sideTitlebar")  == 0)) {
 	                wmPtr->attributes |= kWindowSideTitlebarAttribute;
+			foundOne = 1;
+		    } else if ((*attrArgv[i] == 'n') 
+			       && (strcmp(attrArgv[i], "noActivates")  == 0)) {
+			wmPtr->attributes |= kWindowNoActivatesAttribute;
+			foundOne = 1;
+		    } else if ((*attrArgv[i] == 'n') 
+			       && (strcmp(attrArgv[i], "noUpdates")  == 0)) {
+			wmPtr->attributes |= kWindowNoUpdatesAttribute;
 	                foundOne = 1;
 	            } else {
 	                foundOne = 0;
