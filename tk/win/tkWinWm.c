@@ -815,7 +815,15 @@ WinSetIcon(interp, titlebaricon, tkw)
 	    }
 	} else {
 	    ThreadSpecificData *tsdPtr;
-	    if (!SetClassLong(hwnd, GCL_HICONSM, (LPARAM)GetIcon(titlebaricon, ICON_SMALL))) {
+	    if (
+#ifdef _WIN64
+		!SetClassLongPtr(hwnd, GCLP_HICONSM,
+			(LPARAM)GetIcon(titlebaricon, ICON_SMALL))
+#else
+		!SetClassLong(hwnd, GCL_HICONSM,
+			(LPARAM)GetIcon(titlebaricon, ICON_SMALL))
+#endif
+		) {
 		/* 
 		 * For some reason this triggers, even though it seems
 		 * to be successful This is probably related to the
@@ -828,7 +836,15 @@ WinSetIcon(interp, titlebaricon, tkw)
 		 * return TCL_ERROR;
 		 */
 	    }
-	    if (!SetClassLong(hwnd, GCL_HICON, (LPARAM)GetIcon(titlebaricon, ICON_BIG))) {
+	    if (
+#ifdef _WIN64
+		!SetClassLongPtr(hwnd, GCLP_HICON,
+			(LPARAM)GetIcon(titlebaricon, ICON_BIG))
+#else
+		!SetClassLong(hwnd, GCL_HICON,
+			(LPARAM)GetIcon(titlebaricon, ICON_BIG))
+#endif
+		) {
 		Tcl_AppendResult(interp,"Unable to set new icon", (char*)NULL);
 		return TCL_ERROR;
 	    }
