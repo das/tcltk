@@ -13,7 +13,7 @@
 # environment variable TK_ALT_DISPLAY is set to an alternate display.
 #
 
-if {[lsearch [namespace children] ::test] == -1} {
+if {[lsearch [namespace children] ::tcltest] == -1} {
     source [file join [pwd] [file dirname [info script]] defs.tcl]
 }
 
@@ -233,5 +233,17 @@ test clipboard-7.14 {Tk_ClipboardCmd procedure} {
 } {1 {bad option "error": must be clear or append}}
 
 # cleanup
-::test::cleanupTests
+::tcltest::cleanupTests
 return
+
+
+
+
+
+
+
+
+
+
+
+

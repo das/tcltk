@@ -17,7 +17,7 @@ if {$tcl_platform(platform)!="macintosh"} {
     return
 }
 
-if {[lsearch [namespace children] ::test] == -1} {
+if {[lsearch [namespace children] ::tcltest] == -1} {
     source [file join [pwd] [file dirname [info script]] defs.tcl]
 }
 
@@ -44,11 +44,11 @@ proc getsize {} {
     return "[winfo reqwidth .b.l] [winfo reqheight .b.l]"
 }
 
-set ::test::testConfig(gothic) 0
+set ::tcltest::testConfig(gothic) 0
 set gothic {gothic 12}
 set mx [font measure  $gothic \u4e4e]
 if {[font actual $gothic -family] != [font actual system -family]} {
-    set ::test::testConfig(gothic) 1
+    set ::tcltest::testConfig(gothic) 1
 }
 
 test macFont-1.1 {TkpFontPkgInit} {
@@ -284,5 +284,17 @@ test macFont-9.4 {AllocMacFont: extract text metrics} {
 destroy .b
 
 # cleanup
-::test::cleanupTests
+::tcltest::cleanupTests
 return
+
+
+
+
+
+
+
+
+
+
+
+

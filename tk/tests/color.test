@@ -12,7 +12,7 @@ if {[info commands testcolor] != "testcolor"} {
     return
 }
 
-if {[lsearch [namespace children] ::test] == -1} {
+if {[lsearch [namespace children] ::tcltest] == -1} {
     source [file join [pwd] [file dirname [info script]] defs.tcl]
 }
 
@@ -277,5 +277,17 @@ test color-4.1 {FreeColorObjProc} {
 destroy .t
 
 # cleanup
-::test::cleanupTests
+::tcltest::cleanupTests
 return
+
+
+
+
+
+
+
+
+
+
+
+

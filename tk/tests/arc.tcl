@@ -138,3 +138,15 @@ bind .t.c a {
 bind .t.c b {set go 0}
 
 bind .t.c <Control-x> {.t.c delete current}
+
+
+
+
+
+
+
+
+
+
+
+

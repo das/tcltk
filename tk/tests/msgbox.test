@@ -8,7 +8,7 @@
 # RCS: @(#) $Id$
 #
 
-if {[lsearch [namespace children] ::test] == -1} {
+if {[lsearch [namespace children] ::tcltest] == -1} {
     source [file join [pwd] [file dirname [info script]] defs.tcl]
 }
 
@@ -65,11 +65,10 @@ if {[info commands tkMessageBox] == ""} {
     set isNative 0
 }
 
-if {$isNative && ![info exists INTERACTIVE]} {
+if {$isNative && ![info exists tcl_interactive]} {
     puts " Some tests were skipped because they could not be performed"
     puts " automatically on this platform. If you wish to execute them"
-    puts " interactively, set the TCL variable INTERACTIVE and re-run"
-    puts " the test"
+    puts " run them in an tcl_interactive shell."
     return
 }
 
@@ -156,5 +155,17 @@ foreach spec $specs {
 }
 
 # cleanup
-::test::cleanupTests
+::tcltest::cleanupTests
 return
+
+
+
+
+
+
+
+
+
+
+
+

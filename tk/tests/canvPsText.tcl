@@ -81,3 +81,15 @@ proc setStipple c {
     global stipple
     $c itemconfigure text -stipple $stipple
 }
+
+
+
+
+
+
+
+
+
+
+
+

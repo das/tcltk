@@ -13,7 +13,7 @@ if {$tcl_platform(platform) != "unix"} {
     return
 }
 
-if {[lsearch [namespace children] ::test] == -1} {
+if {[lsearch [namespace children] ::tcltest] == -1} {
     source [file join [pwd] [file dirname [info script]] defs.tcl]
 }
 
@@ -626,5 +626,17 @@ foreach w [winfo child .] {
     catch {destroy $w}
 }
 cleanupbg
-::test::cleanupTests
+::tcltest::cleanupTests
 return
+
+
+
+
+
+
+
+
+
+
+
+

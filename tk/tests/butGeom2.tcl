@@ -111,3 +111,15 @@ proc config-but {option value} {
 	$w configure $option $value
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+

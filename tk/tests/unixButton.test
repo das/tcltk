@@ -22,7 +22,7 @@ if {[lsearch [image types] test] < 0} {
     return
 }
 
-if {[lsearch [namespace children] ::test] == -1} {
+if {[lsearch [namespace children] ::tcltest] == -1} {
     source [file join [pwd] [file dirname [info script]] defs.tcl]
 }
 
@@ -182,5 +182,17 @@ test unixbutton-1.11 {TkpComputeButtonGeometry procedure} {
 eval destroy [winfo children .]
 
 # cleanup
-::test::cleanupTests
+::tcltest::cleanupTests
 return
+
+
+
+
+
+
+
+
+
+
+
+

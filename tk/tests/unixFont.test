@@ -19,7 +19,7 @@ if {$tcl_platform(platform)!="unix"} {
     return
 }
 
-if {[lsearch [namespace children] ::test] == -1} {
+if {[lsearch [namespace children] ::tcltest] == -1} {
     source [file join [pwd] [file dirname [info script]] defs.tcl]
 }
 
@@ -292,5 +292,17 @@ test unixfont-9.2 {GetControlCharSubst procedure: 4 chars subst} {
 } {0 1 1 1 1 2}
 
 # cleanup
-::test::cleanupTests
+::tcltest::cleanupTests
 return
+
+
+
+
+
+
+
+
+
+
+
+
