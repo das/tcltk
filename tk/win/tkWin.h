@@ -46,7 +46,7 @@
 #define TK_ICONIFY	(WM_USER+6) /* an embedded window requests to iconify */
 #define TK_DEICONIFY	(WM_USER+7) /* an embedded window requests to deiconify */
 #define TK_WITHDRAW	(WM_USER+8) /* an embedded window requests to withdraw */
-#define TK_TITLE	(WM_USER+9) /* an embedded window requests to set title */
+#define TK_GETFRAMEWID	(WM_USER+9) /* an embedded window requests a frame window id */
 
 
 /*

@@ -221,5 +221,14 @@ extern Tcl_Encoding TkWinGetUnicodeEncoding _ANSI_ARGS_((void));
 #define TK_THEME_WIN_CLASSIC    1
 #define TK_THEME_WIN_XP         2
 
+/*
+ *  The following is implemented in tkWinWm and used by tkWinEmbed.c
+ */
+void	TkpWinToplevelWithDraw		_ANSI_ARGS_((TkWindow *winPtr));
+void	TkpWinToplevelIconify		_ANSI_ARGS_((TkWindow *winPtr));
+void	TkpWinToplevelDeiconify		_ANSI_ARGS_((TkWindow *winPtr));
+long	TkpWinToplevelIsControlledByWm	_ANSI_ARGS_((TkWindow *winPtr));
+long	TkpWinToplevelMove		_ANSI_ARGS_((TkWindow *winPtr, int x, int y));
+
 #endif /* _TKWININT */
 

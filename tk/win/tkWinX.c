@@ -819,7 +819,7 @@ TkWinChildProc(hwnd, message, wParam, lParam)
 	case TK_MOVEWINDOW:
 	case TK_WITHDRAW:
 	case TK_RAISEWINDOW:
-	case TK_TITLE:
+	case TK_GETFRAMEWID:
 	    result =  TkWinEmbeddedEventProc(hwnd, message, wParam, lParam);
 	    break;
 
