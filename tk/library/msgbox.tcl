@@ -65,7 +65,7 @@ proc tkMessageBox {args} {
 	error "bad window path name \"$data(-parent)\""
     }
 
-    case $data(-type) {
+    switch -- $data(-type) {
 	abortretryignore {
 	    set buttons {
 		{abort  -width 6 -text Abort -under 0}

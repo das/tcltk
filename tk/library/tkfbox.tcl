@@ -1254,7 +1254,7 @@ proc tkFDialog_ActivateEnt {w} {
     set path [lindex $list 1]
     set file [lindex $list 2]
 
-    case $flag {
+    switch -- $flag {
 	OK {
 	    if {![string compare $file ""]} {
 		# user has entered an existing (sub)directory

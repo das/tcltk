@@ -145,13 +145,13 @@ switch $tcl_platform(platform) {
 # ----------------------------------------------------------------------
 
 if {$tcl_platform(platform) != "macintosh"} {
-    source $tk_library/button.tcl
-    source $tk_library/entry.tcl
-    source $tk_library/listbox.tcl
-    source $tk_library/menu.tcl
-    source $tk_library/scale.tcl
-    source $tk_library/scrlbar.tcl
-    source $tk_library/text.tcl
+    source [file join $tk_library button.tcl]
+    source [file join $tk_library entry.tcl]
+    source [file join $tk_library listbox.tcl]
+    source [file join $tk_library menu.tcl]
+    source [file join $tk_library scale.tcl]
+    source [file join $tk_library scrlbar.tcl]
+    source [file join $tk_library text.tcl]
 }
 
 # ----------------------------------------------------------------------

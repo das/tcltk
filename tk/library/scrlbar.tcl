@@ -312,7 +312,7 @@ proc tkScrollByUnits {w orient amount} {
     if {[llength $info] == 2} {
 	uplevel #0 $cmd scroll $amount units
     } else {
-	uplevel #0 $cmd [expr [lindex $info 2] + $amount]
+	uplevel #0 $cmd [expr {[lindex $info 2] + $amount}]
     }
 }
 
@@ -337,7 +337,7 @@ proc tkScrollByPages {w orient amount} {
     if {[llength $info] == 2} {
 	uplevel #0 $cmd scroll $amount pages
     } else {
-	uplevel #0 $cmd [expr [lindex $info 2] + $amount*([lindex $info 1] - 1)]
+	uplevel #0 $cmd [expr {[lindex $info 2] + $amount*([lindex $info 1] - 1)}]
     }
 }
 
@@ -360,7 +360,7 @@ proc tkScrollToPos {w pos} {
     if {[llength $info] == 2} {
 	uplevel #0 $cmd moveto $pos
     } else {
-	uplevel #0 $cmd [expr round([lindex $info 0]*$pos)]
+	uplevel #0 $cmd [expr {round([lindex $info 0]*$pos)}]
     }
 }
 
