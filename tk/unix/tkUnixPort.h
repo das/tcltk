@@ -200,17 +200,11 @@ extern int errno;
 
 /*
  * This macro stores a representation of the window handle in a string.
+ * This should perhaps use the real size of an XID.
  */
 
 #define TkpPrintWindowId(buf,w) \
-	sprintf((buf), "0x%x", (unsigned int) (w))
-	    
-/*
- * TkpScanWindowId is just an alias for Tcl_GetInt on Unix.
- */
-
-#define TkpScanWindowId(i,s,wp) \
-	Tcl_GetInt((i),(s),(wp))
+	sprintf((buf), "%#08lx", (unsigned long) (w))
 	    
 /*
  * This macro indicates that entry and text widgets should display

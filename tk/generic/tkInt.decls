@@ -677,6 +677,10 @@ declare 7 unix {
     void TkUnixSetMenubar (Tk_Window tkwin, Tk_Window menubar)
 }
 
+declare 8 unix {
+    int TkpScanWindowId (Tcl_Interp *interp, CONST char *string, Window *idPtr)
+}
+
 ############################
 # Windows specific functions
 
@@ -701,7 +705,7 @@ declare 5 win {
 }
 
 declare 6 win {
-    int TkpScanWindowId (Tcl_Interp *interp, char *string, int *idPtr)
+    int TkpScanWindowId (Tcl_Interp *interp, CONST char *string, Window *idPtr)
 }
 
 declare 7 win {
