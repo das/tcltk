@@ -707,7 +707,7 @@ DrawMenuEntryLabel(menuPtr, mePtr, d, gc, tkfont, fmPtr, x, y, width, height)
     int activeBorderWidth;
     int leftEdge;
     int imageHeight, imageWidth;
-    int textHeight, textWidth;
+    int textHeight = 0, textWidth = 0;	/* stop GCC warning */
     int haveImage = 0, haveText = 0;
     int imageXOffset = 0, imageYOffset = 0;
     int textXOffset = 0, textYOffset = 0;
@@ -1473,7 +1473,7 @@ GetMenuLabelGeometry(mePtr, tkfont, fmPtr, widthPtr, heightPtr)
 					 * portion */
 {
     TkMenu *menuPtr = mePtr->menuPtr;
-    int haveImage = 0, haveText = 0;
+    int haveImage = 0;
  
     if (mePtr->image != NULL) {
     	Tk_SizeOfImage(mePtr->image, widthPtr, heightPtr);
