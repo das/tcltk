@@ -23,6 +23,21 @@
 
 proc bgerror err {
     global errorInfo tcl_platform
+    
+    # Normally, the bgerror dialog is made transient with respect to "." (due
+    # to the implementation of tk_dialog).  On some systems (like Windows),
+    # when a window is withdraw or iconified, it's transient windows go with
+    # it.  Unfortunately, there is also a grab on the dialog (again because of
+    # the implementation of tk_dialog).  So if "." is withdrawn or iconified
+    # and the user gets a bgerror, the app will hang, for no apparent reason.
+    #
+    # One (somewhat hacky) way to address this is to un-transient the dialog 
+    # if "." is withdrawn or iconified.
+    after idle {
+	if { ![winfo viewable .bgerrorDialog] } {
+	    wm transient .bgerrorDialog {}
+	}
+    }
 
     # save errorInfo which would be erased in the catch below otherwise.
     set info $errorInfo ;
