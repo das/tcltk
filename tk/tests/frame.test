@@ -187,9 +187,10 @@ test frame-2.8 {toplevel configuration options} haveDISPLAY {
     catch {destroy .t}
     toplevel .t -width 200 -height 100 -screen $env(DISPLAY)
     wm geometry .t +0+0
-    list [.t configure -screen] \
-	    [catch {.t configure -screen another} msg] $msg
-} [list [list -screen screen Screen {} $env(DISPLAY)] 1 {can't modify -screen option after widget is created}]
+    set cfg [string compare [.t configure -screen] \
+        "-screen screen Screen {} $env(DISPLAY)"]
+    list $cfg [catch {.t configure -screen another} msg] $msg
+} {0 1 {can't modify -screen option after widget is created}}
 test frame-2.9 {toplevel configuration options} {
     catch {destroy .t}
     list [catch {toplevel .t -width 200 -height 100 -screen bogus} msg] $msg
