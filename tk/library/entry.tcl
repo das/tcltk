@@ -82,12 +82,12 @@ bind Entry <B1-Motion> {
 bind Entry <Double-1> {
     set tk::Priv(selectMode) word
     tk::EntryMouseSelect %W %x
-    catch {%W icursor sel.first}
+    catch {%W icursor sel.last}
 }
 bind Entry <Triple-1> {
     set tk::Priv(selectMode) line
     tk::EntryMouseSelect %W %x
-    %W icursor 0
+    %W icursor sel.last
 }
 bind Entry <Shift-1> {
     set tk::Priv(selectMode) char
