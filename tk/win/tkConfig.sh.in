@@ -32,8 +32,8 @@ TK_DBGX=@TK_DBGX@
 TK_LIB_FILE='@TK_LIB_FILE@'
 
 # Additional libraries to use when linking Tk.
-TK_LIBS='@LIBS@ @GRAPHIC_LIBS@'
-GRAPHIC_LIBS='@GRAPHIC_LIBS@'
+TK_LIBS='@LIBS@ @LIBS_GUI@'
+LIBS_GUI='@LIBS_GUI@'
 
 # Top-level directory in which Tcl's platform-independent files are
 # installed.
