@@ -210,13 +210,7 @@ TKOBJS = \
 	$(TMPDIR)\tkStubInit.obj \
 	$(TMPDIR)\tkWindow.obj
 
-TKSTUBOBJS = \
-	$(TMPDIR)\tkStubLib.obj \
-	$(TMPDIR)\tkStubs.obj \
-	$(TMPDIR)\tkPlatStubs.obj \
-	$(TMPDIR)\tkIntStubs.obj \
-	$(TMPDIR)\tkIntPlatStubs.obj \
-	$(TMPDIR)\tkIntXlibStubs.obj
+TKSTUBOBJS = $(TMPDIR)\tkStubLib.obj \
 
 
 cc32		= "$(TOOLS32)\bin\cl.exe"
