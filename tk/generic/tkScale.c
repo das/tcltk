@@ -24,7 +24,6 @@
 #include "tkPort.h"
 #include "default.h"
 #include "tkInt.h"
-#include "tclMath.h"
 #include "tkScale.h"
 
 /*
