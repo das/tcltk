@@ -8,6 +8,11 @@
 AC_INIT(../generic/tk.h)
 AC_PREREQ(2.57)
 
+# The following define is needed when building with Cygwin since newer
+# versions of autoconf incorrectly set SHELL to /bin/bash instead of
+# /bin/sh. The bash shell seems to suffer from some strange failures.
+SHELL=/bin/sh
+
 TK_VERSION=8.5
 TK_MAJOR_VERSION=8
 TK_MINOR_VERSION=5
