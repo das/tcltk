@@ -485,6 +485,7 @@ GetScreen(interp, screenName, screenPtr)
 	     */
 	    dispPtr = TkpOpenDisplay(screenName);
 	    if (dispPtr == NULL) {
+		Tcl_ResetResult(interp);
 		Tcl_AppendResult(interp, "couldn't connect to display \"",
 			screenName, "\"", (char *) NULL);
 		return (TkDisplay *) NULL;
