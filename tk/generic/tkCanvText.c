@@ -771,7 +771,7 @@ DisplayCanvText(canvas, itemPtr, display, drawable, x, y, width, height)
 	}
 	if ((selFirstChar >= 0) && (selFirstChar <= selLastChar)) {
 	    int xFirst, yFirst, hFirst;
-	    int xLast, yLast;
+	    int xLast, yLast, wLast;
 
 	    /*
 	     * Draw a special background under the selection.
@@ -780,7 +780,7 @@ DisplayCanvText(canvas, itemPtr, display, drawable, x, y, width, height)
 	    Tk_CharBbox(textPtr->textLayout, selFirstChar, &xFirst, &yFirst,
 		    NULL, &hFirst);
 	    Tk_CharBbox(textPtr->textLayout, selLastChar, &xLast, &yLast,
-		    NULL, NULL);
+		    &wLast, NULL);
 
 	    /*
 	     * If the selection spans the end of this line, then display
@@ -793,7 +793,7 @@ DisplayCanvText(canvas, itemPtr, display, drawable, x, y, width, height)
 	    height = hFirst;
 	    for (y = yFirst ; y <= yLast; y += height) {
 		if (y == yLast) {
-		    width = xLast - x;
+		    width = xLast + wLast - x;
 		} else {	    
 		    width = textPtr->rightEdge - textPtr->leftEdge - x;
 		}
