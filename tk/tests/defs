@@ -246,6 +246,10 @@ proc test {name description script answer args} {
 	puts stdout "$answer"
 	puts stdout "---- $name FAILED" 
     }
+    if {[string compare $::tcl_platform(platform) macintosh] == 0} {
+        # Force the text to be drawn even if the tests are not updating.
+        update idletasks
+    }
 }
 
 proc dotests {file args} {

@@ -4343,6 +4343,8 @@ on Win NT 4.0/Japanese that cause a crash in some cases. (stanton)
 2/4/99 (bug fix) Fixed uninitialized memory access bug in Unix send
 code. (stanton)
 
+----------------- Released 8.0.5, 3/9/99 -------------------------
+
 ----------------------------------------------------------
 Changes for Tk 8.0 go above this line.
 Changes for Tk 8.1 go below this line.

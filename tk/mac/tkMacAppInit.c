@@ -26,14 +26,14 @@
 #include "tclMac.h"
 
 #ifdef TK_TEST
-extern int		Tktest_Init _ANSI_ARGS_((Tcl_Interp *interp));
+EXTERN int		Tktest_Init _ANSI_ARGS_((Tcl_Interp *interp));
 #endif /* TK_TEST */
 
 #ifdef TCL_TEST
-extern int		Procbodytest_Init _ANSI_ARGS_((Tcl_Interp *interp));
-extern int		Procbodytest_SafeInit _ANSI_ARGS_((Tcl_Interp *interp));
-extern int		TclObjTest_Init _ANSI_ARGS_((Tcl_Interp *interp));
-extern int		Tcltest_Init _ANSI_ARGS_((Tcl_Interp *interp));
+EXTERN int		Procbodytest_Init _ANSI_ARGS_((Tcl_Interp *interp));
+EXTERN int		Procbodytest_SafeInit _ANSI_ARGS_((Tcl_Interp *interp));
+EXTERN int		TclObjTest_Init _ANSI_ARGS_((Tcl_Interp *interp));
+EXTERN int		Tcltest_Init _ANSI_ARGS_((Tcl_Interp *interp));
 #endif /* TCL_TEST */
 
 Tcl_Interp *gStdoutInterp = NULL;
