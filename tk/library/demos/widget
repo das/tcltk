@@ -18,7 +18,7 @@ package require msgcat
 ::msgcat::mcload [file join $tk_library demos]
 namespace import ::msgcat::mc
 wm title . [mc "Widget Demonstration"]
-if {$tcl_platform(platform) eq "unix"} {
+if {[tk windowingsystem] eq "x11"} {
     # This won't work everywhere, but there's no other way in core Tk
     # at the moment to display a coloured icon.
     image create photo TclPowered \
@@ -72,7 +72,7 @@ menu .menuBar -tearoff 0
 menu .menuBar.file -tearoff 0
 
 # On the Mac use the specia .apple menu for the about item
-if {[tk windowingsystem] eq "classic"} {
+if {[tk windowingsystem] eq "classic" || [tk windowingsystem] eq "aqua"} {
     .menuBar add cascade -menu .menuBar.apple
     menu .menuBar.apple -tearoff 0
     .menuBar.apple add command -label [mc "About..."] -command {aboutBox}

@@ -1171,6 +1171,26 @@ SetupBevelButton(
                 "SetControlData BevelButtonGraphicAlign failed, %d\n", err );
     }
 
+    if (butPtr->compound != COMPOUND_NONE) {
+        ControlButtonTextPlacement thePlacement = \
+                kControlBevelButtonPlaceNormally;
+        if (butPtr->compound == COMPOUND_TOP) {
+            thePlacement = kControlBevelButtonPlaceBelowGraphic;
+        } else if (butPtr->compound == COMPOUND_BOTTOM) {
+            thePlacement = kControlBevelButtonPlaceAboveGraphic;
+        } else if (butPtr->compound == COMPOUND_LEFT) {
+            thePlacement = kControlBevelButtonPlaceToRightOfGraphic;
+        } else if (butPtr->compound == COMPOUND_RIGHT) {
+            thePlacement = kControlBevelButtonPlaceToLeftOfGraphic;
+        }
+        if ((err=SetControlData(controlHandle, kControlButtonPart,
+                kControlBevelButtonTextPlaceTag,
+                sizeof(ControlButtonTextPlacement),
+                (char *) &thePlacement)) != noErr ) {
+            fprintf(stderr,
+                    "SetControlData BevelButtonTextPlace failed, %d\n", err );
+        }
+    }
 }
 
 /*
