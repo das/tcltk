@@ -75,7 +75,7 @@ proc SendButtonPress {parent btn type} {
 # The test suite proper
 #
 #----------------------------------------------------------------------
-
+catch {unset err}
 append err(usage) "tk_chooseDirectory "
 append err(usage) "?-initialdir directory? ?-mustexist boolean? "
 append err(usage) "?-parent window? ?-title title?"
