@@ -43,8 +43,10 @@ Specifies the desired height for the window, in units of characters
 in the font given by the \fB\-font\fR option.
 Must be at least one.
 .OP \-maxundo maxUndo MaxUndo
+.VS 8.4
 Specifies the maximum number of compound undo actions on the undo
 stack. A zero or a negative value imply an unlimited undo stack.
+.VE 8.4
 .OP \-spacing1 spacing1 Spacing1
 Requests additional space above each text line in the widget,
 using any of the standard forms for screen distances.
