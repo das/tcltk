@@ -638,10 +638,12 @@ EmbedWindowDeleted(winPtr)
      * Find the Container structure for this window work.  Delete the
      * information about the embedded application and free the container's
      * record.
+     * The main container may be null. [Bug #476176]
      */
 
     prevPtr = NULL;
     containerPtr = tsdPtr->firstContainerPtr;
+    if (containerPtr == NULL) return;
     while (1) {
 	if (containerPtr->embeddedPtr == winPtr) {
 	    containerPtr->embeddedHWnd = NULL;
