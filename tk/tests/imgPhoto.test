@@ -85,6 +85,15 @@ test imgPhoto-1.7 {options for photo images} {
 test imgPhoto-1.8 {options for photo images} {
     list [catch {image create photo -blah blah} err] $err
 } {1 {unknown option "-blah"}}
+test imgPhoto-1.9 {options for photo images - error case} {
+    list [catch {image create photo -format} err] $err
+} {1 {value for "-format" missing}}
+test imgPhoto-1.10 {options for photo images - error case} {
+    list [catch {image create photo -data} err] $err
+} {1 {value for "-data" missing}}
+test imgPhoto-1.11 {options for photo images - error case} {
+    list [catch {image create photo p1 -format} err] $err
+} {1 {value for "-format" missing}}
 
 test imgPhoto-2.1 {ImgPhotoCreate procedure} {
     eval image delete [image names]
