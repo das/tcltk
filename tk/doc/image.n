@@ -54,6 +54,10 @@ the existing instances will use the new image.
 Returns a decimal string giving the height of image \fIname\fR
 in pixels.
 .TP
+\fBimage inuse \fIname\fR
+Returns a boolean value indicating whether or not the image given by
+\fIname\fR is in use by any widgets.
+.TP
 \fBimage names\fR
 Returns a list containing the names of all existing images.
 .TP
