@@ -407,7 +407,7 @@ TkpGetShadows(borderPtr, tkwin)
 	 * Compute the light shadow color
 	 */
 
-	if (g > MAX_INTENSITY*85/100) {
+	if (g > MAX_INTENSITY*0.95) {
 	    lightColor.red = (90 * r)/100;
 	    lightColor.green = (90 * g)/100;
 	    lightColor.blue = (90 * b)/100;
