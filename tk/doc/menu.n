@@ -415,7 +415,7 @@ to an empty string to enable a textual label to be displayed.
 If a \fB\-image\fR option has been specified, it overrides
 \fB\-bitmap\fR.
 This option is not available for separator or tear-off entries.
-.VS
+.VS 8.0
 .TP
 \fB\-columnbreak \fIvalue\fR
 When this option is zero, the appears below the previous entry. When
@@ -426,8 +426,8 @@ menu.
 \fB\-command \fIvalue\fR
 Specifies a Tcl command to execute when the menu entry is invoked.
 Not available for separator or tear-off entries.
-.TP
 .VS 8.4
+.TP
 \fB\-compound \fIvalue\fR
 Specifies whether the menu entry should display both an image and text,
 and if so, where the image should be placed relative to the text.
