@@ -1933,7 +1933,7 @@ Tk_ComputeTextLayout(tkfont, string, numChars, wrapLength, justify, flags,
 		    continue;
 		}
 	    } else {	
-		NewChunk(&layoutPtr, &maxChunks, start, 1, curX, 1000000000,
+		NewChunk(&layoutPtr, &maxChunks, start, 1, curX, curX,
 			baseline)->numDisplayChars = -1;
 		start++;
 		goto wrapLine;
@@ -2011,7 +2011,7 @@ Tk_ComputeTextLayout(tkfont, string, numChars, wrapLength, justify, flags,
     if ((layoutPtr->numChunks > 0) && ((flags & TK_IGNORE_NEWLINES) == 0)) {
 	if (layoutPtr->chunks[layoutPtr->numChunks - 1].start[0] == '\n') {
 	    chunkPtr = NewChunk(&layoutPtr, &maxChunks, start, 0, curX,
-		    1000000000, baseline);
+		    curX, baseline);
 	    chunkPtr->numDisplayChars = -1;
 	    Tcl_DStringAppend(&lineBuffer, (char *) &curX, sizeof(curX));
 	    baseline += height;
