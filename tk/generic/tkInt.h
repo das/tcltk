@@ -1000,6 +1000,31 @@ EXTERN int		TkpTestembedCmd _ANSI_ARGS_((ClientData clientData,
 /* 
  * Unsupported commands.
  */
+
+typedef struct TkTextIndex TkTextIndex;
+typedef struct TkTextSegment TkTextSegment;
+typedef struct TkText TkText;
+typedef struct TkTextBTree *TkTextBTree;
+
+EXTERN int		TkTextGetIndex _ANSI_ARGS_((Tcl_Interp *interp,
+			    TkText *textPtr, char *string,
+			    TkTextIndex *indexPtr));
+EXTERN void		TkTextIndexBackBytes _ANSI_ARGS_((
+			    CONST TkTextIndex *srcPtr, int count,
+			    TkTextIndex *dstPtr));
+EXTERN void		TkTextIndexForwBytes _ANSI_ARGS_((
+			    CONST TkTextIndex *srcPtr, int count,
+			    TkTextIndex *dstPtr));
+EXTERN TkTextIndex *	TkTextMakeCharIndex _ANSI_ARGS_((TkTextBTree tree,
+			    int lineIndex, int charIndex,
+			    TkTextIndex *indexPtr));
+EXTERN TkTextIndex *	TkTextMakeByteIndex _ANSI_ARGS_((TkTextBTree tree,
+			    int lineIndex, int byteIndex,
+			    TkTextIndex *indexPtr));
+EXTERN void		TkTextPrintIndex _ANSI_ARGS_((
+			    CONST TkTextIndex *indexPtr, char *string));
+EXTERN TkTextSegment *	TkTextSetMark _ANSI_ARGS_((TkText *textPtr, char *name,
+			    TkTextIndex *indexPtr));
 EXTERN int		TkUnsupported1Cmd _ANSI_ARGS_((ClientData clientData,
 			    Tcl_Interp *interp, int argc, char **argv));
 

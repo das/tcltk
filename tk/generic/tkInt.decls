@@ -1501,6 +1501,10 @@ declare 103 win {
     Status XStringListToTextProperty(char** list, int count, \
 	    XTextProperty* text_prop_return)
 }
+declare 104 win {
+    void XDrawLine (Display* d, Drawable dr, GC g, int x1, int y1, \
+	    int x2, int y2)
+}
 
 # X functions for Mac
 
@@ -1872,4 +1876,8 @@ declare 80 mac {
 }
 declare 81 mac {
     void  XForceScreenSaver(Display* display, int mode)
+}
+declare 82 mac {
+    void XDrawLine (Display* d, Drawable dr, GC g, int x1, int y1, \
+	    int x2, int y2)
 }

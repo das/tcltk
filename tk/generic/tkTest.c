@@ -206,7 +206,7 @@ extern int		TkplatformtestInit _ANSI_ARGS_((
 			    Tcl_Interp *interp));
 extern int              TclThread_Init _ANSI_ARGS_((Tcl_Interp *interp));
 
-#if !(defined(__WIN32__) || defined(MAC_TCL))
+#if !(defined(__WIN32__) && defined(MAC_TCL))
 #define TkplatformtestInit(x) TCL_OK
 #endif
 
