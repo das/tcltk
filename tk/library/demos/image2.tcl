@@ -83,8 +83,8 @@ entry $w.dir.e -width 30 -textvariable dirName
 button $w.dir.b -pady 0 -padx 2m -text "Select Dir." \
 	-command "selectAndLoadDir $w"
 bind $w.dir.e <Return> "loadDir $w"
-pack $w.dir.e -side left -fill y -padx 2m -pady 2m
-pack $w.dir.b -side left -fill y -padx {0 2m} -pady 2m
+pack $w.dir.e -side left -fill both -padx 2m     -pady 2m -expand true
+pack $w.dir.b -side left -fill y    -padx {0 2m} -pady 2m
 labelframe $w.f -text "File:" -padx 2m -pady 2m
 
 listbox $w.f.list -width 20 -height 10 -yscrollcommand "$w.f.scroll set"
@@ -99,6 +99,6 @@ labelframe $w.image -text "Image:"
 label $w.image.image -image image2a
 pack $w.image.image -padx 2m -pady 2m
 
-grid $w.dir -        -sticky w -padx 1m -pady 1m -in $w.mid
+grid $w.dir -        -sticky ew -padx 1m -pady 1m -in $w.mid
 grid $w.f   $w.image -sticky nw -padx 1m -pady 1m -in $w.mid
 grid columnconfigure $w.mid 1 -weight 1
