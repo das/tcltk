@@ -319,7 +319,7 @@ libcdll = msvcrt$(DBGX).lib oldnames.lib
 
 baselibs   = kernel32.lib $(optlibs) advapi32.lib
 winlibs    = $(baselibs) user32.lib gdi32.lib comdlg32.lib winspool.lib \
-             imm32.lib
+             imm32.lib comctl32.lib
 guilibs	   = $(libc) $(winlibs)
 conlibs    = $(libc) $(baselibs)
 guilibsdll = $(libcdll) $(winlibs)
