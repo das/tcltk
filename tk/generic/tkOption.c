@@ -439,9 +439,9 @@ Tk_GetOption(tkwin, name, className)
     if (masqName != NULL) {
 	/*
 	 * This option is masquerading with a different window class.
-	 * Instead of using the current level, search the stack to the
-	 * current level - 1, then do a direct probe on the option database
-	 * to get the extra bits.
+	 * Search the stack to the depth it was before the current window's
+	 * information was pushed (the value for which is stored in the bases
+	 * field).
 	 */
 	levelPtr = &tsdPtr->levels[tsdPtr->curLevel];
 	nameId = Tk_GetUid(masqName+1);
