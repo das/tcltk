@@ -5784,9 +5784,6 @@ the CG version of the X drawing emulation layer. (tittle, ingham)
 
 --- Released 8.4.8, November 18, 2004 --- See ChangeLog for details ---
 
-2004-11-23 (bug fix)[1011234] Make up/down cursor keys move by display
-lines, not logical lines in text widget (darley)
-
 2004-12-01 (bug fix)[979239] Fix clipping of partially transparent images
 on buttons on unix to avoid X error (hobbs, petasis)
 
