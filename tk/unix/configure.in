@@ -5,11 +5,10 @@ dnl	to configure the system for the local environment.
 AC_INIT(../generic/tk.h)
 # RCS: @(#) $Id$
 
-TK_VERSION=8.1
+TK_VERSION=8.2
 TK_MAJOR_VERSION=8
-TK_MINOR_VERSION=1
-# The patch level should be blank for patch releases (i.e. not alpha/beta)
-TK_PATCH_LEVEL=
+TK_MINOR_VERSION=2
+TK_PATCH_LEVEL="b1"
 VERSION=${TK_VERSION}
 
 if test "${prefix}" = "NONE"; then
