@@ -76,7 +76,7 @@ TkWinProcs *tkWinProcs;
  */
 
 static char winScreenName[] = ":0"; /* Default name of windows display. */
-static HINSTANCE tkInstance;        /* Application instance handle. */
+static HINSTANCE tkInstance = NULL; /* Application instance handle. */
 static int childClassInitialized;   /* Registered child class? */
 static WNDCLASS childClass;	    /* Window class for child windows. */
 static int tkPlatformId = 0;	    /* version of Windows platform */
@@ -171,7 +171,34 @@ TkGetServerInfo(interp, tkwin)
 HINSTANCE
 Tk_GetHINSTANCE()
 {
+    if (tkInstance == NULL) {
+	tkInstance = GetModuleHandle(NULL);
+    }
     return tkInstance;
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkWinSetHINSTANCE --
+ *
+ *	Sets the global instance handle used by the Tk library.
+ *	This should be called by DllMain.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TkWinSetHINSTANCE(hInstance)
+    HINSTANCE hInstance;
+{
+    tkInstance = hInstance;
 }
 
 /*
@@ -213,8 +240,6 @@ TkWinXInit(hInstance)
     } else {
 	tkWinProcs = &asciiProcs;
     }
-
-    tkInstance = hInstance;
 
     /*
      * When threads are enabled, we cannot use CLASSDC because

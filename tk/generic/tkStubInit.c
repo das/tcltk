@@ -368,6 +368,7 @@ TkIntPlatStubs tkIntPlatStubs = {
     TkWinDialogDebug, /* 31 */
     TkWinGetMenuSystemDefault, /* 32 */
     TkWinGetPlatformId, /* 33 */
+    TkWinSetHINSTANCE, /* 34 */
 #endif /* __WIN32__ */
 #ifdef MAC_TCL
     TkGenerateActivateEvents, /* 0 */

@@ -873,6 +873,12 @@ declare 33 win {
     int TkWinGetPlatformId(void)
 }
 
+# new for 8.4.1
+
+declare 34 win {
+    void TkWinSetHINSTANCE (HINSTANCE hInstance)
+}
+
 ########################
 # Mac specific functions
 
