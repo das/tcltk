@@ -84,10 +84,10 @@ TkpDisplayMenuButton(clientData)
 	return;
     }
 
-    if (mbPtr->state == STATE_DISABLED && mbPtr->disabledFg != NULL) {
+    if ((mbPtr->state == STATE_DISABLED) && (mbPtr->disabledFg != NULL)) {
 	gc = mbPtr->disabledGC;
 	border = mbPtr->normalBorder;
-    } else if (mbPtr->state == STATE_ACTIVE 
+    } else if ((mbPtr->state == STATE_ACTIVE)
 	       && !Tk_StrictMotif(mbPtr->tkwin)) {
 	gc = mbPtr->activeTextGC;
 	border = mbPtr->activeBorder;
@@ -143,8 +143,8 @@ TkpDisplayMenuButton(clientData)
      * foreground color, generate the stippled effect.
      */
 
-    if (((mbPtr->state == STATE_DISABLED) && (mbPtr->disabledFg != NULL) )
-	    || (mbPtr->image != NULL)) {
+    if (((mbPtr->state == STATE_DISABLED) 
+            && (mbPtr->disabledFg == NULL)) || (mbPtr->image != NULL)) {
 	XFillRectangle(mbPtr->display, pixmap, mbPtr->disabledGC,
 		mbPtr->inset, mbPtr->inset,
 		(unsigned) (Tk_Width(tkwin) - 2*mbPtr->inset),
