@@ -197,7 +197,8 @@ in pixels.  This is the value used by \fIwindow\fR's geometry
 manager to compute its geometry.
 .TP
 \fBwinfo rgb \fIwindow color\fR
-Returns a list containing three decimal values, which are the
+Returns a list containing three decimal values in the range 0 to
+65535, which are the
 red, green, and blue intensities that correspond to \fIcolor\fR in
 the window given by \fIwindow\fR.  \fIColor\fR
 may be specified in any of the forms acceptable for a color
