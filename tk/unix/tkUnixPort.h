@@ -7,6 +7,7 @@
  *
  * Copyright (c) 1991-1993 The Regents of the University of California.
  * Copyright (c) 1994-1996 Sun Microsystems, Inc.
+ * Copyright (c) 1998 by Scriptics Corporation.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -156,12 +157,6 @@ extern int errno;
 #define TkPutImage(colors, ncolors, display, pixels, gc, image, destx, desty, srcx, srcy, width, height) \
 	XPutImage(display, pixels, gc, image, destx, desty, srcx, \
 	srcy, width, height);
-
-/*
- * The following Tk functions are implemented as macros under Windows.
- */
-
-#define TkGetNativeProlog(interp) TkGetProlog(interp)
 
 /*
  * Supply macros for seek offsets, if they're not already provided by

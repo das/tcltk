@@ -101,7 +101,7 @@ static TkCmd commands[] = {
      * Commands that are part of the intrinsics:
      */
 
-    {"bell",		Tk_BellCmd,		NULL,			0},
+    {"bell",		NULL,			Tk_BellObjCmd, 		0},
     {"bind",		Tk_BindCmd,		NULL,			1},
     {"bindtags",	Tk_BindtagsCmd,		NULL,			1},
     {"clipboard",	Tk_ClipboardCmd,	NULL,			0},

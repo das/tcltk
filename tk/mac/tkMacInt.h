@@ -292,10 +292,5 @@ extern Tk_Window	Tk_TopCoordsToWindow _ANSI_ARGS_((Tk_Window tkwin,
 			    int rootX, int rootY, int *newX, int *newY));
 extern MacDrawable *	TkMacContainerId _ANSI_ARGS_((TkWindow *winPtr));
 extern MacDrawable *	TkMacGetHostToplevel  _ANSI_ARGS_((TkWindow *winPtr));
-/*
- * The following prototypes need to go into tkMac.h
- */
-EXTERN void		Tk_UpdatePointer _ANSI_ARGS_((Tk_Window tkwin,
-			    int x, int y, int state));
 
 #endif /* _TKMACINT */
