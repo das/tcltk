@@ -224,7 +224,8 @@ ${KEYSYM_FLAGS}
 
 WISH_OBJS = tkAppInit.o
 
-TCLTEST_OBJS = ${TCL_BIN_DIR}/tclTest.o ${TCL_BIN_DIR}/tclUnixTest.o
+TCLTEST_OBJS = ${TCL_BIN_DIR}/tclTest.o ${TCL_BIN_DIR}/tclThreadTest.o \
+        ${TCL_BIN_DIR}/tclUnixTest.o
 TKTEST_OBJS = $(TCLTEST_OBJS) tkTestInit.o tkTest.o tkSquare.o
 
 WIDGOBJS = tkButton.o tkEntry.o tkFrame.o tkListbox.o \
