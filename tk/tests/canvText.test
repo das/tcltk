@@ -34,6 +34,7 @@ set ax [font measure $font 0]
 foreach test {
     {-anchor nw nw xyz {bad anchor position "xyz": must be n, ne, e, se, s, sw, w, nw, or center}}
     {-fill #ff0000 #ff0000 xyz {unknown color name "xyz"}}
+    {-fill {} {} {} {}}
     {-font {Times 40} {Times 40} {} {font "" doesn't exist}}
     {-justify left left xyz {bad justification "xyz": must be left, right, or center}}
     {-stipple gray50 gray50 xyz {bitmap "xyz" not defined}}
