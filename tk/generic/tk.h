@@ -43,13 +43,6 @@
 #define TK_VERSION "8.1"
 #define TK_PATCH_LEVEL "8.1b3"
 
-/* 
- * A special definition used to allow this header file to be included 
- * in resource files.
- */
-
-#ifndef RESOURCE_INCLUDED
-
 /*
  * The following definitions set up the proper options for Macintosh
  * compilers.  We use this method because there is no autoconf equivalent.
@@ -64,6 +57,14 @@
 #ifndef _TCL
 #   include <tcl.h>
 #endif
+
+/* 
+ * A special definition used to allow this header file to be included 
+ * in resource files.
+ */
+
+#ifndef RESOURCE_INCLUDED
+
 #ifndef _XLIB_H
 #   ifdef MAC_TCL
 #	include <Xlib.h>

@@ -481,7 +481,8 @@ $(TMPDIR)\winMain.obj: $(ROOT)\win\winMain.c
 	$(cc32) -DDLL_BUILD -DBUILD_tk $(TK_CFLAGS) -Fo$(TMPDIR)\ $<
 
 {$(RCDIR)}.rc{$(TMPDIR)}.res:
-	$(rc32) -fo $@ -r -i "$(GENERICDIR)" -i "$(TOOLS32)\include" $<
+	$(rc32) -fo $@ -r -i "$(GENERICDIR)" -i "$(TOOLS32)\include" \
+		-i "$(TCLDIR)\generic" $<
 
 clean:
         -@del $(OUTDIR)\*.exp 
