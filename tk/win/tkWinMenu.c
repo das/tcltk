@@ -481,7 +481,7 @@ GetEntryText(mePtr)
 		Tcl_DStringAppend(&itemString, "&", 1);
 	    }
 	    next = Tcl_UtfNext(p);
-	    Tcl_DStringAppend(&itemString, p, next - p);
+	    Tcl_DStringAppend(&itemString, p, (int) (next - p));
 	}
         if (mePtr->accelLength > 0) {
 	    Tcl_DStringAppend(&itemString, "\t", 1);
@@ -490,7 +490,7 @@ GetEntryText(mePtr)
 		    Tcl_DStringAppend(&itemString, "&", 1);
 		}
 		next = Tcl_UtfNext(p);
-		Tcl_DStringAppend(&itemString, p, next - p);
+		Tcl_DStringAppend(&itemString, p, (int) (next - p));
 	    }
 	} 	    
 
@@ -1716,7 +1716,7 @@ DrawMenuUnderline(
     	Tk_UnderlineChars(menuPtr->display, d,
     		gc, tkfont, label, x + mePtr->indicatorSpace,
     		y + (height + fmPtr->ascent - fmPtr->descent) / 2, 
-		start - label, end - label);
+		(int) (start - label), (int) (end - label));
     }		
 }
 

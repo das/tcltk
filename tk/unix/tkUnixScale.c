@@ -271,7 +271,7 @@ DisplayVerticalValue(scalePtr, drawable, value, rightEdge)
     Tk_GetFontMetrics(scalePtr->tkfont, &fm);
     y = TkScaleValueToPixel(scalePtr, value) + fm.ascent/2;
     sprintf(valueString, scalePtr->format, value);
-    length = strlen(valueString);
+    length = (int) strlen(valueString);
     width = Tk_TextWidth(scalePtr->tkfont, valueString, length);
 
     /*
@@ -488,7 +488,7 @@ DisplayHorizontalValue(scalePtr, drawable, value, top)
     Tk_GetFontMetrics(scalePtr->tkfont, &fm);
     y = top + fm.ascent;
     sprintf(valueString, scalePtr->format, value);
-    length = strlen(valueString);
+    length = (int) strlen(valueString);
     width = Tk_TextWidth(scalePtr->tkfont, valueString, length);
 
     /*

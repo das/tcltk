@@ -887,7 +887,7 @@ XParseColor(display, map, spec, colorPtr)
 	char fmt[16];
 	int i, red, green, blue;
 
-	if ((i = strlen(spec+1))%3) {
+	if ((i = (int) strlen(spec+1))%3) {
 	    return 0;
 	}
 	i /= 3;

@@ -1121,7 +1121,7 @@ Tk_CreateWindowFromPath(interp, tkwin, pathName, screenName)
 		"\"", (char *) NULL);
 	return NULL;
     }
-    numChars = p-pathName;
+    numChars = (int) (p-pathName);
     if (numChars > FIXED_SPACE) {
 	p = (char *) ckalloc((unsigned) (numChars+1));
     } else {
