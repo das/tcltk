@@ -146,6 +146,7 @@ extern int tkpWinRopModes[];
  * Internal procedures used by more than one source file.
  */
 
+extern void		TkWinCancelMouseTimer _ANSI_ARGS_((void));
 extern LRESULT CALLBACK	TkWinChildProc _ANSI_ARGS_((HWND hwnd, UINT message,
 			    WPARAM wParam, LPARAM lParam));
 extern void		TkWinClipboardRender _ANSI_ARGS_((TkDisplay *dispPtr,
