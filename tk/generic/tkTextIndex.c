@@ -286,6 +286,10 @@ TkTextNewIndexObj(textPtr, indexPtr)
  *
  *	Given a pixel index and a byte index, look things up in the B-tree
  *	and fill in a TkTextIndex structure.
+ *	
+ *	The valid input range for pixelIndex is from 0 to the number
+ *	of pixels in the widget-1.  Anything outside that range will
+ *	be rounded to the closest acceptable value. 
  *
  * Results:
  * 
@@ -321,6 +325,10 @@ TkTextMakePixelIndex(textPtr, pixelIndex, indexPtr)
     }
     indexPtr->linePtr = TkBTreeFindPixelLine(textPtr->tree, pixelIndex, 
 					     &pixelOffset);
+    /* 
+     * 'pixedlIndex' was too large, so we try again, just to find
+     * the last pixel in the window
+     */
     if (indexPtr->linePtr == NULL) {
 	indexPtr->linePtr = TkBTreeFindPixelLine(textPtr->tree, 
 			      TkBTreeNumPixels(textPtr->tree)-1, &pixelOffset);

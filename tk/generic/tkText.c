@@ -3361,6 +3361,11 @@ TkTextGetTabs(interp, textPtr, stringPtr)
     for (i = 0, tabPtr = &tabArrayPtr->tabs[0]; i  < objc; i++, tabPtr++) {
 	int index;
 	
+	/* 
+	 * This will round fractional pixels above 0.5 upwards, and
+	 * otherwise downwards, to find the right integer pixel
+	 * position.
+	 */
 	if (Tk_GetPixelsFromObj(interp, textPtr->tkwin, objv[i], 
 				&tabPtr->location) != TCL_OK) {
 	    goto error;

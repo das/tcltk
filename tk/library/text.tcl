@@ -457,7 +457,10 @@ bind Text <MouseWheel> {
 }
 if {[string equal [tk windowingsystem] "aqua"]} {
 bind Text <Option-MouseWheel> {
-    %W yview scroll [expr {- 10*%D}] pixels
+    %W yview scroll [expr {-150 * %D}] pixels
+}
+bind Text <MouseWheel> {
+    %W yview scroll [expr {-15 * %D}] pixels
 }
 }
 
