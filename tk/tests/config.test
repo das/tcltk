@@ -864,7 +864,25 @@ test config-13.1 {proper cleanup of options with widget destroy} {
     } {
 	destroy .w
 	$type .w -cursor crosshair
-	destroy .w	
+	destroy .w
+    }
+} {}
+
+eval destroy [winfo children .]
+
+test config-14.1 {Tk_CreateOptionTable - use with namespace import} {
+    namespace export -clear *
+    foreach type {
+	button canvas entry frame listbox menu menubutton message
+	scale scrollbar spinbox text radiobutton checkbutton
+    } {
+	namespace eval ::foo [subst {
+	    namespace import -force ::$type
+	    ::foo::$type .a
+	    ::foo::$type .b
+	}
+	]
+	destroy .a .b
     }
 } {}
 
