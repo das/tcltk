@@ -387,6 +387,30 @@ test canvas-12.2 {canvas mm obj, patch SF-403327, 102471} {
     incr val
 } {12}
 
+proc kill_canvas {w} {
+    destroy $w
+    pack [canvas $w -height 200 -width 200] -fill both -expand yes
+    update idle
+    $w create rectangle 80 80 120 120 -fill blue -tags blue
+    # bind a button press to re-build the canvas
+    $w bind blue <ButtonRelease-1> [subst {
+	[lindex [info level 0] 0] $w
+	append ::x ok
+    }
+    ]
+}
+
+test canvas-13.1 {canvas delete during event, SF bug-228024} {
+    kill_canvas .c
+    set ::x {}
+    # do this many times to improve chances of triggering the crash
+    for {set i 0} {$i < 30} {incr i} {
+	event generate .c <1> -x 100 -y 100
+	event generate .c <ButtonRelease-1> -x 100 -y 100
+    }
+    set ::x
+} okokokokokokokokokokokokokokokokokokokokokokokokokokokokokok
+
 # cleanup
 ::tcltest::cleanupTests
 return
