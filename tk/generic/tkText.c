@@ -972,6 +972,16 @@ ConfigureText(interp, textPtr, argc, argv, flags)
     }
 
     /*
+     * Account for state changes that would reenable blinking cursor state.
+     */
+
+    if (textPtr->flags & GOT_FOCUS) {
+	Tcl_DeleteTimerHandler(textPtr->insertBlinkHandler);
+	textPtr->insertBlinkHandler = (Tcl_TimerToken) NULL;
+	TextBlinkProc((ClientData) textPtr);
+    }
+
+    /*
      * Register the desired geometry for the window, and arrange for
      * the window to be redisplayed.
      */
