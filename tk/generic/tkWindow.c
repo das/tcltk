@@ -46,6 +46,7 @@ Tk_Uid tkNormalUid = NULL;
  */
 
 TCL_DECLARE_MUTEX(windowMutex);
+TCL_DECLARE_MUTEX(uidMutex);
 
 /*
  * Default values for "changes" and "atts" fields of TkWindows.  Note
@@ -258,15 +259,16 @@ CreateTopLevelWindow(interp, parent, name, screenName)
             Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
     if (!tsdPtr->initialized) {
-	tsdPtr->initialized = 1;
 	if (tkNormalUid == NULL) {
-	    Tcl_MutexLock(&windowMutex);
+	    Tcl_MutexLock(&uidMutex);
 	    if (tkNormalUid == NULL) {
 	        tkActiveUid = Tk_GetUid("active");
 		tkDisabledUid = Tk_GetUid("disabled");
 		tkNormalUid = Tk_GetUid("normal");
 	    }
-	    Tcl_MutexUnlock(&windowMutex);
+	    Tcl_MutexUnlock(&uidMutex);
+	tsdPtr->initialized = 1;
+
 	}
 
 	/*
@@ -2598,11 +2600,11 @@ DeleteWindowsExitProc(clientData)
     tsdPtr->numMainWindows = 0;
     tsdPtr->mainWindowList = NULL;
     tsdPtr->initialized = 0;
-    Tcl_MutexLock(&windowMutex);
+    Tcl_MutexLock(&uidMutex);
     tkDisabledUid = NULL;
     tkActiveUid = NULL;
     tkNormalUid = NULL;
-    Tcl_MutexUnlock(&windowMutex);
+    Tcl_MutexUnlock(&uidMutex);
 }
 
 /*
