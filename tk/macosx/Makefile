@@ -79,7 +79,7 @@ forceRelink:
 
 forceRelinkTcl:
 	@-cd ${BUILD_DIR}; \
-	rm -rf Tcl.framework tclsh8.4 \
+	rm -rf Tcl.framework \
 	Development.build/Tcl.build/Tcl Deployment.build/Tcl.build/Tcl
 
 cleanup-embedded:
