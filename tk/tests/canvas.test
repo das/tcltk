@@ -484,6 +484,7 @@ test canvas-17.1 {default smooth method handling} {
 	.c itemconfigure $id -smooth $smoother
 	lappend result [.c itemcget $id -smooth]
     }
+    set result
 } {0 true true true raw raw true}
 
 destroy .c
