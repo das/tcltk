@@ -150,7 +150,7 @@ value is the empty string.
 .TP
 \fIpathName \fBsash mark \fIindex x y\fR
 Records \fIx\fR and \fIy\fR for the sash given by \fIindex\fR; used in
-conjunction with later dragto commands to move the sash.
+conjunction with later \fBsash dragto\fR commands to move the sash.
 .TP
 \fIpathName \fBsash place \fIindex x y\fR
 Place the sash given by \fIindex\fR at the given coordinates.
