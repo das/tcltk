@@ -166,6 +166,11 @@ EXTERN LRESULT CALLBACK	TkWinChildProc _ANSI_ARGS_((HWND hwnd, UINT message,
 EXTERN void	TkWinUpdatingClipboard(int mode);
 
 /*
+ * Used by tkWinDialog.c to associate the right icon with tk_messageBox
+ */
+EXTERN HICON	TkWinGetIcon(Tk_Window tkw, DWORD iconsize);
+
+/*
  * The following structure keeps track of whether we are using the 
  * multi-byte or the wide-character interfaces to the operating system.
  * System calls should be made through the following function table.
