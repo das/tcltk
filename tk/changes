@@ -5230,6 +5230,7 @@ in the master. (dejong)
 be consistent. (fellows)
 
 2002-06-14 (new feature) [TIP 98] Enhanced photo compositing (fellows)
+	*** POTENTIAL INCOMPATIBILITY ***
 
 2002-06-14 (bug fix) Removed references to matherr (kupries)
 
