@@ -213,11 +213,11 @@ static TkWindow *       GetTkWindowFromXEvent _ANSI_ARGS_((XEvent *eventPtr));
 #ifdef TK_USE_INPUT_METHODS
 static int              InvokeInputMethods _ANSI_ARGS_((TkWindow *winPtr, 
 			    XEvent *eventPtr));
-#endif
-
 #if TK_XIM_SPOT
 static void             CreateXIMSpotMethods _ANSI_ARGS_((TkWindow *winPtr));
 #endif
+
+#endif /* TK_USE_INPUT_METHODS */
 
 static int              InvokeMouseHandlers _ANSI_ARGS_((TkWindow *winPtr, 
 			    unsigned long mask, XEvent *eventPtr));
@@ -329,7 +329,7 @@ InvokeMouseHandlers(winPtr, mask, eventPtr)
  *
  *---------------------------------------------------------
  */
-#if TK_XIM_SPOT
+#if defined(TK_USE_INPUT_METHODS) && TK_XIM_SPOT
 static void
 CreateXIMSpotMethods(winPtr)
     TkWindow *winPtr;
@@ -379,7 +379,7 @@ CreateXIMSpotMethods(winPtr)
 	    NULL);
     }
 }
-#endif /*TK_XIM_SPOT*/
+#endif
 
 /*
  *----------------------------------------------------------
