@@ -510,7 +510,7 @@ $(TKTEST): $(TK_LIB_FILE) $(TKTEST_OBJS) wish.$(RES) $(CAT32)
 	$(TK_LIB_FILE) $(LIBS) \
 	wish.$(RES) $(CC_EXENAME) $(LDFLAGS_WINDOW)
 
-cat32.${OBJEXT}: $(TCL_SRC_DIR)/cat.c
+cat32.${OBJEXT}: $(TCL_SRC_DIR)/win/cat.c
 	$(CC) -c $(CC_SWITCHES) $(DEPARG) $(CC_OBJNAME)
 
 $(CAT32): cat32.${OBJEXT}
