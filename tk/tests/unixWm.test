@@ -1609,6 +1609,7 @@ test unixWm-47.1 {WaitRestrictProc procedure} {nonPOrtable} {
     event generate .t.f <Configure> -when tail
     event generate .t <Configure> -when tail
     event generate .t <Button> -button 3 -when tail
+    event generate .t <ButtonRelease> -button 3 -when tail
     event generate .t <Map> -when tail
     lappend result iconify
     wm iconify .t

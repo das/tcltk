@@ -39,17 +39,12 @@ namespace eval tcltest {
 	namespace export $proc
     }
 
-    # ::tcltest::verbose defaults to "b"
-
-    variable verbose "b"
-
-    # match defaults to the empty list
-
-    variable match {}
-
-    # skip defaults to the empty list
-
-    variable skip {}
+    # setup ::tcltest default vars
+    foreach {var default} {verbose b match {} skip {}} {
+	if {![info exists $var]} {
+	    variable $var $default
+	}
+    }
 
     # Tests should not rely on the current working directory.
     # Files that are part of the test suite should be accessed relative to
@@ -101,6 +96,7 @@ namespace eval tcltest {
 
     variable ::tcltest::mainThread 1
     if {[info commands testthread] != {}} {
+	puts "Tk with threads enabled is known to have problems with X"
 	set ::tcltest::mainThread [testthread names]
     }
 }
@@ -205,6 +201,18 @@ proc ::tcltest::initConfig {} {
 	destroy .t
 	if {[string match {{22 3 6 15} {31 18 [34] 15}} $x] == 0} {
 	    set ::tcltest::testConfig(fonts) 0
+	}
+
+	# Test to see if we have are running Unix apps on Exceed,
+	# which won't return font failures (Windows-like), which is
+	# not what we want from ann X server (other Windows X servers
+	# operate as expected)
+
+	set ::tcltest::testConfig(noExceed) 1
+	if {$::tcltest::testConfig(unixOnly) && \
+		[catch {font actual "\{xyz"}] == 0} {
+	    puts "Running X app on Exceed, skipping problematic font tests..."
+	    set ::tcltest::testConfig(noExceed) 0
 	}
     }
 

@@ -371,8 +371,7 @@ test imagePhoto-9.1 {ImgPhotoCmdDeletedProc procedure} {
 test imgPhoto-10.1 {Tk_ImgPhotoPutBlock procedure} {
     eval image delete [image names]
     image create photo p1
-    p1 put {{#ff0000 #ff0000 #ff0000 #ff0000 #ff0000 #ff0000 #ff0000 #ff0000}} \
-	    -to 0 0
+    p1 put {{#ff0000 #ff0000 #ff0000 #ff0000 #ff0000 #ff0000 #ff0000 #ff0000}} -to 0 0
     p1 put {{#00ff00 #00ff00}} -to 2 0
     list [p1 get 2 0] [p1 get 3 0] [p1 get 4 0]
 } {{0 255 0} {0 255 0} {255 0 0}}

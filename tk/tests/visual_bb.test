@@ -82,6 +82,8 @@ test 1.1 "running visual tests" {userInteraction} {
 	    -command {runTest canvPsText.tcl}
     .menu.ps.m add command -label "Bitmaps" \
 	    -command {runTest canvPsBmap.tcl}
+    .menu.ps.m add command -label "Images" \
+	    -command {source canvPsImg.tcl}
     .menu.ps.m add command -label "Arcs" \
 	    -command {runTest canvPsArc.tcl}
     

@@ -60,7 +60,7 @@ test canvImg-1.5 {options for image items} {
 
 test canvImg-2.1 {CreateImage procedure} {
     list [catch {.c create image 40} msg] $msg
-} {1 {wrong # args: should be ".c create image x y ?options?"}}
+} {1 {wrong # coordinates: expected 2, got 1}}
 test canvImg-2.2 {CreateImage procedure} {
     list [catch {.c create image 40 50 60} msg] $msg
 } {1 {unknown option "60"}}
@@ -100,7 +100,7 @@ test canvImg-3.4 {ImageCoords procedure} {
     .c delete all
     .c create image 50 100 -image foo -tags i1
     list [catch {.c coords i1 250} msg] $msg
-} {1 {wrong # coordinates: expected 0 or 2, got 1}}
+} {1 {wrong # coordinates: expected 2, got 1}}
 test canvImg-3.5 {ImageCoords procedure} {
     .c delete all
     .c create image 50 100 -image foo -tags i1

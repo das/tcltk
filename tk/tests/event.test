@@ -30,6 +30,7 @@ test event-1.1 {Tk_HandleEvent procedure, filter events for dead windows} {
     bind .b <Destroy> {
 	lappend x destroy
 	event generate .b <1>
+	event generate .b <ButtonRelease-1>
     }
     bind .b <1> {
 	lappend x button

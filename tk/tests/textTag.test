@@ -595,10 +595,13 @@ test textTag-15.1 {TkTextBindProc} {
     set x {}
     .t tag add x 2.0 2.4
     .t tag add y 4.3
+    event gen .t <Button> -x $x1 -y $y1
     event gen .t <Motion> -x $x1 -y $y1
     event gen .t <ButtonRelease> -x $x1 -y $y1
+    event gen .t <Button> -x $x1 -y $y1
     event gen .t <Motion> -x $x2 -y $y2
     event gen .t <ButtonRelease> -x $x2 -y $y2
+    event gen .t <Button> -x $x2 -y $y2
     event gen .t <Motion> -x $x3 -y $y3
     event gen .t <ButtonRelease> -x $x3 -y $y3
     bind .t <ButtonRelease> {}

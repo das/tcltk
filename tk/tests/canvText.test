@@ -105,7 +105,7 @@ test canvText-3.4 {TextCoords procedure} {
 } {10.0 10.0}
 test canvText-3.5 {TextCoords procedure} {
     list [catch {.c coords test 10} msg] $msg
-} {1 {wrong # coordinates: expected 0 or 2, got 1}}
+} {1 {wrong # coordinates: expected 2, got 1}}
 test canvText-3.6 {TextCoords procedure} {
     list [catch {.c coords test 10 10 10} msg] $msg
 } {1 {wrong # coordinates: expected 0 or 2, got 3}}

@@ -843,7 +843,8 @@ test select-10.3 {ConvertSelection procedure} {unixOnly} {
     set result
 } {{PRIMARY selection doesn't exist or form "ERROR" not defined}}
 # testing timers
-test select-10.4 {ConvertSelection procedure} {unixOnly} {
+# This one hangs in Exceed
+test select-10.4 {ConvertSelection procedure} {unixOnly noExceed} {
     setup
     setupbg
     set selValue $longValue

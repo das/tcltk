@@ -43,16 +43,3 @@ $c create arc .5i 4.5i 2i 6i -style arc -start 135 -extent 315 -width 3m \
     -outline black -outlinestipple gray25
 $c create arc 3.5i 4.5i 5.5i 5.5i -style arc -start 45 -extent -90 -width 1m \
     -outline black
-
-
-
-
-
-
-
-
-
-
-
-
-

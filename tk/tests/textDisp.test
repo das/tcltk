@@ -1793,10 +1793,10 @@ foreach i {a b c d e f g h i j k l m n o p q r s t u v w x y z} {
 .t configure -wrap none
 test textDisp-17.1 {TkTextScanCmd procedure} {
     list [catch {.t scan a b} msg] $msg
-} {1 {wrong # args: should be ".t scan mark|dragto x y"}}
+} {1 {wrong # args: should be ".t scan mark x y" or ".t scan dragto x y ?gain?"}}
 test textDisp-17.2 {TkTextScanCmd procedure} {
     list [catch {.t scan a b c d} msg] $msg
-} {1 {wrong # args: should be ".t scan mark|dragto x y"}}
+} {1 {expected integer but got "b"}}
 test textDisp-17.3 {TkTextScanCmd procedure} {
     list [catch {.t scan stupid b 20} msg] $msg
 } {1 {expected integer but got "b"}}
