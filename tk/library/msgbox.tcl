@@ -262,6 +262,7 @@ proc ::tk::MessageBox {args} {
     }
 
     frame $w.bot -background $bg
+    grid anchor $w.bot center
     pack $w.bot -side bottom -fill both
     frame $w.top -background $bg
     pack $w.top -side top -fill both -expand 1

@@ -78,6 +78,7 @@ proc ::tk_dialog {w title text bitmap default args} {
     }
     pack $w.bot -side bottom -fill both
     pack $w.top -side top -fill both -expand 1
+    grid anchor $w.bot center
 
     # 2. Fill the top part with bitmap and message (use the option
     # database for -wraplength and -font so that they can be
@@ -165,7 +166,7 @@ proc ::tk_dialog {w title text bitmap default args} {
 	set y 0
     }
     wm maxsize $w [winfo screenwidth $w] [winfo screenheight $w]
-    wm geom $w +$x+$y
+    wm geometry $w +$x+$y
     wm deiconify $w
 
     # 7. Set a grab and claim the focus too.
@@ -199,10 +200,10 @@ proc ::tk_dialog {w title text bitmap default args} {
 	destroy $w
     }
     if {[string compare $oldGrab ""]} {
-      if {[string compare $grabStatus "global"]} {
+	if {[string compare $grabStatus "global"]} {
 	    grab $oldGrab
-      } else {
-          grab -global $oldGrab
+	} else {
+	    grab -global $oldGrab
 	}
     }
     return $Priv(button)
