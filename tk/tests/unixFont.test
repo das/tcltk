@@ -230,7 +230,7 @@ test unixfont-8.3 {AllocFont procedure: can't parse info from name} {
     # check that font actual returns the correct attributes.
     # the values of those attributes are system dependent.
     array set fontArray [font actual a12biluc]
-    set result [lsort [array get fontArray]]
+    set result [lsort [array names fontArray]]
     catch {unset fontArray}
     set result
 } {-family -overstrike -size -slant -underline -weight}
