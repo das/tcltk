@@ -27,6 +27,11 @@
 #include <tkPort.h>
 #endif
 
+#ifdef BUILD_tk
+# undef EXPORT
+# define EXPORT DLLEXPORT
+#endif
+
 /*
  * Opaque type declarations:
  */
@@ -996,5 +1001,8 @@ EXTERN int		TkXFileProc _ANSI_ARGS_((ClientData clientData,
  */
 EXTERN int		TkUnsupported1Cmd _ANSI_ARGS_((ClientData clientData,
 			    Tcl_Interp *interp, int argc, char **argv));
+
+#undef EXPORT
+#define EXPORT DLLIMPORT
 
 #endif  /* _TKINT */
