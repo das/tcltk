@@ -834,6 +834,12 @@ EXTERN Tk_Window	Tk_CreateAnonymousWindow _ANSI_ARGS_((
 EXTERN void		Tk_SetClassProcs _ANSI_ARGS_((Tk_Window tkwin, 
 				Tk_ClassProcs * procs, 
 				ClientData instanceData));
+/* 243 */
+EXTERN void		Tk_SetInternalBorderEx _ANSI_ARGS_((Tk_Window tkwin, 
+				int left, int right, int top, int bottom));
+/* 244 */
+EXTERN void		Tk_SetMinimumRequestSize _ANSI_ARGS_((
+				Tk_Window tkwin, int minWidth, int minHeight));
 
 typedef struct TkStubHooks {
     struct TkPlatStubs *tkPlatStubs;
@@ -1089,6 +1095,8 @@ typedef struct TkStubs {
     void (*tk_DeleteClientMessageHandler) _ANSI_ARGS_((Tk_ClientMessageProc * proc)); /* 240 */
     Tk_Window (*tk_CreateAnonymousWindow) _ANSI_ARGS_((Tcl_Interp * interp, Tk_Window parent, char * screenName)); /* 241 */
     void (*tk_SetClassProcs) _ANSI_ARGS_((Tk_Window tkwin, Tk_ClassProcs * procs, ClientData instanceData)); /* 242 */
+    void (*tk_SetInternalBorderEx) _ANSI_ARGS_((Tk_Window tkwin, int left, int right, int top, int bottom)); /* 243 */
+    void (*tk_SetMinimumRequestSize) _ANSI_ARGS_((Tk_Window tkwin, int minWidth, int minHeight)); /* 244 */
 } TkStubs;
 
 #ifdef __cplusplus
@@ -2070,6 +2078,14 @@ extern TkStubs *tkStubsPtr;
 #ifndef Tk_SetClassProcs
 #define Tk_SetClassProcs \
 	(tkStubsPtr->tk_SetClassProcs) /* 242 */
+#endif
+#ifndef Tk_SetInternalBorderEx
+#define Tk_SetInternalBorderEx \
+	(tkStubsPtr->tk_SetInternalBorderEx) /* 243 */
+#endif
+#ifndef Tk_SetMinimumRequestSize
+#define Tk_SetMinimumRequestSize \
+	(tkStubsPtr->tk_SetMinimumRequestSize) /* 244 */
 #endif
 
 #endif /* defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS) */

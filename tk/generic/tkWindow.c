@@ -649,11 +649,16 @@ TkAllocWindow(dispPtr, screenNum, parentPtr)
     winPtr->geomMgrPtr = NULL;
     winPtr->geomData = NULL;
     winPtr->reqWidth = winPtr->reqHeight = 1;
-    winPtr->internalBorderWidth = 0;
+    winPtr->internalBorderLeft = 0;
     winPtr->wmInfoPtr = NULL;
     winPtr->classProcsPtr = NULL;
     winPtr->instanceData = NULL;
     winPtr->privatePtr = NULL;
+    winPtr->internalBorderRight = 0;
+    winPtr->internalBorderTop = 0;
+    winPtr->internalBorderBottom = 0;
+    winPtr->minReqWidth = 0;
+    winPtr->minReqHeight = 0;
 
     return winPtr;
 }

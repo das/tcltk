@@ -955,6 +955,8 @@ TkStubs tkStubs = {
     Tk_DeleteClientMessageHandler, /* 240 */
     Tk_CreateAnonymousWindow, /* 241 */
     Tk_SetClassProcs, /* 242 */
+    Tk_SetInternalBorderEx, /* 243 */
+    Tk_SetMinimumRequestSize, /* 244 */
 };
 
 /* !END!: Do not edit above this line. */

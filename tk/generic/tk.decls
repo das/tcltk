@@ -1147,6 +1147,17 @@ declare 242 generic {
 	    Tk_ClassProcs *procs, ClientData instanceData)
 }
 
+# New in 8.4a4
+#
+declare 243 generic {
+    void Tk_SetInternalBorderEx (Tk_Window tkwin, int left, int right, \
+            int top, int bottom)
+}
+declare 244 generic {
+    void Tk_SetMinimumRequestSize (Tk_Window tkwin, \
+            int minWidth, int minHeight)
+}
+
 # Define the platform specific public Tk interface.  These functions are
 # only available on the designated platform.
 

@@ -743,10 +743,12 @@ typedef struct TkWindow {
 				 * Tk_GeometryRequest, or 0's if
 				 * Tk_GeometryRequest hasn't been
 				 * called. */
-    int internalBorderWidth;	/* Width of internal border of window
+    int internalBorderLeft;	/* Width of internal border of window
 				 * (0 means no internal border).  Geometry
 				 * managers should not normally place children
-				 * on top of the border. */
+				 * on top of the border. 
+				 * Fields for the other three sides are found 
+				 * below. */
 
     /*
      * Information maintained by tkWm.c for window manager communication.
@@ -770,6 +772,18 @@ typedef struct TkWindow {
      */
 
     struct TkWindowPrivate *privatePtr;
+
+    /*
+     * More information used by tkGeometry.c for geometry management.
+     */
+
+    /* The remaining fields of internal border. */
+    int internalBorderRight; 
+    int internalBorderTop;
+    int internalBorderBottom;
+    
+    int minReqWidth;		/* Minimum requested width. */
+    int minReqHeight;		/* Minimum requested height. */
 } TkWindow;
 
 /*
