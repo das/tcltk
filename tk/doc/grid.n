@@ -386,8 +386,8 @@ scrollbar .t.h \-orient horizontal \-command {.t.txt xview}
 \fBgrid\fR .t.txt .t.v \-sticky nsew
 \fBgrid\fR .t.h        \-sticky nsew
 # Tell the text widget to take all the extra room
-\fBgrid rowconfigure\fR    .t .t.txt -weight 1
-\fBgrid columnconfigure\fR .t .t.txt -weight 1
+\fBgrid rowconfigure\fR    .t 0 -weight 1
+\fBgrid columnconfigure\fR .t 0 -weight 1
 .CE
 .PP
 Three widgets of equal width, despite their different "natural" widths:
