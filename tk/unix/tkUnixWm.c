@@ -926,7 +926,8 @@ Tk_WmCmd(clientData, interp, argc, argv)
 	return TCL_ERROR;
     }
     wmPtr = winPtr->wmInfoPtr;
-    if ((c == 'a') && (strncmp(argv[1], "aspect", length) == 0)) {
+    if ((c == 'a') && (strncmp(argv[1], "aspect", length) == 0)
+	    && (length >= 2)) {
 	int numer1, denom1, numer2, denom2;
 
 	if ((argc != 3) && (argc != 7)) {
@@ -969,6 +970,13 @@ Tk_WmCmd(clientData, interp, argc, argv)
 	}
 	wmPtr->flags |= WM_UPDATE_SIZE_HINTS;
 	goto updateGeom;
+    } else if ((c == 'a') && (strncmp(argv[1], "attributes", length) == 0)
+	    && (length >= 2)) {
+	if (argc != 3) {
+	    Tcl_AppendResult(interp, "wrong # arguments: must be \"",
+		    argv[0], " attributes window\"", (char *) NULL);
+	    return TCL_ERROR;
+	}
     } else if ((c == 'c') && (strncmp(argv[1], "client", length) == 0)
 	    && (length >= 2)) {
 	if ((argc != 3) && (argc != 4)) {
@@ -2169,7 +2177,7 @@ Tk_WmCmd(clientData, interp, argc, argv)
 	}
     } else {
 	Tcl_AppendResult(interp, "unknown or ambiguous option \"", argv[1],
-		"\": must be aspect, client, command, deiconify, ",
+		"\": must be aspect, attributes, client, command, deiconify, ",
 		"focusmodel, frame, geometry, grid, group, iconbitmap, ",
 		"iconify, iconmask, iconname, iconposition, ",
 		"iconwindow, maxsize, minsize, overrideredirect, ",

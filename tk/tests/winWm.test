@@ -229,18 +229,25 @@ test winWm-5.2 {UpdateGeometryInfo: menu resizing} {pcOnly} {
     set result
 } {50 50 0}
 
+test winWm-6.1 {wm attributes} {pcOnly} {
+    destroy .t
+    toplevel .t
+    wm attributes .t
+} {-disabled 0 -toolwindow 0 -topmost 0}
+test winWm-6.2 {wm attributes} {pcOnly} {
+    destroy .t
+    toplevel .t
+    wm attributes .t -disabled
+} {0}
+test winWm-6.3 {wm attributes} {pcOnly} {
+    # This isn't quite the correct error message yet, but it works.
+    destroy .t
+    toplevel .t
+    list [catch {wm attributes .t -foo} msg] $msg
+} {1 {wrong # arguments: must be "wm attributes window ?-disabled ?bool?? ?-toolwindow ?bool?? ?-topmost ?bool??"}}
+
+destroy .t
+
 # cleanup
 ::tcltest::cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-

@@ -8,7 +8,7 @@
 '\" RCS: @(#) $Id$
 '\" 
 .so man.macros
-.TH wm n 4.3 Tk "Tk Built-In Commands"
+.TH wm n 8.4 Tk "Tk Built-In Commands"
 .BS
 '\" Note:  do not modify the .SH NAME line immediately below!
 .SH NAME
@@ -44,6 +44,30 @@ a Tcl list containing four elements, which are the current values
 of \fIminNumer\fR, \fIminDenom\fR, \fImaxNumer\fR, and \fImaxDenom\fR
 (if no aspect restrictions are in effect, then an empty string is
 returned).
+.VS 8.4
+.TP
+\fBwm attributes \fIwindow\fR
+.TP
+\fBwm attributes \fIwindow\fR ?\fBoption\fR?
+.TP
+\fBwm attributes \fIwindow\fR ?\fBoption value option value...\fR?
+.RS
+This subcommand returns or sets platform specific attributes associated
+with a window. The first form returns a list of the platform specific
+flags and their values. The second form returns the value for the
+specific option. The third form sets one or more of the values. The
+values are as follows:
+.PP
+On Windows, \fB-disabled\fR gets or sets whether the window is in a
+disabled state. \fB-toolwindow\fR gets or sets the style of the window
+to toolwindow (as defined in the MSDN). \fB-topmost\fR gets or sets
+whether this is a topmost window (displays above all other windows).
+.PP
+On Macintosh,
+.PP
+On Unix, there are currently no special attribute values.
+.RE
+.VE 8.4
 .TP
 \fBwm client \fIwindow\fR ?\fIname\fR?
 If \fIname\fR is specified, this command stores \fIname\fR (which
