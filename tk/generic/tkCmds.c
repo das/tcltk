@@ -1179,7 +1179,18 @@ Tk_WinfoObjCmd(clientData, interp, objc, objv)
 	    break;
 	}
 	case WIN_VIEWABLE: {
-	    Tcl_SetBooleanObj(resultPtr, Tk_IsViewable(tkwin));
+	    int viewable = 0;
+	    for ( ; ; winPtr = winPtr->parentPtr) {
+		if ((winPtr == NULL) || !(winPtr->flags & TK_MAPPED)) {
+		    break;
+		}
+		if (winPtr->flags & TK_TOP_LEVEL) {
+		    viewable = 1;
+		    break;
+		}
+	    }
+
+	    Tcl_SetBooleanObj(resultPtr, viewable);
 	    break;
 	}
 	case WIN_VISUAL: {
