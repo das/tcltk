@@ -726,13 +726,10 @@ ConsoleEventProc(clientData, eventPtr)
 {
     ConsoleInfo *info = (ConsoleInfo *) clientData;
     Tcl_Interp *consoleInterp;
-    Tcl_DString dString;
     
     if (eventPtr->type == DestroyNotify) {
 
-	Tcl_DStringInit(&dString);
-  
-	consoleInterp = info->consoleInterp;
+ 	consoleInterp = info->consoleInterp;
 
         /*
          * It is possible that the console interpreter itself has
@@ -743,12 +740,15 @@ ConsoleEventProc(clientData, eventPtr)
         
         if (consoleInterp == (Tcl_Interp *) NULL) {
             return;
-        }
-        Tcl_Preserve((ClientData) consoleInterp);
-	Tcl_DStringAppend(&dString, "::tk::ConsoleExit", -1);
-	Tcl_Eval(consoleInterp, Tcl_DStringValue(&dString));
-	Tcl_DStringFree(&dString);
-        Tcl_Release((ClientData) consoleInterp);
+        } else {
+	    Tcl_DString dString;
+	    Tcl_DStringInit(&dString);
+	    Tcl_Preserve((ClientData) consoleInterp);
+	    Tcl_DStringAppend(&dString, "::tk::ConsoleExit", -1);
+	    Tcl_Eval(consoleInterp, Tcl_DStringValue(&dString));
+	    Tcl_DStringFree(&dString);
+	    Tcl_Release((ClientData) consoleInterp);
+	}
     }
 }
 
