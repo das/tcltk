@@ -424,6 +424,14 @@ Tk_PanedWindowObjCmd(clientData, interp, objc, objv)
     }
 
     pwPtr->proxywin = Tk_CreateAnonymousWindow(interp, parent, (char *) NULL);
+    /*
+     * The proxy window has to be able to share GCs with the main
+     * panedwindow despite being children of windows with potentially
+     * different characteristics, and it looks better that way too.
+     * [Bug 702230]
+     */
+    Tk_SetWindowVisual(pwPtr->proxywin,
+	    Tk_Visual(tkwin), Tk_Depth(tkwin), Tk_Colormap(tkwin));
     Tk_CreateEventHandler(pwPtr->proxywin, ExposureMask, ProxyWindowEventProc,
 	    (ClientData) pwPtr);
 

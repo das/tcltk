@@ -2495,6 +2495,23 @@ test panedwindow-30.1 {display on depths other than the default one} {
     -cleanup {destroy .t}
     -result {}
 }
+test panedwindow-30.2 {display on depths other than the default one} {
+    -constraints {pseudocolor8 haveTruecolor24}
+    -body {
+	toplevel .t -visual {pseudocolor 8}
+	pack [frame .t.f -visual {truecolor 24}]
+	pack [panedwindow .t.f.p]
+	.t.f.p add [frame .t.f.p.f1 -width 5] [frame .t.f.p.f2 -width 5]
+	update
+	.t.f.p proxy place 1 1
+	update
+	.t.f.p proxy forget
+	update
+	# If we got here, we didn't crash and that's good
+    }
+    -cleanup {destroy .t}
+    -result {}
+}
 
 # cleanup
 ::tcltest::cleanupTests
