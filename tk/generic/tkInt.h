@@ -1171,6 +1171,11 @@ EXTERN void		TkCreateExitHandler _ANSI_ARGS_((Tcl_ExitProc *proc,
 EXTERN void		TkDeleteExitHandler _ANSI_ARGS_((Tcl_ExitProc *proc,
 			    ClientData clientData));
 EXTERN Tcl_ExitProc	TkFinalize;
+EXTERN void		TkPrintPadAmount _ANSI_ARGS_((Tcl_Interp *interp,
+			    char *buffer, int pad1, int pad2));
+EXTERN int		TkParsePadAmount _ANSI_ARGS_((Tcl_Interp *interp,
+			    Tk_Window tkwin, Tcl_Obj *objPtr,
+			    int *pad1Ptr, int *pad2Ptr));
 
 /* 
  * Unsupported commands.
