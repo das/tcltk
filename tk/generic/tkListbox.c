@@ -794,8 +794,15 @@ ListboxWidgetObjCmd(clientData, interp, objc, objv)
 	    if (result != TCL_OK) {
 		break;
 	    }
-	    Tcl_SetListObj(Tcl_GetObjResult(interp), (last - first + 1),
-		    &(elemPtrs[first]));
+	    if (objc == 3) {
+		/*
+		 * One element request - we return a string
+		 */
+		Tcl_SetObjResult(interp, elemPtrs[first]);
+	    } else {
+		Tcl_SetListObj(Tcl_GetObjResult(interp), (last - first + 1),
+			&(elemPtrs[first]));
+	    }
 	    result = TCL_OK;
 	    break;
 	}
