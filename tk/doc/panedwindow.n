@@ -144,7 +144,7 @@ those of the top left corner of the region containing the sash.
 .TP
 \fIpathName \fBsash dragto \fIindex x y\fR
 This command computes the difference between the given coordinates and the
-coordinates given to the last \fBsash coord\fR command for the given
+coordinates given to the last \fBsash mark\fR command for the given
 sash.  It then moves that sash the computed difference.  The return
 value is the empty string.
 .TP
