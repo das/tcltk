@@ -1782,6 +1782,7 @@ UpdateDisplayInfo(textPtr)
 		 * peer widget.
 		 */
 		lineNum = -1;
+		bytesToCount = 0; /* Stop compiler warning */
 	    } else {
 		lineNum = TkBTreeLinesTo(textPtr, dInfoPtr->dLinePtr->index.linePtr);
 		bytesToCount = dInfoPtr->dLinePtr->index.byteIndex;
