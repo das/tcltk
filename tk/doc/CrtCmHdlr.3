@@ -42,8 +42,8 @@ call \fBTk_HandleEvent\fR, such as \fBTk_DoOneEvent\fR or
 type \fBTk_ClientMessageProc\fR:
 .CS
 typedef int Tk_ClientMessageProc(
-	Tk_Window \fItkwin\fR,
-	XEvent *\fIeventPtr\fR);
+    Tk_Window \fItkwin\fR,
+    XEvent *\fIeventPtr\fR);
 .CE
 The \fItkwin\fR parameter to \fIproc\fR is the Tk window which is
 associated with this event.  \fIEventPtr\fR is a pointer to the X event.

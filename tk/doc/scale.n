@@ -117,7 +117,7 @@ of real values (determined by the \fBfrom\fR, \fBto\fR, and
 \fBresolution\fR options),
 and the position of the slider selects a particular real value.
 The slider's position (and hence the scale's value) may be adjusted
-with the mouse or keyboard as described in the BINDINGS
+with the mouse or keyboard as described in the \fBBINDINGS\fR
 section below.  Whenever the scale's value is changed, a Tcl
 command is invoked (using the \fBcommand\fR option) to notify
 other interested widgets of the change.

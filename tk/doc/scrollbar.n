@@ -78,7 +78,7 @@ between the two arrows, it means that the associated window displays
 the top third of its document.
 .PP
 Scrollbars can be used to adjust the view in the associated window
-by clicking or dragging with the mouse.  See the BINDINGS section
+by clicking or dragging with the mouse.  See the \fBBINDINGS\fR section
 below for details.
 
 .SH "ELEMENTS"

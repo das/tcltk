@@ -58,10 +58,10 @@ the selection.  The most common form is STRING.
 type \fBTk_SelectionProc\fR:
 .CS
 typedef int Tk_SelectionProc(
-	ClientData \fIclientData\fR,
-	int \fIoffset\fR,
-	char *\fIbuffer\fR,
-	int \fImaxBytes\fR);
+    ClientData \fIclientData\fR,
+    int \fIoffset\fR,
+    char *\fIbuffer\fR,
+    int \fImaxBytes\fR);
 .CE
 The \fIclientData\fR parameter to \fIproc\fR is a copy of the
 \fIclientData\fR argument given to \fBTk_CreateSelHandler\fR.

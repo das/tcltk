@@ -55,7 +55,7 @@ the user choose a filetype in the listbox, only the files of that type
 are listed. If this option is unspecified, or if it is set to the
 empty list, or if the \fBFile types\fR listbox is not supported by the
 particular platform then all files are listed regardless of their
-types. See the section SPECIFYING FILE PATTERNS below for a
+types. See the section \fBSPECIFYING FILE PATTERNS\fR below for a
 discussion on the contents of \fIfilePatternList\fR.
 .TP
 \fB\-initialdir\fR \fIdirectory\fR

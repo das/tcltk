@@ -28,7 +28,7 @@ on the \fIoption\fR argument:
 If the first argument to \fBgrid\fR is suitable as the first slave
 argument to \fBgrid configure\fR, either a window name (any value
 starting with \fB.\fP) or one of the characters \fBx\fP or \fB^\fP 
-(see the ``RELATIVE PLACEMENT'' section below), then the command is
+(see the \fBRELATIVE PLACEMENT\fR section below), then the command is
 processed in the same way as \fBgrid configure\fR.
 .VS 8.5
 .TP
@@ -92,7 +92,7 @@ followed by pairs of arguments that specify how
 to manage the slaves.
 The characters \fB\-\fP,  \fBx\fP and \fB^\fP, 
 can be specified instead of a window name to alter the default
-location of a \fIslave\fP, as described in the ``RELATIVE PLACEMENT''
+location of a \fIslave\fP, as described in the \fBRELATIVE PLACEMENT\fR
 section, below.
 The following options are supported:
 .RS

@@ -1263,7 +1263,7 @@ The following forms of the command are currently supported:
 Returns the value of a configuration option for an embedded image.
 \fIIndex\fR identifies the embedded image, and \fIoption\fR
 specifies a particular configuration option, which must be one of
-the ones listed in the section EMBEDDED IMAGES.
+the ones listed in the section \fBEMBEDDED IMAGES\fR.
 .TP
 \fIpathName \fBimage configure \fIindex\fR ?\fIoption value ...\fR?
 Query or modify the configuration options for an embedded image.
@@ -1750,7 +1750,7 @@ The following forms of the command are currently supported:
 Returns the value of a configuration option for an embedded window.
 \fIIndex\fR identifies the embedded window, and \fIoption\fR
 specifies a particular configuration option, which must be one of
-the ones listed in the section EMBEDDED WINDOWS.
+the ones listed in the section \fBEMBEDDED WINDOWS\fR.
 .TP
 \fIpathName \fBwindow configure \fIindex\fR ?\fIoption value ...\fR?
 Query or modify the configuration options for an embedded window.

@@ -45,9 +45,9 @@ The structure pointed to by \fImgrPtr\fR contains information about
 the geometry manager:
 .CS
 typedef struct {
-	char *\fIname\fR;
-	Tk_GeomRequestProc *\fIrequestProc\fR;
-	Tk_GeomLostSlaveProc *\fIlostSlaveProc\fR;
+    char *\fIname\fR;
+    Tk_GeomRequestProc *\fIrequestProc\fR;
+    Tk_GeomLostSlaveProc *\fIlostSlaveProc\fR;
 } Tk_GeomMgr;
 .CE
 The \fIname\fR field is the textual name for the geometry manager,
@@ -61,8 +61,8 @@ slave to change its desired geometry.
 type \fBTk_GeomRequestProc\fR:
 .CS
 typedef void Tk_GeomRequestProc(
-	ClientData \fIclientData\fR,
-	Tk_Window \fItkwin\fR);
+    ClientData \fIclientData\fR,
+    Tk_Window \fItkwin\fR);
 .CE
 The parameters to \fIrequestProc\fR will be identical to the
 corresponding parameters passed to \fBTk_ManageGeometry\fR.
@@ -84,8 +84,8 @@ is the same as the window's current geometry manager.
 arguments and results that match the following prototype:
 .CS
 typedef void Tk_GeomLostSlaveProc(
-	ClientData \fIclientData\fR,
-	Tk_Window \fItkwin\fR);
+    ClientData \fIclientData\fR,
+    Tk_Window \fItkwin\fR);
 .CE
 The parameters to \fIlostSlaveProc\fR will be identical to the
 corresponding parameters passed to \fBTk_ManageGeometry\fR.

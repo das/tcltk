@@ -221,9 +221,9 @@ argument gives a name for the bitmap;  it must not previously
 have been used in a call to \fBTk_DefineBitmap\fR.
 The arguments \fIsource\fR, \fIwidth\fR, and \fIheight\fR
 describe the bitmap.
-\fBTk_DefineBitmap\fR normally returns TCL_OK;  if an error occurs
+\fBTk_DefineBitmap\fR normally returns \fBTCL_OK\fR; if an error occurs
 (e.g. a bitmap named \fInameId\fR has already been defined) then
-TCL_ERROR is returned and an error message is left in
+\fBTCL_ERROR\fR is returned and an error message is left in
 \fIinterp->result\fR.
 Note:  \fBTk_DefineBitmap\fR expects the memory pointed to by
 \fIsource\fR to be static:  \fBTk_DefineBitmap\fR doesn't make
@@ -244,7 +244,7 @@ new bitmap named \fBfoo\fR:
 Pixmap bitmap;
 #include "stip.bitmap"
 Tk_DefineBitmap(interp, "foo", stip_bits,
-	stip_width, stip_height);
+    stip_width, stip_height);
 \&...
 bitmap = Tk_GetBitmap(interp, tkwin, "foo");
 .CE

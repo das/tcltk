@@ -109,13 +109,13 @@ The \fIchangeProc\fR and \fIclientData\fR arguments to
 in the image;  it must match the following prototype:
 .CS
 typedef void Tk_ImageChangedProc(
-	ClientData \fIclientData\fR,
-	int \fIx\fR,
-	int \fIy\fR,
-	int \fIwidth\fR,
-	int \fIheight\fR,
-	int \fIimageWidth\fR,
-	int \fIimageHeight\fR);
+    ClientData \fIclientData\fR,
+    int \fIx\fR,
+    int \fIy\fR,
+    int \fIwidth\fR,
+    int \fIheight\fR,
+    int \fIimageWidth\fR,
+    int \fIimageHeight\fR);
 .CE
 The \fIclientData\fR argument to \fIchangeProc\fR is the same as the
 \fIclientData\fR argument to \fBTk_GetImage\fR.

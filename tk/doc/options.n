@@ -252,7 +252,7 @@ communicate with the window manager so that when the user interactively
 resizes the top-level window that contains the widget, the dimensions of
 the window will be displayed to the user in grid units and the window
 size will be constrained to integral numbers of grid units.
-See the section GRIDDED GEOMETRY MANAGEMENT in the \fBwm\fR manual
+See the section \fBGRIDDED GEOMETRY MANAGEMENT\fR in the \fBwm\fR manual
 entry for more details.
 .OP \-takefocus takeFocus TakeFocus
 Determines whether the window accepts the focus during keyboard

@@ -87,9 +87,9 @@ coordinate (such as \fB2p\fR or \fB1.6c\fR) into a double-precision
 canvas coordinate.
 If \fIstring\fR is a valid coordinate description then \fBTk_CanvasGetCoord\fR
 stores the corresponding canvas coordinate at *\fIdoublePtr\fR
-and returns TCL_OK.
+and returns \fBTCL_OK\fR.
 Otherwise it stores an error message in \fIinterp->result\fR and
-returns TCL_ERROR.
+returns \fBTCL_ERROR\fR.
 .PP
 \fBTk_CanvasDrawableCoords\fR is called by type managers during
 redisplay to compute where to draw things.
@@ -146,14 +146,14 @@ structure for the \fB\-tags\fR option.   The code typically looks
 like this:
 .CS
 static Tk_CustomOption tagsOption = {Tk_CanvasTagsParseProc,
-	Tk_CanvasTagsPrintProc, (ClientData) NULL
+    Tk_CanvasTagsPrintProc, (ClientData) NULL
 };
 
 static Tk_ConfigSpec configSpecs[] = {
-	...
-	{TK_CONFIG_CUSTOM, "\-tags", (char *) NULL, (char *) NULL,
-		(char *) NULL, 0, TK_CONFIG_NULL_OK, &tagsOption},
-	...
+    ...
+    {TK_CONFIG_CUSTOM, "\-tags", (char *) NULL, (char *) NULL,
+        (char *) NULL, 0, TK_CONFIG_NULL_OK, &tagsOption},
+    ...
 };
 .CE
 

@@ -34,8 +34,8 @@ value converted from \fIstring\fR.
 These procedure parses the string and fills in the result in the
 Tk_Dash structure. The string can be a list of integers or a
 character string containing only \fB[.,-_]\fR or spaces. If all
-goes well, TCL_OK is returned. If \fIstring\fR doesn't have the
-proper syntax then TCL_ERROR is returned, an error message is left
+goes well, \fBTCL_OK\fR is returned. If \fIstring\fR doesn't have the
+proper syntax then \fBTCL_ERROR\fR is returned, an error message is left
 in the interpreter's result, and nothing is stored at *\fIdashPtr\fR.
 .PP
 The first possible syntax is a list of integers. Each element

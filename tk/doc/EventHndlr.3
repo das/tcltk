@@ -48,8 +48,8 @@ call \fBTk_HandleEvent\fR, such as \fBTk_DoOneEvent\fR or
 type \fBTk_EventProc\fR:
 .CS
 typedef void Tk_EventProc(
-	ClientData \fIclientData\fR,
-	XEvent *\fIeventPtr\fR);
+    ClientData \fIclientData\fR,
+    XEvent *\fIeventPtr\fR);
 .CE
 The \fIclientData\fR parameter to \fIproc\fR is a copy of the \fIclientData\fR
 argument given to \fBTk_CreateEventHandler\fR when the callback
