@@ -518,7 +518,8 @@ proc ::tk::MotifFDialog_Update {w} {
     upvar ::tk::dialog::file::[winfo name $w] data
 
     $data(fEnt) delete 0 end
-    $data(fEnt) insert 0 [::tk::dialog::file::JoinFile $data(selectPath) $data(filter)]
+    $data(fEnt) insert 0 \
+            [::tk::dialog::file::JoinFile $data(selectPath) $data(filter)]
     $data(sEnt) delete 0 end
     $data(sEnt) insert 0 [::tk::dialog::file::JoinFile $data(selectPath) \
 	    $data(selectFile)]
@@ -566,16 +567,19 @@ proc ::tk::MotifFDialog_LoadFiles {w} {
 	if {[file isdir ./$f]} {
 	    lappend dlist $f
 	} else {
-	    if {[string match $data(filter) $f]} {
+            foreach pat $data(filter) {
+                if {[string match $pat $f]} {
 		if {[string match .* $f]} {
 		    incr top
 		}
 		lappend flist $f
+                    break
 	    }
+            }
 	}
     }
-    eval $data(dList) insert end [lsort -dictionary $dlist]
-    eval $data(fList) insert end [lsort -dictionary $flist]
+    eval [list $data(dList) insert end] [lsort -dictionary $dlist]
+    eval [list $data(fList) insert end] [lsort -dictionary $flist]
 
     # The user probably doesn't want to see the . files. We adjust the view
     # so that the listbox displays all the non-dot files
