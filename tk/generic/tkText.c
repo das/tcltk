@@ -1716,12 +1716,13 @@ TextSearchCmd(textPtr, interp, argc, argv)
 	/*
 	 * Check for matches within the current line.  If so, and if we're
 	 * searching backwards, repeat the search to find the last match
-	 * in the line.
+	 * in the line.  (Note: The lastByte should include the NULL char
+	 * so we can handle searching for end of line easier.)
 	 */
 
 	matchByte = -1;
 	firstByte = 0;
-	lastByte = INT_MAX;
+	lastByte = Tcl_DStringLength(&line) + 1;
 	if (lineNum == startingLine) {
 	    int indexInDString;
 

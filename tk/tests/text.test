@@ -1279,6 +1279,19 @@ test text-23.1 {text widget vs hidden commands} {
     list [winfo children .] [interp hidden]
 } [list {} $l]
 
+test text-24.1 {bug fix - 1642} {
+    catch {destroy .t}
+    text .t
+    pack .t
+    .t insert end "line 1\n"
+    .t insert end "line 2\n"
+    .t insert end "line 3\n"
+    .t insert end "line 4\n"
+    .t insert end "line 5\n"
+    tkTextSetCursor .t 3.0
+    .t search -backward -regexp "\$" insert 1.0
+} {2.6}
+
 eval destroy [winfo child .]
 option clear
 
