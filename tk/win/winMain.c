@@ -173,6 +173,22 @@ Tcl_AppInit(interp)
 	    goto error;
 	}
     }
+#if defined(STATIC_BUILD) && defined(TCL_USE_STATIC_PACKAGES)
+    {
+	extern Tcl_PackageInitProc Registry_Init;
+	extern Tcl_PackageInitProc Dde_Init;
+
+	if (Registry_Init(interp) == TCL_ERROR) {
+	    return TCL_ERROR;
+	}
+	Tcl_StaticPackage(interp, "registry", Registry_Init, NULL);
+
+	if (Dde_Init(interp) == TCL_ERROR) {
+	    return TCL_ERROR;
+	}
+	Tcl_StaticPackage(interp, "dde", Dde_Init, NULL);
+   }
+#endif
 
 #ifdef TK_TEST
     if (Tktest_Init(interp) == TCL_ERROR) {
