@@ -690,6 +690,12 @@ TkWmDeadWindow(winPtr)
     if (wmPtr == NULL) {
 	return;
     }
+    if (wmPtr->title != NULL) {
+	ckfree(wmPtr->title);
+    }
+    if (wmPtr->iconName != NULL) {
+	ckfree(wmPtr->iconName);
+    }
     if (wmPtr->hints.flags & IconPixmapHint) {
 	Tk_FreeBitmap(winPtr->display, wmPtr->hints.icon_pixmap);
     }
