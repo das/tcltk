@@ -470,7 +470,7 @@ TkUnixDoOneXEvent(timePtr)
      */
 
     if (timePtr) {
-	TclpGetTime(&now);
+	Tcl_GetTime(&now);
 	blockTime.tv_sec = timePtr->sec;
 	blockTime.tv_usec = timePtr->usec - now.usec;
 	if (blockTime.tv_usec < 0) {
@@ -543,7 +543,7 @@ TkUnixDoOneXEvent(timePtr)
      */
 
     if (timePtr) {
-	TclpGetTime(&now);
+	Tcl_GetTime(&now);
 	if ((now.sec > timePtr->sec) || ((now.sec == timePtr->sec)
 		&& (now.usec > timePtr->usec))) {
 	    return 0;

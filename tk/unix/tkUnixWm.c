@@ -18,7 +18,6 @@
 #include "tkPort.h"
 #include "tkInt.h"
 #include "tkUnixInt.h"
-#include <errno.h>
 
 /*
  * A data structure of the following type holds information for
@@ -4425,7 +4424,7 @@ WaitForEvent(display, wmInfoPtr, type, eventPtr)
     oldRestrictProc = Tk_RestrictEvents(WaitRestrictProc, (ClientData) &info,
 	    &oldRestrictData);
 
-    TclpGetTime(&timeout);
+    Tcl_GetTime(&timeout);
     timeout.sec += 2;
 
     while (!info.foundEvent) {
