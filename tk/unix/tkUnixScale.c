@@ -500,7 +500,11 @@ DisplayHorizontalValue(scalePtr, drawable, value, top)
     if (x < (scalePtr->inset + SPACING)) {
 	x = scalePtr->inset + SPACING;
     }
-    if (x > (Tk_Width(tkwin) - scalePtr->inset)) {
+    /*
+     * Check the right border so use starting point +text width
+     * for the check.
+     */
+    if (x + width >= (Tk_Width(tkwin) - scalePtr->inset)) {
 	x = Tk_Width(tkwin) - scalePtr->inset - SPACING - width;
     }
     Tk_DrawChars(scalePtr->display, drawable, scalePtr->textGC,
