@@ -5193,14 +5193,23 @@ TkTextYviewCmd(textPtr, interp, objc, objv)
     switch (type) {
 	case TKTEXT_SCROLL_ERROR:
 	    return TCL_ERROR;
-	case TKTEXT_SCROLL_MOVETO:
+	case TKTEXT_SCROLL_MOVETO: {
+	    int numPixels = TkBTreeNumPixels(textPtr->tree);
+	    if (numPixels == 0) {
+		/* 
+		 * If the window is totally empty no scrolling is
+		 * needed, and the TkTextMakePixelIndex call
+		 * below will fail.
+		 */
+		break;
+	    }
 	    if (fraction > 1.0) {
 		fraction = 1.0;
 	    }
 	    if (fraction < 0) {
 		fraction = 0;
 	    }
-	    fraction *= (TkBTreeNumPixels(textPtr->tree)-1);
+	    fraction *= (numPixels - 1);
 	    /*
 	     * This function returns the number of pixels by which the
 	     * given line should overlap the top of the visible screen.
@@ -5211,6 +5220,7 @@ TkTextYviewCmd(textPtr, interp, objc, objv)
 		    (int) (0.5 + fraction), &index);
 	    TkTextSetYView(textPtr, &index, pixels);
 	    break;
+	}
 	case TKTEXT_SCROLL_PAGES: {
 	    /*
 	     * Scroll up or down by screenfuls.  Actually, use the

@@ -1002,6 +1002,10 @@ TkBTreeFindPixelLine(tree, pixels, pixelOffset)
 	return NULL;
     }
 
+    if (nodePtr->numPixels == 0) {
+	panic("TkBTreeFindPixelLine called with empty window");
+    }
+    
     /*
      * Work down through levels of the tree until a node is found at
      * level 0.
@@ -1012,7 +1016,7 @@ TkBTreeFindPixelLine(tree, pixels, pixelOffset)
 		nodePtr->numPixels <= pixelsLeft;
 		nodePtr = nodePtr->nextPtr) {
 	    if (nodePtr == NULL) {
-		panic("TkBTreeFindLine ran out of nodes");
+		panic("TkBTreeFindPixelLine ran out of nodes");
 	    }
 	    pixelsLeft -= nodePtr->numPixels;
 	}
@@ -1026,7 +1030,7 @@ TkBTreeFindPixelLine(tree, pixels, pixelOffset)
 	    linePtr->pixelHeight < pixelsLeft;
 	    linePtr = linePtr->nextPtr) {
 	if (linePtr == NULL) {
-	    panic("TkBTreeFindLine ran out of lines");
+	    panic("TkBTreeFindPixelLine ran out of lines");
 	}
 	pixelsLeft -= linePtr->pixelHeight;
     }

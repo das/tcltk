@@ -2929,6 +2929,24 @@ test text-27.4 {tabs - must be positive and must be increasing} {
     set result 1
 } {1}
 
+test text-28.0 {repeated insert and scroll} {
+    foreach subcmd {
+	{moveto 1}
+	{scroll 1 pages}
+	{scroll 100 pixels}
+	{scroll 10 units}
+    } {
+	destroy .t
+	pack [text .t]
+	for {set i 0} {$i < 30} {incr i} {
+	    .t insert end "blabla\n"
+	    eval .t yview $subcmd
+	}
+    }
+    # This test must simply not crash to succeed
+    set result 1
+} {1}
+
 deleteWindows
 option clear
 
