@@ -62,6 +62,14 @@ bind Scale <ButtonRelease-2> {
     tk::ScaleEndDrag %W
     tk::ScaleActivate %W %x %y
 }
+if {[string equal $tcl_platform(platform) "windows"]} {
+    # On Windows do the same with button 3, as that is the right mouse button
+    bind Scale <3>		[bind Scale <2>]
+    bind Scale <B3-Motion>	[bind Scale <B2-Motion>]
+    bind Scale <B3-Leave>	[bind Scale <B2-Leave>]
+    bind Scale <B3-Enter>	[bind Scale <B2-Enter>]
+    bind Scale <ButtonRelease-3> [bind Scale <ButtonRelease-2>]
+}
 bind Scale <Control-1> {
     tk::ScaleControlPress %W %x %y
 }
