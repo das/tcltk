@@ -1,7 +1,7 @@
 /* 
- * tkUnixInit.c --
+ * tkMacOSXInit.c --
  *
- *        This file contains Unix-specific interpreter initialization
+ *        This file contains Mac OS X -specific interpreter initialization
  *        functions.
  *
  * Copyright (c) 1995-1997 Sun Microsystems, Inc.
@@ -110,6 +110,7 @@ TkpInit(interp)
     	menusInitialized = true;
         Tk_MacOSXSetupTkNotifier();
         TkMacOSXInitAppleEvents(interp);
+        TkMacOSXInitCarbonEvents(interp);
         TkMacOSXInitMenus(interp);
         TkMacOSXUseAntialiasedText(interp, TRUE);
     }

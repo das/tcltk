@@ -66,7 +66,7 @@ TkSelGetSelection(
          * Get the scrap from the Macintosh global clipboard.
          */
          
-        err=GetCurrentScrap(&scrapRef);
+        err = GetCurrentScrap(&scrapRef);
         if (err != noErr) {
             Tcl_AppendResult(interp, Tk_GetAtomName(tkwin, selection),
                 " GetCurrentScrap failed.", (char *) NULL);
@@ -340,10 +340,11 @@ TkSuspendClipboard()
 
         ClearCurrentScrap();
         GetCurrentScrap(&scrapRef);
-        Tcl_UtfToExternalDString(TkMacOSXCarbonEncoding, buffer,
-		length, &encodedText);
-        PutScrapFlavor(scrapRef, 'TEXT', 0, Tcl_DStringLength(&encodedText),
-		Tcl_DStringValue(&encodedText));
+        Tcl_UtfToExternalDString(TkMacOSXCarbonEncoding, buffer, 
+                length, &encodedText);
+        PutScrapFlavor(scrapRef, 'TEXT', 0, 
+                Tcl_DStringLength(&encodedText), 
+                Tcl_DStringValue(&encodedText) );
         Tcl_DStringFree(&encodedText);
 
 	/*

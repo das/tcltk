@@ -152,6 +152,12 @@ extern Tcl_Encoding TkMacOSXCarbonEncoding;
 
 extern int TkMacOSXUseAntialiasedText(Tcl_Interp *interp, int enable);
 
+/* 
+ * FIXME: Put this into the decls file? 
+ */
+
+extern void TkMacOSXInitCarbonEvents (Tcl_Interp *interp);
+
 #include "tkIntPlatDecls.h"
 
 #endif /* _TKMACINT */
