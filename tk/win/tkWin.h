@@ -29,14 +29,14 @@
 #endif
 
 /*
- * The following messages are use to communicate between a Tk toplevel
+ * The following messages are used to communicate between a Tk toplevel
  * and its container window.
  */
 
-#define TK_CLAIMFOCUS	(WM_USER)
-#define TK_GEOMETRYREQ	(WM_USER+1)
-#define TK_ATTACHWINDOW	(WM_USER+2)
-#define TK_DETACHWINDOW	(WM_USER+3)
+#define TK_CLAIMFOCUS	(WM_USER)   /* an embedded window requests to focus */
+#define TK_GEOMETRYREQ	(WM_USER+1) /* an embedded window requests to change size */
+#define TK_ATTACHWINDOW	(WM_USER+2) /* an embedded window requests to attach */
+#define TK_DETACHWINDOW	(WM_USER+3) /* an embedded window requests to detach */
 
 
 /*
