@@ -715,6 +715,10 @@ declare 11 unix {
     void TkFreeXId (TkDisplay *dispPtr)
 }
 
+declare 12 unix {
+    int TkpWmSetState (TkWindow *winPtr, int state)
+}
+
 ############################
 # Windows specific functions
 

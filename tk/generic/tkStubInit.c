@@ -290,6 +290,7 @@ TkIntPlatStubs tkIntPlatStubs = {
     TkWmCleanup, /* 9 */
     TkSendCleanup, /* 10 */
     TkFreeXId, /* 11 */
+    TkpWmSetState, /* 12 */
 #endif /* UNIX */
 #ifdef __WIN32__
     TkAlignImageData, /* 0 */
