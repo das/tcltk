@@ -47,13 +47,14 @@ Each of the coordinates may be specified
 in any of the forms given in the COORDINATES section below.
 .OP \-state state State
 Modifies the default state of the canvas where \fIstate\fR may be set to
-one of: normal, disabled, or hidden. Individual canvas objects all have
-their own state option, which overrides the default state. Many options can
-take separate specifications such that the appearance of the item can be
-different in different situations. The options that start with "active"
-control the appearence when the mouse pointer is over it, while the option
-starting with "disabled" controls the appearence when the state is
-disabled.
+one of: \fBnormal\fR, \fBdisabled\fR, or \fBhidden\fR. Individual canvas
+objects all have their own state option which may override the default
+state.  Many options can take separate specifications such that the
+appearance of the item can be different in different situations. The
+options that start with \fBactive\fR control the appearence when the mouse
+pointer is over it, while the option starting with \fBdisabled\fR controls
+the appearence when the state is disabled.  Canvas items which are
+\fBdisabled\fR will not react to canvas bindings.
 .OP \-width width width
 Specifies a desired window width that the canvas widget should request from
 its geometry manager.  The value may be specified in any
