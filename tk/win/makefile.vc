@@ -546,13 +546,13 @@ $(TKSTUBLIB): $(TKSTUBOBJS)
 
 
 $(WISH): $(WISHOBJS) $(TKIMPLIB)
-	$(link32) $(guilflags) -out:$@ $(guilibs) $(TCLIMPLIB) $**
+	$(link32) $(guilflags) -stack:2300000 -out:$@ $(guilibs) $(TCLIMPLIB) $**
 
 $(WISHC): $(WISHOBJS) $(TKIMPLIB)
-	$(link32) $(conlflags) -out:$@ $(guilibs) $(TCLIMPLIB) $**
+	$(link32) $(conlflags) -stack:2300000 -out:$@ $(guilibs) $(TCLIMPLIB) $**
 
 $(TKTEST): $(TKTESTOBJS) $(TKIMPLIB)
-	$(link32) $(guilflags) -out:$@ $(guilibs) $(TCLIMPLIB) $**
+	$(link32) $(guilflags) -stack:2300000 -out:$@ $(guilibs) $(TCLIMPLIB) $**
 
 
 $(CAT32): $(_TCLDIR)\win\cat.c
