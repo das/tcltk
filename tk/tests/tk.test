@@ -7,9 +7,9 @@
 #
 # RCS: @(#) $Id$
 
-if {[lsearch [namespace children] ::tcltest] == -1} {
-    source [file join [pwd] [file dirname [info script]] defs.tcl]
-}
+package require tcltest 2.1
+namespace import -force tcltest::test
+eval tcltest::configure $argv
 
 test tk-1.1 {tk command: general} {
     list [catch {tk} msg] $msg
