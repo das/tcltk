@@ -53,7 +53,7 @@ static int		StringWritePPM _ANSI_ARGS_((Tcl_Interp *interp,
 			    Tcl_Obj *format, Tk_PhotoImageBlock *blockPtr));
 
 Tk_PhotoImageFormat tkImgFmtPPM = {
-    "PPM",			/* name */
+    "ppm",			/* name */
     FileMatchPPM,		/* fileMatchProc */
     NULL,			/* stringMatchProc */
     FileReadPPM,		/* fileReadProc */
