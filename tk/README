@@ -11,7 +11,7 @@ RCS: @(#) $Id$
 
 This directory contains the sources and documentation for Tk, an X11
 toolkit implemented with the Tcl scripting language.  The information
-here corresponds to release 8.2b1, which is the first beta for Tk 8.2.
+here corresponds to release 8.2b2, which is the first beta for Tk 8.2.
 
 For details on features, incompatibilities, and potential problems with
 this release, see the Tcl/Tk 8.2 Web page at

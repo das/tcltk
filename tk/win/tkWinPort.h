@@ -31,7 +31,16 @@
 #include <limits.h>
 #include <fcntl.h>
 #include <io.h>
+
+/*
+ * Need to block out this include for building extensions with MetroWerks
+ * compiler for Win32.
+ */
+
+#ifndef __MWERKS__
 #include <sys/stat.h>
+#endif
+
 #include <time.h>
 #include <tchar.h>
 
