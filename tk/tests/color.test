@@ -178,7 +178,7 @@ test color-1.4 {Tk_AllocColorFromObj - try other colors in list} {
 } {{{1 1}} {{1 1} {1 0}} {{1 0} {2 1}}}
 
 test color-2.1 {Tk_GetColor procedure} {
-    c255 [winfo rgb .t red]
+    c255 [winfo rgb .t #FF0000]
 } {255 0 0}
 test color-2.2 {Tk_GetColor procedure} {
     list [catch {winfo rgb .t noname} msg] $msg
