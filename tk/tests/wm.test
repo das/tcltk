@@ -293,14 +293,17 @@ test wm-stackorder-5.3 {An overrideredirect window
     wm stackorder .t isbelow .
 } 1
 
-
-deleteWindows
+test wm-stackorder-6.1 {An embedded toplevel does not
+        appear in the stacking order} {
+    deleteWindows
+    toplevel .real
+    toplevel .embd -bg blue -use [winfo id .real]
+    update
+    wm stackorder .
+} {. .real}
 
 
 # FIXME:
-
-# Need test cases for embedded Windows, they should not appear in
-# the stacking order since they are not actually toplevel Windows.
 
 # Test delivery of virtual events to the WM. We could check to see
 # if the window was raised after a button click for example.

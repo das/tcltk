@@ -3047,7 +3047,8 @@ TkWmStackorderToplevelWrapperMap(winPtr, table)
     WindowPeek wrapper;
     int newEntry;
 
-    if (Tk_IsMapped(winPtr) && Tk_IsTopLevel(winPtr)) {
+    if (Tk_IsMapped(winPtr) && Tk_IsTopLevel(winPtr) &&
+            !Tk_IsEmbedded(winPtr)) {
         wrapper = (WindowPeek) TkMacGetDrawablePort(winPtr->window);
 
         hPtr = Tcl_CreateHashEntry(table,

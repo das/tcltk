@@ -4335,7 +4335,8 @@ TkWmStackorderToplevelWrapperMap(winPtr, table)
     HWND wrapper;
     int newEntry;
 
-    if (Tk_IsMapped(winPtr) && Tk_IsTopLevel(winPtr)) {
+    if (Tk_IsMapped(winPtr) && Tk_IsTopLevel(winPtr) &&
+            !Tk_IsEmbedded(winPtr)) {
         wrapper = TkWinGetWrapperWindow((Tk_Window) winPtr);
 
         /*fprintf(stderr, "Mapped HWND %d to %x (%s)\n", wrapper,

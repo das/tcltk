@@ -4253,7 +4253,8 @@ TkWmStackorderToplevelWrapperMap(winPtr, table)
     Window wrapper;
     int newEntry;
 
-    if (Tk_IsMapped(winPtr) && Tk_IsTopLevel(winPtr)) {
+    if (Tk_IsMapped(winPtr) && Tk_IsTopLevel(winPtr) &&
+            !Tk_IsEmbedded(winPtr)) {
         wrapper = (winPtr->wmInfoPtr->reparent != None)
             ? winPtr->wmInfoPtr->reparent
             : winPtr->wmInfoPtr->wrapperPtr->window;
