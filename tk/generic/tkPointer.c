@@ -20,8 +20,13 @@
 #include "tkWinInt.h"
 #endif
 
-#ifdef MAC_TCL
+#if defined(MAC_TCL)
 #include "tkMacInt.h"
+#define Cursor XCursor
+#endif
+
+#if defined(MAC_OSX_TK)
+#include "tkMacOSXInt.h"
 #define Cursor XCursor
 #endif
 

@@ -42,6 +42,10 @@
 #include "tkMacInt.h"
 #endif
 
+#ifdef MAC_OSX_TK
+#include "tkMacOSXInt.h"
+#endif
+
 #include "tkDecls.h"
 #include "tkIntDecls.h"
 #include "tkPlatDecls.h"

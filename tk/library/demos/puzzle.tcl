@@ -54,8 +54,19 @@ pack $w.buttons.dismiss $w.buttons.code -side left -expand 1
 # scrollbar widget and using its trough color.
 
 scrollbar $w.s
-frame $w.frame -width 120 -height 120 -borderwidth 2 -relief sunken \
-	-bg [$w.s cget -troughcolor]
+
+# The button metrics are a bit bigger in Aqua, and since we are
+# using place which doesn't autosize, then we need to have a 
+# slightly larger frame here...
+
+if {[string equal [tk windowingsystem] aqua]} {
+    set frameSize 160
+} else {
+    set frameSize 120
+}
+
+frame $w.frame -width $frameSize -height $frameSize -borderwidth 2\
+	-relief sunken -bg [$w.s cget -troughcolor]
 pack $w.frame -side top -pady 1c -padx 1c
 destroy $w.s
 

@@ -49,10 +49,11 @@ proc ::tk::ConsoleInit {} {
 	wm withdraw .
     }
 
-    if {[string compare $tcl_platform(platform) "macintosh"]} {
-	set mod "Ctrl"
-    } else {
+    if {[string equal $tcl_platform(platform) "macintosh"]
+	    || [string equal [tk windowingsystem] "aqua"]} {
 	set mod "Cmd"
+    } else {
+	set mod "Ctrl"
     }
 
     if {[catch {menu .menubar} err]} { bgerror "INIT: $err" }
@@ -66,12 +67,13 @@ proc ::tk::ConsoleInit {} {
 	    -underline 0 -command {wm withdraw .}
     .menubar.file add command -label [mc "Clear Console"] \
 	    -underline 0 -command {.console delete 1.0 "promptEnd linestart"}
-    if {[string compare $tcl_platform(platform) "macintosh"]} {
-	.menubar.file add command -label [mc "Exit"] \
-		-underline 1 -command exit
-    } else {
+   if {[string equal $tcl_platform(platform) "macintosh"]
+	   || [string equal [tk windowingsystem] "aqua"]} {
 	.menubar.file add command -label [mc "Quit"] \
 		-command exit -accel Cmd-Q
+    } else {
+	.menubar.file add command -label [mc "Exit"] \
+		-underline 1 -command exit
     }
 
     menu .menubar.edit -tearoff 0
@@ -107,6 +109,11 @@ proc ::tk::ConsoleInit {} {
 	}
 	"windows" {
 	    $con configure -font systemfixed
+	}
+	"unix" {
+	    if {[string equal [tk windowingsystem] "aqua"]} {
+		$con configure -font {Monaco 9 normal} -highlightthickness 0
+	    }
 	}
     }
 

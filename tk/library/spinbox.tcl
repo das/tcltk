@@ -56,7 +56,7 @@ bind Spinbox <<Copy>> {
 bind Spinbox <<Paste>> {
     global tcl_platform
     catch {
-	if {$tcl_platform(platform) ne "unix"} {
+	if {[tk windowingsystem] ne "x11"} {
 	    catch {
 		%W delete sel.first sel.last
 	    }
@@ -212,7 +212,8 @@ bind Spinbox <Escape> {# nothing}
 bind Spinbox <Return> {# nothing}
 bind Spinbox <KP_Enter> {# nothing}
 bind Spinbox <Tab> {# nothing}
-if {[string equal $tcl_platform(platform) "macintosh"]} {
+if {[string equal [tk windowingsystem] "classic"]
+	|| [string equal [tk windowingsystem] "aqua"]} {
 	bind Spinbox <Command-KeyPress> {# nothing}
 }
 

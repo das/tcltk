@@ -17,8 +17,7 @@
 #-------------------------------------------------------------------------
 
 # Standard Motif bindings:
-if {[string compare $tcl_platform(platform) "windows"] && \
-	[string compare $tcl_platform(platform) "macintosh"]} {
+if {[string equal [tk windowingsystem] "x11"]} {
 
 bind Scrollbar <Enter> {
     if {$tk_strictMotif} {

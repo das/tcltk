@@ -47,7 +47,7 @@ menu .menuBar -tearoff 0
 menu .menuBar.file -tearoff 0
 
 # On the Mac use the specia .apple menu for the about item
-if {$tcl_platform(platform) == "macintosh"} {
+if {[string equal [tk windowingsystem] "classic"]} {
     .menuBar add cascade -menu .menuBar.apple
     menu .menuBar.apple -tearoff 0
     .menuBar.apple add command -label "About..." -command "aboutBox"

@@ -22,7 +22,7 @@
 #include "tkInt.h"
 #include "tkUndo.h"
 
-#ifdef MAC_TCL
+#if defined(MAC_TCL) || defined(MAC_OSX_TK)
 #define Style TkStyle
 #define DInfo TkDInfo
 #endif

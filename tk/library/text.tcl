@@ -276,7 +276,8 @@ bind Text <Meta-KeyPress> {# nothing}
 bind Text <Control-KeyPress> {# nothing}
 bind Text <Escape> {# nothing}
 bind Text <KP_Enter> {# nothing}
-if {[string equal $tcl_platform(platform) "macintosh"]} {
+if {[string equal [tk windowingsystem] "classic"]
+	|| [string equal [tk windowingsystem] "aqua"]} {
     bind Text <Command-KeyPress> {# nothing}
 }
 
@@ -393,7 +394,8 @@ bind Text <Meta-Delete> {
 # Macintosh only bindings:
 
 # if text black & highlight black -> text white, other text the same
-if {[string equal $tcl_platform(platform) "macintosh"]} {
+if {[string equal [tk windowingsystem] "classic"]
+	|| [string equal [tk windowingsystem] "aqua"]} {
 bind Text <FocusIn> {
     %W tag configure sel -borderwidth 0
     %W configure -selectbackground systemHighlight -selectforeground systemHighlightText
@@ -460,7 +462,7 @@ bind Text <MouseWheel> {
     %W yview scroll [expr {- (%D / 120) * 4}] units
 }
 
-if {[string equal "unix" $tcl_platform(platform)]} {
+if {[string equal "x11" [tk windowingsystem]]} {
     # Support for mousewheels on Linux/Unix commonly comes through mapping
     # the wheel to the extended buttons.  If you have a mousewheel, find
     # Linux configuration info at:
@@ -589,6 +591,7 @@ proc ::tk::TextSelectTo {w x y {extend 0}} {
 	$w tag remove sel 0.0 end
 	$w mark set insert $cur
 	$w tag add sel $first $last
+	$w tag remove sel $last end
 	update idletasks
     }
 }
@@ -998,7 +1001,7 @@ proc ::tk_textPaste w {
 	    $w configure -autoseparators 0
 	    $w edit separator
 	}
-	if {[string compare $tcl_platform(platform) "unix"]} {
+	if {[string compare [tk windowingsystem] "x11"]} {
 	    catch { $w delete sel.first sel.last }
 	}
 	$w insert insert $sel

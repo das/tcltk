@@ -3713,3 +3713,47 @@ TkDebugFont(tkwin, name)
     }
     return resultPtr;
 }
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkFontGetFirstTextLayout --
+ *
+ *	This procedure returns the first chunk of a Tk_TextLayout,
+ *	i.e. until the first font change on the first line (or the
+ *	whole first line if there is no such font change).
+ *
+ * Results:
+ *	The return value is the byte length of the chunk, the chunk
+ *	itself is copied into dst and its Tk_Font into font.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+int
+TkFontGetFirstTextLayout(
+    Tk_TextLayout layout,	/* Layout information, from a previous call
+				 * to Tk_ComputeTextLayout(). */
+    Tk_Font * font,
+    char    * dst)
+{
+    TextLayout  *layoutPtr;
+    LayoutChunk *chunkPtr;
+    int numBytesInChunk;
+
+    layoutPtr = (TextLayout *)layout;
+    if ((layoutPtr==NULL)
+            || (layoutPtr->numChunks==0)
+            || (layoutPtr->chunks->numDisplayChars <= 0)) {
+        dst[0] = '\0';
+        return 0;
+    }
+    chunkPtr = layoutPtr->chunks;
+    numBytesInChunk = chunkPtr->numBytes;
+    strncpy(dst, chunkPtr->start, numBytesInChunk);
+    *font = layoutPtr->tkfont;
+    return numBytesInChunk;
+}

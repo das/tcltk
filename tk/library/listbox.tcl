@@ -183,7 +183,7 @@ bind Listbox <MouseWheel> {
     %W yview scroll [expr {- (%D / 120) * 4}] units
 }
 
-if {[string equal "unix" $tcl_platform(platform)]} {
+if {[string equal "x11" [tk windowingsystem]]} {
     # Support for mousewheels on Linux/Unix commonly comes through mapping
     # the wheel to the extended buttons.  If you have a mousewheel, find
     # Linux configuration info at:
