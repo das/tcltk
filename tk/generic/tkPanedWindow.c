@@ -203,8 +203,12 @@ static char *	ComputeSlotAddress _ANSI_ARGS_((char *recordPtr, int offset));
 static int	PanedWindowIdentifyCoords _ANSI_ARGS_((PanedWindow *pwPtr,
 			Tcl_Interp *interp, int x, int y));
 
+/*
+ * Sashes are between panes only, so there is one less sash than slaves
+ */
+
 #define ValidSashIndex(pwPtr, sash) \
-	(((sash) >= 0) && ((sash) < (pwPtr)->numSlaves))
+	(((sash) >= 0) && ((sash) < ((pwPtr)->numSlaves-1)))
 
 static Tk_GeomMgr panedWindowMgrType = {
     "panedwindow",		/* name */
@@ -2239,7 +2243,6 @@ MoveSash(pwPtr, sash, diff)
 	/*
 	 * Growing the pane, at the expense of panes to the right.
 	 */
-
 
 	/*
 	 * First check that moving the sash the requested distance will not
