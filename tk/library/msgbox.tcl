@@ -369,6 +369,8 @@ proc ::tk::MessageBox {args} {
 
 	if {[string equal $name $data(-default)]} {
 	    $w.$name configure -default active
+	} else {
+	    $w.$name configure -default normal
 	}
 	pack $w.$name -in $w.bot -side left -expand 1 -padx 3m -pady 2m
 
