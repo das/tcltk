@@ -35,6 +35,11 @@ The current value can also be changed by setting the variable.
 The return value from \fBtk_optionMenu\fR is the name of the menu
 associated with \fIw\fR, so that the caller can change its configuration
 options or manipulate it in other ways.
+.SH EXAMPLE
+.CS
+tk_optionMenu .foo myVar Foo Bar Boo Spong Wibble
+pack .foo
+.CE
 
 .SH KEYWORDS
 option menu
