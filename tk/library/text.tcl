@@ -581,15 +581,9 @@ proc tkTextSelectTo {w x y {extend 0}} {
 	}
     }
     if {$tkPriv(mouseMoved) || [string compare $tkPriv(selectMode) "char"]} {
-	if {[string compare $tcl_platform(platform) "unix"] \
-		&& [$w compare $cur < anchor]} {
-	    $w mark set insert $first
-	} else {
-	    $w mark set insert $last
-	}
-	$w tag remove sel 0.0 $first
+	$w tag remove sel 0.0 end
+	$w mark set insert $cur
 	$w tag add sel $first $last
-	$w tag remove sel $last end
 	update idletasks
     }
 }

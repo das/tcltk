@@ -390,6 +390,9 @@ proc tkEntryMouseSelect {w x} {
 	    $w selection range 0 end
 	}
     }
+    if {$tkPriv(mouseMoved)} {
+        $w icursor $cur
+    }
     update idletasks
 }
 
