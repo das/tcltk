@@ -98,8 +98,11 @@ proc ::tk_setPalette {args} {
     # defaults are currently for this platform.
     toplevel .___tk_set_palette
     wm withdraw .___tk_set_palette
-    foreach q {button canvas checkbutton entry frame label listbox \
-	    menubutton menu message radiobutton scale scrollbar text} {
+    foreach q {
+	button canvas checkbutton entry frame label labelframe
+	listbox menubutton menu message radiobutton scale scrollbar
+	spinbox text
+    } {
 	$q .___tk_set_palette.$q
     }
 
@@ -150,14 +153,22 @@ proc ::tk_setPalette {args} {
 proc ::tk::RecolorTree {w colors} {
     upvar $colors c
     set result {}
+    set prototype .___tk_set_palette.[string tolower [winfo class $w]]
+    if {![winfo exists $prototype]} {
+	unset prototype
+    }
     foreach dbOption [array names c] {
 	set option -[string tolower $dbOption]
+	set class [string replace $dbOption 0 0 [string toupper \
+		[string index $dbOption 0]]]
 	if {![catch {$w config $option} value]} {
 	    # if the option database has a preference for this
 	    # dbOption, then use it, otherwise use the defaults
 	    # for the widget.
-	    set defaultcolor [option get $w $dbOption widgetDefault]
-	    if {[string match {} $defaultcolor]} {
+	    set defaultcolor [option get $w $dbOption $class]
+	    if {[string match {} $defaultcolor] || \
+		    ([info exists prototype] && \
+		    [$prototype cget $option] ne "$defaultcolor")} {
 		set defaultcolor [winfo rgb . [lindex $value 3]]
 	    } else {
 		set defaultcolor [winfo rgb . $defaultcolor]
