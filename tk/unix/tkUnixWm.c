@@ -4953,9 +4953,6 @@ CreateWrapper(wmPtr)
     wrapperPtr->mainPtr->refCount++;
     wrapperPtr->dirtyAtts = 0;
     wrapperPtr->dirtyChanges = 0;
-#ifdef TK_USE_INPUT_METHODS
-    wrapperPtr->inputContext = NULL;
-#endif /* TK_USE_INPUT_METHODS */
     wrapperPtr->wmInfoPtr = wmPtr;
 
     /*
