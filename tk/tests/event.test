@@ -650,7 +650,7 @@ test event-triple-click-drag-1.1 { Triple click and drag across lines in
 
 destroy .t
 
-unset keypress_lookup
+unset -nocomplain keypress_lookup
 rename _init_keypress_lookup {}
 rename _keypress_lookup {}
 rename _keypress {}
