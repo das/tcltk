@@ -1506,9 +1506,9 @@ proc ::tk::dialog::file::ActivateEnt {w} {
 	# space in the name.  Thus we query the IconList directly.
 
 	set data(selectFile) ""
-	foreach item [tkIconList_Curselection $data(icons)] {
+	foreach item [::tk::IconList_Curselection $data(icons)] {
 	    ::tk::dialog::file::VerifyFileName $w \
-		    [tkIconList_Get $data(icons) $item]
+		    [::tk::IconList_Get $data(icons) $item]
 	}
     } else {
 	::tk::dialog::file::VerifyFileName $w $text
