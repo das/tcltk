@@ -602,7 +602,7 @@ ConsoleCmd(clientData, interp, argc, argv)
 	} else {
 	    Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
 		    " eval command\"", (char *) NULL);
-	    return TCL_ERROR;
+	    result = TCL_ERROR;
 	}
     } else {
 	Tcl_AppendResult(interp, "bad option \"", argv[1],
