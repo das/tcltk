@@ -108,7 +108,9 @@ proc ::tk::SetFocusGrab {grab {focus {}}} {
     if {[winfo exists $oldGrab]} {
 	lappend data [grab status $oldGrab]
     }
-    grab $grab
+    # The "grab" command will fail if another application
+    # already holds the grab.  So catch it.
+    catch {grab $grab}
     if {[winfo exists $focus]} {
 	focus $focus
     }
