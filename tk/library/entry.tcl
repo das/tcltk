@@ -514,10 +514,8 @@ proc tkEntrySeeInsert w {
 	$w xview $c
 	return
     }
-    set x [winfo width $w]
-    while {([$w index @$x] <= $c) && ($left < $c)} {
-	incr left
-	$w xview $left
+    if {$c > [$w index @[winfo width $w]]} {
+	$w xview insert
     }
 }
 
