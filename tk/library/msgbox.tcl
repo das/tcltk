@@ -280,7 +280,7 @@ proc ::tk::MessageBox {args} {
 	    || [string equal [tk windowingsystem] "aqua"]} {
 	option add *Dialog.msg.font system widgetDefault
     } else {
-	option add *Dialog.msg.font {Times 18} widgetDefault
+	option add *Dialog.msg.font {Times 14} widgetDefault
     }
 
     label $w.msg -anchor nw -justify left -text $data(-message) \
