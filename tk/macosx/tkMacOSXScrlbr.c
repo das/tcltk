@@ -252,9 +252,14 @@ TkpDisplayScrollbar(
         procID = kControlScrollBarLiveProc;
 
         windowRef = GetWindowFromPort(destPort);
-        macScrollPtr->sbHandle = NewControl(windowRef, &r, "\p",
+        CreateScrollBarControl (windowRef, &r, initialValue,
+                                minValue, maxValue,
+                                maxValue - minValue, true,
+                                NULL, &(macScrollPtr->sbHandle));
+        
+        /* macScrollPtr->sbHandle = NewControl(windowRef, &r, "\p",
                 false, initialValue,minValue,maxValue,
-                procID, (SInt32) scrollPtr);
+                procID, (SInt32) scrollPtr); */
 
         /*
          * If we are foremost then make us active.
@@ -1056,20 +1061,24 @@ UpdateControlValues(
      */
     middle = scrollPtr->firstFraction / (scrollPtr->firstFraction +
             (1.0 - scrollPtr->lastFraction));
-    viewSize = (SInt32)((scrollPtr->lastFraction-scrollPtr->firstFraction) 
+    
+    viewSize = (SInt32) ((scrollPtr->lastFraction - scrollPtr->firstFraction) 
             * MAX_SCROLLBAR_DVALUE);
+    
     SetControlViewSize(macScrollPtr->sbHandle,viewSize);
     SetControlValue(macScrollPtr->sbHandle, 
             (short) (middle * MAX_SCROLLBAR_VALUE) );
-    contrlHilite=GetControlHilite(macScrollPtr->sbHandle);
+    contrlHilite = GetControlHilite(macScrollPtr->sbHandle);
+    SetControlMinimum(macScrollPtr->sbHandle, 0);
     if ( contrlHilite == 0 || contrlHilite == 255) {
         if (scrollPtr->firstFraction == 0.0 &&
                 scrollPtr->lastFraction == 1.0) {
-            HiliteControl(macScrollPtr->sbHandle,255);
+            SetControlMinimum(macScrollPtr->sbHandle, MAX_SCROLLBAR_VALUE);
         } else {
-            HiliteControl(macScrollPtr->sbHandle,0);
+            HiliteControl(macScrollPtr->sbHandle, 0);
         }
     }
+    
     if ( !IsControlVisible (macScrollPtr -> sbHandle) ) {
         SetControlVisibility(macScrollPtr->sbHandle,TRUE,FALSE);
     }
