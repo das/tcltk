@@ -281,13 +281,21 @@ proc ::tk::FDGetFileTypes {string} {
 
 	set name "$label ("
 	set sep ""
+	set doAppend 1
 	foreach ext $fileTypes($label) {
 	    if {[string equal $ext ""]} {
 		continue
 	    }
 	    regsub {^[.]} $ext "*." ext
 	    if {![info exists hasGotExt($label,$ext)]} {
-		append name $sep$ext
+		if {$doAppend} {
+		    if {[string length $sep] && [string length $name]>40} {
+			set doAppend 0
+			append name $sep...
+		    } else {
+			append name $sep$ext
+		    }
+		}
 		lappend exts $ext
 		set hasGotExt($label,$ext) 1
 	    }
