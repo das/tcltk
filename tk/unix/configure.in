@@ -5,7 +5,7 @@ dnl	to configure the system for the local environment.
 #
 # RCS: @(#) $Id$
 
-AC_INIT(../generic/tk.h)
+AC_INIT([tk],[8.5])
 AC_PREREQ(2.57)
 
 TK_VERSION=8.5
