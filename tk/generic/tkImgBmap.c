@@ -5,6 +5,7 @@
  *
  * Copyright (c) 1994 The Regents of the University of California.
  * Copyright (c) 1994-1997 Sun Microsystems, Inc.
+ * Copyright (c) 1999 by Scriptics Corporation.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -630,8 +631,10 @@ TkGetBitmapData(interp, string, fileName, widthPtr, heightPtr,
     return data;
 
     error:
-    Tcl_SetResult(interp, "format error in bitmap data", TCL_STATIC);
-
+    if (interp != NULL) {
+	Tcl_SetResult(interp, "format error in bitmap data", TCL_STATIC);
+    }
+    
     errorCleanup:
     if (data != NULL) {
 	ckfree(data);
