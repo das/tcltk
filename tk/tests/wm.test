@@ -653,6 +653,62 @@ test wm-state-2.17 {state change after map} {
 } {normal}
 
 
+test wm-maxsize-1.1 {usage} {
+    list [catch {wm maxsize} msg]  $msg
+} {1 {wrong # args: should be "wm option window ?arg ...?"}}
+
+test wm-maxsize-1.2 {usage} {
+    list [catch {wm maxsize . a} msg]  $msg
+} {1 {wrong # arguments: must be "wm maxsize window ?width height?"}}
+
+test wm-maxsize-1.3 {usage} {
+    list [catch {wm maxsize . a b c} msg]  $msg
+} {1 {wrong # arguments: must be "wm maxsize window ?width height?"}}
+
+test wm-maxsize-1.4 {usage} {
+    list [catch {wm maxsize . x 100} msg]  $msg
+} {1 {expected integer but got "x"}}
+
+test wm-maxsize-1.5 {usage} {
+    list [catch {wm maxsize . 100 bogus} msg]  $msg
+} {1 {expected integer but got "bogus"}}
+
+test wm-maxsize-1.6 {usage} {
+    wm maxsize .t 200 150
+    wm maxsize .t
+} {200 150}
+
+
+test wm-minsize-1.1 {usage} {
+    list [catch {wm minsize} msg]  $msg
+} {1 {wrong # args: should be "wm option window ?arg ...?"}}
+
+test wm-minsize-1.2 {usage} {
+    list [catch {wm minsize . a} msg]  $msg
+} {1 {wrong # arguments: must be "wm minsize window ?width height?"}}
+
+test wm-minsize-1.3 {usage} {
+    list [catch {wm minsize . a b c} msg]  $msg
+} {1 {wrong # arguments: must be "wm minsize window ?width height?"}}
+
+test wm-minsize-1.4 {usage} {
+    wm minsize .t
+} {1 1}
+
+test wm-minsize-1.5 {usage} {
+    list [catch {wm minsize . x 100} msg]  $msg
+} {1 {expected integer but got "x"}}
+
+test wm-minsize-1.6 {usage} {
+    list [catch {wm minsize . 100 bogus} msg]  $msg
+} {1 {expected integer but got "bogus"}}
+
+test wm-minsize-1.7 {usage} {
+    wm minsize .t 200 150
+    wm minsize .t
+} {200 150}
+
+
 # FIXME:
 
 # Test delivery of virtual events to the WM. We could check to see
