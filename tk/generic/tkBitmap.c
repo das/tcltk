@@ -1049,8 +1049,10 @@ BitmapInit(dispPtr)
 	 * machines.
 	 */
 
-	Tcl_InitHashTable(&dispPtr->bitmapIdTable, sizeof(Pixmap) 
-                /sizeof(int));
+	/*
+	 * The comment above doesn't make sense...
+	 */
+	Tcl_InitHashTable(&dispPtr->bitmapIdTable, TCL_ONE_WORD_KEYS);
     }
 }
 

@@ -383,6 +383,7 @@ Tk_GetCursorFromData(interp, tkwin, source, mask, width, height,
     cursorPtr->objRefCount = 0;
     cursorPtr->idHashPtr = Tcl_CreateHashEntry(&dispPtr->cursorIdTable, 
             (char *) cursorPtr->cursor, &new);
+
     if (!new) {
 	panic("cursor already registered in Tk_GetCursorFromData");
     }
@@ -796,8 +797,18 @@ CursorInit(dispPtr)
      * machines.
      */
 
-    Tcl_InitHashTable(&dispPtr->cursorIdTable, sizeof(Display *) 
-	    /sizeof(int));
+    /* 
+     *  Old code....
+     *     Tcl_InitHashTable(&dispPtr->cursorIdTable, sizeof(Display *) 
+     *                       /sizeof(int));
+     *
+     * The comment above doesn't make sense.
+     * However, XIDs should only be 32 bits, by the definition of X,
+     * so the code above causes Tk to crash.  Here is the real code:
+     */
+
+    Tcl_InitHashTable(&dispPtr->cursorIdTable, TCL_ONE_WORD_KEYS);
+
     dispPtr->cursorInit = 1;
 }
 

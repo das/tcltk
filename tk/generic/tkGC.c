@@ -338,5 +338,5 @@ GCInit(dispPtr)
 {
     dispPtr->gcInit = 1;
     Tcl_InitHashTable(&dispPtr->gcValueTable, sizeof(ValueKey)/sizeof(int));
-    Tcl_InitHashTable(&dispPtr->gcIdTable, sizeof(GC)/sizeof(int));
+    Tcl_InitHashTable(&dispPtr->gcIdTable, TCL_ONE_WORD_KEYS);
 }
