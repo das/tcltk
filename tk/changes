@@ -5053,6 +5053,7 @@ screens (hipp)
 
  * moved all private tk* commands and variables in the ::tk:: namespace
    [TIP #44] (porter)
+	*** POTENTIAL INCOMPATIBILITY ***
 
  * improved tests to better handle results on variant systems (hobbs)
 
