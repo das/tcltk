@@ -152,5 +152,8 @@ if {$filename != ""} {
 }
 .CE
 
+.SH "SEE ALSO"
+tk_chooseDirectory
+
 .SH KEYWORDS
 file selection dialog

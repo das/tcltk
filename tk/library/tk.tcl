@@ -254,6 +254,11 @@ if {[string equal [info commands tk_messageBox] ""]} {
 	return [eval tkMessageBox $args]
     }
 }
+if {[string equal [info command tk_chooseDirectory] ""]} {
+    proc tk_chooseDirectory {args} {
+	return [eval ::tkChooseDirectory::tk_chooseDirectory $args]
+    }
+}
 	
 #----------------------------------------------------------------------
 # Define the set of common virtual events.
