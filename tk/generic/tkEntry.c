@@ -3295,6 +3295,13 @@ EntryTextVarProc(clientData, interp, name1, name2, flags)
     Entry *entryPtr = (Entry *) clientData;
     CONST char *value;
 
+    if (entryPtr->flags & ENTRY_DELETED) {
+	/*
+	 * Just abort early if we entered here while being deleted.
+	 */
+	return (char *) NULL;
+    }
+
     /*
      * If the variable is unset, then immediately recreate it unless
      * the whole interpreter is going away.

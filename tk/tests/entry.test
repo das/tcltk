@@ -1588,6 +1588,16 @@ test entry-20.6 {widget deletion while active} {
     update idle
     winfo exists .e
 } 0
+test entry-20.7 {widget deletion with textvariable active} {
+    # SF bugs 607390 and 617446
+    destroy .e
+    set FOO init
+    entry .e -textvariable FOO -validate all \
+	    -vcmd {%W configure -bg white; format 1}
+    bind .e <Destroy> { set FOO hello }
+    destroy .e
+    winfo exists .e
+} 0
 
 # XXX Still need to write tests for EntryBlinkProc, EntryFocusProc,
 # and EntryTextVarProc.
