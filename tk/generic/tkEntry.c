@@ -321,23 +321,23 @@ static Tk_OptionSpec optionSpecs[] = {
         0, (ClientData) stateStrings, 0},
     {TK_OPTION_STRING, "-takefocus", "takeFocus", "TakeFocus",
 	DEF_ENTRY_TAKE_FOCUS, -1, Tk_Offset(Entry, takeFocus), 
-        TK_CONFIG_NULL_OK, 0, 0},
+        TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_STRING, "-textvariable", "textVariable", "Variable",
 	DEF_ENTRY_TEXT_VARIABLE, -1, Tk_Offset(Entry, textVarName),
-	TK_CONFIG_NULL_OK, 0, 0},
+	TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_STRING_TABLE, "-validate", "validate", "Validate",
        DEF_ENTRY_VALIDATE, -1, Tk_Offset(Entry, validate),
        0, (ClientData) validateStrings, 0},
     {TK_OPTION_STRING, "-validatecommand", "validateCommand", "ValidateCommand",
        (char *) NULL, -1, Tk_Offset(Entry, validateCmd),
-       TK_CONFIG_NULL_OK, 0, 0},
+       TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_SYNONYM, "-vcmd", (char *) NULL, (char *) NULL,
 	(char *) NULL, 0, -1, 0, (ClientData) "-validatecommand", 0},
     {TK_OPTION_INT, "-width", "width", "Width",
 	DEF_ENTRY_WIDTH, -1, Tk_Offset(Entry, prefWidth), 0, 0, 0},
     {TK_OPTION_STRING, "-xscrollcommand", "xScrollCommand", "ScrollCommand",
 	DEF_ENTRY_SCROLL_COMMAND, -1, Tk_Offset(Entry, scrollCmd),
-	TK_CONFIG_NULL_OK, 0, 0},
+	TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_END, (char *) NULL, (char *) NULL, (char *) NULL,
 	(char *) NULL, 0, -1, 0, 0, 0}
 };
@@ -575,21 +575,15 @@ Tk_EntryObjCmd(clientData, interp, objc, objv)
     Tk_CreateSelHandler(entryPtr->tkwin, XA_PRIMARY, XA_STRING,
 	    EntryFetchSelection, (ClientData) entryPtr, XA_STRING);
 
-    if (Tk_InitOptions(interp, (char *) entryPtr, optionTable, tkwin)
-	    != TCL_OK) {
+    if ((Tk_InitOptions(interp, (char *) entryPtr, optionTable, tkwin)
+	    != TCL_OK) ||
+	    (ConfigureEntry(interp, entryPtr, objc-2, objv+2, 0) != TCL_OK)) {
 	Tk_DestroyWindow(entryPtr->tkwin);
 	return TCL_ERROR;
-    }
-    if (ConfigureEntry(interp, entryPtr, objc-2, objv+2, 0) != TCL_OK) {
-	goto error;
     }
     
     Tcl_SetResult(interp, Tk_PathName(entryPtr->tkwin), TCL_STATIC);
     return TCL_OK;
-
-    error:
-    Tk_DestroyWindow(entryPtr->tkwin);
-    return TCL_ERROR;
 }
 
 /*

@@ -2448,7 +2448,7 @@ CanvasEventProc(clientData, eventPtr)
 	    canvasPtr->flags |= REDRAW_BORDERS;
 	}
     } else if (eventPtr->type == DestroyNotify) {
-	DestroyCanvas((ClientData) canvasPtr);
+	DestroyCanvas((char *) canvasPtr);
     } else if (eventPtr->type == ConfigureNotify) {
 	canvasPtr->flags |= UPDATE_SCROLLBARS;
 
