@@ -635,8 +635,8 @@ ComputeTextBbox(canvas, textPtr)
      * of the bounding box for the text item.
      */
 
-    leftX = (int) (textPtr->x + 0.5);
-    topY = (int) (textPtr->y + 0.5);
+    leftX = (int) floor(textPtr->x + 0.5);
+    topY = (int) floor(textPtr->y + 0.5);
     switch (textPtr->anchor) {
 	case TK_ANCHOR_NW:
 	case TK_ANCHOR_N:
