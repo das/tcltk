@@ -25,7 +25,6 @@
 #include "tkUnixInt.h"
 #endif
 
-
 /*
  * Forward declarations for procedures defined later in this file:
  */

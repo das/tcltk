@@ -107,7 +107,7 @@ static TkCmd commands[] = {
     {"font",		NULL,			Tk_FontObjCmd,		1, 1},
     {"grab",		Tk_GrabCmd,		NULL,			0, 1},
     {"grid",		Tk_GridCmd,		NULL,			1, 1},
-    {"image",		Tk_ImageCmd,		NULL,			1, 1},
+    {"image",		NULL,			Tk_ImageObjCmd,		1, 1},
     {"lower",		Tk_LowerCmd,		NULL,			1, 1},
     {"option",		Tk_OptionCmd,		NULL,			1, 1},
     {"pack",		Tk_PackCmd,		NULL,			1, 1},
@@ -268,7 +268,7 @@ CreateTopLevelWindow(interp, parent, name, screenName)
 	 */
     
 	Tk_CreatePhotoImageFormat(&tkImgFmtGIF);
-	Tk_CreatePhotoImageFormat(&tkImgFmtPPM);
+	Tk_CreateOldPhotoImageFormat(&tkImgFmtPPM);
 
 	/*
 	 * Create exit handler to delete all windows when the application

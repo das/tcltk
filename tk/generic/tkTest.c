@@ -16,6 +16,8 @@
  * RCS: @(#) $Id$
  */
 
+#define USE_OLD_IMAGE
+
 #include "tkInt.h"
 #include "tkPort.h"
 #include "tkText.h"
