@@ -310,3 +310,7 @@ dispsettings
 #
 # Now, wait for user actions...
 #
+
+# Local Variables:
+# mode: tcl
+# End:
