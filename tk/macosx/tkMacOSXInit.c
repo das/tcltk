@@ -173,11 +173,12 @@ TkpInit(interp)
                 Tcl_RegisterChannel(interp, Tcl_GetStdChannel(TCL_STDIN));
                 Tcl_RegisterChannel(interp, Tcl_GetStdChannel(TCL_STDOUT));
                 Tcl_RegisterChannel(interp, Tcl_GetStdChannel(TCL_STDERR));
-                if (Tk_CreateConsoleWindow(interp) == TCL_OK) {
-                    /* Only show the console if we don't have a startup script */
-                    if (TclGetStartupScriptPath() == NULL) {
-                        Tcl_Eval(interp, "console show");
-                    }
+                /* Only show the console if we don't have a startup script */
+                if (TclGetStartupScriptFileName() == NULL) {
+                    Tcl_SetVar(interp, "tcl_interactive", "1", TCL_GLOBAL_ONLY);
+                }
+                if (Tk_CreateConsoleWindow(interp) == TCL_ERROR) {
+                    return TCL_ERROR;
                 }
             }
         }
