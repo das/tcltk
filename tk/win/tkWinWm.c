@@ -1389,6 +1389,17 @@ Tk_WmCmd(clientData, interp, argc, argv)
                     ": it is an embedded window", (char *) NULL);
             return TCL_ERROR;
         }
+	/*
+	 * If WM_UPDATE_PENDING is true, a pending UpdateGeometryInfo may
+	 * need to be called first to update a withdrew toplevel's geometry
+	 * before it is deiconified by TkpWmSetState.
+	 * UpdateGeometryInfo has no effect on an iconified toplevel.
+	 */
+	if (wmPtr->flags & WM_UPDATE_PENDING) {
+	    Tcl_CancelIdleCall(UpdateGeometryInfo, (ClientData) winPtr);
+	    UpdateGeometryInfo((ClientData) winPtr);
+	}
+
 	TkpWmSetState(winPtr, NormalState);
 	/*
 	 * Follow Windows-like style here:
