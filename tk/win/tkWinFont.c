@@ -352,7 +352,7 @@ TkpGetFontFromAttributes(
     Window window;
     WinFont *fontPtr;
     char ***fontFallbacks;
-    char *faceName, *fallback, *actualName;
+    Tk_Uid faceName, fallback, actualName;
 
     tkwin   = (Tk_Window) ((TkWindow *) tkwin)->mainPtr->winPtr;
     window  = Tk_WindowId(tkwin);

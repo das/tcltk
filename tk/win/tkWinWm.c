@@ -3387,7 +3387,7 @@ WmIconbitmapCmd(tkwin, winPtr, interp, objc, objv)
     } else if (objc == 3) {
 	/* No arguments were given */
 	if (wmPtr->hints.flags & IconPixmapHint) {
-	    Tcl_SetResult(interp,
+	    Tcl_SetResult(interp, (char *)
 		    Tk_NameOfBitmap(winPtr->display, wmPtr->hints.icon_pixmap),
 		    TCL_STATIC);
 	}
@@ -3556,7 +3556,7 @@ WmIconmaskCmd(tkwin, winPtr, interp, objc, objv)
     }
     if (objc == 3) {
 	if (wmPtr->hints.flags & IconMaskHint) {
-	    Tcl_SetResult(interp,
+	    Tcl_SetResult(interp, (char *)
 		    Tk_NameOfBitmap(winPtr->display, wmPtr->hints.icon_mask),
 		    TCL_STATIC);
 	}
@@ -4503,7 +4503,7 @@ WmTitleCmd(tkwin, winPtr, interp, objc, objv)
 	return TCL_ERROR;
     }
     if (objc == 3) {
-	Tcl_SetResult(interp,
+	Tcl_SetResult(interp, (char *)
 		((wmPtr->title != NULL) ? wmPtr->title : winPtr->nameUid),
 		TCL_STATIC);
 	return TCL_OK;
@@ -5609,7 +5609,7 @@ TkWmProtocolEventProc(winPtr, eventPtr)
 	     * Cache atom name, as we might destroy the window as a
 	     * result of the eval.
 	     */
-	    char *name = Tk_GetAtomName((Tk_Window) winPtr, protocol);
+	    CONST char *name = Tk_GetAtomName((Tk_Window) winPtr, protocol);
 
 	    Tcl_Preserve((ClientData) protPtr);
             interp = protPtr->interp;
