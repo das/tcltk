@@ -339,8 +339,7 @@ test:	setup $(TKTEST) $(TKLIB) $(CAT32)
 	copy $(TCLDIR)\bin\pkgIndex.tcl $(OUTDIR)
 	set TCL_LIBRARY=$(TCLDIR)/library
 	$(TKTEST) << | $(CAT32)
-		cd ../tests
-		source all
+		source ../tests/all.tcl
 <<
 
 console-wish : all $(WISHC)
