@@ -379,6 +379,7 @@ else
     TK_BUILD_LIB_SPEC="-bI:`pwd`/${TK_BUILD_EXP_FILE}"
     TK_LIB_SPEC="-bI:${exec_prefix}/lib/${TK_EXP_FILE}"
 fi
+TK_SHARED_BUILD=${SHARED_BUILD}
 
 #--------------------------------------------------------------------
 # The statements below define various symbols relating to creating
