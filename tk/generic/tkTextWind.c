@@ -292,7 +292,7 @@ TkTextWindowCmd(textPtr, interp, objc, objv)
 	    if (EmbWinConfigure(textPtr, ewPtr, objc-4, objv+4) != TCL_OK) {
 		TkTextIndex index2;
 
-		TkTextIndexForwChars(&index, 1, &index2, COUNT_INDICES);
+		TkTextIndexForwChars(NULL,&index, 1, &index2, COUNT_INDICES);
 		TkBTreeDeleteChars(&index, &index2);
 		return TCL_ERROR;
 	    }

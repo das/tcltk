@@ -274,7 +274,7 @@ TkTextSetMark(textPtr, name, indexPtr)
 	if (markPtr == textPtr->insertMarkPtr) {
 	    TkTextIndex index, index2;
 	    TkTextMarkSegToIndex(textPtr, textPtr->insertMarkPtr, &index);
-	    TkTextIndexForwChars(&index, 1, &index2, COUNT_INDICES);
+	    TkTextIndexForwChars(NULL,&index, 1, &index2, COUNT_INDICES);
 	    /* 
 	     * While we wish to redisplay, no heights have changed, so
 	     * no need to call TkTextInvalidateLineMetrics.
@@ -282,7 +282,7 @@ TkTextSetMark(textPtr, name, indexPtr)
 	    TkTextChanged(textPtr, &index, &index2);
 	    if (TkBTreeLineIndex(indexPtr->linePtr)
 		    == TkBTreeNumLines(textPtr->tree))  {
-		TkTextIndexBackChars(indexPtr, 1, &insertIndex, COUNT_INDICES);
+		TkTextIndexBackChars(NULL,indexPtr, 1, &insertIndex, COUNT_INDICES);
 		indexPtr = &insertIndex;
 	    }
 	}
@@ -307,7 +307,7 @@ TkTextSetMark(textPtr, name, indexPtr)
     if (markPtr == textPtr->insertMarkPtr) {
 	TkTextIndex index2;
 
-	TkTextIndexForwChars(indexPtr, 1, &index2, COUNT_INDICES);
+	TkTextIndexForwChars(NULL,indexPtr, 1, &index2, COUNT_INDICES);
 	/* 
 	 * While we wish to redisplay, no heights have changed, so
 	 * no need to call TkTextInvalidateLineMetrics

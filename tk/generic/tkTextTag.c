@@ -176,7 +176,7 @@ TkTextTagCmd(textPtr, interp, objc, objv)
 		    }
 		} else {
 		    index2 = index1;
-		    TkTextIndexForwChars(&index2, 1, &index2, COUNT_INDICES);
+		    TkTextIndexForwChars(NULL,&index2, 1, &index2, COUNT_INDICES);
 		}
 
 		if (tagPtr->affectsDisplay) {
