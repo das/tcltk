@@ -2300,7 +2300,7 @@ test menu-26.1 {DestroyMenuHashTable} {
 test menu-27.1 {GetMenuHashTable} {
     catch {interp destroy testinterp}
     interp create testinterp
-    load {} tk testinterp
+    load {} Tk testinterp
     list [catch {interp eval testinterp {menu .m1}} msg] $msg [interp delete testinterp]
 } {0 .m1 {}}
 

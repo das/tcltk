@@ -572,7 +572,7 @@ test focus-6.1 {miscellaneous - embedded application in same process} \
     bind all <FocusOut> {lappend x "focus out %W %d"}
     interp create child
     child eval "set argv {-use [winfo id .t.f1]}"
-    load {} tk child
+    load {} Tk child
     child eval {
 	entry .e1 -bg lightBlue
 	pack .e1
