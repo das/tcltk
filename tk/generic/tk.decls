@@ -703,7 +703,7 @@ declare 142 generic {
 
 declare 143 generic {
     int Tk_ParseArgv (Tcl_Interp *interp, \
-	    Tk_Window tkwin, int *argcPtr, CONST char **argv, \
+	    Tk_Window tkwin, int *argcPtr, CONST84 char **argv, \
 	    Tk_ArgvInfo *argTable, int flags)
 }
 

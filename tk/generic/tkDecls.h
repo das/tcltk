@@ -507,7 +507,7 @@ EXTERN void		Tk_OwnSelection _ANSI_ARGS_((Tk_Window tkwin,
 /* 143 */
 EXTERN int		Tk_ParseArgv _ANSI_ARGS_((Tcl_Interp * interp, 
 				Tk_Window tkwin, int * argcPtr, 
-				CONST char ** argv, Tk_ArgvInfo * argTable, 
+				CONST84 char ** argv, Tk_ArgvInfo * argTable, 
 				int flags));
 /* 144 */
 EXTERN void		Tk_PhotoPutBlock _ANSI_ARGS_((Tk_PhotoHandle handle, 
@@ -998,7 +998,7 @@ typedef struct TkStubs {
     char * (*tk_NameOfRelief) _ANSI_ARGS_((int relief)); /* 140 */
     Tk_Window (*tk_NameToWindow) _ANSI_ARGS_((Tcl_Interp * interp, CONST char * pathName, Tk_Window tkwin)); /* 141 */
     void (*tk_OwnSelection) _ANSI_ARGS_((Tk_Window tkwin, Atom selection, Tk_LostSelProc * proc, ClientData clientData)); /* 142 */
-    int (*tk_ParseArgv) _ANSI_ARGS_((Tcl_Interp * interp, Tk_Window tkwin, int * argcPtr, CONST char ** argv, Tk_ArgvInfo * argTable, int flags)); /* 143 */
+    int (*tk_ParseArgv) _ANSI_ARGS_((Tcl_Interp * interp, Tk_Window tkwin, int * argcPtr, CONST84 char ** argv, Tk_ArgvInfo * argTable, int flags)); /* 143 */
     void (*tk_PhotoPutBlock) _ANSI_ARGS_((Tk_PhotoHandle handle, Tk_PhotoImageBlock * blockPtr, int x, int y, int width, int height)); /* 144 */
     void (*tk_PhotoPutZoomedBlock) _ANSI_ARGS_((Tk_PhotoHandle handle, Tk_PhotoImageBlock * blockPtr, int x, int y, int width, int height, int zoomX, int zoomY, int subsampleX, int subsampleY)); /* 145 */
     int (*tk_PhotoGetImage) _ANSI_ARGS_((Tk_PhotoHandle handle, Tk_PhotoImageBlock * blockPtr)); /* 146 */
