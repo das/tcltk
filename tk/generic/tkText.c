@@ -905,9 +905,25 @@ TextWidgetObjCmd(clientData, interp, objc, objv)
 		     * Caution: we must NEVER call TkTextUpdateOneLine
 		     * with the last artificial line in the widget.
 		     */
-		    while (fromPtr != indexToPtr->linePtr) {
-			value += TkTextUpdateOneLine(textPtr, fromPtr, 0, NULL);
-			fromPtr = TkBTreeNextLine(textPtr, fromPtr);
+		    index = *indexFromPtr;
+		    while (index.linePtr != indexToPtr->linePtr) {
+			value += TkTextUpdateOneLine(textPtr, fromPtr, 
+						     0, &index, 0);
+			/* 
+			 * We might have skipped past indexToPtr, if we
+			 * have multiple logical lines in a single
+			 * display line.  Therefore we iterate through
+			 * each intermediate logical line, just to
+			 * check.  Another approach would be just to use
+			 * TkTextIndexCmp on every while() iteration,
+			 * but that would be less efficient.
+			 */
+			while (fromPtr != index.linePtr) {
+			    fromPtr = TkBTreeNextLine(textPtr, fromPtr);
+			    if (fromPtr == indexToPtr->linePtr) {
+			        break;
+			    }
+			}
 		    }
 		    /* 
 		     * Now we need to adjust the count to add on the
