@@ -604,7 +604,6 @@ TkpSetKeycodeAndState(
 {
     if (keysym == NoSymbol) {
         eventPtr->xkey.keycode = 0;
-        eventPtr->xkey.state = 0;
     } else {
         Display *display = Tk_Display(tkwin);
         int macKeycode = XKeysymToMacKeycode(display, keysym);
@@ -620,7 +619,6 @@ TkpSetKeycodeAndState(
         }
         eventPtr->xkey.keycode |= (macKeycode & MAC_KEYCODE_MASK) << 16;
 
-        eventPtr->xkey.state = 0;
         if (shiftKey & macKeycode) {
             eventPtr->xkey.state |= ShiftMask;
         }
