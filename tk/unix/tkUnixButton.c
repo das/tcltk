@@ -395,11 +395,7 @@ TkpComputeButtonGeometry(butPtr)
     register TkButton *butPtr;	/* Button whose geometry may have changed. */
 {
     int width, height, avgWidth;
-    int length;
-    char *text;
     Tk_FontMetrics fm;
-
-    text = Tcl_GetStringFromObj(butPtr->textPtr, &length);
 
     butPtr->inset = butPtr->highlightWidth + butPtr->borderWidth;
 
@@ -433,9 +429,10 @@ TkpComputeButtonGeometry(butPtr)
 	goto imageOrBitmap;
     } else {
 	Tk_FreeTextLayout(butPtr->textLayout);
+
 	butPtr->textLayout = Tk_ComputeTextLayout(butPtr->tkfont,
-		 text, length, butPtr->wrapLength, butPtr->justify, 0,
-		&butPtr->textWidth, &butPtr->textHeight);
+		Tcl_GetString(butPtr->textPtr), -1, butPtr->wrapLength,
+		butPtr->justify, 0, &butPtr->textWidth, &butPtr->textHeight);
 
 	width = butPtr->textWidth;
 	height = butPtr->textHeight;

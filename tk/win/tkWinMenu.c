@@ -1733,11 +1733,13 @@ DrawMenuUnderline(
 {
     if (mePtr->underline >= 0) {
 	char *label = Tcl_GetStringFromObj(mePtr->labelPtr, NULL);
+	char *start = Tcl_UtfAtIndex(label, mePtr->underline);
+	char *end = Tcl_UtfNext(start);
 
     	Tk_UnderlineChars(menuPtr->display, d,
     		gc, tkfont, label, x + mePtr->indicatorSpace,
     		y + (height + fmPtr->ascent - fmPtr->descent) / 2, 
-		mePtr->underline, mePtr->underline + 1);
+		start - label, end - label);
     }		
 }
 

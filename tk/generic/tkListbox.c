@@ -24,7 +24,7 @@
  */
 
 typedef struct Element {
-    int textLength;		/* # non-NULL characters in text. */
+    int textLength;		/* # non-NULL bytes in text string. */
     int lBearing;		/* Distance from first character's
 				 * origin to left edge of character. */
     int pixelWidth;		/* Total width of element in pixels (including

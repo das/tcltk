@@ -679,7 +679,7 @@ TkpGetSubFonts(interp, tkfont)
  *	the characters.
  *
  * Results:
- *	The return value is the number of characters from source that
+ *	The return value is the number of bytes from source that
  *	fit into the span that extends from 0 to maxLength.  *lengthPtr is
  *	filled with the x-coordinate of the right edge of the last
  *	character that did fit.

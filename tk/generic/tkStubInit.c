@@ -598,6 +598,8 @@ TkIntXlibStubs tkIntXlibStubs = {
     XFilterEvent, /* 78 */
     XmbLookupString, /* 79 */
     TkPutImage, /* 80 */
+    NULL, /* 81 */
+    XParseColor, /* 82 */
 #endif /* __WIN32__ */
 #ifdef MAC_TCL
     NULL, /* 0 */
@@ -658,6 +660,7 @@ TkIntXlibStubs tkIntXlibStubs = {
     XUngrabPointer, /* 55 */
     XUnmapWindow, /* 56 */
     TkPutImage, /* 57 */
+    XParseColor, /* 58 */
 #endif /* MAC_TCL */
 };
 

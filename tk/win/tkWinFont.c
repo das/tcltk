@@ -567,13 +567,13 @@ TkpGetSubFonts(
  *
  *  Tk_MeasureChars --
  *
- *	Determine the number of characters from the string that will fit
+ *	Determine the number of bytes from the string that will fit
  *	in the given horizontal span.  The measurement is done under the
  *	assumption that Tk_DrawChars() will be used to actually display
  *	the characters.
  *
  * Results:
- *	The return value is the number of characters from source that
+ *	The return value is the number of bytes from source that
  *	fit into the span that extends from 0 to maxLength.  *lengthPtr is
  *	filled with the x-coordinate of the right edge of the last
  *	character that did fit.

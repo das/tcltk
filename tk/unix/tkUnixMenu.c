@@ -803,6 +803,8 @@ DrawMenuUnderline(menuPtr, mePtr, d, gc, tkfont, fmPtr, x, y, width, height)
 	int activeBorderWidth;
 	int leftEdge;
 	char *label = Tcl_GetStringFromObj(mePtr->labelPtr, NULL);
+	char *start = Tcl_UtfAtIndex(label, mePtr->underline);
+	char *end = Tcl_UtfNext(start);
 
 	Tk_GetPixelsFromObj(NULL, menuPtr->tkwin,
 		menuPtr->activeBorderWidthPtr, &activeBorderWidth);
@@ -810,10 +812,10 @@ DrawMenuUnderline(menuPtr, mePtr, d, gc, tkfont, fmPtr, x, y, width, height)
 	if (menuPtr->menuType == MENUBAR) {
 	    leftEdge += 5;
 	}
-	
+
 	Tk_UnderlineChars(menuPtr->display, d, gc, tkfont, label,
     		leftEdge, y + (height + fmPtr->ascent - fmPtr->descent) / 2,
-		mePtr->underline, mePtr->underline + 1);
+		start - label, end - label);
     }		
 }
 
@@ -903,7 +905,7 @@ GetTearoffEntryGeometry(menuPtr, mePtr, tkfont, fmPtr, widthPtr, heightPtr)
 	*widthPtr = 0;
     } else {
 	*heightPtr = fmPtr->linespace;
-	*widthPtr = Tk_TextWidth(tkfont, "W", -1);
+	*widthPtr = Tk_TextWidth(tkfont, "W", 1);
     }
 }
 
