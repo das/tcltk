@@ -2202,7 +2202,8 @@ UpdateWrapper(winPtr)
     wmPtr->hints.initial_state = WithdrawnState;
     if (nextHWND) {
 	SetWindowPos(wmPtr->wrapper, nextHWND, 0, 0, 0, 0,
-		SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE|SWP_NOSENDCHANGING);
+		SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE|SWP_NOSENDCHANGING
+		|SWP_NOOWNERZORDER);
     }
     TkpWmSetState(winPtr, state);
 
