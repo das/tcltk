@@ -32,16 +32,14 @@
 # The code below creates the default class bindings for entries.
 #-------------------------------------------------------------------------
 bind Entry <<Cut>> {
-    if {![catch {set data [string range [%W get] [%W index sel.first]\
-	    [expr {[%W index sel.last] - 1}]]}]} {
+    if {![catch {set data [tkEntryGetSelection %W]}]} {
 	clipboard clear -displayof %W
 	clipboard append -displayof %W $data
 	%W delete sel.first sel.last
     }
 }
 bind Entry <<Copy>> {
-    if {![catch {set data [string range [%W get] [%W index sel.first]\
-	    [expr {[%W index sel.last] - 1}]]}]} {
+    if {![catch {set data [tkEntryGetSelection %W]}]} {
 	clipboard clear -displayof %W
 	clipboard append -displayof %W $data
     }
@@ -608,3 +606,18 @@ proc tkEntryPreviousWord {w start} {
     return $pos
 }
 
+# tkEntryGetSelection --
+#
+# Returns the selected text of the entry with respect to the -show option.
+#
+# Arguments:
+# w -         The entry window from which the text to get
+
+proc tkEntryGetSelection {w} {
+    set entryString [string range [$w get] [$w index sel.first] \
+                       [expr [$w index sel.last] - 1]]
+    if {[$w cget -show] != ""} {
+      regsub -all . $entryString [string index [$w cget -show] 0] entryString
+    }
+    return $entryString
+}
