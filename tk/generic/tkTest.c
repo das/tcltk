@@ -222,7 +222,6 @@ static void		TrivialEventProc _ANSI_ARGS_((ClientData clientData,
  */
 
 extern int		TkplatformtestInit _ANSI_ARGS_((Tcl_Interp *interp));
-extern int              TclThread_Init _ANSI_ARGS_((Tcl_Interp *interp));
 
 #if !(defined(__WIN32__) || defined(MAC_TCL))
 #define TkplatformtestInit(x) TCL_OK
@@ -299,12 +298,6 @@ Tktest_Init(interp)
 	    (ClientData) Tk_MainWindow(interp), (Tcl_CmdDeleteProc *) NULL);
 #endif
 
-#ifdef TCL_THREADS
-    if (TclThread_Init(interp) != TCL_OK) {
-	return TCL_ERROR;
-    }
-#endif
-    
     /*
      * Create test image type.
      */

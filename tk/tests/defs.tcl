@@ -31,7 +31,7 @@ namespace eval tcltest {
     set procList [list test cleanupTests dotests saveState restoreState \
 	    normalizeMsg makeFile removeFile makeDirectory removeDirectory \
 	    viewFile bytestring set_iso8859_1_locale restore_locale \
-	    safeFetch threadReap]
+	    safeFetch]
     if {[info exists tk_version]} {
 	lappend procList setupbg dobg bgReady cleanupbg fixfocus
     }
@@ -92,12 +92,6 @@ namespace eval tcltest {
 
     array set ::tcltest::skippedBecause {}
 
-    # tests that use thread need to know which is the main thread
-
-    variable ::tcltest::mainThread 1
-    if {[info commands testthread] != {}} {
-	set ::tcltest::mainThread [testthread names]
-    }
 }
 
 # If there is no "memory" command (because memory debugging isn't
@@ -1061,37 +1055,6 @@ if {[info exists tk_version]} {
 	focus -force .focus.e
 	destroy .focus
     }
-}
-
-# threadReap --
-#
-#	Kill all threads except for the main thread.
-#	Do nothing if testthread is not defined.
-#
-# Arguments:
-#	none.
-#
-# Results:
-#	Returns the number of existing threads.
-
-if {[info commands testthread] != {}} {
-    proc ::tcltest::threadReap {} {
-	testthread errorproc ThreadNullError
-	while {[llength [testthread names]] > 1} {
-	    foreach tid [testthread names] {
-		if {$tid != $::tcltest::mainThread} {
-		    catch {testthread send -async $tid {testthread exit}}
-		    update
-		}
-	    }
-	}
-	testthread errorproc ThreadError
-	return [llength [testthread names]]
-    }
-} else {
-    proc ::tcltest::threadReap {} {
-	return 1
-    }   
 }
 
 # Need to catch the import because it fails if defs.tcl is sourced
