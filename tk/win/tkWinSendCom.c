@@ -22,6 +22,12 @@
 
 #include "tkWinSendCom.h"
 
+#ifdef _MSC_VER
+#   pragma comment (lib, "ole32.lib")
+#   pragma comment (lib, "oleaut32.lib")
+#   pragma comment (lib, "uuid.lib")
+#endif
+
 /*
  * ----------------------------------------------------------------------
  * Non-public prototypes.
