@@ -3893,13 +3893,8 @@ WmIconwindowCmd(tkwin, winPtr, interp, objc, objv)
 	wmPtr->icon = tkwin2;
 	wmPtr2->iconFor = (Tk_Window) winPtr;
 	if (!(wmPtr2->flags & WM_NEVER_MAPPED)) {
-	    if (XWithdrawWindow(Tk_Display(tkwin2), Tk_WindowId(tkwin2),
-		    Tk_ScreenNumber(tkwin2)) == 0) {
-		Tcl_SetResult(interp,
-			"couldn't send withdraw message to window manager",
-			TCL_STATIC);
-		return TCL_ERROR;
-	    }
+	    wmPtr2->flags |= WM_WITHDRAWN;
+	    TkpWmSetState(((TkWindow *) tkwin2), WithdrawnState);
 	}
     }
     return TCL_OK;
