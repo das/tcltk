@@ -315,7 +315,7 @@ typedef struct TkWmInfo {
  * Window styles for various types of toplevel windows.
  */
 
-#define WM_OVERRIDE_STYLE (WS_POPUP|WS_CLIPCHILDREN|CS_DBLCLKS)
+#define WM_OVERRIDE_STYLE (WS_CHILD|WS_CLIPCHILDREN|WS_CLIPSIBLINGS|CS_DBLCLKS)
 #define EX_OVERRIDE_STYLE (WS_EX_TOOLWINDOW)
 
 #define WM_TOPLEVEL_STYLE (WS_OVERLAPPEDWINDOW|WS_CLIPCHILDREN|CS_DBLCLKS)
@@ -1848,6 +1848,7 @@ UpdateWrapper(winPtr)
 	if (winPtr->atts.override_redirect) {
 	    wmPtr->style = WM_OVERRIDE_STYLE;
 	    wmPtr->exStyle = EX_OVERRIDE_STYLE;
+	    parentHWND = GetDesktopWindow();
 	} else if (wmPtr->masterPtr) {
 	    wmPtr->style = WM_TRANSIENT_STYLE;
 	    wmPtr->exStyle = EX_TRANSIENT_STYLE;
@@ -2055,6 +2056,13 @@ UpdateWrapper(winPtr)
 	ckfree((char *) childStateInfo);
     }
 
+    /*
+     * To keep the standard Tk behavior, we must raise override_redirected 
+     * window manually
+     */
+    if (winPtr->atts.override_redirect) {
+	TkWinSetWindowPos(wmPtr->wrapper, NULL, Above);
+    } 
     /*
      * If this is the first window created by the application, then
      * we should activate the initial window.
