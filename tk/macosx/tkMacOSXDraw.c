@@ -76,7 +76,7 @@ TkMacOSXInitCGDrawing(interp, enable, limit)
         
         if (Tcl_LinkVar(interp, "::tk::mac::CGAntialiasLimit",
                 (char *) &tkMacOSXCGAntiAliasLimit, 
-                TCL_LINK_BOOLEAN) != TCL_OK) {
+                TCL_LINK_INT) != TCL_OK) {
             Tcl_ResetResult(interp);
         }
         tkMacOSXCGAntiAliasLimit = limit;
