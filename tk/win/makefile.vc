@@ -568,6 +568,7 @@ genstubs:
 !if !exist($(TCLSH))
 	@echo Build tclsh first!
 !else
+	set TCL_LIBRARY=$(TCL_LIBRARY)
 	$(TCLSH) $(_TCLDIR)\tools\genStubs.tcl $(GENERICDIR) \
 		$(GENERICDIR)\$(PROJECT).decls $(GENERICDIR)\$(PROJECT)Int.decls
 !endif
@@ -581,6 +582,7 @@ depend:
 !if !exist($(TCLSH))
 	@echo Build tclsh first!
 !else
+	set TCL_LIBRARY=$(TCL_LIBRARY)
 	$(TCLSH) $(TOOLSDIR:\=/)/mkdepend.tcl -vc32 -out:"$(OUT_DIR)\depend.mk" \
 		-passthru:"-DBUILD_tcl $(TK_INCLUDES:"="")" $(GENERICDIR) \
 		$(COMPATDIR) $(WINDIR) @<<

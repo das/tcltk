@@ -823,7 +823,7 @@ declare 27 win {
 }
 
 declare 28 win {
-    void  TkWinXCleanup (HINSTANCE hInstance)
+    void  TkWinXCleanup (ClientData clientData)
 }
 
 declare 29 win {
