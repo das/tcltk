@@ -1637,7 +1637,7 @@ TextPeerCmd(textPtr, interp, objc, objv)
 	return TCL_ERROR;
     }
     
-    switch ((enum editOptions)index) {
+    switch ((enum peerOptions)index) {
 	case PEER_CREATE: {
 	    if (objc < 4) {
 		Tcl_WrongNumArgs(interp, 3, objv, "pathName ?options?");
