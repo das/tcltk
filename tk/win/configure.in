@@ -30,6 +30,12 @@ fi
 # be fully tested by built-in autoconf tools.
 #--------------------------------------------------------------------
  
+# If the user did not set CFLAGS, set it now to keep
+# the AC_PROG_CC macro from adding "-g -O2".
+if test "${CFLAGS+set}" != "set" ; then
+    CFLAGS=""
+fi
+
 SC_ENABLE_GCC
 #AC_PROG_CC
 

@@ -370,8 +370,8 @@ setargv(argcPtr, argvPtr)
     *argcPtr = argc;
     *argvPtr = argv;
 }
-
 
+#if !defined(__GNUC__) || defined(TK_TEST)
 /*
  *----------------------------------------------------------------------
  *
@@ -420,4 +420,4 @@ int main(int argc, char **argv)
     Tk_Main(argc, argv, Tcl_AppInit);
     return 0;
 }
-
+#endif /* !__GNUC__ || TK_TEST */
