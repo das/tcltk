@@ -198,6 +198,7 @@ static EncodingAlias encodingAliases[] = {
  * Procedures used only in this file.
  */
 
+static void		FontPkgCleanup _ANSI_ARGS_((ClientData clientData));
 static FontFamily *	AllocFontFamily _ANSI_ARGS_((Display *display,
 			    XFontStruct *fontStructPtr, int base));
 static SubFont *	CanUseFallback _ANSI_ARGS_((UnixFont *fontPtr,
@@ -262,6 +263,44 @@ static int		UtfToUcs2beProc _ANSI_ARGS_((ClientData clientData,
 /*
  *-------------------------------------------------------------------------
  *
+ * FontPkgCleanup --
+ *
+ *	This procedure is called when an application is created.  It
+ *	initializes all the structures that are used by the
+ *	platform-dependent code on a per application basis.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	Releases thread-specific resources used by font pkg.
+ *
+ *-------------------------------------------------------------------------
+ */
+
+static void
+FontPkgCleanup(ClientData clientData)
+{
+    ThreadSpecificData *tsdPtr = (ThreadSpecificData *) 
+            Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
+    
+    if (tsdPtr->controlFamily.encoding != NULL) {
+	FontFamily *familyPtr = &tsdPtr->controlFamily;
+	int i;
+
+	Tcl_FreeEncoding(familyPtr->encoding);
+	for (i = 0; i < FONTMAP_PAGES; i++) {
+	    if (familyPtr->fontMap[i] != NULL) {
+		ckfree(familyPtr->fontMap[i]);
+	    }
+	}
+	tsdPtr->controlFamily.encoding = NULL;
+    }
+}
+
+/*
+ *-------------------------------------------------------------------------
+ *
  * TkpFontPkgInit --
  *
  *	This procedure is called when an application is created.  It
@@ -318,6 +357,7 @@ TkpFontPkgInit(mainPtr)
 	type.clientData		= NULL;
 	type.nullSize		= 2;
 	Tcl_CreateEncoding(&type);
+	Tcl_CreateThreadExitHandler(FontPkgCleanup, NULL);
     }
 }
 
