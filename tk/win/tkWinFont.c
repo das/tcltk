@@ -4,8 +4,9 @@
  *	Contains the Windows implementation of the platform-independant
  *	font package interface.
  *
- * Copyright (c) 1995-1997 Sun Microsystems, Inc.
  * Copyright (c) 1994 Software Research Associates, Inc. 
+ * Copyright (c) 1995-1997 Sun Microsystems, Inc.
+ * Copyright (c) 1998-1999 by Scriptics Corporation.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.

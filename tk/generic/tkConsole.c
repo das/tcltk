@@ -415,12 +415,14 @@ ConsoleCmd(clientData, interp, argc, argv)
 	Tcl_Eval(consoleInterp, Tcl_DStringValue(&dString));
 	Tcl_DStringFree(&dString);
     } else if ((c == 'h') && (strncmp(argv[1], "hide", length)) == 0) {
-	Tcl_Eval(info->consoleInterp, "wm withdraw .");
+	Tcl_Eval(consoleInterp, "wm withdraw .");
     } else if ((c == 's') && (strncmp(argv[1], "show", length)) == 0) {
-	Tcl_Eval(info->consoleInterp, "wm deiconify .");
+	Tcl_Eval(consoleInterp, "wm deiconify .");
     } else if ((c == 'e') && (strncmp(argv[1], "eval", length)) == 0) {
 	if (argc == 3) {
-	    Tcl_Eval(info->consoleInterp, argv[2]);
+	    result = Tcl_Eval(consoleInterp, argv[2]);
+	    Tcl_AppendResult(interp, Tcl_GetStringResult(consoleInterp),
+		    (char *) NULL);
 	} else {
 	    Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
 		    " eval command\"", (char *) NULL);
@@ -482,6 +484,7 @@ InterpreterCmd(clientData, interp, argc, argv)
     } else if ((c == 'r') && (strncmp(argv[1], "record", length)) == 0) {
    	Tcl_RecordAndEval(otherInterp, argv[2], TCL_EVAL_GLOBAL);
 	result = TCL_OK;
+	Tcl_ResetResult(interp);
     	Tcl_AppendResult(interp, otherInterp->result, (char *) NULL);
     } else {
 	Tcl_AppendResult(interp, "bad option \"", argv[1],

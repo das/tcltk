@@ -30,3 +30,8 @@ test main-1.1 {StdinProc} {unixOnly} {
     file delete -force script
     list $error $msg
 } {0 {}}
+
+#
+# Clean up.
+#
+catch {removeFile script}

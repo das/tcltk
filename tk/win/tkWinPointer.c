@@ -4,6 +4,7 @@
  *	Windows specific mouse tracking code.
  *
  * Copyright (c) 1995-1997 Sun Microsystems, Inc.
+ * Copyright (c) 1998-1999 by Scriptics Corporation.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -236,6 +237,31 @@ MouseTimerProc(clientData)
 
     GetCursorPos(&pos);
     Tk_PointerEvent(NULL, pos.x, pos.y);
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkWinCancelMouseTimer --
+ *
+ *    If the mouse timer is set, cancel it.
+ *
+ * Results:
+ *    None.
+ *
+ * Side effects:
+ *    May cancel the mouse timer.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TkWinCancelMouseTimer()
+{
+    if (mouseTimerSet) {
+	Tcl_DeleteTimerHandler(mouseTimer);
+	mouseTimerSet = 0;
+    }
 }
 
 /*

@@ -8,6 +8,7 @@
  *
  * Copyright (c) 1993-1994 The Regents of the University of California.
  * Copyright (c) 1994-1997 Sun Microsystems, Inc.
+ * Copyright (c) 1998-1999 by Scriptics Corporation.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -201,7 +202,7 @@ static void		TrivialEventProc _ANSI_ARGS_((ClientData clientData,
  * External (platform specific) initialization routine:
  */
 
-EXTERN int		TkplatformtestInit _ANSI_ARGS_((
+extern int		TkplatformtestInit _ANSI_ARGS_((
 			    Tcl_Interp *interp));
 #if !(defined(__WIN32__) || defined(MAC_TCL))
 #define TkplatformtestInit(x) TCL_OK

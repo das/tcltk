@@ -63,6 +63,23 @@ else
     CFLAGS_WARNING=""
 fi
 
+#------------------------------------------------------------------------------
+# If we're using GCC, see if the compiler understands -pipe.  If so, use it.
+# It makes compiling go faster.  (This is only a performance feature.)
+#------------------------------------------------------------------------------
+
+if test -z "$no_pipe"; then
+if test -n "$GCC"; then
+  AC_MSG_CHECKING([if the compiler understands -pipe])
+  OLDCC="$CC"  
+  CC="$CC -pipe"
+  AC_TRY_COMPILE(,,
+    AC_MSG_RESULT(yes),
+    CC="$OLDCC"
+    AC_MSG_RESULT(no))
+fi  
+fi
+
 #--------------------------------------------------------------------
 #	See if there was a command-line option for where Tcl is;  if
 #	not, assume that its top-level directory is a sibling of ours.
@@ -280,7 +297,18 @@ fi
 # variable LIB_RUNTIME_DIR.
 
 eval "TK_CC_SEARCH_FLAGS=\"$TCL_LD_SEARCH_FLAGS\""
-TK_LD_SEARCH_FLAGS=`echo ${TK_CC_SEARCH_FLAGS} |sed -e "s|-Wl,||g" -e "s|,| |g"`
+
+# The following case handles the differences between linking with "ld"
+# and the compiler
+
+case $SHLIB_LD in
+    *ld*)
+      TK_LD_SEARCH_FLAGS=`echo ${TK_CC_SEARCH_FLAGS} |sed -e "s|-Wl,||g" -e "s|,| |g"`
+      ;;
+    *)
+      TK_LD_SEARCH_FLAGS="${TK_CC_SEARCH_FLAGS}"
+      ;;
+esac
 
 #--------------------------------------------------------------------
 #	Check for the existence of various libraries.  The order here
