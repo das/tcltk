@@ -810,7 +810,7 @@ Tk_WmCmd(
 	    && (length >= 3)) {
 	TkWindow **cmapList;
 	TkWindow *winPtr2;
-	int i, windowArgc, gotToplevel;
+	int i, windowArgc, gotToplevel = 0;
 	char **windowArgv;
 
 	if ((argc != 3) && (argc != 4)) {
