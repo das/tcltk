@@ -139,9 +139,6 @@ proc ::tk::dialog::error::bgerror err {
     wm iconname .bgerrorDialog ErrorDialog
     wm protocol .bgerrorDialog WM_DELETE_WINDOW { }
 
-    # The following, though surprising, works.
-    wm transient .bgerrorDialog .bgerrorDialog
-
     if {$tcl_platform(platform) eq "macintosh"} {
 	::tk::unsupported::MacWindowStyle style .bgerrorDialog dBoxProc
     }
