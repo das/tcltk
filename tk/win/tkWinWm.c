@@ -3800,6 +3800,13 @@ WmIconifyCmd(tkwin, winPtr, interp, objc, objv)
 	Tcl_WrongNumArgs(interp, 2, objv, "window");
 	return TCL_ERROR;
     }
+    if (winPtr->flags & TK_EMBEDDED) {
+	if(!SendMessage(wmPtr->wrapper, TK_ICONIFY, 0, 0)) {
+	    Tcl_AppendResult(interp, "can't iconify ", winPtr->pathName,
+		": the container does not support the request", (char *) NULL);
+	    return TCL_ERROR;
+	}
+    }
     if (Tk_Attributes((Tk_Window) winPtr)->override_redirect) {
 	Tcl_AppendResult(interp, "can't iconify \"", winPtr->pathName,
 		"\": override-redirect flag is set", (char *) NULL);
@@ -3815,13 +3822,6 @@ WmIconifyCmd(tkwin, winPtr, interp, objc, objv)
 		": it is an icon for ", Tk_PathName(wmPtr->iconFor),
 		(char *) NULL);
 	return TCL_ERROR;
-    }
-    if (winPtr->flags & TK_EMBEDDED) {
-	if(!SendMessage(wmPtr->wrapper, TK_ICONIFY, 0, 0)) {
-	    Tcl_AppendResult(interp, "can't iconify ", winPtr->pathName,
-		": the container does not support the request", (char *) NULL);
-	    return TCL_ERROR;
-	}
     }
     TkpWmSetState(winPtr, IconicState);
     return TCL_OK;
@@ -7985,5 +7985,6 @@ void TkpWinToplevelDetachWindow(winPtr)
         wmPtr->wrapper = None;
 	if(state >= 0 && state <= 3) wmPtr->hints.initial_state = state;
     }
-    TkpWinToplevelOverrideRedirect(winPtr, 1);
+    if(winPtr->flags & TK_TOP_LEVEL)
+	TkpWinToplevelOverrideRedirect(winPtr, 1);
 }

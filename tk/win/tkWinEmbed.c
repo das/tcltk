@@ -171,7 +171,8 @@ TkpUseWindow(interp, tkwin, string)
     if(strcmp(string, "") == 0) {
 	if(winPtr->flags & TK_EMBEDDED) {
 	    TkpWinToplevelDetachWindow(winPtr);
-	    TkpWinToplevelOverrideRedirect(winPtr, 0);
+	    if(winPtr->flags & TK_TOP_LEVEL)
+		TkpWinToplevelOverrideRedirect(winPtr, 0);
 	}
 	return TCL_OK;
     }
@@ -277,7 +278,11 @@ TkpUseWindow(interp, tkwin, string)
     winPtr->flags |= TK_EMBEDDED;
     winPtr->flags &= (~(TK_MAPPED));
 
-    Tcl_DoWhenIdle(TkWmMapWindow, (ClientData)winPtr);
+    if(winPtr->flags & TK_TOP_LEVEL) {
+	// call this function in idle may crash because the window
+	// may be destroyed in script
+	TkWmMapWindow(winPtr);
+    }
 
     return TCL_OK;
 }
