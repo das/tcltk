@@ -17,7 +17,6 @@
 #include "tkPort.h"
 #include "tkInt.h"
 #include "tkText.h"
-#include <tclInt.h>
 
 /*
  * Index to use to select last character in line (very large integer):
@@ -2041,7 +2040,7 @@ StartEnd(textPtr, string, indexPtr)
 	    int chSize = 1;
 	    if (segPtr->typePtr == &tkTextCharType) {
 		Tcl_UniChar ch;
-		chSize = TclUtfToUniChar(segPtr->body.chars + offset, &ch);
+		chSize = Tcl_UtfToUniChar(segPtr->body.chars + offset, &ch);
 		if (!Tcl_UniCharIsWordChar(ch)) {
 		    break;
 		}
@@ -2083,7 +2082,7 @@ StartEnd(textPtr, string, indexPtr)
 	    int chSize = 1;
 	    if (segPtr->typePtr == &tkTextCharType) {
 		Tcl_UniChar ch;
-		TclUtfToUniChar(segPtr->body.chars + offset, &ch);
+		Tcl_UtfToUniChar(segPtr->body.chars + offset, &ch);
 		if (!Tcl_UniCharIsWordChar(ch)) {
 		    break;
 		}
