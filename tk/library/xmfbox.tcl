@@ -103,7 +103,16 @@ proc tkMotifFDialog_Create {dataName type argList} {
     } elseif {[string compare [winfo class $w] TkMotifFDialog]} {
 	destroy $w
 	tkMotifFDialog_BuildUI $w
+    } else {
+	set data(fEnt) $w.top.f1.ent
+	set data(dList) $w.top.f2.a.l
+	set data(fList) $w.top.f2.b.l
+	set data(sEnt) $w.top.f3.ent
+	set data(okBtn) $w.bot.ok
+	set data(filterBtn) $w.bot.filter
+	set data(cancelBtn) $w.bot.cancel
     }
+
     wm transient $w $data(-parent)
 
     tkMotifFDialog_Update $w
