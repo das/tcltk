@@ -198,6 +198,10 @@ proc tkCheckRadioEnter w {
     if {[string compare [$w cget -state] "disabled"] \
 	    && [string equal $tkPriv(buttonWindow) $w]} {
 	$w configure -state active
+	if { [string compare [$w cget -overrelief] ""] } {
+	    set tkPriv(relief) [$w cget -relief]
+	    $w configure -relief [$w cget -overrelief]
+	}
     }
     set tkPriv(window) $w
 }
@@ -496,10 +500,12 @@ proc tkButtonDown w {
 
 	# If this button has a repeatdelay set up, get it going with an after
 	after cancel $tkPriv(afterId)
-	set delay [$w cget -repeatdelay]
-	set tkPriv(repeated) 0
-	if {$delay > 0} {
-	    set tkPriv(afterId) [after $delay [list tkButtonAutoInvoke $w]]
+	if { ![catch {$w cget -repeatdelay} delay] } {
+	    set delay [$w cget -repeatdelay]
+	    set tkPriv(repeated) 0
+	    if {$delay > 0} {
+		set tkPriv(afterId) [after $delay [list tkButtonAutoInvoke $w]]
+	    }
 	}
     }
 }
