@@ -65,7 +65,7 @@ typedef struct {
      * Information used when displaying widget:
      */
 
-    int state;	          	/* State of button for display purposes:
+    char * state;          	/* State of button for display purposes:
 				 * normal, active, or disabled. */
     Tk_3DBorder normalBorder;	/* Structure used to draw 3-D
 				 * border and background when window
