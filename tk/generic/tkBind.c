@@ -2664,7 +2664,6 @@ Tk_EventObjCmd(clientData, interp, objc, objv)
 		return TCL_ERROR;
 	    }
 	    return HandleEventGenerate(interp, tkwin, objc - 2, objv + 2);
-	    break;
 	}
 	case EVENT_INFO: {
 	    if (objc == 2) {
@@ -2677,7 +2676,6 @@ Tk_EventObjCmd(clientData, interp, objc, objv)
 		Tcl_WrongNumArgs(interp, 2, objv, "?virtual?");
 		return TCL_ERROR;
 	    }
-	    break;
 	}
     }
     return TCL_OK;
