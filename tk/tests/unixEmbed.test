@@ -91,8 +91,6 @@ test unixEmbed-1.4 {TkpUseWindow procedure, inheriting colormap} {unix nonPortab
     set result
 } {1}
 
-testConstraint testembed [llength [info commands testembed]]
-
 test unixEmbed-1.5 {TkpUseWindow procedure, creating Container records} {unix testembed} {
     deleteWindows
     frame .f1 -container 1 -width 200 -height 50

@@ -377,8 +377,6 @@ test unixWm-8.10.2 {test for memory leaks} unix {
     set x 1
 } 1
 
-testConstraint testwrapper [llength [info commands testwrapper]]
-
 test unixWm-9.1 {TkWmMapWindow procedure, client property} {unix testwrapper} {
     catch {destroy .t}
     toplevel .t -width 100 -height 50

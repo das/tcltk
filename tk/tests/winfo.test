@@ -15,9 +15,6 @@ configure -testdir [file join [pwd] [file dirname [info script]]]
 configure -loadfile [file join [testsDirectory] constraints.tcl]
 tcltest::loadTestedCommands
 
-# Some tests require the testwrapper command
-testConstraint testwrapper [llength [info commands testwrapper]]
-
 # eatColors --
 # Creates a toplevel window and allocates enough colors in it to
 # use up all the slots in the colormap.
