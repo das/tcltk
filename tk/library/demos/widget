@@ -104,7 +104,7 @@ menu .menuBar -tearoff 0
 menu .menuBar.file -tearoff 0
 
 # On the Mac use the specia .apple menu for the about item
-if {[tk windowingsystem] eq "classic" || [tk windowingsystem] eq "aqua"} {
+if {[tk windowingsystem] eq "aqua"} {
     .menuBar add cascade -menu .menuBar.apple
     menu .menuBar.apple -tearoff 0
     .menuBar.apple add command -label [mc "About..."] -command {aboutBox}
@@ -574,10 +574,6 @@ proc printCode {w file} {
 		tk_messageBox -title "Print spooling failure" \
 			-message "Print spooling probably failed: $msg"
 	    }
-	}
-	macintosh {
-	    tk_messageBox -title "Operation not Implemented" \
-		    -message "Oops, sorry: not implemented yet!"
 	}
 	default {
 	    tk_messageBox -title "Operation not Implemented" \

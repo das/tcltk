@@ -276,8 +276,7 @@ bind Text <Meta-KeyPress> {# nothing}
 bind Text <Control-KeyPress> {# nothing}
 bind Text <Escape> {# nothing}
 bind Text <KP_Enter> {# nothing}
-if {[string equal [tk windowingsystem] "classic"]
-	|| [string equal [tk windowingsystem] "aqua"]} {
+if {[string equal [tk windowingsystem] "aqua"]} {
     bind Text <Command-KeyPress> {# nothing}
 }
 
@@ -386,8 +385,7 @@ bind Text <Meta-Delete> {
 # Macintosh only bindings:
 
 # if text black & highlight black -> text white, other text the same
-if {[string equal [tk windowingsystem] "classic"]
-	|| [string equal [tk windowingsystem] "aqua"]} {
+if {[string equal [tk windowingsystem] "aqua"]} {
 bind Text <FocusIn> {
     %W tag configure sel -borderwidth 0
     %W configure -selectbackground systemHighlight -selectforeground systemHighlightText
@@ -457,8 +455,7 @@ set ::tk::Priv(prevPos) {}
 bind Text <MouseWheel> {
     %W yview scroll [expr {-%D}] pixels
 }
-if {[string equal [tk windowingsystem] "classic"]
-	|| [string equal [tk windowingsystem] "aqua"]} {
+if {[string equal [tk windowingsystem] "aqua"]} {
 bind Text <Option-MouseWheel> {
     %W yview scroll [expr {- 10*%D}] pixels
 }

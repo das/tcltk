@@ -68,7 +68,7 @@ insertion cursor.  Control-z undoes the last editing action performed,
 and }
 
 switch $tcl_platform(platform) {
-    "unix" - "macintosh" {
+    "unix" {
 	$w.text insert end "Control-Shift-z"
     }
     "windows" {

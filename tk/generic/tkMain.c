@@ -55,11 +55,7 @@ static Tcl_ThreadDataKey dataKey;
  */
 
 #if !defined(__WIN32__) && !defined(_WIN32)
-#if !defined(MAC_TCL)
 extern int		isatty _ANSI_ARGS_((int fd));
-#else
-#include <unistd.h>
-#endif
 extern char *		strrchr _ANSI_ARGS_((CONST char *string, int c));
 #endif
 
@@ -126,7 +122,7 @@ Tk_MainEx(argc, argv, appInitProc, interp)
     Tcl_FindExecutable(argv[0]);
     tsdPtr->interp = interp;
 
-#if (defined(__WIN32__) || defined(MAC_TCL))
+#if defined(__WIN32__)
     Tk_InitConsoleChannels(interp);
 #endif
     

@@ -103,7 +103,7 @@ test tk-4.6 {tk command: useinputmethods: set new} {unixOnly} {
     }
     set useim
 } $useim
-test tk-4.7 {tk command: useinputmethods: set new} {macOrPc} {
+test tk-4.7 {tk command: useinputmethods: set new} {pcOnly} {
     # Mac and Windows don't have X Input Methods, so this should
     # always return 0
     tk useinputmethods 1

@@ -94,7 +94,7 @@ test winfo-3.2 {"winfo colormapfull" command} {pseudocolor} {
 test winfo-3.3 {"winfo colormapfull" command} {pseudocolor} {
     list [catch {winfo colormapfull foo} msg] $msg
 } {1 {bad window path name "foo"}}
-test winfo-3.4 {"winfo colormapfull" command} {macOrUnix pseudocolor} {
+test winfo-3.4 {"winfo colormapfull" command} {unixOnly pseudocolor} {
     eatColors .t {-colormap new}
     set result [list [winfo colormapfull .] [winfo colormapfull .t]]
     .t.c delete 34

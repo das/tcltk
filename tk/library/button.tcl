@@ -18,8 +18,7 @@
 # The code below creates the default class bindings for buttons.
 #-------------------------------------------------------------------------
 
-if {[string equal [tk windowingsystem] "classic"]
-	|| [string equal [tk windowingsystem] "aqua"]} {
+if {[string equal [tk windowingsystem] "aqua"]} {
     bind Radiobutton <Enter> {
 	tk::ButtonEnter %W
     }
@@ -445,8 +444,7 @@ proc ::tk::ButtonUp w {
 
 }
 
-if {[string equal [tk windowingsystem] "classic"]
-	|| [string equal [tk windowingsystem] "aqua"]} {
+if {[string equal [tk windowingsystem] "aqua"]} {
 
 ####################
 # Mac implementation

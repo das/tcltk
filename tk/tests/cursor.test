@@ -260,25 +260,6 @@ foreach cursor {
 unset n
 
 # -------------------------------------------------------------------------
-# Check the Mac specific cursors
-set n 0
-foreach cursor {
-    text
-    cross-hair
-} {
-    test cursor-8.$n {check cursor $cursor} \
-        -constraints {macOnly} \
-        -setup {button .b -text $cursor} \
-        -body {
-            list [catch {.b configure -cursor $cursor} msg] $msg
-        } \
-        -cleanup {destroy .b} \
-        -result {0 {}}
-    incr n
-}
-unset n
-
-# -------------------------------------------------------------------------
 
 destroy .t
 

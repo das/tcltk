@@ -332,11 +332,7 @@ Tk_CreateConsoleWindow(interp)
     Tk_Window mainWindow = Tk_MainWindow(interp);
     ThreadSpecificData *tsdPtr = (ThreadSpecificData *) 
             Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
-#ifdef MAC_TCL
-    static char initCmd[] = "if {[catch {source $tk_library:console.tcl}]} {source -rsrc console}";
-#else
     static char initCmd[] = "source $tk_library/console.tcl";
-#endif
     
     consoleInterp = Tcl_CreateInterp();
     if (consoleInterp == NULL) {

@@ -2,7 +2,6 @@
  * tkInitScript.h --
  *
  *	This file contains Unix & Windows common init script
- *      It is not used on the Mac. (the mac init script is in tkMacInit.c)
  *
  * Copyright (c) 1997 Sun Microsystems, Inc.
  *

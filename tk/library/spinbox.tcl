@@ -212,8 +212,7 @@ bind Spinbox <Escape> {# nothing}
 bind Spinbox <Return> {# nothing}
 bind Spinbox <KP_Enter> {# nothing}
 bind Spinbox <Tab> {# nothing}
-if {[string equal [tk windowingsystem] "classic"]
-	|| [string equal [tk windowingsystem] "aqua"]} {
+if {[string equal [tk windowingsystem] "aqua"]} {
 	bind Spinbox <Command-KeyPress> {# nothing}
 }
 
