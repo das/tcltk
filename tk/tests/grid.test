@@ -68,6 +68,22 @@ test grid-1.6 {basic argument checking} {
 	list [catch {grid x} msg] $msg
 } {1 {can't determine master window}}
 
+test grid-1.7 {basic argument checking} {
+	list [catch {grid configure x} msg] $msg
+} {1 {can't determine master window}}
+
+test grid-1.8 {basic argument checking} {
+	button .b
+	list [catch {grid x .b} msg] $msg
+} {0 {}}
+grid_reset 1.8
+
+test grid-1.9 {basic argument checking} {
+	button .b
+	list [catch {grid configure x .b} msg] $msg
+} {0 {}}
+grid_reset 1.9
+
 test grid-2.1 {bbox} {
 	list [catch {grid bbox .} msg] $msg
 } {0 {0 0 0 0}}

@@ -328,7 +328,8 @@ Tk_GridCmd(clientData, interp, argc, argv)
 	return GridBboxCommand(tkwin, interp, argc, argv);
 	
     } else if ((c == 'c') && (strncmp(argv[1], "configure", length) == 0)) {
-	if (argv[2][0] != '.') {
+	if ((argv[2][0] != '.') && (argv[2][0] != REL_SKIP) &&
+    		(argv[2][0] != REL_VERT)) {
 	    Tcl_AppendResult(interp, "bad argument \"", argv[2],
 		    "\": must be name of window", (char *) NULL);
 	    return TCL_ERROR;
