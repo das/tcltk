@@ -241,6 +241,27 @@ test panedwindow-6.7 {sash coord subcommand, sashes correctly placed} {
     destroy .p .p.f .p.f2 .p.f3
     set result
 } [list 0 50]
+test panedwindow-6.8 {sash coord subcommand, errors} {
+    panedwindow .p
+    set result [list \
+	    [catch {.p sash coord -1} msg] $msg \
+	    [catch {.p sash coord  0} msg] $msg \
+	    [catch {.p sash coord  1} msg] $msg \
+	    ]
+    destroy .p
+    set result
+} [list 1 "invalid sash index" 1 "invalid sash index" 1 "invalid sash index"]
+test panedwindow-6.9 {sash coord subcommand, errors} {
+    panedwindow .p
+    .p add [frame .p.f]
+    set result [list \
+	    [catch {.p sash coord -1} msg] $msg \
+	    [catch {.p sash coord  0} msg] \
+	    [catch {.p sash coord  1} msg] $msg \
+	    ]
+    destroy .p
+    set result
+} [list 1 "invalid sash index" 0 1 "invalid sash index"]
 
 test panedwindow-8.1 {sash mark subcommand, errors} {
     panedwindow .p
