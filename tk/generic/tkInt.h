@@ -904,8 +904,9 @@ EXTERN int		Tk_CanvasObjCmd _ANSI_ARGS_((ClientData clientData,
 EXTERN int		Tk_CheckbuttonObjCmd _ANSI_ARGS_((ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *CONST objv[]));
-EXTERN int		Tk_ClipboardCmd _ANSI_ARGS_((ClientData clientData,
-			    Tcl_Interp *interp, int argc, char **argv));
+EXTERN int              Tk_ClipboardObjCmd _ANSI_ARGS_((
+			    ClientData clientData, Tcl_Interp *interp,
+			    int objc, Tcl_Obj *CONST objv[]));
 EXTERN int              Tk_ChooseColorObjCmd _ANSI_ARGS_((
 			    ClientData clientData, Tcl_Interp *interp,
 			    int objc, Tcl_Obj *CONST objv[]));
