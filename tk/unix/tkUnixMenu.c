@@ -1346,7 +1346,7 @@ TkpDrawMenuEntry(mePtr, d, tkfont, menuMetricsPtr, x, y, width, height,
 {
     GC gc, indicatorGC;
     XColor *indicatorColor;
-    XColor *disableColor;
+    XColor *disableColor = NULL;
     TkMenu *menuPtr = mePtr->menuPtr;
     Tk_3DBorder bgBorder, activeBorder;
     CONST Tk_FontMetrics *fmPtr;
@@ -1409,7 +1409,10 @@ TkpDrawMenuEntry(mePtr, d, tkfont, menuMetricsPtr, x, y, width, height,
 		menuPtr->indicatorFgPtr);
     }
 
-    disableColor = Tk_GetColorFromObj(menuPtr->tkwin, menuPtr->disabledFgPtr);
+    if (menuPtr->disabledFgPtr != NULL) {
+	disableColor = Tk_GetColorFromObj(menuPtr->tkwin,
+		menuPtr->disabledFgPtr);
+    }
 
     bgBorder = Tk_Get3DBorderFromObj(menuPtr->tkwin,
 	    (mePtr->borderPtr == NULL)
