@@ -517,6 +517,7 @@ test textWind-10.6.1 {EmbWinLayoutProc procedure, error in creating window} {
     }
     set msg {}
     update
+    while {[llength $msg] == 1} { update }
     set msg
 } {{{can't embed .t2 relative to .t}} {{window name "t2" already exists in parent}}}
 
