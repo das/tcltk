@@ -310,6 +310,7 @@ ScriptHandler(
 	theErr = -1771;
     } else {
 	if (theDesc.descriptorType == (DescType)'TEXT') {
+	    Tcl_DString encodedText;
 	    short length, i;
 	    
 	    length = GetHandleSize(theDesc.dataHandle);
@@ -322,7 +323,10 @@ ScriptHandler(
 	    }
 
 	    HLock(theDesc.dataHandle);
-	    tclErr = Tcl_GlobalEval(interp, *theDesc.dataHandle);
+	    Tcl_ExternalToUtfDString(NULL, *theDesc.dataHandle, length,
+		    &encodedText);
+	    tclErr = Tcl_GlobalEval(interp, Tcl_DStringValue(&encodedText));
+	    Tcl_DStringFree(&encodedText);
 	    HUnlock(theDesc.dataHandle);
 	} else if (theDesc.descriptorType == (DescType)'alis') {
 	    Boolean dummy;
