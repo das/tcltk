@@ -101,7 +101,8 @@ Tk_MainEx(argc, argv, appInitProc, interp)
 					 * to execute commands. */
     Tcl_Interp *interp;
 {
-    char *args, *fileName;
+    char *args;
+    CONST char *fileName;
     char buf[TCL_INTEGER_SPACE];
     int code;
     size_t length;
