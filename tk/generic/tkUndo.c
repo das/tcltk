@@ -249,7 +249,7 @@ TkUndoSetDepth(stack, maxdepth)
 	while (elem != NULL) {
 	    prevelem = elem;
 	    elem = elem->next;
-	    ckfree((char *) elem);
+	    ckfree((char *) prevelem);
 	}
 	stack->depth = stack->maxdepth;
     }
