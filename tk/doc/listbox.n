@@ -215,12 +215,12 @@ element given by \fIindex\fR.  If \fIindex\fR is specified as
 \fBend\fR then the new elements are added to the end of the
 list.  Returns an empty string.
 .TP
-\fIpathName \fBitemcget \fIindex \foption
+\fIpathName \fBitemcget \fIindex option\fR
 Returns the current value of the item configuration option given
 by \fIoption\fR. \fIOption\fR may have any of the values accepted 
 by the \fBlistbox itemconfigure\fR command.
 .TP
-\fIpathName \fBitemconfigure \fIindex ?\fIoption\fR? ?\fIvalue? ?option value ...\fR?
+\fIpathName \fBitemconfigure \fIindex\fR ?\fIoption\fR? ?\fIvalue\fR? ?\fIoption value ...\fR?
 Query or modify the configuration options of an item in the listbox.
 If no \fIoption\fR is specified, returns a list describing all of
 the available options for the item (see \fBTk_ConfigureInfo\fR for
