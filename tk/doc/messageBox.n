@@ -86,12 +86,12 @@ and \fBcancel\fR.
 .PP
 .SH EXAMPLE
 .CS
-set answer [tk_messageBox \-message "Really quit?" \b
-        \-icon question \-type yesno \b
-        \-detail "Select \b"Yes\b" to make the application exit"]
+set answer [tk_messageBox \-message "Really quit?" \e
+        \-icon question \-type yesno \e
+        \-detail "Select \e"Yes\e" to make the application exit"]
 switch -- $answer {
     yes exit
-    no {tk_messageBox \-message "I know you like this application!" \b
+    no {tk_messageBox \-message "I know you like this application!" \e
             \-type ok}
 }
 .CE
