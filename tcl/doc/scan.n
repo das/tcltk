@@ -14,7 +14,7 @@
 .SH NAME
 scan \- Parse string using conversion specifiers in the style of sscanf
 .SH SYNOPSIS
-\fBscan \fIstring format varName \fR?\fIvarName ...\fR?
+\fBscan \fIstring format \fR?\fIvarName ...\fR?
 .BE
 
 .SH INTRODUCTION
