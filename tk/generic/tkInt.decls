@@ -855,6 +855,10 @@ declare 34 win {
     void TkWinSetHINSTANCE (HINSTANCE hInstance)
 }
 
+declare 35 win {
+    int TkWinGetPlatformTheme (void)
+}
+
 ########################
 # Mac OS X specific functions
 

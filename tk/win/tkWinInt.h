@@ -210,5 +210,11 @@ EXTERN TkWinProcs *tkWinProcs;
 extern Tcl_Encoding TkWinGetKeyInputEncoding _ANSI_ARGS_((void));
 extern Tcl_Encoding TkWinGetUnicodeEncoding _ANSI_ARGS_((void));
 
+/*
+ * Values returned by TkWinGetPlatformTheme.
+ */
+#define TK_THEME_WIN_CLASSIC    1
+#define TK_THEME_WIN_XP         2
+
 #endif /* _TKWININT */
 
