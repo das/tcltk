@@ -1072,7 +1072,8 @@ UpdateControlValues(
             (1.0 - scrollPtr->lastFraction));
     
     viewSize = (SInt32) ((scrollPtr->lastFraction - scrollPtr->firstFraction) 
-            * MAX_SCROLLBAR_DVALUE);
+            * MAX_SCROLLBAR_DVALUE
+	    /(1 - (scrollPtr->lastFraction - scrollPtr->firstFraction)));
     
     SetControlViewSize(macScrollPtr->sbHandle,viewSize);
     SetControlValue(macScrollPtr->sbHandle, 
