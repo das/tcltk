@@ -53,7 +53,8 @@ TkpGetString(winPtr, eventPtr, dsPtr)
     Tcl_DStringSetLength(&buf, TCL_DSTRING_STATIC_SIZE-1);
     
 #ifdef TK_USE_INPUT_METHODS
-    if ((winPtr->inputContext != NULL)
+    if (winPtr->dispPtr->useInputMethods
+	    && (winPtr->inputContext != NULL)
 	    && (eventPtr->type == KeyPress)) {
 	len = XmbLookupString(winPtr->inputContext, &eventPtr->xkey,
 		Tcl_DStringValue(&buf), Tcl_DStringLength(&buf),
@@ -67,8 +68,7 @@ TkpGetString(winPtr, eventPtr, dsPtr)
 	    len = XmbLookupString(winPtr->inputContext, &eventPtr->xkey,
 		    Tcl_DStringValue(&buf), len, (KeySym *) NULL, &status);
 	}
-	if ((status != XLookupChars)
-		&& (status != XLookupBoth)) {
+	if ((status != XLookupChars) && (status != XLookupBoth)) {
 	    len = 0;
 	}
     } else {
