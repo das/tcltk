@@ -12,7 +12,7 @@ package require tcltest 2.1
 eval tcltest::configure $argv
 tcltest::loadTestedCommands
 
-test id-1.1 {WindowIdCleanup, delaying window release} {unixOnly testwrapper} {
+test id-1.1 {WindowIdCleanup, delaying window release} {unix testwrapper} {
     bind all <Destroy> {lappend x %W}
     catch {unset map}
     frame .f

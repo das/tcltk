@@ -691,7 +691,7 @@ test unixWm-19.5 {Tk_WmCmd procedure, "geometry" option} {unix nonPortable} {
     update
     lappend result [wm geometry .t]
 } {150x300+5+6 100x50+5+6}
-test unixWm-19.6 {Tk_WmCmd procedure, "geometry" option} {unix} {
+test unixWm-19.6 {Tk_WmCmd procedure, "geometry" option} unix {
     list [catch {wm geometry .t qrs} msg] $msg
 } {1 {bad geometry specifier "qrs"}}
 

@@ -59,7 +59,7 @@ test canvPs-2.2 {test writing to channel, idempotency} {unixOrPc} {
     }
     set status
 } ok
-test canvPs-2.3 {test writing to channel and file, same output} {unixOnly} {
+test canvPs-2.3 {test writing to channel and file, same output} unix {
     removeFile foo.ps
     removeFile bar.ps
     set c1 [open foo.ps w]
@@ -73,7 +73,7 @@ test canvPs-2.3 {test writing to channel and file, same output} {unixOnly} {
     }
     set status
 } ok
-test canvPs-2.4 {test writing to channel and file, same output} {pcOnly} {
+test canvPs-2.4 {test writing to channel and file, same output} win {
     removeFile foo.ps
     removeFile bar.ps
     set c1 [open foo.ps w]

@@ -246,7 +246,7 @@ test window-2.11 {Tk_DestroyWindow, don't reanimate a half-dead window} \
 } {0 YES}
 
 test window-3.1 {Tk_MakeWindowExist procedure, stacking order and menubars} \
-	{unixOnly testmenubar} {
+	{unix testmenubar} {
     catch {destroy .t}
     toplevel .t -width 300 -height 200
     wm geometry .t +0+0
@@ -257,7 +257,7 @@ test window-3.1 {Tk_MakeWindowExist procedure, stacking order and menubars} \
     # If stacking order isn't handle properly, generates an X error.
 } {}
 test window-3.2 {Tk_MakeWindowExist procedure, stacking order and menubars} \
-	{unixOnly testmenubar} {
+	{unix testmenubar} {
     catch {destroy .t}
     toplevel .t -width 300 -height 200
     wm geometry .t +0+0
@@ -284,7 +284,7 @@ test window-4.2 {Tk_NameToWindow procedure} {testmenubar} {
 } {0 100x50+10+10}
 
 test window-5.1 {Tk_MakeWindowExist procedure, stacking order and menubars} \
-	{unixOnly testmenubar} {
+	{unix testmenubar} {
     catch {destroy .t}
     toplevel .t -width 300 -height 200
     wm geometry .t +0+0

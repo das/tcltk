@@ -302,7 +302,7 @@ test menubutton-7.13 {ComputeMenuButtonGeometry procedure} {nonPortable fonts} {
     pack .mb
     list [winfo reqwidth .mb] [winfo reqheight .mb]
 } {78 28}
-test menubutton-7.14 {ComputeMenuButtonGeometry procedure} {testImageType unixOnly nonPortable} {
+test menubutton-7.14 {ComputeMenuButtonGeometry procedure} {testImageType unix nonPortable} {
     # The following test is non-portable because the indicator's pixel
     # size varies to maintain constant absolute size.
 
@@ -312,7 +312,7 @@ test menubutton-7.14 {ComputeMenuButtonGeometry procedure} {testImageType unixOn
     pack .mb
     list [winfo reqwidth .mb] [winfo reqheight .mb]
 } {64 23}
-test menubutton-7.15 {ComputeMenuButtonGeometry procedure} {testImageType pcOnly nonPortable} {
+test menubutton-7.15 {ComputeMenuButtonGeometry procedure} {testImageType win nonPortable} {
     # The following test is non-portable because the indicator's pixel
     # size varies to maintain constant absolute size.
 

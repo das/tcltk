@@ -163,7 +163,7 @@ test clipboard-6.1 {Tk_ClipboardAppend procedure} {
 	clipboard get
     } msg] $msg
 } {0 {first chunk second chunk}}
-test clipboard-6.2 {Tk_ClipboardAppend procedure} {unixOnly} {
+test clipboard-6.2 {Tk_ClipboardAppend procedure} unix {
     setupbg
     clipboard clear
     clipboard append -f INTEGER -t TEST "16"
