@@ -283,8 +283,7 @@ TkWinXInit(hInstance)
     /*
      * Make sure we cleanup on finalize.
      */
-    Tcl_CreateExitHandler((Tcl_ExitProc *) TkWinXCleanup,
-	    (ClientData) hInstance);
+    TkCreateExitHandler(TkWinXCleanup, (ClientData) hInstance);
 }
 
 /*
@@ -304,9 +303,10 @@ TkWinXInit(hInstance)
  */
 
 void
-TkWinXCleanup(hInstance)
-    HINSTANCE hInstance;
+TkWinXCleanup(clientData)
+    ClientData clientData;
 {
+    HINSTANCE hInstance = (HINSTANCE) clientData;
     /*
      * Clean up our own class.
      */

@@ -81,7 +81,7 @@ TkCreateXEventSource()
     if (!tsdPtr->initialized) {
 	tsdPtr->initialized = 1;
 	Tcl_CreateEventSource(DisplaySetupProc, DisplayCheckProc, NULL);
-	Tcl_CreateExitHandler(DisplayExitHandler, NULL);
+	TkCreateExitHandler(DisplayExitHandler, NULL);
     }
 }
 

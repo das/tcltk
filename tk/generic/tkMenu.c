@@ -370,7 +370,7 @@ static void		MenuWorldChanged _ANSI_ARGS_((
 static int		PostProcessEntry _ANSI_ARGS_((TkMenuEntry *mePtr));
 static void		RecursivelyDeleteMenu _ANSI_ARGS_((TkMenu *menuPtr));
 static void		UnhookCascadeEntry _ANSI_ARGS_((TkMenuEntry *mePtr));
-static void		TkMenuCleanup _ANSI_ARGS_((ClientData unused));
+static Tcl_ExitProc	TkMenuCleanup;
 
 /*
  * The structure below is a list of procs that respond to certain window
@@ -3594,7 +3594,7 @@ TkMenuInit()
 	/* 
 	 * Make sure we cleanup on finalize. 
 	 */ 
-	Tcl_CreateExitHandler((Tcl_ExitProc *) TkMenuCleanup, NULL); 
+	TkCreateExitHandler(TkMenuCleanup, NULL); 
 	Tcl_MutexUnlock(&menuMutex);
     }
     if (!tsdPtr->menusInitialized) {

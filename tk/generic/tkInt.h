@@ -1166,6 +1166,11 @@ EXTERN char *		TkTilePrintProc _ANSI_ARGS_((
 			    ClientData clientData, Tk_Window tkwin,
 			    char *widgRec, int offset,
 			    Tcl_FreeProc **freeProcPtr));
+EXTERN void		TkCreateExitHandler _ANSI_ARGS_((Tcl_ExitProc *proc,
+			    ClientData clientData));
+EXTERN void		TkDeleteExitHandler _ANSI_ARGS_((Tcl_ExitProc *proc,
+			    ClientData clientData));
+EXTERN Tcl_ExitProc	TkFinalize;
 
 /* 
  * Unsupported commands.
