@@ -470,6 +470,7 @@ XClearWindow(
 {
 }
 
+/*
 void
 XDrawPoint(
     Display* display,
@@ -490,6 +491,7 @@ XDrawPoints(
     int mode)
 {
 }
+*/
 
 void
 XWarpPointer(
