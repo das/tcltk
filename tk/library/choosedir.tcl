@@ -222,10 +222,11 @@ proc ::tk::dialog::file::chooseDir::DblClick {w} {
     upvar ::tk::dialog::file::[winfo name $w] data
     set selection [tk::IconList_Curselection $data(icons)]
     if { [llength $selection] != 0 } {
-	set text [tk::IconList_Get $data(icons) [lindex $selection 0]]
+	set filenameFragment \
+		[tk::IconList_Get $data(icons) [lindex $selection 0]]
 	set file $data(selectPath)
 	if {[file isdirectory $file]} {
-	    ::tk::dialog::file::ListInvoke $w $text
+	    ::tk::dialog::file::ListInvoke $w [list $filenameFragment]
 	    return
 	}
     }
