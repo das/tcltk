@@ -25,9 +25,21 @@ typedef struct {
     KeySym keysym;		/* X windows Keysym */
 } KeyInfo;
 
+/*
+ * Notes on keyArray:
+ *
+ * 0x34, XK_Return - Powerbooks use this and some keymaps define it.
+ *
+ * 0x47, XK_Clear - This key is NumLock when used on PCs, but Mac
+ * applications don't use it like that.
+ *
+ * All other keycodes are taken from the published ADB keyboard layouts.
+ */
+
 static KeyInfo keyArray[] = {
     {0x4C,	XK_Return},
     {0x24,	XK_Return},
+    {0x34,  XK_Return},
     {0x33,	XK_BackSpace},
     {0x75,	XK_Delete},
     {0x30,	XK_Tab},
