@@ -120,17 +120,18 @@ extern int		strncasecmp _ANSI_ARGS_((CONST char *s1,
 
 /*
  * This macro stores a representation of the window handle in a string.
+ * This should perhaps use the real size of an XID.
  */
 
 #define TkpPrintWindowId(buf,w) \
 	sprintf((buf), "0x%x", (unsigned int) (w))
-	    
+
 /*
  * TkpScanWindowId is just an alias for Tcl_GetInt on Unix.
  */
 
 #define TkpScanWindowId(i,s,wp) \
-	Tcl_GetInt((i),(s),(wp))
+	Tcl_GetInt((i),(s),(int *)(wp))
 
 /*
  * Magic pixel values for dynamic (or active) colors.
