@@ -23,6 +23,20 @@
  */
 
 /*
+ * The following definition is used in generating postscript for images
+ * and windows.
+ */
+
+typedef struct TkColormapData {	/* Hold color information for a window */
+    int separated;		/* Whether to use separate color bands */
+    int color;			/* Whether window is color or black/white */
+    int ncolors;		/* Number of color values stored */
+    XColor *colors;		/* Pixel value -> RGB mappings */
+    int red_mask, green_mask, blue_mask;	/* Masks and shifts for each */
+    int red_shift, green_shift, blue_shift;	/* color band */
+} TkColormapData;
+
+/*
  * One of the following structures is created to keep track of Postscript
  * output being generated.  It consists mostly of information provided on
  * the widget command line.
@@ -1429,9 +1443,20 @@ TkImageGetColor(cdata, pixel, red, green, blue)
 	int r = (pixel & cdata->red_mask) >> cdata->red_shift;
 	int g = (pixel & cdata->green_mask) >> cdata->green_shift;
 	int b = (pixel & cdata->blue_mask) >> cdata->blue_shift;
+#ifdef WIN32
+	/*
+	 * Because XQueryColors is an empty stub on Windows, we need
+	 * to just make this simple calculation.  The TkColormapData
+	 * XColor data is otherwise bogus on Windows.  -- hobbs
+	 */
+	*red   = (double)r / 255.0;
+	*green = (double)g / 255.0;
+	*blue  = (double)b / 255.0;
+#else
 	*red = cdata->colors[r].red / 65535.0;
 	*green = cdata->colors[g].green / 65535.0;
 	*blue = cdata->colors[b].blue / 65535.0;
+#endif
     } else {
 	*red = cdata->colors[pixel].red / 65535.0;
 	*green = cdata->colors[pixel].green / 65535.0;
