@@ -794,8 +794,8 @@ TkStubs tkStubs = {
     Tk_NameToWindow, /* 141 */
     Tk_OwnSelection, /* 142 */
     Tk_ParseArgv, /* 143 */
-    Tk_PhotoPutBlock_Old, /* 144 */
-    Tk_PhotoPutZoomedBlock_Old, /* 145 */
+    Tk_PhotoPutBlock_NoComposite, /* 144 */
+    Tk_PhotoPutZoomedBlock_NoComposite, /* 145 */
     Tk_PhotoGetImage, /* 146 */
     Tk_PhotoBlank, /* 147 */
     Tk_PhotoExpand, /* 148 */
