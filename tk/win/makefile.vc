@@ -100,8 +100,7 @@ TKTESTOBJS = \
 	$(TMPDIR)\tkTest.obj \
 	$(TMPDIR)\tkSquare.obj \
 	$(TMPDIR)\testMain.obj \
-# the tkThreadTest.c file has not been checked it yet.
-#	$(TMPDIR)\tkThreadTest.obj
+	$(TCLLIBDIR)\tclThreadTest.obj
 
 XLIBOBJS = \
 	$(TMPDIR)\xcolors.obj \
@@ -229,7 +228,7 @@ RCDIR		= $(WINDIR)\rc
 
 TK_INCLUDES	= -I$(WINDIR) -I$(GENERICDIR) -I$(BITMAPDIR) -I$(XLIBDIR) \
 			-I$(TCLDIR)\generic
-TK_DEFINES	= $(DEBUGDEFINES)
+TK_DEFINES	= -D__WIN32__ $(DEBUGDEFINES) $(THREADDEFINES)
 
 TK_CFLAGS	= $(cdebug) $(cflags) $(cvarsdll) $(include32) \
 			$(TK_INCLUDES) $(TK_DEFINES) -DUSE_TCL_STUBS
@@ -336,7 +335,10 @@ test:	setup $(TKTEST) $(TKLIB) $(CAT32)
 	set PATH=$(TCLDIR)\win\$(TMPDIRNAME);$(PATH)
 	$(TKTEST) $(ROOT)/tests/all.tcl | $(CAT32)
 
-#       copy $(TCLDIR)\bin\pkgIndex.tcl $(OUTDIR)
+runtest: setup $(TKTEST) $(TKLIB) $(CAT32)
+	set TCL_LIBRARY=$(TCLDIR)/library
+	set PATH=$(TCLDIR)\win\$(TMPDIRNAME);$(PATH)
+	$(TKTEST) 
 
 console-wish : all $(WISHC)
 
