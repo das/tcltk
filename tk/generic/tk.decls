@@ -1136,6 +1136,8 @@ declare 240 generic {
     void Tk_DeleteClientMessageHandler (Tk_ClientMessageProc *proc)
 }
 
+# New in 8.4a2
+#
 declare 241 generic {
     Tk_Window Tk_CreateAnonymousWindow (Tcl_Interp *interp, \
 	    Tk_Window parent, char *screenName)
