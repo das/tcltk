@@ -3691,7 +3691,10 @@ HandleEventGenerate(interp, mainWin, objc, objv)
     } else {
 	Tk_QueueWindowEvent(&event, pos);
     }
-    if (warp != 0) {
+    /*
+     * We only allow warping if the window is mapped
+     */
+    if ((warp != 0) && Tk_IsMapped(tkwin)) {
 	TkDisplay *dispPtr;
 	dispPtr = TkGetDisplay(event.xmotion.display);
 	if (!dispPtr->warpInProgress) {
