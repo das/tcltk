@@ -338,7 +338,7 @@ test entry-3.46 {EntryWidgetCmd procedure, "scan" widget command} {fonts} {
 } {2}
 test entry-3.47 {EntryWidgetCmd procedure, "select" widget command} {
     list [catch {.e select} msg] $msg
-} {1 {wrong # args: should be ".e select option ?index?"}}
+} {1 {wrong # args: should be ".e selection option ?index?"}}
 test entry-3.48 {EntryWidgetCmd procedure, "select" widget command} {
     list [catch {.e select foo} msg] $msg
 } {1 {bad selection option "foo": must be adjust, clear, from, present, range, or to}}
