@@ -79,7 +79,7 @@ with a \fB\-\fR.
 .RE
 .VS 8.4
 .TP
-\fBclipboard get\fR ?\fB\-displayof\fR \fIwindow\fR? ?\fB\-type\fR?
+\fBclipboard get\fR ?\fB\-displayof\fR \fIwindow\fR? ?\fB\-type\fR \fItype\fR?
 Retrieve data from the clipboard on \fIwindow\fR's display.
 \fIwindow\fR defaults to ".".  \fIType\fR specifies the form in which
 the data is to be returned and should be an atom name such as STRING
