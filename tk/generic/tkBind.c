@@ -728,7 +728,7 @@ TkBindInit(mainPtr)
      */
 
     if (!initialized) {
-        Tcl_MutexLock(bindMutex);
+        Tcl_MutexLock(&bindMutex);
 	if (!initialized) {
 	    Tcl_HashEntry *hPtr;
 	    ModInfo *modPtr;
@@ -762,6 +762,7 @@ TkBindInit(mainPtr)
 	    }
 	    initialized = 1;
 	}
+        Tcl_MutexUnlock(&bindMutex);
     }
 
     mainPtr->bindingTable = Tk_CreateBindingTable(mainPtr->interp);
