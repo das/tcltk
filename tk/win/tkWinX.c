@@ -594,6 +594,54 @@ TkpCloseDisplay(dispPtr)
 /*
  *----------------------------------------------------------------------
  *
+ * TkClipCleanup --
+ *
+ *	This procedure is called to cleanup resources associated with
+ *	claiming clipboard ownership and for receiving selection get
+ *	results.  This function is called in tkWindow.c.  This has to be
+ *	called by the display cleanup function because we still need the
+ *	access display elements.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	Resources are freed - the clipboard may no longer be used.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TkClipCleanup(dispPtr)
+    TkDisplay *dispPtr;	/* display associated with clipboard */
+{
+    if (dispPtr->clipWindow != NULL) {
+	/*
+	 * Force the clipboard to be rendered if we are the clipboard owner.
+	 */
+
+	HWND hwnd = Tk_GetHWND(Tk_WindowId(dispPtr->clipWindow));
+	if (GetClipboardOwner() == hwnd) {
+	    OpenClipboard(hwnd);
+	    EmptyClipboard();
+	    TkWinClipboardRender(dispPtr, CF_TEXT);
+	    CloseClipboard();
+	}
+
+	Tk_DeleteSelHandler(dispPtr->clipWindow, dispPtr->clipboardAtom,
+		dispPtr->applicationAtom);
+	Tk_DeleteSelHandler(dispPtr->clipWindow, dispPtr->clipboardAtom,
+		dispPtr->windowAtom);
+
+	Tk_DestroyWindow(dispPtr->clipWindow);
+	Tcl_Release((ClientData) dispPtr->clipWindow);
+	dispPtr->clipWindow = NULL;
+    }
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
  * XBell --
  *
  *	Generate a beep.

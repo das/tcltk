@@ -169,13 +169,6 @@ TkpCloseDisplay(
         panic("TkpCloseDisplay: tried to call TkpCloseDisplay on bad display");
     }
 
-    /*
-     * Make sure that the local scrap is transfered to the global
-     * scrap if needed.
-     */
-
-    TkSuspendClipboard();
-
     gMacDisplay = NULL;
     if (display->screens != (Screen *) NULL) {
         if (display->screens->root_visual != (Visual *) NULL) {
@@ -184,6 +177,49 @@ TkpCloseDisplay(
         ckfree((char *) display->screens);
     }
     ckfree((char *) display);
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkClipCleanup --
+ *
+ *	This procedure is called to cleanup resources associated with
+ *	claiming clipboard ownership and for receiving selection get
+ *	results.  This function is called in tkWindow.c.  This has to be
+ *	called by the display cleanup function because we still need the
+ *	access display elements.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	Resources are freed - the clipboard may no longer be used.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TkClipCleanup(dispPtr)
+    TkDisplay *dispPtr;	/* display associated with clipboard */
+{
+    /*
+     * Make sure that the local scrap is transfered to the global
+     * scrap if needed.
+     */
+
+    TkSuspendClipboard();
+
+    if (dispPtr->clipWindow != NULL) {
+	Tk_DeleteSelHandler(dispPtr->clipWindow, dispPtr->clipboardAtom,
+		dispPtr->applicationAtom);
+	Tk_DeleteSelHandler(dispPtr->clipWindow, dispPtr->clipboardAtom,
+		dispPtr->windowAtom);
+
+	Tk_DestroyWindow(dispPtr->clipWindow);
+	Tcl_Release((ClientData) dispPtr->clipWindow);
+	dispPtr->clipWindow = NULL;
+    }
 }
 
 /*
