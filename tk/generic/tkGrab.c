@@ -201,7 +201,7 @@ Tk_GrabObjCmd(clientData, interp, objc, objv)
     TkDisplay *dispPtr;
     char *arg;
     int index;
-    size_t len;
+    int len;
     static char *optionStrings[] = { "current", "release",
 					 "set", "status", (char *) NULL };
   
