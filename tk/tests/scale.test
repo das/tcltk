@@ -810,22 +810,15 @@ test scale-17.1 {bug fix 1786} {
     set x
 } {}
 
+test scale-18.1 {DestroyScale, -cursor option [Bug: 3897]} {
+    catch {destroy .s}
+    scale .s -cursor trek
+    destroy .s
+} {}
+
 catch {destroy .s}
 option clear
 
 # cleanup
 ::tcltest::cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-
-

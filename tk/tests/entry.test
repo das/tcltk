@@ -1330,19 +1330,18 @@ test entry-17.3 {EntryUpdateScrollbar procedure} {
 } {0.315789 0.842105}
 test entry-17.4 {EntryUpdateScrollbar procedure} {
     catch {destroy .e}
-    catch {rename bogus {}}
     proc bgerror msg {
 	global x
 	set x $msg
     }
-    entry .e -width 5 -xscrollcommand bogus
+    entry .e -width 5 -xscrollcommand thisisnotacommand
     pack .e
     update
     rename bgerror {}
     list $x $errorInfo
-} {{invalid command name "bogus"} {invalid command name "bogus"
+} {{invalid command name "thisisnotacommand"} {invalid command name "thisisnotacommand"
     while executing
-"bogus 0 1"
+"thisisnotacommand 0 1"
     (horizontal scrolling command executed by entry)}}
 
 set l [interp hidden]
@@ -1364,16 +1363,3 @@ option clear
 # cleanup
 ::tcltest::cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-
-
