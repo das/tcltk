@@ -380,25 +380,30 @@ switch $::tcl_platform(platform) {
 
 if {$::tk_library ne ""} {
     if {[string equal $tcl_platform(platform) "macintosh"]} {
-	proc sourceLibFile {file} {
-	    if {[catch {uplevel #0 [list source [file join $::tk_library \
-		$file.tcl]]}]} {uplevel #0 [list source -rsrc $file]}
+	proc ::tk::SourceLibFile {file} {
+	    if {[catch {
+		namespace eval :: \
+			[list source [file join $::tk_library $file.tcl]]
+	    }]} {
+		namespace eval :: [list source -rsrc $file]
+	    }
 	}
     } else {
-	proc sourceLibFile {file} {
-	    uplevel #0 [list source [file join $::tk_library $file.tcl]]
+	proc ::tk::SourceLibFile {file} {
+	    namespace eval :: [list source [file join $::tk_library $file.tcl]]
 	}	
     }
-    sourceLibFile button
-    sourceLibFile entry
-    sourceLibFile listbox
-    sourceLibFile menu
-    sourceLibFile panedwindow
-    sourceLibFile scale
-    sourceLibFile scrlbar
-    sourceLibFile spinbox
-    sourceLibFile text
-    rename sourceLibFile {}
+    namespace eval ::tk {
+	SourceLibFile button
+	SourceLibFile entry
+	SourceLibFile listbox
+	SourceLibFile menu
+	SourceLibFile panedwindow
+	SourceLibFile scale
+	SourceLibFile scrlbar
+	SourceLibFile spinbox
+	SourceLibFile text
+    }
 }
 # ----------------------------------------------------------------------
 # Default bindings for keyboard traversal.
