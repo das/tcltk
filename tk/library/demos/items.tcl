@@ -271,7 +271,7 @@ proc itemDrag {c x y} {
     global lastX lastY
     set x [$c canvasx $x]
     set y [$c canvasy $y]
-    $c move current [expr $x-$lastX] [expr $y-$lastY]
+    $c move current [expr {$x-$lastX}] [expr {$y-$lastY}]
     set lastX $x
     set lastY $y
 }

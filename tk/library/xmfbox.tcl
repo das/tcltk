@@ -347,8 +347,8 @@ proc tkMotifFDialog_BuildUI {w} {
 
     # The buttons
     #
-	set maxWidth [::msgcat::mcmax OK Filter Cancel]
-	set maxWidth [expr $maxWidth<6?6:$maxWidth]
+    set maxWidth [::msgcat::mcmax OK Filter Cancel]
+    set maxWidth [expr {$maxWidth<6?6:$maxWidth}]
     set data(okBtn) [button $bot.ok -text [::msgcat::mc "OK"] \
 	    -width $maxWidth -under 0 \
 	    -command [list tkMotifFDialog_OkCmd $w]]

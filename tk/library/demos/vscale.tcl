@@ -39,7 +39,7 @@ $w.frame.scale set 75
 
 proc setHeight {w height} {
     incr height 21
-    set y2 [expr $height - 30]
+    set y2 [expr {$height - 30}]
     if {$y2 < 21} {
 	set y2 21
     }

@@ -238,10 +238,10 @@ proc bgerror err {
     set parent [winfo parent	.bgerrorDialog]
     set width  [winfo reqwidth	.bgerrorDialog]
     set height [winfo reqheight	.bgerrorDialog]
-    set x [expr ([winfo screenwidth .bgerrorDialog]  - $width )/2 - \
-	    [winfo vrootx $parent]]
-    set y [expr ([winfo screenheight .bgerrorDialog] - $height)/2 - \
-	    [winfo vrooty $parent]]
+    set x [expr {([winfo screenwidth .bgerrorDialog]  - $width )/2 - \
+	    [winfo vrootx $parent]}]
+    set y [expr {([winfo screenheight .bgerrorDialog] - $height)/2 - \
+	    [winfo vrooty $parent]}]
     .bgerrorDialog configure -width $width
     wm geometry .bgerrorDialog +$x+$y
     wm deiconify .bgerrorDialog

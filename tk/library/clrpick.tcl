@@ -198,7 +198,7 @@ proc tkColorDialog_BuildDialog {w} {
     set stripsFrame [frame $topFrame.colorStrip]
 
     set maxWidth [::msgcat::mcmax Red Green Blue]
-    set maxWidth [expr $maxWidth<6?6:$maxWidth]
+    set maxWidth [expr {$maxWidth<6?6:$maxWidth}]
     set colorList [list \
 	    red		[::msgcat::mc "Red"]	\
 	    green	[::msgcat::mc "Green"]	\
@@ -276,7 +276,7 @@ proc tkColorDialog_BuildDialog {w} {
     #
     set botFrame [frame $w.bot -relief raised -bd 1]
     set maxWidth [::msgcat::mcmax OK Cancel]
-    set maxWidth [expr $maxWidth<8?8:$maxWidth]
+    set maxWidth [expr {$maxWidth<8?8:$maxWidth}]
     button $botFrame.ok     -text [::msgcat::mc "OK"]		\
 	    -width $maxWidth -under 0				\
 	    -command [list tkColorDialog_OkCmd $w]

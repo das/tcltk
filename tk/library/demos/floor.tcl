@@ -94,7 +94,7 @@ proc newRoom w {
 proc roomChanged {w args} {
     global currentRoom floorItems colors
     $w delete highlight
-    if [catch {set item $floorItems($currentRoom)}] {
+    if {[catch {set item $floorItems($currentRoom)}]} {
 	return
     }
     set new [eval \
