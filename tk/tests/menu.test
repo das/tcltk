@@ -1671,6 +1671,17 @@ test menu-12.3 {ConfigureMenuCloneEntries} {
     list [catch {.m1 entryconfigure dummy -menu .m3} msg] $msg [destroy .m1]
 } {0 {} {}}
 
+test menu-12.4 {ConfigureMenuCloneEntries} {
+     catch {destroy .m1}
+     catch {destroy .m2}
+     menu .m1
+     .m1 add cascade -label File -menu .m1.foo
+     menu .m1.foo
+     .m1.foo add command -label bar
+     .m1 clone .m2
+     list [catch {.m1 entryconfigure File -state disabled} msg1] $msg1 [destroy .m1]
+} {0 {} {}}
+
 test menu-13.1 {TkGetMenuIndex} {
     catch {destroy .m1}
     menu .m1

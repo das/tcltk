@@ -1998,7 +1998,7 @@ ConfigureMenuCloneEntries(interp, menuPtr, index, objc, objv)
 		Tcl_Obj *pathNamePtr = Tcl_NewStringObj(
 			Tk_PathName(menuListPtr->tkwin), -1);
 		Tcl_Obj *normalPtr = Tcl_NewStringObj("normal", -1);
-		Tcl_Obj *menuObjPtr = Tcl_NewStringObj("menu", -1);
+		Tcl_Obj *menuObjPtr = Tcl_NewStringObj("-menu", -1);
 
 		Tcl_IncrRefCount(pathNamePtr);
 		newCloneNamePtr = TkNewMenuName(menuPtr->interp,
@@ -2628,8 +2628,7 @@ CloneMenu(menuPtr, newMenuNamePtr, newMenuTypePtr)
 	Tcl_IncrRefCount(menuDupCommandArray[i]);
     }
     Tcl_Preserve((ClientData) menuPtr);
-    returnResult = Tcl_EvalObjv(menuPtr->interp, 4, menuDupCommandArray, "",
-	    -1, 0);
+    returnResult = Tcl_EvalObjv(menuPtr->interp, 4, menuDupCommandArray, 0);
     for (i = 0; i < 4; i++) {
 	Tcl_DecrRefCount(menuDupCommandArray[i]);
     }
