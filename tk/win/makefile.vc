@@ -33,6 +33,9 @@ TCLDIR		= ..\..\tcl8.1b2
 # Set this to the appropriate value of /MACHINE: for your platform
 MACHINE	= IX86
 
+# Uncomment the following line to compile with thread support
+#THREADDEFINES = -DTCL_THREADS=1
+
 # Set NODEBUG to 0 to compile with symbols
 NODEBUG = 1
 
