@@ -1390,6 +1390,12 @@ Tk_WmCmd(clientData, interp, argc, argv)
             return TCL_ERROR;
         }
 	TkpWmSetState(winPtr, NormalState);
+	/*
+	 * Follow Windows-like style here:
+	 * raise the window to the top and force the focus on it
+	 */
+	Tk_RestackWindow(tkwin, Above, NULL);
+	TkSetFocusWin(winPtr, 1);
     } else if ((c == 'f') && (strncmp(argv[1], "focusmodel", length) == 0)
 	    && (length >= 2)) {
 	if ((argc != 3) && (argc != 4)) {
