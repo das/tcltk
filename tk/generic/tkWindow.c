@@ -127,7 +127,7 @@ static TkCmd commands[] = {
 #endif
     {"update",		NULL,			Tk_UpdateObjCmd,	1, 1},
     {"winfo",		NULL,			Tk_WinfoObjCmd,		1, 1},
-    {"wm",		Tk_WmCmd,		NULL,			0, 1},
+    {"wm",		NULL,			Tk_WmObjCmd,		0, 1},
 
     /*
      * Widget class commands.

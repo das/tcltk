@@ -243,7 +243,7 @@ test winWm-6.3 {wm attributes} {pcOnly} {
     destroy .t
     toplevel .t
     list [catch {wm attributes .t -foo} msg] $msg
-} {1 {wrong # arguments: must be "wm attributes window ?-disabled ?bool?? ?-toolwindow ?bool?? ?-topmost ?bool??"}}
+} {1 {wrong # args: should be "wm attributes window ?-disabled ?bool?? ?-toolwindow ?bool?? ?-topmost ?bool??"}}
 
 destroy .t
 
