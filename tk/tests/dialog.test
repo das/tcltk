@@ -37,7 +37,7 @@ proc PressButton {btn} {
 
 proc HitReturn {w} {
     event generate $w <Enter>
-    focus $w
+    focus -force $w
     event generate $w <KeyPress> -keysym Return
 }
 
