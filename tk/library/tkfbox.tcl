@@ -1079,9 +1079,14 @@ static char updir_bits[] = {
     }
 
     # the okBtn is created after the typeMenu so that the keyboard traversal
-    # is in the right order
+    # is in the right order, and add binding so that we find out when the
+    # dialog is destroyed by the user (added here instead of to the overall
+    # window so no confusion about how much <Destroy> gets called; exactly
+    # once will do). [Bug 987169]
+
     set data(okBtn)     [::tk::AmpWidget button $f2.ok \
 	    -text "[mc "&OK"]"     -default active -pady 3]
+    bind $data(okBtn) <Destroy> [list ::tk::dialog::file::Destroyed $w]
     set data(cancelBtn) [::tk::AmpWidget button $f2.cancel \
 	    -text "[mc "&Cancel"]" -default normal -pady 3]
 
@@ -1112,9 +1117,9 @@ static char updir_bits[] = {
     $data(cancelBtn) config -command [list ::tk::dialog::file::CancelCmd $w]
     bind $w <KeyPress-Escape> [list tk::ButtonInvoke $data(cancelBtn)]
     bind $w <Alt-Key> [list tk::AltKeyInDialog $w %A]
+
     # Set up event handlers specific to File or Directory Dialogs
     #
-
     if { [string equal $class TkFDialog] } {
 	bind $data(ent) <Return> [list ::tk::dialog::file::ActivateEnt $w]
 	$data(okBtn)     config -command [list ::tk::dialog::file::OkCmd $w]
@@ -1656,6 +1661,16 @@ proc ::tk::dialog::file::CancelCmd {w} {
     upvar ::tk::dialog::file::[winfo name $w] data
     variable ::tk::Priv
 
+    $data(okBtn) configure <Destroy> {}
+    set Priv(selectFilePath) ""
+}
+
+# Gets called when user destroys the dialog directly [Bug 987169]
+#
+proc ::tk::dialog::file::Destroyed {w} {
+    upvar ::tk::dialog::file::[winfo name $w] data
+    variable ::tk::Priv
+
     set Priv(selectFilePath) ""
 }
 
@@ -1777,5 +1792,6 @@ proc ::tk::dialog::file::Done {w {selectFilePath ""}} {
 	    }
 	}
     }
+    $data(okBtn) configure <Destroy> {}
     set Priv(selectFilePath) $selectFilePath
 }
