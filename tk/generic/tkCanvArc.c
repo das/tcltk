@@ -749,8 +749,14 @@ ArcToPoint(canvas, itemPtr, pointPtr)
 
     vertex[0] = (arcPtr->bbox[0] + arcPtr->bbox[2])/2.0;
     vertex[1] = (arcPtr->bbox[1] + arcPtr->bbox[3])/2.0;
-    t1 = (pointPtr[1] - vertex[1])/(arcPtr->bbox[3] - arcPtr->bbox[1]);
-    t2 = (pointPtr[0] - vertex[0])/(arcPtr->bbox[2] - arcPtr->bbox[0]);
+    t1 = arcPtr->bbox[3] - arcPtr->bbox[1];
+    if (t1 != 0.0) {
+	t1 = (pointPtr[1] - vertex[1]) / t1;
+    }
+    t2 = arcPtr->bbox[2] - arcPtr->bbox[0];
+    if (t2 != 0.0) {
+	t2 = (pointPtr[0] - vertex[0]) / t2;
+    }
     if ((t1 == 0.0) && (t2 == 0.0)) {
 	pointAngle = 0;
     } else {
