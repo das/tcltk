@@ -42,7 +42,11 @@
 #endif
 
 #include <time.h>
-#include <tchar.h>
+#ifdef __CYGWIN__
+#    define _T(x) L##x
+#else
+#    include <tchar.h>
+#endif
 
 #ifdef _MSC_VER
 #    define hypot _hypot
