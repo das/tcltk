@@ -23,7 +23,6 @@
 #include "tkScrollbar.h"
 #include "tkMacOSXWm.h"
 #include "tkMacOSXEvent.h"
-#include "tkMacOSXUtil.h"
 
 /*
  * This is a list of all of the toplevels that have been mapped so far. It is

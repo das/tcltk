@@ -15,7 +15,6 @@
 
 #include "tkPort.h"
 #include "tkInt.h"
-#include "tkMacOSXUtil.h"
 #include "tkMacOSXInt.h"
 #include "tkFileFilter.h"
 
