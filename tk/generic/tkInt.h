@@ -474,6 +474,11 @@ typedef struct TkDisplay {
     int warpX;
     int warpY;
     int useInputMethods;	/* Whether to use input methods */
+
+    /*
+     * The following field(s) were all added for Tk8.4
+     */
+    long deletionEpoch;		/* Incremented by window deletions */
 } TkDisplay;
 
 /*

@@ -470,6 +470,7 @@ GetScreen(interp, screenName, screenPtr)
 	    dispPtr->useInputMethods = 0;
 	    OpenIM(dispPtr);
 	    TkInitXId(dispPtr);
+	    dispPtr->deletionEpoch = 0L;
 
 	    tsdPtr->displayList = dispPtr;
 	    break;
@@ -1387,6 +1388,10 @@ Tk_DestroyWindow(tkwin)
 		    (ClientData) winPtr->pathName);
 	    Tcl_DeleteHashEntry(Tcl_FindHashEntry(&winPtr->mainPtr->nameTable,
 		    winPtr->pathName));
+	    /*
+	     * Invalidate all objects referring to windows on this display.
+	     */
+	    dispPtr->deletionEpoch++;
 	}
 	winPtr->mainPtr->refCount--;
 	if (winPtr->mainPtr->refCount == 0) {
