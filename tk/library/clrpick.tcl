@@ -109,6 +109,13 @@ proc ::tk::dialog::color:: {args} {
     ::tk::RestoreFocusGrab $w $data(okBtn)
     unset data
 
+    # Remove the transient property to insulate the
+    # dialog from changes in the master's state.
+
+    if {[winfo exists $w]} {
+        wm transient $w {}
+    }
+
     return $Priv(selectColor)
 }
 

@@ -56,6 +56,13 @@ proc ::tk::MotifFDialog {type args} {
     vwait ::tk::Priv(selectFilePath)
     ::tk::RestoreFocusGrab $w $data(sEnt) withdraw
 
+    # Remove the transient property to insulate the
+    # dialog from changes in the master's state.
+
+    if {[winfo exists $w]} {
+        wm transient $w {}
+    }
+
     return $Priv(selectFilePath)
 }
 

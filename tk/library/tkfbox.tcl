@@ -878,6 +878,13 @@ proc ::tk::dialog::file:: {type args} {
 
     ::tk::RestoreFocusGrab $w $data(ent) withdraw
 
+    # Remove the transient property to insulate the
+    # dialog from changes in the master's state.
+
+    if {[winfo exists $w]} {
+        wm transient $w {}
+    }
+
     # Cleanup traces on selectPath variable
     #
 
