@@ -12,6 +12,7 @@
  */
 
 #include "tkWinInt.h"
+#ifndef STATIC_BUILD
 
 /*
  * The following declaration is for the VC++ DLL entry point.
@@ -61,7 +62,9 @@ DllEntryPoint(hInst, reason, reserved)
  *	Always TRUE.
  *
  * Side effects:
- *	None.
+ *	This might call some sycronization functions, but MSDN
+ *	documentation states: "Waiting on synchronization objects in
+ *	DllMain can cause a deadlock."
  *
  *----------------------------------------------------------------------
  */
@@ -77,8 +80,34 @@ DllMain(hInstance, reason, reserved)
      * the hInstance to use.
      */
 
-    if (reason == DLL_PROCESS_ATTACH) {
+    switch (reason) {
+    case DLL_PROCESS_ATTACH:
+	DisableThreadLibraryCalls(hInstance);
 	TkWinSetHINSTANCE(hInstance);
+	break;
+
+    case DLL_PROCESS_DETACH:
+	/*
+	 * Protect the call to TkFinalize in an SEH block.  We can't
+	 * be guarenteed Tk is always being unloaded from a stable
+	 * condition.
+	 */
+
+	__try {
+	    /*
+	     * Run and remove our exit handlers, if they haven't already
+	     * been run.  Just in case we are being unloaded prior to
+	     * Tcl (it can happen), we won't leave any dangling pointers
+	     * hanging around for when Tcl gets unloaded later.
+	     */
+
+	    TkFinalize(NULL);
+	} __except (EXCEPTION_EXECUTE_HANDLER) {
+	    /* empty handler body */
+	}
+	break;
     }
-    return (TRUE);
+    return TRUE;
 }
+#endif /* !STATIC_BUILD */
+

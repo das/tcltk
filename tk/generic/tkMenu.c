@@ -3594,7 +3594,7 @@ TkMenuInit()
 	/* 
 	 * Make sure we cleanup on finalize. 
 	 */ 
-	Tcl_CreateExitHandler((Tcl_ExitProc *) TkMenuCleanup, NULL); 
+	TkCreateExitHandler((Tcl_ExitProc *) TkMenuCleanup, NULL); 
 	Tcl_MutexUnlock(&menuMutex);
     }
     if (!tsdPtr->menusInitialized) {

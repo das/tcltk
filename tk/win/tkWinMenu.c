@@ -2990,7 +2990,7 @@ TkpMenuInit()
     tsdPtr->menuHWND = CreateWindow(MENU_CLASS_NAME, "MenuWindow", WS_POPUP,
 	0, 0, 10, 10, NULL, NULL, Tk_GetHINSTANCE(), NULL);
 
-    Tcl_CreateExitHandler(MenuExitHandler, (ClientData) NULL);
+    TkCreateExitHandler(MenuExitHandler, (ClientData) NULL);
     SetDefaults(1);
 }
 

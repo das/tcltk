@@ -208,7 +208,7 @@ TkpUseWindow(interp, tkwin, string)
      */
 
     if (tsdPtr->firstContainerPtr == (Container *) NULL) {
-        Tcl_CreateExitHandler(CleanupContainerList, (ClientData) NULL);
+        TkCreateExitHandler(CleanupContainerList, (ClientData) NULL);
     }
     
     /*
@@ -284,7 +284,7 @@ TkpMakeContainer(tkwin)
      */
 
     if (tsdPtr->firstContainerPtr == (Container *) NULL) {
-        Tcl_CreateExitHandler(CleanupContainerList, (ClientData) NULL);
+        TkCreateExitHandler(CleanupContainerList, (ClientData) NULL);
     }
     
     /*

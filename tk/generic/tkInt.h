@@ -1167,6 +1167,11 @@ EXTERN char *		TkTilePrintProc _ANSI_ARGS_((
 			    Tcl_FreeProc **freeProcPtr));
 EXTERN XEvent *		TkpGetBindingXEvent _ANSI_ARGS_((
 			    Tcl_Interp *interp));
+EXTERN void		TkCreateExitHandler _ANSI_ARGS_((Tcl_ExitProc *proc,
+			    ClientData clientData));
+EXTERN void		TkDeleteExitHandler _ANSI_ARGS_((Tcl_ExitProc *proc,
+			    ClientData clientData));
+EXTERN Tcl_ExitProc	TkFinalize;
 
 /* 
  * Unsupported commands.

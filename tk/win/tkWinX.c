@@ -277,7 +277,7 @@ TkWinXInit(hInstance)
     /*
      * Make sure we cleanup on finalize.
      */
-    Tcl_CreateExitHandler((Tcl_ExitProc *) TkWinXCleanup,
+    TkCreateExitHandler((Tcl_ExitProc *) TkWinXCleanup,
 	    (ClientData) hInstance);
 }
 

@@ -360,7 +360,7 @@ CreateTopLevelWindow(interp, parent, name, screenName, flags)
 	 * exits.
 	 */
 
-	Tcl_CreateExitHandler(DeleteWindowsExitProc, (ClientData) NULL);
+	TkCreateExitHandler(DeleteWindowsExitProc, (ClientData) tsdPtr);
     }
 
     if ((parent != NULL) && (screenName != NULL) && (screenName[0] == '\0')) {
@@ -2705,12 +2705,11 @@ Tk_GetNumMainWindows()
 
 static void
 DeleteWindowsExitProc(clientData)
-    ClientData clientData;		/* Not used. */
+    ClientData clientData;		/* tsdPtr when handler was created. */
 {
     TkDisplay *dispPtr, *nextPtr;
     Tcl_Interp *interp;
-    ThreadSpecificData *tsdPtr = (ThreadSpecificData *) 
-            Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
+    ThreadSpecificData *tsdPtr = (ThreadSpecificData *) clientData;
 
     /*
      * Finish destroying any windows that are in a

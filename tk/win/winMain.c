@@ -174,7 +174,7 @@ Tcl_AppInit(interp)
      * This exit handler will be used to free the
      * resources allocated in this file.
      */
-    Tcl_CreateExitHandler(AppInitExitHandler, NULL);
+    TkCreateExitHandler(AppInitExitHandler, NULL);
 
     /*
      * Initialize the console only if we are running as an interactive

@@ -1272,7 +1272,7 @@ InitSampleControls()
      * code it includes will crash the Mac on exit from Tk.
 	 
      oldPixPtr = ((CWindowPeek) windowRef)->port.portPixMap;
-     Tcl_CreateExitHandler(ButtonExitProc, (ClientData) NULL);
+     TkCreateExitHandler(ButtonExitProc, (ClientData) NULL);
     */
 
 }
