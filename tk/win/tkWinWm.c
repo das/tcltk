@@ -3823,8 +3823,7 @@ UpdateGeometryInfo(clientData)
      * state of the window changes.
      */
 
-    if ((wmPtr->wrapper == NULL)
-	    || IsIconic(wmPtr->wrapper) || IsZoomed(wmPtr->wrapper)) {
+    if (IsIconic(wmPtr->wrapper) || IsZoomed(wmPtr->wrapper)) {
 	return;
     }
 
