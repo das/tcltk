@@ -339,7 +339,7 @@ ControlUtfProc(clientData, src, srcLen, flags, statePtr, dst, dstLen,
 				 * correspond to the bytes stored in the
 				 * output buffer. */
 {
-    CONST char *srcStart, *srcEnd;
+    CONST char *srcEnd;
     char *dstStart, *dstEnd;
     Tcl_UniChar ch;
     int result;
@@ -351,7 +351,6 @@ ControlUtfProc(clientData, src, srcLen, flags, statePtr, dst, dstLen,
 
     result = TCL_OK;    
 
-    srcStart = src;
     srcEnd = src + srcLen;
 
     dstStart = dst;

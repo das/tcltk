@@ -3490,6 +3490,7 @@ Tk_CoordsToWindow(rootX, rootY, tkwin)
     WmInfo *wmPtr;
     TkWindow *winPtr, *childPtr, *nextPtr;
     TkDisplay *dispPtr = ((TkWindow *) tkwin)->dispPtr;
+    Tk_ErrorHandler handler;
 
     /*
      * Step 1: scan the list of toplevel windows to see if there is a
@@ -3528,12 +3529,17 @@ Tk_CoordsToWindow(rootX, rootY, tkwin)
      *    the toplevel.
      */
 
+    handler = Tk_CreateErrorHandler(Tk_Display(tkwin), -1, -1, -1,
+	    (Tk_ErrorProc *) NULL, (ClientData) NULL);
     while (1) {
 	if (XTranslateCoordinates(Tk_Display(tkwin), parent, window,
 		x, y, &childX, &childY, &child) == False) {
-	    panic("Tk_CoordsToWindow got False return from XTranslateCoordinates");
+	    fprintf (stderr, "Tk_CoordsToWindow got False return from XTranslateCoordinates\n");
+	    fflush (stderr);
+	    return NULL;
 	}
 	if (child == None) {
+	    Tk_DeleteErrorHandler(handler);
 	    return NULL;
 	}
 	for (wmPtr = (WmInfo *) dispPtr->firstWmPtr; wmPtr != NULL; 
@@ -3556,6 +3562,7 @@ Tk_CoordsToWindow(rootX, rootY, tkwin)
     }
 
     gotToplevel:
+    Tk_DeleteErrorHandler(handler);
     winPtr = wmPtr->winPtr;
     if (winPtr->mainPtr != ((TkWindow *) tkwin)->mainPtr) {
 	return NULL;
