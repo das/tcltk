@@ -656,7 +656,7 @@ while {![eof $$f]} {
     }
 }
 close $$f
-set f [open $(DOC_INSTALL_DIR:\=/)/tcl$(VERSION).cnt a]
+set f [open "$(DOC_INSTALL_DIR:\=/)/tcl$(VERSION).cnt" a]
 puts $$f {:Include $(HLPBASE).cnt}
 close $$f
 <<
