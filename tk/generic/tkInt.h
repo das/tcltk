@@ -423,8 +423,9 @@ typedef struct TkDisplay {
 				/* First in list of chunks of window
 				 * identifers that can't be reused right
 				 * now. */
-    int idCleanupScheduled;	/* 1 means a call to WindowIdCleanup has
-				 * already been scheduled, 0 means it
+    Tcl_TimerToken idCleanupScheduled;
+				/* If set, it means a call to WindowIdCleanup
+				 * has already been scheduled, 0 means it
 				 * hasn't. */
 
     /*
