@@ -469,12 +469,12 @@ FileReadGIF(interp, chan, fileName, format, imageHandle, destX, destY,
 	block.height = height;
 	block.pixelSize = (transparent>=0) ? 4 : 3;
 	block.offset[3] = (transparent>=0) ? 3 : 0;
-	block.pitch = block.pixelSize * width;
-	nBytes = block.pitch * height;
+	block.pitch = block.pixelSize * fileWidth;
+	nBytes = block.pitch * fileHeight;
 	block.pixelPtr = (unsigned char *) ckalloc((unsigned) nBytes);
 
-	if (ReadImage(interp, (char *) block.pixelPtr, chan, width,
-		height, colorMap, fileWidth, fileHeight, srcX, srcY,
+	if (ReadImage(interp, (char *) block.pixelPtr, chan, fileWidth,
+		fileHeight, colorMap, fileWidth, fileHeight, srcX, srcY,
 		BitSet(buf[8], INTERLACE), transparent) != TCL_OK) {
 	    goto error;
 	}
