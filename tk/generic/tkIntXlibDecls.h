@@ -386,7 +386,7 @@ EXTERN Status		XAllocColor _ANSI_ARGS_((Display* d, Colormap c,
 EXTERN void		XBell _ANSI_ARGS_((Display* d, int i));
 /* 14 */
 EXTERN void		XChangeProperty _ANSI_ARGS_((Display* d, Window w, 
-				Atom a, Atom a, int i1, int i2, 
+				Atom a1, Atom a2, int i1, int i2, 
 				_Xconst unsigned char* c, int i3));
 /* 15 */
 EXTERN void		XChangeWindowAttributes _ANSI_ARGS_((Display* d, 
@@ -728,7 +728,7 @@ typedef struct TkIntXlibStubs {
     XErrorHandler (*xSetErrorHandler) _ANSI_ARGS_((XErrorHandler x)); /* 11 */
     Status (*xAllocColor) _ANSI_ARGS_((Display* d, Colormap c, XColor* xp)); /* 12 */
     void (*xBell) _ANSI_ARGS_((Display* d, int i)); /* 13 */
-    void (*xChangeProperty) _ANSI_ARGS_((Display* d, Window w, Atom a, Atom a, int i1, int i2, _Xconst unsigned char* c, int i3)); /* 14 */
+    void (*xChangeProperty) _ANSI_ARGS_((Display* d, Window w, Atom a1, Atom a2, int i1, int i2, _Xconst unsigned char* c, int i3)); /* 14 */
     void (*xChangeWindowAttributes) _ANSI_ARGS_((Display* d, Window w, unsigned long ul, XSetWindowAttributes* x)); /* 15 */
     void (*xConfigureWindow) _ANSI_ARGS_((Display* d, Window w, unsigned int i, XWindowChanges* x)); /* 16 */
     void (*xCopyArea) _ANSI_ARGS_((Display* d, Drawable dr1, Drawable dr2, GC g, int i1, int i2, unsigned int ui1, unsigned int ui2, int i3, int i4)); /* 17 */
