@@ -9,7 +9,7 @@ AC_INIT(../generic/tk.h)
 TK_VERSION=8.2
 TK_MAJOR_VERSION=8
 TK_MINOR_VERSION=2
-TK_PATCH_LEVEL=b1
+TK_PATCH_LEVEL=b2
 VER=$TK_MAJOR_VERSION$TK_MINOR_VERSION
 
 #--------------------------------------------------------------------
