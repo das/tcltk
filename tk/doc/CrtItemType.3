@@ -442,7 +442,7 @@ In order to generate Postscript that complies with the Adobe Document
 Structuring Conventions, Tk actually generates Postscript in two passes.
 It calls each item's \fIpostscriptProc\fR in each pass.
 The only purpose of the first pass is to collect font information
-(which is done by \fBTk_CanvPsFont\fR);  the actual Postscript is
+(which is done by \fBTk_CanvasPsFont\fR);  the actual Postscript is
 discarded.
 Tk sets the \fIprepass\fR argument to \fIpostscriptProc\fR to 1
 during the first pass;  the type manager can use \fIprepass\fR to skip

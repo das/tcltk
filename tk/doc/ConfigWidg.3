@@ -258,13 +258,13 @@ will never match any arguments.
 .TP
 \fBTK_CONFIG_FONT\fR
 The value must be an ASCII string identifying a font in a form
-suitable for passing to \fBTk_GetFontStruct\fR.  The value is converted
-to an (\fBXFontStruct *\fR) by calling \fBTk_GetFontStruct\fR and the result
+suitable for passing to \fBTk_GetFont\fR.  The value is converted
+to an (\fBXFontStruct *\fR) by calling \fBTk_GetFont\fR and the result
 is stored in the target.
 If TK_CONFIG_NULL_OK is specified in \fIspecFlags\fR then the value
 may be an empty string, in which case the target will be set to NULL.
 If the previous value of the target
-wasn't NULL, then it is freed by passing it to \fBTk_FreeFontStruct\fR.
+wasn't NULL, then it is freed by passing it to \fBTk_FreeFont\fR.
 .TP
 \fBTK_CONFIG_INT\fR
 The value must be an ASCII integer string
