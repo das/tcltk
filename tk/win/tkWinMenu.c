@@ -2116,26 +2116,22 @@ DrawMenuEntryLabel(
 	    }
 	    case COMPOUND_LEFT: {
 		/*
-		 * The standard image position on Windows is
-		 * in the indicator space to the left of
-		 * the entries.  Of course if this entry is
-		 * a radio/check button, we can't do that 
-		 * because the indicator space will be used.
+		 * The standard image position on Windows is in the indicator
+		 * space to the left of the entries, unless this entry is a
+		 * radio|check button because then the indicator space will
+		 * be used.
 		 */
-		if ((mePtr->type == CHECK_BUTTON_ENTRY) 
-		  || (mePtr->type == RADIO_BUTTON_ENTRY)) {
-		    textXOffset = imageWidth + 2;
-		    textYOffset = 0;
-		    imageXOffset = 0;
-		    imageYOffset = 0;
-		} else {
-		    textXOffset = imageWidth + 2 - indicatorSpace;
+		textXOffset = imageWidth + 2;
+		textYOffset = 0;
+		imageXOffset = 0;
+		imageYOffset = 0;
+		if ((mePtr->type != CHECK_BUTTON_ENTRY) 
+			&& (mePtr->type != RADIO_BUTTON_ENTRY)) {
+		    textXOffset -= indicatorSpace;
 		    if (textXOffset < 0) {
 			textXOffset = 0;
 		    }
-		    textYOffset = 0;
 		    imageXOffset = -indicatorSpace;
-		    imageYOffset = 0;
 		}
 		break;
 	    }
