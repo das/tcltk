@@ -3255,7 +3255,7 @@ TkFontParseXLFD(string, faPtr, xaPtr)
     for (i = 0; *src != '\0'; src++) {
 	if (!(*src & 0x80)
 		&& Tcl_UniCharIsUpper(UCHAR(*src))) {
-	    *src = Tcl_UniCharToLower(UCHAR(*src));
+	    *src = (char) Tcl_UniCharToLower(UCHAR(*src));
 	}
 	if (*src == '-') {
 	    i++;

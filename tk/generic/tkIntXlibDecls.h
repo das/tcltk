@@ -15,7 +15,11 @@
 #ifndef _TKINTXLIBDECLS
 #define _TKINTXLIBDECLS
 
+#ifdef MAC_TCL
+#include "Xutil.h"
+#else
 #include "X11/Xutil.h"
+#endif
 
 #ifdef BUILD_tk
 #undef TCL_STORAGE_CLASS
