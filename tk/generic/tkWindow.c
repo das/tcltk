@@ -2503,8 +2503,18 @@ Tk_MainWindow(interp)
 					 * reporting also. */
 {
     TkMainInfo *mainPtr;
-    ThreadSpecificData *tsdPtr = (ThreadSpecificData *) 
-            Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
+    ThreadSpecificData *tsdPtr;
+
+    if (interp == NULL) {
+	return NULL;
+    }
+#ifdef USE_TCL_STUBS
+    if (tclStubsPtr == NULL) {
+	return NULL;
+    }
+#endif
+    tsdPtr = (ThreadSpecificData *) 
+	Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
     for (mainPtr = tsdPtr->mainWindowList; mainPtr != NULL;
 	    mainPtr = mainPtr->nextPtr) {
@@ -2628,8 +2638,16 @@ OpenIM(dispPtr)
 int
 Tk_GetNumMainWindows()
 {
-    ThreadSpecificData *tsdPtr = (ThreadSpecificData *) 
-            Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
+    ThreadSpecificData *tsdPtr;
+
+#ifdef USE_TCL_STUBS
+    if (tclStubsPtr == NULL) {
+	return 0;
+    }
+#endif
+
+    tsdPtr = (ThreadSpecificData *) 
+	Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
     return tsdPtr->numMainWindows;
 }
