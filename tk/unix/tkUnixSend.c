@@ -1256,6 +1256,39 @@ TkGetInterpNames(interp, tkwin)
 /*
  *--------------------------------------------------------------
  *
+ * TkSendCleanup --
+ *
+ *	This procedure is called to free resources used by the
+ *	communication channels for sending commands and
+ *	receiving results.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	Frees various data structures and windows.
+ *
+ *--------------------------------------------------------------
+ */
+
+void
+TkSendCleanup(dispPtr)
+    TkDisplay *dispPtr;
+{
+    if (dispPtr->commTkwin != NULL) {
+	Tk_DeleteEventHandler(dispPtr->commTkwin, PropertyChangeMask,
+	    SendEventProc, (ClientData) dispPtr);
+#ifdef PURIFY
+	/* Tk_DestroyWindow(dispPtr->commTkwin); */
+	ckfree((char *) dispPtr->commTkwin);
+#endif
+	dispPtr->commTkwin = NULL;
+    }
+}
+
+/*
+ *--------------------------------------------------------------
+ *
  * SendInit --
  *
  *	This procedure is called to initialize the
