@@ -138,7 +138,7 @@ test menubutton-3.6 {ButtonWidgetCmd procedure, "cget" option} {
 } {3}
 test menubutton-3.7 {ButtonWidgetCmd procedure, "configure" option} {
     llength [.mb configure]
-} {32}
+} {33}
 test menubutton-3.8 {ButtonWidgetCmd procedure, "configure" option} {
     list [catch {.mb configure -gorp} msg] $msg
 } {1 {unknown option "-gorp"}}

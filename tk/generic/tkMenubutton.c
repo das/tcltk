@@ -37,6 +37,15 @@ static char *stateStrings[] = {
 };
 
 /*
+ * The following table defines the legal values for the -compound option.
+ * It is used with the "enum compound" declaration in tkButton.h
+ */
+
+static char *compoundStrings[] = {
+    "bottom", "center", "left", "none", "right", "top", (char *) NULL
+};
+
+/*
  * Information used for parsing configuration specs:
  */
 
@@ -113,6 +122,9 @@ static Tk_OptionSpec optionSpecs[] = {
     {TK_OPTION_RELIEF, "-relief", "relief", "Relief",
 	DEF_MENUBUTTON_RELIEF, -1, Tk_Offset(TkMenuButton, relief), 
         0, 0, 0},
+    {TK_OPTION_STRING_TABLE, "-compound", "compound", "Compound",
+         DEF_BUTTON_COMPOUND, -1, Tk_Offset(TkMenuButton, compound), 0,
+         (ClientData) compoundStrings, 0},
     {TK_OPTION_STRING_TABLE, "-state", "state", "State",
 	DEF_MENUBUTTON_STATE, -1, Tk_Offset(TkMenuButton, state),
 	0, (ClientData) stateStrings, 0},
