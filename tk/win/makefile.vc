@@ -322,18 +322,21 @@ $(TKPLUGINDLL): $(TKOBJS) $(TMPDIR)\tk.res $(TMPDIR)\plugin.def
 
 $(WISH): $(WISHOBJS) $(TKLIB) $(TMPDIR)\wish.res
 	set LIB=$(TOOLS32)\lib
-	$(link32) $(ldebug) $(guilflags) $(TMPDIR)\wish.res -out:$@ \
+	$(link32) $(ldebug) $(guilflags) $(TMPDIR)\wish.res -stack:2300000 \
+		-out:$@ \
 		$(guilibsdll) $(TCLLIBDIR)\$(TCLLIB) $(TKLIB) $(WISHOBJS) 
 
 $(WISHP): $(WISHOBJS) $(TKPLUGINLIB) $(TMPDIR)\wish.res
 	set LIB=$(TOOLS32)\lib
-	$(link32) $(ldebug) $(guilflags) $(TMPDIR)\wish.res -out:$@ \
+	$(link32) $(ldebug) $(guilflags) $(TMPDIR)\wish.res -stack:2300000 \
+		-out:$@ \
 		$(guilibsdll) $(TCLLIBDIR)\$(TCLPLUGINLIB) \
 		$(TKPLUGINLIB) $(WISHOBJS) 
 
 $(TKTEST): $(TKTESTOBJS) $(TKLIB) $(TMPDIR)\wish.res
 	set LIB=$(TOOLS32)\lib
-	$(link32) $(ldebug) $(guilflags) $(TMPDIR)\wish.res -out:$@ \
+	$(link32) $(ldebug) $(guilflags) $(TMPDIR)\wish.res -stack:2300000 \
+		-out:$@ \
 		$(guilibsdll) $(TCLLIBDIR)\$(TCLLIB) $(TKLIB) $(TKTESTOBJS)
 
 $(TMPDIR)\tk.def: $(DUMPEXTS) $(TKOBJS)
