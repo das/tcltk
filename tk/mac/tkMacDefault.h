@@ -433,6 +433,7 @@
  * Defaults for texts:
  */
 
+#define DEF_TEXT_AUTO_SEPARATORS	"1"
 #define DEF_TEXT_BG_COLOR		NORMAL_BG
 #define DEF_TEXT_BG_MONO		WHITE
 #define DEF_TEXT_BORDER_WIDTH		"0"
@@ -467,6 +468,7 @@
 #define DEF_TEXT_STATE			"normal"
 #define DEF_TEXT_TABS			""
 #define DEF_TEXT_TAKE_FOCUS		(char *) NULL
+#define DEF_TEXT_UNDO    		"0"
 #define DEF_TEXT_WIDTH			"80"
 #define DEF_TEXT_WRAP			"char"
 #define DEF_TEXT_XSCROLL_COMMAND	""

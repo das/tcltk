@@ -313,6 +313,8 @@ switch $::tcl_platform(platform) {
 	event add <<Copy>> <Control-Key-c> <Key-F16>
 	event add <<Paste>> <Control-Key-v> <Key-F18>
 	event add <<PasteSelection>> <ButtonRelease-2>
+	event add <<Undo>> <Control-Key-z>
+	event add <<Redo>> <Control-Key-Z>
 	# Some OS's define a goofy (as in, not <Shift-Tab>) keysym
 	# that is returned when the user presses <Shift-Tab>.  In order for
 	# tab traversal to work, we have to add these keysyms to the 
@@ -337,6 +339,8 @@ switch $::tcl_platform(platform) {
 	event add <<Copy>> <Control-Key-c> <Control-Key-Insert>
 	event add <<Paste>> <Control-Key-v> <Shift-Key-Insert>
 	event add <<PasteSelection>> <ButtonRelease-2>
+  	event add <<Undo>> <Control-Key-z>
+	event add <<Redo>> <Control-Key-y>
     }
     "macintosh" {
 	event add <<Cut>> <Control-Key-x> <Key-F2> 
@@ -344,6 +348,8 @@ switch $::tcl_platform(platform) {
 	event add <<Paste>> <Control-Key-v> <Key-F4>
 	event add <<PasteSelection>> <ButtonRelease-2>
 	event add <<Clear>> <Clear>
+	event add <<Undo>> <Control-Key-z>
+	event add <<Redo>> <Control-Key-Z>
     }
 }
 # ----------------------------------------------------------------------
