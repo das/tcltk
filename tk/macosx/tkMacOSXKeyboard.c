@@ -712,9 +712,18 @@ TkpGetKeySym(
      */
 
     index = 0;
+
+    /*
+     * We want Option key combinations to use their base chars as keysyms, so
+     * we ignore the option modifier here.
+     */
+
+#if 0
     if (eventPtr->xkey.state & OPTION_MASK) {
         index |= 2;
     }
+#endif
+
     if ((eventPtr->xkey.state & ShiftMask)
             || (/* (dispPtr->lockUsage != LU_IGNORE)
                    && */ (eventPtr->xkey.state & LockMask))) {
