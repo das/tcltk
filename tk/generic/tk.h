@@ -53,18 +53,6 @@ extern "C" {
 #define TK_VERSION	"8.4"
 #define TK_PATCH_LEVEL	"8.4.0"
 
-/* 
- * A special definition used to allow this header file to be included
- * from windows or mac resource files so that they can obtain version
- * information.  RC_INVOKED is defined by default by the windows RC tool
- * and manually set for macintosh.
- *
- * Resource compilers don't like all the C stuff, like typedefs and
- * procedure declarations, that occur below, so block them out.
- */
-    
-#ifndef RC_INVOKED
-    
 /*
  * The following definitions set up the proper options for Macintosh
  * compilers.  We use this method because there is no autoconf equivalent.
@@ -83,6 +71,18 @@ extern "C" {
 #   endif
 #endif
 
+/* 
+ * A special definition used to allow this header file to be included
+ * from windows or mac resource files so that they can obtain version
+ * information.  RC_INVOKED is defined by default by the windows RC tool
+ * and manually set for macintosh.
+ *
+ * Resource compilers don't like all the C stuff, like typedefs and
+ * procedure declarations, that occur below, so block them out.
+ */
+    
+#ifndef RC_INVOKED
+    
 #ifndef _XLIB_H
 #   if defined (MAC_TCL)
 #	include <Xlib.h>
