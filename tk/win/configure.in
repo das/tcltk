@@ -13,6 +13,17 @@ TK_PATCH_LEVEL="a3"
 VER=$TK_MAJOR_VERSION$TK_MINOR_VERSION
 
 #------------------------------------------------------------------------
+# Handle the --prefix=... option
+#------------------------------------------------------------------------
+
+if test "${prefix}" = "NONE"; then
+    prefix=/usr/local
+fi
+if test "${exec_prefix}" = "NONE"; then
+    exec_prefix=$prefix
+fi
+
+#------------------------------------------------------------------------
 # Standard compiler checks
 #------------------------------------------------------------------------
 
