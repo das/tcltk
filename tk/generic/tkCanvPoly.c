@@ -1484,20 +1484,15 @@ PolygonToArea(canvas, itemPtr, rectPtr)
 	polyPoints = polyPtr->coordPtr;
     }
 
-    if (polyPtr->fillGC != None) {
-	inside = TkPolygonToArea(polyPoints, numPoints, rectPtr);
-	if (inside==0) goto donearea;
-    } else {
-	if ((polyPoints[0] >= rectPtr[0])
-		&& (polyPoints[0] <= rectPtr[2])
-		&& (polyPoints[1] >= rectPtr[1])
-		&& (polyPoints[1] <= rectPtr[3])) {
-	    inside = 1;
-	}
-    }
+    /*
+     * Simple test to see if we are in the polygon.  Polygons are
+     * different from othe canvas items in that they register points
+     * being inside even if it isn't filled.
+     */
+    inside = TkPolygonToArea(polyPoints, numPoints, rectPtr);
+    if (inside==0) goto donearea;
 
     if (polyPtr->outline.gc == None) goto donearea ;
-
 
     /*
      * Iterate through all of the edges of the line, computing a polygon
