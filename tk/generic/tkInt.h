@@ -983,6 +983,10 @@ EXTERN int              Tk_MessageBoxObjCmd _ANSI_ARGS_((ClientData clientData,
 EXTERN int		Tk_MessageObjCmd _ANSI_ARGS_((ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *CONST objv[]));
+EXTERN int		Tk_PanedWindowObjCmd _ANSI_ARGS_((
+			    ClientData clientData,
+			    Tcl_Interp *interp, int objc,
+			    Tcl_Obj *CONST objv[]));
 EXTERN int		Tk_OptionObjCmd _ANSI_ARGS_((ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 	                    Tcl_Obj *CONST objv[]));

@@ -143,6 +143,7 @@ static TkCmd commands[] = {
     {"listbox",		NULL,			Tk_ListboxObjCmd,	1, 0},
     {"menubutton",	NULL,                   Tk_MenubuttonObjCmd,	1, 0},
     {"message",		NULL,			Tk_MessageObjCmd,	1, 0},
+    {"panedwindow",	NULL,			Tk_PanedWindowObjCmd,	1, 0},
     {"radiobutton",	NULL,			Tk_RadiobuttonObjCmd,	1, 0},
     {"scale",		NULL,	                Tk_ScaleObjCmd,		1, 0},
     {"scrollbar",	Tk_ScrollbarCmd,	NULL,			1, 1},

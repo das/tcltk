@@ -319,6 +319,7 @@ TK_OBJS = \
 	tkMenubutton.$(OBJEXT) \
 	tkMenuDraw.$(OBJEXT) \
 	tkMessage.$(OBJEXT) \
+	tkPanedWindow.$(OBJEXT) \
 	tkObj.$(OBJEXT) \
 	tkOldConfig.$(OBJEXT) \
 	tkOption.$(OBJEXT) \

@@ -331,6 +331,7 @@ TKOBJS = \
 	$(TMP_DIR)\tkMenubutton.obj \
 	$(TMP_DIR)\tkMenuDraw.obj \
 	$(TMP_DIR)\tkMessage.obj \
+	$(TMP_DIR)\tkPanedWindow.obj \
 	$(TMP_DIR)\tkObj.obj \
 	$(TMP_DIR)\tkOldConfig.obj \
 	$(TMP_DIR)\tkOption.obj \
@@ -651,6 +652,7 @@ $(GENERICDIR)/tkListbox.c: $(GENERICDIR)/default.h
 $(GENERICDIR)/tkMenu.c: $(GENERICDIR)/default.h
 $(GENERICDIR)/tkMenubutton.c: $(GENERICDIR)/default.h
 $(GENERICDIR)/tkMessage.c: $(GENERICDIR)/default.h
+$(GENERICDIR)/tkPanedWindow.c: $(GENERICDIR)/default.h
 $(GENERICDIR)/tkScale.c: $(GENERICDIR)/default.h
 $(GENERICDIR)/tkScrollbar.c: $(GENERICDIR)/default.h
 $(GENERICDIR)/tkText.c: $(GENERICDIR)/default.h
