@@ -470,7 +470,8 @@ typedef struct TkText {
 				 * image segment doesn't yet have an
 				 * associated image, there is no entry for
 				 * it here. */
-    int state;			/* One of the TK_STATE_* values. */
+    Tk_Uid state;		/* Either normal or disabled. A text 
+				 * widget is read-only when disabled. */
 
     /*
      * Default information for displaying (may be overridden by tags

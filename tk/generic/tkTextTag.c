@@ -392,9 +392,9 @@ TkTextTagCmd(textPtr, interp, argc, argv)
 		}
 	    }
 	    if ((tagPtr->wrapMode != NULL)
-		    && (tagPtr->wrapMode != tkTextCharUid)
-		    && (tagPtr->wrapMode != tkTextNoneUid)
-		    && (tagPtr->wrapMode != tkTextWordUid)) {
+		    && (tagPtr->wrapMode != Tk_GetUid("char"))
+		    && (tagPtr->wrapMode != Tk_GetUid("none"))
+		    && (tagPtr->wrapMode != Tk_GetUid("word"))) {
 		Tcl_AppendResult(interp, "bad wrap mode \"", tagPtr->wrapMode,
 			"\": must be char, none, or word", (char *) NULL);
 		tagPtr->wrapMode = NULL;

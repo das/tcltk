@@ -184,7 +184,6 @@ TkBindEventProc(winPtr, eventPtr)
 {
 #define MAX_OBJS 20
     ClientData objects[MAX_OBJS], *objPtr;
-    static Tk_Uid allUid = NULL;
     TkWindow *topLevPtr;
     int i, count;
     char *p;
@@ -232,10 +231,7 @@ TkBindEventProc(winPtr, eventPtr)
 	} else {
 	    count = 3;
 	}
-	if (allUid == NULL) {
-	    allUid = Tk_GetUid("all");
-	}
-	objPtr[count-1] = (ClientData) allUid;
+	objPtr[count-1] = (ClientData) Tk_GetUid("all");
     }
     Tk_BindEvent(winPtr->mainPtr->bindingTable, eventPtr, (Tk_Window) winPtr,
 	    count, objPtr);

@@ -3231,9 +3231,9 @@ AppearanceEntryDrawWrapper(
         itemRect.bottom = itemRect.top + height;
         itemRect.right = itemRect.left + width;
     
-        if (mePtr->state == TK_STATE_ACTIVE) {
+        if (mePtr->state == ENTRY_ACTIVE) {
             theState = kThemeMenuSelected;
-        } else if (mePtr->state == TK_STATE_DISABLED) {
+        } else if (mePtr->state == ENTRY_DISABLED) {
     	    theState = kThemeMenuDisabled;
         } else {
     	    theState = kThemeMenuActive;

@@ -604,8 +604,8 @@ EmbImageLayoutProc(textPtr, indexPtr, eiPtr, offset, maxX, maxChars,
 				 * many characters. */
     int noCharsYet;		/* Non-zero means no characters have been
 				 * assigned to this line yet. */
-    Tk_Uid wrapMode;		/* Wrap mode to use for line: tkTextCharUid,
-				 * tkTextNoneUid, or tkTextWordUid. */
+    Tk_Uid wrapMode;		/* Wrap mode to use for line: char, 
+				 * text, or word. */
     register TkTextDispChunk *chunkPtr;
 				/* Structure to fill in with information
 				 * about this chunk.  The x field has already
@@ -630,7 +630,7 @@ EmbImageLayoutProc(textPtr, indexPtr, eiPtr, offset, maxX, maxChars,
 	height += 2*eiPtr->body.ei.padY;
     }
     if ((width > (maxX - chunkPtr->x))
-	    && !noCharsYet && (textPtr->wrapMode != tkTextNoneUid)) {
+	    && !noCharsYet && (textPtr->wrapMode != Tk_GetUid("none"))) {
 	return 0;
     }
 

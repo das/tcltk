@@ -131,7 +131,7 @@ static TkCmd commands[] = {
     {"button",		NULL,			Tk_ButtonObjCmd,	1, 0},
     {"canvas",		Tk_CanvasCmd,		NULL,			1, 1},
     {"checkbutton",	NULL,			Tk_CheckbuttonObjCmd,	1, 0},
-    {"entry",		Tk_EntryCmd,		NULL,			1, 1},
+    {"entry",		NULL,                   Tk_EntryObjCmd,		1, 0},
     {"frame",		Tk_FrameCmd,		NULL,			1, 1},
     {"label",		NULL,			Tk_LabelObjCmd,		1, 0},
     {"listbox",		Tk_ListboxCmd,		NULL,			1, 1},
