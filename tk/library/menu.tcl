@@ -555,6 +555,10 @@ proc tkMenuMotion {menu x y state} {
 proc tkMenuButtonDown menu {
     global tkPriv
     global tcl_platform
+
+    if {![winfo viewable $menu]} {
+        return
+    }
     $menu postcascade active
     if {[string compare $tkPriv(postedMb) ""]} {
 	grab -global $tkPriv(postedMb)
@@ -1242,8 +1246,9 @@ proc tk_popup {menu x y {entry {}}} {
 	tkMenuUnpost {}
     }
     tkPostOverPoint $menu $x $y $entry
-    if {![string compare $tcl_platform(platform) "unix"]} {
-	tkSaveGrabInfo $menu
+    if {![string compare $tcl_platform(platform) "unix"] \
+	    && [winfo viewable $menu]} {
+        tkSaveGrabInfo $menu
 	grab -global $menu
 	set tkPriv(popup) $menu
 	tk_menuSetFocus $menu
