@@ -347,8 +347,14 @@ GetBitmap(interp, tkwin, string)
                     " safe interpreter", (char *) NULL);
             goto error;
         }
-        
-	string = Tcl_TranslateFileName(interp, string + 1, &buffer);
+
+	/*
+	 * Note that we need to cast away the CONST from the string because
+	 * Tcl_TranslateFileName is non const, even though it doesn't modify
+	 * the string.
+	 */
+
+	string = Tcl_TranslateFileName(interp, (char *) string + 1, &buffer);
 	if (string == NULL) {
 	    goto error;
 	}

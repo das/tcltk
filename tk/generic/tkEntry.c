@@ -1049,7 +1049,7 @@ ConfigureEntry(interp, entryPtr, objc, objv, flags)
     int flags;			/* Flags to pass to Tk_ConfigureWidget. */
 {
     Tk_SavedOptions savedOptions;
-    Tcl_Obj *errorResult;
+    Tcl_Obj *errorResult = NULL;
     int error;
     int oldExport;
 

@@ -582,7 +582,7 @@ ConfigureScale(interp, scalePtr, objc, objv)
     Tcl_Obj *CONST objv[];	/* Argument values. */
 {
     Tk_SavedOptions savedOptions;
-    Tcl_Obj *errorResult;
+    Tcl_Obj *errorResult = NULL;
     int error;
     char *label;
 

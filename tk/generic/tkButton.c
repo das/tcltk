@@ -977,7 +977,7 @@ ConfigureButton(interp, butPtr, objc, objv)
     Tcl_Obj *CONST objv[];	/* Argument values. */
 {
     Tk_SavedOptions savedOptions;
-    Tcl_Obj *errorResult;
+    Tcl_Obj *errorResult = NULL;
     int error;
     Tk_Image image;
 

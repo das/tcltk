@@ -498,7 +498,7 @@ ConfigureMenuButton(interp, mbPtr, objc, objv)
     Tcl_Obj *CONST objv[];	/* Arguments. */
 {
     Tk_SavedOptions savedOptions;
-    Tcl_Obj *errorResult;
+    Tcl_Obj *errorResult = NULL;
     int error;
     Tk_Image image;
 
