@@ -1448,6 +1448,17 @@ test textDisp-13.9 {TkTextSeeCmd procedure} {fonts} {
     .t see 30.90
     lappend x [.t bbox 30.90]
 } {{80 55 7 13} {136 55 7 13} {136 55 7 13} {80 55 7 13}}
+test textDisp-13.10 {TkTextSeeCmd procedure} {} {
+    # SF Bug 641778
+    set w .tsee
+    destroy $w
+    text $w -font {Helvetica 8 normal} -bd 16
+    $w insert end Hello
+    $w see end
+    set res [$w bbox end]
+    destroy $w
+    set res
+} {}
 wm geom . {}
 
 .t configure -wrap none
