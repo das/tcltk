@@ -82,6 +82,16 @@ typedef struct TkCursor {
 } TkCursor;
 
 /*
+ * This defines whether we should try to use XIM over-the-spot style
+ * input.  Allow users to override it.  It is a much more elegant use
+ * of XIM, but uses a bit more memory.
+ */
+
+#ifndef TK_XIM_SPOT
+#   define TK_XIM_SPOT	1
+#endif
+
+/*
  * One of the following structures is maintained for each display
  * containing a window managed by Tk.  In part, the structure is 
  * used to store thread-specific data, since each thread will have 
@@ -456,6 +466,9 @@ typedef struct TkDisplay {
 
 #ifdef TK_USE_INPUT_METHODS
     XIM inputMethod;		/* Input method for this display */
+#if TK_XIM_SPOT
+    XFontSet inputXfs;		/* XFontSet cached for over-the-spot XIM. */
+#endif
 #endif /* TK_USE_INPUT_METHODS */
     Tcl_HashTable winTable;	/* Maps from X window ids to TkWindow ptrs. */
 
@@ -480,6 +493,7 @@ typedef struct TkDisplay {
      */
     long deletionEpoch;		/* Incremented by window deletions */
 } TkDisplay;
+
 
 /*
  * One of the following structures exists for each error handler
@@ -515,8 +529,6 @@ typedef struct TkErrorHandler {
 				 * this display, or NULL for end of
 				 * list. */
 } TkErrorHandler;
-
-
 
 
 /*
@@ -700,7 +712,7 @@ typedef struct TkWindow {
 				 * declared for this window, or
 				 * NULL if none. */
 #ifdef TK_USE_INPUT_METHODS
-    XIC inputContext;		/* Input context (for input methods). */
+    XIC inputContext;		/* XIM input context. */
 #endif /* TK_USE_INPUT_METHODS */
 
     /*
