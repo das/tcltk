@@ -584,9 +584,8 @@ OpenIM(dispPtr)
 {
     unsigned short i;
     XIMStyles *stylePtr;
-    char *modifier_list;
 
-    if ((modifier_list = XSetLocaleModifiers("")) == NULL) {
+    if (XSetLocaleModifiers("") == NULL) {
 	goto error;
     }
 
