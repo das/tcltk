@@ -335,7 +335,10 @@ binaries: @LIBRARIES@ $(WISH)
 
 libraries:
 
-doc:
+$(ROOT_DIR)/doc/man.macros:
+	$(INSTALL_DATA) @TCL_SRC_DIR@/../doc/man.macros $(ROOT_DIR)/doc/man.macros
+
+doc: $(ROOT_DIR)/doc/man.macros
 
 test: binaries $(TKTEST)
 	@TCL_LIBRARY="$(TCL_SRC_DIR_NATIVE)/../library"; export TCL_LIBRARY; \
