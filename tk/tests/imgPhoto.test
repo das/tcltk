@@ -46,6 +46,7 @@ if {![file exists $teapotPhotoFile]} {
     if {![file exists $teapotPhotoFile]} {
 	puts "Can't find [file join demos images teapot.ppm] in $tk_library"
 	puts "your Tk library is incomplete, so I am skipping imgPhoto tests."    
+	::tcltest::cleanupTests
 	return 0
     }
 }
