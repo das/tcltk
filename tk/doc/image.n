@@ -27,12 +27,9 @@ It can take several different forms, depending on the
 Creates a new image and returns its name.
 \fItype\fR specifies the type of the image, which must be one of
 the types currently defined (e.g., \fBbitmap\fR).
-\fIname\fR specifies the name for the image
-.VS 8.4
-(which may not start with a period "." character);
-.VE 8.4
-if it is omitted then Tk picks a name of the form \fBimage\fIx\fR,
-where \fIx\fR is an integer.
+\fIname\fR specifies the name for the image;  if it is omitted then
+Tk picks a name of the form \fBimage\fIx\fR, where \fIx\fR is
+an integer.
 There may be any number of \fIoption\fR\-\fIvalue\fR pairs,
 which provide configuration options for the new image.
 The legal set of options is defined separately for each image

@@ -232,18 +232,6 @@ Tk_ImageObjCmd(clientData, interp, objc, objv)
 		sprintf(idString, "image%d", dispPtr->imageId);
 		name = idString;
 		firstOption = 3;
-	    } else if (arg[0] == '.') {
-		/*
-		 * It is a really bad idea to create an image with the
-		 * same name as the root window, and who knows what
-		 * will happen if any other (potential) window name is
-		 * used.  So it's prohibited for safety, so stopping
-		 * bug #120819
-		 */
-		Tcl_AppendResult(interp, "image names cannot start with "
-				 "period symbols: \"", arg, "\" is illegal",
-				 (char *)NULL);
-		return TCL_ERROR;
 	    } else {
 		name = arg;
 		firstOption = 4;
