@@ -4321,7 +4321,7 @@ UpdateTitle(winPtr)
     XChangeProperty(winPtr->display, wmPtr->wrapperPtr->window,
 	    Tk_InternAtom((Tk_Window) winPtr, "_NET_WM_NAME"),
 	    XA_UTF8_STRING, 8, PropModeReplace, 
-	    string, (signed int)strlen(string));
+	    (const unsigned char*)string, (signed int)strlen(string));
 
     /*
      * Set icon name:
@@ -4335,7 +4335,8 @@ UpdateTitle(winPtr)
 	XChangeProperty(winPtr->display, wmPtr->wrapperPtr->window,
 		Tk_InternAtom((Tk_Window) winPtr, "_NET_WM_ICON_NAME"),
 		XA_UTF8_STRING, 8, PropModeReplace,
-		wmPtr->iconName, (signed int)strlen(wmPtr->iconName));
+		(const unsigned char*)wmPtr->iconName,
+		(signed int)strlen(wmPtr->iconName));
     }
 }
 
