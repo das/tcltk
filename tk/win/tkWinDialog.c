@@ -669,7 +669,6 @@ GetFileNameW(clientData, interp, objc, objv, open)
 	     * path.
 	     */
 	    char *dir;
-	    int dirlen;
 	    char *p;
 	    char *file;
 	    WCHAR *files;
