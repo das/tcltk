@@ -73,7 +73,7 @@ foreach {testName testData} {
     panedwindow-1a.6 {-padx 1.3 1 badValue {bad screen distance "badValue"}}
     panedwindow-1a.7 {-pady 1.3 1 badValue {bad screen distance "badValue"}}
     panedwindow-1a.8 {-sticky nsew nesw abcd {bad stickyness value "abcd": must be a string containing zero or more of n, e, s, and w}}
-    panedwindow-1a.9 {-stretch alw always foo {bad stretch "foo": must be one of always, first, last, middle, or never}}
+    panedwindow-1a.9 {-stretch alw always foo {bad stretch "foo": must be always, first, last, middle, or never}}
     panedwindow-1a.10 {-width 10 10 badValue {bad screen distance "badValue"}}
 } {
     lassign $testData optionName goodIn goodOut badIn badOut
