@@ -1027,7 +1027,7 @@ ConfigureButton(interp, butPtr, objc, objv)
 	/*
 	 * A few options need special processing, such as setting the
 	 * background from a 3-D border, or filling in complicated
-	 * defaults that couldn't be specified to Tk_ConfigureWidget.
+	 * defaults that couldn't be specified to Tk_SetOptions.
 	 */
 
 	if ((butPtr->state == STATE_ACTIVE)

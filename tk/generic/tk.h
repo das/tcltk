@@ -1747,8 +1747,9 @@ EXTERN int		Tk_ListboxCmd _ANSI_ARGS_((ClientData clientData,
 			    Tcl_Interp *interp, int argc, char **argv));
 EXTERN int		Tk_LowerCmd _ANSI_ARGS_((ClientData clientData,
 			    Tcl_Interp *interp, int argc, char **argv));
-EXTERN int		Tk_MenubuttonCmd _ANSI_ARGS_((ClientData clientData,
-			    Tcl_Interp *interp, int argc, char **argv));
+EXTERN int		Tk_MenubuttonObjCmd _ANSI_ARGS_((ClientData clientData,
+			    Tcl_Interp *interp, int objc, 
+			    Tcl_Obj *CONST objv[]));
 EXTERN int              Tk_MessageBoxObjCmd _ANSI_ARGS_((ClientData clientData,
                             Tcl_Interp *interp, int objc, 
 			    Tcl_Obj *CONST objv[]));
