@@ -20,6 +20,10 @@
 #include "tk.h"
 #endif
 
+#ifndef _TKUNDO
+#include "tkUndo.h"
+#endif
+
 #ifdef BUILD_tk
 # undef TCL_STORAGE_CLASS
 # define TCL_STORAGE_CLASS DLLEXPORT
@@ -451,24 +455,13 @@ typedef struct TkTextTabArray {
 					 * BE THE LAST IN THE STRUCTURE. */
 } TkTextTabArray;
 
-/* enum definining the types used in an edit stack */
+/* enum definining the edit modes of */
 
 typedef enum {
-    TK_EDIT_SEPARATOR,			/* Marker */
-    TK_EDIT_INSERT,			/* The undo is an insert */
-    TK_EDIT_DELETE			/* The undo is a delete */
-} TkTextEditType;
-
-/* strcut defining the basic undo/redo stack element */
-
-typedef struct TkTextEditAtom {
-    TkTextEditType type;		/* The type that will trigger the
-					 * required action*/
-    char * index;			/* The starting index of the range */
-    char * string;			/* The text to be inserted / deleted */
-    struct TkTextEditAtom * next;	/* Pointer to the next element in the
-					 * stack */
-} TkTextEditAtom;
+    TK_TEXT_EDIT_INSERT,			/* insert mode */
+    TK_TEXT_EDIT_DELETE,			/* delete mode */
+    TK_TEXT_EDIT_OTHER			   /* none of the above */
+} TkTextEditMode;
 
 /*
  * A data structure of the following type is kept for each text widget that
@@ -649,13 +642,14 @@ typedef struct TkText {
      * Information related to the undo/redo functonality
      */
      
-    TkTextEditAtom * undoStack; /* The undo stack */
-    
-    TkTextEditAtom * redoStack; /* The redo stack */
+    TkUndoRedoStack * undoStack; /* The undo/redo stack */
     
     int undo;			/* non zero means the undo/redo behaviour is 
 				 * enabled */
     
+    int maxUndo;		/* The maximum depth of the undo stack expressed
+             * as the maximum number of compound statements */
+
     int autoSeparators;		/* non zero means the separatorss will be 
 				 * inserted automatically */
     
@@ -670,6 +664,9 @@ typedef struct TkText {
 
     int isDirtyIncrement;	/* Amount with which the isDirty flag is
 				 * incremented every edit action
+				 */
+
+    TkTextEditMode lastEditMode;	/* Keeps track of what the last edit mode was
 				 */
 
 } TkText;

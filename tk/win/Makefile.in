@@ -340,6 +340,7 @@ TK_OBJS = \
 	tkTextTag.$(OBJEXT) \
 	tkTextWind.$(OBJEXT) \
 	tkTrig.$(OBJEXT) \
+	tkUndo.$(OBJEXT) \
 	tkUtil.$(OBJEXT) \
 	tkVisual.$(OBJEXT) \
 	tkStubInit.$(OBJEXT) \

@@ -486,6 +486,7 @@
 #define DEF_TEXT_INSERT_OFF_TIME	"300"
 #define DEF_TEXT_INSERT_ON_TIME		"600"
 #define DEF_TEXT_INSERT_WIDTH		"1"
+#define DEF_TEXT_MAX_UNDO    	"0"
 #define DEF_TEXT_PADX			"1"
 #define DEF_TEXT_PADY			"1"
 #define DEF_TEXT_RELIEF			"flat"

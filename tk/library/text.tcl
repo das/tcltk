@@ -339,15 +339,11 @@ bind Text <Control-t> {
 }
 
 bind Text <<Undo>> {
-    if { ! [ catch { %W edit undo } ] } {
-       %W see insert
-    }
+    catch { %W edit undo }
 }
 
 bind Text <<Redo>> {
-    if { ! [ catch { %W edit redo } ] } {
-       %W see insert
-    }
+    catch { %W edit redo }
 }
 
 if {[string compare $tcl_platform(platform) "windows"]} {
