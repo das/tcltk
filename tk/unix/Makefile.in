@@ -406,7 +406,7 @@ test: tktest
 	export SHLIB_PATH; \
 	TCL_LIBRARY=@TCL_SRC_DIR@/library; export TCL_LIBRARY; \
 	TK_LIBRARY=@TK_SRC_DIR@/library; export TK_LIBRARY; \
-	./tktest $(TOP_DIR)/tests/all.tcl -geometry +0+0
+	./tktest $(TOP_DIR)/tests/all.tcl -geometry +0+0 $(TCLTESTARGS)
 
 # Useful target to launch a built tktest with the proper path,...
 runtest:
