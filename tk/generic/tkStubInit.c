@@ -628,6 +628,8 @@ TkPlatStubs tkPlatStubs = {
     Tk_HWNDToWindow, /* 3 */
     Tk_PointerEvent, /* 4 */
     Tk_TranslateWinEvent, /* 5 */
+    Tk_GetMenuHWND, /* 6 */
+    Tk_GetEmbeddedMenuHWND, /* 7 */
 #endif /* __WIN32__ */
 #ifdef MAC_OSX_TK
     Tk_MacOSXSetEmbedHandler, /* 0 */
