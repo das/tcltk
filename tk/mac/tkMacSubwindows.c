@@ -938,7 +938,15 @@ TkMacGetDrawablePort(
     	} 
 	
 	if (resultPort == NULL) {
-    	    panic("TkMacGetDrawablePort couldn't find container");
+	    /*
+	     * FIXME:
+	     *
+	     * So far as I can tell, the only time that this happens is when
+	     * we are tearing down an embedded child interpreter, and most
+	     * of the time, this is harmless...  However, we really need to
+	     * find why the embedding loses.
+	     */
+	    DebugStr("\pTkMacGetDrawablePort couldn't find container");
     	    return NULL;
     	}	
 	    
@@ -1075,9 +1083,13 @@ tkMacMoveWindow(
 {
     int xOffset, yOffset;
 
+    if (TkMacHaveAppearance() >= 0x110) {
+        MoveWindowStructure((WindowRef) window, (short) x, (short) y);
+    } else {
     TkMacWindowOffset(window, &xOffset, &yOffset);
     MoveWindow((WindowRef) window, 
 	(short) (x + xOffset), (short) (y + yOffset), false);
+}
 }
 
 /*

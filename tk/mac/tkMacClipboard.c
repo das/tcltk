@@ -74,7 +74,7 @@ TkSelGetSelection(
 
 	    Tcl_ExternalToUtfDString(NULL, *handle, length, &encodedText);
 	    result = (*proc)(clientData, interp,
-		    Tcl_DStringValue(encodedText));
+		    Tcl_DStringValue(&encodedText));
 	    Tcl_DStringFree(&encodedText);
 
 	    HUnlock(handle);

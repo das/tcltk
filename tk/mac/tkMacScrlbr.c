@@ -242,6 +242,7 @@ TkpDisplayScrollbar(
 
     if (macScrollPtr->sbHandle == NULL) {
         Rect r;
+        WindowRef frontNonFloating;
         
         r.left = r.top = 0;
         r.right = r.bottom = 1;
@@ -252,7 +253,14 @@ TkpDisplayScrollbar(
 	/*
 	 * If we are foremost than make us active.
 	 */
-	if ((WindowPtr) destPort == FrontWindow()) {
+	
+	if (TkMacHaveAppearance() >= 0x110) {
+	    frontNonFloating = FrontNonFloatingWindow();
+	} else {
+	    frontNonFloating = FrontWindow();
+	}
+	
+	if ((WindowPtr) destPort == FrontWindow() || TkpIsWindowFloating((WindowPtr) destPort)) {
 	    macScrollPtr->macFlags |= ACTIVE;
 	}
     }

@@ -250,7 +250,11 @@ MacintoshInit()
 
     InitGraf(&tcl_macQdPtr->thePort);
     InitFonts();
+    if (TkMacHaveAppearance() >= 0x110) {
+        InitFloatingWindows();
+    } else {
     InitWindows();
+    }
     InitMenus();
     InitDialogs((long) NULL);		
     InitCursor();

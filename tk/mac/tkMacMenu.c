@@ -1881,8 +1881,15 @@ TkpSetMainMenubar(
 {
     TkWindow *winPtr = (TkWindow *) tkwin;
     WindowRef macWindowPtr = (WindowRef) TkMacGetDrawablePort(winPtr->window);
+    WindowRef frontNonFloating;
     
-    if ((macWindowPtr == NULL) || (macWindowPtr != FrontWindow())) {
+    if (TkMacHaveAppearance() >= 0x110) {
+        frontNonFloating = FrontNonFloatingWindow();
+    } else {
+        frontNonFloating = FrontWindow();
+    }
+    
+    if ((macWindowPtr == NULL) || (macWindowPtr != frontNonFloating)) {
     	return;
     }
 

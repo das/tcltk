@@ -206,4 +206,8 @@ typedef TkMenuDefProcPtr TkMenuDefUPP;
 
 #include "tkIntPlatDecls.h"
 
+/* FIXME - This has to go in the tkInt.decls!!! */
+
+int             TkpIsWindowFloating _ANSI_ARGS_((WindowRef window));
+
 #endif /* _TKMACINT */

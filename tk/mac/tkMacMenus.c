@@ -120,7 +120,11 @@ TkMacHandleMenuSelect(
 		    break;
 		case kCloseItem:
 		    /* Send close event */
-		    window = TkMacGetXWindow(FrontWindow());
+		    if (TkMacHaveAppearance() >= 0x110) {
+		        window = TkMacGetXWindow(FrontNonFloatingWindow());
+		    } else {
+		        window = TkMacGetXWindow(FrontWindow());
+		    }
 		    dispPtr = TkGetDisplayList();
 		    tkwin = Tk_IdToWindow(dispPtr->display, window);
 		    TkGenWMDestroyEvent(tkwin);
@@ -255,7 +259,11 @@ GenerateEditEvent(
     Window window;
     TkDisplay *dispPtr;
 
-    window = TkMacGetXWindow(FrontWindow());
+    if (TkMacHaveAppearance() >= 0x110) {
+        window = TkMacGetXWindow(FrontNonFloatingWindow());
+    } else {
+        window = TkMacGetXWindow(FrontWindow());
+    }
     dispPtr = TkGetDisplayList();
     tkwin = Tk_IdToWindow(dispPtr->display, window);
     tkwin = (Tk_Window) ((TkWindow *) tkwin)->dispPtr->focusPtr;
