@@ -88,12 +88,8 @@ This means that applications cannot connect to your server unless
 they use some other form of authorization
 such as that provide by \fBxauth\fR.
 .VS
-Under Windows, any application running on the current machine can send
-Dynamic Data Exchange (DDE) commands which could read and write files and start
-processes. Only the local machine can connect, however, so there are
-no restrictions on which processes can connect. The \fBsend\fR command
-uses DDE as its transport, and a \fBdde\fR command has been added to
-Tk 8.0.
+Under Windows, \fBsend\fR is currently disabled.  Most of the
+functionality is provided by the \fBdde\fR command instead.
 .VE
 .SH KEYWORDS
 .VS
