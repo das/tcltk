@@ -156,7 +156,7 @@ foreach mode $modes {
         if {[string index $option 0] eq "-"} {
 	    test filebox-1.2-$mode$option "tk_getOpenFile command" -body {
 		tk_getOpenFile $option
-	    } -returnCode error -result "value for \"$option\" missing"
+	    } -returnCodes error -result "value for \"$option\" missing"
         }
     }
 

@@ -273,7 +273,7 @@ test frame-3.3 {TkCreateFrame procedure} -setup {
     .t configure -class
 } -cleanup {
     destroy .t
-} {-class class Class Toplevel Toplevel}
+} -result {-class class Class Toplevel Toplevel}
 test frame-3.4 {TkCreateFrame procedure} {
     catch {destroy .t}
     toplevel .t -width 350 -class NewClass -bg black -visual default -height 90
