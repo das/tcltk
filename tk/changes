@@ -4286,6 +4286,8 @@ with MacOS 8.1 or later. (JI)
 
 ----------------- Released 8.0.4, 11/20/98 -----------------------
 
+1/28/99 (configure change) Now support -pipe option on gcc.  (RJ)
+
 ----------------------------------------------------------
 Changes for Tk 8.0 go above this line.
 Changes for Tk 8.1 go below this line.
