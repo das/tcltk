@@ -1136,6 +1136,7 @@ dist:   $(UNIX_DIR)/configure mklinks
 	mkdir $(DISTDIR)/macosx/Wish.pbproj
 	cp -p $(TOP_DIR)/macosx/Wish.pbproj/*.pbx* \
 		$(DISTDIR)/macosx/Wish.pbproj
+	cp -p $(TOP_DIR)/macosx/README $(DISTDIR)/macosx
 	mkdir $(DISTDIR)/compat
 	cp -p $(TOP_DIR)/license.terms $(TCLDIR)/compat/unistd.h \
 		$(TCLDIR)/compat/stdlib.h $(TCLDIR)/compat/limits.h \
