@@ -261,7 +261,9 @@ is the name of the vendor for the server, and \fIvendorRelease\fR
 is an integer release number provided by the server.
 .TP
 \fBwinfo toplevel \fIwindow\fR
-Returns the path name of the top-level window containing \fIwindow\fR.
+Returns the path name of the top-of-hierarchy window containing \fIwindow\fR.
+In standard Tk this will always be a \fBtoplevel\fR widget, but extensions may
+create other kinds of top-of-hierarchy widgets.
 .TP
 \fBwinfo viewable \fIwindow\fR
 Returns 1 if \fIwindow\fR and all of its ancestors up through the
