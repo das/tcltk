@@ -228,7 +228,8 @@ FileReadPPM(interp, chan, fileName, formatString, imageHandle, destX, destY,
 	    }
 	}
 	block.height = nLines;
-	Tk_PhotoPutBlock(imageHandle, &block, destX, destY, width, nLines);
+	Tk_PhotoPutBlock(imageHandle, &block, destX, destY, width, nLines,
+		TK_PHOTO_COMPOSITE_SET);
 	destY += nLines;
     }
 

@@ -481,7 +481,8 @@ FileReadGIF(interp, chan, fileName, format, imageHandle, destX, destY,
 	break;
     }
 
-    Tk_PhotoPutBlock(imageHandle, &block, destX, destY, width, height);
+    Tk_PhotoPutBlock(imageHandle, &block, destX, destY, width, height,
+	    TK_PHOTO_COMPOSITE_SET);
 
     noerror:
     if (block.pixelPtr) {

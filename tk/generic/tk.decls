@@ -708,13 +708,13 @@ declare 143 generic {
 }
 
 declare 144 generic {
-    void Tk_PhotoPutBlock (Tk_PhotoHandle handle, \
+    void Tk_PhotoPutBlock_Old (Tk_PhotoHandle handle, \
 	    Tk_PhotoImageBlock *blockPtr, int x, int y, \
 	    int width, int height)
 }
 
 declare 145 generic {
-    void Tk_PhotoPutZoomedBlock (Tk_PhotoHandle handle, \
+    void Tk_PhotoPutZoomedBlock_Old (Tk_PhotoHandle handle, \
 	    Tk_PhotoImageBlock *blockPtr, int x, int y, \
 	    int width, int height, int zoomX, int zoomY, \
 	    int subsampleX, int subsampleY)
@@ -1162,6 +1162,18 @@ declare 244 generic {
 #
 declare 245 generic {
     void Tk_SetCaretPos (Tk_Window tkwin, int x, int y, int height)
+}
+
+declare 246 generic {
+    void Tk_PhotoPutBlock (Tk_PhotoHandle handle,
+	    Tk_PhotoImageBlock *blockPtr, int x, int y,
+	    int width, int height, int compRule)
+}
+declare 247 generic {
+    void Tk_PhotoPutZoomedBlock (Tk_PhotoHandle handle,
+	    Tk_PhotoImageBlock *blockPtr, int x, int y,
+	    int width, int height, int zoomX, int zoomY,
+	    int subsampleX, int subsampleY, int compRule)
 }
 
 # Define the platform specific public Tk interface.  These functions are

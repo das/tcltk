@@ -145,6 +145,8 @@ extern int errno;
 	(Region) b, (Region) r)
 #define TkRectInRegion(r, x, y, w, h) XRectInRegion((Region) r, x, y, w, h)
 #define TkSetRegion(d, gc, rgn) XSetRegion(d, gc, (Region) rgn)
+#define TkSubtractRegion(a, b, r) XSubtractRegion((Region) a, \
+	(Region) b, (Region) r)
 #define TkUnionRectWithRegion(rect, src, ret) XUnionRectWithRegion(rect, \
 	(Region) src, (Region) ret)
 

@@ -657,6 +657,10 @@ declare 144 generic {
     void TkGCCleanup(TkDisplay *dispPtr)
 }
 
+declare 145 {mac win} {
+    void TkSubtractRegion (TkRegion sra, TkRegion srcb, TkRegion dr_return)
+}
+
 ##############################################################################
 
 # Define the platform specific internal Tcl interface. These functions are
