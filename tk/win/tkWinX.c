@@ -822,6 +822,7 @@ TkWinChildProc(hwnd, message, wParam, lParam)
 	case TK_GETFRAMEWID:
 	case TK_OVERRIDEREDIRECT:
 	case TK_SETMENU:
+	case TK_STATE:
 	    result =  TkWinEmbeddedEventProc(hwnd, message, wParam, lParam);
 	    break;
 

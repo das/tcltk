@@ -337,6 +337,7 @@ TkIntPlatStubs tkIntPlatStubs = {
     TkWinSetHINSTANCE, /* 34 */
     TkWinGetPlatformTheme, /* 35 */
     TkWinCleanupContainerList, /* 36 */
+    TkpWmGetState, /* 37 */
 #endif /* __WIN32__ */
 #ifdef MAC_OSX_TK
     TkGenerateActivateEvents, /* 0 */

@@ -484,6 +484,18 @@ TkWinEmbeddedEventProc(hwnd, message, wParam, lParam)
 	    result = 1;
 	    break;
 
+	    case TK_STATE:
+	    /*
+	     *	0 - normal state
+	     *	1 - withdrawn state
+	     *	2 - zoom state
+	     *	3 - icon state
+	     */
+	    if(wParam >= 0 && wParam <= 3) {
+		TkpWmSetState(containerPtr->parentPtr, wParam);
+	    }
+	    result = TkpWmGetState(containerPtr->parentPtr);
+	    break;
 	    /*
 	     * Return 0 since the current Tk container implementation 
 	     * is unable to provide following services.

@@ -49,6 +49,7 @@
 #define TK_GETFRAMEWID	    (WM_USER+9)	    /* an embedded window requests a frame window id */
 #define TK_OVERRIDEREDIRECT (WM_USER+10)    /* an embedded window requests to overrideredirect */
 #define TK_SETMENU	    (WM_USER+11)    /* an embedded window requests to setup menu */
+#define TK_STATE	    (WM_USER+12)    /* an embedded window sets/gets state */
 
 /*
  *--------------------------------------------------------------
