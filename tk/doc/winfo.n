@@ -110,12 +110,10 @@ or use \fBwinfo reqheight\fR to get the window's requested height
 instead of its actual height.
 .TP
 \fBwinfo id \fIwindow\fR
-.VS
 Returns a hexadecimal string giving a low-level platform-specific
 identifier for \fIwindow\fR.  On Unix platforms, this is the X
 window identifier.  Under Windows, this is the Windows
 HWND.  On the Macintosh the value has no meaning outside Tk.
-.VE
 .TP
 \fBwinfo interps \fR?\fB\-displayof \fIwindow\fR?
 Returns a list whose members are the names of all Tcl interpreters

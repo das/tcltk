@@ -51,10 +51,8 @@ trigger anymore.
 Generates a window event and arranges for it to be processed just as if
 it had come from the window system.
 \fIWindow\fR gives the path name of the window for which the event
-.VS 8.3
 will be generated; it may also be an identifier (such as returned by
 \fBwinfo id\fR) as long as it is for a window in the current application.
-.VE
 \fIEvent\fR provides a basic description of
 the event, such as \fB<Shift-Button-2>\fR or \fB<<Paste>>\fR.
 If \fIWindow\fR is empty the whole screen is meant, and coordinates

@@ -73,7 +73,6 @@ and \fItype\fR is the requested type, \fIcommand\fR will be executed
 as a Tcl command with two additional numbers appended to it
 (with space separators).  
 The two additional numbers
-.VS
 are \fIoffset\fR and \fImaxChars\fR:  \fIoffset\fR specifies a starting
 character position in the selection and \fImaxChars\fR gives the maximum
 number of characters to retrieve.  The command should return a value consisting
@@ -87,7 +86,6 @@ include all of the remainder of the selection;  if the length of
 \fIcommand\fR will be invoked again, until it eventually
 returns a result shorter than \fImaxChars\fR.  The value of \fImaxChars\fR
 will always be relatively large (thousands of characters).
-.VE
 .PP
 If \fIcommand\fR returns an error then the selection retrieval is rejected
 just as if the selection didn't exist at all.

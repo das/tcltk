@@ -45,10 +45,8 @@ will cause some action to occur.
 If strict Motif compliance has been requested by setting the
 \fBtk_strictMotif\fR variable, this option will normally be
 ignored;  the normal background color will be used instead.
-.VS
 For some elements on Windows and Macintosh systems, the active color
 will only be used while mouse button 1 is pressed over the element.
-.VE
 .OP \-activeborderwidth activeBorderWidth BorderWidth
 Specifies a non-negative value indicating
 the width of the 3-D border drawn around active elements.  See above for
