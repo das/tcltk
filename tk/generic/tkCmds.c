@@ -708,13 +708,13 @@ Tk_TkObjCmd(clientData, interp, objc, objv)
 		 * That will indicate to the user that input methods
 		 * are just not available.
 		 */
-		int bool;
-		if (Tcl_GetBooleanFromObj(interp, objv[2+skip], &bool)
+		int boolVal;
+		if (Tcl_GetBooleanFromObj(interp, objv[2+skip], &boolVal)
 			!= TCL_OK) {
 		    return TCL_ERROR;
 		}
 #ifdef TK_USE_INPUT_METHODS
-		dispPtr->useInputMethods = bool;
+		dispPtr->useInputMethods = boolVal;
 #endif /* TK_USE_INPUT_METHODS */
 	    } else if ((objc - skip) != 2) {
 		Tcl_WrongNumArgs(interp, 2, objv,
