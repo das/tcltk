@@ -4958,9 +4958,13 @@ WmTitleCmd(tkwin, winPtr, interp, objc, objv)
     }
     if (objc == 3) {
 	if(wrapper) {
-	    char buf[256];
-	    GetWindowText(wrapper, buf, 256);
-	    Tcl_SetResult(interp, buf, TCL_VOLATILE);
+	    char buf[512];
+	    Tcl_DString titleString;
+	    int size = tkWinProcs->useWide? 256:512;
+	    (*tkWinProcs->getWindowText)(wrapper, (LPCTSTR)buf, size);
+	    Tcl_WinTCharToUtf(buf, -1, &titleString);	
+	    Tcl_SetResult(interp, Tcl_DStringValue(&titleString), TCL_VOLATILE);
+	    Tcl_DStringFree(&titleString);
 	} else {
 	    Tcl_SetResult(interp, (char *)
 		((wmPtr->title != NULL) ? wmPtr->title : winPtr->nameUid),
