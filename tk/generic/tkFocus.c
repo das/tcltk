@@ -439,14 +439,21 @@ TkFocusFilterEvent(winPtr, eventPtr)
     }
     newFocusPtr = tlFocusPtr->focusWinPtr;
 
+    /*
+     * Ignore event if newFocus window is already dead!
+     */
+    if (newFocusPtr->flags & TK_ALREADY_DEAD) {
+	return retValue;
+    }
+
     if (eventPtr->type == FocusIn) {
 	GenerateFocusEvents(displayFocusPtr->focusWinPtr, newFocusPtr);
 	displayFocusPtr->focusWinPtr = newFocusPtr;
 	dispPtr->focusPtr = newFocusPtr;
 
 	/*
-	 * NotifyPointer gets set when the focus has been set to the root window
-	 * but we have the pointer.  We'll treat this like an implicit
+	 * NotifyPointer gets set when the focus has been set to the root
+	 * window but we have the pointer.  We'll treat this like an implicit
 	 * focus in event so that upon Leave events we release focus.
 	 */
 
