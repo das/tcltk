@@ -1128,5 +1128,5 @@ TkWinResendEvent(wndproc, hwnd, eventPtr)
 unsigned long
 TkpGetMS()
 {
-    return GetCurrentTime();
+    return GetTickCount();
 }

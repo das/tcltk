@@ -48,8 +48,10 @@
 #    define hypot _hypot
 #endif /* _MSC_VER */
 
-#define strncasecmp strnicmp
-#define strcasecmp stricmp
+#ifndef __GNUC__
+#    define strncasecmp strnicmp
+#    define strcasecmp stricmp
+#endif
 
 #define NBBY 8
 
