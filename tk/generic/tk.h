@@ -1298,7 +1298,6 @@ EXTERN void		Tk_CreateOldPhotoImageFormat _ANSI_ARGS_((
 
 /* Additional stuff that has moved to Tcl: */
 
-#define Tk_AfterCmd		Tcl_AfterCmd
 #define Tk_EventuallyFree	Tcl_EventuallyFree
 #define Tk_FreeProc		Tcl_FreeProc
 #define Tk_Preserve		Tcl_Preserve
