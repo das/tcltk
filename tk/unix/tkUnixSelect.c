@@ -247,7 +247,8 @@ TkSelPropProc(eventPtr)
 {
     register IncrInfo *incrPtr;
     register TkSelHandler *selPtr;
-    int i, length, numItems;
+    int length, numItems;
+    unsigned long i;
     Atom target, formatType;
     long buffer[TK_SEL_WORDS_AT_ONCE];
     TkDisplay *dispPtr = TkGetDisplay(eventPtr->xany.display);
@@ -802,7 +803,7 @@ ConvertSelection(winPtr, eventPtr)
     IncrInfo incr;			/* State of selection conversion. */
     Atom singleInfo[2];			/* incr.multAtoms points here except
 					 * for multiple conversions. */
-    int i;
+    unsigned long i;
     Tk_ErrorHandler errorHandler;
     TkSelectionInfo *infoPtr;
     TkSelInProgress ip;

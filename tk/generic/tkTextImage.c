@@ -391,7 +391,7 @@ EmbImageConfigure(textPtr, eiPtr, objc, objv)
 	    if (new > count) {
 		count = new;
 	    }
-	    if (len == (int) strlen(haveName)) {
+	    if (len == strlen(haveName)) {
 	    	conflict = 1;
 	    }
 	}
