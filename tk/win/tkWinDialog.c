@@ -123,7 +123,6 @@ static UINT APIENTRY	OFNHookProc(HWND hdlg, UINT uMsg, WPARAM wParam,
 static UINT APIENTRY	OFNHookProcW(HWND hdlg, UINT uMsg, WPARAM wParam, 
 			    LPARAM lParam);
 static void		SetTkDialog(ClientData clientData);
-static int		TrySetDirectory(HWND hwnd, const TCHAR *dir);
 
 /*
  *-------------------------------------------------------------------------

@@ -397,7 +397,7 @@ TkWinEmbeddedEventProc(hwnd, message, wParam, lParam)
 
 	break;
       case TK_GEOMETRYREQ:
-	EmbedGeometryRequest(containerPtr, wParam, lParam);
+	EmbedGeometryRequest(containerPtr, (int) wParam, lParam);
 	break;
     }
     return 1;

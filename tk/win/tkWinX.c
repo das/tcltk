@@ -31,8 +31,6 @@ static int childClassInitialized;   /* Registered child class? */
 static WNDCLASS childClass;	    /* Window class for child windows. */
 static int tkPlatformId;	    /* version of Windows platform */
 
-TCL_DECLARE_MUTEX(winXMutex)
-
 /*
  * Thread local storage.  Notice that now each thread must have its
  * own TkDisplay structure, since this structure contains most of

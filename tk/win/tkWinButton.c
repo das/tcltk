@@ -25,10 +25,6 @@
 #define CHECK_STYLE (BS_OWNERDRAW | BS_CHECKBOX | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS)
 #define RADIO_STYLE (BS_OWNERDRAW | BS_RADIOBUTTON | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS)
 
-static DWORD buttonStyles[] = {
-    LABEL_STYLE, PUSH_STYLE, CHECK_STYLE, RADIO_STYLE
-};
-
 /*
  * Declaration of Windows specific button structure.
  */
@@ -83,13 +79,8 @@ static Tcl_ThreadDataKey dataKey;
 /*
  * Declarations for functions defined in this file.
  */
-
-static int		ButtonBindProc _ANSI_ARGS_((ClientData clientData,
-			    Tcl_Interp *interp, XEvent *eventPtr,
-			    Tk_Window tkwin, KeySym keySym));
 static LRESULT CALLBACK	ButtonProc _ANSI_ARGS_((HWND hwnd, UINT message,
 			    WPARAM wParam, LPARAM lParam));
-static DWORD		ComputeStyle _ANSI_ARGS_((WinButton* butPtr));
 static Window		CreateProc _ANSI_ARGS_((Tk_Window tkwin,
 			    Window parent, ClientData instanceData));
 static void		InitBoxes _ANSI_ARGS_((void));
