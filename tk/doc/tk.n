@@ -92,5 +92,13 @@ will always return 0.  If the \fIwindow\fR argument is omitted, it defaults
 to the main window.  If the \fIboolean\fR argument is omitted, the current
 state is returned.  This is turned on by default for the main display.
 .VE
+.VS 8.4
+.TP
+\fBtk windowingsystem\fR
+.
+Returns the current Tk windowing system, one of
+\fBx11\fR (X11-based), \fBwin32\fR (MS Windows),
+\fBclassic\fR (Mac OS Classic), or \fBaqua\fR (Mac OS X Aqua).
+.VE
 .SH KEYWORDS
 application name, send
