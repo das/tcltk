@@ -351,9 +351,9 @@ InitWm(void)
      */
 
 #ifdef TCL_THREADS
-	    childClass.style = CS_HREDRAW | CS_VREDRAW;
+	    classPtr->style = CS_HREDRAW | CS_VREDRAW;
 #else
-	    childClass.style = CS_HREDRAW | CS_VREDRAW | CS_CLASSDC;
+	    classPtr->style = CS_HREDRAW | CS_VREDRAW | CS_CLASSDC;
 #endif
 	    classPtr->cbClsExtra = 0;
 	    classPtr->cbWndExtra = 0;
