@@ -106,14 +106,16 @@ bind Scale <End> {
 # x, y -	Mouse coordinates.
 
 proc tkScaleActivate {w x y} {
-    global tkPriv
     if {[string equal [$w cget -state] "disabled"]} {
 	return
     }
     if {[string equal [$w identify $x $y] "slider"]} {
-	$w configure -state active
+	set state active
     } else {
-	$w configure -state normal
+	set state normal
+    }
+    if {[string compare [$w cget -state] $state]} {
+	$w configure -state $state
     }
 }
 
