@@ -420,7 +420,7 @@ TkpGetNativeFont(tkwin, name)
     UnixFont *fontPtr;
     XFontStruct *fontStructPtr;
     FontAttributes fa;
-    char *p;
+    CONST char *p;
     int hasSpace, dashes, hasWild;
 
     /*
@@ -2422,7 +2422,7 @@ GetFontAttributes(display, fontStructPtr, faPtr)
     } else {
 	TkInitFontAttributes(&faPtr->fa);
 	TkInitXLFDAttributes(&faPtr->xa);
-	faPtr->xa.family = Tk_GetUid("");
+	faPtr->fa.family = Tk_GetUid("");
 	faPtr->xa.foundry = Tk_GetUid("");
 	faPtr->xa.charset = Tk_GetUid("");
     }
