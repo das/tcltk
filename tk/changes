@@ -5899,3 +5899,7 @@ and potential crashes in exit). (chengyemao)
 
 2004-12-17 (platform support) Added TkWinClenupContainerList into stublib. 
 (chengyemao)
+
+2004-12-18 (buf fix)[222677] Close the embedded window (of a different process)
+when its container is destroyed. (chengyemao)
+
