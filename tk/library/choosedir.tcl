@@ -112,8 +112,9 @@ proc ::tk::dialog::chooseDir::tkChooseDirectory { args } {
     grid configure $lbl -sticky w
     grid configure $ent -sticky ew
     grid configure $frm -sticky nsew
-    grid columnconfigure . 0 -weight 1
-    grid columnconfigure . 1 -weight 1
+    grid columnconfigure $w 0 -weight 1
+    grid columnconfigure $w 1 -weight 1
+    grid rowconfigure $w 2 -weight 1
 
     $ent insert end $opts(-initialdir)
 
