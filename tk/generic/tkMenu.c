@@ -1070,7 +1070,7 @@ TkInvokeMenu(interp, menuPtr, index)
     if (mePtr->type == TEAROFF_ENTRY) {
 	Tcl_DString ds;
 	Tcl_DStringInit(&ds);
-	Tcl_DStringAppend(&ds, "tkTearOffMenu ", -1);
+	Tcl_DStringAppend(&ds, "tk::TearOffMenu ", -1);
 	Tcl_DStringAppend(&ds, Tk_PathName(menuPtr->tkwin), -1);
 	result = Tcl_Eval(interp, Tcl_DStringValue(&ds));
 	Tcl_DStringFree(&ds);
@@ -2644,7 +2644,7 @@ CloneMenu(menuPtr, newMenuNamePtr, newMenuTypePtr)
 	}
     }
 
-    menuDupCommandArray[0] = Tcl_NewStringObj("tkMenuDup", -1);
+    menuDupCommandArray[0] = Tcl_NewStringObj("tk::MenuDup", -1);
     menuDupCommandArray[1] = Tcl_NewStringObj(Tk_PathName(menuPtr->tkwin), -1);
     menuDupCommandArray[2] = newMenuNamePtr;
     if (newMenuTypePtr == NULL) {

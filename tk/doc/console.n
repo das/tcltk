@@ -78,14 +78,14 @@ the internal implementation of the console and are likely to change or
 be modified without warning.\fR
 .PP
 Output to the console from the main interpreter via the stdout and
-stderr channels is handled by invoking the \fBtkConsoleOutput\fR
+stderr channels is handled by invoking the \fBtk::ConsoleOutput\fR
 command in the console interpreter with two arguments.  The first
 argument is the name of the channel being written to, and the second
 argument is the string being written to the channel (after encoding
 and end-of-line translation processing has been performed.)
 .PP
 When the \fB.\fR window of the main interpreter is destroyed, the
-\fBtkConsoleExit\fR command in the console interpreter is called
+\fBtk::ConsoleExit\fR command in the console interpreter is called
 (assuming the console interpreter has not already been deleted itself,
 that is.)
 

@@ -3340,7 +3340,7 @@ TkMacHandleTearoffMenu(void)
     	
     	if (windowPart != inMenuBar) {
     	    Tcl_DStringInit(&tearoffCmdStr);
-    	    Tcl_DStringAppendElement(&tearoffCmdStr, "tkTearOffMenu");
+    	    Tcl_DStringAppendElement(&tearoffCmdStr, "tk::TearOffMenu");
     	    Tcl_DStringAppendElement(&tearoffCmdStr, 
     		    Tk_PathName(tearoffStruct.menuPtr->tkwin));
 	    sprintf(intString, "%d", tearoffStruct.point.h);
