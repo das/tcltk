@@ -7226,11 +7226,16 @@ ActivateWindow(
     winPtr = ((ActivateEvent *) evPtr)->winPtr;
 
     /*
-     * Ensure that the window is not excluded by a grab.
+     * If the window is excluded by a grab, call SetFocus on the
+     * grabbed window instead. [Bug 220908]
      */
 
-    if (winPtr && (TkGrabState(winPtr) != TK_GRAB_EXCLUDED)) {
-	SetFocus(Tk_GetHWND(winPtr->window));
+    if (winPtr) {
+	if (TkGrabState(winPtr) != TK_GRAB_EXCLUDED) {
+	    SetFocus(Tk_GetHWND(winPtr->window));
+	} else {
+	    SetFocus(Tk_GetHWND(winPtr->dispPtr->grabWinPtr->window));
+	}
     }
 
     return 1;
