@@ -2015,9 +2015,11 @@ test unixWm-51.7 {TkWmRestackToplevel procedure, other window isn't mapped} {
 	wm geometry $w +0+0
     }
     raise .t .t2
+    after 200
     update
     set result [list [winfo containing 100 100]]
     lower .t3
+    after 200
     lappend result [winfo containing 100 100]
 } {.t3 .t}
 test unixWm-51.8 {TkWmRestackToplevel procedure, overrideredirect windows} {
