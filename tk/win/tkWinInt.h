@@ -123,6 +123,7 @@ typedef struct {
  */
 
 #define TK_WIN_TOPLEVEL_CLASS_NAME "TkTopLevel"
+#define TK_WIN_TOPLEVEL_NOCDC_CLASS_NAME "TkTopLevelNoCDC"
 #define TK_WIN_CHILD_CLASS_NAME "TkChild"
 
 /*
