@@ -2438,20 +2438,21 @@ test menu-33.1 {menu vs command hiding} {
 
 # menu-34 MenuInit only called at boot time
 
+# creating menus on two different screens then deleting the
+# menu from the first screen crashes Tk8.3.1
+#
+test menu-35.1 {menus on multiple screens - crashes tk8.3.1, Bug 5454} {
+    if {[info exists ::env(TK_ALT_DISPLAY)]} {
+	toplevel .one
+	menu .one.m
+	toplevel .two -screen $::env(TK_ALT_DISPLAY)
+	menu .two.m
+	destroy .one
+	destroy .two
+    }
+} {}
+
 # cleanup
 deleteWindows
 ::tcltest::cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-
-
