@@ -1671,7 +1671,7 @@ ImgPhotoConfigureMaster(interp, masterPtr, objc, objv, flags)
     }
     if (data) {
 	if (data->length
-		|| (data->typePtr == &tclByteArrayType
+		|| (data->typePtr == Tcl_GetObjType("bytearray")
 			&& data->internalRep.otherValuePtr != NULL)) {
 	    Tcl_IncrRefCount(data);
 	} else {
