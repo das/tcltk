@@ -195,9 +195,10 @@ proc tkButtonLeave w {
 
 proc tkCheckRadioEnter w {
     global tkPriv
-    if {[string compare [$w cget -state] "disabled"] \
-	    && [string equal $tkPriv(buttonWindow) $w]} {
-	$w configure -state active
+    if {[string compare [$w cget -state] "disabled"]} {
+	if {[string equal $tkPriv(buttonWindow) $w]} {
+	    $w configure -state active
+	}
 	if { [string compare [$w cget -overrelief] ""] } {
 	    set tkPriv(relief) [$w cget -relief]
 	    $w configure -relief [$w cget -overrelief]
@@ -250,9 +251,12 @@ proc tkButtonDown w {
 
 proc tkCheckRadioDown w {
     global tkPriv
-    set tkPriv(relief) [$w cget -relief]
+    if { [string equal [$w cget -overrelief] ""] } {
+	set tkPriv(relief) [$w cget -relief]
+    }
     if {[string compare [$w cget -state] "disabled"]} {
 	set tkPriv(buttonWindow) $w
+	set tkPriv(repeated) 0
 	$w configure -state active
     }
 }
