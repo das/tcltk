@@ -2602,8 +2602,8 @@ static void
 ImgPhotoBlendComplexAlpha(bgImg, iPtr, xOffset, yOffset, width, height)
     XImage *bgImg;		/* background image to draw on */
     PhotoInstance *iPtr;	/* image instance to draw */
-    int xOffset, int yOffset;	/* X & Y offset into image instance to draw */
-    int width, int height;	/* width & height of image to draw */
+    int xOffset, yOffset;	/* X & Y offset into image instance to draw */
+    int width, height;		/* width & height of image to draw */
 {
     int x, y, line;
     unsigned long pixel;
