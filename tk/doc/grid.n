@@ -113,16 +113,12 @@ The \fIamount\fR  defaults to 0.
 \fB\-padx \fIamount\fR
 The \fIamount\fR specifies how much horizontal external padding to
 leave on each side of the slave(s), in screen units.
-\fIAmount\fR may be a list
-of two values to specify padding for left and right separately.
 The \fIamount\fR defaults to 0.
 This space is added outside the slave(s) border.
 .TP
 \fB\-pady \fIamount\fR
 The \fIamount\fR specifies how much vertical external padding to
 leave on the top and bottom of the slave(s), in screen units.
-\fIAmount\fR may be a list
-of two values to specify padding for top and bottom separately.
 The \fIamount\fR defaults to 0.
 This space is added outside the slave(s) border.
 .TP
