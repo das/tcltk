@@ -35,15 +35,8 @@ proc tkMotifFDialog {type args} {
 
     # Set a grab and claim the focus too.
 
-    set oldFocus [focus]
-    set oldGrab [grab current $w]
-    if {[string compare $oldGrab ""]} {
-	set grabStatus [grab status $oldGrab]
-    }
-    grab $w
-    focus $data(sEnt)
-    $data(sEnt) select from 0
-    $data(sEnt) select to   end
+    ::tk::SetFocusGrab $w $data(sEnt)
+    $data(sEnt) selection range 0 end
 
     # Wait for the user to respond, then restore the focus and
     # return the index of the selected button.  Restore the focus
@@ -52,16 +45,8 @@ proc tkMotifFDialog {type args} {
     # restore any grab that was in effect.
 
     tkwait variable tkPriv(selectFilePath)
-    catch {focus $oldFocus}
-    grab release $w
-    wm withdraw $w
-    if {[string compare $oldGrab ""]} {
-	if {[string equal $grabStatus "global"]} {
-	    grab -global $oldGrab
-	} else {
-	    grab $oldGrab
-	}
-    }
+    ::tk::RestoreFocusGrab $w $data(sEnt) withdraw
+
     return $tkPriv(selectFilePath)
 }
 
@@ -119,16 +104,9 @@ proc tkMotifFDialog_Create {dataName type argList} {
 
     # Withdraw the window, then update all the geometry information
     # so we know how big it wants to be, then center the window in the
-    # display and de-iconify it.
+    # display (Motif style) and de-iconify it.
 
-    wm withdraw $w
-    update idletasks
-    set x [expr {[winfo screenwidth $w]/2 - [winfo reqwidth $w]/2 \
-	    - [winfo vrootx [winfo parent $w]]}]
-    set y [expr {[winfo screenheight $w]/2 - [winfo reqheight $w]/2 \
-	    - [winfo vrooty [winfo parent $w]]}]
-    wm geom $w +$x+$y
-    wm deiconify $w
+    ::tk::PlaceWindow $w
     wm title $w $data(-title)
 
     return $w
