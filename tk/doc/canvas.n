@@ -17,11 +17,13 @@ canvas \- Create and manipulate canvas widgets
 .SH SYNOPSIS
 \fBcanvas\fR \fIpathName \fR?\fIoptions\fR?
 .SO
-\-background	\-highlightthickness	\-insertwidth	\-relief
-\-borderwidth	\-insertbackground	\-state
-\-cursor	\-insertborderwidth	\-selectbackground	\-takefocus
-\-highlightbackground	\-insertofftime	\-selectborderwidth	\-xscrollcommand
-\-highlightcolor	\-insertontime	\-selectforeground	\-yscrollcommand
+\-background            \-borderwidth           \-cursor
+\-highlightbackground   \-highlightcolor        \-highlightthickness
+\-insertbackground      \-insertborderwidth     \-insertofftime
+\-insertontime          \-insertwidth           \-relief
+\-state                 \-selectbackground      \-selectborderwidth
+\-selectforeground      \-takefocus             \-xscrollcommand
+\-yscrollcommand
 .SE
 .SH "WIDGET-SPECIFIC OPTIONS"
 .OP \-closeenough closeEnough CloseEnough
