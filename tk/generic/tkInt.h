@@ -1176,6 +1176,11 @@ EXTERN void		TkCreateExitHandler _ANSI_ARGS_((Tcl_ExitProc *proc,
 EXTERN void		TkDeleteExitHandler _ANSI_ARGS_((Tcl_ExitProc *proc,
 			    ClientData clientData));
 EXTERN Tcl_ExitProc	TkFinalize;
+EXTERN void		TkpBuildRegionFromAlphaData _ANSI_ARGS_((
+			    TkRegion region, unsigned int x, unsigned int y,
+			    unsigned int width, unsigned int height,
+			    unsigned char *dataPtr, unsigned int pixelStride,
+			    unsigned int lineStride));
 
 /* 
  * Unsupported commands.
