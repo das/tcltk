@@ -20,7 +20,8 @@ clipboard \- Manipulate Tk clipboard
 .SH DESCRIPTION
 .PP
 This command provides a Tcl interface to the Tk clipboard,
-which stores data for later retrieval using the selection mechanism.
+which stores data for later retrieval using the selection mechanism 
+(via the \fB-selection CLIPBOARD\fR option).
 In order to copy data into the clipboard, \fBclipboard clear\fR must
 be called, followed by a sequence of one or more calls to \fBclipboard
 append\fR.  To ensure that the clipboard is updated atomically, all
