@@ -224,7 +224,8 @@ typedef struct TkWmInfo {
 
 #define WM_TRANSIENT_STYLE \
 		(WS_POPUP|WS_CAPTION|WS_SYSMENU|WS_CLIPSIBLINGS|CS_DBLCLKS)
-#define EX_TRANSIENT_STYLE (WS_EX_DLGMODALFRAME)
+#define EX_TRANSIENT_STYLE \
+		(WS_EX_TOOLWINDOW|WS_EX_DLGMODALFRAME)
 
 /*
  * The following structure is the official type record for geometry
@@ -4558,7 +4559,8 @@ RaiseWinWhenIdle(clientData)
 {
     register TkWindow *winPtr = (TkWindow *) clientData;
 
-    if ((winPtr == NULL) || (winPtr->flags & TK_ALREADY_DEAD)) {
+    if ((winPtr == NULL)
+	    || (winPtr->flags & (TK_ALREADY_DEAD|TK_DONT_DESTROY_WINDOW))) {
 	return;
     }
     if (winPtr->wmInfoPtr->flags & WM_UPDATE_PENDING) {
