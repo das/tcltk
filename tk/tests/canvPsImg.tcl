@@ -69,7 +69,7 @@ foreach l { monochrome gray color } {
     pack .t.$l -in .t.top.r -anchor w
 }
 
-set BitmapImage [image create bitmap -file $tk_library/demos/images/face \
+set BitmapImage [image create bitmap -file $tk_library/demos/images/face.bmp \
 	-background white -foreground black]
 set PhotoImage [image create photo -file $tk_library/demos/images/teapot.ppm]
 

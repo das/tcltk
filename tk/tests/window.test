@@ -7,9 +7,10 @@
 #
 # RCS: @(#) $Id$
 
-if {[lsearch [namespace children] ::tcltest] == -1} {
-    source [file join [pwd] [file dirname [info script]] defs.tcl]
-}
+package require tcltest 2.1
+namespace import -force tcltest::test
+namespace import -force tcltest::testConstraint
+eval tcltest::configure $argv
 
 foreach i [winfo children .] {
     destroy $i
@@ -80,8 +81,7 @@ test window-2.3 {Tk_DestroyWindow procedure, destroy handler deletes parent} {
 } {}
 
 # Some tests require the testmenubar command
-set ::tcltest::testConfig(testmenubar) \
-	[expr {[info commands testmenubar] != {}}]
+testConstraint testmenubar [llength [info commands testmenubar]]
 
 test window-3.1 {Tk_MakeWindowExist procedure, stacking order and menubars} \
 	{unixOnly testmenubar} {

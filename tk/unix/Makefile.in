@@ -442,7 +442,7 @@ xttest: test.o tkTest.o tkSquare.o $(TK_LIB_FILE)
 test: tktest
 	TCL_LIBRARY=@TCL_SRC_DIR@/library; export TCL_LIBRARY; \
 	TK_LIBRARY=@TK_SRC_DIR@/library; export TK_LIBRARY; \
-	./tktest $(TOP_DIR)/tests/all.tcl -geometry +0+0 \
+	./tktest $(TOP_DIR)/tests/all.tcl -geometry +0+0 -match \* \
 	$(TESTFLAGS) $(TCLTESTARGS)
 
 # Tests with different languages
@@ -452,7 +452,7 @@ testlang: tktest
 	for lang in $(LOCALES) ;  \
 	do \
 	LANG=$(lang); export LANG; \
-	./tktest $(TOP_DIR)/tests/all.tcl -geometry +0+0 \
+	./tktest $(TOP_DIR)/tests/all.tcl -geometry +0+0 -match \* \
 	$(TESTFLAGS) $(TCLTESTARGS); \
 	done
 

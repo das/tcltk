@@ -9,9 +9,15 @@
 #
 # RCS: @(#) $Id$
 
-if {[lsearch [namespace children] ::tcltest] == -1} {
-    source [file join [pwd] [file dirname [info script]] defs.tcl]
-}
+package require tcltest 2.1
+namespace import -force tcltest::test
+namespace import -force tcltest::testsDirectory
+namespace import -force tcltest::configure
+namespace import -force tcltest::interpreter
+configure -testdir [file join [pwd] [file dirname [info script]]]
+configure -loadfile [file join [testsDirectory] constraints.tcl]
+tcltest::loadTestedCommands
+eval configure $argv
 
 if {$tcl_platform(platform) != "unix"} {
     puts "skipping: Unix only tests..."
@@ -2351,7 +2357,7 @@ test unixWm-59.1 {exit processing} {
 	exit
     }
     close $fd
-    if {[catch {exec $::tcltest::tktest script -geometry 10x10+0+0} msg]} {
+    if {[catch {exec [interpreter] script -geometry 10x10+0+0} msg]} {
 	set error 1
     } else {
 	set error 0
@@ -2370,7 +2376,7 @@ test unixWm-59.2 {exit processing} {
 	exit
     }
     close $fd
-    if {[catch {exec $::tcltest::tktest script -geometry 10x10+0+0} msg]} {
+    if {[catch {exec [interpreter] script -geometry 10x10+0+0} msg]} {
 	set error 1
     } else {
 	set error 0
@@ -2395,7 +2401,7 @@ test unixWm-59.3 {exit processing} {
 	exit
     }
     close $fd
-    if {[catch {exec $::tcltest::tktest script -geometry 10x10+0+0} msg]} {
+    if {[catch {exec [interpreter] script -geometry 10x10+0+0} msg]} {
 	set error 1
     } else {
 	set error 0
