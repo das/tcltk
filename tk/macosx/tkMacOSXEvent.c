@@ -73,6 +73,16 @@ tkMacOSXFlushWindows ()
     }
 }
 
+
+
+int
+XSync (Display *display, Bool flag)
+{
+    tkMacOSXFlushWindows();
+    display->request++;
+    return 0;
+}
+
 /*
  *----------------------------------------------------------------------
  *

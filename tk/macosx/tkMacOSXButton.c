@@ -223,7 +223,11 @@ TkpDisplayButton(
 
     if (TkMacOSXComputeDrawParams(butPtr, &drawParams) ) {
         macButtonPtr->usingControl=1;
-        macButtonPtr->useTkText=DEFAULT_USE_TK_TEXT;
+        if (butPtr->type == TYPE_BUTTON) {
+            macButtonPtr->useTkText = 0;
+        } else {
+            macButtonPtr->useTkText = 1;
+        }
     } else {
         macButtonPtr->usingControl=0;
         macButtonPtr->useTkText=1;
