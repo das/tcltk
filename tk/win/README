@@ -20,4 +20,4 @@ locate the necessary Tcl files.  Otherwise you may need to
 edit makefile.vc and adjust the path to Tcl accordingly.
 
 Information about compiling for windows is maintained at:
-    http://www.tcl-tk.net/doc/howto/compile.html
+    http://www.tcl.tk/doc/howto/compile.html
