@@ -930,7 +930,8 @@ InitSampleControls()
 	OSErr err;
 	ControlRef dontCare;
 	    
-	/* Adding UserPaneBackgroundProcs to the root control does
+ 	/* 
+ 	 * Adding UserPaneBackgroundProcs to the root control does
 	 * not seem to work, so we have to add another UserPane to 
 	 * the root control.
 	 */
@@ -1336,9 +1337,10 @@ UpdateControlColors(
 			(butPtr->type == TYPE_RADIO_BUTTON))) {
 	    RGBColor newColor;
 	
-	    TkSetMacColor(xcolor->pixel, &newColor);
+	    if (TkSetMacColor(xcolor->pixel, &newColor)) {
 	    ChangeBackgroundWindowColor((**controlHandle).contrlOwner,
 		    newColor, saveColorPtr);
+            }
 	    return true;
 	}
     }
