@@ -151,8 +151,20 @@ extern int tkpWinRopModes[];
 
 #include "tkIntPlatDecls.h"
 
-extern LRESULT CALLBACK	TkWinChildProc _ANSI_ARGS_((HWND hwnd, UINT message,
+/*
+ * We need to specially add the TkWinChildProc because of the special
+ * prototype it has (doesn't fit into stubs schema)
+ */
+#ifdef BUILD_tk
+#undef TCL_STORAGE_CLASS
+#define TCL_STORAGE_CLASS DLLEXPORT
+#endif
+
+EXTERN LRESULT CALLBACK	TkWinChildProc _ANSI_ARGS_((HWND hwnd, UINT message,
 			    WPARAM wParam, LPARAM lParam));
+
+#undef TCL_STORAGE_CLASS
+#define TCL_STORAGE_CLASS DLLIMPORT
 
 #endif /* _TKWININT */
 
