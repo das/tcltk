@@ -375,17 +375,17 @@ objs: ${OBJS}
 
 
 wish: $(WISH_OBJS) $(TK_LIB_FILE) $(TK_STUB_LIB_FILE)
-	$(CC) @LD_FLAGS@ $(WISH_OBJS) \
+	$(CC) @LDFLAGS@ $(WISH_OBJS) \
 		@TK_BUILD_LIB_SPEC@ \
 		$(WISH_LIBS) $(TK_CC_SEARCH_FLAGS) -o wish
 
 tktest: $(TKTEST_OBJS) $(TK_LIB_FILE)
-	${CC} @LD_FLAGS@ $(TKTEST_OBJS) \
+	${CC} @LDFLAGS@ $(TKTEST_OBJS) \
 		@TK_BUILD_LIB_SPEC@ \
 		$(WISH_LIBS) $(TK_CC_SEARCH_FLAGS) -o tktest
 
 xttest: test.o tkTest.o tkSquare.o $(TK_LIB_FILE)
-	${CC} @LD_FLAGS@ test.o tkTest.o tkSquare.o \
+	${CC} @LDFLAGS@ test.o tkTest.o tkSquare.o \
 		@TK_BUILD_LIB_SPEC@ \
 		$(WISH_LIBS) $(TK_LD_SEARCH_FLAGS) -lXt -o xttest
 
