@@ -13,8 +13,6 @@
 
 #include "tkWinInt.h"
 
-static int tkPlatformId;
-
 /*
  * The following declaration is for the VC++ DLL entry point.
  */
@@ -71,7 +69,6 @@ DllMain(hInstance, reason, reserved)
     DWORD reason;
     LPVOID reserved;
 {
-    OSVERSIONINFO os;
 
     /*
      * If we are attaching to the DLL from a new process, tell Tk about
@@ -80,40 +77,9 @@ DllMain(hInstance, reason, reserved)
      */
     
     if (reason == DLL_PROCESS_ATTACH) {
-	os.dwOSVersionInfoSize = sizeof(os);
-	GetVersionEx(&os);
-	tkPlatformId = os.dwPlatformId;
-
         TkWinXInit(hInstance);
     } else if (reason == DLL_PROCESS_DETACH) {
         TkWinXCleanup(hInstance);
     }
     return(TRUE);
 }
-
-/*
- *----------------------------------------------------------------------
- *
- * TkWinGetPlatformId --
- *
- *	Determines whether running under NT, 95, or Win32s, to allow 
- *	runtime conditional code.
- *
- * Results:
- *	The return value is one of:
- *	    VER_PLATFORM_WIN32s		Win32s on Windows 3.1. 
- *	    VER_PLATFORM_WIN32_WINDOWS	Win32 on Windows 95.
- *	    VER_PLATFORM_WIN32_NT	Win32 on Windows NT
- *
- * Side effects:
- *	None.
- *
- *----------------------------------------------------------------------
- */
-
-int		
-TkWinGetPlatformId()
-{
-    return tkPlatformId;
-}
-

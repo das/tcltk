@@ -177,11 +177,7 @@ UpdateScrollbar(scrollPtr)
     scrollInfo.nMin = 0;
     scrollInfo.nMax = MAX_SCROLL;
     thumbSize = (scrollPtr->info.lastFraction - scrollPtr->info.firstFraction);
-    if (tkpIsWin32s) {
-	scrollInfo.nPage = 0;
-    } else {
-	scrollInfo.nPage = ((UINT) (thumbSize * (double) MAX_SCROLL)) + 1;
-    } 
+    scrollInfo.nPage = ((UINT) (thumbSize * (double) MAX_SCROLL)) + 1;
     if (thumbSize < 1.0) {
 	scrollInfo.nPos = (int)
 	    ((scrollPtr->info.firstFraction / (1.0-thumbSize))

@@ -43,6 +43,12 @@ int
 TkpInit(interp)
     Tcl_Interp *interp;
 {
+    /*
+     * This is necessary for static initialization, and is ok
+     * otherwise because TkWinXInit flips a static bit to do
+     * its work just once.
+     */
+    TkWinXInit(GetModuleHandle(NULL));
     return Tcl_Eval(interp, initScript);
 }
 

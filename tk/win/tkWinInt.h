@@ -48,6 +48,7 @@
 
 typedef struct TkWinDCState {
     HPALETTE palette;
+    int bkmode;
 } TkWinDCState;
 
 /*
@@ -122,13 +123,6 @@ typedef struct {
 
 #define TK_WIN_TOPLEVEL_CLASS_NAME "TkTopLevel"
 #define TK_WIN_CHILD_CLASS_NAME "TkChild"
-
-/*
- * The following variable indicates whether we are restricted to Win32s
- * GDI calls.
- */
-
-extern int tkpIsWin32s;
 
 /*
  * The following variable is a translation table between X gc functions and
