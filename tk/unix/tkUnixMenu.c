@@ -1657,3 +1657,30 @@ TkpMenuInit()
      * Nothing to do.
      */
 }
+
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkpMenuThreadInit --
+ *
+ *	Does platform-specific initialization of thread-specific
+ *      menu state.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TkpMenuThreadInit()
+{
+    /*
+     * Nothing to do.
+     */
+}
+
