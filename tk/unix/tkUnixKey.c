@@ -95,7 +95,7 @@ TkpGetString(winPtr, eventPtr, dsPtr)
     Tcl_DStringSetLength(&buf, TCL_DSTRING_STATIC_SIZE-1);
 
 #ifdef TK_USE_INPUT_METHODS
-    if (winPtr->dispPtr->useInputMethods
+    if ((winPtr->dispPtr->flags & TK_DISPLAY_USE_IM)
 	    && (winPtr->inputContext != NULL)
 	    && (eventPtr->type == KeyPress)) {
 #if TK_XIM_SPOT

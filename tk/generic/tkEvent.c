@@ -861,7 +861,7 @@ Tk_HandleEvent(eventPtr)
      * Unix, but this hasn't been factored out of the generic code yet.
      */
     dispPtr = winPtr->dispPtr;
-    if ((dispPtr->useInputMethods)) {
+    if ((dispPtr->flags & TK_DISPLAY_USE_IM)) {
 	if (!(winPtr->flags & (TK_CHECKED_IC|TK_ALREADY_DEAD))) {
 	    winPtr->flags |= TK_CHECKED_IC;
 	    if (dispPtr->inputMethod != NULL) {
