@@ -3556,11 +3556,9 @@ MatchStringFormat(interp, data, formatObj, imageFormatPtr,
     ThreadSpecificData *tsdPtr = (ThreadSpecificData *) 
             Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
     char *formatString = NULL;
-    int len;
     
     if (formatObj) {
-	formatString = Tcl_GetByteArrayFromObj(formatObj, &len);
-	    /*Tcl_GetString(formatObj);*/
+	formatString = Tcl_GetString(formatObj);
     }
 
     /*
