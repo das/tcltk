@@ -109,7 +109,7 @@ static TkCmd commands[] = {
     {"grid",		Tk_GridCmd,		NULL,			1, 1},
     {"image",		NULL,			Tk_ImageObjCmd,		1, 1},
     {"lower",		NULL,			Tk_LowerObjCmd,		1, 1},
-    {"option",		Tk_OptionCmd,		NULL,			1, 1},
+    {"option",		NULL,			Tk_OptionObjCmd,	1, 1},
     {"pack",		Tk_PackCmd,		NULL,			1, 1},
     {"place",		Tk_PlaceCmd,		NULL,			1, 1},
     {"raise",		NULL,			Tk_RaiseObjCmd,		1, 1},
