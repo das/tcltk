@@ -2784,14 +2784,22 @@ ImgPhotoDisplay(clientData, display, drawable, imageX, imageY, width,
     if ((instancePtr->masterPtr->flags & COMPLEX_ALPHA)
 	    && visInfo.depth >= 15
 	    && (visInfo.class == DirectColor || visInfo.class == TrueColor)) {
+	Tk_ErrorHandler handler;
 	XImage *bgImg = NULL;
 
+	/*
+	 * Create an error handler to suppress the case where the input was
+	 * not properly constrained, which can cause an X error. [Bug 979239]
+	 */
+	handler = Tk_CreateErrorHandler(display, -1, -1, -1,
+		(Tk_ErrorProc *) NULL, (ClientData) NULL);
 	/*
 	 * Pull the current background from the display to blend with
 	 */
 	bgImg = XGetImage(display, drawable, drawableX, drawableY,
 		(unsigned int)width, (unsigned int)height, AllPlanes, ZPixmap);
 	if (bgImg == NULL) {
+	    Tk_DeleteErrorHandler(handler);
 	    return;
 	}
 
@@ -2806,6 +2814,7 @@ ImgPhotoDisplay(clientData, display, drawable, imageX, imageY, width,
 		bgImg, 0, 0, drawableX, drawableY,
 		(unsigned int) width, (unsigned int) height);
 	XDestroyImage(bgImg);
+	Tk_DeleteErrorHandler(handler);
     } else {
 	/*
 	 * masterPtr->region describes which parts of the image contain
