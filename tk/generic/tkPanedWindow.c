@@ -341,6 +341,7 @@ Tk_PanedWindowObjCmd(clientData, interp, objc, objv)
     PanedWindow *pwPtr;
     Tk_Window tkwin, parent;
     OptionTables *pwOpts;
+    XSetWindowAttributes atts;
 
     if (objc < 2) {
 	Tcl_WrongNumArgs(interp, 1, objv, "pathName ?options?");
@@ -429,11 +430,15 @@ Tk_PanedWindowObjCmd(clientData, interp, objc, objv)
      * panedwindow despite being children of windows with potentially
      * different characteristics, and it looks better that way too.
      * [Bug 702230]
+     * Also Set the X window save under attribute to avoid expose events as
+     * the proxy sash is dragged across the panes.  [Bug 1036963]
      */
     Tk_SetWindowVisual(pwPtr->proxywin,
 	    Tk_Visual(tkwin), Tk_Depth(tkwin), Tk_Colormap(tkwin));
     Tk_CreateEventHandler(pwPtr->proxywin, ExposureMask, ProxyWindowEventProc,
 	    (ClientData) pwPtr);
+    atts.save_under = True;
+    Tk_ChangeWindowAttributes(pwPtr->proxywin, CWSaveUnder, &atts);
 
     if (ConfigurePanedWindow(interp, pwPtr, objc - 2, objv + 2) != TCL_OK) {
 	Tk_DestroyWindow(pwPtr->proxywin);
