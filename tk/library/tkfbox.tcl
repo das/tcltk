@@ -1261,8 +1261,11 @@ rSASvJTGhnhcV3EJlo3kh53ltF5nAhQAOw==}]
 	} else {
 	    set files {}
 	    foreach f $completeFileList {
-		if { [string match $data(filter) $f] } {
-		    lappend files $f
+		foreach pat $data(filter) {
+		    if { [string match $pat $f] } {
+			lappend files $f
+			break
+		    }
 		}
 	    }
 	}
