@@ -48,10 +48,10 @@ extern "C" {
 #define TK_MAJOR_VERSION   8
 #define TK_MINOR_VERSION   4
 #define TK_RELEASE_LEVEL   TCL_BETA_RELEASE
-#define TK_RELEASE_SERIAL  2
+#define TK_RELEASE_SERIAL  3
 
 #define TK_VERSION	"8.4"
-#define TK_PATCH_LEVEL	"8.4b2"
+#define TK_PATCH_LEVEL	"8.4b3"
 
 /*
  * The following definitions set up the proper options for Macintosh
@@ -66,6 +66,9 @@ extern "C" {
 
 #ifndef _TCL
 #   include <tcl.h>
+#   if (TCL_MAJOR_VERSION != 8) || (TCL_MINOR_VERSION != 4)
+#	error Tk 8.4 must be compiled with tcl.h from Tcl 8.4
+#   endif
 #endif
 
 /* 
