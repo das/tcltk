@@ -285,8 +285,10 @@ proc tkConsoleBind {w} {
 
     ## Get all Text bindings into Console
     foreach ev [bind Text] { bind Console $ev [bind Text $ev] }	
-    ## We really didn't want the newline insertion
+    ## We really didn't want the newline insertion...
     bind Console <Control-Key-o> {}
+    ## ...or any Control-v binding (would block <<Paste>>)
+    bind Console <Control-Key-v> {}
 
     # For the moment, transpose isn't enabled until the console
     # gets and overhaul of how it handles input -- hobbs
