@@ -400,7 +400,7 @@ source of the window's current size, or an empty string if
 no source has been specified yet.  Most window managers interpret
 ``no source'' as equivalent to \fBprogram\fR.
 .TP
-\fBwm stackorder \fIwindow\fR ?\fIisabove|isbelow\fR? \fI?window?\fR
+\fBwm stackorder \fIwindow\fR ?\fIisabove|isbelow window\fR?
 The stackorder command returns a list of toplevel windows
 in stacking order, from lowest to highest. When a single toplevel
 window is passed, the returned list recursively includes all of the

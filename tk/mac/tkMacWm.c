@@ -1559,7 +1559,7 @@ Tk_WmCmd(
 	if ((argc != 3) && (argc != 5)) {
 	    Tcl_AppendResult(interp, "wrong # arguments: must be \"",
 		    argv[0],
-		    " stackorder window ?isabove|isbelow? ?window?\"",
+		    " stackorder window ?isabove|isbelow window?\"",
 		    (char *) NULL);
 	    return TCL_ERROR;
 	}
