@@ -839,6 +839,7 @@ GenerateXEvent(hwnd, message, wParam, lParam)
 		    event.type = MouseWheelEvent;
 		    event.xany.send_event = -1;
 		    event.xkey.keycode = (short) HIWORD(wParam);
+		    event.xkey.nbytes = 0;
 		    break;
 		case WM_SYSKEYDOWN:
 		case WM_KEYDOWN:
