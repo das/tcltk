@@ -2101,11 +2101,19 @@ test listbox-26.5 {listbox disabled state disallows active modification} {
 } 0
 
 resetGridInfo
-catch {destroy .l2}
-catch {destroy .t}
-catch {destroy .e}
-catch {destroy .partial}
+eval destroy [winfo children .]
 option clear
+
+test listbox-27.1 {widget deletion while active} {
+    destroy .l
+    pack [listbox .l]
+    update
+    .l configure -cursor xterm -xscrollcommand { destroy .l }
+    update idle
+    winfo exists .l
+} 0
+
+eval destroy [winfo children .]
 
 # cleanup
 ::tcltest::cleanupTests
