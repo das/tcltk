@@ -456,6 +456,12 @@ proc ::tk::ConsoleBind {w} {
 	    source [file join $tk_library console.tcl]
 	}
     }
+    if {[string equal $::tcl_platform(platform) "macintosh"]
+	   || [string equal [tk windowingsystem] "aqua"]} {
+	    bind Console <Command-q> {
+		exit
+	    }
+    }
     bind Console <<Cut>> {
         # Same as the copy event
  	if {![catch {set data [%W get sel.first sel.last]}]} {
