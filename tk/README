@@ -7,8 +7,8 @@ RCS: @(#) $Id$
 
 This directory and its descendants contain the sources and documentation
 for Tk, an X11 toolkit implemented with the Tcl scripting language.  The
-information here corresponds to Tk 8.0.3, which is the third patch update
-for Tk 8.0.  This release is designed to work with Tcl 8.0.3 and may not
+information here corresponds to Tk 8.0.5, which is the third patch update
+for Tk 8.0.  This release is designed to work with Tcl 8.0.5 and may not
 work with any other version of Tcl.
 
 Tk 8.0 is a major release with significant new features such as native
