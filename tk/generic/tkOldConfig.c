@@ -941,6 +941,12 @@ Tk_ConfigureValue(interp, tkwin, specs, widgRec, argvName, flags)
     }
     interp->result = FormatConfigValue(interp, tkwin, specPtr, widgRec,
 	    interp->result, &interp->freeProc);
+    /*
+     * Don't let the interp->result be NULL.
+     */
+    if (interp->result == NULL) {
+	interp->result = "";
+    }
     return TCL_OK;
 }
 
