@@ -59,9 +59,9 @@ proc tkColorDialog {args} {
     tkColorDialog_Config $w $args
     tkColorDialog_InitValues $w
 
-    set sc [$data(-parent) cget -screen]
+    set sc [winfo screen $data(-parent)]
     set winExists [winfo exists $w]
-    if {!$winExists || [string compare $sc [$w cget -screen]]} {
+    if {!$winExists || [string compare $sc [winfo screen $w]]} {
 	if {$winExists} {
 	    destroy $w
 	}
