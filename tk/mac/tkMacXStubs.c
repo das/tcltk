@@ -106,6 +106,7 @@ TkpOpenDisplay(
 
     graphicsDevice = GetMainDevice();
     display = (Display *) ckalloc(sizeof(Display));
+    memset(display, 0, sizeof(Display));
     display->resource_alloc = MacXIdAlloc;
     screen = (Screen *) ckalloc(sizeof(Screen) * 2);
     display->default_screen = 0;
@@ -138,6 +139,7 @@ TkpOpenDisplay(
     screen->root_visual->map_entries = 2 ^ 8;
 
     gMacDisplay = (TkDisplay *) ckalloc(sizeof(TkDisplay));
+    memset(gMacDisplay, 0, sizeof(TkDisplay));
     gMacDisplay->display = display;
     return gMacDisplay;
 }
