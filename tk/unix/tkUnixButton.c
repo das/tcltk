@@ -244,12 +244,16 @@ TkpDrawCheckIndicator(tkwin, display, d, x, y, bgBorder, indicatorColor,
 	    Tk_GetColorByValue(tkwin, bg_brdr->bgColorPtr)->pixel;
     imgColors[1 /*B*/] =
 	    Tk_GetColorByValue(tkwin, bg_brdr->bgColorPtr)->pixel;
-    imgColors[2 /*C*/] =
-	    Tk_GetColorByValue(tkwin, bg_brdr->lightColorPtr)->pixel;
+    imgColors[2 /*C*/] = (bg_brdr->lightColorPtr != NULL) ?
+	Tk_GetColorByValue(tkwin, bg_brdr->lightColorPtr)->pixel :
+	WhitePixelOfScreen(bg_brdr->screen);
     imgColors[3 /*D*/] =
 	    Tk_GetColorByValue(tkwin, selectColor)->pixel;
     imgColors[4 /*E*/] =
 	    Tk_GetColorByValue(tkwin, bg_brdr->darkColorPtr)->pixel;
+    imgColors[4 /*E*/] = (bg_brdr->darkColorPtr != NULL) ? 
+	Tk_GetColorByValue(tkwin, bg_brdr->darkColorPtr)->pixel :
+	BlackPixelOfScreen(bg_brdr->screen);
     imgColors[5 /*F*/] =
 	    Tk_GetColorByValue(tkwin, bg_brdr->bgColorPtr)->pixel;
     imgColors[6 /*G*/] =
