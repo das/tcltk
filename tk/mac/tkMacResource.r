@@ -50,14 +50,14 @@ resource 'vers' (1) {
 	TK_MAJOR_VERSION, MINOR_VERSION,
 	RELEASE_LEVEL, 0x00, verUS,
 	TK_PATCH_LEVEL,
-	TK_PATCH_LEVEL ", by Ray Johnson © 1993-1996" "\n" "Sun Microsystems Labratories"
+	TK_PATCH_LEVEL ", by Ray Johnson & Jim Ingham "\n© 1993-1997 Sun Microsystems" "\n  1998-1999 Scriptics Inc."
 };
 
 resource 'vers' (2) {
 	TK_MAJOR_VERSION, MINOR_VERSION,
 	RELEASE_LEVEL, 0x00, verUS,
 	TK_PATCH_LEVEL,
-	"Wish " TK_PATCH_LEVEL " © 1993-1996"
+	"Wish " TK_PATCH_LEVEL " © 1993-1999"
 };
 
 
@@ -134,8 +134,8 @@ resource 'DITL' (128, "About Box", purgeable) {
 	    "Wish - Windowing Shell" "\n" "based on Tcl " 
 	    TCL_PATCH_LEVEL " & Tk " TK_PATCH_LEVEL "\n\n" 
             "Ray Johnson & Jim Ingham" "\n"
-	    "Sun Microsystems Labs" "\n" "ray.johnson@eng.sun.com"
-            "\n" "jim.ingham@eng.sun.com"},	    
+	    "Scriptics Inc." "\n"
+            "jim.ingham@cygnus.com"},	    
         { 19,  24, 119,  92}, Picture  {enabled, 128}
     }
 };
