@@ -125,7 +125,7 @@ static void		InitBitmapObj _ANSI_ARGS_((Tcl_Obj *objPtr));
  * ptr1 field of the Tcl_Obj points to a TkBitmap object.
  */
 
-static Tcl_ObjType bitmapObjType = {
+Tcl_ObjType tkBitmapObjType = {
     "bitmap",			/* name */
     FreeBitmapObjProc,		/* freeIntRepProc */
     DupBitmapObjProc,		/* dupIntRepProc */
@@ -168,7 +168,7 @@ Tk_AllocBitmapFromObj(interp, tkwin, objPtr)
 {
     TkBitmap *bitmapPtr;
 
-    if (objPtr->typePtr != &bitmapObjType) {
+    if (objPtr->typePtr != &tkBitmapObjType) {
 	InitBitmapObj(objPtr);
     }
     bitmapPtr = (TkBitmap *) objPtr->internalRep.twoPtrValue.ptr1;
@@ -900,7 +900,7 @@ GetBitmapFromObj(tkwin, objPtr)
     Tcl_HashEntry *hashPtr;
     TkDisplay *dispPtr = ((TkWindow *) tkwin)->dispPtr;
 
-    if (objPtr->typePtr != &bitmapObjType) {
+    if (objPtr->typePtr != &tkBitmapObjType) {
 	InitBitmapObj(objPtr);
     }
 
@@ -975,7 +975,7 @@ InitBitmapObj(objPtr)
     if ((typePtr != NULL) && (typePtr->freeIntRepProc != NULL)) {
 	(*typePtr->freeIntRepProc)(objPtr);
     }
-    objPtr->typePtr = &bitmapObjType;
+    objPtr->typePtr = &tkBitmapObjType;
     objPtr->internalRep.twoPtrValue.ptr1 = (VOID *) NULL;
 }
 

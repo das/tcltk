@@ -735,3 +735,35 @@ SetWindowFromAny(interp, objPtr)
 
     return TCL_OK;
 }
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkRegisterObjTypes --
+ *
+ *	Registers Tk's Tcl_ObjType structures with the Tcl run-time.
+ *
+ * Results:
+ *	None
+ *
+ * Side effects:
+ *	All instances of Tcl_ObjType structues used in Tk are registered
+ *	with Tcl.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TkRegisterObjTypes()
+{
+    Tcl_RegisterObjType(&tkBorderObjType);
+    Tcl_RegisterObjType(&tkBitmapObjType);
+    Tcl_RegisterObjType(&tkColorObjType);
+    Tcl_RegisterObjType(&tkCursorObjType);
+    Tcl_RegisterObjType(&tkFontObjType);
+    Tcl_RegisterObjType(&mmObjType);
+    Tcl_RegisterObjType(&tkOptionObjType);
+    Tcl_RegisterObjType(&pixelObjType);
+    Tcl_RegisterObjType(&tkStateKeyObjType);
+    Tcl_RegisterObjType(&windowObjType);
+}

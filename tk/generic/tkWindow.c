@@ -2829,6 +2829,11 @@ Initialize(interp)
         return TCL_ERROR;
     }
 
+    /*
+     * Ensure that our obj-types are registered with the Tcl runtime.
+     */
+    TkRegisterObjTypes();
+
     tsdPtr = (ThreadSpecificData *) 
 	Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 

@@ -140,7 +140,7 @@ static int		SetOptionFromAny _ANSI_ARGS_((Tcl_Interp *interp,
  * and the internalPtr2 field points to the entry that matched.
  */
 
-Tcl_ObjType optionType = {
+Tcl_ObjType tkOptionObjType = {
     "option",				/* name */
     (Tcl_FreeInternalRepProc *) NULL,	/* freeIntRepProc */
     (Tcl_DupInternalRepProc *) NULL,	/* dupIntRepProc */
@@ -1042,7 +1042,7 @@ GetOptionFromObj(interp, objPtr, tablePtr)
      * First, check to see if the object already has the answer cached.
      */
 
-    if (objPtr->typePtr == &optionType) {
+    if (objPtr->typePtr == &tkOptionObjType) {
 	if (objPtr->internalRep.twoPtrValue.ptr1 == (VOID *) tablePtr) {
 	    return (Option *) objPtr->internalRep.twoPtrValue.ptr2;
 	}
@@ -1108,7 +1108,7 @@ GetOptionFromObj(interp, objPtr, tablePtr)
     }
     objPtr->internalRep.twoPtrValue.ptr1 = (VOID *) tablePtr;
     objPtr->internalRep.twoPtrValue.ptr2 = (VOID *) bestPtr;
-    objPtr->typePtr = &optionType;
+    objPtr->typePtr = &tkOptionObjType;
     return bestPtr;
 
     error:
