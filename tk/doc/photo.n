@@ -33,7 +33,7 @@ formats are supported, but an interface exists to allow additional
 image file formats to be added easily.  A photo image is transparent
 in regions where no image data has been supplied
 .VS 8.4
-or where it has been set transparent by the \fBtransparency set\fB
+or where it has been set transparent by the \fBtransparency set\fR
 subcommand.
 .VE 8.4
 
