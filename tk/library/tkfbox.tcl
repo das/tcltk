@@ -1509,10 +1509,17 @@ proc ::tk::dialog::file::ActivateEnt {w} {
 	# names as a true list, watching out for a single file with a
 	# space in the name.  Thus we query the IconList directly.
 
+	set selIcos [::tk::IconList_Curselection $data(icons)]
 	set data(selectFile) ""
-	foreach item [::tk::IconList_Curselection $data(icons)] {
-	    ::tk::dialog::file::VerifyFileName $w \
+	if {[llength $selIcos] == 0 && $text ne ""} {
+	    # This assumes the user typed something in without selecting
+	    # files - so assume they only type in a single filename.
+	    ::tk::dialog::file::VerifyFileName $w $text
+	} else {
+	    foreach item $selIcos {
+		::tk::dialog::file::VerifyFileName $w \
 		    [::tk::IconList_Get $data(icons) $item]
+	    }
 	}
     } else {
 	::tk::dialog::file::VerifyFileName $w $text
