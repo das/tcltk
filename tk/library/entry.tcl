@@ -87,7 +87,7 @@ bind Entry <Double-1> {
 bind Entry <Triple-1> {
     set tk::Priv(selectMode) line
     tk::EntryMouseSelect %W %x
-    %W icursor sel.last
+    catch {%W icursor sel.last}
 }
 bind Entry <Shift-1> {
     set tk::Priv(selectMode) char
