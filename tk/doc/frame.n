@@ -17,8 +17,9 @@ frame \- Create and manipulate frame widgets
 .SH SYNOPSIS
 \fBframe\fR \fIpathName\fR ?\fIoptions\fR?
 .SO
-\-borderwidth	\-highlightbackground	\-highlightthickness	\-takefocus
-\-cursor	\-highlightcolor	\-relief
+\-borderwidth	\-highlightcolor	\-takefocus
+\-cursor	\-highlightthickness
+\-highlightbackground	\-relief
 .SE
 .SH "WIDGET-SPECIFIC OPTIONS"
 .OP \-background background Background

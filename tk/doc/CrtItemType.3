@@ -531,7 +531,7 @@ It is only relevant for item types that support an insertion cursor;
 that don't support an insertion cursor.
 The procedure must match the following prototype:
 .CS
-typedef void Tk_ItemIndexProc(
+typedef void Tk_ItemCursorProc(
 	Tk_Canvas \fIcanvas\fR,
 	Tk_Item *\fIitemPtr\fR,
 	int \fIindex\fR);
