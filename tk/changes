@@ -5935,3 +5935,6 @@ automatically in wrapper updating.  Modified and added functions: WmStateCmd,
 UpdateWrapper, TkpWmGetState (added) in tkWinWm.c; TkpUseWindow, 
 TkWinEmbeddedEventProc in tkWinEmbed.c; TkWinChildProc in tkWinX.c. 
 (chengyemao) 
+
+2005-1-8 (bug fix)[1098625] Wrong toplevel geometry when created with a menu.
+(chengyemao)
