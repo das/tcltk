@@ -1536,6 +1536,11 @@ ConfigureMenu(interp, menuPtr, objc, objv)
 		ckfree((char *) cleanupPtr->errorStructPtr);
 		cleanupPtr->errorStructPtr = NULL;
 	    }
+	    if (menuListPtr->errorStructPtr != NULL) {
+		Tk_RestoreSavedOptions(menuListPtr->errorStructPtr);
+		ckfree((char *) menuListPtr->errorStructPtr);
+		menuListPtr->errorStructPtr = NULL;
+	    }
 	    return TCL_ERROR;
 	}
 
@@ -1576,17 +1581,17 @@ ConfigureMenu(interp, menuPtr, objc, objv)
 	    if ((menuListPtr->numEntries == 0)
 		    || (menuListPtr->entries[0]->type != TEAROFF_ENTRY)) {
 		if (MenuNewEntry(menuListPtr, 0, TEAROFF_ENTRY) == NULL) {
-		    if (menuListPtr->errorStructPtr != NULL) {
-			for (cleanupPtr = menuPtr->masterMenuPtr;
-				cleanupPtr != menuListPtr;
-				cleanupPtr = cleanupPtr->nextInstancePtr) {
-			    Tk_RestoreSavedOptions(cleanupPtr->errorStructPtr);
-			    ckfree((char *) cleanupPtr->errorStructPtr);
-			    cleanupPtr->errorStructPtr = NULL;
-			}
+		    for (cleanupPtr = menuPtr->masterMenuPtr;
+			 cleanupPtr != menuListPtr;
+			 cleanupPtr = cleanupPtr->nextInstancePtr) {
 			Tk_RestoreSavedOptions(cleanupPtr->errorStructPtr);
 			ckfree((char *) cleanupPtr->errorStructPtr);
 			cleanupPtr->errorStructPtr = NULL;
+		    }
+		    if (menuListPtr->errorStructPtr != NULL) {
+			Tk_RestoreSavedOptions(menuListPtr->errorStructPtr);
+			ckfree((char *) menuListPtr->errorStructPtr);
+			menuListPtr->errorStructPtr = NULL;
 		    }
 		    return TCL_ERROR;
 		}
