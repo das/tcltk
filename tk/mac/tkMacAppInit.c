@@ -272,7 +272,6 @@ MacintoshInit()
 
 
     Tcl_MacSetEventProc(TkMacConvertEvent);
-
     return TCL_OK;
 }
 

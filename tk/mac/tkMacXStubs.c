@@ -28,6 +28,7 @@
 #include <ToolUtils.h>
 #include <Sound.h>
 #include "tkMacInt.h"
+#include "tkPort.h"
 
 /*
  * Because this file is still under major development Debugger statements are
@@ -523,39 +524,6 @@ Tk_FreeXId (
 {
     /* no-op function needed for stubs implementation. */
 }
-
-void
-Tk_3DHorizontalBevel (
-    Tk_Window tkwin,
-    Drawable d,
-    Tk_3DBorder b,
-    int x,
-    int y,
-    int width,
-    int height,
-    int leftIn,
-    int rightIn,
-    int topBevel,
-    int relief)
-{
-    /* no-op function needed for stubs implementation. */
-}
-
-void
-Tk_3DVerticalBevel (
-    Tk_Window tkwin,
-    Drawable d,
-    Tk_3DBorder b,
-    int x,
-    int y,
-    int width,
-    int height,
-    int leftBevel,
-    int relief)
-{
-    /* no-op function needed for stubs implementation. */
-}
-
 
 /*
  *----------------------------------------------------------------------
@@ -720,6 +688,31 @@ XSetWindowColormap(
     Colormap colormap)
 {
     Debugger();
+}
+
+Status		
+XStringListToTextProperty(
+    char** list, 
+    int count, 
+    XTextProperty* text_prop_return)
+{
+    Debugger();
+    return (Status) 0;
+}
+void		
+XSetWMClientMachine(
+    Display* display, 
+    Window w, 
+    XTextProperty* text_prop)
+{
+    Debugger();
+}
+XIC		
+XCreateIC(
+    void)
+{
+    Debugger();
+    return (XIC) 0;
 }
 
 /*

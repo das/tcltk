@@ -15,12 +15,8 @@
 #define _TKMACINT
 
 #include "tkInt.h"
-#include "tkPort.h"
 
-#ifndef _TKMAC
-#    include "tkMac.h"
-#endif /* _TKMAC */
-
+#include "tkMac.h"
 
 #include <AppleEvents.h>
 #include <Windows.h>
@@ -207,5 +203,7 @@ typedef TkMenuDefProcPtr TkMenuDefUPP;
 	(*(userRoutine))((message), (theMenu), (menuRectPtr), (hitPt), \
 	(whichItemPtr), (globalsPtr))
 #endif
+
+#include "tkIntPlatDecls.h"
 
 #endif /* _TKMACINT */

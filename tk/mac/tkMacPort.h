@@ -48,6 +48,7 @@
 #include <Xatom.h>
 #include <Xfuncproto.h>
 #include <Xutil.h>
+#include "tkIntXlibDecls.h"
 
 /*
  * Not all systems declare the errno variable in errno.h. so this

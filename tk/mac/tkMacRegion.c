@@ -12,6 +12,7 @@
  */
 
 #include "tkInt.h"
+#include "tkMacInt.h"
 #include "X.h"
 #include "Xlib.h"
 

@@ -13,7 +13,7 @@
  */
 
 #include "tcl.h"
-#include "tclMacInt.h"
+#include "tclMacInt.h" /* Needed for FSpLocationFromPath */
 #include "tk.h"
 #include "tkInt.h"
 #include "tkMacInt.h"

@@ -433,14 +433,14 @@ Tk_SendObjCmd(
 	     * parser is faster.
 	     */
 
-	    result = Tcl_EvalObj(localInterp, objv[firstArg], TCL_EVAL_DIRECT);
+	    result = Tcl_EvalObjEx(localInterp, objv[firstArg], TCL_EVAL_DIRECT);
 	} else {
 	    listObjPtr = Tcl_NewListObj(0, (Tcl_Obj **) NULL);
 	    for (i = firstArg; i < objc; i++) {
 		Tcl_ListObjAppendList(interp, listObjPtr, objv[i]);
 	    }
 	    Tcl_IncrRefCount(listObjPtr);
-	    result = Tcl_EvalObj(localInterp, listObjPtr, TCL_EVAL_DIRECT);
+	    result = Tcl_EvalObjEx(localInterp, listObjPtr, TCL_EVAL_DIRECT);
 	    Tcl_DecrRefCount(listObjPtr);
 	}
 	if (interp != localInterp) {

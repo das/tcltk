@@ -49,6 +49,7 @@ typedef void (Tk_MacEmbedGetOffsetInParentProc) (Tk_Window window, Point *ulCorn
  * so they can be exported.
  */
 
+#include "tkPlatDecls.h"
 
 #pragma export reset
 

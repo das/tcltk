@@ -163,8 +163,8 @@ TkpDisplayMenuButton(
      * foreground color, generate the stippled effect.
      */
 
-    if (mbPtr->state == STATE_DISABLED && mbPtr->disabledFg != NULL) {
-            || (mbPtr->image != NULL))) {
+    if ((mbPtr->state == STATE_DISABLED && mbPtr->disabledFg != NULL)
+            || (mbPtr->image != NULL)) {
 	XFillRectangle(mbPtr->display, Tk_WindowId(tkwin), 
                 mbPtr->disabledGC, mbPtr->inset, mbPtr->inset,
 		(unsigned) (Tk_Width(tkwin) - 2*mbPtr->inset),

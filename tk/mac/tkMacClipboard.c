@@ -119,7 +119,7 @@ XSetSelectionOwner(
      * It expects a Tk_Window, even though it only needs a Tk_Display.
      */
 
-    tkwin = (Tk_Window)tkMainWindowList->winPtr;
+    tkwin = (Tk_Window) TkGetMainInfoList()->winPtr;
 
     if (selection == Tk_InternAtom(tkwin, "CLIPBOARD")) {
 
@@ -128,7 +128,7 @@ XSetSelectionOwner(
 	 * owner of the clipboard.
 	 */
 
-	dispPtr = tkMainWindowList->winPtr->dispPtr;
+	dispPtr = TkGetMainInfoList()->winPtr->dispPtr;
 	if (dispPtr->clipboardActive) {
 	    return;
 	}
@@ -283,9 +283,9 @@ TkSuspendClipboard()
      * it needs it.  (Window list NULL if quiting.)
      */
 
-    if (tkMainWindowList != NULL) {
-	Tk_ClearSelection((Tk_Window) tkMainWindowList->winPtr, 
-		Tk_InternAtom((Tk_Window) tkMainWindowList->winPtr,
+    if (TkGetMainInfoList() != NULL) {
+	Tk_ClearSelection((Tk_Window) TkGetMainInfoList()->winPtr, 
+		Tk_InternAtom((Tk_Window) TkGetMainInfoList()->winPtr,
 			"CLIPBOARD"));
     }
 

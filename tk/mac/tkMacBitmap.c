@@ -101,8 +101,6 @@ TkpDefineNativeBitmaps()
     BuiltInIcon *builtInPtr;
     NativeIcon *nativeIconPtr;
     Tcl_HashTable *tablePtr;
-    ThreadSpecificData *tsdPtr = (ThreadSpecificData *) 
-            Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
     
     for (builtInPtr = builtInIcons; builtInPtr->name != NULL; builtInPtr++) {
 	name = Tk_GetUid(builtInPtr->name);
@@ -204,7 +202,7 @@ TkpCreateNativeBitmap(
 Pixmap
 TkpGetNativeAppBitmap(
     Display *display,	/* The display. */
-    char *name,		/* The name of the bitmap. */
+    CONST char *name,	/* The name of the bitmap. */
     int *width,		/* The width & height of the bitmap. */
     int *height)
 {

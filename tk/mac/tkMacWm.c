@@ -3620,6 +3620,7 @@ TkMacZoomToplevel(
     Point location = {0, 0};
     int xOffset, yOffset;
     WmInfo *wmPtr;
+    TkDisplay *dispPtr;
 
     SetPort(whichWindow);
     if (!TrackBox(whichWindow, where, zoomPart)) {

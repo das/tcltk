@@ -23,6 +23,7 @@
 #include "tkPort.h"
 #include "tkInt.h"
 #include "tclMacInt.h"
+#include "tkMacInt.h"
 #include "tkFileFilter.h"
 
 #ifndef StrLength
