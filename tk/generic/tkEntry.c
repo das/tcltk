@@ -1946,7 +1946,7 @@ EntryCmdDeletedProc(clientData)
      * destroys the widget.
      */
 
-    if (! entryPtr->flags & ENTRY_DELETED) {
+    if (!(entryPtr->flags & ENTRY_DELETED)) {
         Tk_DestroyWindow(entryPtr->tkwin);
     }
 }
