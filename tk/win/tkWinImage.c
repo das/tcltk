@@ -221,7 +221,7 @@ XCreateImage(display, visual, depth, format, offset, data, width, height,
     imagePtr->data = data;
     imagePtr->byte_order = LSBFirst;
     imagePtr->bitmap_unit = 8;
-    imagePtr->bitmap_bit_order = MSBFirst;
+    imagePtr->bitmap_bit_order = LSBFirst;
     imagePtr->bitmap_pad = bitmap_pad;
     imagePtr->bits_per_pixel = depth;
     imagePtr->depth = depth;
