@@ -1539,7 +1539,10 @@ EntryWorldChanged(instanceData)
  */
 
 int
-TkpDrawEntryBorderAndFocus(Entry *entryPtr, Drawable pixmap, int isSpinbox)
+TkpDrawEntryBorderAndFocus(entryPtr, pixmap, isSpinbox)
+    Entry *entryPtr;
+    Drawable pixmap;
+    int isSpinbox;
 {
     return 0;
 }
@@ -1567,7 +1570,9 @@ TkpDrawEntryBorderAndFocus(Entry *entryPtr, Drawable pixmap, int isSpinbox)
  */
 
 int
-TkpDrawSpinboxButtons(Spinbox *sbPtr, pixmap)
+TkpDrawSpinboxButtons(sbPtr, pixmap)
+    Spinbox *sbPtr; 
+    Pixmap pixmap;
 {
     return 0;
 }
