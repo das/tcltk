@@ -30,7 +30,6 @@ AC_PROG_MAKE_SET
 # These two macros perform additinal compiler test.
 #--------------------------------------------------------------------
 
-AC_PROG_CC
 AC_CYGWIN
 
 #--------------------------------------------------------------------
