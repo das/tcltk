@@ -908,9 +908,7 @@ DeleteImage(masterPtr)
 	(*typePtr->deleteProc)(masterPtr->masterData);
     }
     if (masterPtr->instancePtr == NULL) {
-        if ((masterPtr->winPtr->flags & TK_ALREADY_DEAD) == 0) {
-	    Tcl_DeleteHashEntry(masterPtr->hPtr);
-	}
+	Tcl_DeleteHashEntry(masterPtr->hPtr);
 	Tcl_Release((ClientData) masterPtr->winPtr);
 	ckfree((char *) masterPtr);
     }
