@@ -142,5 +142,6 @@ extern int		strncasecmp _ANSI_ARGS_((CONST char *s1,
 #define MENU_BACKGROUND_PIXEL		47
 #define MENU_DISABLED_PIXEL		49
 #define MENU_TEXT_PIXEL			51
+#define APPEARANCE_PIXEL		52
 
 #endif /* _TKMACPORT */
