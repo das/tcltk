@@ -366,7 +366,7 @@ Tk_UpdatePointer(tkwin, x, y, state)
 	     * If we still have a target window, send the event.
 	     */
 
-	    if (winPtr != NULL) {
+	    if (targetWinPtr != NULL) {
 		InitializeEvent(&event, targetWinPtr, type, x, y,
 			tsdPtr->lastState, b);
 		Tk_QueueWindowEvent(&event, TCL_QUEUE_TAIL);
