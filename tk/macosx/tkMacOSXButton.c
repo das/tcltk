@@ -465,7 +465,7 @@ TkpDisplayButton(
                 && ((butPtr->disabledFg == NULL) || (butPtr->image != NULL))) {
             if ((butPtr->flags & SELECTED) && !butPtr->indicatorOn
 		    && (butPtr->selectBorder != NULL)) {
-                XSetForeground(butPtr->display, butPtr->stippledGC,
+                XSetForeground(butPtr->display, butPtr->stippleGC,
 			Tk_3DBorderColor(butPtr->selectBorder)->pixel);
             }
 	    /*
@@ -483,7 +483,7 @@ TkpDisplayButton(
 	    }
             if ((butPtr->flags & SELECTED) && !butPtr->indicatorOn
 		    && (butPtr->selectBorder != NULL)) {
-		XSetForeground(butPtr->display, butPtr->stippledGC,
+		XSetForeground(butPtr->display, butPtr->stippleGC,
 			Tk_3DBorderColor(butPtr->normalBorder)->pixel);
 	    }
         }
