@@ -694,7 +694,6 @@ DisplayFrame(clientData)
 {
     register Frame *framePtr = (Frame *) clientData;
     register Tk_Window tkwin = framePtr->tkwin;
-    GC gc;
 
     framePtr->flags &= ~REDRAW_PENDING;
     if ((framePtr->tkwin == NULL) || !Tk_IsMapped(tkwin)
@@ -711,15 +710,19 @@ DisplayFrame(clientData)
 		framePtr->borderWidth, framePtr->relief);
     }
     if (framePtr->highlightWidth != 0) {
+        GC fgGC, bgGC;
+        
+	bgGC = Tk_GCForColor(framePtr->highlightBgColorPtr,
+		Tk_WindowId(tkwin));
 	if (framePtr->flags & GOT_FOCUS) {
-	    gc = Tk_GCForColor(framePtr->highlightColorPtr,
+	    fgGC = Tk_GCForColor(framePtr->highlightColorPtr,
+		    Tk_WindowId(tkwin));
+	    TkpDrawHighlightBorder(tkwin, fgGC, bgGC, framePtr->highlightWidth,
 		    Tk_WindowId(tkwin));
 	} else {
-	    gc = Tk_GCForColor(framePtr->highlightBgColorPtr,
+	    TkpDrawHighlightBorder(tkwin, bgGC, bgGC, framePtr->highlightWidth,
 		    Tk_WindowId(tkwin));
 	}
-	Tk_DrawFocusHighlight(tkwin, gc, framePtr->highlightWidth,
-		Tk_WindowId(tkwin));
     }
 }
 

@@ -499,6 +499,10 @@ EXTERN void		TkGenWMConfigureEvent _ANSI_ARGS_((Tk_Window tkwin,
 				int x, int y, int width, int height, 
 				int flags));
 #endif /* MAC_TCL */
+/* 135 */
+EXTERN void		TkpDrawHighlightBorder _ANSI_ARGS_((Tk_Window tkwin, 
+				GC fgGC, GC bgGC, int highlightWidth, 
+				Drawable drawable));
 
 typedef struct TkIntStubs {
     int magic;
@@ -799,6 +803,7 @@ typedef struct TkIntStubs {
 #ifdef MAC_TCL
     void (*tkGenWMConfigureEvent) _ANSI_ARGS_((Tk_Window tkwin, int x, int y, int width, int height, int flags)); /* 134 */
 #endif /* MAC_TCL */
+    void (*tkpDrawHighlightBorder) _ANSI_ARGS_((Tk_Window tkwin, GC fgGC, GC bgGC, int highlightWidth, Drawable drawable)); /* 135 */
 } TkIntStubs;
 
 #ifdef __cplusplus
@@ -1431,6 +1436,10 @@ extern TkIntStubs *tkIntStubsPtr;
 	(tkIntStubsPtr->tkGenWMConfigureEvent) /* 134 */
 #endif
 #endif /* MAC_TCL */
+#ifndef TkpDrawHighlightBorder
+#define TkpDrawHighlightBorder \
+	(tkIntStubsPtr->tkpDrawHighlightBorder) /* 135 */
+#endif
 
 #endif /* defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS) */
 

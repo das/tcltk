@@ -210,17 +210,20 @@ TkpDisplayScrollbar(
      * Draw the focus or any 3D relief we may have.
      */
     if (scrollPtr->highlightWidth != 0) {
-	GC gc;
+	GC fgGC, bgGC;
+
+	bgGC = Tk_GCForColor(scrollPtr->highlightBgColorPtr,
+		Tk_WindowId(tkwin));
 
 	if (scrollPtr->flags & GOT_FOCUS) {
-	    gc = Tk_GCForColor(scrollPtr->highlightColorPtr,
+	    fgGC = Tk_GCForColor(scrollPtr->highlightColorPtr,
 		    Tk_WindowId(tkwin));
-	} else {
-	    gc = Tk_GCForColor(scrollPtr->highlightBgColorPtr,
-		    Tk_WindowId(tkwin));
-	}
-	Tk_DrawFocusHighlight(tkwin, gc, scrollPtr->highlightWidth,
+	    TkpDrawHighlightBorder(tkwin, fgGC, bgGC, scrollPtr->highlightWidth,
 		Tk_WindowId(tkwin));
+	} else {
+	    TkpDrawHighlightBorder(tkwin, bgGC, bgGC, scrollPtr->highlightWidth,
+		Tk_WindowId(tkwin));
+	}
     }
     Tk_Draw3DRectangle(tkwin, Tk_WindowId(tkwin), scrollPtr->bgBorder,
 	    scrollPtr->highlightWidth, scrollPtr->highlightWidth,

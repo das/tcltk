@@ -1272,14 +1272,17 @@ DisplayListbox(clientData)
 	    Tk_Height(tkwin) - 2*listPtr->highlightWidth,
 	    listPtr->borderWidth, listPtr->relief);
     if (listPtr->highlightWidth > 0) {
-	GC gc;
+	GC fgGC, bgGC;
 
+	bgGC = Tk_GCForColor(listPtr->highlightBgColorPtr, pixmap);
 	if (listPtr->flags & GOT_FOCUS) {
-	    gc = Tk_GCForColor(listPtr->highlightColorPtr, pixmap);
+	    fgGC = Tk_GCForColor(listPtr->highlightColorPtr, pixmap);
+	    TkpDrawHighlightBorder(tkwin, fgGC, bgGC, 
+	            listPtr->highlightWidth, pixmap);
 	} else {
-	    gc = Tk_GCForColor(listPtr->highlightBgColorPtr, pixmap);
+	    TkpDrawHighlightBorder(tkwin, bgGC, bgGC, 
+	            listPtr->highlightWidth, pixmap);
 	}
-	Tk_DrawFocusHighlight(tkwin, gc, listPtr->highlightWidth, pixmap);
     }
     XCopyArea(listPtr->display, pixmap, Tk_WindowId(tkwin),
 	    listPtr->textGC, 0, 0, (unsigned) Tk_Width(tkwin),

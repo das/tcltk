@@ -223,15 +223,17 @@ TkpDisplayMenuButton(
     }
     
     if (mbPtr->highlightWidth != 0) {
-	GC gc;
+	GC fgGC, bgGC;
 
+	bgGC = Tk_GCForColor(mbPtr->highlightBgColorPtr, Tk_WindowId(tkwin));
 	if (mbPtr->flags & GOT_FOCUS) {
-	    gc = Tk_GCForColor(mbPtr->highlightColorPtr, Tk_WindowId(tkwin));
+	    fgGC = Tk_GCForColor(mbPtr->highlightColorPtr, Tk_WindowId(tkwin));
+	    TkpDrawHighlightBorder(tkwin, fgGC, bgGC, mbPtr->highlightWidth,
+		    Tk_WindowId(tkwin));
 	} else {
-	    gc = Tk_GCForColor(mbPtr->highlightBgColorPtr, Tk_WindowId(tkwin));
+	    TkpDrawHighlightBorder(tkwin, bgGC, bgGC, mbPtr->highlightWidth,
+		    Tk_WindowId(tkwin));
 	}
-	Tk_DrawFocusHighlight(tkwin, gc, mbPtr->highlightWidth,
-		Tk_WindowId(tkwin));
     }
 
     SetGWorld(saveWorld, saveDevice);

@@ -610,7 +610,10 @@ declare 134 mac {
  	    int width, int height, int flags)
 }
 
-
+declare 135 generic {
+    void TkpDrawHighlightBorder (Tk_Window tkwin, GC fgGC, GC bgGC, \
+        int highlightWidth, Drawable drawable)
+}
 
 ##############################################################################
 

@@ -337,6 +337,7 @@ TkIntStubs tkIntStubs = {
 #ifdef MAC_TCL
     TkGenWMConfigureEvent, /* 134 */
 #endif /* MAC_TCL */
+    TkpDrawHighlightBorder, /* 135 */
 };
 
 TkIntPlatStubs tkIntPlatStubs = {
