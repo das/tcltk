@@ -4849,6 +4849,9 @@ then widget was destroyed (hobbs)
 2000-03-02 (feature enhancement) added %V substitution to entry widget
 validation to clarify type of validation occuring (hobbs)
 
+2000-03-07 (feature enhancement) added -disabledforeground/-state to labels
+(melski)
+
 2000-03-29 (config enhancement) improved build support for gcc/mingw on
 Windows (nijtmans, hobbs) and added RPM target (melski)
 
