@@ -111,7 +111,7 @@ static TkCmd commands[] = {
     {"lower",		NULL,			Tk_LowerObjCmd,		1, 1},
     {"option",		NULL,			Tk_OptionObjCmd,	1, 1},
     {"pack",		Tk_PackCmd,		NULL,			1, 1},
-    {"place",		Tk_PlaceCmd,		NULL,			1, 1},
+    {"place",		NULL,			Tk_PlaceObjCmd,		1, 0},
     {"raise",		NULL,			Tk_RaiseObjCmd,		1, 1},
     {"selection",	NULL,			Tk_SelectionObjCmd,	0, 1},
     {"tk",		NULL,			Tk_TkObjCmd,		0, 1},

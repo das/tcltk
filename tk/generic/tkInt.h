@@ -977,8 +977,9 @@ EXTERN int		Tk_OptionObjCmd _ANSI_ARGS_((ClientData clientData,
 	                    Tcl_Obj *CONST objv[]));
 EXTERN int		Tk_PackCmd _ANSI_ARGS_((ClientData clientData,
 			    Tcl_Interp *interp, int argc, char **argv));
-EXTERN int		Tk_PlaceCmd _ANSI_ARGS_((ClientData clientData,
-			    Tcl_Interp *interp, int argc, char **argv));
+EXTERN int		Tk_PlaceObjCmd _ANSI_ARGS_((ClientData clientData,
+			    Tcl_Interp *interp, int objc,
+			    Tcl_Obj *CONST objv[]));
 EXTERN int		Tk_RadiobuttonObjCmd _ANSI_ARGS_((
 			    ClientData clientData,
 			    Tcl_Interp *interp, int objc,
