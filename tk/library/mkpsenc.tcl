@@ -9,8 +9,8 @@ proc ::tk::CreatePostscriptEncoding {encoding} {
     set result "/CurrentEncoding \[\n"
     for {set i 0} {$i<256} {incr i 8} {
         for {set j 0} {$j<8} {incr j} {
-            set hexcode [format "%04X" [scan [encoding convertfrom\
-		    $encoding [format "%c" [expr $i+$j] ]] %c]]
+	    set enc [encoding convertfrom $encoding [format %c [expr {$i+$j}]]]
+	    if {[catch {format %04X [scan $enc %c]} hexcode]} continue
 	    if [info exists ::tk::psglyphs($hexcode)] {
 		append result "/$::tk::psglyphs($hexcode)"
 	    } else {
@@ -1365,4 +1365,3 @@ append ps_preamable {
 
 proc tk::ensure_psenc_is_loaded {} {
 }
-
