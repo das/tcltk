@@ -2961,6 +2961,16 @@ Initialize(interp)
     code = Tcl_PkgProvideEx(interp, "Tk", TK_VERSION, (ClientData) &tkStubs);
     if (code != TCL_OK) {
 	goto done;
+    } else {
+	/*
+	 * If we were able to provide ourselves as a package, then set
+	 * the main loop procedure in Tcl to our main loop proc.  This
+	 * will cause tclsh to be event-aware when Tk is dynamically
+	 * loaded.  This will have no effect in wish, which already is
+	 * prepared to run the event loop.
+	 */
+
+	Tcl_SetMainLoop(Tk_MainLoop);
     }
 
 #ifdef Tk_InitStubs
