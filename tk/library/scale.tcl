@@ -188,8 +188,10 @@ proc ::tk::ScaleDrag {w x y} {
 proc ::tk::ScaleEndDrag {w} {
     variable ::tk::Priv
     set Priv(dragging) 0
-    $w configure -sliderrelief $Priv($w,relief)
-    unset Priv($w,relief)
+    if {[info exists Priv($w,relief)]} {
+        $w configure -sliderrelief $Priv($w,relief)
+        unset Priv($w,relief)
+    }
 }
 
 # ::tk::ScaleIncrement --
