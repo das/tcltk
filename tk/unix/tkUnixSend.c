@@ -1104,7 +1104,7 @@ Tk_SendCmd(clientData, interp, argc, argv)
 
     prevRestrictProc = Tk_RestrictEvents(SendRestrictProc,
 	    (ClientData) NULL, &prevArg);
-    TclpGetTime(&timeout);
+    Tcl_GetTime(&timeout);
     timeout.sec += 2;
     while (!pending.gotResponse) {
 	if (!TkUnixDoOneXEvent(&timeout)) {
@@ -1128,7 +1128,7 @@ Tk_SendCmd(clientData, interp, argc, argv)
 		strcpy(pending.result, msg);
 		pending.gotResponse = 1;
 	    } else {
-		TclpGetTime(&timeout);
+		Tcl_GetTime(&timeout);
 		timeout.sec += 2;
 	    }
 	}
