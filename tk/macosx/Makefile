@@ -40,8 +40,8 @@ PBXBUILD		= /usr/bin/pbxbuild
 XCODEBUILD		= /usr/bin/xcodebuild
 
 BUILDCMD		= `if [ -f $(XCODEBUILD) ]; then \
-				echo "$(XCODEBUILD)"; \
-			  	else echo "$(PBXBUILD)"; fi`
+			    echo "$(XCODEBUILD) -project $$(ls -d *.pbproj)"; \
+			    else echo "$(PBXBUILD)"; fi`
 
 MAKE_VARS		:= SYMROOT OBJROOT BINDIR APPLICATION_INSTALL_PATH \
 				TCL_FRAMEWORK_DIR TCLSH_DIR
