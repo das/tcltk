@@ -991,8 +991,9 @@ EXTERN int		Tk_ScaleObjCmd _ANSI_ARGS_((ClientData clientData,
                             Tcl_Obj *CONST objv[]));
 EXTERN int		Tk_ScrollbarCmd _ANSI_ARGS_((ClientData clientData,
 			    Tcl_Interp *interp, int argc, char **argv));
-EXTERN int		Tk_SelectionCmd _ANSI_ARGS_((ClientData clientData,
-			    Tcl_Interp *interp, int argc, char **argv));
+EXTERN int		Tk_SelectionObjCmd _ANSI_ARGS_((ClientData clientData,
+			    Tcl_Interp *interp, int objc,
+			    Tcl_Obj *CONST objv[]));
 EXTERN int		Tk_SendCmd _ANSI_ARGS_((ClientData clientData,
 			    Tcl_Interp *interp, int argc, char **argv));
 EXTERN int		Tk_SendObjCmd _ANSI_ARGS_((ClientData clientData,

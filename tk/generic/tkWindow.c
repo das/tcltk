@@ -113,7 +113,7 @@ static TkCmd commands[] = {
     {"pack",		Tk_PackCmd,		NULL,			1, 1},
     {"place",		Tk_PlaceCmd,		NULL,			1, 1},
     {"raise",		NULL,			Tk_RaiseObjCmd,		1, 1},
-    {"selection",	Tk_SelectionCmd,	NULL,			0, 1},
+    {"selection",	NULL,			Tk_SelectionObjCmd,	0, 1},
     {"tk",		NULL,			Tk_TkObjCmd,		0, 1},
     {"tkwait",		NULL,			Tk_TkwaitObjCmd,	1, 1},
 #if defined(__WIN32__) || defined(MAC_TCL)
