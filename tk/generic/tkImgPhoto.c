@@ -4520,7 +4520,6 @@ Tk_PhotoPutBlock(interp, handle, blockPtr, x, y, width, height, compRule)
      */
 
     if (alphaOffset) {
-	int x1, y1, end;
 
 	/*
 	 * This block is grossly inefficient.  For each row in the image, it
