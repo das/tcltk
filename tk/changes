@@ -5903,3 +5903,9 @@ and potential crashes in exit). (chengyemao)
 2004-12-18 (buf fix)[222677] Close the embedded window (of a different process)
 when its container is destroyed. (chengyemao)
 
+2004-12-19 (feature implementation of embedded/embedding Tk and bug fix)
+Implemented container identification, focus, raise, set title of and move window 
+so that an embedded widget is able to identify a container, to get focus and to
+receive key press input. Fixed bugs include [1024364] and an incorrect wm
+overrideredirect for an embedded window. (chengyemao)
+
