@@ -706,6 +706,10 @@ TkpDisplayButton(clientData)
 	TkWinReleaseDrawableDC(pixmap, dc, &state);
     }
 
+    if (butPtr->flags & GOT_FOCUS) {
+	Tk_SetCaretPos(tkwin, x, y, 0 /* not used */);
+    }
+
     /*
      * Copy the information from the off-screen pixmap onto the screen,
      * then delete the pixmap.

@@ -828,6 +828,8 @@ DisplayCanvText(canvas, itemPtr, display, drawable, x, y, width, height)
 			    - (textInfoPtr->insertWidth / 2)),
 		    (double) (textPtr->header.y1 + y),
 		    &drawableX, &drawableY);
+	    Tk_SetCaretPos(Tk_CanvasTkwin(canvas), drawableX, drawableY,
+		    height);
 	    if (textInfoPtr->cursorOn) {
 		Tk_Fill3DRectangle(Tk_CanvasTkwin(canvas), drawable,
 			textInfoPtr->insertBorder,
