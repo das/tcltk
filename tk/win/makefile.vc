@@ -100,7 +100,8 @@ TKTESTOBJS = \
 	$(TMPDIR)\tkTest.obj \
 	$(TMPDIR)\tkSquare.obj \
 	$(TMPDIR)\testMain.obj \
-	$(TMPDIR)\tkThreadTest.obj
+# the tkThreadTest.c file has not been checked it yet.
+#	$(TMPDIR)\tkThreadTest.obj
 
 XLIBOBJS = \
 	$(TMPDIR)\xcolors.obj \
@@ -336,11 +337,11 @@ install: install-binaries install-libraries
 plugin:	setup $(TKPLUGINDLL) $(WISHP)
 tktest: setup $(TKTEST) $(CAT32)
 test:	setup $(TKTEST) $(TKLIB) $(CAT32)
-	copy $(TCLDIR)\bin\pkgIndex.tcl $(OUTDIR)
 	set TCL_LIBRARY=$(TCLDIR)/library
-	$(TKTEST) << | $(CAT32)
-		source ../tests/all.tcl
-<<
+	set PATH=$(TCLDIR)\win\$(TMPDIRNAME);$(PATH)
+	$(TKTEST) $(ROOT)/tests/all.tcl
+
+#       copy $(TCLDIR)\bin\pkgIndex.tcl $(OUTDIR)
 
 console-wish : all $(WISHC)
 
@@ -452,13 +453,13 @@ genstubs:
 #
 
 $(TMPDIR)\testMain.obj: $(ROOT)\win\winMain.c
-	$(cc32) $(TK_CFLAGS) -DTK_TEST -Fo$@ $?
+	$(cc32) $(WISH_CFLAGS) -DTK_TEST -Fo$@ $?
 
 $(TMPDIR)\tkTest.obj: $(ROOT)\generic\tkTest.c
-	$(cc32) $(TK_CFLAGS) -Fo$@ $?
+	$(cc32) $(WISH_CFLAGS) -Fo$@ $?
 
 $(TMPDIR)\tkSquare.obj: $(ROOT)\generic\tkSquare.c
-	$(cc32) $(TK_CFLAGS) -Fo$@ $?
+	$(cc32) $(WISH_CFLAGS) -Fo$@ $?
 
 $(TMPDIR)\winMain.obj: $(ROOT)\win\winMain.c
 	$(cc32) $(WISH_CFLAGS) -Fo$@ $?
