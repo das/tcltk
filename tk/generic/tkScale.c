@@ -365,6 +365,9 @@ ScaleWidgetObjCmd(clientData, interp, objc, objv)
     }
     result = Tcl_GetIndexFromObj(interp, objv[1], commandNames,
             "option", 0, &index);
+    if (result != TCL_OK) {
+	return result;
+    }
     Tcl_Preserve((ClientData) scalePtr);
 
     switch (index) {
