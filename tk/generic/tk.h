@@ -416,11 +416,14 @@ typedef struct Tk_GeomMgr {
 #define VirtualEvent	    (LASTEvent)
 #define ActivateNotify	    (LASTEvent + 1)
 #define DeactivateNotify    (LASTEvent + 2)
-#define TK_LASTEVENT	    (LASTEvent + 3)
+#define MouseWheelEvent     (LASTEvent + 3)
+#define TK_LASTEVENT	    (LASTEvent + 4)
 
-#define VirtualEventMask    (1L << 30)
+#define MouseWheelMask	    (1L << 28)
+
 #define ActivateMask	    (1L << 29)
-#define TK_LASTEVENT	    (LASTEvent + 3)
+#define VirtualEventMask    (1L << 30)
+#define TK_LASTEVENT	    (LASTEvent + 4)
 
 
 /*

@@ -4250,3 +4250,13 @@ on windows.  If you build your own Tk main program, you no longer
 need to compile and link this yourself. (SKS)
 
 -------- Released 8.0.3 to the Tcl Consortium CD-ROM project, 8/13/98 ------
+
+10/5/98 (new feature) Added the event "MouseWheel" that will fire on
+Windows applications in response to mouse wheel movement.  You can
+bind to the MouseWheel event and use the %D substitution to get the
+delta the wheel moved.  The "event generate" command has also been
+enhanced with the -delta flag so you can generate these events from
+Tcl.  See the bind and event man pages for more details.  The listbox
+and text widgets' default bindings have been updated to understand
+MouseWheel events. (RJ)
+
