@@ -24,8 +24,8 @@
  *
  * README
  * unix/configure.in
- * win/makefile.bc	(Not for patch release updates)
- * win/makefile.vc	(Not for patch release updates)
+ * win/makefile.bc
+ * win/makefile.vc
  * win/README
  * mac/README
  * library/tk.tcl	(Not for patch release updates)

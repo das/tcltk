@@ -2355,4 +2355,5 @@ test unixWm-58.3 {exit processing} {
 
     
 catch {destroy .t}
+catch {removeFile script}
 concat {}
