@@ -310,14 +310,11 @@ TkMenuConfigureEntryDrawOptions(mePtr, index)
     unsigned long mask;
     Tk_Font tkfont;
     TkMenu *menuPtr = mePtr->menuPtr;
-    int state;
 
     tkfont = Tk_GetFontFromObj(menuPtr->tkwin,
 	    (mePtr->fontPtr != NULL) ? mePtr->fontPtr : menuPtr->fontPtr);
     
-    Tcl_GetIndexFromObj(NULL, mePtr->statePtr, tkMenuStateStrings,
-	    NULL, 0, &state);
-    if (state == ENTRY_ACTIVE) {
+    if (mePtr->state == ENTRY_ACTIVE) {
 	if (index != menuPtr->active) {
 	    TkActivateMenuEntry(menuPtr, index);
 	}
@@ -637,7 +634,6 @@ DisplayMenu(clientData)
     Tk_FontMetrics menuMetrics;
     int width;
     int borderWidth;
-    int columnBreak;
     Tk_3DBorder border;
     int activeBorderWidth;
     int relief;
@@ -696,8 +692,8 @@ DisplayMenu(clientData)
 	TkpDrawMenuEntry(mePtr, Tk_WindowId(menuPtr->tkwin), tkfont,
 		&menuMetrics, mePtr->x, mePtr->y, width, 
 		mePtr->height, strictMotif, 1);
-	Tcl_GetBooleanFromObj(NULL, mePtr->columnBreakPtr, &columnBreak);
-	if ((index > 0) && (menuPtr->menuType != MENUBAR) && columnBreak) {
+	if ((index > 0) && (menuPtr->menuType != MENUBAR)
+		&& mePtr->columnBreak) {
 	    mePtr = menuPtr->entries[index - 1];
 	    Tk_Fill3DRectangle(tkwin, Tk_WindowId(tkwin), border,
 		mePtr->x, mePtr->y + mePtr->height, 
