@@ -80,6 +80,7 @@ sourcePath focus\n\
 sourcePath optMenu\n\
 sourcePath palette\n\
 sourcePath tearoff\n\
+if {[catch {package require msgcat}]} {sourcePath msgcat}\n\
 sourcePath bgerror\n\
 sourcePath msgbox\n\
 sourcePath comdlg\n\
