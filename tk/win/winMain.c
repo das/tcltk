@@ -32,7 +32,7 @@
  */
 
 static void		setargv _ANSI_ARGS_((int *argcPtr, char ***argvPtr));
-static void		WishPanic _ANSI_ARGS_(TCL_VARARGS(CONST char *,format));
+static Tcl_PanicProc	WishPanic;
 
 #ifdef TK_TEST
 extern int		Tktest_Init(Tcl_Interp *interp);
@@ -239,12 +239,10 @@ WishPanic TCL_VARARGS_DEF(CONST char *,arg1)
     MessageBeep(MB_ICONEXCLAMATION);
     MessageBox(NULL, buf, "Fatal Error in Wish",
 	    MB_ICONSTOP | MB_OK | MB_TASKMODAL | MB_SETFOREGROUND);
+#ifdef _MSC_VER
     DebugBreak();
-    __try {
-	ExitProcess(EXIT_FAILURE);
-    } __except (EXCEPTION_EXECUTE_HANDLER) {
-	TerminateProcess(GetCurrentProcess(), EXIT_FAILURE);
-    }
+#endif
+    ExitProcess(1);
 }
 /*
  *-------------------------------------------------------------------------
