@@ -22,7 +22,7 @@ proc bogusTrace args {
 }
 catch {unset value}
 catch {unset value2}
-
+option clear
 eval image delete [image names]
 if {[testConstraint testImageType]} {
     image create test image1
