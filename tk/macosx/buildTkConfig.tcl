@@ -28,7 +28,7 @@ proc main {tclConfigFile tkConfigFileIn tkConfigFile} {
 	}
 	regsub -line -all -- {@[^@]+@} $tkConfig {} tkConfig
 	regsub -line -all -- {/[^/]+\.build/Tk.build} $tkConfig {} tkConfig
-	regsub -line {^(TK_DEFS=')} $tkConfig {\1 -DMAC_OSX_TK} tkConfig
+	regsub -line {^(TK_DEFS=')} $tkConfig {\1 -DMAC_OSX_TK } tkConfig
 	
 	set out [open $tkConfigFile w]
 	puts $out $tkConfig
