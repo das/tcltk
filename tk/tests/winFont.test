@@ -183,15 +183,3 @@ test winfont-7.4 {AllocFont procedure: extract info from textmetric} {pcOnly} {
 destroy .b
 ::tcltest::cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-
