@@ -582,7 +582,7 @@ ReconfigureWindowsMenu(
 	 */
 	
 	if (mePtr->state == ENTRY_DISABLED) {
-	    flags |= MF_DISABLED;
+	    flags |= MF_DISABLED | MF_GRAYED;
 	}
 	
 	/*
