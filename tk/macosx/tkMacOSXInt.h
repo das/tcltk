@@ -151,12 +151,9 @@ extern TkMacOSXWindowList *tkMacOSXWindowListPtr;
 extern Tcl_Encoding TkMacOSXCarbonEncoding;
 
 extern int TkMacOSXUseAntialiasedText(Tcl_Interp *interp, int enable);
-
-/* 
- * FIXME: Put this into the decls file? 
- */
-
 extern void TkMacOSXInitCarbonEvents (Tcl_Interp *interp);
+extern int TkMacOSXInitCGDrawing(Tcl_Interp *interp, int enable, int antiAlias);
+extern void TkMacOSXDefaultStartupScript(void);
 
 #include "tkIntPlatDecls.h"
 

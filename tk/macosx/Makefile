@@ -128,4 +128,6 @@ cleanup-embedded:
 embedded-develop embedded-deploy install-embedded-develop install-embedded-deploy \
 clean-develop clean-deploy cleanup-embedded
 
+.NOTPARALLEL:
+
 ################################################################################

@@ -31,6 +31,9 @@
 #ifdef __WIN32__
 #include "tkWinInt.h"
 #endif
+#ifdef MAC_OSX_TK
+#include "tkMacOSXInt.h"
+#endif
 
 
 typedef struct ThreadSpecificData {
@@ -124,6 +127,12 @@ Tk_MainEx(argc, argv, appInitProc, interp)
 
 #if defined(__WIN32__)
     Tk_InitConsoleChannels(interp);
+#endif
+
+#ifdef MAC_OSX_TK
+    if (Tcl_GetStartupScript(NULL) == NULL) {
+        TkMacOSXDefaultStartupScript();
+    }
 #endif
     
 #ifdef TCL_MEM_DEBUG

@@ -611,7 +611,7 @@ XMoveWindow(
 	UpdateOffsets(macWin->winPtr, deltaX, deltaY);
 	TkMacOSXWinBounds(macWin->winPtr, &bounds);
 	InvalWindowRect(GetWindowFromPort(destPort),&bounds);
-        GenerateConfigureNotify(macWin->winPtr, 0);
+	GenerateConfigureNotify(macWin->winPtr, 0);
     }
 }
 

@@ -672,7 +672,14 @@ ComputeRectOvalBbox(canvas, rectOvalPtr)
 	bloat = 0;
 #endif
     } else {
+#ifdef MAC_OSX_TK
+	/* Mac OS X CoreGraphics needs correct rounding here 
+	 * otherwise it will draw outside the bounding box.
+	 * Probably correct on other platforms as well? */
+	bloat = (int) (width+1.5)/2;
+#else
 	bloat = (int) (width+1)/2;
+#endif
     }
 
     /*
