@@ -2534,6 +2534,10 @@ ImgPhotoInstanceSetSize(instancePtr)
 		(masterPtr->width > 0) ? masterPtr->width: 1,
 		(masterPtr->height > 0) ? masterPtr->height: 1,
 		instancePtr->visualInfo.depth);
+        if(!newPixmap) {
+            panic("Fail to create pixmap with Tk_GetPixmap in ImgPhotoInstanceSetSize.\n");
+            return;
+        }
 
 	/*
 	 * The following is a gross hack needed to properly support colormaps
