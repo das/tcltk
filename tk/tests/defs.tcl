@@ -801,6 +801,7 @@ proc ::tcltest::makeFile {contents name {directory {}}} {
     if {[lsearch -exact $::tcltest::filesMade $fullName] == -1} {
 	lappend ::tcltest::filesMade $fullName
     }
+    return $fullName
 }
 
 proc ::tcltest::removeFile {name} {
