@@ -434,6 +434,9 @@ Tk_GridCmd(clientData, interp, argc, argv)
 		    slavePtr->padX = slavePtr->padY = 0;
 		    slavePtr->iPadX = slavePtr->iPadY = 0;
 		    slavePtr->doubleBw = 2*Tk_Changes(tkwin)->border_width;
+		    if (slavePtr->flags & REQUESTED_RELAYOUT) {
+			Tk_CancelIdleCall(ArrangeGrid, (ClientData) slavePtr);
+		    }
 		    slavePtr->flags = 0;
 		    slavePtr->sticky = 0;
 	    	}

@@ -35,7 +35,8 @@ proc bgerror err {
     #  code from the tkerror trial, other ret codes are passed back
     #  to our caller (tcl background error handler) so the called "tkerror"
     #  can still use  return -code break, to skip remaining messages
-    #  in the error queue for instance)  -- dl
+    #  in the error queue for instance)
+
     set ret [catch {tkerror $err} msg];
     if {$ret != 1} {return -code $ret $msg}
 
