@@ -210,6 +210,12 @@ This application provides a front end for several short scripts that demonstrate
 	{demo demo-menubu}
 .t insert end " \n " {demospace}
 
+.t insert end \n {} "Labelframes" title
+.t insert end " \n " {demospace}
+.t insert end "1. Labelframe." \
+	{demo demo-labelframe}
+.t insert end " \n " {demospace}
+
 .t insert end \n {} "Common Dialogs" title
 .t insert end " \n " {demospace}
 .t insert end "1. Message boxes." {demo demo-msgbox}

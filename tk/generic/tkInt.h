@@ -965,6 +965,9 @@ EXTERN int		Tk_ImageObjCmd _ANSI_ARGS_((ClientData clientData,
 EXTERN int		Tk_LabelObjCmd _ANSI_ARGS_((ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *CONST objv[]));
+EXTERN int		Tk_LabelframeObjCmd _ANSI_ARGS_((ClientData clientData,
+			    Tcl_Interp *interp, int objc,
+			    Tcl_Obj *CONST objv[]));
 EXTERN int		Tk_ListboxObjCmd _ANSI_ARGS_((ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *CONST objv[]));

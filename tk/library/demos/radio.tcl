@@ -26,8 +26,8 @@ button $w.buttons.vars -text "See Variables"  \
 	-command "showVars $w.dialog size color"
 pack $w.buttons.dismiss $w.buttons.code $w.buttons.vars -side left -expand 1
 
-frame $w.left
-frame $w.right
+labelframe $w.left -pady 2 -text "Point Size"
+labelframe $w.right -pady 2 -text "Color"
 pack $w.left $w.right -side left -expand yes  -pady .5c -padx .5c
 
 foreach i {10 12 18 24} {

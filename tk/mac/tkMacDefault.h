@@ -190,11 +190,24 @@
 #define DEF_FRAME_HIGHLIGHT_BG		NORMAL_BG
 #define DEF_FRAME_HIGHLIGHT		BLACK
 #define DEF_FRAME_HIGHLIGHT_WIDTH	"0"
+#define DEF_FRAME_PADX			"0"
+#define DEF_FRAME_PADY			"0"
 #define DEF_FRAME_RELIEF		"flat"
 #define DEF_FRAME_TAKE_FOCUS		"0"
-#define DEF_FRAME_USE			""
 #define DEF_FRAME_VISUAL		""
 #define DEF_FRAME_WIDTH			"0"
+
+/*
+ * Defaults for labelframes:
+ */
+
+#define DEF_LABELFRAME_BORDER_WIDTH	"2"
+#define DEF_LABELFRAME_CLASS		"Labelframe"
+#define DEF_LABELFRAME_RELIEF		"groove"
+#define DEF_LABELFRAME_FG		"systemButtonText"
+#define DEF_LABELFRAME_FONT		"system"
+#define DEF_LABELFRAME_TEXT		""
+#define DEF_LABELFRAME_LABELANCHOR	"nw"
 
 /*
  * Defaults for listboxes:
@@ -472,5 +485,6 @@
 #define DEF_TOPLEVEL_CLASS		"Toplevel"
 #define DEF_TOPLEVEL_MENU		""
 #define DEF_TOPLEVEL_SCREEN		""
+#define DEF_TOPLEVEL_USE		""
 
 #endif /* _TKMACDEFAULT */

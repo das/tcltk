@@ -826,6 +826,11 @@ Tk_DrawChars(
     dc = TkWinGetDrawableDC(display, drawable, &state);
 
     SetROP2(dc, tkpWinRopModes[gc->function]);
+    
+    if ((gc->clip_mask != None) && 
+            ((TkpClipMask*)gc->clip_mask)->type == TKP_CLIP_REGION) {
+        SelectClipRgn(dc, (HRGN)((TkpClipMask*)gc->clip_mask)->value.region);
+    }
 
     if ((gc->fill_style == FillStippled
 	    || gc->fill_style == FillOpaqueStippled)
