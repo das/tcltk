@@ -296,20 +296,20 @@ proc ::tk::dialog::color::BuildDialog {w} {
     # the botFrame frame contains the buttons
     #
     set botFrame [frame $w.bot -relief raised -bd 1]
-    set maxWidth [::tk::mcmaxamp &OK &Cancel]
-    set maxWidth [expr {$maxWidth<8?8:$maxWidth}]
+    
     ::tk::AmpWidget button $botFrame.ok     -text [mc "&OK"]		\
-	    -width $maxWidth \
 	    -command [list tk::dialog::color::OkCmd $w]
     ::tk::AmpWidget button $botFrame.cancel -text [mc "&Cancel"]	\
-	    -width $maxWidth \
 	    -command [list tk::dialog::color::CancelCmd $w]
 
     set data(okBtn)      $botFrame.ok
     set data(cancelBtn)  $botFrame.cancel
  
-    pack $botFrame.ok $botFrame.cancel \
-	-padx 10 -pady 10 -expand yes -side left
+    grid x $botFrame.ok x $botFrame.cancel x -sticky ew
+    grid configure $botFrame.ok $botFrame.cancel -padx 10 -pady 10
+    grid columnconfigure $botFrame {0 4} -weight 1 -uniform space
+    grid columnconfigure $botFrame {1 3} -weight 1 -uniform button
+    grid columnconfigure $botFrame 2 -weight 2 -uniform space
     pack $botFrame -side bottom -fill x
 
 
