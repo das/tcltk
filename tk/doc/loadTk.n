@@ -27,6 +27,8 @@ interpreters.
 .PP
 The \fB::safe::loadTk\fR command initializes the required data structures
 in the named safe interpreter and then loads Tk into it.
+The interpreter must have been created with \fB::safe::interpCreate\fR
+or have been initialized with \fB::safe::interpInit\fR.
 The command returns the name of the safe interpreter.
 If \fB\-use\fR is specified, the window identified by the specified system
 dependent identifier \fIwindowId\fR is used to contain the ``.''
