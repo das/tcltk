@@ -1138,7 +1138,10 @@ proc tkFDialogResolveFile {context text defaultext} {
 
     set path [tkFDialog_JoinFile $context $text]
 
-    if {[string equal [file ext $path] ""]} {
+    # If the file has no extension, append the default.  Be careful not
+    # to do this for directories, otherwise typing a dirname in the box
+    # will give back "dirname.extension" instead of trying to change dir.
+    if {![file isdirectory $path] && [string equal [file ext $path] ""]} {
 	set path "$path$defaultext"
     }
 
