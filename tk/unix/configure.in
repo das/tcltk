@@ -492,11 +492,12 @@ if test "$tk_ok" = "yes" ; then
 
     # Don't link Tk directly to Tcl.
 
-    SHLIB_LD_LIBS="\${TCL_BUILD_STUB_LIB_SPEC}"
+    SHLIB_LD_LIBS=${TCL_BUILD_STUB_LIB_SPEC}
 else
     AC_MSG_RESULT(dynamic linking)
 
-    TCL_BUILD_STUB_LIB_SPEC=""
+    MAKE_STUB_LIB="\# nothing to do here..."
+    SHLIB_LD_LIBS=${TCL_BUILD_LIB_SPEC}
     TCL_STUB_FLAGS=""
 fi
 
