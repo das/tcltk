@@ -12,8 +12,8 @@ bind PanedWindow <Button-2> { ::tk::panedwindow::MarkSash %W %x %y 0 }
 bind PanedWindow <B1-Motion> { ::tk::panedwindow::DragSash %W %x %y 1 }
 bind PanedWindow <B2-Motion> { ::tk::panedwindow::DragSash %W %x %y 0 }
 
-bind PanedWindow <ButtonRelease-1> {::tk::panedwindow::ReleaseSash %W %x %y 1}
-bind PanedWindow <ButtonRelease-2> {::tk::panedwindow::ReleaseSash %W %x %y 0}
+bind PanedWindow <ButtonRelease-1> {::tk::panedwindow::ReleaseSash %W 1}
+bind PanedWindow <ButtonRelease-2> {::tk::panedwindow::ReleaseSash %W 0}
 
 bind PanedWindow <Motion> { ::tk::panedwindow::Motion %W %x %y }
 
@@ -71,7 +71,7 @@ proc ::tk::panedwindow::DragSash {w x y proxy} {
 # Results:
 #   Returns ...
 #
-proc ::tk::panedwindow::ReleaseSash {w x y proxy} {
+proc ::tk::panedwindow::ReleaseSash {w proxy} {
     if { [info exists ::tk::Priv(sash)] } {
 	if {$proxy} {
 	    foreach {x y} [$w proxy coord] break
