@@ -736,6 +736,7 @@ $(GENERICDIR)/tkTextTag.c: $(GENERICDIR)/default.h
 $(GENERICDIR)/tkUndo.c: $(GENERICDIR)/tkUndo.h
 
 $(GENERICDIR)/tkText.c: $(GENERICDIR)/tkText.h
+$(GENERICDIR)/tkTest.c: $(GENERICDIR)/tkText.h
 $(GENERICDIR)/tkTextBTree.c: $(GENERICDIR)/tkText.h
 $(GENERICDIR)/tkTextDisp.c: $(GENERICDIR)/tkText.h
 $(GENERICDIR)/tkTextDisp.c: $(GENERICDIR)/tkText.h
