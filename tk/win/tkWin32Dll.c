@@ -14,6 +14,15 @@
 #include "tkWinInt.h"
 #ifndef STATIC_BUILD
 
+#if defined(HAVE_NO_SEH) && defined(TCL_MEM_DEBUG)
+static void *INITIAL_ESP,
+            *INITIAL_EBP,
+            *INITIAL_HANDLER,
+            *RESTORED_ESP,
+            *RESTORED_EBP,
+            *RESTORED_HANDLER;
+#endif /* HAVE_NO_SEH && TCL_MEM_DEBUG */
+
 /*
  * The following declaration is for the VC++ DLL entry point.
  */
