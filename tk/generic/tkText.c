@@ -1797,7 +1797,7 @@ TextSearchCmd(textPtr, interp, argc, argv)
 	    }
 	    matchByte = i;
 	    matchLength = thisLength;
-	    firstByte += Tcl_UtfToUniChar(startOfLine + matchByte, &ch);
+	    firstByte = i + Tcl_UtfToUniChar(startOfLine + matchByte, &ch);
 	} while (backwards);
 
 	/*
