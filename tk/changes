@@ -4663,3 +4663,9 @@ avoid compiler errors on Macintosh.  Patch from Vince Darley.
 [Bug: 2389] (hobbs)
 
 --------------- Released 8.2b2, August 5, 1999 ----------------------
+
+8/13/99 (Mac) Rearranged the projects in the tkMacProjects.sea.hqx so
+that the build directory is separate from the sources.  Fixed bug in
+Tk_DrawChars(). (Jim Ingham)
+
+--------------- Released 8.2.0, August 17, 1999 ----------------------
