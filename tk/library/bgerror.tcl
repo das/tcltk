@@ -172,6 +172,7 @@ proc bgerror err {
     pack $W.text -side left -expand yes -fill both
     $W.text insert 0.0 "$err\n$info"
     $W.text mark set insert 0.0
+    bind $W.text <ButtonPress-1> { focus %W }
     $W.text configure -state disabled
 
     # 2. Fill the top part with bitmap and message
