@@ -3253,9 +3253,9 @@ TkFontParseXLFD(string, faPtr, xaPtr)
 
     field[0] = src;
     for (i = 0; *src != '\0'; src++) {
-	if (!(*src & 0x90)
-		&& isupper(UCHAR(*src))) { /* INTL: 7-bit ISO only. */
-	    *src = tolower(UCHAR(*src)); /* INTL: 7-bit ISO only. */
+	if (!(*src & 0x80)
+		&& Tcl_UniCharIsUpper(UCHAR(*src))) {
+	    *src = Tcl_UniCharToLower(UCHAR(*src));
 	}
 	if (*src == '-') {
 	    i++;
