@@ -18,7 +18,6 @@ destroy \- Destroy one or more windows
 .BE
 
 .SH DESCRIPTION
-.VS
 .PP
 This command deletes the windows given by the
 \fIwindow\fR arguments, plus all of their descendants.
@@ -28,7 +27,17 @@ The \fIwindow\fRs are destroyed in order, and if an error occurs
 in destroying a window the command aborts without destroying the
 remaining windows.
 No error is returned if \fIwindow\fR does not exist.
-.VE
+.SH EXAMPLE
+Destroy all checkbuttons that are direct children of the given widget:
+.CS
+proc killCheckbuttonChildren {parent} {
+   foreach w [winfo children $parent] {
+      if {[winfo class $w] eq "Checkbutton"} {
+         \fBdestroy\fR $w
+      }
+   }
+}
+.CE
 
 .SH KEYWORDS
 application, destroy, window
