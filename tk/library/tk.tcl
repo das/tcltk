@@ -291,7 +291,10 @@ switch $tcl_platform(platform) {
 	    switch $tcl_platform(os) {
 		"IRIX"  -
 		"Linux" { event add <<PrevWindow>> <ISO_Left_Tab> }
-		"HP-UX" { event add <<PrevWindow>> <hpBackTab> }
+		"HP-UX" {
+		    # This seems to be correct on *some* HP systems.
+		    catch { event add <<PrevWindow>> <hpBackTab> }
+		}
 	    }
 	}
 	trace variable tk_strictMotif w tkEventMotifBindings
