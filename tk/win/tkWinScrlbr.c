@@ -672,16 +672,18 @@ ModalLoopProc(tkwin, eventPtr)
     WinScrollbar *scrollPtr = (WinScrollbar *) winPtr->instanceData;
     int oldMode;
 
-    Tcl_Preserve((ClientData)scrollPtr);
-    scrollPtr->winFlags |= IN_MODAL_LOOP;
-    oldMode = Tcl_SetServiceMode(TCL_SERVICE_ALL);
-    TkWinResendEvent(scrollPtr->oldProc, scrollPtr->hwnd, eventPtr);
-    (void) Tcl_SetServiceMode(oldMode);
-    scrollPtr->winFlags &= ~IN_MODAL_LOOP;
-    if (scrollPtr->hwnd && scrollPtr->winFlags & ALREADY_DEAD) {
-	DestroyWindow(scrollPtr->hwnd);
+    if (scrollPtr->hwnd) {
+	Tcl_Preserve((ClientData)scrollPtr);
+	scrollPtr->winFlags |= IN_MODAL_LOOP;
+	oldMode = Tcl_SetServiceMode(TCL_SERVICE_ALL);
+	TkWinResendEvent(scrollPtr->oldProc, scrollPtr->hwnd, eventPtr);
+	(void) Tcl_SetServiceMode(oldMode);
+	scrollPtr->winFlags &= ~IN_MODAL_LOOP;
+	if (scrollPtr->hwnd && scrollPtr->winFlags & ALREADY_DEAD) {
+	    DestroyWindow(scrollPtr->hwnd);
+	}
+	Tcl_Release((ClientData)scrollPtr);
     }
-    Tcl_Release((ClientData)scrollPtr);
 }
 
 /*
