@@ -1766,7 +1766,7 @@ test text-22.3 {TextDumpCmd procedure, bad args} {
 } {1 {Usage: .t dump ?-all -image -text -mark -tag -window? ?-command script? index ?index2?}}
 test text-22.4 {TextDumpCmd procedure, bad args} {
     list [catch {.t dump -bogus} msg] $msg
-} {1 {Usage: .t dump ?-all -image -text -mark -tag -window? ?-command script? index ?index2?}}
+} {1 {bad option "-bogus": must be -all, -command, -image, -mark, -tag, -text, or -window}}
 test text-22.5 {TextDumpCmd procedure, bad args} {
     list [catch {.t dump bogus} msg] $msg
 } {1 {bad text index "bogus"}}
