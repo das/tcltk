@@ -128,7 +128,7 @@ proc bgerror err {
     set title [::msgcat::mc "Application Error"]
     set text [::msgcat::mc "Error: %1\$s" $err]
     set buttons [list ok $ok dismiss [::msgcat::mc "Skip Messages"] \
-	    function [::msgcat::mc "Details  >>"]]
+	    function [::msgcat::mc "Details >>"]]
 
     # 1. Create the top-level window and divide it into top
     # and bottom parts.
