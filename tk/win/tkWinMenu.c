@@ -364,6 +364,10 @@ TkpDestroyMenu(menuPtr)
  	DestroyMenu(winMenuHdl);
     }
     menuPtr->platformData = NULL;
+
+    if (menuPtr == modalMenuPtr) {
+	modalMenuPtr = NULL;
+    }
 }
 
 /*
