@@ -645,6 +645,18 @@ declare 141 generic {
     TkWindow ** TkWmStackorderToplevel(TkWindow *parentPtr)
 }
 
+declare 142 generic {
+    void TkFocusFree(TkMainInfo *mainPtr)
+}
+
+declare 143 generic {
+    void TkClipCleanup(TkDisplay *dispPtr)
+}
+
+declare 144 generic {
+    void TkGCCleanup(TkDisplay *dispPtr)
+}
+
 ##############################################################################
 
 # Define the platform specific internal Tcl interface. These functions are
@@ -689,6 +701,18 @@ declare 7 unix {
 
 declare 8 unix {
     int TkpScanWindowId (Tcl_Interp *interp, CONST char *string, Window *idPtr)
+}
+
+declare 9 unix {
+    void TkWmCleanup (TkDisplay *dispPtr)
+}
+
+declare 10 unix {
+    void TkSendCleanup (TkDisplay *dispPtr)
+}
+
+declare 11 unix {
+    void TkFreeXId (TkDisplay *dispPtr)
 }
 
 ############################
