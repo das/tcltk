@@ -2097,7 +2097,7 @@ ResolveConstraints(masterPtr, slotType, maxOffset)
      * its range of possible values fixed at a single value.
      */
 
-    for (start=0; start < gridCount;) {
+    for (start = 0; start < gridCount;) {
     	int totalWeight = 0;	/* Sum of the weights for all of the
     				 * slots in this span. */
     	int need = 0;		/* The minimum space needed to layout
@@ -2119,7 +2119,7 @@ ResolveConstraints(masterPtr, slotType, maxOffset)
 	    continue;
 	}
 
-	for (end=start+1; end<gridCount; end++) {
+	for (end = start + 1; end < gridCount; end++) {
 	    if (layoutPtr[end].minOffset == layoutPtr[end].maxOffset) {
 		break;
 	    }
@@ -2131,7 +2131,7 @@ ResolveConstraints(masterPtr, slotType, maxOffset)
 	 * use.
 	 */
 
-	for (slot=start; slot<=end; slot++) {
+	for (slot = start; slot <= end; slot++) {
 	    totalWeight += layoutPtr[slot].weight;
 	    need += layoutPtr[slot].minSize;
 	}
@@ -2255,9 +2255,14 @@ ResolveConstraints(masterPtr, slotType, maxOffset)
 	 * to propagate the new space allocation.
 	 */
 
-	for (slot=end; slot > start; slot--) {
-	    layoutPtr[slot-1].maxOffset =
-		    layoutPtr[slot].maxOffset-layoutPtr[slot].minSize;
+	for (slot = end; slot > start; slot--) {
+	    /* maxOffset may not go up */
+	    if ((layoutPtr[slot].maxOffset-layoutPtr[slot].minSize)
+		    < layoutPtr[slot-1].maxOffset)
+	    {
+		layoutPtr[slot-1].maxOffset =
+			layoutPtr[slot].maxOffset-layoutPtr[slot].minSize;
+	    }
 	}
     }
 
