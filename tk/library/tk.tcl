@@ -256,7 +256,7 @@ if {[string equal [info commands tk_messageBox] ""]} {
 }
 if {[string equal [info command tk_chooseDirectory] ""]} {
     proc tk_chooseDirectory {args} {
-	return [eval ::tkChooseDirectory::tk_chooseDirectory $args]
+	return [eval ::tk::dialog::chooseDir::tkChooseDirectory $args]
     }
 }
 	
