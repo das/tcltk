@@ -26,6 +26,35 @@
  * structures exists for each node or leaf in the option tree.  It is
  * actually stored as part of the parent node, and describes a particular
  * child of the parent.
+ *
+ * The structure of the option db tree is a little confusing.  There are
+ * four different kinds of nodes in the tree:
+ *	interior class nodes
+ *	interior name nodes
+ *	leaf class nodes
+ *	leaf name nodes
+ *
+ * All interior nodes refer to _window_ classes and names; all leaf nodes
+ * refer to _option_ classes and names.  When looking for a particular option,
+ * therefore, you must compare interior node values to corresponding window
+ * values, and compare leaf node values to corresponding option values.
+ *
+ * The tree is actually stored in a collection of arrays; there is one each
+ * combination of WILDCARD/EXACT and CLASS/NAME and NODE/LEAF.  The NODE arrays
+ * contain the interior nodes of the tree; each element has a pointer to an
+ * array of elements which are the leaves of the tree.  The LEAF arrays, rather
+ * than holding the leaves of the tree, hold a cached subset of the option
+ * database, consisting of the values of all defined options for a single
+ * window, and some additional information about each ancestor of the window
+ * (since some options may be inherited from a parent), all the way back to the
+ * root window.
+ *
+ * Each time a call is made to Tk_GetOption, Tk will attempt to use the cached
+ * information to satisfy the lookup.  If the call is for a window other than
+ * that for which options are currently cached, the portion of the cache that
+ * contains information for common ancestors of the two windows is retained and
+ * the remainder is discarded and rebuilt with new information for the new
+ * window.
  */
 
 typedef struct Element {
