@@ -73,7 +73,7 @@ extern "C" {
  * in resource files.
  */
 
-#ifndef RESOURCE_INCLUDED
+#ifndef RC_INVOKED
 
 #ifndef _XLIB_H
 #   ifdef MAC_TCL
@@ -1512,7 +1512,7 @@ typedef int (Tk_SelectionProc) _ANSI_ARGS_((ClientData clientData,
  */
 
 
-#endif /* RESOURCE_INCLUDED */
+#endif /* RC_INVOKED */
 
 #undef TCL_STORAGE_CLASS
 #define TCL_STORAGE_CLASS DLLIMPORT
