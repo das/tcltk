@@ -294,6 +294,15 @@ Tk_3DHorizontalBevel(tkwin, drawable, border, x, y, width, height,
 
     for ( ; y < bottom; y++) {
 	/*
+	 * X Dimensions are 16-bit, so avoid wraparound or display errors
+	 * by limiting these here.
+	 */
+	if (x1 < -32767)
+	    x1 = -32767;
+	if (x2 > 32767)
+	    x2 = 32767;
+
+	/*
 	 * In some weird cases (such as large border widths for skinny
 	 * rectangles) x1 can be >= x2.  Don't draw the lines
 	 * in these cases.

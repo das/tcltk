@@ -1890,6 +1890,25 @@ DisplayLineBackground(textPtr, dlPtr, prevPtr, pixmap)
 	    rightX = maxX;
 	}
 	if (chunkPtr->stylePtr->bgGC != None) {
+	    /* Not visible - bail out now */
+	    if (rightX + xOffset <= 0) {
+	        leftX = rightX;
+		continue;
+	    }
+
+	    /*
+	     * Trim the start position for drawing to be no further away than
+	     * -borderWidth. The reason is that on many X servers drawing from
+	     * -32768 (or less) to +something simply does not display
+	     * correctly. [Patch #541999]
+	     */
+	    if ((leftX + xOffset) < -(sValuePtr->borderWidth)) {
+	        leftX = -sValuePtr->borderWidth - xOffset;
+	    }
+	    if ((rightX - leftX) > 32767) {
+	        rightX = leftX + 32767;
+	    }
+
 	    XFillRectangle(display, pixmap, chunkPtr->stylePtr->bgGC,
 		    leftX + xOffset, 0, (unsigned int) (rightX - leftX),
 		    (unsigned int) dlPtr->height);
