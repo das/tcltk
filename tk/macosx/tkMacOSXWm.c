@@ -758,10 +758,6 @@ Tcl_Obj *CONST objv[];	/* Argument objects. */
     int i;
     WindowRef macWindow;
 
-    if (objc != 3) {
-        Tcl_WrongNumArgs(interp, 2, objv, "window");
-        return TCL_ERROR;
-    }
     if (objc < 3) {
 configArgs:
         Tcl_AppendResult(interp, "wrong # arguments: must be \"",
