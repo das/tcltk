@@ -346,6 +346,8 @@ XStringToKeysym(
  *	The function XKeysymToKeycode is only used by tkTest.c and
  *	currently only implementes the support for keys used in the
  *	Tk test suite.
+ *      FIXME - This is no longer true.  This function is now used in
+ *      "event generate" so we really should make it work.
  *
  * Results:
  *	None.
