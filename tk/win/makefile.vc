@@ -485,6 +485,7 @@ tktest:	  setup $(TKTEST) $(CAT32)
 
 test: setup $(TKTEST) $(TKLIB) $(CAT32)
 	set TCL_LIBRARY=$(TCL_LIBRARY)
+	set TK_LIBRARY=$(ROOT)/library
 !if $(TCLINSTALL)
 	set PATH=$(_TCLDIR)\bin;$(PATH)
 !else
@@ -498,6 +499,7 @@ test: setup $(TKTEST) $(TKLIB) $(CAT32)
 
 runtest: setup $(TKTEST) $(TKLIB) $(CAT32)
 	set TCL_LIBRARY=$(TCL_LIBRARY)
+	set TK_LIBRARY=$(ROOT)/library
 !if $(TCLINSTALL)
 	set PATH=$(_TCLDIR)\bin;$(PATH)
 !else
@@ -507,6 +509,7 @@ runtest: setup $(TKTEST) $(TKLIB) $(CAT32)
 
 rundemo: setup $(TKTEST) $(TKLIB) $(CAT32)
 	set TCL_LIBRARY=$(TCL_LIBRARY)
+	set TK_LIBRARY=$(ROOT)/library
 !if $(TCLINSTALL)
 	set PATH=$(_TCLDIR)\bin;$(PATH)
 !else
