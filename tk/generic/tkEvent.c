@@ -421,7 +421,7 @@ Tk_DeleteGenericHandler(proc, clientData)
  */
 
 void
-TkEventInit(void)
+TkEventInit _ANSI_ARGS_((void))
 {
     ThreadSpecificData *tsdPtr = (ThreadSpecificData *) 
             Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));

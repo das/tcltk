@@ -924,7 +924,7 @@ Tk_SelectionCmd(clientData, interp, argc, argv)
  */
 
 TkSelInProgress *
-TkSelGetInProgress(void)
+TkSelGetInProgress _ANSI_ARGS_((void))
 {
     ThreadSpecificData *tsdPtr = (ThreadSpecificData *) 
             Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
