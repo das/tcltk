@@ -116,7 +116,7 @@ test filebox-2.3 "tk_chooseDirectory command" {unixOnly} {
 	    -title "Enter \"$otherdir\" and press Ok" \
 	    -parent $parent -initialdir $initialdir]
 } $otherdir
- 
+
 # cleanup
 ::tcltest::cleanupTests
 return
