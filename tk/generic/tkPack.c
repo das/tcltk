@@ -1062,7 +1062,7 @@ TkParsePadAmount(interp, tkwin, specObj, halfPtr, allPtr)
 {
     char *secondPart; 		/* The second pixel amount of the list */
     char *separator = 0;	/* Separator between 1st and 2nd pixel widths */
-    int sepChar;		/* Character used as the separator */
+    int sepChar = 0;		/* Character used as the separator */
     int firstInt, secondInt;    /* The two components of the padding */
     char *padSpec = Tcl_GetString(specObj);
 
