@@ -47,13 +47,13 @@ proc tk_dialog {w title text bitmap default args} {
     # even though its grab keeps the rest of the application from being used.
 
     wm transient $w [winfo toplevel [winfo parent $w]]
-    if {[string equal $tcl_platform(platform) "macintosh"]} {
+    if {![string compare $tcl_platform(platform) "macintosh"]} {
 	unsupported1 style $w dBoxProc
     }
 
     frame $w.bot
     frame $w.top
-    if {[string equal $tcl_platform(platform) "unix"]} {
+    if {![string compare $tcl_platform(platform) "unix"]} {
 	$w.bot configure -relief raised -bd 1
 	$w.top configure -relief raised -bd 1
     }
@@ -65,17 +65,16 @@ proc tk_dialog {w title text bitmap default args} {
     # overridden by the caller).
 
     option add *Dialog.msg.wrapLength 3i widgetDefault
-    if {[string equal $tcl_platform(platform) "macintosh"]} {
+    if {![string compare $tcl_platform(platform) "macintosh"]} {
 	option add *Dialog.msg.font system widgetDefault
     } else {
-	option add *Dialog.msg.font {Times 18} widgetDefault
+	option add *Dialog.msg.font {Times 12} widgetDefault
     }
 
     label $w.msg -justify left -text $text
     pack $w.msg -in $w.top -side right -expand 1 -fill both -padx 3m -pady 3m
     if {[string compare $bitmap ""]} {
-	if {[string equal $tcl_platform(platform) "macintosh"] && \
-		[string equal $bitmap "error"]} {
+      if {![string compare $tcl_platform(platform) "macintosh"] && ![string compare $bitmap "error"]} {
 	    set bitmap "stop"
 	}
 	label $w.bitmap -bitmap $bitmap
@@ -86,7 +85,7 @@ proc tk_dialog {w title text bitmap default args} {
 
     set i 0
     foreach but $args {
-	button $w.button$i -text $but -command [list set tkPriv(button) $i]
+	button $w.button$i -text $but -command "set tkPriv(button) $i"
 	if {$i == $default} {
 	    $w.button$i configure -default active
 	} else {
@@ -95,10 +94,10 @@ proc tk_dialog {w title text bitmap default args} {
 	grid $w.button$i -in $w.bot -column $i -row 0 -sticky ew -padx 10
 	grid columnconfigure $w.bot $i
 	# We boost the size of some Mac buttons for l&f
-	if {[string equal $tcl_platform(platform) "macintosh"]} {
+      if {![string compare $tcl_platform(platform) "macintosh"]} {
 	    set tmp [string tolower $but]
-	    if {[string equal $tmp "ok"] || [string equal $tmp "cancel"]} {
-		grid columnconfigure $w.bot $i -minsize [expr {59 + 20}]
+          if {![string compare $tmp "ok"] || ![string compare $tmp "cancel"]} {
+		grid columnconfigure $w.bot $i -minsize [expr 59 + 20]
 	    }
 	}
 	incr i
@@ -109,10 +108,10 @@ proc tk_dialog {w title text bitmap default args} {
 
     if {$default >= 0} {
 	bind $w <Return> "
-	[list $w.button$default] configure -state active -relief sunken
-	update idletasks
-	after 100
-	set tkPriv(button) $default
+          [list $w.button$default] configure -state active -relief sunken
+	    update idletasks
+	    after 100
+	    set tkPriv(button) $default
 	"
     }
 
