@@ -63,7 +63,8 @@ bind Entry <<Clear>> {
     %W delete sel.first sel.last
 }
 bind Entry <<PasteSelection>> {
-    if {!$tk::Priv(mouseMoved) || $tk_strictMotif} {
+    if {$tk_strictMotif || ![info exists tk::Priv(mouseMoved)]
+	|| !$tk::Priv(mouseMoved)} {
 	tk::EntryPaste %W %x
     }
 }
@@ -286,18 +287,12 @@ bind Entry <Meta-Delete> {
 
 bind Entry <2> {
     if {!$tk_strictMotif} {
-	%W scan mark %x
-	set tk::Priv(x) %x
-	set tk::Priv(y) %y
-	set tk::Priv(mouseMoved) 0
+	::tk::EntryScanMark %W %x
     }
 }
 bind Entry <B2-Motion> {
     if {!$tk_strictMotif} {
-	if {abs(%x-$tk::Priv(x)) > 2} {
-	    set tk::Priv(mouseMoved) 1
-	}
-	%W scan dragto %x
+	::tk::EntryScanDrag %W %x
     }
 }
 
@@ -549,7 +544,8 @@ proc ::tk::EntryTranspose w {
     if {$first < 0} {
 	return
     }
-    set new [string index [$w get] [expr {$i-1}]][string index [$w get] $first]
+    set data [$w get]
+    set new [string index $data [expr {$i-1}]][string index $data $first]
     $w delete $first $i
     $w insert insert $new
     EntrySeeInsert $w
@@ -602,6 +598,41 @@ proc ::tk::EntryPreviousWord {w start} {
     }
     return $pos
 }
+
+# ::tk::EntryScanMark --
+#
+# Marks the start of a possible scan drag operation
+#
+# Arguments:
+# w -	The entry window from which the text to get
+# x -	x location on screen
+
+proc ::tk::EntryScanMark {w x} {
+    $w scan mark $x
+    set ::tk::Priv(x) $x
+    set ::tk::Priv(y) 0 ; # not used
+    set ::tk::Priv(mouseMoved) 0
+}
+
+# ::tk::EntryScanDrag --
+#
+# Marks the start of a possible scan drag operation
+#
+# Arguments:
+# w -	The entry window from which the text to get
+# x -	x location on screen
+
+proc ::tk::EntryScanDrag {w x} {
+    # Make sure these exist, as some weird situations can trigger the
+    # motion binding without the initial press.  [Bug #220269]
+    if {![info exists ::tk::Priv(x)]} { set ::tk::Priv(x) $x }
+    # allow for a delta
+    if {abs($x-$::tk::Priv(x)) > 2} {
+	set ::tk::Priv(mouseMoved) 1
+    }
+    $w scan dragto $x
+}
+
 # ::tk::EntryGetSelection --
 #
 # Returns the selected text of the entry with respect to the -show option.
@@ -613,7 +644,8 @@ proc ::tk::EntryGetSelection {w} {
     set entryString [string range [$w get] [$w index sel.first] \
 	    [expr {[$w index sel.last] - 1}]]
     if {[string compare [$w cget -show] ""]} {
-	regsub -all . $entryString [string index [$w cget -show] 0] entryString
+	return [string repeat [string index [$w cget -show] 0] \
+		[string length $entryString]]
     }
     return $entryString
 }
