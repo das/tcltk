@@ -31,15 +31,11 @@ proc runTest {file} {
 
 # The following procedure is invoked to print the contents of a canvas:
 
-proc lpr c {
-    exec rm -f tmp.ps
-    $c postscript -file tmp.ps
-    exec lpr tmp.ps
-    exec rm -f tmp.ps
+proc lpr {c args} {
+    exec lpr <<[eval [list $c postscript] $args]
 }
 
 test 1.1 "running visual tests" {userInteraction} {
-
     #-------------------------------------------------------
     # The code below create the main window, consisting of a
     # menu bar and a message explaining the basic operation

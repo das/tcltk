@@ -654,6 +654,13 @@ hciva9/Ovbv37+BzBgEEADs=
     set result
 } 1
 
+test imgPhoto-15.1 {photo images can fail to allocate memory gracefully} \
+	{nonPortable} {
+    # This is not portable to very large machines with more around
+    # 3GB of free memory available...
+    list [catch {image create photo -width 32000 -height 32000} msg] $msg
+} {1 {not enough free memory for image buffer}}
+
 destroy .c
 eval image delete [image names]
 
