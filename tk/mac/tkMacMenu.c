@@ -4425,3 +4425,33 @@ TkpMenuThreadInit()
      * Nothing to do.
      */
 }
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkpPreprocessMacMenu --
+ *
+ *    Handle preprocessing of menubar if it exists.
+ *
+ * Results:
+ *    None.
+ *
+ * Side effects:
+ *    All post commands for the current menubar get executed.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TkpPreprocessMacMenu()
+{
+    TkMenuReferences *menuBarRefPtr;
+
+    if ( currentMenuBarName != NULL ) {
+        menuBarRefPtr = TkFindMenuReferences(currentMenuBarInterp,
+		currentMenuBarName);
+        if ( (menuBarRefPtr != NULL) && (menuBarRefPtr->menuPtr != NULL) ) {
+	    TkPreprocessMenu(menuBarRefPtr->menuPtr->masterMenuPtr);
+        }
+    }
+}
