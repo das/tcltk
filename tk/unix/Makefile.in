@@ -459,7 +459,7 @@ install-libraries:
 		else true; \
 		fi; \
 	    done;
-	chmod +x $(SRC_DIR)/install-sh
+	chmod +x $(UNIX_DIR)/install-sh
 	@for i in $(GENERIC_DIR)/tk.h $(GENERIC_DIR)/tkDecls.h ; \
 	    do \
 	    echo "Installing $$i"; \
