@@ -8,9 +8,9 @@ package require tcltest 2.1
 eval tcltest::configure $argv
 tcltest::loadTestedCommands
 
-test dialog-1.1 {tk_dialog command} {
+test dialog-1.1 {tk_dialog command} -body {
     list [catch {tk_dialog} msg] $msg
-} {1 {wrong # args: should be "tk_dialog w title text bitmap default args"}}
+} -match glob -result {1 {wrong # args: should be "tk_dialog w title text bitmap default *"}}
 test dialog-1.2 {tk_dialog command} {
     list [catch {tk_dialog foo foo foo foo foo} msg] $msg
 } {1 {bad window path name "foo"}}
