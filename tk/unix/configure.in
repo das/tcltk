@@ -199,6 +199,18 @@ AC_UID_T
 AC_CHECK_HEADERS(sys/time.h)
 AC_HEADER_TIME
 
+#-------------------------------------------
+#     In OS/390 struct pwd has no pw_gecos field
+#-------------------------------------------
+
+AC_MSG_CHECKING([pw_gecos in struct pwd])
+AC_TRY_COMPILE([#include <pwd.h>],
+      [struct passwd pwd; pwd.pw_gecos;], tk_ok=yes, tk_ok=no)
+AC_MSG_RESULT($tk_ok)
+if test $tk_ok = yes; then
+    AC_DEFINE(HAVE_PW_GECOS)
+fi
+
 #--------------------------------------------------------------------
 #	Locate the X11 header files and the X11 library archive.  Try
 #	the ac_path_x macro first, but if it doesn't find the X stuff

@@ -711,7 +711,7 @@ TkCanvPostscriptCmd(canvasPtr, interp, argc, argv)
 
     Tcl_AppendResult(canvasPtr->interp, "%!PS-Adobe-3.0 EPSF-3.0\n",
 	    "%%Creator: Tk Canvas Widget\n", (char *) NULL);
-#if !(defined(__WIN32__) || defined(MAC_TCL))
+#ifdef HAVE_PW_GECOS
     if (!Tcl_IsSafe(interp)) {
 	struct passwd *pwPtr = getpwuid(getuid());	/* INTL: Native. */
 	Tcl_AppendResult(canvasPtr->interp, "%%For: ",
@@ -719,7 +719,7 @@ TkCanvPostscriptCmd(canvasPtr, interp, argc, argv)
 		(char *) NULL);
 	endpwent();
     }
-#endif /* __WIN32__ || MAC_TCL */
+#endif /* HAVE_PW_GECOS */
     Tcl_AppendResult(canvasPtr->interp, "%%Title: Window ",
 	    Tk_PathName(canvasPtr->tkwin), "\n", (char *) NULL);
     time(&now);
