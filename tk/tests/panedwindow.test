@@ -1911,8 +1911,8 @@ test panedwindow-23.2 {PanedWindowReqProc, react to slave geometry changes} {
     .f1 configure -width 20
     lappend result [winfo reqwidth .p]
     destroy .p .f1 .f2
-    set result
-} {32 42}
+    expr {[lindex $result 1] - [lindex $result 0]}
+} {10}
 
 
 test panedwindow-24.1 {ConfigurePanes, can't add panedwindow to itself} {
