@@ -885,6 +885,10 @@ proc tkMenuFind {w char} {
     set windowlist [winfo child $w]
 
     foreach child $windowlist {
+	# Don't descend into other toplevels.
+        if {[winfo toplevel [focus]] != [winfo toplevel $child] } {
+	    continue
+	}
 	switch [winfo class $child] {
 	    Menu {
 		if {[$child cget -type] == "menubar"} {
@@ -911,6 +915,10 @@ proc tkMenuFind {w char} {
     }
 
     foreach child $windowlist {
+	# Don't descend into other toplevels.
+        if {[winfo toplevel [focus]] != [winfo toplevel $child] } {
+	    continue
+	}
 	switch [winfo class $child] {
 	    Menubutton {
 		set char2 [string index [$child cget -text] \
