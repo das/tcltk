@@ -3574,7 +3574,6 @@ TkpDrawMenuEntry(
     Tk_FontMetrics entryMetrics;
     int adjustedY = y + padY;
     int adjustedHeight = height - 2 * padY;
-    int state;
 
     /*
      * Choose the gc for drawing the foreground part of the entry.
@@ -3605,7 +3604,7 @@ TkpDrawMenuEntry(
     	    }
     	}
 
-	if (((parentDisabled || (state == ENTRY_DISABLED)))
+	if (((parentDisabled || (mePtr->state == ENTRY_DISABLED)))
 		&& (menuPtr->disabledFgPtr != NULL)) {
 	    gc = mePtr->disabledGC;
 	    if (gc == NULL) {
