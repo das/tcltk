@@ -1005,7 +1005,7 @@ TkTextFreeTag(textPtr, tagPtr)
 	    for (; i < textPtr->numCurTags-1; i++) {
 		textPtr->curTagArrayPtr[i] = textPtr->curTagArrayPtr[i+1];
 	    }
-	    textPtr->curTagArrayPtr[textPtr->numCurTags] = NULL;
+	    textPtr->curTagArrayPtr[textPtr->numCurTags-1] = NULL;
 	    textPtr->numCurTags--;
 	    break;
 	}
