@@ -108,7 +108,7 @@ bind Text <Shift-Right> {
     tk::TextKeySelect %W [%W index {insert + 1c}]
 }
 bind Text <Shift-Up> {
-    tkT::extKeySelect %W [tk::TextUpDownLine %W -1]
+    tk::TextKeySelect %W [tk::TextUpDownLine %W -1]
 }
 bind Text <Shift-Down> {
     tk::TextKeySelect %W [tk::TextUpDownLine %W 1]
