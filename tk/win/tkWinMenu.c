@@ -680,7 +680,11 @@ ReconfigureWindowsMenu(
 
     if ((menuPtr->menuType == MENUBAR) 
 	    && (menuPtr->parentTopLevelPtr != NULL)) {
-	DrawMenuBar(TkWinGetWrapperWindow(menuPtr->parentTopLevelPtr));
+	HANDLE bar;
+	bar = TkWinGetWrapperWindow(menuPtr->parentTopLevelPtr);
+	if (bar) {
+	    DrawMenuBar(bar);
+	}
 	Tk_GeometryRequest(menuPtr->parentTopLevelPtr, width, height);
     }
     
