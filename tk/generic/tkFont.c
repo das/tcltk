@@ -1742,8 +1742,10 @@ Tk_UnderlineChars(display, drawable, gc, tkfont, string, x, y, firstChar,
 
     fontPtr = (TkFont *) tkfont;
     
-    Tk_MeasureChars(tkfont, string, firstChar, -1, 0, &startX);
-    Tk_MeasureChars(tkfont, string, lastChar, -1, 0, &endX);
+    Tk_MeasureChars(tkfont, string,
+	    (Tcl_UtfAtIndex(string, firstChar) - string), -1, 0, &startX);
+    Tk_MeasureChars(tkfont, string,
+	    (Tcl_UtfAtIndex(string, lastChar) - string), -1, 0, &endX);
 
     XFillRectangle(display, drawable, gc, x + startX,
 	    y + fontPtr->underlinePos, (unsigned int) (endX - startX),
