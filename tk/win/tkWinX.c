@@ -14,6 +14,7 @@
  */
 
 #include "tkWinInt.h"
+#include <commctrl.h>
 
 /*
  * The zmouse.h file includes the definition for WM_MOUSEWHEEL.
@@ -153,6 +154,17 @@ TkWinXInit(hInstance)
 	return;
     }
     childClassInitialized = 1;
+
+    if (TkWinGetPlatformId() == VER_PLATFORM_WIN32_NT) {
+	/*
+	 * This is necessary to enable the use of themeable elements on XP,
+	 * so we don't even try and call it for Win9*.
+	 */
+
+	INITCOMMONCONTROLSEX comctl;
+	ZeroMemory(&comctl, sizeof(comctl));
+	(void) InitCommonControlsEx(&comctl);
+    }
 
     tkInstance = hInstance;
 
