@@ -44,7 +44,6 @@ the same size.  In disabled state, the button is drawn with the
 non-default button appearance without leaving space for the default
 appearance.  The disabled state may result in a smaller button than
 the active state.
-ring.
 .VE
 .OP \-height height Height
 Specifies a desired height for the button.

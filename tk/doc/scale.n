@@ -63,7 +63,7 @@ rounding occurs.  Defaults to 1 (i.e., the value will be integral).
 Specifies a boolean value indicating whether or not the current
 value of the scale is to be displayed.
 .OP \-sliderlength sliderLength SliderLength
-Specfies the size of the slider, measured in screen units along the slider's
+Specifies the size of the slider, measured in screen units along the slider's
 long dimension.  The value may be specified in any of the forms acceptable
 to \fBTk_GetPixels\fR.
 .OP \-sliderrelief sliderRelief SliderRelief
