@@ -463,6 +463,15 @@ if {[string equal [tk windowingsystem] "classic"]
     bind Text <MouseWheel> {
         %W yview scroll [expr {- (%D)}] units
     }
+    bind Text <Option-MouseWheel> {
+        %W yview scroll [expr {-10 * (%D)}] units
+    }
+    bind Text <Shift-MouseWheel> {
+        %W xview scroll [expr {- (%D)}] units
+    }
+    bind Text <Shift-Option-MouseWheel> {
+        %W xview scroll [expr {-10 * (%D)}] units
+    }
 } else {
     bind Text <MouseWheel> {
         %W yview scroll [expr {- (%D / 120) * 4}] units
