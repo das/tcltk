@@ -2716,7 +2716,7 @@ SetDefaults(
     }
     SelectObject(scratchDC, menuFont);
     GetTextMetrics(scratchDC, &tm);
-    GetTextFace(scratchDC, sizeof(menuFontDString), faceName);
+    GetTextFace(scratchDC, LF_FACESIZE, faceName);
     pointSize = MulDiv(tm.tmHeight - tm.tmInternalLeading,
 	    72, GetDeviceCaps(scratchDC, LOGPIXELSY));
     if (tm.tmWeight >= 700) {
