@@ -26,6 +26,7 @@
  * unix/configure.in
  * win/makefile.bc	(Not for patch release updates)
  * win/makefile.vc	(Not for patch release updates)
+ * win/README
  * library/tk.tcl
  *
  * The release level should be  0 for alpha, 1 for beta, and 2 for
