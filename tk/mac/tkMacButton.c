@@ -874,9 +874,9 @@ DrawBufferedControl(
     } else {	  
 	(**controlHandle).contrlVis = 0;
     }	  
-#if 0    
-    LMSetWindowList((WindowRef) ((CWindowPeek) windowRef)->nextWindow);
-#endif
+    if (!TkMacHaveAppearance()) {    
+        LMSetWindowList((WindowRef) ((CWindowPeek) windowRef)->nextWindow);
+    }
 }
 
 /*
