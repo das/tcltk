@@ -97,21 +97,6 @@ proc tclListValidFlags {v} {
     return $errormsg
 }
 
-# This procedure is used to sort strings in a case-insenstive mode.
-#
-proc tclSortNoCase {str1 str2} {
-    string compare -nocase $str1 $str2
-}
-
-
-# Gives an error if the string does not contain a valid integer
-# number
-#
-proc tclVerifyInteger {string} {
-    lindex {1 2 3} $string
-}
-
-
 #----------------------------------------------------------------------
 #
 #			Focus Group
