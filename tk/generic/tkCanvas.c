@@ -243,7 +243,7 @@ typedef struct {
 } SearchUids;
 
 static Tcl_ThreadDataKey dataKey;
-static SearchUids *GetStaticUids _ANSI_ARGS((void));
+static SearchUids *GetStaticUids _ANSI_ARGS_((void));
 #endif /* USE_OLD_TAG_SEARCH */
 
 /*
