@@ -83,7 +83,7 @@ TCL_BIN_DIR		= @TCL_BIN_DIR@
 # The directory containing the Tcl sources and headers appropriate
 # for this version of Tk ("srcdir" will be replaced or has already
 # been replaced by the configure script):
-TCL_GENERIC_DIR	= @TCL_SRC_DIR@/../generic
+TCL_GENERIC_DIR	= @TCL_SRC_DIR@/generic
 
 # This is a switch passed to a Cygwin script that generates file
 # names based on the platform.
