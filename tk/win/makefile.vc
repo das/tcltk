@@ -446,7 +446,10 @@ $(TMPDIR)\tkSquare.obj: $(GENERICDIR)\tkSquare.c
 $(TMPDIR)\winMain.obj: $(WINDIR)\winMain.c
 	$(cc32) $(WISH_CFLAGS) -Fo$@ $?
 
-$(TMPDIR)\tkStubLib.obj : $(GENERICDIR)\tkStubLib.c
+$(TMPDIR)\tkStubLib.obj: $(GENERICDIR)\tkStubLib.c
+	$(cc32) $(TK_CFLAGS) -DSTATIC_BUILD -Fo$@ $?
+
+$(TMPDIR)\tkStubImg.obj: $(GENERICDIR)\tkStubImg.c
 	$(cc32) $(TK_CFLAGS) -DSTATIC_BUILD -Fo$@ $?
 
 #
