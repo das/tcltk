@@ -518,7 +518,20 @@ void
 TkWinWmCleanup(hInstance)
     HINSTANCE hInstance;
 {
-    ThreadSpecificData *tsdPtr = (ThreadSpecificData *) 
+    ThreadSpecificData *tsdPtr;
+
+    /*
+     * If we're using stubs to access the Tcl library, and they
+     * haven't been initialized, we can't call Tcl_GetThreadData.
+     */
+
+#ifdef USE_TCL_STUBS
+    if (tclStubsPtr == NULL) {
+        return;
+    }
+#endif
+
+    tsdPtr = (ThreadSpecificData *) 
             Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
     if (!tsdPtr->initialized) {

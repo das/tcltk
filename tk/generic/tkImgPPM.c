@@ -183,6 +183,7 @@ FileReadPPM(interp, chan, fileName, formatString, imageHandle, destX, destY,
 	block.offset[1] = 1;
 	block.offset[2] = 2;
     }
+    block.offset[3] = 0;
     block.width = width;
     block.pitch = block.pixelSize * fileWidth;
 

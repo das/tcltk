@@ -263,6 +263,7 @@ FileReadGIF(interp, chan, fileName, formatString, imageHandle, destX, destY,
     block.offset[0] = 0;
     block.offset[1] = 1;
     block.offset[2] = 2;
+    block.offset[3] = 0;
     nBytes = height * block.pitch;
     block.pixelPtr = (unsigned char *) ckalloc((unsigned) nBytes);
 
