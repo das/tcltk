@@ -168,6 +168,7 @@ void Tk_MapEmbeddedWindow(winPtr)
 	if(state < 0 || state > 3) {
 	    state = NormalState;
 	} 
+	while(Tcl_DoOneEvent(TCL_IDLE_EVENTS)); 
 	TkpWmSetState(winPtr, state);	
 	TkWmMapWindow(winPtr);
     }
