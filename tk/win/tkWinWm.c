@@ -1088,6 +1088,20 @@ TkWmDeadWindow(winPtr)
     if (wmPtr->flags & WM_UPDATE_PENDING) {
 	Tcl_CancelIdleCall(UpdateGeometryInfo, (ClientData) winPtr);
     }
+    if (wmPtr->masterPtr != NULL) {
+	wmPtr2 = wmPtr->masterPtr->wmInfoPtr;
+	/*
+	 * If we had a master, tell them that we aren't tied
+	 * to them anymore
+	 */
+	if (wmPtr2 != NULL) {
+	    wmPtr2->numTransients--;
+	}
+	Tk_DeleteEventHandler((Tk_Window) wmPtr->masterPtr,
+		VisibilityChangeMask,
+		WmWaitVisibilityProc, (ClientData) winPtr);
+	wmPtr->masterPtr = NULL;
+    }
 
     /*
      * Destroy the decorative frame window.
@@ -2302,11 +2316,6 @@ WmWaitVisibilityProc(clientData, eventPtr)
 	    if ((state == NormalState) || (state == ZoomState)) {
 		TkpWmSetState(winPtr, state);
 		UpdateWrapper(winPtr);
-#if 0
-		Tk_DeleteEventHandler((Tk_Window) masterPtr,
-			VisibilityChangeMask,
-			WmWaitVisibilityProc, (ClientData) winPtr);
-#endif
 	    }
 	}
     }
