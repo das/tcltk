@@ -48,12 +48,12 @@ extern "C" {
  */
 
 #define TK_MAJOR_VERSION   8
-#define TK_MINOR_VERSION   5
-#define TK_RELEASE_LEVEL   TCL_ALPHA_RELEASE
-#define TK_RELEASE_SERIAL  0
+#define TK_MINOR_VERSION   4
+#define TK_RELEASE_LEVEL   TCL_FINAL_RELEASE
+#define TK_RELEASE_SERIAL  3
 
-#define TK_VERSION	"8.5"
-#define TK_PATCH_LEVEL	"8.5a0"
+#define TK_VERSION	"8.4"
+#define TK_PATCH_LEVEL	"8.4.3"
 
 /*
  * The following definitions set up the proper options for Macintosh
@@ -68,8 +68,8 @@ extern "C" {
 
 #ifndef _TCL
 #   include <tcl.h>
-#   if (TCL_MAJOR_VERSION != 8) || (TCL_MINOR_VERSION != 5)
-#	error Tk 8.5 must be compiled with tcl.h from Tcl 8.5
+#   if (TCL_MAJOR_VERSION != 8) || (TCL_MINOR_VERSION != 4)
+#	error Tk 8.4 must be compiled with tcl.h from Tcl 8.4
 #   endif
 #endif
 
@@ -1577,7 +1577,7 @@ typedef int (Tk_SelectionProc) _ANSI_ARGS_((ClientData clientData,
 
 /*
  * Allow users to say that they don't want to alter their source to
- * add extra arguments to Tk_PhotoPutBlock() et al; DO NOT DEFINE THIS
+ * add the extra argument to Tk_PhotoPutBlock(); DO NOT DEFINE THIS
  * WHEN BUILDING TK.
  *
  * This goes after the inclusion of the stubbed-decls so that the
@@ -1593,33 +1593,12 @@ typedef int (Tk_SelectionProc) _ANSI_ARGS_((ClientData clientData,
 #	undef Tk_PhotoPutZoomedBlock
 #   endif
 #   define Tk_PhotoPutZoomedBlock	Tk_PhotoPutZoomedBlock_NoComposite
-#   define USE_PANIC_ON_PHOTO_ALLOC_FAILURE
-#else /* !USE_COMPOSITELESS_PHOTO_PUT_BLOCK */
-#   ifdef USE_PANIC_ON_PHOTO_ALLOC_FAILURE
-#	ifdef Tk_PhotoPutBlock
-#	    undef Tk_PhotoPutBlock
-#	endif
-#	define Tk_PhotoPutBlock		Tk_PhotoPutBlock_Panic
-#	ifdef Tk_PhotoPutZoomedBlock
-#	    undef Tk_PhotoPutZoomedBlock
-#	endif
-#	define Tk_PhotoPutZoomedBlock	Tk_PhotoPutZoomedBlock_Panic
-#   endif /* USE_PANIC_ON_PHOTO_ALLOC_FAILURE */
 #endif /* USE_COMPOSITELESS_PHOTO_PUT_BLOCK */
-#ifdef USE_PANIC_ON_PHOTO_ALLOC_FAILURE
-#   ifdef Tk_PhotoExpand
-#	undef Tk_PhotoExpand
-#   endif
-#   define Tk_PhotoExpand		Tk_PhotoExpand_Panic
-#   ifdef Tk_PhotoSetSize
-#	undef Tk_PhotoSetSize
-#   endif
-#   define Tk_PhotoSetSize		Tk_PhotoSetSize_Panic
-#endif /* USE_PANIC_ON_PHOTO_ALLOC_FAILURE */
 
 /*
  * Tcl commands exported by Tk:
  */
+
 
 #undef TCL_STORAGE_CLASS
 #define TCL_STORAGE_CLASS DLLIMPORT
