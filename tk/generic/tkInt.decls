@@ -1130,6 +1130,10 @@ declare 66 mac {
     int TkpIsWindowFloating (WindowRef window)
 }
 
+declare 35 win {
+    int TkWinGetPlatformTheme (void)
+}
+
 ########################
 # Mac OS X specific functions
 
