@@ -99,7 +99,9 @@ Arrange for \fIwindow\fR to be displayed in normal (non-iconified) form.
 This is done by mapping the window.  If the window has never been
 mapped then this command will not map the window, but it will ensure
 that when the window is first mapped it will be displayed
-in de-iconified form.  Returns an empty string.
+in de-iconified form.  On Windows, a deiconified window will also be
+raised and be given the focus (made the active window).
+Returns an empty string.
 .TP
 \fBwm focusmodel \fIwindow\fR ?\fBactive\fR|\fBpassive\fR?
 If \fBactive\fR or \fBpassive\fR is supplied as an optional argument
