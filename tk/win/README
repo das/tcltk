@@ -22,4 +22,4 @@ locate the necessary Tcl files.  Otherwise you may need to
 edit makefile.vc and adjust the path to Tcl accordingly.
 
 Information about compiling for windows is maintained at:
-    http://www.scriptics.com/support/howto/compile.html
+    http://dev.scriptics.com/doc/howto/compile.html

@@ -6,11 +6,11 @@ UNIX versions of Tk.  This directory also contains source files for Tk
 that are specific to UNIX.
 
 The information in this file is maintained at:
-	http://www.scriptics.com/support/howto/compile.html
+	http://dev.scriptics.com/doc/howto/compile.html
 
 For information on platforms where Tcl/Tk is known to compile, along
 with any porting notes for getting it to work on those platforms, see:
-	http://dev.scriptics.com/services/support/platforms.html
+	http://dev.scriptics.com/software/tcltk/platforms.html
 
 The rest of this file contains instructions on how to do this.  The
 release should compile and run either "out of the box" or with trivial

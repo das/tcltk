@@ -11,7 +11,7 @@ Release: 1
 Copyright: BSD
 Group: Development/Languages
 Source: ftp://ftp.scriptics.com/pub/tcl/tcl8_3/tk%{version}.tar.gz
-URL: http://www.scriptics.com/
+URL: http://dev.scriptics.com/
 Packager: Scriptics Corporation
 Buildroot: /var/tmp/%{name}%{version}
 Requires: XFree86-libs >= 3.3.3, XFree86-devel >= 3.3.3, tcl = 8.3.1
