@@ -330,6 +330,19 @@ test winWm-7.4 {UpdateWrapper must maintain focus} win {
     list $res [focus]
 } {.t .t}
 
+test winWm-8.1 {Tk_WmCmd procedure, "iconphoto" option} win {
+    list [catch {wm iconph .} msg] $msg
+} {1 {wrong # args: should be "wm iconphoto window ?-default? image1 ?image2 ...?"}}
+test winWm-8.2 {Tk_WmCmd procedure, "iconphoto" option} win {
+    destroy .t
+    toplevel .t
+    image create photo blank16 -width 16 -height 16
+    image create photo blank32 -width 32 -height 32
+    # This should just make blank icons for the window
+    wm iconphoto .t blank16 blank32
+    image delete blank16 blank32
+} {}
+
 destroy .t
 
 # cleanup
