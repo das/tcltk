@@ -63,7 +63,7 @@ TkWinGetModifierState()
 	state |= ControlMask;
     }
     if (GetKeyState(VK_MENU) & 0x8000) {
-	state |= Mod2Mask;
+	state |= ALT_MASK;
     }
     if (GetKeyState(VK_CAPITAL) & 0x0001) {
 	state |= LockMask;

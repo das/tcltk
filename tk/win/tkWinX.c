@@ -965,7 +965,7 @@ GetState(message, wParam, lParam)
 		mask = ControlMask;
 		break;
 	    case VK_MENU:
-		mask = Mod2Mask;
+		mask = ALT_MASK;
 		break;
 	    case VK_CAPITAL:
 		if (message == WM_SYSKEYDOWN || message == WM_KEYDOWN) {

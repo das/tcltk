@@ -413,15 +413,6 @@ typedef struct {
 #define QUADRUPLE	4
 #define MULT_CLICKS	7
 
-/*
- * The following special modifier mask bits are defined, to indicate
- * logical modifiers such as Meta and Alt that may float among the
- * actual modifier bits.
- */
-
-#define META_MASK	(AnyModifier<<1)
-#define ALT_MASK	(AnyModifier<<2)
-
 static ModInfo modArray[] = {
     {"Control",		ControlMask,	0},
     {"Shift",		ShiftMask,	0},
@@ -2080,6 +2071,14 @@ MatchPatterns(dispPtr, bindPtr, psPtr, bestPtr, objectPtr, sourcePtrPtr)
 		if ((modMask & ALT_MASK) && (dispPtr->altModMask != 0)) {
 		    modMask = (modMask & ~ALT_MASK) | dispPtr->altModMask;
 		}
+
+		if ((state & META_MASK) && (dispPtr->metaModMask != 0)) {
+		    state = (state & ~META_MASK) | dispPtr->metaModMask;
+		}
+		if ((state & ALT_MASK) && (dispPtr->altModMask != 0)) {
+		    state = (state & ~ALT_MASK) | dispPtr->altModMask;
+		}
+
 		if ((state & modMask) != modMask) {
 		    goto nextSequence;
 		}
@@ -3250,31 +3249,7 @@ HandleEventGenerate(interp, mainWin, objc, objv)
 
     flags = flagArray[event.xany.type];
     if (flags & (KEY_BUTTON_MOTION_VIRTUAL)) {
-	int eventState;
-	TkDisplay *dispPtr = ((TkWindow *) tkwin)->dispPtr;
-	/*
-	 * Refresh the mapping information if it's stale
-	 */
-	
-	if (dispPtr->bindInfoStale) {
-	    TkpInitKeymapInfo(dispPtr);
-	}
-
-	eventState = pat.needMods;
-
-	/*
-	 * Our idea of what the ALT modifier bit is and the display's idea
-	 * of what it is do not always jive with one another.  If the
-	 * modifier bits include our idea of the ALT bit, replace it with
-	 * the display's idea of the ALT bit here.  Same for the META bit.
-	 */
-	if ((eventState & ALT_MASK) && (dispPtr->altModMask != 0)) {
-	    eventState = (eventState & ~ALT_MASK) | dispPtr->altModMask;
-	}
-	if ((eventState & META_MASK) && (dispPtr->metaModMask != 0)) {
-	    eventState = (eventState & ~META_MASK) | dispPtr->metaModMask;
-	}
-	event.xkey.state = eventState;
+	event.xkey.state = pat.needMods;
 	if ((flags & KEY) && (event.xany.type != MouseWheelEvent)) {
 	    TkpSetKeycodeAndState(tkwin, pat.detail.keySym, &event);
 	} else if (flags & BUTTON) {
