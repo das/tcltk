@@ -44,7 +44,7 @@ NODEBUG = 1
 ######################################################################
 
 TCLNAMEPREFIX = tcl
-TKNAMEPREFIX = tcl
+TKNAMEPREFIX = tk
 WISHNAMEPREFIX = wish
 VERSION = 80
 
