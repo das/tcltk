@@ -1130,9 +1130,8 @@ WinSetIcon(interp, titlebaricon, tkw)
  *----------------------------------------------------------------------
  */
 HICON
-TkWinGetIcon(Tk_Window tkw, DWORD iconsize)
+TkWinGetIcon(Tk_Window tkwin, DWORD iconsize)
 {
-    TkWindow *winPtr;
     WmInfo *wmPtr;
     HICON icon;
     ThreadSpecificData *tsdPtr = (ThreadSpecificData *) 
@@ -1145,17 +1144,19 @@ TkWinGetIcon(Tk_Window tkw, DWORD iconsize)
 	return GetIcon(tsdPtr->iconPtr, iconsize);
     }
 
-    if (Tk_WindowId(tkw) == None) {
-	Tk_MakeWindowExist(tkw);
+    /* ensure we operate on the toplevel, that has the icon refs */
+    while (!Tk_IsTopLevel(tkwin)) {
+	tkwin = Tk_Parent(tkwin);
+	if (tkwin == NULL) {
+	    return NULL;
+	}
     }
 
-    winPtr = (TkWindow *)tkw;
-    if (!(Tk_IsTopLevel(tkw))) {
-	winPtr = GetTopLevel(Tk_GetHWND(Tk_WindowId(tkw)));
+    if (Tk_WindowId(tkwin) == None) {
+	Tk_MakeWindowExist(tkwin);
     }
-    /* We must get the window's wrapper, not the window itself */
-    wmPtr = winPtr->wmInfoPtr;
 
+    wmPtr = ((TkWindow *) tkwin)->wmInfoPtr;
     if (wmPtr->iconPtr != NULL) {
 	/*
 	 * return window toplevel icon
