@@ -99,8 +99,7 @@ int (*tclMatherrPtr)() = matherr;
 static char *operatorStrings[] = {
     "||", "&&", "|", "^", "&", "==", "!=", "<", ">", "<=", ">=", "<<", ">>",
     "+", "-", "*", "/", "%", "+", "-", "~", "!",
-    "BUILTIN FUNCTION", "FUNCTION",
-    "", "", "", "", "", "", "", "", "eq", "ne",
+    "BUILTIN FUNCTION", "FUNCTION"
 };
     
 /*
@@ -113,6 +112,17 @@ static char *resultStrings[] = {
     "TCL_OK", "TCL_ERROR", "TCL_RETURN", "TCL_BREAK", "TCL_CONTINUE"
 };
 #endif
+
+/*
+ * These are used by evalstats to monitor object usage in Tcl.
+ */
+
+#ifdef TCL_COMPILE_STATS
+long		tclObjsAlloced = 0;
+long		tclObjsFreed   = 0;
+#define TCL_MAX_SHARED_OBJ_STATS 5
+long		tclObjsShared[TCL_MAX_SHARED_OBJ_STATS] = { 0, 0, 0, 0, 0 };
+#endif /* TCL_COMPILE_STATS */
 
 /*
  * Macros for testing floating-point values for certain special cases. Test
@@ -427,7 +437,7 @@ void
 TclDeleteExecEnv(eePtr)
     ExecEnv *eePtr;		/* Execution environment to free. */
 {
-    ckfree((char *) eePtr->stackPtr);
+    Tcl_EventuallyFree((ClientData)eePtr->stackPtr, TCL_DYNAMIC);
     ckfree((char *) eePtr);
 }
 
@@ -497,7 +507,7 @@ GrowEvaluationStack(eePtr)
  
     memcpy((VOID *) newStackPtr, (VOID *) eePtr->stackPtr,
 	   (size_t) currBytes);
-    ckfree((char *) eePtr->stackPtr);
+    Tcl_EventuallyFree((ClientData)eePtr->stackPtr, TCL_DYNAMIC);
     eePtr->stackPtr = newStackPtr;
     eePtr->stackEnd = (newElems - 1); /* i.e. index of last usable item */
 }
@@ -734,15 +744,19 @@ TclExecuteByteCode(interp, codePtr)
 		Tcl_Obj **objv;	 /* The array of argument objects. */
 		Command *cmdPtr; /* Points to command's Command struct. */
 		int newPcOffset; /* New inst offset for break, continue. */
+		Tcl_Obj **preservedStack;
+				 /* Reference to memory block containing
+				  * objv array (must be kept live throughout
+				  * trace and command invokations.) */
 #ifdef TCL_COMPILE_DEBUG
 		int isUnknownCmd = 0;
 		char cmdNameBuf[21];
 #endif /* TCL_COMPILE_DEBUG */
-		
+
 		/*
 		 * If the interpreter was deleted, return an error.
 		 */
-		
+
 		if (iPtr->flags & DELETED) {
 		    Tcl_ResetResult(interp);
 		    Tcl_AppendToObj(Tcl_GetObjResult(interp),
@@ -753,7 +767,7 @@ TclExecuteByteCode(interp, codePtr)
 		    result = TCL_ERROR;
 		    goto checkForCatch;
 		}
-    
+
 		/*
 		 * Find the procedure to execute this command. If the
 		 * command is not found, handle it with the "unknown" proc.
@@ -785,14 +799,26 @@ TclExecuteByteCode(interp, codePtr)
 		    objv[0] = Tcl_NewStringObj("unknown", -1);
 		    Tcl_IncrRefCount(objv[0]);
 		}
-		
+
+		/*
+		 * A reference to part of the stack vector itself
+		 * escapes our control, so must use preserve/release
+		 * to stop it from being deallocated by a recursive
+		 * call to ourselves.  The extra variable is needed
+		 * because all others are liable to change due to the
+		 * trace procedures.
+		 */
+
+		Tcl_Preserve((ClientData)stackPtr);
+		preservedStack = stackPtr;
+
 		/*
 		 * Call any trace procedures.
 		 */
 
 		if (iPtr->tracePtr != NULL) {
 		    Trace *tracePtr, *nextTracePtr;
-
+		    
 		    for (tracePtr = iPtr->tracePtr;  tracePtr != NULL;
 		            tracePtr = nextTracePtr) {
 			nextTracePtr = tracePtr->nextPtr;
@@ -809,14 +835,14 @@ TclExecuteByteCode(interp, codePtr)
 			}
 		    }
 		}
-		
+
 		/*
 		 * Finally, invoke the command's Tcl_ObjCmdProc. First reset
 		 * the interpreter's string and object results to their
 		 * default empty values since they could have gotten changed
 		 * by earlier invocations.
 		 */
-		
+
 		Tcl_ResetResult(interp);
 		if (tclTraceExec >= 2) {
 #ifdef TCL_COMPILE_DEBUG
@@ -850,6 +876,14 @@ TclExecuteByteCode(interp, codePtr)
 		    result = Tcl_AsyncInvoke(interp, result);
 		}
 		CACHE_STACK_INFO();
+
+		/*
+		 * If the old stack is going to be released, it is
+		 * safe to do so now, since no references to objv are
+		 * going to be used from now on.
+		 */
+
+		Tcl_Release((ClientData)preservedStack);
 
 		/*
 		 * If the interpreter has a non-empty string result, the
@@ -1757,55 +1791,6 @@ TclExecuteByteCode(interp, codePtr)
 	    }
 	    ADJUST_PC(1);
 
-	case INST_STREQ:
-	case INST_STRNEQ:
-	    {
-		/*
-		 * String (in)equality check
-		 */
-		char *s1, *s2;
-		int s1len, s2len;
-		long iResult;
-
-		value2Ptr = POP_OBJECT();
-		valuePtr  = POP_OBJECT();
-
-		s1 = Tcl_GetStringFromObj(valuePtr, &s1len);
-		s2 = Tcl_GetStringFromObj(value2Ptr, &s2len);
-		if (s1len == s2len) {
-		    /*
-		     * We only need to check (in)equality when we have equal
-		     * length strings.
-		     */
-		    if (*pc == INST_STRNEQ) {
-			iResult = (strcmp(s1, s2) != 0);
-		    } else {
-			/* INST_STREQ */
-			iResult = (strcmp(s1, s2) == 0);
-		    }
-		} else {
-		    iResult = (*pc == INST_STRNEQ);
-		}
-
-		/*
-		 * Reuse the valuePtr object already on stack if possible.
-		 */
-		
-		if (Tcl_IsShared(valuePtr)) {
-		    PUSH_OBJECT(Tcl_NewLongObj(iResult));
-		    TRACE(("%.20s %.20s => %ld\n",
-			   O2S(valuePtr), O2S(value2Ptr), iResult));
-		    TclDecrRefCount(valuePtr);
-		} else {	/* reuse the valuePtr object */
-		    TRACE(("%.20s %.20s => %ld\n",
-			    O2S(valuePtr), O2S(value2Ptr), iResult));
-		    Tcl_SetLongObj(valuePtr, iResult);
-		    ++stackTop; /* valuePtr now on stk top has right r.c. */
-		}
-		TclDecrRefCount(value2Ptr);
-	    }
-	    ADJUST_PC(1);
-
 	case INST_EQ:
 	case INST_NEQ:
 	case INST_LT:
@@ -2358,15 +2343,18 @@ TclExecuteByteCode(interp, codePtr)
 	case INST_LNOT:
 	    {
 		/*
-		 * The operand must be numeric. If the operand object is
-		 * unshared modify it directly, otherwise create a copy to
-		 * modify: this is "copy on write". free any old string
-		 * representation since it is now invalid.
+		 * The operand must be numeric or a boolean string as
+		 * accepted by Tcl_GetBooleanFromObj(). If the operand
+		 * object is unshared modify it directly, otherwise
+		 * create a copy to modify: this is "copy on write".
+		 * Free any old string representation since it is now
+		 * invalid.
 		 */
-		
+
 		double d;
+		int boolvar;
 		Tcl_ObjType *tPtr;
-		
+
 		valuePtr = POP_OBJECT();
 		tPtr = valuePtr->typePtr;
 		if ((tPtr != &tclIntType) && ((tPtr != &tclDoubleType)
@@ -2383,6 +2371,11 @@ TclExecuteByteCode(interp, codePtr)
 			    result = Tcl_GetDoubleFromObj((Tcl_Interp *) NULL,
 				    valuePtr, &d);
 			}
+			if (result == TCL_ERROR && *pc == INST_LNOT) {
+			    result = Tcl_GetBooleanFromObj((Tcl_Interp *)NULL,
+				    valuePtr, &boolvar);
+			    i = (long)boolvar; /* i is long, not int! */
+			}
 			if (result != TCL_OK) {
 			    TRACE(("\"%.20s\" => ILLEGAL TYPE %s\n",
 				    s, (tPtr? tPtr->name : "null")));
@@ -2393,12 +2386,12 @@ TclExecuteByteCode(interp, codePtr)
 		    }
 		    tPtr = valuePtr->typePtr;
 		}
-		
+
 		if (Tcl_IsShared(valuePtr)) {
 		    /*
 		     * Create a new object.
 		     */
-		    if (tPtr == &tclIntType) {
+		    if ((tPtr == &tclIntType) || (tPtr == &tclBooleanType)) {
 			i = valuePtr->internalRep.longValue;
 			objPtr = Tcl_NewLongObj(
 			        (*pc == INST_UMINUS)? -i : !i);
@@ -2422,7 +2415,7 @@ TclExecuteByteCode(interp, codePtr)
 		    /*
 		     * valuePtr is unshared. Modify it directly.
 		     */
-		    if (tPtr == &tclIntType) {
+		    if ((tPtr == &tclIntType) || (tPtr == &tclBooleanType)) {
 			i = valuePtr->internalRep.longValue;
 			Tcl_SetLongObj(valuePtr,
 			        (*pc == INST_UMINUS)? -i : !i);
@@ -3895,11 +3888,21 @@ ExprRandFunc(interp, eePtr, clientData)
     register int stackTop;	/* Cached top index of evaluation stack. */
     Interp *iPtr = (Interp *) interp;
     double dResult;
-    int tmp;
+    long tmp;			/* Algorithm assumes at least 32 bits.
+				 * Only long guarantees that.  See below. */
 
     if (!(iPtr->flags & RAND_SEED_INITIALIZED)) {
 	iPtr->flags |= RAND_SEED_INITIALIZED;
 	iPtr->randSeed = TclpGetClicks();
+
+	/*
+	 * Make sure 1 <= randSeed <= (2^31) - 2.  See below.
+	 */
+
+        iPtr->randSeed &= (unsigned long) 0x7fffffff;
+	if ((iPtr->randSeed == 0) || (iPtr->randSeed == 0x7fffffff)) {
+	    iPtr->randSeed ^= 123459876;
+	}
     }
     
     /*
@@ -3912,11 +3915,20 @@ ExprRandFunc(interp, eePtr, clientData)
      * Generate the random number using the linear congruential
      * generator defined by the following recurrence:
      *		seed = ( IA * seed ) mod IM
-     * where IA is 16807 and IM is (2^31) - 1.  In order to avoid
-     * potential problems with integer overflow, the  code uses
-     * additional constants IQ and IR such that
+     * where IA is 16807 and IM is (2^31) - 1.  The recurrence maps
+     * a seed in the range [1, IM - 1] to a new seed in that same range.
+     * The recurrence maps IM to 0, and maps 0 back to 0, so those two
+     * values must not be allowed as initial values of seed.
+     *
+     * In order to avoid potential problems with integer overflow, the
+     * recurrence is implemented in terms of additional constants
+     * IQ and IR such that
      *		IM = IA*IQ + IR
-     * For details on how this algorithm works, refer to the following
+     * None of the operations in the implementation overflows a 32-bit
+     * signed integer, and the C type long is guaranteed to be at least
+     * 32 bits wide.
+     *
+     * For more details on how this algorithm works, refer to the following
      * papers: 
      *
      *	S.K. Park & K.W. Miller, "Random number generators: good ones
@@ -3932,14 +3944,6 @@ ExprRandFunc(interp, eePtr, clientData)
 #define RAND_IR		2836
 #define RAND_MASK	123459876
 
-    if (iPtr->randSeed == 0) {
-	/*
-	 * Don't allow a 0 seed, since it breaks the generator.  Shift
-	 * it to some other value.
-	 */
-
-	iPtr->randSeed = 123459876;
-    }
     tmp = iPtr->randSeed/RAND_IQ;
     iPtr->randSeed = RAND_IA*(iPtr->randSeed - tmp*RAND_IQ) - RAND_IR*tmp;
     if (iPtr->randSeed < 0) {
@@ -3947,14 +3951,10 @@ ExprRandFunc(interp, eePtr, clientData)
     }
 
     /*
-     * On 64-bit architectures we need to mask off the upper bits to
-     * ensure we only have a 32-bit range.  The constant has the
-     * bizarre form below in order to make sure that it doesn't
-     * get sign-extended (the rules for sign extension are very
-     * concat, particularly on 64-bit machines).
+     * Since the recurrence keeps seed values in the range [1, RAND_IM - 1],
+     * dividing by RAND_IM yields a double in the range (0, 1).
      */
 
-    iPtr->randSeed &= ((((unsigned long) 0xfffffff) << 4) | 0xf);
     dResult = iPtr->randSeed * (1.0/RAND_IM);
 
     /*
@@ -4101,11 +4101,16 @@ ExprSrandFunc(interp, eePtr, clientData)
     }
     
     /*
-     * Reset the seed.
+     * Reset the seed.  Make sure 1 <= randSeed <= 2^31 - 2.
+     * See comments in ExprRandFunc() for more details.
      */
 
     iPtr->flags |= RAND_SEED_INITIALIZED;
     iPtr->randSeed = i;
+    iPtr->randSeed &= (unsigned long) 0x7fffffff;
+    if ((iPtr->randSeed == 0) || (iPtr->randSeed == 0x7fffffff)) {
+	iPtr->randSeed ^= 123459876;
+    }
 
     /*
      * To avoid duplicating the random number generation code we simply
@@ -4500,7 +4505,7 @@ EvalStatsCmd(unused, interp, argc, argv)
     fprintf(stdout, "  Mean code/source		%.1f\n",
 	    totalCodeBytes / statsPtr->totalSrcBytes);
 
-    fprintf(stdout, "\nCurrent ByteCodes		%ld\n",
+    fprintf(stdout, "\nCurrent (active) ByteCodes	%ld\n",
 	    numCurrentByteCodes);
     fprintf(stdout, "  Source bytes			%.6g\n",
 	    statsPtr->currentSrcBytes);
@@ -4521,6 +4526,29 @@ EvalStatsCmd(unused, interp, argc, argv)
     fprintf(stdout, "  Code + source bytes		%.6g (%0.1f mean code/src)\n",
 	    (currentCodeBytes + statsPtr->currentSrcBytes),
 	    (currentCodeBytes / statsPtr->currentSrcBytes) + 1.0);
+
+    /*
+     * Tcl_IsShared statistics check
+     *
+     * This gives the refcount of each obj as Tcl_IsShared was called
+     * for it.  Shared objects must be duplicated before they can be
+     * modified.
+     */
+
+    numSharedMultX = 0;
+    fprintf(stdout, "\nTcl_IsShared object check (all objects):\n");
+    fprintf(stdout, "  Object had refcount <=1 (not shared)	%ld\n",
+	    tclObjsShared[1]);
+    for (i = 2;  i < TCL_MAX_SHARED_OBJ_STATS;  i++) {
+	fprintf(stdout, "  refcount ==%d		%ld\n",
+		i, tclObjsShared[i]);
+	numSharedMultX += tclObjsShared[i];
+    }
+    fprintf(stdout, "  refcount >=%d		%ld\n",
+	    i, tclObjsShared[0]);
+    numSharedMultX += tclObjsShared[0];
+    fprintf(stdout, "  Total shared objects			%d\n",
+	    numSharedMultX);
 
     /*
      * Literal table statistics.
@@ -4562,7 +4590,7 @@ EvalStatsCmd(unused, interp, argc, argv)
 	    (tclObjsAlloced - tclObjsFreed));
     fprintf(stdout, "Total literal objects		%ld\n",
 	    statsPtr->numLiteralsCreated);
-    
+
     fprintf(stdout, "\nCurrent literal objects		%d (%0.1f%% of current objects)\n",
 	    globalTablePtr->numEntries,
 	    (globalTablePtr->numEntries * 100.0) / (tclObjsAlloced-tclObjsFreed));
@@ -4713,7 +4741,7 @@ EvalStatsCmd(unused, interp, argc, argv)
 		decadeHigh, (sum * 100.0) / statsPtr->numCompilations);
     }
 
-    fprintf(stdout, "\nByteCode longevity (excludes current ByteCodes):\n");
+    fprintf(stdout, "\nByteCode longevity (excludes Current ByteCodes):\n");
     fprintf(stdout, "	       Up to ms		Percentage\n");
     minSizeDecade = maxSizeDecade = 0;
     for (i = 0;  i < 31;  i++) {
