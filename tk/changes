@@ -5479,4 +5479,4 @@ on Windows. (martin)
 of the event structure when that field is valid for that event type. (fellows)
 	*** POTENTIAL INCOMPATIBILITY ***
 
---- Released 8.4.2, March X, 2002 --- See ChangeLog for details ---
+--- Released 8.4.2, March 3, 2002 --- See ChangeLog for details ---
