@@ -346,6 +346,11 @@ HDRS = bltList.h \
 	default.h ks_names.h tkPatch.h tk.h tkButton.h tkCanvas.h tkInt.h  \
 	tkPort.h tkScrollbar.h tkText.h
 
+INSTALL_HDRS = $(GENERIC_DIR)/tk.h  \
+	$(GENERIC_DIR)/tkInt.h \
+	$(GENERIC_DIR)/tkDecls.h \
+	$(GENERIC_DIR)/tkIntXlibDecls.h
+
 DEMOPROGS = browse hello ixset rmt rolodex square tcolor timer widget
 
 all: binaries libraries doc
@@ -484,7 +489,7 @@ install-libraries:
 	    chmod +x $(UNIX_DIR)/install-sh; \
 	    fi
 	@echo "Installing header files";
-	@for i in $(GENERIC_DIR)/tk.h $(GENERIC_DIR)/tkDecls.h ; \
+	@for i in $(INSTALL_HDRS) ; \
 	    do \
 	    $(INSTALL_DATA) $$i $(INCLUDE_INSTALL_DIR); \
 	    done;
@@ -965,7 +970,7 @@ dist:   $(UNIX_DIR)/configure
 	cp $(TOP_DIR)/license.terms $(UNIX_DIR)/Makefile.in $(DISTDIR)/unix
 	chmod 664 $(DISTDIR)/unix/Makefile.in
 	cp $(UNIX_DIR)/configure $(UNIX_DIR)/configure.in \
-		$(UNIX_DIR)/aclocal.m4 $(UNIX_DIR)/tk.spec \
+		$(UNIX_DIR)/aclocal.m4 \
 		$(UNIX_DIR)/tkConfig.sh.in $(TCLDIR)/unix/install-sh \
 		$(UNIX_DIR)/README $(DISTDIR)/unix
 	chmod 775 $(DISTDIR)/unix/configure $(DISTDIR)/unix/configure.in
