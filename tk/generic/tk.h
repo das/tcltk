@@ -32,6 +32,7 @@ extern "C" {
  *
  * unix/configure.in
  * README
+ * win/configure.in
  * win/makefile.vc	(only if major.minor changes, not patchlevel)
  * library/tk.tcl	(only if major.minor changes, not patchlevel)
  * mac/README		(only if major.minor changes, not patchlevel)
