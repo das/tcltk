@@ -749,7 +749,9 @@ test button-11.1 {ButtonTextVarProc procedure} {
 } {Label Label New}
 test button-11.2 {ButtonTextVarProc procedure} {
     eval destroy [winfo children .]
-    set x Label
+    # Windows buttons have a default min width, so we have to
+    # set this to be longer to force the wider button.
+    set x ExtraLongLabel
     button .b1 -textvariable x
     set old [winfo reqwidth .b1]
     set x New
