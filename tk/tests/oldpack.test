@@ -449,7 +449,7 @@ test pack-8.16 {syntax errors} {
     set msg ""
     set result [catch {pack append .pack .pack.blue {frame south}} msg]
     concat $result $msg
-} {1 bad anchor position "south": must be n, ne, e, se, s, sw, w, nw, or center}
+} {1 bad anchor "south": must be n, ne, e, se, s, sw, w, nw, or center}
 test pack-8.17 {syntax errors} {
     set msg ""
     set result [catch {pack append .pack .pack.blue {padx -2}} msg]
