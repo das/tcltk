@@ -93,7 +93,7 @@ proc tkTearOffMenu {w {x 0} {y 0}} {
 
     set cmd [$w cget -tearoffcommand]
     if {[string compare $cmd ""]} {
-	uplevel #0 $cmd $w $menu
+	uplevel #0 $cmd [list $w $menu]
     }
     return $menu
 }

@@ -198,11 +198,12 @@ proc tkScrollSelect {w element repeat} {
     }
     if {[string equal $repeat "again"]} {
 	set tkPriv(afterId) [after [$w cget -repeatinterval] \
-		tkScrollSelect $w $element again]
+		[list tkScrollSelect $w $element again]]
     } elseif {[string equal $repeat "initial"]} {
 	set delay [$w cget -repeatdelay]
 	if {$delay > 0} {
-	    set tkPriv(afterId) [after $delay tkScrollSelect $w $element again]
+	    set tkPriv(afterId) [after $delay \
+		    [list tkScrollSelect $w $element again]]
 	}
     }
 }
@@ -258,7 +259,7 @@ proc tkScrollDrag {w x y} {
 		    [expr {[lindex $tkPriv(initValues) 1] + $delta}]
 	} else {
 	    set delta [expr {round($delta * [lindex $tkPriv(initValues) 0])}]
-	    eval $w set [lreplace $tkPriv(initValues) 2 3 \
+	    eval [list $w] set [lreplace $tkPriv(initValues) 2 3 \
 		    [expr {[lindex $tkPriv(initValues) 2] + $delta}] \
 		    [expr {[lindex $tkPriv(initValues) 3] + $delta}]]
 	}

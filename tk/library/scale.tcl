@@ -211,12 +211,12 @@ proc tkScaleIncrement {w dir big repeat} {
 
     if {[string equal $repeat "again"]} {
 	set tkPriv(afterId) [after [$w cget -repeatinterval] \
-		tkScaleIncrement $w $dir $big again]
+		[list tkScaleIncrement $w $dir $big again]]
     } elseif {[string equal $repeat "initial"]} {
 	set delay [$w cget -repeatdelay]
 	if {$delay > 0} {
 	    set tkPriv(afterId) [after $delay \
-		    tkScaleIncrement $w $dir $big again]
+		    [list tkScaleIncrement $w $dir $big again]]
 	}
     }
 }

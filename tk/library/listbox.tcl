@@ -347,7 +347,7 @@ proc tkListboxAutoScan {w} {
 	return
     }
     tkListboxMotion $w [$w index @$x,$y]
-    set tkPriv(afterId) [after 50 tkListboxAutoScan $w]
+    set tkPriv(afterId) [after 50 [list tkListboxAutoScan $w]]
 }
 
 # tkListboxUpDown --

@@ -634,7 +634,7 @@ proc tkTextAutoScan {w} {
 	return
     }
     tkTextSelectTo $w $tkPriv(x) $tkPriv(y)
-    set tkPriv(afterId) [after 50 tkTextAutoScan $w]
+    set tkPriv(afterId) [after 50 [list tkTextAutoScan $w]]
 }
 
 # tkTextSetCursor

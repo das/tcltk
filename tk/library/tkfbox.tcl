@@ -150,7 +150,7 @@ proc tkIconList_AutoScan {w} {
     }
 
     tkIconList_Motion1 $w $x $y
-    set tkPriv(afterId) [after 50 tkIconList_AutoScan $w]
+    set tkPriv(afterId) [after 50 [list tkIconList_AutoScan $w]]
 }
 
 # Deletes all the items inside the canvas subwidget and reset the IconList's
@@ -555,7 +555,7 @@ proc tkIconList_KeyPress {w key} {
     catch {
 	after cancel $tkPriv(ILAccel,$w,afterId)
     }
-    set tkPriv(ILAccel,$w,afterId) [after 500 tkIconList_Reset $w]
+    set tkPriv(ILAccel,$w,afterId) [after 500 [list tkIconList_Reset $w]]
 }
 
 proc tkIconList_Goto {w text} {
@@ -933,7 +933,7 @@ proc tkFDialog_UpdateWhenIdle {w} {
     if {[info exists data(updateId)]} {
 	return
     } else {
-	set data(updateId) [after idle tkFDialog_Update $w]
+	set data(updateId) [after idle [list tkFDialog_Update $w]]
     }
 }
 

@@ -786,7 +786,8 @@ proc tkListBoxKeyAccel_Key {w key} {
     catch {
 	after cancel $tkPriv(lbAccel,$w,afterId)
     }
-    set tkPriv(lbAccel,$w,afterId) [after 500 tkListBoxKeyAccel_Reset $w]
+    set tkPriv(lbAccel,$w,afterId) [after 500 \
+	    [list tkListBoxKeyAccel_Reset $w]]
 }
 
 proc tkListBoxKeyAccel_Goto {w string} {

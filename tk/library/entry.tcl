@@ -430,7 +430,7 @@ proc tkEntryAutoScan {w} {
 	$w xview scroll -2 units
 	tkEntryMouseSelect $w $x
     }
-    set tkPriv(afterId) [after 50 tkEntryAutoScan $w]
+    set tkPriv(afterId) [after 50 [list tkEntryAutoScan $w]]
 }
 
 # tkEntryKeySelect --
