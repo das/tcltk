@@ -1723,11 +1723,10 @@ TkMacOSXSetUpCGContext(
     OSStatus err;
     Rect boundsRect;
     CGAffineTransform coordsTransform;        
-    RgnHandle clipRgn;
+    static RgnHandle clipRgn = NULL;
 
     err = QDBeginCGContext(destPort, contextPtr);
     outContext = *contextPtr;
-    CGContextSaveGState(outContext);
  
     /*
      * Now clip the CG Context to the port.  Note, we have already
@@ -1739,15 +1738,17 @@ TkMacOSXSetUpCGContext(
      * visible region so we don't overwrite the window decoration.
      */
      
-    clipRgn = NewRgn();
-    GetPortClipRegion(destPort, clipRgn);
-
-    SectRegionWithPortVisibleRegion(destPort, clipRgn);
+    if (!clipRgn) {
+        clipRgn = NewRgn();
+    }
 
     GetPortBounds(destPort, &boundsRect);
     
+    RectRgn(clipRgn, &boundsRect);
+    SectRegionWithPortClipRegion(destPort, clipRgn);
+    SectRegionWithPortVisibleRegion(destPort, clipRgn);
     ClipCGContextToRegion(outContext, &boundsRect, clipRgn);
-    DisposeRgn(clipRgn);
+    SetEmptyRgn(clipRgn);
     
     /*
      * Note: You have to call SyncCGContextOriginWithPort
@@ -1823,7 +1824,6 @@ TkMacOSXReleaseCGContext(
         CGrafPtr destPort, 
         CGContextRef *outContext)
 {
-    CGContextRestoreGState(*outContext);
     CGContextSynchronize(*outContext);
     QDEndCGContext(destPort, outContext);
 }
