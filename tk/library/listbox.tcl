@@ -183,6 +183,23 @@ bind Listbox <MouseWheel> {
     %W yview scroll [expr {- (%D / 120) * 4}] units
 }
 
+if {[string equal "unix" $tcl_platform(platform)]} {
+    # Support for mousewheels on Linux/Unix commonly comes through mapping
+    # the wheel to the extended buttons.  If you have a mousewheel, find
+    # Linux configuration info at:
+    #	http://www.inria.fr/koala/colas/mouse-wheel-scroll/
+    bind Listbox <4> {
+	if {!$tk_strictMotif} {
+	    %W yview scroll -5 units
+	}
+    }
+    bind Listbox <5> {
+	if {!$tk_strictMotif} {
+	    %W yview scroll 5 units
+	}
+    }
+}
+
 # tkListboxBeginSelect --
 #
 # This procedure is typically invoked on button-1 presses.  It begins
