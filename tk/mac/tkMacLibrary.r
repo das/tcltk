@@ -54,7 +54,7 @@ resource 'vers' (1) {
 	TK_MAJOR_VERSION, MINOR_VERSION,
 	RELEASE_LEVEL, 0x00, verUS,
 	TK_PATCH_LEVEL,
-	TK_PATCH_LEVEL ",by Ray Johnson & Jim Ingham "\n© 1993-1997 Sun Microsystems" "\n  1998-1999 Scriptics Inc."
+	TK_PATCH_LEVEL ",by Ray Johnson & Jim Ingham" "\n" "© 1993-1997 Sun Microsystems" "\n" "1998-2000 Scriptics Inc."
 };
 
 resource 'vers' (2) {
