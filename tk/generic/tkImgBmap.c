@@ -254,7 +254,7 @@ ImgBmapConfigureMaster(masterPtr, objc, objv, flags)
     BitmapInstance *instancePtr;
     int maskWidth, maskHeight, dummy1, dummy2;
 
-    char **argv = (char **) ckalloc((objc+1) * sizeof(char *));
+    CONST char **argv = (CONST char **) ckalloc((objc+1) * sizeof(char *));
     for (dummy1 = 0; dummy1 < objc; dummy1++) {
 	argv[dummy1]=Tcl_GetString(objv[dummy1]);
     }

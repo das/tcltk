@@ -465,7 +465,7 @@ Tk_InitOptions(interp, recordPtr, optionTable, tkwin)
     OptionTable *tablePtr = (OptionTable *) optionTable;
     Option *optionPtr;
     int count;
-    char *value;
+    Tk_Uid value;
     Tcl_Obj *valuePtr;
     enum {
 	OPTION_DATABASE, SYSTEM_DEFAULT, TABLE_DEFAULT

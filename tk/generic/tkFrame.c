@@ -484,7 +484,7 @@ CreateFrame(clientData, interp, objc, objv, type, appName)
     Frame *framePtr;
     Tk_OptionTable optionTable;
     Tk_Window new;
-    char *className, *screenName, *visualName, *colormapName, *arg, *useOption;
+    CONST char *className, *screenName, *visualName, *colormapName, *arg, *useOption;
     int i, c, depth;
     size_t length;
     unsigned int mask;

@@ -234,12 +234,12 @@ static int		ValidateName _ANSI_ARGS_((TkDisplay *dispPtr,
  *--------------------------------------------------------------
  */
 
-char *
+CONST char *
 Tk_SetAppName(
     Tk_Window tkwin,		/* Token for any window in the application
 				 * to be named:  it is just used to identify
 				 * the application and the display.  */
-    char *name)			/* The name that will be used to
+    CONST char *name)		/* The name that will be used to
 				 * refer to the interpreter in later
 				 * "send" commands.  Must be globally
 				 * unique. */

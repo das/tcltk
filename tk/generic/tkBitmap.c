@@ -87,7 +87,7 @@ typedef struct TkBitmap {
  */
 
 typedef struct {
-    char *source;		/* Bitmap bits. */
+    CONST char *source;		/* Bitmap bits. */
     int width, height;		/* Dimensions of bitmap. */
 } DataKey;
 
@@ -468,7 +468,7 @@ Tk_DefineBitmap(interp, name, source, width, height)
     Tcl_Interp *interp;		/* Interpreter to use for error reporting. */
     CONST char *name;		/* Name to use for bitmap.  Must not already
 				 * be defined as a bitmap. */
-    char *source;		/* Address of bits for bitmap. */
+    CONST char *source;		/* Address of bits for bitmap. */
     int width;			/* Width of bitmap. */
     int height;			/* Height of bitmap. */
 {
@@ -523,7 +523,7 @@ Tk_DefineBitmap(interp, name, source, width, height)
  *--------------------------------------------------------------
  */
 
-char *
+CONST char *
 Tk_NameOfBitmap(display, bitmap)
     Display *display;			/* Display for which bitmap was
 					 * allocated. */
@@ -809,7 +809,7 @@ Pixmap
 Tk_GetBitmapFromData(interp, tkwin, source, width, height)
     Tcl_Interp *interp;		/* Interpreter to use for error reporting. */
     Tk_Window tkwin;		/* Window in which bitmap will be used. */
-    char *source;		/* Bitmap data for bitmap shape. */
+    CONST char *source;		/* Bitmap data for bitmap shape. */
     int width, height;		/* Dimensions of bitmap. */
 {
     DataKey nameKey;

@@ -1279,7 +1279,7 @@ SetFontFromAny(interp, objPtr)
  *---------------------------------------------------------------------------
  */
 
-char *
+CONST char *
 Tk_NameOfFont(tkfont)
     Tk_Font tkfont;		/* Font whose name is desired. */
 {
@@ -1550,7 +1550,7 @@ Tk_PostscriptFontName(tkfont, dsPtr)
 				 * corresponds to tkfont will be appended. */
 {
     TkFont *fontPtr;
-    char *family, *weightString, *slantString;
+    Tk_Uid family, weightString, slantString;
     char *src, *dest;
     int upper, len;
 
@@ -2993,7 +2993,7 @@ GetAttributeInfoObj(interp, faPtr, objPtr)
 					 * returned for all options. */
 {
     int i, index, start, end;
-    char *str;
+    CONST char *str;
     Tcl_Obj *optionPtr, *valuePtr, *resultPtr;
 
     resultPtr = Tcl_GetObjResult(interp);

@@ -176,8 +176,8 @@ static void		MessageCmdDeletedProc _ANSI_ARGS_((
 static void		MessageEventProc _ANSI_ARGS_((ClientData clientData,
 			    XEvent *eventPtr));
 static char *		MessageTextVarProc _ANSI_ARGS_((ClientData clientData,
-			    Tcl_Interp *interp, char *name1, CONST char *name2,
-			    int flags));
+			    Tcl_Interp *interp, CONST char *name1,
+			    CONST char *name2, int flags));
 static int		MessageWidgetObjCmd _ANSI_ARGS_((ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 	                    Tcl_Obj *CONST objv[]));
@@ -847,7 +847,7 @@ static char *
 MessageTextVarProc(clientData, interp, name1, name2, flags)
     ClientData clientData;	/* Information about message. */
     Tcl_Interp *interp;		/* Interpreter containing variable. */
-    char *name1;		/* Name of variable. */
+    CONST char *name1;		/* Name of variable. */
     CONST char *name2;		/* Second part of variable name. */
     int flags;			/* Information about what happened. */
 {

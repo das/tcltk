@@ -202,7 +202,7 @@ static void		FontPkgCleanup _ANSI_ARGS_((ClientData clientData));
 static FontFamily *	AllocFontFamily _ANSI_ARGS_((Display *display,
 			    XFontStruct *fontStructPtr, int base));
 static SubFont *	CanUseFallback _ANSI_ARGS_((UnixFont *fontPtr,
-			    char *fallbackName, int ch));
+			    CONST char *fallbackName, int ch));
 static SubFont *	CanUseFallbackWithAliases _ANSI_ARGS_((
 			    UnixFont *fontPtr, char *fallbackName,
 			    int ch, Tcl_DString *nameTriedPtr));
@@ -1802,7 +1802,8 @@ FindSubFontForChar(fontPtr, ch)
     int ch;			/* The Unicode character to be displayed. */
 {
     int i, j, k, numNames;
-    char *faceName, *fallback;
+    Tk_Uid faceName; 
+    char *fallback;
     char **aliases, **nameList, **anyFallbacks;
     char ***fontFallbacks;
     SubFont *subFontPtr;
@@ -2221,7 +2222,7 @@ static SubFont *
 CanUseFallback(fontPtr, faceName, ch)
     UnixFont *fontPtr;		/* The font object that will own the new
 				 * screen font. */
-    char *faceName;		/* Desired face name for new screen font. */
+    CONST char *faceName;	/* Desired face name for new screen font. */
     int ch;			/* The Unicode character that the new
 				 * screen font must be able to display. */
 {

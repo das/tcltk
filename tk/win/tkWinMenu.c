@@ -2744,8 +2744,8 @@ MenuExitHandler(
 Tcl_Obj *
 TkWinGetMenuSystemDefault(
     Tk_Window tkwin,		/* A window to use. */
-    char *dbName,		/* The option database name. */
-    char *className)		/* The name of the option class. */
+    CONST char *dbName,		/* The option database name. */
+    CONST char *className)	/* The name of the option class. */
 {
     Tcl_Obj *valuePtr = NULL;
 

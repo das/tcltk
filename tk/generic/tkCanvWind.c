@@ -329,8 +329,8 @@ ConfigureWinItem(interp, canvas, itemPtr, objc, objv, flags)
 
     oldWindow = winItemPtr->tkwin;
     canvasTkwin = Tk_CanvasTkwin(canvas);
-    if (Tk_ConfigureWidget(interp, canvasTkwin, configSpecs, objc, (char **) objv,
-	    (char *) winItemPtr, flags|TK_CONFIG_OBJS) != TCL_OK) {
+    if (TCL_OK != Tk_ConfigureWidget(interp, canvasTkwin, configSpecs, objc,
+	    (CONST char **) objv, (char *) winItemPtr, flags|TK_CONFIG_OBJS)) {
 	return TCL_ERROR;
     }
 

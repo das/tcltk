@@ -643,7 +643,7 @@ typedef struct TkMainInfo {
  */
 
 typedef struct {
-    char *source;		/* Bits for bitmap. */
+    CONST char *source;		/* Bits for bitmap. */
     int width, height;		/* Dimensions of bitmap. */
     int native;			/* 0 means generic (X style) bitmap,
     				 * 1 means native style bitmap. */
@@ -1051,12 +1051,12 @@ EXTERN int		Tk_ScaleObjCmd _ANSI_ARGS_((ClientData clientData,
 			    Tcl_Interp *interp, int objc, 
                             Tcl_Obj *CONST objv[]));
 EXTERN int		Tk_ScrollbarCmd _ANSI_ARGS_((ClientData clientData,
-			    Tcl_Interp *interp, int argc, char **argv));
+			    Tcl_Interp *interp, int argc, CONST char **argv));
 EXTERN int		Tk_SelectionObjCmd _ANSI_ARGS_((ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *CONST objv[]));
 EXTERN int		Tk_SendCmd _ANSI_ARGS_((ClientData clientData,
-			    Tcl_Interp *interp, int argc, char **argv));
+			    Tcl_Interp *interp, int argc, CONST char **argv));
 EXTERN int		Tk_SendObjCmd _ANSI_ARGS_((ClientData clientData,
 			    Tcl_Interp *interp, int objc, 
 			    Tcl_Obj *CONST objv[]));
@@ -1064,7 +1064,7 @@ EXTERN int		Tk_SpinboxObjCmd _ANSI_ARGS_((ClientData clientData,
 			    Tcl_Interp *interp, int objc, 
                             Tcl_Obj *CONST objv[]));
 EXTERN int		Tk_TextCmd _ANSI_ARGS_((ClientData clientData,
-			    Tcl_Interp *interp, int argc, char **argv));
+			    Tcl_Interp *interp, int argc, CONST char **argv));
 EXTERN int		Tk_TkObjCmd _ANSI_ARGS_((ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *CONST objv[]));
@@ -1093,10 +1093,10 @@ EXTERN void		TkRegisterObjTypes _ANSI_ARGS_((void));
 
 EXTERN int		TkCreateMenuCmd _ANSI_ARGS_((Tcl_Interp *interp));
 EXTERN int		TkDeadAppCmd _ANSI_ARGS_((ClientData clientData,
-			    Tcl_Interp *interp, int argc, char **argv));
+			    Tcl_Interp *interp, int argc, CONST char **argv));
 
 EXTERN int		TkpTestembedCmd _ANSI_ARGS_((ClientData clientData,
-			    Tcl_Interp *interp, int argc, char **argv));
+			    Tcl_Interp *interp, int argc, CONST char **argv));
 EXTERN int		TkCanvasGetCoordObj _ANSI_ARGS_((Tcl_Interp *interp,
 			    Tk_Canvas canvas, Tcl_Obj *obj,
 			    double *doublePtr));

@@ -293,7 +293,7 @@ typedef struct TkCanvas {
  */
 
 extern int		TkCanvPostscriptCmd _ANSI_ARGS_((TkCanvas *canvasPtr,
-			    Tcl_Interp *interp, int argc, char **argv));
+			    Tcl_Interp *interp, int argc, CONST char **argv));
 
 /*
  * The following definition is shared between tkCanvPs.c and tkCanvImg.c, 

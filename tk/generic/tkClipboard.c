@@ -141,7 +141,7 @@ ClipboardAppHandler(clientData, offset, buffer, maxBytes)
 {
     TkDisplay *dispPtr = (TkDisplay *) clientData;
     size_t length;
-    char *p;
+    CONST char *p;
 
     p = dispPtr->clipboardAppPtr->winPtr->nameUid;
     length = strlen(p);

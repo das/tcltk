@@ -1497,7 +1497,7 @@ SelCvtFromX(propPtr, numValues, type, tkwin)
 {
     char *result;
     int resultSpace, curSize, fieldSize;
-    char *atomName;
+    CONST char *atomName;
 
     /*
      * Convert each long in the property to a string value, which is

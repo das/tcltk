@@ -1488,7 +1488,7 @@ TkSelDefaultSelection(infoPtr, target, buffer, maxBytes, typePtr)
 
     if (target == dispPtr->targetsAtom) {
 	register TkSelHandler *selPtr;
-	char *atomString;
+	CONST char *atomString;
 	int length, atomLength;
 
 	if (maxBytes < 50) {
@@ -1517,7 +1517,7 @@ TkSelDefaultSelection(infoPtr, target, buffer, maxBytes, typePtr)
 
     if (target == dispPtr->applicationAtom) {
 	int length;
-	char *name = winPtr->mainPtr->winPtr->nameUid;
+	Tk_Uid name = winPtr->mainPtr->winPtr->nameUid;
 
 	length = strlen(name);
 	if (maxBytes <= length) {

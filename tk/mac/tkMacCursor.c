@@ -249,8 +249,8 @@ TkGetCursorByName(
 TkCursor *
 TkCreateCursorFromData(
     Tk_Window tkwin,		/* Window in which cursor will be used. */
-    char *source,		/* Bitmap data for cursor shape. */
-    char *mask,			/* Bitmap data for cursor mask. */
+    CONST char *source,		/* Bitmap data for cursor shape. */
+    CONST char *mask,		/* Bitmap data for cursor mask. */
     int width, int height,	/* Dimensions of cursor. */
     int xHot, int yHot,		/* Location of hot-spot in cursor. */
     XColor fgColor,		/* Foreground color for cursor. */

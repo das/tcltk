@@ -3299,7 +3299,7 @@ TkTextSeeCmd(textPtr, interp, argc, argv)
     TkText *textPtr;		/* Information about text widget. */
     Tcl_Interp *interp;		/* Current interpreter. */
     int argc;			/* Number of arguments. */
-    char **argv;		/* Argument strings.  Someone else has already
+    CONST char **argv;		/* Argument strings.  Someone else has already
 				 * parsed this command enough to know that
 				 * argv[1] is "see". */
 {
@@ -3421,7 +3421,7 @@ TkTextXviewCmd(textPtr, interp, argc, argv)
     TkText *textPtr;		/* Information about text widget. */
     Tcl_Interp *interp;		/* Current interpreter. */
     int argc;			/* Number of arguments. */
-    char **argv;		/* Argument strings.  Someone else has already
+    CONST char **argv;		/* Argument strings.  Someone else has already
 				 * parsed this command enough to know that
 				 * argv[1] is "xview". */
 {
@@ -3609,7 +3609,7 @@ TkTextYviewCmd(textPtr, interp, argc, argv)
     TkText *textPtr;		/* Information about text widget. */
     Tcl_Interp *interp;		/* Current interpreter. */
     int argc;			/* Number of arguments. */
-    char **argv;		/* Argument strings.  Someone else has already
+    CONST char **argv;		/* Argument strings.  Someone else has already
 				 * parsed this command enough to know that
 				 * argv[1] is "yview". */
 {
@@ -3775,7 +3775,7 @@ TkTextScanCmd(textPtr, interp, argc, argv)
     register TkText *textPtr;	/* Information about text widget. */
     Tcl_Interp *interp;		/* Current interpreter. */
     int argc;			/* Number of arguments. */
-    char **argv;		/* Argument strings.  Someone else has already
+    CONST char **argv;		/* Argument strings.  Someone else has already
 				 * parsed this command enough to know that
 				 * argv[1] is "scan". */
 {

@@ -630,7 +630,7 @@ int
 Tk_GetScrollInfo(interp, argc, argv, dblPtr, intPtr)
     Tcl_Interp *interp;			/* Used for error reporting. */
     int argc;				/* # arguments for command. */
-    char **argv;			/* Arguments for command. */
+    CONST char **argv;			/* Arguments for command. */
     double *dblPtr;			/* Filled in with argument "moveto"
 					 * option, if any. */
     int *intPtr;			/* Filled in with number of pages

@@ -496,8 +496,8 @@ ConfigureLine(interp, canvas, itemPtr, objc, objv, flags)
     Tk_State state;
 
     tkwin = Tk_CanvasTkwin(canvas);
-    if (Tk_ConfigureWidget(interp, tkwin, configSpecs, objc, (char **) objv,
-	    (char *) linePtr, flags|TK_CONFIG_OBJS) != TCL_OK) {
+    if (TCL_OK != Tk_ConfigureWidget(interp, tkwin, configSpecs, objc,
+	    (CONST char **) objv, (char *) linePtr, flags|TK_CONFIG_OBJS)) {
 	return TCL_ERROR;
     }
 
