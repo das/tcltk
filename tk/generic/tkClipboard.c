@@ -652,6 +652,7 @@ TkClipCleanup(dispPtr)
 
 	Tk_DestroyWindow(dispPtr->clipWindow);
 	Tcl_Release((ClientData) dispPtr->clipWindow);
+	dispPtr->clipWindow = NULL;
     }
 }
 
