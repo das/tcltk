@@ -814,6 +814,12 @@ TkWinChildProc(hwnd, message, wParam, lParam)
 	case TK_GEOMETRYREQ:
 	case TK_ATTACHWINDOW:
 	case TK_DETACHWINDOW:
+	case TK_ICONIFY:
+	case TK_DEICONIFY:
+	case TK_MOVEWINDOW:
+	case TK_WITHDRAW:
+	case TK_RAISEWINDOW:
+	case TK_TITLE:
 	    result =  TkWinEmbeddedEventProc(hwnd, message, wParam, lParam);
 	    break;
 
