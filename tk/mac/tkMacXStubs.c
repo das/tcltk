@@ -811,8 +811,8 @@ TkGetDefaultScreenName(
  *
  * Tk_SetCaretPos --
  *
- *	This indicates the cursor position to Tk.  This is not used
- *	on the Mac currently.
+ *	This indicates the cursor position to Tk.
+ *	This is currently a noop stub for MacX.
  *
  *----------------------------------------------------------------------
  */
@@ -820,5 +820,10 @@ TkGetDefaultScreenName(
 void
 Tk_SetCaretPos(Tk_Window tkwin, int x, int y, int height)
 {
-    return;
+    TkCaret *caretPtr = &(((TkWindow *) tkwin)->dispPtr->caret);
+
+    caretPtr->winPtr = ((TkWindow *) tkwin);
+    caretPtr->x = x;
+    caretPtr->y = y;
+    caretPtr->height = height;
 }

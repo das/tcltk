@@ -92,6 +92,21 @@ typedef struct TkCursor {
 #endif
 
 /*
+ * The following structure is kept one-per-TkDisplay to maintain information
+ * about the caret (cursor location) on this display.  This is used to
+ * dictate global focus location (Windows Accessibility guidelines) and to
+ * position the IME or XIM over-the-spot window.
+ */
+
+typedef struct TkCaret {
+    struct TkWindow *winPtr;	/* the window on which we requested caret
+				 * placement */
+    int x;			/* relative x coord of the caret */
+    int y;			/* relative y coord of the caret */
+    int height;			/* specified height of the window */
+} TkCaret;
+
+/*
  * One of the following structures is maintained for each display
  * containing a window managed by Tk.  In part, the structure is 
  * used to store thread-specific data, since each thread will have 
@@ -488,6 +503,8 @@ typedef struct TkDisplay {
     long deletionEpoch;		/* Incremented by window deletions */
     unsigned int flags;		/* Various flag values:  these are all
 				 * defined in below. */
+    TkCaret caret;		/* information about the caret for this
+				 * display.  This is not a pointer. */
 } TkDisplay;
 
 /*
