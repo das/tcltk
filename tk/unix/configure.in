@@ -8,7 +8,8 @@ AC_INIT(../generic/tk.h)
 TK_VERSION=8.1
 TK_MAJOR_VERSION=8
 TK_MINOR_VERSION=1
-TK_PATCH_LEVEL=1
+# The patch level should be blank for patch releases (i.e. not alpha/beta)
+TK_PATCH_LEVEL=
 VERSION=${TK_VERSION}
 
 if test "${prefix}" = "NONE"; then
