@@ -45,6 +45,8 @@ proc ::tk::panedwindow::MarkSash {w x y proxy} {
 	    foreach {sx sy} [$w sash coord $index] break
 	    set ::tk::Priv(dx) [expr {$sx-$x}]
 	    set ::tk::Priv(dy) [expr {$sy-$y}]
+	    # Do this to init the proxy location
+	    DragSash $w $x $y $proxy
 	}
     }
 }
