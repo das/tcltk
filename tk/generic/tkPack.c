@@ -1366,16 +1366,15 @@ PackStructureProc(clientData, eventPtr)
 	    Tcl_DoWhenIdle(ArrangePacking, (ClientData) packPtr);
 	}
     } else if (eventPtr->type == UnmapNotify) {
-	Packer *packPtr2;
+	register Packer *packPtr2;
 
 	/*
 	 * Unmap all of the slaves when the master gets unmapped,
 	 * so that they don't bother to keep redisplaying
 	 * themselves.
 	 */
-
 	for (packPtr2 = packPtr->slavePtr; packPtr2 != NULL;
-		packPtr2 = packPtr2->nextPtr) {
+	     packPtr2 = packPtr2->nextPtr) {
 	    Tk_UnmapWindow(packPtr2->tkwin);
 	}
     }

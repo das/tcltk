@@ -789,6 +789,14 @@ ButtonProc(hwnd, message, wParam, lParam)
 	    BeginPaint(hwnd, &ps);
 	    EndPaint(hwnd, &ps);
 	    TkpDisplayButton((ClientData)butPtr);
+
+	    /*
+	     * Special note: must cancel any existing idle handler
+	     * for TkpDisplayButton;  it's no longer needed, and
+	     * TkpDisplayButton cleared the REDRAW_PENDING flag.
+	     */
+           
+	    Tcl_CancelIdleCall(TkpDisplayButton, (ClientData)butPtr);
 	    return 0;
 	}
 	case BN_CLICKED: {

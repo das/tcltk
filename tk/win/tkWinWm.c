@@ -1392,10 +1392,13 @@ Tk_WmCmd(clientData, interp, argc, argv)
 	TkpWmSetState(winPtr, NormalState);
 	/*
 	 * Follow Windows-like style here:
-	 * raise the window to the top and force the focus on it
+	 * raise the window to the top, and if it isn't overridden,
+	 * then force the focus on it
 	 */
-	Tk_RestackWindow(tkwin, Above, NULL);
-	TkSetFocusWin(winPtr, 1);
+	TkWmRestackToplevel(winPtr, Above, NULL);
+	if (!(Tk_Attributes((Tk_Window) winPtr)->override_redirect)) {
+	    TkSetFocusWin(winPtr, 1);
+	}
     } else if ((c == 'f') && (strncmp(argv[1], "focusmodel", length) == 0)
 	    && (length >= 2)) {
 	if ((argc != 3) && (argc != 4)) {

@@ -2258,9 +2258,6 @@ Tk_RestackWindow(tkwin, aboveBelow, other)
 {
     TkWindow *winPtr = (TkWindow *) tkwin;
     TkWindow *otherPtr = (TkWindow *) other;
-    XWindowChanges changes;
-    unsigned int mask;
-
 
     /*
      * Special case:  if winPtr is a top-level window then just find
@@ -2268,8 +2265,6 @@ Tk_RestackWindow(tkwin, aboveBelow, other)
      * otherPtr without changing any of Tk's childLists.
      */
 
-    changes.stack_mode = aboveBelow;
-    mask = CWStackMode;
     if (winPtr->flags & TK_TOP_LEVEL) {
 	while ((otherPtr != NULL) && !(otherPtr->flags & TK_TOP_LEVEL)) {
 	    otherPtr = otherPtr->parentPtr;
@@ -2341,6 +2336,10 @@ Tk_RestackWindow(tkwin, aboveBelow, other)
      */
 
     if (winPtr->window != None) {
+	XWindowChanges changes;
+	unsigned int mask;
+
+	mask = CWStackMode;
 	changes.stack_mode = Above;
 	for (otherPtr = winPtr->nextPtr; otherPtr != NULL;
 		otherPtr = otherPtr->nextPtr) {

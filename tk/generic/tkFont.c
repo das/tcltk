@@ -2837,7 +2837,7 @@ ConfigAttributesObj(interp, tkwin, objc, objv, faPtr)
 		&index) != TCL_OK) {
 	    return TCL_ERROR;
 	}
-	if (objc & 1) {
+	if ((i+2 >= objc) && (objc & 1)) {
 	    /*
 	     * This test occurs after Tcl_GetIndexFromObj() so that
 	     * "font create xyz -xyz" will return the error message

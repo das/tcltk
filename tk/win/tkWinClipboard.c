@@ -384,7 +384,7 @@ UpdateClipboard(hwnd)
     EmptyClipboard();
 
     /*
-     * CF_UNICODETEXT is only supported on NT, but it it is preffered
+     * CF_UNICODETEXT is only supported on NT, but it it is prefered
      * when possible.
      */
 
