@@ -1645,14 +1645,9 @@ ButtonTextVarProc(clientData, interp, name1, name2, flags)
     if (valuePtr == NULL) {
 	valuePtr = Tcl_NewObj();
     }
-    /*
-     * Incr valuePtr before Decr, in case they point to the same object.
-     * We could also do some short-circuiting in that case, but it
-     * shouldn't happen in practice.
-     */
-    Tcl_IncrRefCount(valuePtr);
-    butPtr->textPtr = valuePtr;
     Tcl_DecrRefCount(butPtr->textPtr);
+    butPtr->textPtr = valuePtr;
+    Tcl_IncrRefCount(butPtr->textPtr);
     TkpComputeButtonGeometry(butPtr);
 
     if ((butPtr->tkwin != NULL) && Tk_IsMapped(butPtr->tkwin)
