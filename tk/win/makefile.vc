@@ -28,7 +28,7 @@
 ROOT		= ..
 TOOLS32		= c:\program files\devstudio\vc
 TOOLS32_rc	= c:\program files\devstudio\sharedide
-TCLDIR		= ..\..\tcl8.1b3
+TCLDIR		= ..\..\tcl8.1
 INSTALLDIR      = c:\program files\tcl
 
 # Set this to the appropriate value of /MACHINE: for your platform
