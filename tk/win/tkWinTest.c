@@ -121,11 +121,10 @@ AppendSystemError(
 	Tcl_Encoding encoding;
 
 	encoding = Tcl_GetEncoding(NULL, "unicode");
-	Tcl_ExternalToUtfDString(encoding, (char *) wMsgPtr, -1, &ds);
+	msg = Tcl_ExternalToUtfDString(encoding, (char *) wMsgPtr, -1, &ds);
 	Tcl_FreeEncoding(encoding);
 	LocalFree(wMsgPtr);
 
-	msg = Tcl_DStringValue(&ds);
 	length = Tcl_DStringLength(&ds);
 
 	/*

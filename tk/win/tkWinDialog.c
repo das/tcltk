@@ -393,9 +393,8 @@ ColorDlgHookProc(hDlg, uMsg, wParam, lParam)
 	    ccPtr = (CHOOSECOLOR *) lParam;
 	    title = (const char *) ccPtr->lCustData;
 	    if ((title != NULL) && (title[0] != '\0')) {
-		Tcl_WinUtfToTChar(title, -1, &ds);
 		(*tkWinProcs->setWindowText)(hDlg,
-			(TCHAR *) Tcl_DStringValue(&ds));
+			Tcl_WinUtfToTChar(title, -1, &ds));
 		Tcl_DStringFree(&ds);
 	    }
 	    if (tsdPtr->debugFlag) {

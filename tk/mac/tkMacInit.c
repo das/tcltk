@@ -121,11 +121,9 @@ tkInit";
 	    argv[1] = "Tool Command Language";	    
 	    Tcl_DStringInit(&libPath);
 	    Tcl_DStringAppend(&libPath, "tk", -1);
-	    Tcl_DStringAppend(&libPath, TK_VERSION, -1);
-	    argv[2] = Tcl_DStringValue(&libPath);
-	    Tcl_JoinPath(3, argv, &path);
+	    argv[2] = Tcl_DStringAppend(&libPath, TK_VERSION, -1);
+	    libDir = Tcl_JoinPath(3, argv, &path);
 	    Tcl_DStringFree(&libPath);
-	    libDir = Tcl_DStringValue(&path);
 	}
     }
     if (libDir == NULL) {
