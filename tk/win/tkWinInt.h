@@ -229,6 +229,7 @@ void	TkpWinToplevelIconify		_ANSI_ARGS_((TkWindow *winPtr));
 void	TkpWinToplevelDeiconify		_ANSI_ARGS_((TkWindow *winPtr));
 long	TkpWinToplevelIsControlledByWm	_ANSI_ARGS_((TkWindow *winPtr));
 long	TkpWinToplevelMove		_ANSI_ARGS_((TkWindow *winPtr, int x, int y));
+long	TkpWinToplevelOverrideRedirect	_ANSI_ARGS_((TkWindow *winPtr, int reqValue));
 
 #endif /* _TKWININT */
 

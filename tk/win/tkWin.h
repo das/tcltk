@@ -37,17 +37,17 @@
  * external Tk container application.
  */
 
-#define TK_CLAIMFOCUS	(WM_USER)   /* an embedded window requests to focus */
-#define TK_GEOMETRYREQ	(WM_USER+1) /* an embedded window requests to change size */
-#define TK_ATTACHWINDOW	(WM_USER+2) /* an embedded window requests to attach */
-#define TK_DETACHWINDOW	(WM_USER+3) /* an embedded window requests to detach */
-#define TK_MOVEWINDOW	(WM_USER+4) /* an embedded window requests to move */
-#define TK_RAISEWINDOW	(WM_USER+5) /* an embedded window requests to raise */
-#define TK_ICONIFY	(WM_USER+6) /* an embedded window requests to iconify */
-#define TK_DEICONIFY	(WM_USER+7) /* an embedded window requests to deiconify */
-#define TK_WITHDRAW	(WM_USER+8) /* an embedded window requests to withdraw */
-#define TK_GETFRAMEWID	(WM_USER+9) /* an embedded window requests a frame window id */
-
+#define TK_CLAIMFOCUS	    (WM_USER)	    /* an embedded window requests to focus */
+#define TK_GEOMETRYREQ	    (WM_USER+1)	    /* an embedded window requests to change size */
+#define TK_ATTACHWINDOW	    (WM_USER+2)	    /* an embedded window requests to attach */
+#define TK_DETACHWINDOW	    (WM_USER+3)	    /* an embedded window requests to detach */
+#define TK_MOVEWINDOW	    (WM_USER+4)	    /* an embedded window requests to move */
+#define TK_RAISEWINDOW	    (WM_USER+5)	    /* an embedded window requests to raise */
+#define TK_ICONIFY	    (WM_USER+6)	    /* an embedded window requests to iconify */
+#define TK_DEICONIFY	    (WM_USER+7)	    /* an embedded window requests to deiconify */
+#define TK_WITHDRAW	    (WM_USER+8)	    /* an embedded window requests to withdraw */
+#define TK_GETFRAMEWID	    (WM_USER+9)	    /* an embedded window requests a frame window id */
+#define TK_OVERRIDEREDIRECT (WM_USER+10)    /* an embedded window requests to overrideredirect */
 
 /*
  *--------------------------------------------------------------
