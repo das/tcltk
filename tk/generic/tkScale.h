@@ -174,6 +174,7 @@ typedef struct TkScale {
  * REDRAW_OTHER -		1 means other stuff besides slider and value
  *				need to be redrawn.
  * REDRAW_ALL -			1 means the entire widget needs to be redrawn.
+ * REDRAW_PENDING -		1 means any sort of redraw is pending
  * ACTIVE -			1 means the widget is active (the mouse is
  *				in its window).
  * INVOKE_COMMAND -		1 means the scale's command needs to be
@@ -195,12 +196,13 @@ typedef struct TkScale {
 #define REDRAW_SLIDER		(1<<0)
 #define REDRAW_OTHER		(1<<1)
 #define REDRAW_ALL		(REDRAW_OTHER|REDRAW_SLIDER)
-#define ACTIVE			(1<<2)
-#define INVOKE_COMMAND		(1<<3)
-#define SETTING_VAR		(1<<4)
-#define NEVER_SET		(1<<5)
-#define GOT_FOCUS		(1<<6)
-#define SCALE_DELETED		(1<<7)
+#define REDRAW_PENDING		(1<<2)
+#define ACTIVE			(1<<3)
+#define INVOKE_COMMAND		(1<<4)
+#define SETTING_VAR		(1<<5)
+#define NEVER_SET		(1<<6)
+#define GOT_FOCUS		(1<<7)
+#define SCALE_DELETED		(1<<8)
 
 /*
  * Symbolic values for the active parts of a slider.  These are

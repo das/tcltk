@@ -1084,6 +1084,7 @@ ScaleCmdDeletedProc(clientData)
      */
 
     if (!(scalePtr->flags & SCALE_DELETED)) {
+	scalePtr->flags |= SCALE_DELETED;
 	Tk_DestroyWindow(tkwin);
     }
 }
@@ -1114,11 +1115,11 @@ TkEventuallyRedrawScale(scalePtr, what)
 				 * or REDRAW_ALL. */
 {
     if ((what == 0) || (scalePtr->tkwin == NULL)
-	    || (scalePtr->flags & SCALE_DELETED)
 	    || !Tk_IsMapped(scalePtr->tkwin)) {
 	return;
     }
-    if ((scalePtr->flags & REDRAW_ALL) == 0) {
+    if (!(scalePtr->flags & REDRAW_PENDING)) {
+	scalePtr->flags |= REDRAW_PENDING;
 	Tcl_DoWhenIdle(TkpDisplayScale, (ClientData) scalePtr);
     }
     scalePtr->flags |= what;
