@@ -2563,6 +2563,35 @@ test text-20.172 {TextSearchCmd, regexp search multi-line} {knownBug} {
     # Should match at 1.0 for a true greedy match
 } {1.0}
 
+test text-20.173 {TextSearchCmd, regexp search multi-line} {
+    deleteWindows
+    pack [text .t2]
+    .t2 insert 1.0 "\naaaxxx\nyyy\n"
+    set res {}
+    lappend res [.t2 search -count c -regexp -- {x*\ny*} 2.0] $c
+    lappend res [.t2 search -count c -regexp -- {x*\ny*} 2.1] $c
+    set res
+} {2.3 7 2.3 7}
+
+test text-20.174 {TextSearchCmd, regexp search multi-line} {
+    deleteWindows
+    pack [text .t2]
+    .t2 insert 1.0 "\naaa\n\n\n\n\nxxx\n"
+    set res {}
+    lappend res [.t2 search -count c -regexp -- {\n+} 2.0] $c
+    lappend res [.t2 search -count c -regexp -- {\n+} 2.1] $c
+    set res
+} {2.3 5 2.3 5}
+
+test text-20.175 {TextSearchCmd, regexp search multi-line} {
+    deleteWindows
+    pack [text .t2]
+    .t2 insert 1.0 "\naaa\n\n\t  \n\t\t\t  \n\nxxx\n"
+    set res {}
+    lappend res [.t2 search -count c -regexp -- {(\n+(\t+ *)*)+} 2.0] $c
+    set res
+} {2.3 13}
+
 deleteWindows
 text .t2 -highlightthickness 0 -bd 0 -relief flat -padx 0 -width 100
 pack .t2

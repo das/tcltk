@@ -4612,7 +4612,7 @@ SearchCore(interp, searchSpecPtr, patObj)
 		 */
 		if (!match 
 		    || ((info.extendStart == info.matches[0].start) 
-			&& (info.matches[0].end == lastOffset))) {
+			&& (info.matches[0].end == (lastOffset - firstOffset)))) {
 		    int extraLines = 1;
 		    int prevFullLine;
 		    /* 
