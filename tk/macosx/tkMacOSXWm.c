@@ -72,6 +72,8 @@ static int		ParseGeometry _ANSI_ARGS_((Tcl_Interp *interp,
 			    char *string, TkWindow *winPtr));
 static void		TopLevelEventProc _ANSI_ARGS_((ClientData clientData,
 			    XEvent *eventPtr));
+static void             TkWmStackorderToplevelWrapperMap _ANSI_ARGS_((
+                            TkWindow *winPtr, Tcl_HashTable *table));
 static void		TopLevelReqProc _ANSI_ARGS_((ClientData dummy,
 			    Tk_Window tkwin));
 static void		UpdateGeometryInfo _ANSI_ARGS_((
@@ -5408,21 +5410,21 @@ TkpChangeFocus(winPtr, force)
  *
  *----------------------------------------------------------------------
  */
-void
+static void
 TkWmStackorderToplevelWrapperMap(winPtr, table)
     TkWindow *winPtr;				/* TkWindow to recurse on */
     Tcl_HashTable *table;			/* Maps mac window to TkWindow */
 {
     TkWindow *childPtr;
     Tcl_HashEntry *hPtr;
-    void *wrapper;
+    WindowRef macWindow;
     int newEntry;
 
     if (Tk_IsMapped(winPtr) && Tk_IsTopLevel(winPtr)) {
-        wrapper = (void *) TkMacOSXGetDrawablePort(winPtr->window);
+        macWindow = GetWindowFromPort(TkMacOSXGetDrawablePort(winPtr->window));
 
         hPtr = Tcl_CreateHashEntry(table,
-            (char *) wrapper, &newEntry);
+            (const char *) macWindow, &newEntry);
         Tcl_SetHashValue(hPtr, winPtr);
     }
 
