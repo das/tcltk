@@ -450,7 +450,7 @@ test button-6.2 {ConfigureButton - textvariable trace} {
     set x New
     lindex [.b1 configure -text] 4
 } {From-y}
-test button-6.2 {ConfigureButton - variable traces} {
+test button-6.2a {ConfigureButton - variable traces} {
     catch {destroy .b1}
     catch {unset x}
     checkbutton .b1 -variable x

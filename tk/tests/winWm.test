@@ -113,7 +113,7 @@ test winWm-2.2 {TkpWmSetState} win {
     destroy .t
     set result
 } {normal withdrawn iconic normal}
-test winWm-2.2 {TkpWmSetState} win {
+test winWm-2.3 {TkpWmSetState} win {
     toplevel .t
     wm geometry .t 150x50+10+10
     update

@@ -183,7 +183,7 @@ test textTag-3.7 {TkTextTagCmd - "bind" option} haveCourier12 {
     .t tag bind x <Enter>
 } {script1
 script2}
-test textTag-3.7 {TkTextTagCmd - "bind" option} haveCourier12 {
+test textTag-3.7a {TkTextTagCmd - "bind" option} haveCourier12 {
     .t tag delete x
     list [catch {.t tag bind x <Enter>} msg] $msg
 } {0 {}}

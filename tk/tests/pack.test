@@ -132,7 +132,7 @@ test pack-2.11 {x padding and filling} {
 test pack-2.12 {x padding and filling} {
     pack1 -side top -ipadx 5 -padx 10 -fill x
 } {280x40+10+0 300x160+0+40}
-test pack-2.12 {x padding and filling} {
+test pack-2.12a {x padding and filling} {
     pack1 -side top -ipadx 5 -padx {5 15} -fill x
 } {280x40+5+0 300x160+0+40}
 set pad [winfo pixels .pack 1c]

@@ -980,7 +980,7 @@ test textWind-17.8 {peer widget window configuration} {
     set res
 } {{-window {} {} {} .t.f} {-window {} {} {} {}}}
 
-test textWind-17.8 {peer widget window configuration} {
+test textWind-17.8a {peer widget window configuration} {
     catch {destroy .t .tt}
     pack [text .t]
     .t delete 1.0 end

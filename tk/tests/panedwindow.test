@@ -2445,7 +2445,7 @@ test panedwindow-27.14 {identify subcommand errors} {
     destroy .p
     set result
 } [list 1 "expected integer but got \"foo\""]
-test panedwindow-27.14 {identify subcommand errors} {
+test panedwindow-27.14a {identify subcommand errors} {
     panedwindow .p
     set result [list [catch {.p identify 0 bar} msg] $msg]
     destroy .p
