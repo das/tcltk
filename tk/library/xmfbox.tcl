@@ -817,26 +817,25 @@ proc ::tk::MotifFDialog_ActivateSEnt {w} {
 	    set item [file join $data(selectPath) $item]
 	} elseif {![file exists [file dirname $item]]} {
 	    tk_messageBox -icon warning -type ok \
-	    -message [mc {Directory "%1$s" does not exist.} \
-		[file dirname $item]]
+		    -message [mc {Directory "%1$s" does not exist.} \
+		    [file dirname $item]]
 	    return
 	}
 
 	if {![file exists $item]} {
 	    if {[string equal $data(type) open]} {
 		tk_messageBox -icon warning -type ok \
-		    -message [mc {File "$item" does not exist.} \
-			$item]
+			-message [mc {File "%1$s" does not exist.} $item]
 		return
 	    }
 	} else {
 	    if {[string equal $data(type) save]} {
-	    set message [format %s%s \
-		[mc {File "%1$s" already exists.\n\n} \
-		    $selectFilePath ] \
-		[mc {Replace existing file?}]]
+		set message [format %s%s \
+			[mc {File "%1$s" already exists.\n\n} \
+			$selectFilePath] \
+			[mc {Replace existing file?}]]
 		set answer [tk_messageBox -icon warning -type yesno \
-				-message $message]
+			-message $message]
 		if {[string equal $answer "no"]} {
 		    return
 		}
