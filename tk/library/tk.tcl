@@ -442,13 +442,14 @@ proc ::tk::CancelRepeat {} {
 
 # ::tk::TabToWindow --
 # This procedure moves the focus to the given widget.  If the widget
-# is an entry, it selects the entire contents of the widget.
+# is an entry or a spinbox, it selects the entire contents of the widget.
 #
 # Arguments:
 # w - Window to which focus should be set.
 
 proc ::tk::TabToWindow {w} {
-    if {[string equal [winfo class $w] Entry]} {
+    if {[string equal [winfo class $w] Entry] \
+	    || [string equal [winfo class $w] Spinbox]} {
 	$w selection range 0 end
 	$w icursor end
     }
