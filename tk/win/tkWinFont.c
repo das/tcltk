@@ -1931,6 +1931,7 @@ GetScreenFont(
     HFONT hFont;
     LOGFONTW lf;
 
+    memset(&lf, 0, sizeof(lf));
     lf.lfHeight		= -pixelSize;
     lf.lfWidth		= 0;
     lf.lfEscapement	= 0;
