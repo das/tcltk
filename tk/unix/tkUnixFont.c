@@ -1158,7 +1158,8 @@ Tk_DrawChars(display, drawable, gc, tkfont, source, numBytes, x, y)
     int xStart, needWidth, window_width;
     Tcl_UniChar ch;
     FontFamily *familyPtr;
-    int rx, ry, width, height, border_width, depth;
+    int rx, ry;
+    unsigned int width, height, border_width, depth;
     int do_width;
     Drawable root;
 
