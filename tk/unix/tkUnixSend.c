@@ -1275,9 +1275,21 @@ void
 TkSendCleanup(dispPtr)
     TkDisplay *dispPtr;
 {
+    TkWindow *winPtr = (TkWindow *) dispPtr->commTkwin;
+
     if (dispPtr->commTkwin != NULL) {
-	Tk_DeleteEventHandler(dispPtr->commTkwin, PropertyChangeMask,
-	    SendEventProc, (ClientData) dispPtr);
+	Tk_DeleteEventHandler((Tk_Window) winPtr, PropertyChangeMask,
+		SendEventProc, (ClientData) dispPtr);
+
+	/*
+	 * We need to manually free all the XIC structures that
+	 * have been allocated in order to avoid a nasty bug in XCloseIM().
+	 */
+	if (winPtr->inputContext != NULL) {
+	    XDestroyIC(winPtr->inputContext);
+	    winPtr->inputContext = NULL;
+	}
+
 #ifdef PURIFY
 	/* Tk_DestroyWindow(dispPtr->commTkwin); */
 	ckfree((char *) dispPtr->commTkwin);
