@@ -2343,7 +2343,7 @@ argumentNumber18
 
 # Test exit processing and cleanup:
 
-test unixWm-58.1 {exit processing} {
+test unixWm-59.1 {exit processing} {
     catch {removeFile script}
     set fd [open script w]
     puts $fd {
@@ -2358,7 +2358,7 @@ test unixWm-58.1 {exit processing} {
     }
     list $error $msg
 } {0 {}}
-test unixWm-58.2 {exit processing} {
+test unixWm-59.2 {exit processing} {
     catch {removeFile script}
     set fd [open script w]
     puts $fd {
@@ -2377,7 +2377,7 @@ test unixWm-58.2 {exit processing} {
     }
     list $error $msg
 } {0 {}}
-test unixWm-58.3 {exit processing} {
+test unixWm-59.3 {exit processing} {
     catch {removeFile script}
     set fd [open script w]
     puts $fd {
