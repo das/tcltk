@@ -12,7 +12,7 @@ catch {array set flag $argv}
 set requiredSourceFiles [list arc.tcl bugs.tcl butGeom2.tcl \
 	canvPsBmap.tcl canvPsText.tcl bevel.tcl butGeom.tcl \
 	canvPsArc.tcl canvPsGrph.tcl cmap.tcl filebox.test \
-	option.file1 option.file2 visual defs]
+	option.file1 option.file2 visual README defs]
 
 #
 # Set the TMP_DIR to pwd or the arg of -tmpdir, if given.
