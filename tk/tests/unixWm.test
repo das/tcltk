@@ -822,6 +822,7 @@ test unixWm-23.5 {Tk_WmCmd procedure, "iconify" option} {
     catch {destroy .t2}
     toplevel .t2
     wm geom .t2 +0+0
+    update
     wm iconify .t2
     update
     set result [winfo ismapped .t2]
@@ -835,6 +836,7 @@ test unixWm-23.6 {Tk_WmCmd procedure, "iconify" option} {
     update
     set result [winfo ismapped .t2]
     wm iconify .t2
+    update
     lappend result [winfo ismapped .t2]
     destroy .t2
     set result
