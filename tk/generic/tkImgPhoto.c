@@ -2719,6 +2719,15 @@ ImgPhotoDisplay(clientData, display, drawable, imageX, imageY, width,
 	return;
     }
 
+    /*
+     * Check for bogus widths/heights.  This prevents us from calling
+     * XGetImage with a zero size, which it does not like. [Bug 979239]
+     */
+
+    if (width < 1 || height < 1) {
+	return;
+    }
+
     if (
 #if defined(MAC_TCL)
 	/*
