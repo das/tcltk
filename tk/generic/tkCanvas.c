@@ -360,7 +360,7 @@ static Tk_ClassProcs canvasClass = {
     if ((result=TagSearchScan(canvasPtr,(objPtr),(searchPtrPtr))) != TCL_OK){ \
 	errorExitClause; \
     } \
-    itemPtr = TagSearchFirst(searchPtr);
+    itemPtr = TagSearchFirst(*(searchPtrPtr));
 #define FOR_EVERY_CANVAS_ITEM_MATCHING(objPtr,searchPtrPtr,errorExitClause) \
     if ((result=TagSearchScan(canvasPtr,(objPtr),(searchPtrPtr))) != TCL_OK){ \
 	errorExitClause; \
