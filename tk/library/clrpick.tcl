@@ -154,11 +154,18 @@ proc tkColorDialog_Config {w argList} {
 
     # 1: the configuration specs
     #
-    set specs {
-	{-initialcolor "" "" ""}
-	{-parent "" "" "."}
-	{-title "" "" "Color"}
+    if {[info exists tkPriv(selectColor)] && \
+	    [string compare $tkPriv(selectColor) ""]} {
+	set defaultColor $tkPriv(selectColor)
+    } else {
+	set defaultColor [. cget -background]
     }
+
+    set specs [list \
+	    [list -initialcolor "" "" $defaultColor] \
+	    [list -parent "" "" "."] \
+	    [list -title "" "" "Color"] \
+	    ]
 
     # 2: parse the arguments
     #
@@ -167,17 +174,8 @@ proc tkColorDialog_Config {w argList} {
     if {[string equal $data(-title) ""]} {
 	set data(-title) " "
     }
-    if {[string equal $data(-initialcolor) ""]} {
-	if {[info exists tkPriv(selectColor)] && \
-		[string compare $tkPriv(selectColor) ""]} {
-	    set data(-initialcolor) $tkPriv(selectColor)
-	} else {
-	    set data(-initialcolor) [. cget -background]
-	}
-    } else {
-	if {[catch {winfo rgb . $data(-initialcolor)} err]} {
-	    error $err
-	}
+    if {[catch {winfo rgb . $data(-initialcolor)} err]} {
+	error $err
     }
 
     if {![winfo exists $data(-parent)]} {
