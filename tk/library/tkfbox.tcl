@@ -1418,7 +1418,10 @@ proc ::tk::dialog::file::ResolveFile {context text defaultext {expandEnv 1}} {
     # If the file has no extension, append the default.  Be careful not
     # to do this for directories, otherwise typing a dirname in the box
     # will give back "dirname.extension" instead of trying to change dir.
-    if {![file isdirectory $path] && [string equal [file ext $path] ""]} {
+    if {
+	![file isdirectory $path] && ([file ext $path] eq "") &&
+	![string match {$*} [file tail $path]]
+    } then {
 	set path "$path$defaultext"
     }
 
