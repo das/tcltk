@@ -1563,6 +1563,13 @@ test bind-16.43 {ExpandPercents procedure} {
     event gen .b.f <ButtonRelease>
     set x
 } {422 13}
+test bind-16.44 {ExpandPercents procedure} {
+    setup
+    bind .b.f <Gravity> {set x "%R %S"}
+    set x none
+    event gen .b.f <Gravity>
+    set x
+} {?? ??}
 
 
 test bind-17.1 {event command} {
