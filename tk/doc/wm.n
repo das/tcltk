@@ -400,6 +400,19 @@ source of the window's current size, or an empty string if
 no source has been specified yet.  Most window managers interpret
 ``no source'' as equivalent to \fBprogram\fR.
 .TP
+\fBwm stackorder \fIwindow\fR ?\fIisabove|isbelow\fR? \fI?window?\fR
+The stackorder command returns a list of toplevel windows
+in stacking order, from lowest to highest. When a single toplevel
+window is passed, the returned list recursively includes all of the
+window's children that are toplevels. Only those toplevels
+that are currently mapped to the screen are returned.
+The stackorder command can also be used to determine if one
+toplevel is positioned above or below a second toplevel.
+When two window arguments separated by either \fIisabove\fR or
+\fIisbelow\fR are passed, a boolean result indicates whether
+or not the first window is currently above or below the second
+window in the stacking order.
+.TP
 \fBwm state \fIwindow\fR ?newstate?
 If \fInewstate\fR is specified, the window will be set to the new state,
 otherwise it returns the current state of \fIwindow\fR: either

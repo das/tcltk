@@ -640,6 +640,10 @@ declare 140 generic {
     TkRegion TkPhotoGetValidRegion (Tk_PhotoHandle handle)
 }
 
+declare 141 generic {
+    TkWindow ** TkWmStackorderToplevel(TkWindow *parentPtr)
+}
+
 ##############################################################################
 
 # Define the platform specific internal Tcl interface. These functions are
