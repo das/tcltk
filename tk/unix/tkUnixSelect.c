@@ -1197,6 +1197,7 @@ SelRcvIncrProc(clientData, eventPtr)
 	     */
 
 	    retrPtr->result = TCL_OK;
+	    Tcl_Release((ClientData) interp);
 	    goto done;
 	} else {
 	    src = propInfo;
