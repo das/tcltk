@@ -72,7 +72,7 @@ static void		StdinProc _ANSI_ARGS_((ClientData clientData,
 /*
  *----------------------------------------------------------------------
  *
- * TkMainEx --
+ * Tk_MainEx --
  *
  *	Main program for Wish and most other Tk-based applications.
  *
