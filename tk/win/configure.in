@@ -151,4 +151,4 @@ AC_SUBST(MAKE_DLL)
 AC_SUBST(TK_XINCLUDES)
 AC_SUBST(XINCLUDES)
 
-AC_OUTPUT(Makefile tkConfig.sh tcl.hpj)
+AC_OUTPUT(Makefile tkConfig.sh)
