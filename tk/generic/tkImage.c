@@ -237,8 +237,23 @@ Tk_ImageObjCmd(clientData, interp, objc, objv)
 		name = idString;
 		firstOption = 3;
 	    } else {
+		TkWindow *topWin;
+
 		name = arg;
 		firstOption = 4;
+		/*
+		 * Need to check if the _command_ that we are about to
+		 * create is the name of the current master widget
+		 * command (normally "." but could have been renamed)
+		 * and fail in that case before a really nasty and
+		 * hard to stop crash happens.
+		 */
+		topWin = (TkWindow *) TkToplevelWindowForCommand(interp, name);
+		if (topWin != NULL && winPtr->mainPtr->winPtr == topWin) {
+		    Tcl_AppendResult(interp, "images may not be named the ",
+			    "same as the main window", (char *) NULL);
+		    return TCL_ERROR;
+		}
 	    }
 
 	    /*

@@ -1933,3 +1933,45 @@ FrameLostSlaveProc(clientData, tkwin)
     }
     FrameWorldChanged((ClientData) framePtr);
 }
+
+/*
+ *--------------------------------------------------------------
+ *
+ * TkToplevelWindowFromCommandToken --
+ *
+ *	If the given command name to the command for a toplevel window
+ *	in the given interpreter, return the tkwin for that toplevel
+ *	window.  Note that this lookup can't be done using the
+ *	standard tkwin internal table because the command might have
+ *	been renamed.
+ *
+ * Results:
+ *	A Tk_Window token, or NULL if the name does not refer to a
+ *	toplevel window.
+ *
+ * Side effects:
+ *	None.
+ *
+ *--------------------------------------------------------------
+ */
+
+Tk_Window
+TkToplevelWindowForCommand(interp, cmdName)
+    Tcl_Interp *interp;
+    CONST char *cmdName;
+{
+    Tcl_CmdInfo cmdInfo;
+    Frame *framePtr;
+
+    if (Tcl_GetCommandInfo(interp, cmdName, &cmdInfo) == 0) {
+	return NULL;
+    }
+    if (cmdInfo.objProc != FrameWidgetObjCmd) {
+	return NULL;
+    }
+    framePtr = (Frame *) cmdInfo.objClientData;
+    if (framePtr->type != TYPE_TOPLEVEL) {
+	return NULL;
+    }
+    return framePtr->tkwin;
+}

@@ -328,6 +328,7 @@ TkIntStubs tkIntStubs = {
 #endif /* MAC_OSX_TK */
     TkStylePkgInit, /* 146 */
     TkStylePkgFree, /* 147 */
+    TkToplevelWindowForCommand, /* 148 */
 };
 
 TkIntPlatStubs tkIntPlatStubs = {

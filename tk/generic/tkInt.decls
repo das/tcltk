@@ -668,6 +668,11 @@ declare 147 generic {
     void TkStylePkgFree (TkMainInfo *mainPtr)
 }
 
+declare 148 generic {
+    Tk_Window TkToplevelWindowForCommand(Tcl_Interp *interp,
+	    CONST char *cmdName)
+}
+
 ##############################################################################
 
 # Define the platform specific internal Tcl interface. These functions are
