@@ -803,3 +803,20 @@ TkGetDefaultScreenName(
     }
     return screenName;
 }
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * Tk_SetCaretPos --
+ *
+ *	This indicates the cursor position to Tk.  This is not used
+ *	on the Mac currently.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+Tk_SetCaretPos(Tk_Window tkwin, int x, int y, int height)
+{
+    return;
+}
