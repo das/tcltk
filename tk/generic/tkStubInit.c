@@ -347,6 +347,7 @@ TkIntStubs tkIntStubs = {
     TkpSetKeycodeAndState, /* 137 */
     TkpGetKeySym, /* 138 */
     TkpInitKeymapInfo, /* 139 */
+    TkPhotoGetValidRegion, /* 140 */
 };
 
 TkIntPlatStubs tkIntPlatStubs = {

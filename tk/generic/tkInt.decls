@@ -632,6 +632,10 @@ declare 139 generic {
     void TkpInitKeymapInfo (TkDisplay *dispPtr)
 }
 
+declare 140 generic {
+    TkRegion TkPhotoGetValidRegion (Tk_PhotoHandle handle)
+}
+
 ##############################################################################
 
 # Define the platform specific internal Tcl interface. These functions are

@@ -4694,6 +4694,37 @@ Tk_PhotoSetSize(handle, width, height)
 /*
  *----------------------------------------------------------------------
  *
+ * TkGetPhotoValidRegion --
+ *
+ *	This procedure is called to get the part of the photo where
+ *	there is valid data.  Or, conversely, the part of the photo
+ *	which is transparent.
+ *
+ * Results:
+ *	A TkRegion value that indicates the current area of the photo
+ *	that is valid.  This value should not be used after any
+ *	modification to the photo image.
+ *
+ * Side Effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+TkRegion
+TkPhotoGetValidRegion(handle)
+    Tk_PhotoHandle handle; /* Handle for the image whose valid region
+			    * is to obtained. */
+{
+    PhotoMaster *masterPtr;
+
+    masterPtr = (PhotoMaster *) handle;
+    return masterPtr->validRegion;
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
  * ImgGetPhoto --
  *
  *	This procedure is called to obtain image data from a photo
