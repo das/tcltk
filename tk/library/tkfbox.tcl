@@ -700,7 +700,6 @@ proc ::tk::IconList_KeyPress {w key} {
 proc ::tk::IconList_Goto {w text} {
     upvar ::tk::$w data
     upvar ::tk::$w:textList textList
-    variable ::tk::Priv
     
     if {![info exists data(list)]} {
 	return
@@ -857,7 +856,7 @@ proc ::tk::dialog::file:: {type args} {
     # may take the focus away so we can't redirect it.  Finally,
     # restore any grab that was in effect.
 
-    vwait tk::Priv(selectFilePath)
+    vwait ::tk::Priv(selectFilePath)
 
     ::tk::RestoreFocusGrab $w $data(ent) withdraw
 
