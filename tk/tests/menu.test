@@ -24,6 +24,8 @@ set ::tcltest::testConfig(nonUnixUserInteraction) \
     [expr {$::tcltest::testConfig(userInteraction) || \
 	$::tcltest::testConfig(unixOnly)}]
 
+set ::tcltest::testConfig(altDisplay) [info exists env(TK_ALT_DISPLAY)]
+
 proc deleteWindows {} {
     foreach i [winfo children .] {
     	catch [destroy $i]
@@ -2441,17 +2443,14 @@ test menu-33.1 {menu vs command hiding} {
 # creating menus on two different screens then deleting the
 # menu from the first screen crashes Tk8.3.1
 #
-test menu-35.1 {menus on multiple screens - crashes tk8.3.1, Bug 5454} {
-    if {[info exists ::env(TK_ALT_DISPLAY)]} {
-	toplevel .one
-	menu .one.m
-	toplevel .two -screen $::env(TK_ALT_DISPLAY)
-	menu .two.m
-	destroy .one
-	destroy .two
-    } else {
-	puts "skipping: Multi-screen tests requiring TK_ALT_DISPLAY..."
-    }
+test menu-35.1 {menus on multiple screens - crashes tk8.3.1, Bug 5454} \
+	{altDisplay} {
+    toplevel .one
+    menu .one.m
+    toplevel .two -screen $::env(TK_ALT_DISPLAY)
+    menu .two.m
+    destroy .one
+    destroy .two
 } {}
 
 # cleanup
