@@ -31,7 +31,6 @@
 
 #define kSourceItem             1
 #define kCloseItem              2
-#define kQuitItem               4
 
 #define EDIT_CUT                1
 #define EDIT_COPY               2
@@ -110,14 +109,6 @@ TkMacOSXHandleMenuSelect(
                     tkwin = Tk_IdToWindow(dispPtr->display, window);
                     TkGenWMDestroyEvent(tkwin);
                     break;
-                case kQuitItem:
-                    /* Exit */
-                    if (optionKeyPressed || gInterp == NULL) {
-                        Tcl_Exit(0);
-                    } else {
-                        Tcl_Eval(gInterp, "exit");
-                    }
-                    break;
             }
             break;
         case kEditMenu:
@@ -189,8 +180,7 @@ TkMacOSXInitMenus(
     InsertMenu(tkFileMenu, 0);
     AppendMenu(tkFileMenu, "\pSource…");
     AppendMenu(tkFileMenu, "\pClose/W");
-    AppendMenu(tkFileMenu, "\p(-");
-    AppendMenu(tkFileMenu, "\pQuit/Q");
+
 
     if (TkMacOSXUseMenuID(kEditMenu) != TCL_OK) {
 	Tcl_Panic("Menu ID %d is already in use!", kEditMenu);

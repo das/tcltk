@@ -2099,11 +2099,18 @@ EventuallyInvokeMenu (ClientData data)
 {
     struct MenuCommandHandlerData *realData
             = (struct MenuCommandHandlerData *) data;
+    int code;
 
+    code = TkInvokeMenu(realData->menuPtr->interp, realData->menuPtr,
+            realData->index);
+    if (code != TCL_OK && code != TCL_CONTINUE
+            && code != TCL_BREAK) {
+        Tcl_AddErrorInfo(realData->menuPtr->interp, "\n    (menu invoke)");
+        Tcl_BackgroundError(realData->menuPtr->interp);
+    }
+    
     Tcl_Release(realData->menuPtr->interp);
     Tcl_Release(realData->menuPtr);
-    TkInvokeMenu(realData->menuPtr->interp, realData->menuPtr,
-            realData->index);
 }
 
 /*
