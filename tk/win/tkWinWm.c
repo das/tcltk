@@ -2213,7 +2213,7 @@ Tk_WmCmd(clientData, interp, argc, argv)
 	     * to them anymore
 	     */
 	    wmPtr->masterPtr->wmInfoPtr->numTransients--;
-	    Tk_DeleteEventHandler((Tk_Window) masterPtr,
+	    Tk_DeleteEventHandler((Tk_Window) wmPtr->masterPtr,
 		    VisibilityChangeMask,
 		    WmWaitVisibilityProc, (ClientData) winPtr);
 	}
