@@ -13,6 +13,7 @@
 
 package require Tcl 8.4
 package require tcltest 2.1
+package require Tk ;# This is the Tk test suite; fail early if no Tk!
 tcltest::configure -testdir [file join [pwd] [file dirname [info script]]]
 tcltest::configure -singleproc 1
 eval tcltest::configure $argv
