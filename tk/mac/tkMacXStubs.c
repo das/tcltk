@@ -463,6 +463,66 @@ XSendEvent(
     return 0;
 }
 
+void
+XClearWindow(display, w)
+    Display* display;
+    Window w;
+{
+}
+
+void
+XDrawPoint(display, d, gc, x, y)
+    Display* display;
+    Drawable d;
+    GC gc;
+    int x;
+    int y;
+{
+}
+
+void
+XDrawPoints(display, d, gc, points, npoints, mode)
+    Display* display;
+    Drawable d;
+    GC gc;
+    XPoint* points;
+    int npoints;
+    int mode;
+{
+}
+
+void
+XWarpPointer(display, src_w, dest_w, src_x, src_y, src_width,
+	src_height, dest_x, dest_y)
+    Display* display;
+    Window src_w;
+    Window dest_w;
+    int src_x;
+    int src_y;
+    unsigned int src_width;
+    unsigned int src_height;
+    int dest_x;
+    int dest_y;
+{
+}
+
+void
+XQueryColor(display, colormap, def_in_out)
+    Display* display;
+    Colormap colormap;
+    XColor* def_in_out;
+{
+}
+
+void
+XQueryColors(display, colormap, defs_in_out, ncolors)
+    Display* display;
+    Colormap colormap;
+    XColor* defs_in_out;
+    int ncolors;
+{
+}
+
 int
 XGetWindowProperty(
     Display *display,
