@@ -685,10 +685,15 @@ DoObjConfig(interp, recordPtr, optionPtr, valuePtr, tkwin, savedOptionPtr)
 	case TK_OPTION_DOUBLE: {
 	    double new;
 	    
-	    if (Tcl_GetDoubleFromObj(interp, valuePtr, &new) 
-		    != TCL_OK) {
-		return TCL_ERROR;
+	    if (nullOK && ObjectIsEmpty(valuePtr)) {
+		valuePtr = NULL;
+		new = 0;
+	    } else {
+		if (Tcl_GetDoubleFromObj(interp, valuePtr, &new) != TCL_OK) {
+		    return TCL_ERROR;
+		}
 	    }
+
 	    if (internalPtr != NULL) {
 		*((double *) oldInternalPtr) = *((double *) internalPtr);
 		*((double *) internalPtr) = new;
@@ -866,10 +871,15 @@ DoObjConfig(interp, recordPtr, optionPtr, valuePtr, tkwin, savedOptionPtr)
 	}
 	case TK_OPTION_PIXELS: {
 	    int new;
-	    
-	    if (Tk_GetPixelsFromObj(interp, tkwin, valuePtr,
-		    &new) != TCL_OK) {
-		return TCL_ERROR;
+
+	    if (nullOK && ObjectIsEmpty(valuePtr)) {
+		valuePtr = NULL;
+		new = 0;
+	    } else {
+		if (Tk_GetPixelsFromObj(interp, tkwin, valuePtr,
+			&new) != TCL_OK) {
+		    return TCL_ERROR;
+		}
 	    }
 	    if (internalPtr != NULL) {
 		*((int *) oldInternalPtr) = *((int *) internalPtr);

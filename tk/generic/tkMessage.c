@@ -230,7 +230,7 @@ Tk_MessageObjCmd(clientData, interp, objc, objv)
 {
     register Message *msgPtr;
     Tk_OptionTable optionTable;
-    Tk_Window tkwin = (Tk_Window) clientData;
+    Tk_Window tkwin;
 
     optionTable = (Tk_OptionTable) clientData;
     if (optionTable == NULL) {
