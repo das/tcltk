@@ -624,7 +624,9 @@ Makefile: $(SRC_DIR)/Makefile.in
 
 $(GENERIC_DIR)/tkStubInit.c: $(GENERIC_DIR)/tk.decls \
 		$(GENERIC_DIR)/tkInt.decls
-	@echo "Warning: run \"make genstubs\" to regenerate tkStubInit.c"
+	@echo "Warning: tkStubInit.c may be out of date."
+	@echo "Developers may want to run \"make genstubs\" to regenerate."
+	@echo "This warning can be safely ignored, do not report as a bug!"
 
 genstubs:
 	$(TCL_EXE) "$(TCL_TOOL_DIR}\genStubs.tcl" \
