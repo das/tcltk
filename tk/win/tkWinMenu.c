@@ -1078,6 +1078,12 @@ TkWinHandleMenuEvent(phwnd, pMessage, pwParam, plParam, plResult)
 		    } else {
 			TkActivateMenuEntry(menuPtr, -1);
 		    }
+		} else {
+		    if (itemPtr->itemState & ODS_SELECTED) {
+			mePtr->entryFlags |= ENTRY_PLATFORM_FLAG1;
+		    } else {
+			mePtr->entryFlags &= ~ENTRY_PLATFORM_FLAG1;
+		    }
 		}
 
 		tkfont = Tk_GetFontFromObj(menuPtr->tkwin, menuPtr->fontPtr);
@@ -2408,7 +2414,8 @@ DrawMenuEntryBackground(
     int width,				/* width of rectangle to draw */
     int height)				/* height of rectangle to draw */
 {
-    if (mePtr->state == ENTRY_ACTIVE) {
+    if (mePtr->state == ENTRY_ACTIVE 
+		|| (mePtr->entryFlags & ENTRY_PLATFORM_FLAG1)!=0 ) {
 	bgBorder = activeBorder;
     }
     Tk_Fill3DRectangle(menuPtr->tkwin, d, bgBorder,
