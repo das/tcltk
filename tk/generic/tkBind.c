@@ -2312,8 +2312,10 @@ ExpandPercents(winPtr, before, eventPtr, keySym, dsPtr)
 		number = eventPtr->xany.serial;
 		goto doNumber;
 	    case 'a':
-		TkpPrintWindowId(numStorage, eventPtr->xconfigure.above);
-		string = numStorage;
+		if (flags & CONFIG) {
+		    TkpPrintWindowId(numStorage, eventPtr->xconfigure.above);
+		    string = numStorage;
+		}
 		goto doString;
 	    case 'b':
 		number = eventPtr->xbutton.button;
