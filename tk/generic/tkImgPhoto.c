@@ -4590,7 +4590,9 @@ Tk_PhotoPutBlock(interp, handle, blockPtr, x, y, width, height, compRule)
      * Check if display code needs alpha blending...
      */
 
-    ToggleComplexAlphaIfNeeded(masterPtr);
+    if (alphaOffset != 0 || masterPtr->flags & COMPLEX_ALPHA) {
+	ToggleComplexAlphaIfNeeded(masterPtr);
+    }
 
     /*
      * Update each instance.
@@ -4890,7 +4892,9 @@ Tk_PhotoPutZoomedBlock(interp, handle, blockPtr, x, y, width, height,
      * Check if display code needs alpha blending...
      */
 
-    ToggleComplexAlphaIfNeeded(masterPtr);
+    if (alphaOffset != 0 || masterPtr->flags & COMPLEX_ALPHA) {
+	ToggleComplexAlphaIfNeeded(masterPtr);
+    }
 
     /*
      * Update each instance.
