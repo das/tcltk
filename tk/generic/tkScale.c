@@ -13,6 +13,7 @@
  *
  * Copyright (c) 1990-1994 The Regents of the University of California.
  * Copyright (c) 1994-1997 Sun Microsystems, Inc.
+ * Copyright (c) 1999 by Scriptics Corporation.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -631,8 +632,8 @@ ConfigureScale(interp, scalePtr, objc, objv)
 	    valuePtr = Tcl_GetVar2Ex(interp, name, NULL, TCL_GLOBAL_ONLY);
 	    if (valuePtr != NULL) {
 	        Tcl_GetDoubleFromObj(interp, valuePtr, &value);
+		scalePtr->value = TkRoundToResolution(scalePtr, value);
 	    }
-	    scalePtr->value = TkRoundToResolution(scalePtr, value);
 	}
 
 	/*
