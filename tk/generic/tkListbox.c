@@ -1042,14 +1042,10 @@ ListboxWidgetObjCmd(clientData, interp, objc, objv)
 	}
 
 	case COMMAND_SELECTION: {
-	    if (!(listPtr->state & STATE_NORMAL)) {
-		break;
-	    }
-
 	    result = ListboxSelectionSubCmd(interp, listPtr, objc, objv);
 	    break;
 	}
-	
+
 	case COMMAND_SIZE: {
 	    char buf[TCL_INTEGER_SPACE];
 	    if (objc != 2) {
@@ -1182,6 +1178,16 @@ ListboxSelectionSubCmd(interp, listPtr, objc, objv)
     if (result != TCL_OK) {
 	return result;
     }
+
+    /*
+     * Only allow 'selection includes' to respond if disabled. [Bug #632514]
+     */
+
+    if ((listPtr->state == STATE_DISABLED)
+	    && (selCmdIndex != SELECTION_INCLUDES)) {
+	return TCL_OK;
+    }
+
     switch (selCmdIndex) {
 	case SELECTION_ANCHOR: {
 	    if (objc != 4) {
@@ -1207,11 +1213,9 @@ ListboxSelectionSubCmd(interp, listPtr, objc, objv)
 		Tcl_WrongNumArgs(interp, 3, objv, "index");
 		return TCL_ERROR;
 	    }
-	    if (Tcl_FindHashEntry(listPtr->selection, (char *)first)) {
-		Tcl_SetResult(interp, "1", TCL_STATIC);
-	    } else {
-		Tcl_SetResult(interp, "0", TCL_STATIC);
-	    }
+	    Tcl_SetObjResult(interp,
+		    Tcl_NewBooleanObj((Tcl_FindHashEntry(listPtr->selection,
+			    (char *)first) != NULL)));
 	    result = TCL_OK;
 	    break;
 	}

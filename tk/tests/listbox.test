@@ -2132,6 +2132,19 @@ test listbox-28.3 {listbox -activestyle} {
     .l cget -activestyle
 } dotbox
 
+test listbox-29.1 {listbox selection behavior, -state disabled} {
+    destroy .l
+    listbox .l
+    .l insert end 1 2 3
+    .l selection set 2
+    set out [.l selection includes 2]
+    .l configure -state disabled
+    # still return 1 when disabled, because 'selection get' will work,
+    # but selection cannot be changed (new behavior since 8.4)
+    .l selection set 3
+    lappend out [.l selection includes 2] [.l curselection]
+} {1 1 2}
+
 resetGridInfo
 deleteWindows
 option clear
