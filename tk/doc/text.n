@@ -127,7 +127,9 @@ The value of the \fBtabs\fR option may be overridden by \fB\-tabs\fR
 options in tags.
 If no \fB\-tabs\fR option is specified, or if it is specified as
 an empty list, then Tk uses default tabs spaced every eight
-(average size) characters.
+(average size) characters.  To achieve a different standard spacing,
+for example every 4 characters, simply configure the widget with 
+\fB\-tabs \"[expr {4 * [font measure $font 0]}] left\"\fR.
 .OP \-undo undo Undo
 Specifies a boolean that says whether the undo mechanism is active or
 not.
