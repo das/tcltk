@@ -56,7 +56,9 @@ TkpCreateScale(tkwin)
  *
  * TkpDestroyScale --
  *
- *	Destroy a TkScale structure.
+ *	Destroy a TkScale structure.  It's necessary to do this with
+ *	Tcl_EventuallyFree to allow the Tcl_Preserve(scalePtr) to work
+ *	as expected in TkpDisplayScale. (hobbs)
  *
  * Results:
  *	None
@@ -71,7 +73,7 @@ void
 TkpDestroyScale(scalePtr)
     TkScale *scalePtr;
 {
-    ckfree((char *) scalePtr);
+    Tcl_EventuallyFree((ClientData) scalePtr, TCL_DYNAMIC);
 }
 
 /*
@@ -514,19 +516,18 @@ TkpDisplayScale(clientData)
      */
 
     Tcl_Preserve((ClientData) scalePtr);
-    Tcl_Preserve((ClientData) interp);
     if ((scalePtr->flags & INVOKE_COMMAND) 
             && (scalePtr->commandPtr != NULL)) {
+	Tcl_Preserve((ClientData) interp);
 	sprintf(string, scalePtr->format, scalePtr->value);
-
 	result = Tcl_VarEval(interp, Tcl_GetString(scalePtr->commandPtr),
                 " ", string, (char *) NULL);
 	if (result != TCL_OK) {
 	    Tcl_AddErrorInfo(interp, "\n    (command executed by scale)");
 	    Tcl_BackgroundError(interp);
 	}
+	Tcl_Release((ClientData) interp);
     }
-    Tcl_Release((ClientData) interp);
     scalePtr->flags &= ~INVOKE_COMMAND;
     if (scalePtr->flags & SCALE_DELETED) {
 	Tcl_Release((ClientData) scalePtr);
