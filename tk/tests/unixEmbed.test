@@ -203,7 +203,8 @@ test unixEmbed-2.4 {EmbeddedEventProc procedure} {
     list $x [testembed]
 } {{{XXX .f1 {} {}}} {}}
 
-test unixEmbed-3.1 {ContainerEventProc procedure, detect creation} {
+test unixEmbed-3.1 {ContainerEventProc procedure, detect creation} \
+	{nonPortable} {
     foreach w [winfo child .] {
 	catch {destroy $w}
     }

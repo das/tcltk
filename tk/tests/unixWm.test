@@ -1594,7 +1594,7 @@ test unixWm-46.1 {WaitForEvent procedure, use of modal timeout} {
     list $result $x
 } {no yes}
 
-test unixWm-47.1 {WaitRestrictProc procedure} {
+test unixWm-47.1 {WaitRestrictProc procedure} {nonPOrtable} {
     catch {destroy .t}
     toplevel .t -width 300 -height 200
     frame .t.f -bd 2 -relief raised
