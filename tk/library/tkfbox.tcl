@@ -820,6 +820,8 @@ proc ::tk::dialog::file:: {type args} {
 	set data(cancelBtn) $w.f2.cancel
 	::tk::dialog::file::SetSelectMode $w $data(-multiple)
     }
+    # Make sure subseqent uses of this dialog are independent [Bug 845189]
+    catch {unset data(extUsed)}
 
     # Dialog boxes should be transient with respect to their parent,
     # so that they will always stay on top of their parent window.  However,
