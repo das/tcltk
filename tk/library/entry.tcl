@@ -509,13 +509,8 @@ proc tkEntryBackspace w {
 
 proc tkEntrySeeInsert w {
     set c [$w index insert]
-    set left [$w index @0]
-    if {$left > $c} {
+    if {($c < [$w index @0]) || ($c > [$w index @[winfo width $w]])} {
 	$w xview $c
-	return
-    }
-    if {$c > [$w index @[winfo width $w]]} {
-	$w xview insert
     }
 }
 
