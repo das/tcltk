@@ -1357,14 +1357,14 @@ CreateClosestFont(tkwin, faPtr, xaPtr)
 	FontAttributes got;
 	int scalable;
 	unsigned int score;
-	
+
 	if (TkFontParseXLFD(nameList[nameIdx], &got.fa, &got.xa) != TCL_OK) {
 	    continue;
 	}
 	IdentifySymbolEncodings(&got);
 	scalable = (got.fa.size == 0);
 	score = RankAttributes(&want, &got);
-	if (score <= bestScore[scalable]) {
+	if (score < bestScore[scalable]) {
 	    bestIdx[scalable] = nameIdx;
 	    bestScore[scalable] = score;
 	}
@@ -2377,7 +2377,7 @@ CanUseFallback(fontPtr, faceName, ch, fixSubFontPtrPtr)
 
 	scalable = (got.fa.size == 0);
 	score = RankAttributes(&want, &got);
-	if (score <= bestScore[scalable]) {
+	if (score < bestScore[scalable]) {
 	    bestIdx[scalable] = nameIdx;
 	    bestScore[scalable] = score;
 	}
