@@ -486,6 +486,21 @@ DoConfig(interp, tkwin, specPtr, value, valueIsUid, widgRec)
 		if (Tk_GetRelief(interp, uid, (int *) ptr) != TCL_OK) {
 		    return TCL_ERROR;
 		}
+
+		/*
+		 * Not all widgets allow the link relief.  If the given
+		 * relief is "link" and this widget does not support it,
+		 * display the "invalid relief" error message and return
+		 * TCL_ERROR.
+		 */
+		
+		if ((*ptr == TK_RELIEF_LINK) && \
+			((specPtr->specFlags & TK_CONFIG_LINK_OK) == 0)) {
+		    Tcl_SetResult(interp, "invalid relief \"link\": must be "
+			    "flat, groove, raised, ridge, solid, or sunken",
+			    TCL_STATIC);
+		    return TCL_ERROR;
+		}
 		break;
 	    case TK_CONFIG_CURSOR:
 	    case TK_CONFIG_ACTIVE_CURSOR: {

@@ -20,8 +20,9 @@
  * used by Tk_GetReliefFromObj.
  */
 
-static char *reliefStrings[] = {"flat", "groove", "raised", "ridge", "solid",
-	"sunken", (char *) NULL};
+static char *reliefStrings[] = {"flat", "groove", "raised",
+				    "ridge", "solid", "sunken", 
+				    (char *) NULL};
 
 /*
  * Forward declarations for procedures defined in this file:
@@ -663,6 +664,8 @@ Tk_GetRelief(interp, name, reliefPtr)
     } else if ((c == 'g') && (strncmp(name, "groove", length) == 0)
 	    && (length >= 2)) {
         *reliefPtr = TK_RELIEF_GROOVE;
+    } else if ((c == 'l') && (strncmp(name, "link", length) == 0)) {
+	*reliefPtr = TK_RELIEF_LINK;
     } else if ((c == 'r') && (strncmp(name, "raised", length) == 0)
 	    && (length >= 2)) {
 	*reliefPtr = TK_RELIEF_RAISED;
@@ -676,7 +679,7 @@ Tk_GetRelief(interp, name, reliefPtr)
 	char buf[200];
 
 	sprintf(buf, "bad relief type \"%.50s\": must be %s",
-		name, "flat, groove, raised, ridge, solid, or sunken");
+		name, "flat, groove, link, raised, ridge, solid, or sunken");
 	Tcl_SetResult(interp, buf, TCL_VOLATILE);
 	return TCL_ERROR;
     }
@@ -718,6 +721,8 @@ Tk_NameOfRelief(relief)
 	return "ridge";
     } else if (relief == TK_RELIEF_SOLID) {
 	return "solid";
+    } else if (relief == TK_RELIEF_LINK) {
+	return "link";
     } else {
 	return "unknown relief";
     }

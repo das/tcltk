@@ -1384,7 +1384,7 @@ GetMenuSeparatorGeometry (
     int *heightPtr)			/* The resulting height */
 {
     *widthPtr = 0;
-    *heightPtr = fmPtr->linespace;
+    *heightPtr = fmPtr->linespace - (2 * fmPtr->descent);
 }
 
 /*

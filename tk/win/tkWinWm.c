@@ -224,8 +224,7 @@ typedef struct TkWmInfo {
 
 #define WM_TRANSIENT_STYLE \
 		(WS_POPUP|WS_CAPTION|WS_SYSMENU|WS_CLIPSIBLINGS|CS_DBLCLKS)
-#define EX_TRANSIENT_STYLE \
-		(WS_EX_TOOLWINDOW|WS_EX_DLGMODALFRAME)
+#define EX_TRANSIENT_STYLE (WS_EX_DLGMODALFRAME)
 
 /*
  * The following structure is the official type record for geometry
