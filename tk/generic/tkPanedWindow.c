@@ -1635,8 +1635,7 @@ ArrangePanes(clientData)
 	    if (i == pwPtr->numSlaves - 1 && Tk_IsMapped(pwPtr->tkwin)) {
 		if (Tk_Width(pwPtr->tkwin) > Tk_ReqWidth(pwPtr->tkwin)) {
 		    paneWidth += Tk_Width(pwPtr->tkwin) -
-			Tk_ReqWidth(pwPtr->tkwin) -
-			Tk_InternalBorderWidth(pwPtr->tkwin);
+			Tk_ReqWidth(pwPtr->tkwin);
 		}
 	    }
 	    paneHeight = Tk_Height(pwPtr->tkwin) - (2 * slavePtr->pady) -
@@ -1646,8 +1645,7 @@ ArrangePanes(clientData)
 	    if (i == pwPtr->numSlaves - 1 && Tk_IsMapped(pwPtr->tkwin)) {
 		if (Tk_Height(pwPtr->tkwin) > Tk_ReqHeight(pwPtr->tkwin)) {
 		    paneHeight += Tk_Height(pwPtr->tkwin) -
-			Tk_ReqHeight(pwPtr->tkwin) -
-			Tk_InternalBorderWidth(pwPtr->tkwin);
+			Tk_ReqHeight(pwPtr->tkwin);
 		}
 	    }
 	    paneWidth = Tk_Width(pwPtr->tkwin) - (2 * slavePtr->padx) -
