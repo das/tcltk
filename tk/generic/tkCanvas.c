@@ -726,13 +726,14 @@ CanvasWidgetCmd(clientData, interp, argc, argv)
 	    	TagSearchExpr *expr, **lastPtr;
 
 		lastPtr = &(canvasPtr->bindTagExprs);
-		while ((expr = *lastPtr)) {
-		    if (expr->uid == searchPtr->expr->uid)
+		while ((expr = *lastPtr) != NULL) {
+		    if (expr->uid == searchPtr->expr->uid) {
 			break;
-		    	lastPtr = &(expr->next);
 		    }
+		    lastPtr = &(expr->next);
+		}
 		if (!expr) {
-	        /*
+		    /*
 		     * transfer ownership of expr to bindTagExprs list
 		     */
 		    *lastPtr = searchPtr->expr;
@@ -741,8 +742,8 @@ CanvasWidgetCmd(clientData, interp, argc, argv)
 		    /*
 		     * flag in TagSearch that expr has changed ownership
 		     * so that TagSearchDestroy doesn't try to free it
-	         */
-	        searchPtr->expr = NULL;
+		     */
+		    searchPtr->expr = NULL;
 		}
             }
 #endif /* not USE_OLD_TAG_SEARCH */
@@ -4898,7 +4899,8 @@ CanvasDoEvent(canvasPtr, eventPtr)
     expr = canvasPtr->bindTagExprs;
     while (expr) {
 	expr->index = 0;
-    	if ((expr->match = TagSearchEvalExpr(expr, itemPtr))) {
+    	expr->match = TagSearchEvalExpr(expr, itemPtr);
+	if (expr->match) {
 	    numExprs++;
 	}
 	expr = expr->next;
