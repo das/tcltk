@@ -1931,13 +1931,13 @@ InitMasterData(masterPtr)
 	gridPtr->columnEnd = 0;
 	gridPtr->columnMax = 0;
 	gridPtr->columnPtr = (SlotInfo *) ckalloc(size);
-	gridPtr->columnSpace = 0;
 	gridPtr->columnSpace = TYPICAL_SIZE;
 	gridPtr->rowEnd = 0;
 	gridPtr->rowMax = 0;
 	gridPtr->rowPtr = (SlotInfo *) ckalloc(size);
-	gridPtr->rowSpace = 0;
 	gridPtr->rowSpace = TYPICAL_SIZE;
+	gridPtr->startX = 0;
+	gridPtr->startY = 0;
 
 	memset((VOID *) gridPtr->columnPtr, 0, size);
 	memset((VOID *) gridPtr->rowPtr, 0, size);
