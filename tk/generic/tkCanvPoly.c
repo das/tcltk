@@ -464,7 +464,7 @@ ConfigurePolygon(interp, canvas, itemPtr, argc, argv, flags)
     state = itemPtr->state;
 
     if (polyPtr->outline.activeWidth > polyPtr->outline.width ||
-	    polyPtr->outline.activeDash.number > 0 ||
+	    polyPtr->outline.activeDash.number != 0 ||
 	    polyPtr->outline.activeColor != NULL ||
 	    polyPtr->outline.activeStipple != None ||
 	    polyPtr->activeFillColor != NULL ||

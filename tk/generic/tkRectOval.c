@@ -439,7 +439,7 @@ ConfigureRectOval(interp, canvas, itemPtr, argc, argv, flags)
      */
 
     if (rectOvalPtr->outline.activeWidth > rectOvalPtr->outline.width ||
-	    rectOvalPtr->outline.activeDash.number > 0 ||
+	    rectOvalPtr->outline.activeDash.number != 0 ||
 	    rectOvalPtr->outline.activeColor != NULL ||
 	    rectOvalPtr->outline.activeStipple != None ||
 	    rectOvalPtr->activeFillColor != NULL ||

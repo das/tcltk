@@ -514,7 +514,7 @@ ConfigureLine(interp, canvas, itemPtr, argc, argv, flags)
     }
 
     if (linePtr->outline.activeWidth > linePtr->outline.width ||
-	    linePtr->outline.activeDash.number > 0 ||
+	    linePtr->outline.activeDash.number != 0 ||
 	    linePtr->outline.activeColor != NULL ||
 	    linePtr->outline.activeStipple != None) {
 	itemPtr->redraw_flags |= TK_ITEM_STATE_DEPENDANT;
