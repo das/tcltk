@@ -44,7 +44,7 @@ TOOLS32_rc	= c:\Progra~1\devstudio\sharedide
 #THREADDEFINES = -DTCL_THREADS=1
 
 # Set NODEBUG to 0 to compile with symbols
-NODEBUG = 0
+NODEBUG = 1
 
 # uncomment the following two lines to compile with TCL_MEM_DEBUG
 #DEBUGDEFINES	=-DTCL_MEM_DEBUG
