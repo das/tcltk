@@ -377,8 +377,8 @@ If the selection isn't in this widget then a new selection is
 created using the most recent anchor point specified for the widget.
 Returns an empty string.
 .RE
-.TP
 .VS 8.3
+.TP
 \fIpathName \fBvalidate\fR
 This command is used to force an evaluation of the \fBvalidateCommand\fR
 independent of the conditions specified by the \fBvalidate\fR option.
