@@ -523,7 +523,10 @@ proc ::tk::TextButton1 {w x y} {
     set Priv(pressX) $x
     $w mark set insert [TextClosestGap $w $x $y]
     $w mark set anchor insert
-    if {[string equal [$w cget -state] "normal"]} {focus $w}
+    # Allow focus in any case on Windows, because that will let the
+    # selection be displayed even for state disabled text widgets.
+    if {[string equal $::tcl_platform(platform) "windows"] \
+	    || [string equal [$w cget -state] "normal"]} {focus $w}
     if {[$w cget -autoseparators]} {$w edit separator}
 }
 
