@@ -20,7 +20,7 @@
  * used by Tk_GetReliefFromObj.
  */
 
-static char *reliefStrings[] = {"flat", "groove", "raised",
+static CONST char *reliefStrings[] = {"flat", "groove", "raised",
 				    "ridge", "solid", "sunken", 
 				    (char *) NULL};
 

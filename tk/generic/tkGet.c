@@ -37,9 +37,12 @@ static Tcl_ThreadDataKey dataKey;
  * used by Tk_GetAnchorFromObj and Tk_GetJustifyFromObj.
  */
 
-static char *anchorStrings[] = {"n", "ne", "e", "se", "s", "sw", "w", "nw",
-	"center", (char *) NULL};
-static char *justifyStrings[] = {"left", "right", "center", (char *) NULL};
+static CONST char *anchorStrings[] = {
+    "n", "ne", "e", "se", "s", "sw", "w", "nw", "center", (char *) NULL
+};
+static CONST char *justifyStrings[] = {
+    "left", "right", "center", (char *) NULL
+};
 
 
 /*

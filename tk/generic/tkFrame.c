@@ -718,7 +718,7 @@ FrameWidgetObjCmd(clientData, interp, objc, objv)
     int objc;			/* Number of arguments. */
     Tcl_Obj *CONST objv[];	/* Argument objects. */
 {
-    static char *frameOptions[] = {
+    static CONST char *frameOptions[] = {
 	"cget", "configure", (char *) NULL
     };
     enum options {

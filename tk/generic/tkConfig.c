@@ -743,7 +743,7 @@ DoObjConfig(interp, recordPtr, optionPtr, valuePtr, tkwin, savedOptionPtr)
 	    int new;
 
 	    if (Tcl_GetIndexFromObj(interp, valuePtr,
-		    (char **) optionPtr->specPtr->clientData,
+		    (CONST char **) optionPtr->specPtr->clientData,
 		    optionPtr->specPtr->optionName+1, 0, &new) != TCL_OK) {
 		return TCL_ERROR;
 	    }

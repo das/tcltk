@@ -17,7 +17,9 @@
 #include "tkInt.h"
 
 typedef enum {TOP, BOTTOM, LEFT, RIGHT} Side;
-static char *sideNames[] = {"top", "bottom", "left", "right", (char *) NULL };
+static CONST char *sideNames[] = {
+    "top", "bottom", "left", "right", (char *) NULL
+};
 
 /* For each window that the packer cares about (either because
  * the window is managed by the packer or because the window
@@ -201,7 +203,7 @@ Tk_PackObjCmd(clientData, interp, objc, objv)
 {
     Tk_Window tkwin = (Tk_Window) clientData;
     char *argv2;
-    static char *optionStrings[] = {
+    static CONST char *optionStrings[] = {
 	/* after, append, before and unpack are deprecated */
 	"after", "append", "before", "unpack",
 	"configure", "forget", "info", "propagate", "slaves", (char *) NULL };
@@ -1550,7 +1552,7 @@ ConfigureSlaves(interp, tkwin, objc, objv)
     Tk_Window other, slave, parent, ancestor;
     int i, j, numWindows, tmp, positionGiven;
     char *string;
-    static char *optionStrings[] = {
+    static CONST char *optionStrings[] = {
 	"-after", "-anchor", "-before", "-expand", "-fill",
 	"-in", "-ipadx", "-ipady", "-padx", "-pady", "-side", (char *) NULL };
     enum options {

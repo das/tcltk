@@ -160,7 +160,7 @@ Tk_ImageObjCmd(clientData, interp, objc, objv)
     int objc;			/* Number of arguments. */
     Tcl_Obj *CONST objv[];	/* Argument strings. */
 {
-    static char *imageOptions[] = {
+    static CONST char *imageOptions[] = {
 	"create", "delete", "height", "inuse", "names", "type", "types",
 	    "width", (char *) NULL
     };

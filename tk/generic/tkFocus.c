@@ -121,8 +121,9 @@ Tk_FocusObjCmd(clientData, interp, objc, objv)
     int objc;			/* Number of arguments. */
     Tcl_Obj *CONST objv[];	/* Argument objects. */
 {
-    static char *focusOptions[] = {"-displayof", "-force", "-lastfor",
-				   (char *) NULL};
+    static CONST char *focusOptions[] = {
+	"-displayof", "-force", "-lastfor", (char *) NULL
+    };
     Tk_Window tkwin = (Tk_Window) clientData;
     TkWindow *winPtr = (TkWindow *) clientData;
     TkWindow *newPtr, *focusWinPtr, *topLevelPtr;

@@ -249,7 +249,7 @@ FileReadGIF(interp, chan, fileName, format, imageHandle, destX, destY,
     int bitPixel;
     unsigned char colorMap[MAXCOLORMAPSIZE][4];
     int transparent = -1;
-    static char *optionStrings[] = {
+    static CONST char *optionStrings[] = {
 	"-index",	NULL
     };
 

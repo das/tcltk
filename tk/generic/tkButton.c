@@ -481,7 +481,7 @@ static Tk_OptionSpec *optionSpecs[] = {
  * into a single enumerated type used to dispatch the widget command.
  */
 
-static char *commandNames[][8] = {
+static CONST char *commandNames[][8] = {
     {"cget", "configure", (char *) NULL},
     {"cget", "configure", "flash", "invoke", (char *) NULL},
     {"cget", "configure", "deselect", "flash", "invoke", "select",

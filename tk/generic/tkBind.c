@@ -2617,7 +2617,7 @@ Tk_EventObjCmd(clientData, interp, objc, objv)
     Tk_Window tkwin;
     VirtualEventTable *vetPtr;
     TkBindInfo bindInfo;
-    static char *optionStrings[] = {
+    static CONST char *optionStrings[] = {
 	"add",		"delete",	"generate",	"info",
 	NULL
     };
@@ -3186,7 +3186,7 @@ HandleEventGenerate(interp, mainWin, objc, objv)
     Tk_Window tkwin, tkwin2;
     TkWindow *mainPtr;
     unsigned long eventMask;
-    static char *fieldStrings[] = {
+    static CONST char *fieldStrings[] = {
 	"-when",	"-above",	"-borderwidth",	"-button",
 	"-count",	"-delta",	"-detail",	"-focus",
 	"-height",

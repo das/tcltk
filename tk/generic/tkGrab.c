@@ -202,10 +202,10 @@ Tk_GrabObjCmd(clientData, interp, objc, objv)
     char *arg;
     int index;
     int len;
-    static char *optionStrings[] = { "current", "release",
+    static CONST char *optionStrings[] = { "current", "release",
 					 "set", "status", (char *) NULL };
   
-    static char *flagStrings[] = { "-global", (char *) NULL };
+    static CONST char *flagStrings[] = { "-global", (char *) NULL };
 
     enum options { GRABCMD_CURRENT, GRABCMD_RELEASE,
 		       GRABCMD_SET, GRABCMD_STATUS };

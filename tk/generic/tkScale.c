@@ -147,7 +147,7 @@ static Tk_OptionSpec optionSpecs[] = {
  * to dispatch the scale widget command.
  */
 
-static char *commandNames[] = {
+static CONST char *commandNames[] = {
     "cget", "configure", "coords", "get", "identify", "set", (char *) NULL
 };
 

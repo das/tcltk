@@ -563,7 +563,7 @@ ImgPhotoCmd(clientData, interp, objc, objv)
     Tcl_Obj *CONST objv[];	/* Argument objects. */
 {
     int oldformat = 0;
-    static char *photoOptions[] = {
+    static CONST char *photoOptions[] = {
 	"blank", "cget", "configure", "copy", "data", "get", "put",
 	"read", "redither", "write", (char *) NULL
     };

@@ -321,7 +321,7 @@ static Tk_OptionSpec itemAttrOptionSpecs[] = {
  * commands) and map the indexes into the string tables into 
  * enumerated types used to dispatch the listbox widget command.
  */
-static char *commandNames[] = {
+static CONST char *commandNames[] = {
     "activate", "bbox", "cget", "configure", "curselection", "delete", "get",
 	"index", "insert", "itemcget", "itemconfigure", "nearest", "scan",
 	"see", "selection", "size", "xview", "yview",
@@ -336,7 +336,7 @@ enum command {
 	COMMAND_SIZE, COMMAND_XVIEW, COMMAND_YVIEW
 };
 
-static char *selCommandNames[] = {
+static CONST char *selCommandNames[] = {
     "anchor", "clear", "includes", "set", (char *) NULL
 };
 
@@ -344,7 +344,7 @@ enum selcommand {
     SELECTION_ANCHOR, SELECTION_CLEAR, SELECTION_INCLUDES, SELECTION_SET
 };
 
-static char *scanCommandNames[] = {
+static CONST char *scanCommandNames[] = {
     "mark", "dragto", (char *) NULL
 };
 
@@ -352,7 +352,7 @@ enum scancommand {
     SCAN_MARK, SCAN_DRAGTO
 };
 
-static char *indexNames[] = {
+static CONST char *indexNames[] = {
     "active", "anchor", "end", (char *)NULL
 };
 

@@ -168,7 +168,7 @@ static TkStateMap xlfdSetwidthMap[] = {
  * when configuring a set of font attributes.
  */
 
-static char *fontOpt[] = {
+static CONST char *fontOpt[] = {
     "-family",
     "-size",
     "-weight",
@@ -479,7 +479,7 @@ Tk_FontObjCmd(clientData, interp, objc, objv)
     int index;
     Tk_Window tkwin;
     TkFontInfo *fiPtr;
-    static char *optionStrings[] = {
+    static CONST char *optionStrings[] = {
 	"actual",	"configure",	"create",	"delete",
 	"families",	"measure",	"metrics",	"names",
 	NULL
@@ -684,7 +684,7 @@ Tk_FontObjCmd(clientData, interp, objc, objv)
 	    Tk_Font tkfont;
 	    int skip, index, i;
 	    CONST TkFontMetrics *fmPtr;
-	    static char *switches[] = {
+	    static CONST char *switches[] = {
 		"-ascent", "-descent", "-linespace", "-fixed", NULL
 	    };
 

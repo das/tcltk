@@ -209,8 +209,9 @@ Tk_PlaceObjCmd(clientData, interp, objc, objv)
     char *string;
     TkDisplay *dispPtr;
     Tk_OptionTable optionTable;
-    static char *optionStrings[] = { "configure", "forget", "info", "slaves",
-					 (char *) NULL };
+    static CONST char *optionStrings[] = {
+	"configure", "forget", "info", "slaves", (char *) NULL
+    };
     enum options { PLACE_CONFIGURE, PLACE_FORGET, PLACE_INFO, PLACE_SLAVES };
     int index;
     

@@ -638,7 +638,7 @@ Tk_OptionObjCmd(clientData, interp, objc, objv)
     ThreadSpecificData *tsdPtr = (ThreadSpecificData *) 
             Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
-    static char *optionCmds[] = {
+    static CONST char *optionCmds[] = {
 	"add", "clear", "get", "readfile", NULL
     };
 

@@ -631,7 +631,7 @@ TestobjconfigObjCmd(clientData, interp, objc, objv)
     int objc;			/* Number of arguments. */
     Tcl_Obj *CONST objv[];	/* Argument objects. */
 {
-    static char *options[] = {"alltypes", "chain1", "chain2",
+    static CONST char *options[] = {"alltypes", "chain1", "chain2",
 	    "configerror", "delete", "info", "internal", "new",
 	    "notenoughparams", "twowindows", (char *) NULL};
     enum {
@@ -1354,7 +1354,9 @@ TrivialConfigObjCmd(clientData, interp, objc, objv)
     Tcl_Obj *CONST objv[];	/* Argument objects. */
 {
     int result = TCL_OK;
-    static char *options[] = {"cget", "configure", "csave", (char *) NULL};
+    static CONST char *options[] = {
+	"cget", "configure", "csave", (char *) NULL
+    };
     enum {
 	CGET, CONFIGURE, CSAVE
     };
@@ -1538,7 +1540,7 @@ TestfontObjCmd(clientData, interp, objc, objv)
     int objc;			/* Number of arguments. */
     Tcl_Obj *CONST objv[];	/* Argument objects. */
 {
-    static char *options[] = {"counts", "subfonts", (char *) NULL};
+    static CONST char *options[] = {"counts", "subfonts", (char *) NULL};
     enum option {COUNTS, SUBFONTS};
     int index;
     Tk_Window tkwin;
