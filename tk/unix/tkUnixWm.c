@@ -2049,10 +2049,28 @@ Tk_WmCmd(clientData, interp, argc, argv)
 		master = Tk_Parent(master);
 	    }
 	    Tk_MakeWindowExist(master);
+
+	    if (wmPtr->iconFor != NULL) {
+	        Tcl_AppendResult(interp, "can't make \"", argv[2],
+	    	        "\" a transient: it is an icon for ",
+	                Tk_PathName(wmPtr->iconFor),
+	                (char *) NULL);
+	        return TCL_ERROR;
+	    }
+
 	    wmPtr2 = ((TkWindow *) master)->wmInfoPtr;
 	    if (wmPtr2->wrapperPtr == NULL) {
 		CreateWrapper(wmPtr2);
 	    }
+
+	    if (wmPtr2->iconFor != NULL) {
+	        Tcl_AppendResult(interp, "can't make \"", argv[3],
+	                "\" a master: it is an icon for ",
+	                Tk_PathName(wmPtr2->iconFor),
+	                (char *) NULL);
+	        return TCL_ERROR;
+	    }
+
 	    wmPtr->master = Tk_WindowId(wmPtr2->wrapperPtr);
 	    if (wmPtr->masterWindowName != NULL) {
 		ckfree((char *) wmPtr->masterWindowName);
