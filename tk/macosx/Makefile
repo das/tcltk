@@ -86,7 +86,9 @@ cleanup-embedded:
 	@-cd ${INSTALL_ROOT}; \
 	rm -f Frameworks; \
 	rm -rf @executable_path; \
+	chmod -RH u+w Library/Frameworks/Tcl.framework; \
 	rm -rf Library/Frameworks/Tcl.framework; \
+	chmod -RH u+w Library/Frameworks/Tk.framework; \
 	rm -rf Library/Frameworks/Tk.framework; \
 	rmdir -p Library/Frameworks 2>&-;
 
