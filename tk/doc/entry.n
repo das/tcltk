@@ -440,12 +440,12 @@ Dragging with mouse button 1 strokes out a selection between
 the insertion cursor and the character under the mouse.
 .IP [2]
 Double-clicking with mouse button 1 selects the word under the mouse
-and positions the insertion cursor at the beginning of the word.
+and positions the insertion cursor at the end of the word.
 Dragging after a double click will stroke out a selection consisting
 of whole words.
 .IP [3]
 Triple-clicking with mouse button 1 selects all of the text in the
-entry and positions the insertion cursor before the first character.
+entry and positions the insertion cursor at the end of the line.
 .IP [4]
 The ends of the selection can be adjusted by dragging with mouse
 button 1 while the Shift key is down;  this will adjust the end
