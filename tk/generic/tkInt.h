@@ -500,7 +500,6 @@ typedef struct TkDisplay {
     /*
      * The following field(s) were all added for Tk8.4
      */
-    long deletionEpoch;		/* Incremented by window deletions */
     unsigned int flags;		/* Various flag values:  these are all
 				 * defined in below. */
     TkCaret caret;		/* information about the caret for this
@@ -601,6 +600,7 @@ typedef struct TkMainInfo {
     Tcl_HashTable nameTable;	/* Hash table mapping path names to TkWindow
 				 * structs for all windows related to this
 				 * main window.  Managed by tkWindow.c. */
+    long deletionEpoch;		/* Incremented by window deletions */
     Tk_BindingTable bindingTable;
 				/* Used in conjunction with "bind" command
 				 * to bind events to Tcl commands. */

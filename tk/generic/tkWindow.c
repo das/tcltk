@@ -888,6 +888,7 @@ TkCreateMainWindow(interp, screenName, baseName)
     mainPtr->refCount = 1;
     mainPtr->interp = interp;
     Tcl_InitHashTable(&mainPtr->nameTable, TCL_STRING_KEYS);
+    mainPtr->deletionEpoch = 0l;
     TkEventInit();
     TkBindInit(mainPtr);
     TkFontPkgInit(mainPtr);
@@ -1493,9 +1494,10 @@ Tk_DestroyWindow(tkwin)
             winPtr->pathName = NULL;
 
 	    /*
-	     * Invalidate all objects referring to windows on this display.
+	     * Invalidate all objects referring to windows
+	     * with the same main window
 	     */
-	    dispPtr->deletionEpoch++;
+	    winPtr->mainPtr->deletionEpoch++;
 	}
 	winPtr->mainPtr->refCount--;
 	if (winPtr->mainPtr->refCount == 0) {
