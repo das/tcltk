@@ -75,22 +75,14 @@ proc sourcePath {file} {\n\
   error $msg\n\
 }\n\
 sourcePath tk\n\
-sourcePath button\n\
 sourcePath dialog\n\
-sourcePath entry\n\
 sourcePath focus\n\
-sourcePath listbox\n\
-sourcePath menu\n\
 sourcePath optMenu\n\
 sourcePath palette\n\
-sourcePath scale\n\
-sourcePath scrlbar\n\
 sourcePath tearoff\n\
-sourcePath text\n\
 sourcePath bgerror\n\
 sourcePath msgbox\n\
 sourcePath comdlg\n\
-sourcePath spinbox\n\
 rename sourcePath {}\n\
 rename tkInit {}\n\
 } }\n\

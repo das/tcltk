@@ -447,7 +447,7 @@ proc ::tk::ConsoleBind {w} {
     bind Console <F9> {
 	eval destroy [winfo child .]
 	if {[string equal $tcl_platform(platform) "macintosh"]} {
-	    if {[catch {source $tk_library:console.tcl}]} {source -rsrc console}
+	    if {[catch {source [file join $tk_library console.tcl]}]} {source -rsrc console}
 	} else {
 	    source [file join $tk_library console.tcl]
 	}
