@@ -947,6 +947,7 @@ ImgPhotoCmd(clientData, interp, objc, objv)
 		    }
 		}
 	    }
+	    matched = 0;
 	    if (stringWriteProc == NULL) {
 		oldformat = 1;
 		for (imageFormat = tsdPtr->oldFormatList; imageFormat != NULL;
@@ -1954,9 +1955,12 @@ ImgPhotoConfigureMaster(interp, masterPtr, objc, objv, flags)
 	masterPtr->fileString = NULL;
     }
     if (data) {
-	if (data->length
-		|| (data->typePtr == Tcl_GetObjType("bytearray")
-			&& data->internalRep.otherValuePtr != NULL)) {
+	/*
+	 * Force into ByteArray format, which most (all) image handlers
+	 * will use anyway.  Empty length means ignore the -data option.
+	 */
+	(void) Tcl_GetByteArrayFromObj(data, &length);
+	if (length) {
 	    Tcl_IncrRefCount(data);
 	} else {
 	    data = NULL;
@@ -1967,7 +1971,12 @@ ImgPhotoConfigureMaster(interp, masterPtr, objc, objv, flags)
 	masterPtr->dataString = data;
     }
     if (format) {
-	if (format->length) {
+	/*
+	 * Stringify to ignore -format "".  It may come in as a list or
+	 * other object.
+	 */
+	(void) Tcl_GetStringFromObj(format, &length);
+	if (length) {
 	    Tcl_IncrRefCount(format);
 	} else {
 	    format = NULL;
