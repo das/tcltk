@@ -470,6 +470,11 @@ GetScreen(interp, screenName, screenPtr)
 	    dispPtr->cursorFont = None;
 	    dispPtr->warpWindow = None;
 	    dispPtr->multipleAtom = None;
+	    /*
+	     * By default we do want to collapse motion events in
+	     * Tk_QueueWindowEvent.
+	     */
+	    dispPtr->flags |= TK_DISPLAY_COLLAPSE_MOTION_EVENTS;
 
 	    Tcl_InitHashTable(&dispPtr->winTable, TCL_ONE_WORD_KEYS);
 

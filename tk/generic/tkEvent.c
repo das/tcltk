@@ -1171,6 +1171,40 @@ Tk_RestrictEvents(proc, arg, prevArgPtr)
 /*
  *----------------------------------------------------------------------
  *
+ * Tk_CollapseMotionEvents --
+ *
+ *	This procedure controls whether we collapse motion events in a
+ *	particular display or not.
+ *
+ * Results:
+ *	The return value is the previous collapse value in effect.
+ *
+ * Side effects:
+ *	Filtering of motion events may be changed after calling this.
+ *
+ *----------------------------------------------------------------------
+ */
+
+int
+Tk_CollapseMotionEvents(display, collapse)
+    Display *display;		/* Display handling these events. */
+    int collapse;		/* boolean value that specifies whether
+				 * motion events should be collapsed. */
+{
+    TkDisplay *dispPtr = (TkDisplay *) display;
+    int prev = (dispPtr->flags & TK_DISPLAY_COLLAPSE_MOTION_EVENTS);
+
+    if (collapse) {
+	dispPtr->flags |= TK_DISPLAY_COLLAPSE_MOTION_EVENTS;
+    } else {
+	dispPtr->flags &= ~TK_DISPLAY_COLLAPSE_MOTION_EVENTS;
+    }
+    return prev;
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
  * Tk_QueueWindowEvent --
  *
  *	Given an X-style window event, this procedure adds it to the
@@ -1210,6 +1244,19 @@ Tk_QueueWindowEvent(eventPtr, position)
 	if (dispPtr->display == eventPtr->xany.display) {
 	    break;
 	}
+    }
+
+    /*
+     * Don't filter motion events if the user 
+     * defaulting to true (1), which could be set to false (0) when the
+     * user wishes to receive all the motion data)
+     */
+    if (!(dispPtr->flags & TK_DISPLAY_COLLAPSE_MOTION_EVENTS)) {
+	wevPtr = (TkWindowEvent *) ckalloc(sizeof(TkWindowEvent));
+	wevPtr->header.proc = WindowEventProc;
+	wevPtr->event = *eventPtr;
+	Tcl_QueueEvent(&wevPtr->header, position);
+	return;
     }
 
     if ((dispPtr->delayedMotionPtr != NULL) && (position == TCL_QUEUE_TAIL)) {

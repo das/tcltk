@@ -898,6 +898,7 @@ TkStubs tkStubs = {
     Tk_SetCaretPos, /* 245 */
     Tk_PhotoPutBlock, /* 246 */
     Tk_PhotoPutZoomedBlock, /* 247 */
+    Tk_CollapseMotionEvents, /* 248 */
 };
 
 /* !END!: Do not edit above this line. */

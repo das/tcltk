@@ -493,8 +493,15 @@ typedef struct TkDisplay {
      * The following field(s) were all added for Tk8.4
      */
     long deletionEpoch;		/* Incremented by window deletions */
+    unsigned int flags;		/* Various flag values:  these are all
+				 * defined in below. */
 } TkDisplay;
 
+/*
+ * Flag values for TkDisplay flags.
+ */
+
+#define TK_DISPLAY_COLLAPSE_MOTION_EVENTS	(1 << 0)
 
 /*
  * One of the following structures exists for each error handler

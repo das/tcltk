@@ -1176,6 +1176,10 @@ declare 247 generic {
 	    int subsampleX, int subsampleY, int compRule)
 }
 
+declare 248 generic {
+    int Tk_CollapseMotionEvents (Display *display, int collapse)
+}
+
 # Define the platform specific public Tk interface.  These functions are
 # only available on the designated platform.
 
