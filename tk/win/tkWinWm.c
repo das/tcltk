@@ -324,6 +324,7 @@ InitWm(void)
         return;
     }
     tsdPtr->initialized = 1;
+    tsdPtr->firstWindow = 1;
     classPtr = &tsdPtr->toplevelClass;
 
     classPtr->style = CS_HREDRAW | CS_VREDRAW | CS_CLASSDC;
@@ -904,6 +905,7 @@ TkpWmSetState(winPtr, state)
     WmInfo *wmPtr = winPtr->wmInfoPtr;
     int cmd;
     
+
     if (wmPtr->flags & WM_NEVER_MAPPED) {
 	wmPtr->hints.initial_state = state;
 	return;
@@ -919,6 +921,7 @@ TkpWmSetState(winPtr, state)
     } else if (state == ZoomState) {
 	cmd = SW_SHOWMAXIMIZED;
     }
+
     ShowWindow(wmPtr->wrapper, cmd);
     wmPtr->flags &= ~WM_SYNC_PENDING;
 }
@@ -3982,7 +3985,7 @@ WmProc(hwnd, message, wParam, lParam)
 			 * assumes move/size is only one level deep. */
     LRESULT result;
     TkWindow *winPtr;
-	
+
     if (TkWinHandleMenuEvent(&hwnd, &message, &wParam, &lParam, &result)) {
 	goto done;
     }

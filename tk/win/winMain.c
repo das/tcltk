@@ -43,6 +43,8 @@ extern int		TclObjTest_Init _ANSI_ARGS_((Tcl_Interp *interp));
 extern int		Tcltest_Init _ANSI_ARGS_((Tcl_Interp *interp));
 #endif /* TCL_TEST */
 
+static BOOL consoleRequired = TRUE;
+
 
 /*
  *----------------------------------------------------------------------
@@ -97,6 +99,7 @@ WinMain(hInstance, hPrevInstance, lpszCmdLine, nCmdShow)
      * called to attach the console to a text widget.
      */
 
+    consoleRequired = TRUE;
     TkConsoleCreate();
 
     Tk_Main(argc, argv, Tcl_AppInit);
@@ -140,8 +143,10 @@ Tcl_AppInit(interp)
      * application.
      */
 
-    if (TkConsoleInit(interp) == TCL_ERROR) {
-	goto error;
+    if (consoleRequired) {
+	if (TkConsoleInit(interp) == TCL_ERROR) {
+	    goto error;
+	}
     }
 
 #ifdef TCL_TEST
@@ -321,3 +326,54 @@ setargv(argcPtr, argvPtr)
     *argcPtr = argc;
     *argvPtr = argv;
 }
+
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * main --
+ *
+ *	Main entry point from the console.
+ *
+ * Results:
+ *	None: Tk_Main never returns here, so this procedure never
+ *      returns either.
+ *
+ * Side effects:
+ *	Whatever the applications does.
+ *
+ *----------------------------------------------------------------------
+ */
+
+int main(int argc, char **argv)
+{
+    Tcl_SetPanicProc(WishPanic);
+
+    /*
+     * Set up the default locale to be standard "C" locale so parsing
+     * is performed correctly.
+     */
+
+    setlocale(LC_ALL, "C");
+    /*
+     * Increase the application queue size from default value of 8.
+     * At the default value, cross application SendMessage of WM_KILLFOCUS
+     * will fail because the handler will not be able to do a PostMessage!
+     * This is only needed for Windows 3.x, since NT dynamically expands
+     * the queue.
+     */
+
+    SetMessageQueue(64);
+
+    /*
+     * Create the console channels and install them as the standard
+     * channels.  All I/O will be discarded until TkConsoleInit is
+     * called to attach the console to a text widget.
+     */
+
+    consoleRequired = FALSE;
+
+    Tk_Main(argc, argv, Tcl_AppInit);
+    return 0;
+}
+
