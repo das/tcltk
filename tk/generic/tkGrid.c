@@ -2384,7 +2384,7 @@ ConfigureSlaves(interp, tkwin, objc, objv)
     Gridder *slavePtr;
     Tk_Window other, slave, parent, ancestor;
     int i, j, tmp;
-    size_t length;
+    int length;
     int numWindows;
     int width;
     int defaultColumn = 0;	/* default column number */

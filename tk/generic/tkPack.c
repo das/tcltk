@@ -1141,7 +1141,7 @@ PackAfter(interp, prevPtr, masterPtr, objc, objv)
 {
     register Packer *packPtr;
     Tk_Window tkwin, ancestor, parent;
-    size_t length;
+    int length;
     Tcl_Obj **options;
     int index, optionCount, c;
 
