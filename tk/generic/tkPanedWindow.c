@@ -1501,7 +1501,10 @@ PanedWindowReqProc(clientData, tkwin)
 {
     Slave *panePtr = (Slave *) clientData;
     PanedWindow *pwPtr = (PanedWindow *) (panePtr->masterPtr);
-    ComputeGeometry(pwPtr);
+    if (!(pwPtr->flags & REQUESTED_RELAYOUT)) {
+	pwPtr->flags |= REQUESTED_RELAYOUT;
+	Tcl_DoWhenIdle(ArrangePanes, (ClientData) pwPtr);
+    }
 }
 
 /*
@@ -1810,7 +1813,7 @@ ComputeGeometry(pwPtr)
     int i, x, y, doubleBw, internalBw;
     int reqWidth, reqHeight, sashWidth, sxOff, syOff, hxOff, hyOff, dim;
     Slave *slavePtr;
-    
+
     pwPtr->flags |= REQUESTED_RELAYOUT;
 
     x = y = internalBw = Tk_InternalBorderWidth(pwPtr->tkwin);
