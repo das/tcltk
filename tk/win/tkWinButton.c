@@ -896,10 +896,12 @@ TkpComputeButtonGeometry(butPtr)
 	    width  -= 10;
 	    height -= 10;
 
-	    /*
-	     * Extra inset for the focus ring.
-	     */
-	    butPtr->inset += 1;
+	    if (!haveImage) {
+		/*
+		 * Extra inset for the focus ring.
+		 */
+		butPtr->inset += 1;
+	    }
 	    break;
 	}
 
