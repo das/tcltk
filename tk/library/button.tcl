@@ -342,7 +342,7 @@ proc ::tk::ButtonEnter {w} {
 
 proc ::tk::ButtonLeave w {
     variable ::tk::Priv
-    if {[$w cget -state] eq "disabled"} {
+    if {[$w cget -state] ne "disabled"} {
 	$w configure -state normal
     }
 
