@@ -27,9 +27,9 @@ namespace eval ::tk::console {
     variable defaultPrompt  ; # default prompt if tcl_prompt1 isn't used
 
     if {$inPlugin} {
-	set defaultPrompt {subst "[history nextid] % "}
+	set defaultPrompt {subst {[history nextid] % }}
     } else {
-	set defaultPrompt {subst "([file tail [pwd]]) [history nextid] % "}
+	set defaultPrompt {subst {([file tail [pwd]]) [history nextid] % }}
     }
 }
 
@@ -309,6 +309,7 @@ proc tkConsoleBind {w} {
 	<<Console_PrevSearch>>		<Control-Key-r>
 	<<Console_NextSearch>>		<Control-Key-s>
 
+	<<Console_Expand>>		<Key-Tab>
 	<<Console_Expand>>		<Key-Escape>
 	<<Console_ExpandFile>>		<Control-Shift-Key-F>
 	<<Console_ExpandProc>>		<Control-Shift-Key-P>
@@ -328,11 +329,6 @@ proc tkConsoleBind {w} {
 	bind Console $key {}
     }
 
-    bind Console <Tab> {
-	tkConsoleInsert %W \t
-	focus %W
-	break
-    }
     bind Console <<Console_Expand>> {
 	if {[%W compare insert > promptEnd]} {::tk::console::Expand %W}
     }
