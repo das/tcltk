@@ -216,6 +216,7 @@ EventRef TkMacOSXCreateFakeEvent ();
 void
 Tk_MacOSXSetupTkNotifier()
 {
+    EventQueueRef mainEventQueue;
     Tcl_NotifierProcs macNotifierProcs = {
         TkMacOSXSetTimer,
         TkMacOSXWaitForEvent,
@@ -226,8 +227,24 @@ Tk_MacOSXSetupTkNotifier()
         TkMacOSXAlertNotifier,
         TkMacOSXServiceModeHook
     };
-    
+
+    /*
+     * Dispose of existing unix notifier thread
+     */
+
+    TclFinalizeNotifier();
+
     Tcl_SetNotifier(&macNotifierProcs);
+
+    /* HACK ALERT: There is a bug in Jaguar where when it goes to make
+     * the event queue for the Main Event Loop, it stores the Current
+     * event loop rather than the Main Event Loop in the Queue structure.
+     * So we have to make sure that the Main Event Queue gets set up on
+     * the main thread.  Calling GetMainEventQueue will force this to
+     * happen.
+     */
+
+    mainEventQueue = GetMainEventQueue();
 
     /* 
      * Tcl_SetNotifier doesn't call the TclInitNotifier
