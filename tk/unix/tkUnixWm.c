@@ -982,7 +982,8 @@ Tk_WmObjCmd(clientData, interp, objc, objv)
         WMOPT_POSITIONFROM, WMOPT_PROTOCOL, WMOPT_RESIZABLE, WMOPT_SIZEFROM,
         WMOPT_STACKORDER, WMOPT_STATE, WMOPT_TITLE, WMOPT_TRANSIENT,
 	WMOPT_WITHDRAW };
-    int index, length;
+    int index; 
+    size_t length;
     char *argv1;
     TkWindow *winPtr;
     TkDisplay *dispPtr = ((TkWindow *) tkwin)->dispPtr;
