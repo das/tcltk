@@ -2302,9 +2302,11 @@ WmWaitVisibilityProc(clientData, eventPtr)
 	    if ((state == NormalState) || (state == ZoomState)) {
 		TkpWmSetState(winPtr, state);
 		UpdateWrapper(winPtr);
+#if 0
 		Tk_DeleteEventHandler((Tk_Window) masterPtr,
 			VisibilityChangeMask,
 			WmWaitVisibilityProc, (ClientData) winPtr);
+#endif
 	    }
 	}
     }
