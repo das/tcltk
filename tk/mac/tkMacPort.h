@@ -71,14 +71,14 @@ extern int errno;
  */
 
 #ifndef panic	/* In a stubs-aware setting, this could confuse the #define */
-extern void 		panic  _ANSI_ARGS_(TCL_VARARGS(char *, string));
+EXTERN void 		panic  _ANSI_ARGS_(TCL_VARARGS(char *, string));
 #endif
 #ifndef strcasecmp
-extern int		strcasecmp _ANSI_ARGS_((CONST char *s1,
+EXTERN int		strcasecmp _ANSI_ARGS_((CONST char *s1,
 			    CONST char *s2));
 #endif
 #ifndef strncasecmp			    
-extern int		strncasecmp _ANSI_ARGS_((CONST char *s1,
+EXTERN int		strncasecmp _ANSI_ARGS_((CONST char *s1,
 			    CONST char *s2, size_t n));
 #endif
 /*
@@ -148,5 +148,14 @@ extern int		strncasecmp _ANSI_ARGS_((CONST char *s1,
 #define MENU_DISABLED_PIXEL		49
 #define MENU_TEXT_PIXEL			51
 #define APPEARANCE_PIXEL		52
+
+/*
+ * The following declaration is used to get access to a private Tcl interface
+ * that is needed for portability reasons.
+ */
+
+#ifndef _TCLINT
+#include <tclInt.h>
+#endif
 
 #endif /* _TKMACPORT */

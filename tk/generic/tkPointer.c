@@ -21,6 +21,7 @@
 #endif
 
 #ifdef MAC_TCL
+#include "tkMacInt.h"
 #define Cursor XCursor
 #endif
 

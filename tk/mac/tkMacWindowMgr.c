@@ -273,13 +273,13 @@ TkAboutDlg()
     while (itemHit != 1) {
 	ModalDialog( NULL, &itemHit);
     }
-    DisposDialog(aboutDlog);
+    DisposeDialog(aboutDlog);
     aboutDlog = NULL;
 	
     if (TkMacHaveAppearance() >= 0x110) {
-    SelectWindow(FrontWindow());
-    } else {
         SelectWindow(FrontNonFloatingWindow());
+    } else {
+    SelectWindow(FrontWindow());
     }
 
     return;
@@ -1234,7 +1234,11 @@ TkMacConvertEvent(
 	    /* fall through */
 	    
 	case keyUp:
+	    if (TkMacHaveAppearance() >= 0x110) {
 	    whichWindow = FrontNonFloatingWindow();
+	    } else {
+	        whichWindow = FrontWindow();
+	    }
 	    if (whichWindow == NULL) {
 	        /*
 	         * This happens if we get a key event before Tk has had a
@@ -1715,7 +1719,7 @@ BringWindowForward(
     WindowRef wRef)
 {
     if (!TkpIsWindowFloating(wRef)) {
-        if (IsValidWindowPtr(wRef))
+        if ((TkMacHaveAppearance() < 0x110) || IsValidWindowPtr(wRef))
         SelectWindow(wRef);
     }
 }
