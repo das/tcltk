@@ -358,6 +358,7 @@ install-binaries:
 	copy $(WISH) "$(BIN_INSTALL_DIR)"
 	@mkd "$(LIB_INSTALL_DIR)"
 	copy $(TKLIB) "$(LIB_INSTALL_DIR)"
+	copy $(TKSTUBLIB) "$(LIB_INSTALL_DIR)"
 
 install-libraries:
 	@mkd "$(INCLUDE_INSTALL_DIR)"
