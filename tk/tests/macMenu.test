@@ -852,7 +852,7 @@ test macMenu-21.3 {TkpSetMainMenubar - different interps} {
     catch {destroy .m1}
     catch {interp delete testinterp}
     interp create testinterp
-    load {} tk testinterp
+    load {} Tk testinterp
     menu .m1
     . configure -menu .m1
     raise .

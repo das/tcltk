@@ -25,10 +25,6 @@
 #define CHECK_STYLE (BS_OWNERDRAW | BS_CHECKBOX | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS)
 #define RADIO_STYLE (BS_OWNERDRAW | BS_RADIOBUTTON | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS)
 
-static DWORD buttonStyles[] = {
-    LABEL_STYLE, PUSH_STYLE, CHECK_STYLE, RADIO_STYLE
-};
-
 /*
  * Declaration of Windows specific button structure.
  */
@@ -84,12 +80,8 @@ static Tcl_ThreadDataKey dataKey;
  * Declarations for functions defined in this file.
  */
 
-static int		ButtonBindProc _ANSI_ARGS_((ClientData clientData,
-			    Tcl_Interp *interp, XEvent *eventPtr,
-			    Tk_Window tkwin, KeySym keySym));
 static LRESULT CALLBACK	ButtonProc _ANSI_ARGS_((HWND hwnd, UINT message,
 			    WPARAM wParam, LPARAM lParam));
-static DWORD		ComputeStyle _ANSI_ARGS_((WinButton* butPtr));
 static Window		CreateProc _ANSI_ARGS_((Tk_Window tkwin,
 			    Window parent, ClientData instanceData));
 static void		InitBoxes _ANSI_ARGS_((void));
@@ -280,8 +272,13 @@ CreateProc(tkwin, parentWin, instanceData)
 	    parent, NULL, Tk_GetHINSTANCE(), NULL);
     SetWindowPos(butPtr->hwnd, HWND_TOP, 0, 0, 0, 0,
 		    SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE);
+#ifdef _WIN64
+    butPtr->oldProc = (WNDPROC)SetWindowLongPtr(butPtr->hwnd, GWLP_WNDPROC,
+	    (LONG_PTR) ButtonProc);
+#else
     butPtr->oldProc = (WNDPROC)SetWindowLong(butPtr->hwnd, GWL_WNDPROC,
 	    (DWORD) ButtonProc);
+#endif
 
     window = Tk_AttachHWND(tkwin, butPtr->hwnd);
     return window;
@@ -310,7 +307,11 @@ TkpDestroyButton(butPtr)
     WinButton *winButPtr = (WinButton *)butPtr;
     HWND hwnd = winButPtr->hwnd;
     if (hwnd) {
+#ifdef _WIN64
+	SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR) winButPtr->oldProc);
+#else
 	SetWindowLong(hwnd, GWL_WNDPROC, (DWORD) winButPtr->oldProc);
+#endif
     }
 }
 
@@ -387,20 +388,6 @@ TkpDisplayButton(clientData)
     if ((butPtr->type >= TYPE_CHECK_BUTTON) && !butPtr->indicatorOn) {
 	relief = (butPtr->flags & SELECTED) ? TK_RELIEF_SUNKEN
 		: TK_RELIEF_RAISED;
-    }
-
-    /*
-     * LINK relief means that the button has a raised relief when it is
-     * active, and a flat relief otherwise (like toolbar buttons).  It
-     * is supported for true buttons only.
-     */
-
-    if ((butPtr->type == TYPE_BUTTON) && butPtr->relief == TK_RELIEF_LINK) {
-	if (butPtr->state == STATE_ACTIVE) {
-	    relief = TK_RELIEF_RAISED;
-	} else {
-	    relief = TK_RELIEF_FLAT;
-	}
     }
 
     /*

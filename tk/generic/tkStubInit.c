@@ -949,6 +949,8 @@ TkStubs tkStubs = {
     Tk_PostscriptStipple, /* 236 */
     Tk_PostscriptY, /* 237 */
     Tk_PostscriptPhoto, /* 238 */
+    Tk_CreateClientMessageHandler, /* 239 */
+    Tk_DeleteClientMessageHandler, /* 240 */
 };
 
 /* !END!: Do not edit above this line. */

@@ -539,6 +539,13 @@ Tk_InitOptions(interp, recordPtr, optionTable, tkwin)
 	    continue;
 	}
 
+	/*
+	 * Bump the reference count on valuePtr, so that it is strongly
+	 * referenced here, and will be properly free'd when finished,
+	 * regardless of what DoObjConfig does.
+	 */
+	Tcl_IncrRefCount(valuePtr);
+	
 	if (DoObjConfig(interp, recordPtr, optionPtr, valuePtr, tkwin,
 		(Tk_SavedOption *) NULL) != TCL_OK) {
 	    if (interp != NULL) {
@@ -563,8 +570,10 @@ Tk_InitOptions(interp, recordPtr, optionTable, tkwin)
 		}
 		Tcl_AddErrorInfo(interp, msg);
 	    }
+	    Tcl_DecrRefCount(valuePtr);
 	    return TCL_ERROR;
 	}
+	Tcl_DecrRefCount(valuePtr);
     }
     return TCL_OK;
 }
@@ -804,34 +813,10 @@ DoObjConfig(interp, recordPtr, optionPtr, valuePtr, tkwin, savedOptionPtr)
 	}
 	case TK_OPTION_RELIEF: {
 	    int new;
-	    char *valueStr;
-	    
+
 	    if (Tk_GetReliefFromObj(interp, valuePtr, &new) != TCL_OK) {
-		/*
-		 * In order that error messages be handled properly, we let
-		 * GetReliefFromObj do the first pass check on the relief
-		 * string.  If it fails there, and the option spec doesn't
-		 * allow for LINK relief, return an error.  If the option spec
-		 * does allow LINK relief, see if the string matches "link".
-		 */
-		if ((specPtr->flags & TK_OPTION_LINK_OK) == 0) {
-		    return TCL_ERROR;
-		} else {
-		    valueStr = Tcl_GetString(valuePtr);
-		    if (valueStr[0] == 'l' && strcmp(valueStr, "link") == 0) {
-			new = TK_RELIEF_LINK;
-			Tcl_ResetResult(interp);
-		    } else {
-			Tcl_ResetResult(interp);
-			Tcl_AppendResult(interp, "bad relief \"",
-				valueStr, "\": must be flat, groove, link, "
-				"raised, ridge, solid, or sunken",
-				(char *)NULL);
-			return TCL_ERROR;
-		    }
-		}
+		return TCL_ERROR;
 	    }
-		    
 	    if (internalPtr != NULL) {
 		*((int *) oldInternalPtr) = *((int *) internalPtr);
 		*((int *) internalPtr) = new;

@@ -167,5 +167,7 @@ EXTERN void	TkWinUpdatingClipboard(int mode);
 #undef TCL_STORAGE_CLASS
 #define TCL_STORAGE_CLASS DLLIMPORT
 
+extern Tcl_Encoding TkWinGetKeyInputEncoding _ANSI_ARGS_((void));
+
 #endif /* _TKWININT */
 

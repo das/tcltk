@@ -8,7 +8,7 @@ AC_INIT(../generic/tk.h)
 TK_VERSION=8.3
 TK_MAJOR_VERSION=8
 TK_MINOR_VERSION=3
-TK_PATCH_LEVEL=".2"
+TK_PATCH_LEVEL=".3"
 VERSION=${TK_VERSION}
 
 if test "${prefix}" = "NONE"; then
@@ -255,7 +255,7 @@ if test "$tk_checkBoth" = 1; then
     LIBS="$LIBS -lsocket -lnsl"
     AC_CHECK_FUNC(accept, tk_checkNsl=0, [LIBS=$tk_oldLibs])
 fi
-AC_CHECK_FUNC(gethostbyname, , AC_CHECK_LIB(nsl, main, [LIBS="$LIBS -lnsl"]))
+AC_CHECK_FUNC(gethostbyname, , [AC_CHECK_LIB(nsl, main, [LIBS="$LIBS -lnsl"])])
 
 # Add the threads support libraries
 
@@ -334,7 +334,7 @@ TCL_STUB_LIB_SPEC='-L$(TCL_BIN_DIR) $(TCL_STUB_LIB_FLAG)'
 if test "${SHARED_BUILD}" = "1" -a "${SHLIB_SUFFIX}" != ""; then
     TK_SHLIB_CFLAGS="${SHLIB_CFLAGS}"
     TK_LIB_FILE=libtk${TK_SHARED_LIB_SUFFIX}
-    MAKE_LIB="\${SHLIB_LD} -o \${TK_LIB_FILE} \${OBJS} \$(TK_LD_SEARCH_FLAGS) ${TCL_STUB_LIB_SPEC} \${LIBS}"
+    MAKE_LIB="\${SHLIB_LD} -o \${TK_LIB_FILE} \${OBJS} \$(TK_LD_SEARCH_FLAGS) ${TCL_STUB_LIB_SPEC} \${SHLIB_LD_LIBS}"
     RANLIB=":"
 
 #    TCL_STUB_FLAGS="-DUSE_TCL_STUBS"

@@ -1106,7 +1106,13 @@ TkInvokeMenu(interp, menuPtr, index)
 	}
 	Tcl_DecrRefCount(valuePtr);
     }
-    if ((result == TCL_OK) && (mePtr->commandPtr != NULL)) {
+    /*
+     * We check numEntries in addition to whether the menu entry
+     * has a command because that goes to zero if the menu gets
+     * deleted (e.g., during command evaluation).
+     */
+    if ((menuPtr->numEntries != 0) && (result == TCL_OK)
+	    && (mePtr->commandPtr != NULL)) {
 	Tcl_Obj *commandPtr = mePtr->commandPtr;
 
 	Tcl_IncrRefCount(commandPtr);

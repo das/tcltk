@@ -1449,7 +1449,7 @@ DrawWindowsSystemBitmap(display, drawable, gc, rectPtr, bitmapID, alignFlags)
     DPtoLP(hdc, &ptSize, 1);
 
     ptOrg.y = ptOrg.x = 0;
-    DPtoLP(hdc, &ptOrg, 1);
+    DPtoLP(scratchDC, &ptOrg, 1);
 
     if (alignFlags & ALIGN_BITMAP_TOP) {
 	topOffset = 0;
@@ -2715,7 +2715,7 @@ SetDefaults(
      * documented.
      */
 
-    if (TkWinGetPlatformId() == VER_PLATFORM_WIN32_WINDOWS) {
+    if (TkWinGetPlatformId() >= VER_PLATFORM_WIN32_WINDOWS) {
 	indicatorDimensions[0] = GetSystemMetrics(SM_CYMENUCHECK);
 	indicatorDimensions[1] = ((GetSystemMetrics(SM_CXFIXEDFRAME) +
 		GetSystemMetrics(SM_CXBORDER) 

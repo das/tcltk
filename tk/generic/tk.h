@@ -39,7 +39,7 @@ extern "C" {
  * win/README		(not patchlevel)
  * unix/README		(not patchlevel)
  * unix/tk.spec		(3 LOC Major/Minor, 2 LOC patch)
- * win/aclocal.m4	(not patchlevel)
+ * win/tcl.m4		(not patchlevel)
  *
  * You may also need to update some of these files when the numbers change
  * for the version of Tcl that this release of Tk is compiled against.
@@ -48,10 +48,10 @@ extern "C" {
 #define TK_MAJOR_VERSION   8
 #define TK_MINOR_VERSION   3
 #define TK_RELEASE_LEVEL   TCL_FINAL_RELEASE
-#define TK_RELEASE_SERIAL  2
+#define TK_RELEASE_SERIAL  3
 
 #define TK_VERSION	"8.3"
-#define TK_PATCH_LEVEL	"8.3.2"
+#define TK_PATCH_LEVEL	"8.3.3"
 
 /*
  * The following definitions set up the proper options for Macintosh
@@ -1338,6 +1338,8 @@ typedef int (Tk_ErrorProc) _ANSI_ARGS_((ClientData clientData,
 typedef void (Tk_EventProc) _ANSI_ARGS_((ClientData clientData,
 	XEvent *eventPtr));
 typedef int (Tk_GenericProc) _ANSI_ARGS_((ClientData clientData,
+	XEvent *eventPtr));
+typedef int (Tk_ClientMessageProc) _ANSI_ARGS_((Tk_Window tkwin,
 	XEvent *eventPtr));
 typedef int (Tk_GetSelProc) _ANSI_ARGS_((ClientData clientData,
 	Tcl_Interp *interp, char *portion));

@@ -270,7 +270,7 @@ static int AddClause(interp, filterPtr, patternsStr, ostypesStr, isWindows)
 		/*
 		 * Prepend a "*" to patterns that do not have a leading "*"
 		 */
-		globPtr->pattern = (char*)ckalloc(len+1);
+		globPtr->pattern = (char*)ckalloc((unsigned int) len+1);
 		globPtr->pattern[0] = '*';
 		strcpy(globPtr->pattern+1, globList[i]);
 	    }
@@ -289,11 +289,11 @@ static int AddClause(interp, filterPtr, patternsStr, ostypesStr, isWindows)
 		    strcpy(globPtr->pattern, "*.");
 		}
 		else {
-		    globPtr->pattern = (char*)ckalloc(len);
+		    globPtr->pattern = (char*)ckalloc((unsigned int) len);
 		    strcpy(globPtr->pattern, globList[i]);
 		}
 	    } else {
-		globPtr->pattern = (char*)ckalloc(len);
+		globPtr->pattern = (char*)ckalloc((unsigned int) len);
 		strcpy(globPtr->pattern, globList[i]);
 	    }
 

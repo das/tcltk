@@ -32,8 +32,7 @@ TK_DBGX=@TK_DBGX@
 TK_LIB_FILE='@TK_LIB_FILE@'
 
 # Additional libraries to use when linking Tk.
-TK_LIBS='@LIBS@ @LIBS_GUI@'
-LIBS_GUI='@LIBS_GUI@'
+TK_LIBS='@XLIBSW@ @DL_LIBS@ @LIBS@ @MATH_LIBS@'
 
 # Top-level directory in which Tcl's platform-independent files are
 # installed.
@@ -45,6 +44,9 @@ TK_EXEC_PREFIX='@exec_prefix@'
 
 # -I switch(es) to use to make all of the X11 include files accessible:
 TK_XINCLUDES='@XINCLUDES@'
+
+# Linker switch(es) to use to link with the X11 library archive.
+TK_XLIBSW='@XLIBSW@'
 
 # -l flag to pass to the linker to pick up the Tcl library
 TK_LIB_FLAG='@TK_LIB_FLAG@'

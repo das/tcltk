@@ -216,7 +216,7 @@ test unixEmbed-5.1 {TkpClaimFocus procedure} {macOnly tempNotMac} {
     pack .f1 .f2
     interp create child
     child eval "set argv {-use [winfo id .f1]}"
-    load {} tk child
+    load {} Tk child
     child eval {
 	. configure -bd 2 -highlightthickness 2 -relief sunken
     }

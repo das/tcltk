@@ -27,8 +27,6 @@ static Tcl_ThreadDataKey dataKey;
 
 static void		NotifyVisibility _ANSI_ARGS_((XEvent *eventPtr,
 			    TkWindow *winPtr));
-static void 		StackWindow _ANSI_ARGS_((Window w, Window sibling,
-			    int stack_mode));
 
 /*
  *----------------------------------------------------------------------

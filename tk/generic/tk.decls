@@ -1126,6 +1126,15 @@ declare 238 generic {
 	    int width, int height)
 }
 
+# New in 8.4a1 / 8.3.3
+#
+declare 239 generic {
+    void Tk_CreateClientMessageHandler (Tk_ClientMessageProc *proc)
+}
+declare 240 generic {
+    void Tk_DeleteClientMessageHandler (Tk_ClientMessageProc *proc)
+}
+
 # Define the platform specific public Tk interface.  These functions are
 # only available on the designated platform.
 

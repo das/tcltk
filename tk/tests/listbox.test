@@ -2050,15 +2050,21 @@ test listbox-25.2 {listbox item configurations and widget based inserts} {
     .l insert 0 1 2 3 4
     list [.l itemcget 0 -fg] [.l itemcget 4 -fg]
 } [list {} red]
-    
-
 
 resetGridInfo
-catch {destroy .l2}
-catch {destroy .t}
-catch {destroy .e}
-catch {destroy .partial}
+eval destroy [winfo children .]
 option clear
+
+test listbox-27.1 {widget deletion while active} {
+    destroy .l
+    pack [listbox .l]
+    update
+    .l configure -cursor xterm -xscrollcommand { destroy .l }
+    update idle
+    winfo exists .l
+} 0
+
+eval destroy [winfo children .]
 
 # cleanup
 ::tcltest::cleanupTests

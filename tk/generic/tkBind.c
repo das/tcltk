@@ -3722,12 +3722,18 @@ NameToWindow(interp, mainWin, objPtr, tkwinPtr)
 	}
 	*tkwinPtr = tkwin;
     } else {
-	if (TkpScanWindowId(NULL, name, &id) != TCL_OK) {
+	/*
+	 * Check for the winPtr being valid, even if it looks ok to
+	 * TkpScanWindowId.  [Bug #411307]
+	 */
+
+	if ((TkpScanWindowId(NULL, name, &id) != TCL_OK) ||
+		((*tkwinPtr = Tk_IdToWindow(Tk_Display(mainWin), (Window) id))
+			== NULL)) {
 	    Tcl_AppendResult(interp, "bad window name/identifier \"",
 		    name, "\"", (char *) NULL);
 	    return TCL_ERROR;
 	}
-	*tkwinPtr = Tk_IdToWindow(Tk_Display(mainWin), (Window) id);
     }
     return TCL_OK;
 }

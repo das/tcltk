@@ -151,6 +151,23 @@ static int ShouldUseConsoleChannel(type)
     if ((handle == INVALID_HANDLE_VALUE) || (handle == 0)) {
 	return 1;
     }
+
+    /*
+     * Win2K BUG: GetStdHandle(STD_OUTPUT_HANDLE) can return what appears
+     * to be a valid handle.  See TclpGetDefaultStdChannel() for this change
+     * implemented.  We didn't change it here because GetFileType() [below]
+     * will catch this with FILE_TYPE_UNKNOWN and appropriately return a
+     * value of 1, anyways.
+     *
+     *    char dummyBuff[1];
+     *    DWORD dummyWritten;
+     *
+     *    if ((type == TCL_STDOUT)
+     *	    && !WriteFile(handle, dummyBuff, 0, &dummyWritten, NULL)) {
+     *	return 1;
+     *    }
+     */
+
     fileType = GetFileType(handle);
 
     /*
