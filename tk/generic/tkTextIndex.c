@@ -781,7 +781,7 @@ GetIndex(interp, textPtr, string, indexPtr, canCachePtr)
 	if (end == cp) {
 	    goto error;
 	}
-	TkTextPixelIndex(textPtr, x, y, indexPtr);
+	TkTextPixelIndex(textPtr, x, y, indexPtr, NULL);
 	endOfBase = end;
 	goto gotBase; 
     }
