@@ -33,7 +33,6 @@ proc focusSetupAlt {} {
     global env
     catch {destroy .alt}
     toplevel .alt -screen $env(TK_ALT_DISPLAY)
-    wm withdraw .alt
     foreach i {a b c d} {
 	button .alt.$i -text .alt.$i -relief raised -bd 2
 	pack .alt.$i
