@@ -74,8 +74,21 @@
 
 #define MENU_HASH_KEY "tkMenus"
 
-static int menusInitialized;	/* Whether or not the hash tables, etc., have
-				 * been setup */
+typedef struct ThreadSpecificData {
+    int menusInitialized;       /* Flag indicates whether thread-specific
+				 * elements of the Windows Menu module
+				 * have been initialized. */
+} ThreadSpecificData;
+static Tcl_ThreadDataKey dataKey;
+
+/*
+ * The following flag indicates whether the process-wide state for
+ * the Menu module has been intialized.  The Mutex protects access to
+ * that flag.
+ */
+
+static int menusInitialized;
+TCL_DECLARE_MUTEX(menuMutex)
 
 /*
  * Configuration specs for individual menu entries. If this changes, be sure
@@ -3413,8 +3426,19 @@ DeleteMenuCloneEntries(menuPtr, first, last)
 void
 TkMenuInit()
 {
+    ThreadSpecificData *tsdPtr = (ThreadSpecificData *) 
+	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
+    
     if (!menusInitialized) {
-    	TkpMenuInit();
-    	menusInitialized = 1;
+	Tcl_MutexLock(&menuMutex);
+	if (!menusInitialized) {
+	    TkpMenuInit();
+	    menusInitialized = 1;
+	}
+	Tcl_MutexUnlock(&menuMutex);
+    }
+    if (!tsdPtr->menusInitialized) {
+	TkpMenuThreadInit();
+	tsdPtr->menusInitialized = 1;
     }
 }
