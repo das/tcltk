@@ -559,7 +559,7 @@ TkpDisplayScale(clientData)
     scalePtr->flags &= ~INVOKE_COMMAND;
     if (scalePtr->flags & SCALE_DELETED) {
 	Tcl_Release((ClientData) scalePtr);
-	goto done;
+	return;
     }
     Tcl_Release((ClientData) scalePtr);
 
