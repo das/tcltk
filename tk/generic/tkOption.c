@@ -396,7 +396,7 @@ Tk_GetOption(tkwin, name, className)
 				 * is no class for this option:  just
 				 * check for name. */
 {
-    Tk_Uid nameId, classId;
+    Tk_Uid nameId, classId = NULL;
     char *masqName;
     register Element *elPtr, *bestPtr;
     register int count;
