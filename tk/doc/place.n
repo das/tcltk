@@ -236,12 +236,12 @@ the master windows or the parents of slave windows (i.e. it doesn't
 set their requested sizes).
 To control the sizes of these windows, make them windows like
 frames and canvases that provide configuration options for this purpose.
-.SH
+.SH EXAMPLE
 Make the label occupy the middle bit of the toplevel, no matter how it
 is resized:
 .CS
 label .l \-text "In the\nMiddle!" \-bg black \-fg white
-place .l \-relwidth .3 \-relx .35 \-relheight .3 \-rely .35
+\fBplace\fR .l \-relwidth .3 \-relx .35 \-relheight .3 \-rely .35
 .CE
 
 .SH "SEE ALSO"
