@@ -2257,7 +2257,8 @@ TestsendCmd(clientData, interp, argc, argv)
 		Tcl_DString tmp;
 
 		Tcl_DStringInit(&tmp);
-		for (p = Tcl_DStringAppend(&tmp, argv[4], strlen(argv[4]));
+		for (p = Tcl_DStringAppend(&tmp, argv[4],
+			(int) strlen(argv[4]));
 			*p != 0; p++) {
 		    if (*p == '\n') {
 			*p = 0;
