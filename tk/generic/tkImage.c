@@ -257,6 +257,7 @@ Tk_ImageObjCmd(clientData, interp, objc, objv)
 		masterPtr->instancePtr = NULL;
 		masterPtr->deleted = 0;
 		masterPtr->winPtr = winPtr->mainPtr->winPtr;
+		Tcl_Preserve((ClientData) masterPtr->winPtr);
 		Tcl_SetHashValue(hPtr, masterPtr);
 	    } else {
 		/*
@@ -910,6 +911,7 @@ DeleteImage(masterPtr)
         if ((masterPtr->winPtr->flags & TK_ALREADY_DEAD) == 0) {
 	    Tcl_DeleteHashEntry(masterPtr->hPtr);
 	}
+	Tcl_Release((ClientData) masterPtr->winPtr);
 	ckfree((char *) masterPtr);
     }
 }
