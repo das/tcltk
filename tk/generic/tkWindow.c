@@ -41,7 +41,7 @@ static Tcl_ThreadDataKey dataKey;
  * The Mutex below is used to lock access to the Tk_Uids above. 
  */
 
-TCL_DECLARE_MUTEX(windowMutex);
+TCL_DECLARE_MUTEX(windowMutex)
 
 /*
  * Default values for "changes" and "atts" fields of TkWindows.  Note
