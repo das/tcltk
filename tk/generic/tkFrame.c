@@ -805,7 +805,7 @@ FrameWidgetObjCmd(clientData, interp, objc, objv)
 			&& (strncmp(arg, "-visual", length) == 0))) {
 		    if(c == 'u') {
 			CONST char*string = Tcl_GetString(objv[i+1]);
-			if(TCL_OK == TkpUseWindow(interp, framePtr->tkwin, string)) {
+			if(TCL_OK != TkpUseWindow(interp, framePtr->tkwin, string)) {
 			    result = TCL_ERROR;
 			    goto done;
 			}
