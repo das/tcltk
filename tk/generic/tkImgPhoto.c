@@ -937,17 +937,18 @@ ImgPhotoCmd(clientData, interp, objc, objv)
 	 */
 
 	if (options.options & OPT_FORMAT) {
+	    matched = 0;
 	    for (imageFormat = tsdPtr->formatList; imageFormat != NULL;
 	 	imageFormat = imageFormat->nextPtr) {
 		if ((strncasecmp(Tcl_GetString(options.format),
 			imageFormat->name, strlen(imageFormat->name)) == 0)) {
+		    matched = 1;
 		    if (imageFormat->stringWriteProc != NULL) {
 			stringWriteProc = imageFormat->stringWriteProc;
 			break;
 		    }
 		}
 	    }
-	    matched = 0;
 	    if (stringWriteProc == NULL) {
 		oldformat = 1;
 		for (imageFormat = tsdPtr->oldFormatList; imageFormat != NULL;
