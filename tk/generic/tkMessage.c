@@ -328,7 +328,8 @@ MessageWidgetObjCmd(clientData, interp, objc, objv)
     register Message *msgPtr = (Message *) clientData;
     static char *optionStrings[] = { "cget", "configure", (char *) NULL };
     enum options { MESSAGE_CGET, MESSAGE_CONFIGURE };
-    int index, result;
+    int index;
+    int result = TCL_OK;
     Tcl_Obj *objPtr;
     
     if (objc < 2) {
