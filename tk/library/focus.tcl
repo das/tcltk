@@ -130,14 +130,14 @@ proc tk_focusPrev w {
 
 proc tkFocusOK w {
     set code [catch {$w cget -takefocus} value]
-    if {($code == 0) && [string compare $value ""]} {
+    if {($code == 0) && ($value != "")} {
 	if {$value == 0} {
 	    return 0
 	} elseif {$value == 1} {
 	    return [winfo viewable $w]
 	} else {
-	    set value [uplevel #0 [list $value $w]]
-	    if {[string compare $value ""]} {
+	    set value [uplevel #0 $value [list $w]]
+	    if {$value != ""} {
 		return $value
 	    }
 	}
