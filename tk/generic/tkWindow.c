@@ -1401,6 +1401,13 @@ Tk_DestroyWindow(tkwin)
 		    (ClientData) winPtr->pathName);
 	    Tcl_DeleteHashEntry(Tcl_FindHashEntry(&winPtr->mainPtr->nameTable,
 		    winPtr->pathName));
+            /*
+             * The memory pointed to by pathName has been deallocated.
+             * Keep users from accessing it after the window has been
+             * destroyed by setting it to NULL.
+             */
+            winPtr->pathName = NULL;
+
 	    /*
 	     * Invalidate all objects referring to windows on this display.
 	     */
