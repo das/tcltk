@@ -330,7 +330,7 @@ static void
 SourceDialog()
 {
     int result;
-    char *path;
+    CONST char *path;
     char openCmd[] = "tk_getOpenFile -filetypes {\
             {{TCL Scripts} {.tcl} TEXT} {{Text Files} {} TEXT}}";
     

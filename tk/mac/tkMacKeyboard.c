@@ -247,7 +247,8 @@ TkpGetString(
 	    len = 0;
 	}
     }
-    return Tcl_ExternalToUtfDString(NULL, string, len, dsPtr);
+    Tcl_ExternalToUtfDString(NULL, string, len, dsPtr);
+    return Tcl_DStringValue(dsPtr);
 }
 
 /*
