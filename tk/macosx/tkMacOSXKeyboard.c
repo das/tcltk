@@ -628,8 +628,9 @@ TkpSetKeycodeAndState(
         }
 
         if (keysym <= LATIN1_MAX) {
-            eventPtr->xkey.trans_chars[0] = keysym;
-            eventPtr->xkey.trans_chars[1] = 0;
+            int done;
+            done = Tcl_UniCharToUtf(keysym,eventPtr->xkey.trans_chars);
+            eventPtr->xkey.trans_chars[done] = 0;
         } else {
             eventPtr->xkey.trans_chars[0] = 0;
         }
