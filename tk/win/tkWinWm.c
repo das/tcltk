@@ -1805,7 +1805,7 @@ UpdateWrapper(winPtr)
     TkWindow *winPtr;		/* Top-level window to redecorate. */
 {
     register WmInfo *wmPtr = winPtr->wmInfoPtr;
-    HWND parentHWND, oldWrapper;
+    HWND parentHWND, oldWrapper = wmPtr->wrapper;
     HWND child;
     int x, y, width, height, state;
     WINDOWPLACEMENT place;
@@ -1946,7 +1946,7 @@ UpdateWrapper(winPtr)
 	SetWindowLong(child, GWL_WNDPROC, (LONG) TopLevelProc);
 #endif
     }
-    oldWrapper = SetParent(child, wmPtr->wrapper);
+    SetParent(child, wmPtr->wrapper);
     if (oldWrapper) {
 	hSmallIcon = (HICON) SendMessage(oldWrapper, WM_GETICON, ICON_SMALL,
 		(LPARAM) NULL);
