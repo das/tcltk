@@ -688,8 +688,9 @@ TextWidgetObjCmd(clientData, interp, objc, objv)
 
 	    for (i = 2; i < objc-2; i++) {
 		int value;
-		int length;
-		CONST char *option = Tcl_GetStringFromObj(objv[i],&length);
+		unsigned length;
+		CONST char *option = Tcl_GetStringFromObj(objv[i],
+			(int *)&length);
 		char c;
 		if (length < 2 || option[0] != '-') {
 		  badOption:
@@ -1051,7 +1052,7 @@ TextWidgetObjCmd(clientData, interp, objc, objv)
 	    if (objc > 3) {
 		name = Tcl_GetStringFromObj(objv[i], &length);
 		if (length > 1 && name[0] == '-') {
-		    if (strncmp("-displaychars", name, length) == 0) {
+		    if (strncmp("-displaychars", name, (unsigned)length)==0) {
 			i++;
 			visible = 1;
 			name = Tcl_GetStringFromObj(objv[i], &length);
@@ -4336,7 +4337,8 @@ SearchCore(interp, searchSpecPtr, patObj)
 			    p = startOfLine + lastOffset -1;
 			}
 			while (p >= startOfLine + firstOffset) {
-			    if (p[0] == c && !strncmp(p, pattern, matchLength)) {
+			    if (p[0] == c && !strncmp(p, pattern,
+				    (unsigned)matchLength)) {
 				goto backwardsMatch;
 			    }
 			    p--;
