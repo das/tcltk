@@ -504,6 +504,7 @@ TkpDisplayScale(clientData)
     char string[PRINT_CHARS];
     XRectangle drawnArea;
 
+    scalePtr->flags &= ~REDRAW_PENDING;
     if ((scalePtr->tkwin == NULL) || !Tk_IsMapped(scalePtr->tkwin)) {
 	goto done;
     }
@@ -527,7 +528,7 @@ TkpDisplayScale(clientData)
     }
     Tcl_Release((ClientData) interp);
     scalePtr->flags &= ~INVOKE_COMMAND;
-    if (scalePtr->tkwin == NULL) {
+    if (scalePtr->flags & SCALE_DELETED) {
 	Tcl_Release((ClientData) scalePtr);
 	return;
     }
