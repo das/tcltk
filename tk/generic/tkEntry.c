@@ -271,7 +271,7 @@ static Tk_OptionSpec optionSpecs[] = {
     {TK_OPTION_COLOR, "-selectforeground", "selectForeground", "Background",
 	DEF_ENTRY_SELECT_FG_COLOR, -1, Tk_Offset(Entry, selFgColorPtr),
 	0, (ClientData) DEF_ENTRY_SELECT_FG_MONO, 0},
-    {TK_CONFIG_STRING, "-show", "show", "Show",
+    {TK_OPTION_STRING, "-show", "show", "Show",
         DEF_ENTRY_SHOW, -1, Tk_Offset(Entry, showChar), 
         TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_STRING_TABLE, "-state", "state", "State",

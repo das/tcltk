@@ -851,6 +851,11 @@ ImgPhotoCmd(clientData, interp, argc, argv)
 		!= TCL_OK) {
             return TCL_ERROR;
         }
+        if (Tcl_SetChannelOption(interp, chan, "-encoding", "binary")
+		!= TCL_OK) {
+            return TCL_ERROR;
+        }
+    
 	if (MatchFileFormat(interp, chan, options.name, options.format,
 		&imageFormat, &imageWidth, &imageHeight) != TCL_OK) {
 	    Tcl_Close(NULL, chan);
@@ -1361,6 +1366,10 @@ ImgPhotoConfigureMaster(interp, masterPtr, argc, argv, flags)
 	    return TCL_ERROR;
 	}
         if (Tcl_SetChannelOption(interp, chan, "-translation", "binary")
+		!= TCL_OK) {
+            return TCL_ERROR;
+        }
+        if (Tcl_SetChannelOption(interp, chan, "-encoding", "binary")
 		!= TCL_OK) {
             return TCL_ERROR;
         }

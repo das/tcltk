@@ -31,11 +31,14 @@
 #endif
 #undef USE_TK_STUB_PROCS
 
-#include "tkInt.h"
 #include "tkPort.h"
+#include "tkInt.h"
 
 #ifdef __WIN32__
 #include "tkWinInt.h"
+#endif
+#ifdef MAC_TCL
+#include "tkMacInt.h"
 #endif
 
 #include "tkDecls.h"

@@ -269,6 +269,15 @@ FileWritePPM(interp, fileName, formatString, blockPtr)
 	return TCL_ERROR;
     }
 
+    if (Tcl_SetChannelOption(interp, chan, "-translation", "binary")
+	    != TCL_OK) {
+	return TCL_ERROR;
+    }
+    if (Tcl_SetChannelOption(interp, chan, "-encoding", "binary")
+	    != TCL_OK) {
+	return TCL_ERROR;
+    }
+    
     sprintf(header, "P6\n%d %d\n255\n", blockPtr->width, blockPtr->height);
     Tcl_Write(chan, header, -1);
 	

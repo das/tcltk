@@ -594,6 +594,13 @@ EXTERN void		XSetWMClientMachine _ANSI_ARGS_((Display* display,
 /* 79 */
 EXTERN Status		XStringListToTextProperty _ANSI_ARGS_((char** list, 
 				int count, XTextProperty* text_prop_return));
+/* 80 */
+EXTERN void		XDrawSegments _ANSI_ARGS_((Display * display, 
+				Drawable d, GC gc, XSegment * segments, 
+				int nsegments));
+/* 81 */
+EXTERN void		XForceScreenSaver _ANSI_ARGS_((Display* display, 
+				int mode));
 #endif /* MAC_TCL */
 
 typedef struct TkIntXlibStubs {
@@ -787,6 +794,8 @@ typedef struct TkIntXlibStubs {
     XVisualInfo * (*xGetVisualInfo) _ANSI_ARGS_((Display* display, long vinfo_mask, XVisualInfo* vinfo_template, int* nitems_return)); /* 77 */
     void (*xSetWMClientMachine) _ANSI_ARGS_((Display* display, Window w, XTextProperty* text_prop)); /* 78 */
     Status (*xStringListToTextProperty) _ANSI_ARGS_((char** list, int count, XTextProperty* text_prop_return)); /* 79 */
+    void (*xDrawSegments) _ANSI_ARGS_((Display * display, Drawable d, GC gc, XSegment * segments, int nsegments)); /* 80 */
+    void (*xForceScreenSaver) _ANSI_ARGS_((Display* display, int mode)); /* 81 */
 #endif /* MAC_TCL */
 } TkIntXlibStubs;
 
@@ -1527,6 +1536,14 @@ extern TkIntXlibStubs *tkIntXlibStubsPtr;
 #ifndef XStringListToTextProperty
 #define XStringListToTextProperty \
 	(tkIntXlibStubsPtr->xStringListToTextProperty) /* 79 */
+#endif
+#ifndef XDrawSegments
+#define XDrawSegments \
+	(tkIntXlibStubsPtr->xDrawSegments) /* 80 */
+#endif
+#ifndef XForceScreenSaver
+#define XForceScreenSaver \
+	(tkIntXlibStubsPtr->xForceScreenSaver) /* 81 */
 #endif
 #endif /* MAC_TCL */
 

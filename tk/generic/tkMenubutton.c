@@ -148,7 +148,7 @@ static char *commandNames[] = {
 };
 
 enum command {
-    COMMAND_CGET, COMMAND_CONFIGURE, 
+    COMMAND_CGET, COMMAND_CONFIGURE
 };
 
 /*

@@ -512,6 +512,15 @@ TkGetBitmapData(interp, string, fileName, widthPtr, heightPtr,
 	    }
 	    return NULL;
 	}
+	
+        if (Tcl_SetChannelOption(interp, pi.chan, "-translation", "binary")
+		!= TCL_OK) {
+            return NULL;
+        }
+        if (Tcl_SetChannelOption(interp, pi.chan, "-encoding", "binary")
+		!= TCL_OK) {
+            return NULL;
+        }
     } else {
 	pi.chan = NULL;
     }
