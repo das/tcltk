@@ -1080,6 +1080,7 @@ TkParsePadAmount(interp, tkwin, specObj, halfPtr, allPtr)
     int firstInt, secondInt;    /* The two components of the padding */
     char *padSpec = Tcl_GetString(specObj);
 
+    while(*padSpec && isspace(UCHAR(*padSpec))) padSpec++; 
     for (secondPart=padSpec;
 	    (*secondPart != '\0') && !isspace(UCHAR(*secondPart));
 	    secondPart++)
