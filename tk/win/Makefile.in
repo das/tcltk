@@ -378,7 +378,8 @@ install-libraries:
 	    echo "Installing $$i"; \
 	    $(INSTALL_DATA) $$i $(INCLUDE_INSTALL_DIR); \
 	    done;
-	@for i in $(ROOT_DIR)/library/*.tcl $(ROOT_DIR)/library/tclIndex $(UNIX_DIR)/tkAppInit.c; \
+	@for i in $(ROOT_DIR)/library/*.tcl $(ROOT_DIR)/library/prolog.ps \
+	        $(ROOT_DIR)/library/tclIndex $(UNIX_DIR)/tkAppInit.c; \
 	    do \
 	    echo "Installing $$i"; \
 	    $(INSTALL_DATA) $$i $(SCRIPT_INSTALL_DIR); \
