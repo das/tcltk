@@ -122,6 +122,13 @@ TkpDisplayWarning(msg, title)
     char *msg;			/* Message to be displayed. */
     char *title;		/* Title of warning. */
 {
-    MessageBox(NULL, msg, title, MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL
+    Tcl_Encoding unicodeEncoding = Tcl_GetEncoding(NULL, "unicode");
+    Tcl_DString msgString, titleString;
+
+    Tcl_UtfToExternalDString(unicodeEncoding, msg, -1, &msgString);
+    Tcl_UtfToExternalDString(unicodeEncoding, title, -1, &titleString);
+    MessageBoxW(NULL, (WCHAR *) Tcl_DStringValue(&msgString),
+	    (WCHAR *) Tcl_DStringValue(&titleString),
+	    MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL
 	    | MB_SETFOREGROUND | MB_TOPMOST);
 }
