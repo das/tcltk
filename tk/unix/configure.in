@@ -101,8 +101,6 @@ SC_CONFIG_CFLAGS
 
 SC_ENABLE_SYMBOLS
 
-TK_DBGX=${DBGX}
-
 #--------------------------------------------------------------------
 #	Detect what compiler flags to set for 64-bit support.
 #--------------------------------------------------------------------
@@ -356,9 +354,9 @@ eval "TK_LIB_FILE=${TK_LIB_FILE}"
 
 if test "$SHARED_BUILD" = 0 -o $TCL_NEEDS_EXP_FILE = 0; then
     if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
-	eval TK_LIB_FLAG="-ltk${VERSION}\${TK_DBGX}"
+	eval TK_LIB_FLAG="-ltk${VERSION}"
     else
-	eval TK_LIB_FLAG="-ltk`echo ${VERSION} | tr -d .`\${TK_DBGX}"
+	eval TK_LIB_FLAG="-ltk`echo ${VERSION} | tr -d .`"
     fi
     TK_BUILD_LIB_SPEC="-L`pwd` ${TK_LIB_FLAG}"
     TK_LIB_SPEC="-L${libdir} ${TK_LIB_FLAG}"
@@ -391,9 +389,9 @@ TK_SHARED_BUILD=${SHARED_BUILD}
 eval "TK_STUB_LIB_FILE=libtkstub${TK_UNSHARED_LIB_SUFFIX}"
 
 if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
-    eval TK_STUB_LIB_FLAG="-ltkstub${TK_VERSION}\${TK_DBGX}"
+    eval TK_STUB_LIB_FLAG="-ltkstub${TK_VERSION}"
 else
-    eval TK_STUB_LIB_FLAG="-ltkstub`echo ${TK_VERSION} | tr -d .`\${TK_DBGX}"
+    eval TK_STUB_LIB_FLAG="-ltkstub`echo ${TK_VERSION} | tr -d .`"
 fi
 
 TK_BUILD_STUB_LIB_SPEC="-L`pwd` ${TK_STUB_LIB_FLAG}"
@@ -410,7 +408,6 @@ AC_SUBST(TK_VERSION)
 AC_SUBST(TK_MAJOR_VERSION)
 AC_SUBST(TK_MINOR_VERSION)
 AC_SUBST(TK_PATCH_LEVEL)
-AC_SUBST(TK_DBGX)
 
 AC_SUBST(TK_STUB_LIB_FILE)
 AC_SUBST(TK_STUB_LIB_FLAG)

@@ -96,14 +96,11 @@ TCL_BIN_DIR		= @TCL_BIN_DIR@
 # The linker flags needed to link in the Tcl library (ex: -ltcl8.2)
 TCL_LIB_FLAG		= @TCL_LIB_FLAG@
 
-# Libraries built with optimization switches have this additional extension
-TK_DBGX			= @TK_DBGX@
-
 # Flag, 1: we're building a shared lib, 0 we're not
 TK_SHARED_BUILD		= @TK_SHARED_BUILD@
 
 # Directory in which to install the pkgIndex.tcl file for loadable Tk
-PKG_INSTALL_DIR		= $(LIB_INSTALL_DIR)/tk$(VERSION)$(TK_DBGX)
+PKG_INSTALL_DIR		= $(LIB_INSTALL_DIR)/tk$(VERSION)
 
 # Package index file for loadable Tk
 PKG_INDEX		= $(PKG_INSTALL_DIR)/pkgIndex.tcl
