@@ -1361,12 +1361,6 @@ typedef int (Tk_SelectionProc) _ANSI_ARGS_((ClientData clientData,
 #include "tkDecls.h"
 
 /*
- * Platform dependant exported procedures and variables.
- */
-    
-#include "tkPlatDecls.h"
-    
-/*
  * Tcl commands exported by Tk:
  */
 

@@ -25,12 +25,6 @@
  * in the generic/tk.decls script.
  */
 
-#ifdef __WIN32__
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#undef WIN32_LEAN_AND_MEAN
-#endif /* __WIN32__ */
-
 /* !BEGIN!: Do not edit below this line. */
 
 /*
