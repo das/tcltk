@@ -3512,9 +3512,9 @@ WmWaitVisibilityOrMapProc(clientData, eventPtr)
     if (masterPtr == NULL)
 	return;
 
-    if (eventPtr->type == MapNotify &&
-            !(winPtr->wmInfoPtr->flags & WM_TRANSIENT_WITHDRAWN)) {
-	TkpWmSetState(winPtr, NormalState);
+    if (eventPtr->type == MapNotify) {
+	if (!(winPtr->wmInfoPtr->flags & WM_TRANSIENT_WITHDRAWN))
+	    TkpWmSetState(winPtr, NormalState);
     } else if (eventPtr->type == UnmapNotify) {
 	TkpWmSetState(winPtr, WithdrawnState);
     }
