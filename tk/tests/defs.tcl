@@ -981,7 +981,7 @@ if {[info exists tk_version]} {
 	}
 	
 	# The following code segment cannot be run on Windows prior
-	# to Tk 8.1b3 due to a channel I/O bug.
+	# to Tk 8.1b3 due to a channel I/O bug (bugID 1495).
 
 	global tcl_platform
 	set ::tcltest::fd [open "|[list $::tcltest::tktest -geometry +0+0 -name tktest] $args" r+]
