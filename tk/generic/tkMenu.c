@@ -2564,7 +2564,7 @@ MenuVarProc(clientData, interp, name1, name2, flags)
 
     if (flags & TCL_TRACE_UNSETS) {
 	mePtr->entryFlags &= ~ENTRY_SELECTED;
-	if ((flags & TCL_TRACE_DESTROYED) {
+	if (flags & TCL_TRACE_DESTROYED) {
 	    Tcl_TraceVar(interp, name,
 		    TCL_GLOBAL_ONLY|TCL_TRACE_WRITES|TCL_TRACE_UNSETS,
 		    MenuVarProc, clientData);
