@@ -983,6 +983,7 @@ ConfigureButton(interp, butPtr, objc, objv)
     Tcl_Obj *CONST objv[];	/* Argument values. */
 {
     Tk_SavedOptions savedOptions;
+    Tcl_Obj *errorResult;
     int error;
     Tk_Image image;
 
@@ -1024,6 +1025,8 @@ ConfigureButton(interp, butPtr, objc, objv)
 	     * Second pass: restore options to old values.
 	     */
 
+	    errorResult = Tcl_GetObjResult(interp);
+	    Tcl_IncrRefCount(errorResult);
 	    Tk_RestoreSavedOptions(&savedOptions);
 	}
 
@@ -1205,7 +1208,13 @@ ConfigureButton(interp, butPtr, objc, objv)
     }
     
     TkButtonWorldChanged((ClientData) butPtr);
-    return (error) ? TCL_ERROR : TCL_OK;
+    if (error) {
+	Tcl_SetObjResult(interp, errorResult);
+	Tcl_DecrRefCount(errorResult);
+	return TCL_ERROR;
+    } else {
+	return TCL_OK;
+    }
 }
 
 /*
