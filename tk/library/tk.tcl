@@ -100,6 +100,10 @@ proc ::tk::PlaceWindow {w {place ""} {anchor ""}} {
 	set y [expr {([winfo screenheight $w]-[winfo reqheight $w])/2}]
 	set checkBounds 0
     }
+    if {[tk windowingsystem eq "win32"]} {
+        # Bug 533519: win32 multiple desktops may produce negative geometry.
+        set checkBounds 0
+    }
     if {$checkBounds} {
 	if {$x < 0} {
 	    set x 0
