@@ -544,12 +544,36 @@ Most existing window managers appear to have bugs that affect the
 operation of the \fBwm\fR command.  For example, some changes won't
 take effect if the window is already active:  the window will have
 to be withdrawn and de-iconified in order to make the change happen.
-.SH EXAMPLE
+.SH EXAMPLES
 A fixed-size window that says that it is fixed-size too:
 .CS
 toplevel .fixed
 \fBwm\fR title     .fixed "Fixed-size Window"
 \fBwm\fR resizable .fixed 0 0
+.CE
+.PP
+A simple dialog-like window, centred on the screen:
+.CS
+# Create and arrange the dialog contents.
+toplevel .msg
+label  .msg.l  \-text "This is a very simple dialog demo."
+button .msg.ok \-text OK \-default active \-command {destroy .msg}
+pack .msg.ok \-side bottom \-fill x
+pack .msg.l  \-expand 1    \-fill both
+
+# Now set the widget up as a centred dialog.
+
+# But first, we need the geometry managers to finish setting
+# up the interior of the dialog, for which we need to run the
+# event loop with the widget hidden completely...
+\fBwm\fR withdraw .msg
+update
+set x [expr {([winfo screenwidth .]\-[winfo width .msg])/2}]
+set y [expr {([winfo screenheight .]\-[winfo height .msg])/2}]
+\fBwm\fR geometry  .msg +$x+$y
+\fBwm\fR transient .msg .
+\fBwm\fR title     .msg "Dialog demo"
+\fBwm\fR deiconify .msg
 .CE
 
 .SH "SEE ALSO"
