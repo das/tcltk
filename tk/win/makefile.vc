@@ -646,7 +646,6 @@ install-docs:
 !if exist($(HELPFILE))
 	@xcopy /i /y "$(HELPFILE)" "$(DOC_INSTALL_DIR)\"
 	@xcopy /i /y "$(HELPCNT)" "$(DOC_INSTALL_DIR)\"
-	@echo :Include $(HLPBASE).cnt >> $(DOC_INSTALL_DIR)\tcl$(VERSION).cnt
 	$(TCLSH) <<
 puts "Installing Tk's helpfile contents into Tcl's ..."
 set f [open "$(DOC_INSTALL_DIR:\=/)/tcl$(VERSION).cnt" r]
