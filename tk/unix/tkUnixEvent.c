@@ -583,14 +583,23 @@ OpenIM(dispPtr)
 	    NULL) != NULL) || (stylePtr == NULL)) {
 	goto error;
     }
+#if TK_XIM_SPOT
+    /*
+     * If we want to do over-the-spot XIM, we have to check that this
+     * mode is supported.  If not we will fall-through to the check below.
+     */
     for (i = 0; i < stylePtr->count_styles; i++) {
 	if (stylePtr->supported_styles[i]
-#if TK_XIM_SPOT
-		== (XIMPreeditPosition | XIMStatusNothing)
-#else
-		== (XIMPreeditNothing | XIMStatusNothing)
+		== (XIMPreeditPosition | XIMStatusNothing)) {
+	    dispPtr->flags |= TK_USE_XIM_SPOT;
+	    XFree(stylePtr);
+	    return;
+	}
+    }
 #endif
-	    ) {
+    for (i = 0; i < stylePtr->count_styles; i++) {
+	if (stylePtr->supported_styles[i]
+		== (XIMPreeditNothing | XIMStatusNothing)) {
 	    XFree(stylePtr);
 	    return;
 	}

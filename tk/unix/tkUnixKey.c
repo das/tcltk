@@ -123,11 +123,13 @@ TkpGetString(winPtr, eventPtr, dsPtr)
 	/*
 	 * Adjust the XIM caret position.
 	 */
-	spot.x = caretX; spot.y = caretY;
-	preedit_attr = XVaCreateNestedList(0, XNSpotLocation, &spot, NULL);
-	XSetICValues(winPtr->inputContext,
-		XNPreeditAttributes, preedit_attr, NULL);
-	XFree(preedit_attr);
+	if (winPtr->dispPtr->flags & TK_USE_XIM_SPOT) {
+	    spot.x = caretX; spot.y = caretY;
+	    preedit_attr = XVaCreateNestedList(0, XNSpotLocation, &spot, NULL);
+	    XSetICValues(winPtr->inputContext,
+		    XNPreeditAttributes, preedit_attr, NULL);
+	    XFree(preedit_attr);
+	}
 #endif
     } else {
 	len = XLookupString(&eventPtr->xkey, Tcl_DStringValue(&buf),
