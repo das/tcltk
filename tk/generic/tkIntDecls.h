@@ -506,6 +506,12 @@ EXTERN void		TkpDrawHighlightBorder _ANSI_ARGS_((Tk_Window tkwin,
 /* 136 */
 EXTERN void		TkSetFocusWin _ANSI_ARGS_((TkWindow * winPtr, 
 				int force));
+/* 137 */
+EXTERN void		TkpSetKeycodeAndState _ANSI_ARGS_((Tk_Window tkwin, 
+				KeySym keySym, XEvent * eventPtr));
+/* 138 */
+EXTERN KeySym		TkpGetKeySym _ANSI_ARGS_((TkDisplay * dispPtr, 
+				XEvent * eventPtr));
 
 typedef struct TkIntStubs {
     int magic;
@@ -808,6 +814,8 @@ typedef struct TkIntStubs {
 #endif /* MAC_TCL */
     void (*tkpDrawHighlightBorder) _ANSI_ARGS_((Tk_Window tkwin, GC fgGC, GC bgGC, int highlightWidth, Drawable drawable)); /* 135 */
     void (*tkSetFocusWin) _ANSI_ARGS_((TkWindow * winPtr, int force)); /* 136 */
+    void (*tkpSetKeycodeAndState) _ANSI_ARGS_((Tk_Window tkwin, KeySym keySym, XEvent * eventPtr)); /* 137 */
+    KeySym (*tkpGetKeySym) _ANSI_ARGS_((TkDisplay * dispPtr, XEvent * eventPtr)); /* 138 */
 } TkIntStubs;
 
 #ifdef __cplusplus
@@ -1447,6 +1455,14 @@ extern TkIntStubs *tkIntStubsPtr;
 #ifndef TkSetFocusWin
 #define TkSetFocusWin \
 	(tkIntStubsPtr->tkSetFocusWin) /* 136 */
+#endif
+#ifndef TkpSetKeycodeAndState
+#define TkpSetKeycodeAndState \
+	(tkIntStubsPtr->tkpSetKeycodeAndState) /* 137 */
+#endif
+#ifndef TkpGetKeySym
+#define TkpGetKeySym \
+	(tkIntStubsPtr->tkpGetKeySym) /* 138 */
 #endif
 
 #endif /* defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS) */

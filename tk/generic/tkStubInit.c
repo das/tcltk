@@ -344,6 +344,8 @@ TkIntStubs tkIntStubs = {
 #endif /* MAC_TCL */
     TkpDrawHighlightBorder, /* 135 */
     TkSetFocusWin, /* 136 */
+    TkpSetKeycodeAndState, /* 137 */
+    TkpGetKeySym, /* 138 */
 };
 
 TkIntPlatStubs tkIntPlatStubs = {

@@ -619,6 +619,16 @@ declare 136 generic {
     void TkSetFocusWin (TkWindow *winPtr, int force) 
 }
 
+declare 137 generic {
+    void TkpSetKeycodeAndState (Tk_Window tkwin, KeySym keySym, \
+            XEvent *eventPtr)
+}
+
+declare 138 generic {
+    KeySym TkpGetKeySym (TkDisplay *dispPtr, XEvent *eventPtr)
+}
+
+
 ##############################################################################
 
 # Define the platform specific internal Tcl interface. These functions are
