@@ -3351,6 +3351,8 @@ TkFontParseXLFD(string, faPtr, xaPtr)
 
     if (FieldSpecified(field[XLFD_CHARSET])) {
 	xaPtr->charset = Tk_GetUid(field[XLFD_CHARSET]);
+    } else {
+	xaPtr->charset = Tk_GetUid("iso8859-1");
     }
     Tcl_DStringFree(&ds);
     return TCL_OK;
