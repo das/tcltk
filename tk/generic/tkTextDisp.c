@@ -5636,7 +5636,16 @@ DlineIndexOfX(textPtr, dlPtr, x, indexPtr)
 
     *indexPtr = dlPtr->index;
     x = x - dInfoPtr->x + dInfoPtr->curXPixelOffset;
-    for (chunkPtr = dlPtr->chunkPtr; x >= (chunkPtr->x + chunkPtr->width);
+    chunkPtr = dlPtr->chunkPtr;
+
+    if (chunkPtr == NULL) {
+	/* 
+	 * This may occur if everything is elided
+	 */
+	return;
+    }
+
+    for (; x >= (chunkPtr->x + chunkPtr->width);
 	    indexPtr->byteIndex += chunkPtr->numBytes,
 	    chunkPtr = chunkPtr->nextPtr) {
 	if (chunkPtr->nextPtr == NULL) {

@@ -3224,6 +3224,29 @@ test textDisp-31.6 {line update index shifting} {
     set res
 } {190 220 135 105 190}
 
+test textDisp-32.0 {everything elided} {
+    # Must not crash
+    pack [text .tt]
+    .tt insert 0.0 HELLO
+    .tt tag configure HIDE -elide 1
+    .tt tag add HIDE 0.0 end
+    update ; update ; update ; update
+    destroy .tt
+} {}
+
+test textDisp-32.1 {everything elided} {
+    # Must not crash
+    pack [text .tt]
+    update
+    .tt insert 0.0 HELLO
+    update
+    .tt tag configure HIDE -elide 1
+    update
+    .tt tag add HIDE 0.0 end
+    update ; update ; update ; update
+    destroy .tt
+} {}
+
 deleteWindows
 option clear
 
