@@ -1897,11 +1897,11 @@ DisplayEntry(clientData)
     if ((entryPtr->state == STATE_NORMAL) && (entryPtr->flags & GOT_FOCUS)) {
 	Tk_CharBbox(entryPtr->textLayout, entryPtr->insertPos, &cursorX, NULL,
 		NULL, NULL);
+	cursorX += entryPtr->layoutX;
+	cursorX -= (entryPtr->insertWidth)/2;
 	Tk_SetCaretPos(entryPtr->tkwin, cursorX, baseY - fm.ascent,
 		fm.ascent + fm.descent);
 	if (entryPtr->insertPos >= entryPtr->leftIndex) {
-	    cursorX += entryPtr->layoutX;
-	    cursorX -= (entryPtr->insertWidth)/2;
 	    if (cursorX < xBound) {
 		if (entryPtr->flags & CURSOR_ON) {
 		    Tk_Fill3DRectangle(tkwin, pixmap, entryPtr->insertBorder,
