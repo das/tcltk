@@ -214,8 +214,6 @@ test bind-5.1 {Tk_CreateBindingTable procedure} {
     .b.c bind foo
 } {}
 
-testConstraint testcbind [llength [info commands testcbind]]
-
 test bind-6.1 {Tk_DeleteBindTable procedure} {
     catch {destroy .b.c}
     canvas .b.c

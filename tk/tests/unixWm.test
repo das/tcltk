@@ -414,8 +414,6 @@ test unixWm-9.5 {TkWmMapWindow procedure, normal windows} unix {
     winfo ismapped .t
 } {1}
 
-testConstraint testmenubar [llength [info commands testmenubar]]
-
 test unixWm-10.1 {TkWmDeadWindow procedure, canceling UpdateGeometry idle handler} unix {
     catch {destroy .t}
     toplevel .t -width 100 -height 50

@@ -13,12 +13,6 @@ package require tcltest 2.1
 eval tcltest::configure $argv
 tcltest::loadTestedCommands
 
-## testmetrics is a win/mac only test command
-##
-testConstraint testmetrics [llength [info commands testmetrics]]
-
-update
-
 proc scroll args {
     global scrollInfo
     set scrollInfo $args

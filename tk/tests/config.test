@@ -12,8 +12,6 @@ package require tcltest 2.1
 eval tcltest::configure $argv
 tcltest::loadTestedCommands
 
-testConstraint testobjconfig [llength [info commands testobjconfig]]
-
 proc killTables {} {
     # Note: it's important to delete chain2 before chain1, because
     # chain2 depends on chain1.  If chain1 is deleted first, the

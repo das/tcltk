@@ -11,8 +11,6 @@ package require tcltest 2.1
 eval tcltest::configure $argv
 tcltest::loadTestedCommands
 
-testConstraint testcolor [llength [info commands testcolor]]
-
 # cname --
 # Returns a proper name for a color, given its intensities.
 #

@@ -12,8 +12,6 @@ package require tcltest 2.1
 eval tcltest::configure $argv
 tcltest::loadTestedCommands
 
-testConstraint testcursor [llength [info commands testcursor]]
-
 test cursor-1.1 {Tk_AllocCursorFromObj - converting internal reps} {testcursor} {
     set x watch
     lindex $x 0

@@ -11,8 +11,6 @@ package require tcltest 2.1
 eval tcltest::configure $argv
 tcltest::loadTestedCommands
 
-testConstraint testborder [llength [info commands testborder]]
-
 if {[testConstraint pseudocolor8]} {
     toplevel .t -visual {pseudocolor 8} -colormap new
     wm geom .t +0+0

@@ -12,8 +12,6 @@ package require tcltest 2.1
 eval tcltest::configure $argv
 tcltest::loadTestedCommands
 
-testConstraint testbitmap [llength [info commands testbitmap]]
-
 test bitmap-1.1 {Tk_AllocBitmapFromObj - converting internal reps} testbitmap {
     set x gray25
     lindex $x 0

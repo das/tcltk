@@ -17,7 +17,6 @@ eval tcltest::configure $argv
 tcltest::loadTestedCommands
 
 testConstraint xhost [llength [auto_execok xhost]]
-testConstraint testsend [llength [info commands testsend]]
 
 # Compute a script that will load Tk into a child interpreter.
 

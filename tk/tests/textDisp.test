@@ -13,10 +13,6 @@ eval tcltest::configure $argv
 tcltest::loadTestedCommands
 namespace import -force tcltest::test
 
-tcltest::testConstraint textfonts [expr {
-    [tcltest::testConstraint fonts] || $tcl_platform(platform) eq "windows"
-}]
-
 # The procedure below is used as the scrolling command for the text;
 # it just saves the scrolling information in a variable "scrollInfo".
 

@@ -245,9 +245,6 @@ test window-2.11 {Tk_DestroyWindow, don't reanimate a half-dead window} \
     list $error $msg
 } {0 YES}
 
-# Some tests require the testmenubar command
-testConstraint testmenubar [llength [info commands testmenubar]]
-
 test window-3.1 {Tk_MakeWindowExist procedure, stacking order and menubars} \
 	{unixOnly testmenubar} {
     catch {destroy .t}

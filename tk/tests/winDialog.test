@@ -12,9 +12,9 @@ package require tcltest 2.1
 eval tcltest::configure $argv
 tcltest::loadTestedCommands
 
-testConstraint testwinevent [llength [info commands testwinevent]]
-
-catch {testwinevent debug 1}
+if {[testConstraint testwinevent]} {
+    catch {testwinevent debug 1}
+}
 
 proc start {arg} {
     set ::tk_dialog 0
@@ -317,7 +317,9 @@ test winDialog-9.8 {Tk_ChooseDirectoryObjCmd:\
     list [catch {tk_chooseDirectory -initialdir ~12x/455} msg] $msg
 } {1 {user "12x" doesn't exist}}
 
-catch {testwinevent debug 0}
+if {[testConstraint testwinevent]} {
+    catch {testwinevent debug 0}
+}
 
 # cleanup
 cleanupTests

@@ -15,16 +15,6 @@ tcltest::loadTestedCommands
 # Create entries in the option database to be sure that geometry options
 # like border width have predictable values.
 
-if {[tcltest::testConstraint fonts]} {
-    tcltest::testConstraint textfonts 1
-} else {
-    if {$::tcl_platform(platform) eq "windows"} {
-	tcltest::testConstraint textfonts 1
-    } else {
-	tcltest::testConstraint textfonts 0
-    }
-}
-
 option add *Text.borderWidth 2
 option add *Text.highlightThickness 2
 option add *Text.font {Courier -12}

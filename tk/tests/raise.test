@@ -14,8 +14,6 @@ package require tcltest 2.1
 eval tcltest::configure $argv
 tcltest::loadTestedCommands
 
-testConstraint testmakeexist [llength [info commands testmakeexist]]
-
 # Procedure to create a bunch of overlapping windows, which should
 # make it easy to detect differences in order.
 
