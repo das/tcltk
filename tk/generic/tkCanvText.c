@@ -767,9 +767,6 @@ DisplayCanvText(canvas, itemPtr, display, drawable, x, y, width, height)
     selLastChar = 0;		/* lint. */
 
     if (textInfoPtr->selItemPtr == itemPtr) {
-	char *text;
-
-	text = textPtr->text;
 	selFirstChar = textInfoPtr->selectFirst;
 	selLastChar = textInfoPtr->selectLast;
 	if (selLastChar > textPtr->numChars) {

@@ -3039,11 +3039,9 @@ ParseFontNameObj(interp, tkwin, objPtr, faPtr)
     char *dash;
     int objc, result, i, n;
     Tcl_Obj **objv;
-    Tcl_Obj *resultPtr;
     char *string;
     
     TkInitFontAttributes(faPtr);
-    resultPtr = Tcl_GetObjResult(interp);
 
     string = Tcl_GetString(objPtr);
     if (*string == '-') {

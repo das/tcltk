@@ -652,7 +652,6 @@ Tk_TkObjCmd(clientData, interp, objc, objv)
 		dispPtr = ((TkWindow *) tkwin)->dispPtr;
 	    }
 	    if ((objc - skip) == 3) {
-#ifdef TK_USE_INPUT_METHODS
 		/*
 		 * In the case where TK_USE_INPUT_METHODS is not defined,
 		 * this will be ignored and we will always return 0.
@@ -664,6 +663,7 @@ Tk_TkObjCmd(clientData, interp, objc, objv)
 			!= TCL_OK) {
 		    return TCL_ERROR;
 		}
+#ifdef TK_USE_INPUT_METHODS
 		dispPtr->useInputMethods = bool;
 #endif /* TK_USE_INPUT_METHODS */
 	    } else if ((objc - skip) != 2) {

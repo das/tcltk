@@ -189,16 +189,18 @@ typedef struct TkScale {
  *				doesn't appear to have changed).
  * GOT_FOCUS -			1 means that the focus is currently in
  *				this widget.
+ * SCALE_DELETED -		1 means the scale widget is being deleted
  */
 
-#define REDRAW_SLIDER		1
-#define REDRAW_OTHER		2
-#define REDRAW_ALL		3
-#define ACTIVE			4
-#define INVOKE_COMMAND		0x10
-#define SETTING_VAR		0x20
-#define NEVER_SET		0x40
-#define GOT_FOCUS		0x80
+#define REDRAW_SLIDER		(1<<0)
+#define REDRAW_OTHER		(1<<1)
+#define REDRAW_ALL		(REDRAW_OTHER|REDRAW_SLIDER)
+#define ACTIVE			(1<<2)
+#define INVOKE_COMMAND		(1<<3)
+#define SETTING_VAR		(1<<4)
+#define NEVER_SET		(1<<5)
+#define GOT_FOCUS		(1<<6)
+#define SCALE_DELETED		(1<<7)
 
 /*
  * Symbolic values for the active parts of a slider.  These are

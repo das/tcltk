@@ -975,6 +975,17 @@ Tk_Fill3DRectangle(tkwin, drawable, border, x, y, width,
   
     if (relief == TK_RELIEF_FLAT) {
 	borderWidth = 0;
+    } else {
+	/*
+	 * We need to make this extra check, otherwise we will leave
+	 * garbage in thin frames [Bug: 3596]
+	 */
+	if (width < 2*borderWidth) {
+	    borderWidth = width/2;
+	}
+	if (height < 2*borderWidth) {
+	    borderWidth = height/2;
+	}
     }
     doubleBorder = 2*borderWidth;
 

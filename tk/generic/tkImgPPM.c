@@ -355,7 +355,7 @@ ReadPPMFileHeader(chan, widthPtr, heightPtr, maxIntensityPtr)
 {
 #define BUFFER_SIZE 1000
     char buffer[BUFFER_SIZE];
-    int i, numFields, firstInLine;
+    int i, numFields;
     int type = 0;
     char c;
 
@@ -367,7 +367,6 @@ ReadPPMFileHeader(chan, widthPtr, heightPtr, maxIntensityPtr)
     if (Tcl_Read(chan, &c, 1) != 1) {
 	return 0;
     }
-    firstInLine = 1;
     i = 0;
     for (numFields = 0; numFields < 4; numFields++) {
 	/*
@@ -376,7 +375,6 @@ ReadPPMFileHeader(chan, widthPtr, heightPtr, maxIntensityPtr)
 
 	while (1) {
 	    while (isspace(UCHAR(c))) {
-		firstInLine = (c == '\n');
 		if (Tcl_Read(chan, &c, 1) != 1) {
 		    return 0;
 		}
@@ -389,7 +387,6 @@ ReadPPMFileHeader(chan, widthPtr, heightPtr, maxIntensityPtr)
 		    return 0;
 		}
 	    } while (c != '\n');
-	    firstInLine = 1;
 	}
 
 	/*
@@ -409,7 +406,6 @@ ReadPPMFileHeader(chan, widthPtr, heightPtr, maxIntensityPtr)
 	    buffer[i] = ' ';
 	    i++;
 	}
-	firstInLine = 0;
     }
     done:
     buffer[i] = 0;
