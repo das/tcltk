@@ -1011,7 +1011,7 @@ Tk_SendCmd(clientData, interp, argc, argv)
 		Tcl_ResetResult(interp);
 		Tcl_AddErrorInfo(interp, Tcl_GetVar2(localInterp,
 			"errorInfo", (char *) NULL, TCL_GLOBAL_ONLY));
-		errorObjPtr = Tcl_GetObjVar2(localInterp, "errorCode", NULL,
+		errorObjPtr = Tcl_GetVar2Ex(localInterp, "errorCode", NULL,
 			TCL_GLOBAL_ONLY);
 		Tcl_SetObjErrorCode(interp, errorObjPtr);
 	    }
