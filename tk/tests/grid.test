@@ -744,6 +744,12 @@ test grid-10.25 {column/row configure} {
 } {0 2 1 1 2 2 0 1}
 grid_reset 10.25
 
+test grid-10.26 {column/row configure} {
+    button .b
+    grid columnconfigure .b 0
+} {-minsize 0 -pad 0 -uniform {} -weight 0}
+grid_reset 10.26
+
 # auto-placement tests
 
 test grid-11.1 {default widget placement} {

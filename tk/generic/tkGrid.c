@@ -885,10 +885,11 @@ GridRowColumnConfigureCommand(tkwin, interp, objc, objv)
 	    return TCL_ERROR;
 	}
 	ok = CheckSlotData(masterPtr, slot, slotType, /* checkOnly */ 1);
-	slotPtr = (slotType == COLUMN) ?
-		masterPtr->masterDataPtr->columnPtr :
-		masterPtr->masterDataPtr->rowPtr;
-
+        if (ok == TCL_OK) {
+            slotPtr = (slotType == COLUMN) ?
+                    masterPtr->masterDataPtr->columnPtr :
+                    masterPtr->masterDataPtr->rowPtr;
+        }
 	/*
 	 * Return all of the options for this row or column.  If the
 	 * request is out of range, return all 0's.
