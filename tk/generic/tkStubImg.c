@@ -46,7 +46,7 @@ Tk_InitImageArgs(interp, argc, argvPtr)
     int argc;
     char ***argvPtr;
 {
-    static useNewImage = -1;
+    static int useNewImage = -1;
     static char **argv = NULL;
 
     if (argv) {
