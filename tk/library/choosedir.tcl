@@ -65,6 +65,10 @@ proc ::tk::dialog::chooseDir::tkChooseDirectory { args } {
 	set opts(-parent) ""
     }
 
+    if { [string equal $opts(-initialdir) ""] } {
+	set opts(-initialdir) [pwd]
+    }
+
     set w [toplevel $opts(-parent).choosedirectory]
     wm title $w $opts(-title)
 

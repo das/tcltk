@@ -59,10 +59,16 @@ proc tkColorDialog {args} {
     tkColorDialog_Config $w $args
     tkColorDialog_InitValues $w
 
-    if {![winfo exists $w]} {
-	toplevel $w -class tkColorDialog
+    set sc [$data(-parent) cget -screen]
+    set winExists [winfo exists $w]
+    if {!$winExists || [string compare $sc [$w cget -screen]]} {
+	if {$winExists} {
+	    destroy $w
+	}
+	toplevel $w -class tkColorDialog -screen $sc
 	tkColorDialog_BuildDialog $w
     }
+
     wm transient $w $data(-parent)
 
     # 5. Withdraw the window, then update all the geometry information
@@ -82,7 +88,7 @@ proc tkColorDialog {args} {
     # may take the focus away so we can't redirect it.  Finally,
     # restore any grab that was in effect.
 
-    tkwait variable tkPriv(selectColor)
+    vwait tkPriv(selectColor)
     ::tk::RestoreFocusGrab $w $data(okBtn)
     unset data
 
