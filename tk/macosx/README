@@ -83,6 +83,25 @@ you expect. (Wish started from the Finder inherits the Finder's environment
 variables, which are essentially those set in $HOME/.MacOSX/environment.plist
 and not those set by your shell configuration files).
 
+- As of Tk 8.4.7, AquaTk has a version of the low-level drawing primitives using
+the CoreGraphics routines - the code is primarily due to James Tittle.  There
+were numerous problems with the QD version, mostly due to the different drawing
+model of QD & Tk.  CG also trivially supports dashed lines, and the various end
+caps & miters.  So this is a great improvement.
+
+The old QD code is retained for now, just in case there are any
+compatibility problems.  To switch back to the QD drawing, just put:
+
+set tk::mac::useCGDrawing 0
+
+in your script before you do drawing.  Also the CG drawing can anti-alias line drawing.
+However, anti-aliased thin lines look washed out, so the threshold for antialiasing 
+is set to 3 pixel width lines.  You can change this if you want by putting:
+
+set tk::mac::CGAntialiasLimit <pixel limit>
+
+in your script before drawing.
+
 - Quickdraw text antialiasing is enabled by default when available (from 10.1.5
 onwards). Changing the global boolean variable '::tk::mac::antialiasedtext'
 allows to dis/enable antialiasing on the fly from tcl (even for existing text).

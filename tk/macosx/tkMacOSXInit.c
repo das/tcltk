@@ -112,6 +112,7 @@ TkpInit(interp)
         TkMacOSXInitAppleEvents(interp);
         TkMacOSXInitMenus(interp);
         TkMacOSXUseAntialiasedText(interp, TRUE);
+        TkMacOSXInitCGDrawing(interp, TRUE, 3);
     }
  
     if (carbonEncodingInitialized == false) {
