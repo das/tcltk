@@ -9,6 +9,8 @@ if {![info exists widgetDemo]} {
     error "This script should be run from the \"widget\" demo."
 }
 
+package require Tk
+
 # arrowSetup --
 # This procedure regenerates all the text and graphics in the canvas
 # window.  It's called when the canvas is initially created, and also

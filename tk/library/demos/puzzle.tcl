@@ -9,6 +9,8 @@ if {![info exists widgetDemo]} {
     error "This script should be run from the \"widget\" demo."
 }
 
+package require Tk
+
 # puzzleSwitch --
 # This procedure is invoked when the user clicks on a particular button;
 # if the button is next to the empty space, it moves the button into th

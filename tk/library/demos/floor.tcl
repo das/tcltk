@@ -9,6 +9,8 @@ if {![info exists widgetDemo]} {
     error "This script should be run from the \"widget\" demo."
 }
 
+package require Tk
+
 # floorDisplay --
 # Recreate the floorplan display in the canvas given by "w".  The
 # floor given by "active" is displayed on top with its office structure

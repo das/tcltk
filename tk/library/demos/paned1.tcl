@@ -9,6 +9,8 @@ if {![info exists widgetDemo]} {
     error "This script should be run from the \"widget\" demo."
 }
 
+package require Tk
+
 set w .paned1
 catch {destroy $w}
 toplevel $w

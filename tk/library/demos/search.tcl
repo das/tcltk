@@ -10,6 +10,8 @@ if {![info exists widgetDemo]} {
     error "This script should be run from the \"widget\" demo."
 }
 
+package require Tk
+
 # textLoadFile --
 # This procedure below loads a file into a text widget, discarding
 # the previous contents of the widget. Tags for the old widget are
