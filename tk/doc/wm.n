@@ -391,14 +391,15 @@ source of the window's current size, or an empty string if
 no source has been specified yet.  Most window managers interpret
 ``no source'' as equivalent to \fBprogram\fR.
 .TP
-\fBwm state \fIwindow\fR
-Returns the current state of \fIwindow\fR:  either \fBnormal\fR,
-\fBiconic\fR, \fBwithdrawn\fR, or \fBicon\fR.  The difference
-between \fBiconic\fR and \fBicon\fR is that \fBiconic\fR refers
-to a window that has been iconified (e.g., with the \fBwm iconify\fR
-command) while \fBicon\fR refers to a window whose only purpose is
-to serve as the icon for some other window (via the \fBwm iconwindow\fR
-command).
+\fBwm state \fIwindow\fR ?newstate?
+If \fInewstate\fR is specified, the window will be set to the new state,
+otherwise it returns the current state of \fIwindow\fR: either
+\fBnormal\fR, \fBiconic\fR, \fBwithdrawn\fR, \fBicon\fR, or (Windows only)
+\fBzoomed\fR.  The difference between \fBiconic\fR and \fBicon\fR is that
+\fBiconic\fR refers to a window that has been iconified (e.g., with the
+\fBwm iconify\fR command) while \fBicon\fR refers to a window whose only
+purpose is to serve as the icon for some other window (via the \fBwm
+iconwindow\fR command).  The \fBicon\fR state cannot be set.
 .TP
 \fBwm title \fIwindow\fR ?\fIstring\fR?
 If \fIstring\fR is specified, then it will be passed to the window
