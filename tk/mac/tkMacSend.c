@@ -249,7 +249,7 @@ Tk_SetAppName(
     int i, suffix, offset, result;
     int createCommand = 0;
     RegisteredInterp *riPtr, *prevPtr;
-    char *actualName;
+    CONST char *actualName;
     Tcl_DString dString;
     Tcl_Obj *resultObjPtr, *interpNamePtr;
     char *interpName;
@@ -306,7 +306,7 @@ Tk_SetAppName(
 		actualName = Tcl_DStringValue(&dString);
 	    }
 	    suffix++;
-	    sprintf(actualName + offset, "%d", suffix);
+	    sprintf(Tcl_DStringValue(&dString) + offset, "%d", suffix);
 	    i = 0;
 	} else {
 	    i++;

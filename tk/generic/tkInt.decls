@@ -2232,3 +2232,8 @@ declare 89 {mac aqua} {
     void XQueryColors (Display *display, Colormap colormap, \
 	    XColor *defs_in_out, int ncolors)
 }
+
+declare 90 {mac aqua} {
+    Status XQueryTree (Display* d, Window w1, Window* w2, Window* w3, \
+	    Window** w4, unsigned int* ui)
+}

@@ -525,6 +525,19 @@ XQueryColors(
 {
 }
 
+int   
+XQueryTree(display, w, root_return, parent_return, children_return,
+        nchildren_return)
+    Display* display;
+    Window w;
+    Window* root_return;
+    Window* parent_return;
+    Window** children_return;
+    unsigned int* nchildren_return;
+{
+    return 0;
+}
+
 int
 XGetWindowProperty(
     Display *display,

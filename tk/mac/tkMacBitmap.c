@@ -97,7 +97,7 @@ TkpDefineNativeBitmaps()
     int new;
     Tcl_HashEntry *predefHashPtr;
     TkPredefBitmap *predefPtr;
-    char * name;
+    CONST char * name;
     BuiltInIcon *builtInPtr;
     NativeIcon *nativeIconPtr;
     Tcl_HashTable *tablePtr;

@@ -714,6 +714,7 @@ TkIntXlibStubs tkIntXlibStubs = {
     XWarpPointer, /* 87 */
     XQueryColor, /* 88 */
     XQueryColors, /* 89 */
+    XQueryTree, /* 90 */
 #endif /* MAC_TCL */
 #ifdef MAC_OSX_TK
     XSetDashes, /* 0 */
@@ -806,6 +807,7 @@ TkIntXlibStubs tkIntXlibStubs = {
     XWarpPointer, /* 87 */
     XQueryColor, /* 88 */
     XQueryColors, /* 89 */
+    XQueryTree, /* 90 */
 #endif /* MAC_OSX_TK */
 };
 
