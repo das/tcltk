@@ -5034,8 +5034,8 @@ UpdateGeometryInfo(clientData)
      * state of the window changes.
      */
 
-    if (wmPtr->wrapper && IsIconic(wmPtr->wrapper) ||
-	    IsZoomed(wmPtr->wrapper)) {
+    if (wmPtr->wrapper && (IsIconic(wmPtr->wrapper) ||
+	    IsZoomed(wmPtr->wrapper))) {
 	return;
     }
 
