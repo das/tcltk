@@ -12,7 +12,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkUnixWm.c 1.155 97/10/28 08:35:19
+ * RCS: @(#) $Id$
  */
 
 #include "tkPort.h"

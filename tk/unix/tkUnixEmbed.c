@@ -11,7 +11,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkUnixEmbed.c 1.22 97/08/13 11:15:51
+ * RCS: @(#) $Id$
  */
 
 #include "tkInt.h"

@@ -11,7 +11,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkCanvas.c 1.126 97/07/31 09:05:52
+ * RCS: @(#) $Id$
  */
 
 #include "default.h"

@@ -9,7 +9,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkScale.h 1.5 96/07/08 12:56:56
+ * RCS: @(#) $Id$
  */
 
 #ifndef _TKSCALE

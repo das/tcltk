@@ -10,7 +10,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkBind.c 1.133 97/07/01 17:59:53
+ * RCS: @(#) $Id$
  */
 
 #include "tkPort.h"

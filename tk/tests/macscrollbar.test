@@ -8,7 +8,7 @@
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 #
-# SCCS: @(#) macscrollbar.test 1.3 97/06/24 13:48:34
+# RCS: @(#) $Id$
 
 # Only run this test on the Macintosh
 if {$tcl_platform(platform) != "macintosh"} return

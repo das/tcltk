@@ -13,7 +13,7 @@
  *	   Department of Computer Science,
  *	   Australian National University.
  *
- * SCCS: @(#) tkImgPPM.c 1.16 97/10/28 14:51:46
+ * RCS: @(#) $Id$
  */
 
 #include "tkInt.h"

@@ -8,7 +8,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkUnixMenu.c 1.76 97/11/05 09:08:22
+ * RCS: @(#) $Id$
  */
 
 #include "tkPort.h"

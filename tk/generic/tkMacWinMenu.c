@@ -9,7 +9,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkMacWinMenu.c 1.39 97/04/09 14:56:59
+ * RCS: @(#) $Id$
  */
 
 #include "tkMenu.h"

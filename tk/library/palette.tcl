@@ -3,7 +3,7 @@
 # This file contains procedures that change the color palette used
 # by Tk.
 #
-# SCCS: @(#) palette.tcl 1.11 97/06/23 20:35:44
+# RCS: @(#) $Id$
 #
 # Copyright (c) 1995-1997 Sun Microsystems, Inc.
 #

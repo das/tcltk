@@ -11,7 +11,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkMacXStubs.c 1.87 97/11/20 18:35:29
+ * RCS: @(#) $Id$
  */
 
 #include "tkInt.h"

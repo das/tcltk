@@ -15,7 +15,7 @@
  *	   Department of Computer Science,
  *	   Australian National University.
  *
- * SCCS: @(#) tkImgPhoto.c 1.60 97/08/08 11:32:46
+ * RCS: @(#) $Id$
  */
 
 #include "tkInt.h"

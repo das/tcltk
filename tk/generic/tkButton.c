@@ -12,7 +12,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkButton.c 1.144 97/07/31 09:04:57
+ * RCS: @(#) $Id$
  */
 
 #include "tkButton.h"

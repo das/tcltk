@@ -9,7 +9,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkUnixInit.c 1.24 97/07/24 14:46:09
+ * RCS: @(#) $Id$
  */
 
 #include "tkInt.h"

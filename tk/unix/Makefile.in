@@ -5,7 +5,7 @@
 # "autoconf" program (constructs like "@foo@" will get replaced in the
 # actual Makefile.
 #
-# SCCS: @(#) Makefile.in 1.146 97/11/05 11:10:45
+# RCS: @(#) $Id$
 
 # Current Tk version;  used in various names.
 

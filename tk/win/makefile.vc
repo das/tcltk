@@ -4,7 +4,7 @@
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 # 
 # Copyright (c) 1995-1996 Sun Microsystems, Inc.
-# SCCS: %Z% $Id$ 
+# RCS: @(#) $Id$
 
 # Does not depend on the presence of any environment variables in
 # order to compile tcl; all needed information is derived from 

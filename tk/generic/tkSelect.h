@@ -9,7 +9,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkSelect.h 1.4 95/11/03 13:22:41
+ * RCS: @(#) $Id$
  */
 
 #ifndef _TKSELECT

@@ -9,7 +9,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkCanvLine.c 1.46 97/04/25 16:51:02
+ * RCS: @(#) $Id$
  */
 
 #include <stdio.h>

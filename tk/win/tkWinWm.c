@@ -11,7 +11,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkWinWm.c 1.67 97/09/23 17:39:47
+ * RCS: @(#) $Id$
  */
 
 #include "tkWinInt.h"

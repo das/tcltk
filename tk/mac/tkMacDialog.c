@@ -8,7 +8,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkMacDialog.c 1.12 96/12/03 11:15:12
+ * RCS: @(#) $Id$
  *
  */
 

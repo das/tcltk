@@ -8,7 +8,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkGrid.c 1.39 97/10/10 10:12:03
+ * RCS: @(#) $Id$
  */
 
 #include "tkInt.h"

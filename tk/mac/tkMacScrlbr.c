@@ -10,7 +10,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkMacScrlbr.c 1.9 96/12/10 20:04:39
+ * RCS: @(#) $Id$
  */
 
 #include "tkScrollbar.h"

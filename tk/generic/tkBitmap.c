@@ -11,7 +11,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkBitmap.c 1.45 97/07/24 17:27:38
+ * RCS: @(#) $Id$
  */
 
 #include "tkPort.h"

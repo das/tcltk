@@ -9,7 +9,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkCanvBmap.c 1.30 96/05/03 10:49:00
+ * RCS: @(#) $Id$
  */
 
 #include <stdio.h>

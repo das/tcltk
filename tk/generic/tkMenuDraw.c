@@ -9,7 +9,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkMenuDraw.c 1.46 97/10/28 14:26:00
+ * RCS: @(#) $Id$
  */
 
 #include "tkMenu.h"

@@ -12,7 +12,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkMenu.c 1.148 97/10/29 09:22:00
+ * RCS: @(#) $Id$
  */
 
 /*

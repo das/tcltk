@@ -6,7 +6,7 @@
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 #
-# SCCS: @(#) tk.test 1.3 97/05/20 15:17:44
+# RCS: @(#) $Id$
 
 if {[info commands test] == ""} {
     source defs

@@ -9,7 +9,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkCanvPoly.c 1.37 97/04/29 15:39:16
+ * RCS: @(#) $Id$
  */
 
 #include <stdio.h>

@@ -9,7 +9,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkMacTest.c 1.2 96/12/15 14:34:00
+ * RCS: @(#) $Id$
  */
 
 #include <Types.h>

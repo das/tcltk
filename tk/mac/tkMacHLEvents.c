@@ -9,7 +9,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkMacHLEvents.c 1.21 97/09/17 17:19:00
+ * RCS: @(#) $Id$
  */
 
 #include "tcl.h"

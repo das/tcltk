@@ -9,7 +9,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkUnixScale.c 1.5 96/07/31 14:22:29
+ * RCS: @(#) $Id$
  */
 
 #include "tkScale.h"

@@ -11,7 +11,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkTextBTree.c 1.37 97/04/25 16:52:00
+ * RCS: @(#) $Id$
  */
 
 #include "tkInt.h"

@@ -10,7 +10,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkTextMark.c 1.18 97/10/20 11:12:50
+ * RCS: @(#) $Id$
  */
 
 #include "tkInt.h"

@@ -9,7 +9,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkGrab.c 1.52 97/03/21 11:14:34
+ * RCS: @(#) $Id$
  */
 
 #include "tkPort.h"

@@ -9,7 +9,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkCanvWind.c 1.29 97/10/14 10:40:54
+ * RCS: @(#) $Id$
  */
 
 #include <stdio.h>

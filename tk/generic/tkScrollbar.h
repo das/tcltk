@@ -9,7 +9,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkScrollbar.h 1.8 96/11/05 11:34:58
+ * RCS: @(#) $Id$
  */
 
 #ifndef _TKSCROLLBAR
