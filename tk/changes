@@ -5740,4 +5740,7 @@ lines, not logical lines in text widget (darley)
 2004-12-01 (bug fix)[979239] Fix clipping of partially transparent images
 on buttons on unix to avoid X error (hobbs, petasis)
 
+2004-12-03 (bug fix)[848161] Fix Tk_PhotoPut(Zoomed)Block overlay
+compositing of partially transparent areas.
+
 --- Released 8.4.9, December 6, 2004 --- See ChangeLog for details ---
