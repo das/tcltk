@@ -345,11 +345,14 @@ install-binaries:
 	@$(INSTALL_DATA) $(TK_LIB_FILE) $(LIB_INSTALL_DIR)/$(TK_LIB_FILE)
 	@echo "Installing $(WISH)"
 	@$(INSTALL_PROGRAM) $(WISH) $(BIN_INSTALL_DIR)/$(WISH)
-	@echo "Installing $(TK_DLL_FILE)"
-	@$(INSTALL_PROGRAM) $(TK_DLL_FILE) $(BIN_INSTALL_DIR)/$(TK_DLL_FILE)
-	@echo "Installing tkConfig.sh"
+	@if test "$(DLLSUFFIX)" != "" ; then \
+		echo "Installing $(TK_DLL_FILE)" ; \
+		$(INSTALL_PROGRAM) $(TK_DLL_FILE) \
+			$(BIN_INSTALL_DIR)/$(TK_DLL_FILE) ; \
+	fi
 	@if test "$(TK_STUB_LIB_FILE)" != "" ; then \
 	    if [ -f $(TK_STUB_LIB_FILE) ]; then \
+		echo "Installing tkConfig.sh" ; \
 	        $(INSTALL_DATA) tkConfig.sh $(LIB_INSTALL_DIR)/tkConfig.sh; \
 	        echo "Installing $(TK_STUB_LIB_FILE)"; \
 	        $(INSTALL_DATA) $(TK_STUB_LIB_FILE) \
