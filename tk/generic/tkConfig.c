@@ -891,8 +891,10 @@ DoObjConfig(interp, recordPtr, optionPtr, valuePtr, tkwin, savedOptionPtr)
 	    break;
 	}
 	default: {
-	    sprintf(interp->result, "bad config table: unknown type %d",
+	    char buf[40+TCL_INTEGER_SPACE];
+	    sprintf(buf, "bad config table: unknown type %d",
 		    optionPtr->specPtr->type);
+	    Tcl_SetResult(interp, buf, TCL_VOLATILE);
 	    return TCL_ERROR;
 	}
     }
