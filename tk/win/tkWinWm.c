@@ -1838,6 +1838,15 @@ TkWinWmCleanup(hInstance)
     tsdPtr->initialized = 0;
 
     UnregisterClass(TK_WIN_TOPLEVEL_CLASS_NAME, hInstance);
+#ifndef TCL_THREADS
+    /*
+     * Clean up specialized class created for layered windows.
+     */
+    if (setLayeredWindowAttributesProc != NULL) {
+	UnregisterClass(TK_WIN_TOPLEVEL_NOCDC_CLASS_NAME, hInstance);
+	setLayeredWindowAttributesProc = NULL;
+    }
+#endif
 }
 
 /*
