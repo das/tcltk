@@ -2678,10 +2678,10 @@ ImgPhotoDisplay(clientData, display, drawable, imageX, imageY, width,
     }
 
     if (
-#if defined(MAC_TCL) || defined(MAC_OSX_TK)
+#if defined(MAC_TCL)
 	/*
-	 * The retrieval of bgImg is currently not functional on OSX
-	 * (and likely not OS9 either), so skip attempts to alpha blend.
+	 * The retrieval of bgImg is currently not functional on OS9
+	 * so skip attempts to alpha blend.
 	 */
 	0 &&
 #endif
