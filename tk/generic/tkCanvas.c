@@ -291,7 +291,7 @@ static int		FindArea _ANSI_ARGS_((Tcl_Interp *interp,
 			    TkCanvas *canvasPtr, Tcl_Obj *CONST *argv, Tk_Uid uid,
 			    int enclosed));
 static double		GridAlign _ANSI_ARGS_((double coord, double spacing));
-CONST char**		TkGetStringsFromObjs _ANSI_ARGS_((int argc,
+static CONST char**	TkGetStringsFromObjs _ANSI_ARGS_((int argc,
 			    Tcl_Obj *CONST *objv));
 static void		InitCanvas _ANSI_ARGS_((void));
 #ifdef USE_OLD_TAG_SEARCH
@@ -5494,7 +5494,7 @@ CanvasSetOrigin(canvasPtr, xOrigin, yOrigin)
  *----------------------------------------------------------------------
  */
 /* ARGSUSED */
-CONST char **
+static CONST char **
 TkGetStringsFromObjs(argc, objv)
     int argc;
     Tcl_Obj *CONST objv[];
