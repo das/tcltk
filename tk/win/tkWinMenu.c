@@ -1240,16 +1240,15 @@ TkpSetWindowMenuBar(tkwin, menuPtr)
 	Tcl_SetHashValue(hashEntryPtr, (char *) menuPtr);
 	menuPtr->platformData = (TkMenuPlatformData) winMenuHdl;
 	TkWinSetMenu(tkwin, winMenuHdl);
-	if (menuPtr->menuFlags & MENU_RECONFIGURE_PENDING) {
-	    Tcl_DoWhenIdle(ReconfigureWindowsMenu, (ClientData) menuPtr);
+	if (!(menuPtr->menuFlags & MENU_RECONFIGURE_PENDING)) {
 	    menuPtr->menuFlags |= MENU_RECONFIGURE_PENDING;
+	    Tcl_DoWhenIdle(ReconfigureWindowsMenu, (ClientData) menuPtr);
 	}
     } else {
 	TkWinSetMenu(tkwin, NULL);
     }
 }
 
-
 /*
  *----------------------------------------------------------------------
  *
