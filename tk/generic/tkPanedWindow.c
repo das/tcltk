@@ -1436,7 +1436,10 @@ DestroyPanedWindow(pwPtr)
     if (pwPtr->flags & REDRAW_PENDING) {
 	Tcl_CancelIdleCall(DisplayPanedWindow, (ClientData) pwPtr);
     }
-    
+    if (pwPtr->flags & REQUESTED_RELAYOUT) {
+	Tcl_CancelIdleCall(ArrangePanes, (ClientData) pwPtr);
+    }
+
     /*
      * Clean up the slave list; foreach slave:
      *  o  Cancel the slave's structure notification callback
