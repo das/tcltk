@@ -953,12 +953,12 @@ CanvasWidgetCmd(clientData, interp, objc, objv)
 	}
 	arg = Tcl_GetStringFromObj(objv[2], (int *) &length);
 	c = arg[0];
-	Tcl_MutexLock(&typeListPtr);
+	Tcl_MutexLock(&typeListMutex);
 	for (typePtr = typeList; typePtr != NULL; typePtr = typePtr->nextPtr) {
 	    if ((c == typePtr->name[0])
 		    && (strncmp(arg, typePtr->name, length) == 0)) {
 		if (matchPtr != NULL) {
-		    Tcl_MutexUnlock(&typeListPtr);
+		    Tcl_MutexUnlock(&typeListMutex);
 		badType:
 		    Tcl_AppendResult(interp,
 			    "unknown or ambiguous item type \"",
@@ -974,7 +974,7 @@ CanvasWidgetCmd(clientData, interp, objc, objv)
 	 * the matched item type that are potentially modified by
 	 * other threads.
 	 */
-	Tcl_MutexUnlock(&typeListPtr);
+	Tcl_MutexUnlock(&typeListMutex);
 	if (matchPtr == NULL) {
 	    goto badType;
 	}
