@@ -3063,14 +3063,14 @@ WmTransientCmd(tkwin, winPtr, interp, objc, objv)
 	     * transient states reflect the state of the master.
 	     */
 
-	    if (wmPtr->masterPtr == NULL) {
-		masterPtr->wmInfoPtr->numTransients++;
-	    } else {
+	    if (wmPtr->masterPtr != NULL) {
+		wmPtr->masterPtr->wmInfoPtr->numTransients--;
 		Tk_DeleteEventHandler((Tk_Window) wmPtr->masterPtr,
 			StructureNotifyMask,
 			WmWaitMapProc, (ClientData) winPtr);
 	    }
 
+	    masterPtr->wmInfoPtr->numTransients++;
 	    Tk_CreateEventHandler((Tk_Window) masterPtr,
 		    StructureNotifyMask,
 		    WmWaitMapProc, (ClientData) winPtr);
