@@ -1316,9 +1316,9 @@ Tk_MessageBoxObjCmd(
     int                     result = TCL_OK;
     
     static CONST char *movableAlertStrings[] = {
-	"-default", "-finemessage", "-icon", 
+	"-default", "-detail", "-icon", 
 	"-message", "-parent", 
-	"-title", "-type", 	
+	"-title", "-type",
 	(char *)NULL
     };
     static CONST char *movableTypeStrings[] = {
@@ -1337,7 +1337,7 @@ Tk_MessageBoxObjCmd(
 	(char *)NULL
     };
     enum movableAlertOptions {
-	ALERT_DEFAULT, ALERT_FINEMESSAGE, ALERT_ICON,
+	ALERT_DEFAULT, ALERT_DETAIL, ALERT_ICON,
 	ALERT_MESSAGE, ALERT_PARENT,
 	ALERT_TITLE, ALERT_TYPE
     };
@@ -1422,7 +1422,7 @@ Tk_MessageBoxObjCmd(
 	    indexDefaultOption = i;
 	    break;
 	    
-            case ALERT_FINEMESSAGE:
+            case ALERT_DETAIL:
 	    str = Tcl_GetStringFromObj( objv[i + 1], NULL );
 	    finemessageTextCF = CFStringCreateWithCString( NULL, str, kCFStringEncodingUTF8 );
 	    break;
