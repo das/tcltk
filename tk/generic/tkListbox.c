@@ -3195,6 +3195,12 @@ ListboxListVarProc(clientData, interp, name1, name2, flags)
 
     if (oldLength != listPtr->nElements) {
 	listPtr->flags |= UPDATE_V_SCROLLBAR;
+	if (listPtr->topIndex > (listPtr->nElements - listPtr->fullLines)) {
+	    listPtr->topIndex = listPtr->nElements - listPtr->fullLines;
+	    if (listPtr->topIndex < 0) {
+		listPtr->topIndex = 0;
+	    }
+	}
     }
 
     /*
