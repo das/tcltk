@@ -12,7 +12,7 @@
  * RCS: @(#) $Id$
  */
 #include "tkMacOSXInt.h"
-#include "tkMenuButton.h"
+#include "tkMenubutton.h"
 #include "tkMenu.h"
 #include "tkColor.h"
 #include "tkMacOSXInt.h"
