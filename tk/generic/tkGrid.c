@@ -767,7 +767,7 @@ GridPropagateCommand(tkwin, interp, objc, objv)
 {
     Tk_Window master;
     Gridder *masterPtr;
-    int propagate;
+    int propagate, old;
     
     if (objc > 4) {
 	Tcl_WrongNumArgs(interp, 2, objv, "window ?boolean?");
@@ -789,7 +789,8 @@ GridPropagateCommand(tkwin, interp, objc, objv)
     
     /* Only request a relayout if the propagation bit changes */
     
-    if ((!propagate) ^ (masterPtr->flags&DONT_PROPAGATE)) {
+    old = !(masterPtr->flags & DONT_PROPAGATE);
+    if (propagate != old) {
 	if (propagate) {
 	    masterPtr->flags &= ~DONT_PROPAGATE;
 	} else {
