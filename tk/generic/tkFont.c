@@ -3753,7 +3753,7 @@ TkFontGetFirstTextLayout(
     }
     chunkPtr = layoutPtr->chunks;
     numBytesInChunk = chunkPtr->numBytes;
-    strncpy(dst, chunkPtr->start, numBytesInChunk);
+    strncpy(dst, chunkPtr->start, (size_t) numBytesInChunk);
     *font = layoutPtr->tkfont;
     return numBytesInChunk;
 }
