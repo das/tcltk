@@ -11,7 +11,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkWinEmbed.c 1.21 97/11/07 21:59:08;
+ * RCS: @(#) $Id$
  */
 
 #include "tkWinInt.h"

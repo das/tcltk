@@ -31,7 +31,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkMacSend.c 1.9 98/02/18 11:01:26
+ * RCS: @(#) $Id$
  */
 
 #include <Gestalt.h>

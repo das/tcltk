@@ -10,7 +10,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkPlace.c 1.28 97/11/07 21:17:41
+ * RCS: @(#) $Id$
  */
 
 #include "tkPort.h"

@@ -11,7 +11,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkFont.c 1.88 98/02/11 17:44:51
+ * RCS: @(#) $Id$
  */
 
 #include "tkPort.h"

@@ -13,7 +13,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkMain.c 1.158 98/01/20 22:46:33
+ * RCS: @(#) $Id$
  */
 
 #include <ctype.h>

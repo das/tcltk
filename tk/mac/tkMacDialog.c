@@ -8,7 +8,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkMacDialog.c 1.20 97/11/07 21:23:36
+ * RCS: @(#) $Id$
  */
 
 #include <Gestalt.h>

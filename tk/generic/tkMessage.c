@@ -11,7 +11,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkMessage.c 1.76 97/11/07 21:20:11
+ * RCS: @(#) $Id$
  */
 
 #include "tkPort.h"

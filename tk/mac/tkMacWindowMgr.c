@@ -8,7 +8,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkMacWindowMgr.c 1.62 98/01/16 10:42:51
+ * RCS: @(#) $Id$
  */
 
 #include <Events.h>

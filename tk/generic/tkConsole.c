@@ -10,7 +10,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkConsole.c 1.55 98/01/02 17:40:37
+ * RCS: @(#) $Id$
  */
 
 #include "tk.h"

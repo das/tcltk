@@ -7,7 +7,7 @@
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 #
-# SCCS: @(#) winDialog.test 1.4 97/08/06 18:19:56
+# RCS: @(#) $Id$
 
 if {$tcl_platform(os) != "Windows NT"} {
     return 

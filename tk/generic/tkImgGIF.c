@@ -27,7 +27,7 @@
  * |   provided "as is" without express or implied warranty.           |
  * +-------------------------------------------------------------------+
  *
- * SCCS: @(#) tkImgGIF.c 1.20 97/11/07 21:20:21
+ * RCS: @(#) $Id$
  */
 
 /*

@@ -3,7 +3,7 @@
 #	Implements messageboxes for platforms that do not have native
 #	messagebox support.
 #
-# SCCS: @(#) msgbox.tcl 1.11 97/12/19 16:07:48
+# RCS: @(#) $Id$
 #
 # Copyright (c) 1994-1997 Sun Microsystems, Inc.
 #
@@ -120,7 +120,7 @@ proc tkMessageBox {args} {
 	    }
 	}
 	if {!$valid} {
-	    error "bad -default value \"$data(-default)\": must be abort, retry, ignore, ok, cancel, no, or yes"
+	    error "invalid default button \"$data(-default)\""
 	}
     }
 

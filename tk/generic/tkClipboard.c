@@ -11,7 +11,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkClipboard.c 1.16 97/11/07 21:16:25
+ * RCS: @(#) $Id$
  */
 
 #include "tkInt.h"

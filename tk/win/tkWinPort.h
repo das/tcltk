@@ -10,7 +10,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkWinPort.h 1.27 98/02/10 10:35:52
+ * RCS: @(#) $Id$
  */
 
 #ifndef _WINPORT

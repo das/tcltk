@@ -8,7 +8,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkWinCursor.c 1.11 97/11/12 17:50:45
+ * RCS: @(#) $Id$
  */
 
 #include "tkWinInt.h"

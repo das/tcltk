@@ -9,7 +9,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkWinScrlbr.c 1.20 97/11/07 21:25:53
+ * RCS: @(#) $Id$
  */
 
 #include "tkWinInt.h"

@@ -11,7 +11,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkTextWind.c 1.16 98/01/08 13:41:05
+ * RCS: @(#) $Id$
  */
 
 #include "tk.h"

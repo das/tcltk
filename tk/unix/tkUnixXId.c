@@ -17,7 +17,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * SCCS: @(#) tkUnixXId.c 1.24 98/01/12 15:30:26
+ * RCS: @(#) $Id$
  */
 
 /*
