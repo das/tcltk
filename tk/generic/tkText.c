@@ -618,7 +618,7 @@ TextWidgetCmd(clientData, interp, argc, argv)
 		 * handle partial and fully overlapping ranges.  We have to
 		 * do this with multiple passes.
 		 */
-		TkTextIndex *indices, *ixStart, *ixEnd, *lastStart, *lastEnd;
+		TkTextIndex *indices, *ixStart, *ixEnd, *lastStart;
 		char *useIdx;
 
 		argc -= 2;
@@ -653,7 +653,7 @@ TextWidgetCmd(clientData, interp, argc, argv)
 		 */
 		qsort((VOID *) indices, (unsigned) (argc / 2),
 			2 * sizeof(TkTextIndex), TextIndexSortProc);
-		lastStart = lastEnd = NULL;
+		lastStart = NULL;
 		/*
 		 * Second pass will handle bogus ranges (end < start) and
 		 * overlapping ranges.
@@ -684,7 +684,6 @@ TextWidgetCmd(clientData, interp, argc, argv)
 			}
 		    }
 		    lastStart = ixStart;
-		    lastEnd   = ixEnd;
 		    useIdx[i]   = 1;
 		}
 		/*
