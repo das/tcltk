@@ -579,7 +579,7 @@ ReconfigureWindowsMenu(
 	    lpNewItem = (LPCTSTR) mePtr;
 	    flags |= MF_OWNERDRAW;
 	}
-	
+
 	/*
 	 * Set enabling and disabling correctly.
 	 */
@@ -596,6 +596,18 @@ ReconfigureWindowsMenu(
 		|| (mePtr->type == RADIO_BUTTON_ENTRY))
 		&& (mePtr->entryFlags & ENTRY_SELECTED)) {
 	    flags |= MF_CHECKED;
+	}
+	
+	/*
+	 * Set the SEPARATOR bit for separator entries.  This bit is not
+	 * used by our internal drawing functions, but it is used by the
+	 * system when drawing the system menu (we do not draw the system menu
+	 * ourselves).  If this bit is not set, separator entries on the system
+	 * menu will not be drawn correctly.
+	 */
+
+	if (mePtr->type == SEPARATOR_ENTRY) {
+	    flags |= MF_SEPARATOR;
 	}
 	
 	if (mePtr->columnBreak) {
