@@ -2179,7 +2179,6 @@ DisplayText(clientData)
 {
     register TkText *textPtr = (TkText *) clientData;
     TextDInfo *dInfoPtr = textPtr->dInfoPtr;
-    Tk_Window tkwin;
     register DLine *dlPtr;
     DLine *prevPtr;
     Pixmap pixmap;
@@ -2244,16 +2243,14 @@ DisplayText(clientData)
      */
 
     while (dInfoPtr->flags & REPICK_NEEDED) {
-	int flags = textPtr->flags;
-	
 	Tcl_Preserve((ClientData) textPtr);
 	dInfoPtr->flags &= ~REPICK_NEEDED;
 	TkTextPickCurrent(textPtr, &textPtr->pickEvent);
-	tkwin = textPtr->tkwin;
-	Tcl_Release((ClientData) textPtr);
 	if ((textPtr->tkwin == NULL) || (textPtr->flags & DESTROYED)) {
+	    Tcl_Release((ClientData) textPtr);
 	    goto end;
 	}
+	Tcl_Release((ClientData) textPtr);
     }
 
     /*
