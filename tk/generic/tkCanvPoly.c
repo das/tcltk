@@ -266,6 +266,10 @@ CreatePolygon(interp, canvas, itemPtr, objc, objv)
     PolygonItem *polyPtr = (PolygonItem *) itemPtr;
     int i;
 
+    if (objc == 0) {
+	panic("canvas did not pass any coords\n");
+    }
+
     /*
      * Carry out initialization that is needed in order to clean
      * up after errors during the the remainder of this procedure.
@@ -368,9 +372,10 @@ PolygonCoords(interp, canvas, itemPtr, objc, objv)
 	}
     }
     if (objc & 1) {
-	Tcl_AppendResult(interp,
-		"odd number of coordinates specified for polygon",
-		(char *) NULL);
+	char buf[64 + TCL_INTEGER_SPACE];
+	sprintf(buf, "wrong # coordinates: expected an even number, got %d",
+		objc);
+	Tcl_SetResult(interp, buf, TCL_VOLATILE);
 	return TCL_ERROR;
     } else {
 	numPoints = objc/2;

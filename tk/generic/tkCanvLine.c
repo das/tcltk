@@ -302,6 +302,10 @@ CreateLine(interp, canvas, itemPtr, objc, objv)
     LineItem *linePtr = (LineItem *) itemPtr;
     int i;
 
+    if (objc == 0) {
+	panic("canvas did not pass any coords\n");
+    }
+
     /*
      * Carry out initialization that is needed to set defaults and to
      * allow proper cleanup after errors during the the remainder of
@@ -330,13 +334,13 @@ CreateLine(interp, canvas, itemPtr, objc, objv)
      * start with a digit or a minus sign followed by a digit.
      */
 
-    for (i = 0; i < objc; i++) {
+    for (i = 1; i < objc; i++) {
 	char *arg = Tcl_GetString(objv[i]);
 	if ((arg[0] == '-') && (arg[1] >= 'a') && (arg[1] <= 'z')) {
 	    break;
 	}
     }
-    if (i && (LineCoords(interp, canvas, itemPtr, i, objv) != TCL_OK)) {
+    if (LineCoords(interp, canvas, itemPtr, i, objv) != TCL_OK) {
 	goto error;
     }
     if (ConfigureLine(interp, canvas, itemPtr, objc-i, objv+i, 0) == TCL_OK) {
@@ -411,14 +415,15 @@ LineCoords(interp, canvas, itemPtr, objc, objv)
 	}
     }
     if (objc & 1) {
-	Tcl_AppendResult(interp,
-		"odd number of coordinates specified for line",
-		(char *) NULL);
+	char buf[64 + TCL_INTEGER_SPACE];
+	sprintf(buf, "wrong # coordinates: expected an even number, got %d",
+		objc);
+	Tcl_SetResult(interp, buf, TCL_VOLATILE);
 	return TCL_ERROR;
     } else if (objc < 4) {
-	Tcl_AppendResult(interp,
-		"too few coordinates specified for line",
-		(char *) NULL);
+	char buf[64 + TCL_INTEGER_SPACE];
+	sprintf(buf, "wrong # coordinates: expected at least 4, got %d", objc);
+	Tcl_SetResult(interp, buf, TCL_VOLATILE);
 	return TCL_ERROR;
     } else {
 	numPoints = objc/2;

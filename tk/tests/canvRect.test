@@ -51,10 +51,10 @@ test canvRect-1.$i {configuration options} {
 
 test canvRect-2.1 {CreateRectOval procedure} {
     list [catch {.c create rect} msg] $msg
-} {1 {wrong # args: should be ".c create rectangle x1 y1 x2 y2 ?options?"}}
+} {1 {wrong # args: should be ".c create rect coords ?arg arg ...?"}}
 test canvRect-2.2 {CreateRectOval procedure} {
     list [catch {.c create oval x y z} msg] $msg
-} {1 {wrong # args: should be ".c create oval x1 y1 x2 y2 ?options?"}}
+} {1 {wrong # coordinates: expected 0 or 4, got 3}}
 test canvRect-2.3 {CreateRectOval procedure} {
     list [catch {.c create rectangle x 2 3 4} msg] $msg
 } {1 {bad screen distance "x"}}
