@@ -459,7 +459,6 @@ set ::tk::Priv(prevPos) {}
 #     (int)-1/3 = -1
 # The following code ensure equal +/- behaviour.
 bind Text <MouseWheel> {
-    puts stderr %D
     if {%D >= 0} {
 	%W yview scroll [expr {-%D/3}] pixels
     } else {
