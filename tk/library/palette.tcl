@@ -24,6 +24,11 @@
 # for the option database, such as activeForeground, not -activeforeground.
 
 proc tk_setPalette {args} {
+    if {[winfo depth .] == 1} {
+	# Just return on monochrome displays, otherwise errors will occur
+	return
+    }
+
     global tkPalette
 
     # Create an array that has the complete new palette.  If some colors
@@ -95,8 +100,8 @@ proc tk_setPalette {args} {
     # defaults are currently for this platform.
     toplevel .___tk_set_palette
     wm withdraw .___tk_set_palette
-    foreach q {button canvas checkbutton entry frame label listbox menubutton menu message \
-		 radiobutton scale scrollbar text} {
+    foreach q {button canvas checkbutton entry frame label listbox \
+	    menubutton menu message radiobutton scale scrollbar text} {
 	$q .___tk_set_palette.$q
     }
 
@@ -188,10 +193,10 @@ proc tkRecolorTree {w colors} {
 
 proc tkDarken {color percent} {
     foreach {red green blue} [winfo rgb . $color] {
-      set red [expr {($red/256)*$percent/100}]
-      set green [expr {($green/256)*$percent/100}]
-      set blue [expr {($blue/256)*$percent/100}]
-      break
+	set red [expr {($red/256)*$percent/100}]
+	set green [expr {($green/256)*$percent/100}]
+	set blue [expr {($blue/256)*$percent/100}]
+	break
     }
     if {$red > 255} {
 	set red 255
