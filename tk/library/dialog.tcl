@@ -66,7 +66,7 @@ proc ::tk_dialog {w title text bitmap default args} {
     }    
 
     if {[string equal $tcl_platform(platform) "macintosh"]} {
-	unsupported1 style $w dBoxProc
+	::tk::unsupported::MacWindowStyle style $w dBoxProc
     }
 
     frame $w.bot

@@ -222,6 +222,7 @@ namespace eval ::tk::unsupported {
 	tkTextUpDownLine		::tk::TextUpDownLine
 	tkTraverseToMenu		::tk::TraverseToMenu
 	tkTraverseWithinMenu		::tk::TraverseWithinMenu
+	unsupported1			::tk::unsupported::MacWindowStyle
     }
 
     # Map from the old global names of Tk private variable to their
@@ -229,7 +230,9 @@ namespace eval ::tk::unsupported {
 
     variable PrivateVariables
     array set PrivateVariables {
+	droped_to_start		::tk::mac::Droped_to_start
 	histNum			::tk::HistNum
+	stub_location		::tk::mac::Stub_location
 	tkFocusIn		::tk::FocusIn
 	tkFocusOut		::tk::FocusOut
 	tkPalette		::tk::Palette

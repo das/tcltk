@@ -3744,9 +3744,9 @@ TkMacZoomToplevel(
  *
  * TkUnsupported1Cmd --
  *
- *	This procedure is invoked to process the "unsupported1" Tcl 
- *	command.  This command allows you to set the style of decoration
- *	for a Macintosh window.
+ *	This procedure is invoked to process the 
+ *	"::tk::unsupported::MacWindowStyle" Tcl command.  This command
+ *	allows you to set the style of decoration for a Macintosh window.
  *
  * Results:
  *	A standard Tcl result.

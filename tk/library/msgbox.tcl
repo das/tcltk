@@ -286,7 +286,7 @@ proc ::tk::MessageBox {args} {
     }    
 
     if {[string equal $tcl_platform(platform) "macintosh"]} {
-	unsupported1 style $w dBoxProc
+	unsupported::MacWindowStyle style $w dBoxProc
     }
 
     frame $w.bot
