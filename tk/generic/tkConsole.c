@@ -107,30 +107,50 @@ TkConsoleCreate()
 
     TclInitSubsystems(NULL);
 
-    consoleChannel = Tcl_CreateChannel(&consoleChannelType, "console0",
-	    (ClientData) TCL_STDIN, TCL_READABLE);
-    if (consoleChannel != NULL) {
-	Tcl_SetChannelOption(NULL, consoleChannel, "-translation", "lf");
-	Tcl_SetChannelOption(NULL, consoleChannel, "-buffering", "none");
-	Tcl_SetChannelOption(NULL, consoleChannel, "-encoding", "utf-8");
+    /*
+     * check for STDIN, otherwise create it
+     */
+
+    if (Tcl_GetStdChannel(TCL_STDIN) == NULL) {
+	consoleChannel = Tcl_CreateChannel(&consoleChannelType, "console0",
+	        (ClientData) TCL_STDIN, TCL_READABLE);
+	if (consoleChannel != NULL) {
+	    Tcl_SetChannelOption(NULL, consoleChannel, "-translation", "lf");
+	    Tcl_SetChannelOption(NULL, consoleChannel, "-buffering", "none");
+	    Tcl_SetChannelOption(NULL, consoleChannel, "-encoding", "utf-8");
+	}
+	Tcl_SetStdChannel(consoleChannel, TCL_STDIN);
     }
-    Tcl_SetStdChannel(consoleChannel, TCL_STDIN);
-    consoleChannel = Tcl_CreateChannel(&consoleChannelType, "console1",
-	    (ClientData) TCL_STDOUT, TCL_WRITABLE);
-    if (consoleChannel != NULL) {
-	Tcl_SetChannelOption(NULL, consoleChannel, "-translation", "lf");
-	Tcl_SetChannelOption(NULL, consoleChannel, "-buffering", "none");
-	Tcl_SetChannelOption(NULL, consoleChannel, "-encoding", "utf-8");
+
+    /*
+     * check for STDOUT, otherwise create it
+     */
+
+    if (Tcl_GetStdChannel(TCL_STDOUT) == NULL) {
+	consoleChannel = Tcl_CreateChannel(&consoleChannelType, "console1",
+	        (ClientData) TCL_STDOUT, TCL_WRITABLE);
+	if (consoleChannel != NULL) {
+	    Tcl_SetChannelOption(NULL, consoleChannel, "-translation", "lf");
+	    Tcl_SetChannelOption(NULL, consoleChannel, "-buffering", "none");
+	    Tcl_SetChannelOption(NULL, consoleChannel, "-encoding", "utf-8");
+	}
+	Tcl_SetStdChannel(consoleChannel, TCL_STDOUT);
     }
-    Tcl_SetStdChannel(consoleChannel, TCL_STDOUT);
-    consoleChannel = Tcl_CreateChannel(&consoleChannelType, "console2",
-	    (ClientData) TCL_STDERR, TCL_WRITABLE);
-    if (consoleChannel != NULL) {
-	Tcl_SetChannelOption(NULL, consoleChannel, "-translation", "lf");
-	Tcl_SetChannelOption(NULL, consoleChannel, "-buffering", "none");
-	Tcl_SetChannelOption(NULL, consoleChannel, "-encoding", "utf-8");
+
+    /*
+     * check for STDERR, otherwise create it
+     */
+
+    if (Tcl_GetStdChannel(TCL_STDERR) == NULL) {
+	consoleChannel = Tcl_CreateChannel(&consoleChannelType, "console2",
+	        (ClientData) TCL_STDERR, TCL_WRITABLE);
+	if (consoleChannel != NULL) {
+	    Tcl_SetChannelOption(NULL, consoleChannel, "-translation", "lf");
+	    Tcl_SetChannelOption(NULL, consoleChannel, "-buffering", "none");
+	    Tcl_SetChannelOption(NULL, consoleChannel, "-encoding", "utf-8");
+	}
+	Tcl_SetStdChannel(consoleChannel, TCL_STDERR);
     }
-    Tcl_SetStdChannel(consoleChannel, TCL_STDERR);
 }
 
 /*

@@ -26,6 +26,9 @@
 #else
 #   include <stdlib.h>
 #endif
+#ifdef __WIN32__
+#include "tkWinInt.h"
+#endif
 
 typedef struct ThreadSpecificData {
     Tcl_Interp *interp;         /* Interpreter for this thread. */
@@ -48,13 +51,12 @@ Tcl_ThreadDataKey dataKey;
  * some systems.
  */
 
-extern int		isatty _ANSI_ARGS_((int fd));
 #if !defined(__WIN32__) && !defined(_WIN32)
+extern int		isatty _ANSI_ARGS_((int fd));
 extern char *		strrchr _ANSI_ARGS_((CONST char *string, int c));
 #endif
 extern void		TkpDisplayWarning _ANSI_ARGS_((char *msg,
 			    char *title));
-
 /*
  * Forward declarations for procedures defined later in this file.
  */
@@ -100,6 +102,9 @@ Tk_Main(argc, argv, appInitProc)
     ThreadSpecificData *tsdPtr = (ThreadSpecificData *) 
             Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
     Tcl_Interp *interp;
+#ifdef __WIN32__
+    HANDLE handle;
+#endif
 
     Tcl_FindExecutable(argv[0]);
     interp = tsdPtr->interp = Tcl_CreateInterp();
@@ -160,7 +165,26 @@ Tk_Main(argc, argv, appInitProc)
      */
 
 #ifdef __WIN32__
-    tsdPtr->tty = 1;
+    handle = GetStdHandle(STD_INPUT_HANDLE);
+
+    if ((handle == INVALID_HANDLE_VALUE) || (handle == 0) 
+	     || (GetFileType(handle) == FILE_TYPE_UNKNOWN)) {
+	/*
+	 * If it's a bad or closed handle, then it's been connected
+	 * to a wish console window.
+	 */
+
+	tsdPtr->tty = 1;
+    } else if (GetFileType(handle) == FILE_TYPE_CHAR) {
+	/*
+	 * A character file handle is a tty by definition.
+	 */
+
+	tsdPtr->tty = 1;
+    } else {
+	tsdPtr->tty = 0;
+    }
+
 #else
     tsdPtr->tty = isatty(0);
 #endif
