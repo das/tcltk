@@ -919,8 +919,6 @@ TkStubs tkStubs = {
     Tk_InitConsoleChannels, /* 215 */
     Tk_CreateConsoleWindow, /* 216 */
     Tk_CreateSmoothMethod, /* 217 */
-    Tk_CreateCanvasVisitor, /* 218 */
-    Tk_GetCanvasVisitor, /* 219 */
 };
 
 /* !END!: Do not edit above this line. */

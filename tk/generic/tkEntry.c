@@ -2598,7 +2598,8 @@ EntryBlinkProc(clientData)
 {
     Entry *entryPtr = (Entry *) clientData;
 
-    if (!(entryPtr->flags & GOT_FOCUS) || (entryPtr->insertOffTime == 0)) {
+    if ((entryPtr->state == STATE_DISABLED) ||
+	    !(entryPtr->flags & GOT_FOCUS) || (entryPtr->insertOffTime == 0)) {
 	return;
     }
     if (entryPtr->flags & CURSOR_ON) {

@@ -1617,7 +1617,8 @@ TextBlinkProc(clientData)
     TkTextIndex index;
     int x, y, w, h;
 
-    if (!(textPtr->flags & GOT_FOCUS) || (textPtr->insertOffTime == 0)) {
+    if ((textPtr->state == TK_STATE_DISABLED) ||
+	    !(textPtr->flags & GOT_FOCUS) || (textPtr->insertOffTime == 0)) {
 	return;
     }
     if (textPtr->flags & INSERT_ON) {

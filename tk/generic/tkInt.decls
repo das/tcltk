@@ -660,8 +660,6 @@ declare 6 unix {
 declare 7 unix {
     void TkUnixSetMenubar (Tk_Window tkwin, Tk_Window menubar)
 }
-	
-
 
 ############################
 # Windows specific functions
