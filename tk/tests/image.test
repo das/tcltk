@@ -80,6 +80,9 @@ test image-1.9 {Tk_ImageCmd procedure, "create" option} {
     eval image delete [image names]
     list [catch {image create test -badName foo} msg] $msg [image names]
 } {1 {bad option name "-badName"} {}}
+test image-1.10 {Tk_ImageCmd procedure, "create" option} {
+    list [catch {image create test .} msg] $msg
+} {1 {image names cannot start with period symbols: "." is illegal}}
 
 test image-2.1 {Tk_ImageCmd procedure, "delete" option} {
     list [catch {image delete} msg] $msg
