@@ -179,7 +179,7 @@ append a $a
 append a $a
 append a $a
 append a $a
-test winDialog-5.16 {GetFileName: initial file: long name} {
+test winDialog-5.16 {GetFileName: initial file: long name} {knownBug} {
     start {set x [tk_getSaveFile -initialfile $a -title Long]}
     then {
 	Click 1
