@@ -28,7 +28,7 @@
 ROOT		= ..
 TOOLS32		= c:\program files\devstudio\vc
 TOOLS32_rc	= c:\program files\devstudio\sharedide
-TCLDIR		= ..\..\tcl8.2
+TCLDIR		= ..\..\tcl8.3
 INSTALLDIR      = c:\program files\tcl
 
 # Set this to the appropriate value of /MACHINE: for your platform
@@ -50,8 +50,8 @@ NODEBUG = 1
 TCLNAMEPREFIX = tcl
 TKNAMEPREFIX = tk
 WISHNAMEPREFIX = wish
-VERSION = 82
-DOTVERSION = 8.2
+VERSION = 83
+DOTVERSION = 8.3
 
 TCLSTUBPREFIX = $(TCLNAMEPREFIX)stub
 TKSTUBPREFIX  = $(TKNAMEPREFIX)stub

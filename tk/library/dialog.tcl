@@ -68,7 +68,7 @@ proc tk_dialog {w title text bitmap default args} {
     if {[string equal $tcl_platform(platform) "macintosh"]} {
 	option add *Dialog.msg.font system widgetDefault
     } else {
-	option add *Dialog.msg.font {Times 18} widgetDefault
+	option add *Dialog.msg.font {Times 12} widgetDefault
     }
 
     label $w.msg -justify left -text $text
