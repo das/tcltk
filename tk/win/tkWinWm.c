@@ -7502,7 +7502,6 @@ WmProc(hwnd, message, wParam, lParam)
 	case WM_MENUSELECT:
 	case WM_ENTERIDLE:
 	case WM_INITMENUPOPUP:
-	case WM_UNINITMENUPOPUP:
 	{
 	    HWND hMenuHWnd = Tk_GetEmbeddedMenuHWND((Tk_Window)winPtr);
 	    if(hMenuHWnd) {
