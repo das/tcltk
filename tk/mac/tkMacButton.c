@@ -233,19 +233,6 @@ TkpDisplayButton(
     }
 
     /*
-     * LINK relief means that the button has a raised relief when it is
-     * active, and a flat relief otherwise (like toolbar buttons).  It
-     * is supported for true buttons only.
-     */
-
-    if ((butPtr->type == TYPE_BUTTON) && butPtr->relief == TK_RELIEF_LINK) {
-	if ((butPtr->flags & MOUSE_IN_BUTTON) == MOUSE_IN_BUTTON) {
-	    relief = TK_RELIEF_RAISED;
-	} else {
-	    relief = TK_RELIEF_FLAT;
-	}
-    }
-    /*
      * See the comment in UpdateControlColors as to why we use the 
      * highlightbackground for the border of Macintosh buttons.
      */

@@ -411,7 +411,9 @@ See \fBOBJOFFSET VS. INTERNALOFFSET\fR below for details.
 \fBTK_OPTION_RELIEF\fR
 The value must be standard relief such as \fBraised\fR.
 The internal form is an integer relief value such as
-TK_RELIEF_RAISED.
+TK_RELIEF_RAISED.  This option type supports the TK_OPTION_NULL_OK
+flag; if the empty string is specified as the value for the option,
+the integer relief value is set to TK_RELIEF_NULL.
 .TP
 \fBTK_OPTION_STRING\fR
 The value may be any string.  The internal form is a (char *) pointer

@@ -720,8 +720,8 @@ Tk_NameOfRelief(relief)
 	return "ridge";
     } else if (relief == TK_RELIEF_SOLID) {
 	return "solid";
-    } else if (relief == TK_RELIEF_LINK) {
-	return "link";
+    } else if (relief == TK_RELIEF_NULL) {
+	return "";
     } else {
 	return "unknown relief";
     }

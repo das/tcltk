@@ -116,6 +116,10 @@ typedef struct {
     int relief;			/* Value of -relief option: specifies 3-d
 				 * effect for border, such as
 				 * TK_RELIEF_RAISED. */
+    int overRelief;		/* Value of -overrelief option: specifies a 3-d
+				 * effect for the border, such as
+				 * TK_RELIEF_RAISED, to be used when the mouse
+				 * is over the button. */
     Tcl_Obj *highlightWidthPtr;	/* Value of -highlightthickness option:
 				 * specifies width in pixels of highlight to
 				 * draw around widget when it has the focus.
@@ -273,15 +277,12 @@ typedef struct {
  * BUTTON_DELETED:		Non-zero needs that this button has been
  *				deleted, or is in the process of being
  *				deleted.
- * MOUSE_IN_BUTTON:		Non-zero means that the mouse is currently
- *				over the button.
  */
 
 #define REDRAW_PENDING		(1 << 0)
 #define SELECTED		(1 << 1)
 #define GOT_FOCUS		(1 << 2)
 #define BUTTON_DELETED		(1 << 3)
-#define MOUSE_IN_BUTTON		(1 << 4)
 /*
  * Declaration of variables shared between the files in the button module.
  */
