@@ -1363,13 +1363,15 @@ DestroyEntry(memPtr)
     entryPtr->tkwin = NULL;
 
     /*
-     * Tcl_EventuallyFree should be used here or better yet in the
+     * Tcl_EventuallyFree should be used in
      * DestroyNotify branch of EntryEventProc.  However, that can lead
      * complications in Tk_FreeConfigOptions where the display for the
      * entry has been deleted by Tk_DestroyWindow, which is needed
-     * when freeing the cursor option. 
+     * when freeing the cursor option.  Also, there can be a timing
+     * issue were we wouldn't get called until too late in Tk clean-up,
+     * and it complains that we haven't freed our fonts yet.
      */
-    ckfree((char *) entryPtr);
+    Tcl_EventuallyFree((ClientData) entryPtr, TCL_DYNAMIC);
 }
 
 /*
