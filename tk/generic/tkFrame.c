@@ -1397,8 +1397,7 @@ DisplayFrame(clientData)
     TkRegion clipRegion = NULL;
 
     framePtr->flags &= ~REDRAW_PENDING;
-    if ((framePtr->tkwin == NULL) || !Tk_IsMapped(tkwin)
-        || framePtr->isContainer) {
+    if ((framePtr->tkwin == NULL) || !Tk_IsMapped(tkwin)) {
 	return;
     }
 
