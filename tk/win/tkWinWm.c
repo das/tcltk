@@ -4550,6 +4550,9 @@ RaiseWinWhenIdle(clientData)
 {
     register TkWindow *winPtr = (TkWindow *) clientData;
 
+    if ((winPtr == NULL) || (winPtr->flags & TK_ALREADY_DEAD)) {
+	return;
+    }
     if (winPtr->wmInfoPtr->flags & WM_UPDATE_PENDING) {
 	Tcl_CancelIdleCall(UpdateGeometryInfo, (ClientData) winPtr);
 	UpdateGeometryInfo((ClientData) winPtr);
