@@ -963,7 +963,7 @@ ImgPhotoCmd(clientData, interp, objc, objv)
 	    }
 	    if ((*imageFormat->stringReadProc)(interp, data,
 		    format, (Tk_PhotoHandle) masterPtr,
-		    0, 0, imageWidth, imageHeight, options.toX, options.toY)
+		    options.toX, options.toY, imageWidth, imageHeight, 0, 0)
 		    != TCL_OK) {
 		return TCL_ERROR;
 	    }
