@@ -98,7 +98,8 @@ InitFont(tkwin, pattern, fontPtr)
     char *family;
     int weight, slant, spacing, i;
     double size;
-    FcFontSet *set, *charset;
+    FcFontSet *set;
+    FcCharSet *charset;
     FcResult result;
     XftFont *ftFont;
     
