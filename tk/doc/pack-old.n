@@ -12,7 +12,7 @@
 .BS
 '\" Note:  do not modify the .SH NAME line immediately below!
 .SH NAME
-pack \- Obsolete syntax for packer geometry manager
+pack-old \- Obsolete syntax for packer geometry manager
 .SH SYNOPSIS
 \fBpack after \fIsibling \fIwindow options\fR ?\fIwindow options \fR...?
 .sp
