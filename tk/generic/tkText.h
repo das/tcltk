@@ -34,7 +34,7 @@
  * file:
  */
 
-typedef struct TkTextBTree *TkTextBTree;
+typedef struct TkTextBTree_ *TkTextBTree;
 
 /*
  * The data structure below defines a single line of text (from newline
