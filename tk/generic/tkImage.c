@@ -1048,7 +1048,7 @@ Tk_SetTSOrigin(tkwin, gc, x, y)
     GC gc;
     int x, y;
 {
-    while (!Tk_IsTopLevel(tkwin)) {
+    while (!Tk_TopWinHierarchy(tkwin)) {
 	x -= Tk_X(tkwin) + Tk_Changes(tkwin)->border_width;
 	y -= Tk_Y(tkwin) + Tk_Changes(tkwin)->border_width;
 	tkwin = Tk_Parent(tkwin);

@@ -216,7 +216,7 @@ Tk_FocusObjCmd(clientData, interp, objc, objv)
 	    }
 	    for (topLevelPtr = newPtr; topLevelPtr != NULL;
 		    topLevelPtr = topLevelPtr->parentPtr)  {
-		if (topLevelPtr->flags & TK_TOP_LEVEL) {
+		if (topLevelPtr->flags & TK_TOP_HIERARCHY) {
 		    for (tlFocusPtr = newPtr->mainPtr->tlFocusPtr;
 			    tlFocusPtr != NULL;
 			    tlFocusPtr = tlFocusPtr->nextPtr) {
@@ -588,7 +588,7 @@ TkSetFocusWin(winPtr, force)
 	if (!(topLevelPtr->flags & TK_MAPPED)) {
 	    allMapped = 0;
 	}
-	if (topLevelPtr->flags & TK_TOP_LEVEL) {
+	if (topLevelPtr->flags & TK_TOP_HIERARCHY) {
 	    break;
 	}
     }

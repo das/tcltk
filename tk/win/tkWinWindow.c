@@ -371,13 +371,13 @@ XMapWindow(display, w)
      * its mapped children have just become visible.
      */
 
-    if (!(winPtr->flags & TK_TOP_LEVEL)) {
+    if (!(winPtr->flags & TK_TOP_HIERARCHY)) {
 	for (parentPtr = winPtr->parentPtr; ;
 	        parentPtr = parentPtr->parentPtr) {
 	    if ((parentPtr == NULL) || !(parentPtr->flags & TK_MAPPED)) {
 		return;
 	    }
-	    if (parentPtr->flags & TK_TOP_LEVEL) {
+	    if (parentPtr->flags & TK_TOP_HIERARCHY) {
 		break;
 	    }
 	}
@@ -478,7 +478,7 @@ XUnmapWindow(display, w)
     ShowWindow(Tk_GetHWND(w), SW_HIDE);
     winPtr->flags &= ~TK_MAPPED;
 
-    if (winPtr->flags & TK_TOP_LEVEL) {
+    if (winPtr->flags & TK_WIN_MANAGED) {
 	event.type = UnmapNotify;
 	event.xunmap.serial = display->request;
 	event.xunmap.send_event = False;

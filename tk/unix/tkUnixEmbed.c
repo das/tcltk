@@ -780,7 +780,7 @@ TkpRedirectKeyEvent(winPtr, eventPtr)
 
 	    return;
 	}
-	if (winPtr->flags & TK_TOP_LEVEL) {
+	if (winPtr->flags & TK_TOP_HIERARCHY) {
 	    break;
 	}
 	winPtr = winPtr->parentPtr;

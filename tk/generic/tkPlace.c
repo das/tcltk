@@ -593,7 +593,7 @@ ConfigureSlave(interp, tkwin, table, objc, objv)
     int result = TCL_OK;
     Slave *slavePtr;
     
-    if (Tk_IsTopLevel(tkwin)) {
+    if (Tk_TopWinHierarchy(tkwin)) {
 	Tcl_AppendResult(interp, "can't use placer on top-level window \"",
 		Tk_PathName(tkwin), "\"; use wm command instead",
 		(char *) NULL);
@@ -626,7 +626,7 @@ ConfigureSlave(interp, tkwin, table, objc, objv)
 	    if (ancestor == Tk_Parent(slavePtr->tkwin)) {
 		break;
 	    }
-	    if (Tk_IsTopLevel(ancestor)) {
+	    if (Tk_TopWinHierarchy(ancestor)) {
 		Tcl_AppendResult(interp, "can't place ",
 			Tk_PathName(slavePtr->tkwin), " relative to ",
 			Tk_PathName(tkwin), (char *) NULL);

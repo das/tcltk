@@ -242,7 +242,7 @@ CreateProc(tkwin, parentWin, instanceData)
 
     for (winPtr = ((TkWindow*)tkwin)->nextPtr; winPtr != NULL;
 	 winPtr = winPtr->nextPtr) {
-	if ((winPtr->window != None) && !(winPtr->flags & TK_TOP_LEVEL)) {
+	if ((winPtr->window != None) && !(winPtr->flags & TK_TOP_HIERARCHY)) {
 	    TkWinSetWindowPos(scrollPtr->hwnd, Tk_GetHWND(winPtr->window),
 		    Below);
 	    break;

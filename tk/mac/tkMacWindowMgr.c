@@ -426,7 +426,7 @@ GenerateUpdates(
      
     for (childPtr = winPtr->childList; childPtr != NULL;
 				       childPtr = childPtr->nextPtr) {
-	if (!Tk_IsMapped(childPtr) || Tk_IsTopLevel(childPtr)) {
+	if (!Tk_IsMapped(childPtr) || Tk_TopWinHierarchy(childPtr)) {
 	    continue;
 	}
 
@@ -1546,7 +1546,7 @@ void
 TkpSetCapture(
     TkWindow *winPtr)			/* Capture window, or NULL. */
 {
-    while ((winPtr != NULL) && !Tk_IsTopLevel(winPtr)) {
+    while ((winPtr != NULL) && !Tk_TopWinHierarchy(winPtr)) {
 	winPtr = winPtr->parentPtr;
     }
     gGrabWinPtr = (Tk_Window) winPtr;
