@@ -128,7 +128,7 @@ test macFont-5.1 {TkpGetFontFamilies} {macOnly} {
     expr {[lsearch [font families] Geneva] > 0}
 } {1}
 
-test macFont-6.1 {TkpGetSubFonts} {gothic macOnly} {
+test macFont-6.1 {TkpGetSubFonts} {testfont gothic macOnly} {
     .b.l config -text "abc\u4e4e" 
     update
     set x [testfont subfonts $fixed]

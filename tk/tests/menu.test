@@ -2461,7 +2461,7 @@ test menu-32.9 {Ensure deleting of clones doesn't corrupt menu refs} {
 } {.menubar.cascade .#menubar.#menubar#test.#menubar#cascade .menubar.cascade .#menubar.#menubar#test.#menubar#cascade}
 
 set l [interp hidden]
-eval destroy [winfo children .]
+deleteWindows
 
 test menu-33.1 {menu vs command hiding} {
     catch {destroy .m}

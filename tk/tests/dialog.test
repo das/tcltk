@@ -4,15 +4,12 @@
 # RCS: @(#) $Id$
 #
 
-if {[lsearch [namespace children] ::tcltest] == -1} {
-    source [file join [pwd] [file dirname [info script]] defs.tcl]
-}
-
-# Some tests require user interaction on non-unix platform
-
-set ::tcltest::testConfig(nonUnixUserInteraction) \
-    [expr {$::tcltest::testConfig(userInteraction) || \
-	$::tcltest::testConfig(unixOnly)}]
+package require tcltest 2.1
+namespace import -force tcltest::configure
+namespace import -force tcltest::testsDirectory
+configure -testdir [file join [pwd] [file dirname [info script]]]
+configure -loadfile [file join [testsDirectory] constraints.tcl]
+tcltest::loadTestedCommands
 
 test dialog-1.1 {tk_dialog command} {
     list [catch {tk_dialog} msg] $msg
@@ -63,4 +60,5 @@ test dialog-2.2 {tk_dialog operation} {
     set res
 } {-1}
 
-
+tcltest::cleanupTests
+return
