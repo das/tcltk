@@ -353,7 +353,7 @@ CreateTopLevelWindow(interp, parent, name, screenName, flags)
 	 */
     
 	Tk_CreatePhotoImageFormat(&tkImgFmtGIF);
-	Tk_CreateOldPhotoImageFormat(&tkImgFmtPPM);
+	Tk_CreatePhotoImageFormat(&tkImgFmtPPM);
 
 	/*
 	 * Create exit handler to delete all windows when the application
