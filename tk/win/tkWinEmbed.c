@@ -385,11 +385,13 @@ TkWinEmbeddedEventProc(hwnd, message, wParam, lParam)
      */
 
     for (containerPtr = tsdPtr->firstContainerPtr;
-	    containerPtr->parentHWnd != hwnd;
+	    containerPtr && containerPtr->parentHWnd != hwnd;
 	    containerPtr = containerPtr->nextPtr) {
-	if (containerPtr == NULL) {
-	    panic("TkWinContainerProc couldn't find Container record");
-	}
+	/* empty loop body */
+    }
+
+    if (containerPtr == NULL) {
+	Tcl_Panic("TkWinContainerProc couldn't find Container record");
     }
 
     switch (message) {
