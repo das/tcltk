@@ -954,7 +954,7 @@ GetFileNameA(clientData, interp, objc, objv, open)
 {
     OPENFILENAME ofn;
     TCHAR file[TK_MULTI_MAX_PATH], savePath[MAX_PATH];
-    int result, winCode, oldMode, i, multi;
+    int result, winCode, oldMode, i, multi = 0;
     char *extension, *filter, *title;
     Tk_Window tkwin;
     HWND hWnd;
