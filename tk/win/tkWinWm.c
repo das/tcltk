@@ -767,7 +767,7 @@ InitWm(void)
  *
  *----------------------------------------------------------------------
  */
-int
+static int
 WinSetIcon(interp, titlebaricon, tkw)
     Tcl_Interp *interp;
     WinIconPtr titlebaricon;
@@ -1092,10 +1092,12 @@ BlockOfIconImagesPtr ReadIconFromICOFile(Tcl_Interp* interp, char* fileName){
     }
     if (Tcl_SetChannelOption(interp, channel, "-translation", "binary")
 	    != TCL_OK) {
+	Tcl_Close(NULL, channel);
 	return NULL;
     }
     if (Tcl_SetChannelOption(interp, channel, "-encoding", "binary")
 	    != TCL_OK) {
+	Tcl_Close(NULL, channel);
 	return NULL;
     }
     /*  Allocate memory for the resource structure */
