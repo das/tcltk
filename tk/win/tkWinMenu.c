@@ -1820,8 +1820,8 @@ MenuKeyBindProc(clientData, interp, eventPtr, tkwin, keySym)
 		CallWindowProc(DefWindowProc, Tk_GetHWND(Tk_WindowId(tkwin)),
 			WM_SYSKEYDOWN, virtualKey, ((scanCode << 16)
 			| (1 << 29)));
-		if (eventPtr->xkey.nchars > 0) {
-		    for (i = 0; i < eventPtr->xkey.nchars; i++) {
+		if (eventPtr->xkey.nbytes > 0) {
+		    for (i = 0; i < eventPtr->xkey.nbytes; i++) {
 			CallWindowProc(DefWindowProc,
 				Tk_GetHWND(Tk_WindowId(tkwin)),
 				WM_SYSCHAR,
