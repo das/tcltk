@@ -10,9 +10,9 @@ Version: %{version}
 Release: 1
 Copyright: BSD
 Group: Development/Languages
-Source: ftp://ftp.scriptics.com/pub/tcl/tcl8_4/tk%{version}.tar.gz
-URL: http://dev.scriptics.com/
-Packager: Scriptics Corporation
+Source: http://prdownloads.sourceforge.net/tcl/tk%{version}-src.tar.gz
+URL: http://www.tcl.tk/
+Packager: Carina
 Buildroot: /var/tmp/%{name}%{version}
 Requires: XFree86-libs >= 3.3.3, XFree86-devel >= 3.3.3, tcl = 8.4a4
 
