@@ -201,6 +201,12 @@ proc tkFocusGroup_Destroy {t w} {
 proc tkFocusGroup_In {t w detail} {
     global tkPriv tkFocusIn
 
+    if {[string compare $detail NotifyNonlinear] && \
+	    [string compare $detail NotifyNonlinearVirtual]} {
+	# This is caused by mouse moving out&in of the window *or*
+	# ordinary keypresses some window managers (ie: CDE [Bug: 2960]).
+	return
+    }
     if {![info exists tkFocusIn($t,$w)]} {
 	set tkFocusIn($t,$w) ""
 	return
@@ -228,8 +234,8 @@ proc tkFocusGroup_In {t w detail} {
 proc tkFocusGroup_Out {t w detail} {
     global tkPriv tkFocusOut
 
-    if {[string compare $detail NotifyNonlinear] &&
-	[string compare $detail NotifyNonlinearVirtual]} {
+    if {[string compare $detail NotifyNonlinear] && \
+	    [string compare $detail NotifyNonlinearVirtual]} {
 	# This is caused by mouse moving out of the window
 	return
     }

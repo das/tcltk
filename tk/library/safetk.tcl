@@ -185,12 +185,15 @@ proc ::safe::allowTk {interpPath argv} {
 
 proc ::safe::disallowTk {interpPath} {
     variable tkInit
-    unset tkInit($interpPath)
-    none
+    # This can already be deleted by the DeleteHook of the interp
+    if {[info exists tkInit($interpPath)]} {
+	unset tkInit($interpPath)
+    }
+    return
 }
 
 
-# safe::disallowTk --
+# safe::tkDelete --
 #
 #	Clean up the window associated with the interp being deleted.
 #
