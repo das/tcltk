@@ -1012,3 +1012,39 @@ FindDisplayFocusInfo(mainPtr, dispPtr)
     mainPtr->displayFocusPtr = displayFocusPtr;
     return displayFocusPtr;
 }
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkFocusFree --
+ *
+ *	Free resources associated with maintaining the focus.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	This mainPtr should no long access focus information.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TkFocusFree(mainPtr)
+    TkMainInfo *mainPtr;	/* Record that identifies a particular
+				 * application. */
+{
+    DisplayFocusInfo *displayFocusPtr;
+    ToplevelFocusInfo *tlFocusPtr;
+
+    while (mainPtr->displayFocusPtr != NULL) {
+	displayFocusPtr          = mainPtr->displayFocusPtr;
+	mainPtr->displayFocusPtr = mainPtr->displayFocusPtr->nextPtr;
+	ckfree((char *) displayFocusPtr);
+    }
+    while (mainPtr->tlFocusPtr != NULL) {
+	tlFocusPtr          = mainPtr->tlFocusPtr;
+	mainPtr->tlFocusPtr = mainPtr->tlFocusPtr->nextPtr;
+	ckfree((char *) tlFocusPtr);
+    }
+}
