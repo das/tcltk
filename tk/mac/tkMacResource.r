@@ -32,20 +32,6 @@
 #include "tcl.h"
 #include "tk.h"
 
-#if (TK_RELEASE_LEVEL == 0)
-#   define RELEASE_LEVEL alpha
-#elif (TK_RELEASE_LEVEL == 1)
-#   define RELEASE_LEVEL beta
-#elif (TK_RELEASE_LEVEL == 2)
-#   define RELEASE_LEVEL final
-#endif
-
-#if (TK_RELEASE_LEVEL == 2)
-#   define MINOR_VERSION (TK_MINOR_VERSION * 16) + TK_RELEASE_SERIAL
-#else
-#   define MINOR_VERSION TK_MINOR_VERSION * 16
-#endif
-
 #define TK_LIBRARY_RESOURCES 3000
 
 /* 
@@ -94,6 +80,8 @@ read 'TEXT' (TK_LIBRARY_RESOURCES+16, "msgbox", purgeable)
 	"::library:msgbox.tcl";
 read 'TEXT' (TK_LIBRARY_RESOURCES+17, "comdlg", purgeable) 
 	"::library:comdlg.tcl";
+read 'TEXT' (TK_LIBRARY_RESOURCES+18, "spinbox", purgeable) 
+	"::library:spinbox.tcl";
 
 
 /*
