@@ -27,5 +27,6 @@ test main-1.1 {StdinProc} {unixOnly} {
     } else {
 	set error 0
     }
+    file delete -force script
     list $error $msg
 } {0 {}}
