@@ -310,10 +310,9 @@ static int		DumpSegment _ANSI_ARGS_((Tcl_Interp *interp, char *key,
  * that can be invoked from generic window code.
  */
 
-static TkClassProcs textClass = {
-    NULL,			/* createProc. */
-    TextWorldChanged,		/* geometryProc. */
-    NULL			/* modalProc. */
+static Tk_ClassProcs textClass = {
+    sizeof(Tk_ClassProcs),	/* size */
+    TextWorldChanged,		/* worldChangedProc */
 };
 
 
@@ -440,7 +439,7 @@ Tk_TextCmd(clientData, interp, argc, argv)
     textPtr->insertMarkPtr = TkTextSetMark(textPtr, "insert", &startIndex);
 
     Tk_SetClass(textPtr->tkwin, "Text");
-    TkSetClassProcs(textPtr->tkwin, &textClass, (ClientData) textPtr);
+    Tk_SetClassProcs(textPtr->tkwin, &textClass, (ClientData) textPtr);
     Tk_CreateEventHandler(textPtr->tkwin,
 	    ExposureMask|StructureNotifyMask|FocusChangeMask,
 	    TextEventProc, (ClientData) textPtr);

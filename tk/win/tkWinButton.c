@@ -89,10 +89,10 @@ static void		InitBoxes _ANSI_ARGS_((void));
  * The class procedure table for the button widgets.
  */
 
-TkClassProcs tkpButtonProcs = { 
-    CreateProc,			/* createProc. */
-    TkButtonWorldChanged,	/* geometryProc. */
-    NULL			/* modalProc. */ 
+Tk_ClassProcs tkpButtonProcs = { 
+    sizeof(Tk_ClassProcs),	/* size */
+    TkButtonWorldChanged,	/* worldChangedProc */
+    CreateProc,			/* createProc */
 };
 
 

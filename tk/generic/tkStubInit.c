@@ -131,7 +131,7 @@ TkIntStubs tkIntStubs = {
     TkSelEventProc, /* 81 */
     TkSelInit, /* 82 */
     TkSelPropProc, /* 83 */
-    TkSetClassProcs, /* 84 */
+    NULL, /* 84 */
     TkSetWindowMenuBar, /* 85 */
     TkStringToKeysym, /* 86 */
     TkThickPolyLineToArea, /* 87 */
@@ -953,6 +953,7 @@ TkStubs tkStubs = {
     Tk_CreateClientMessageHandler, /* 239 */
     Tk_DeleteClientMessageHandler, /* 240 */
     Tk_CreateAnonymousWindow, /* 241 */
+    Tk_SetClassProcs, /* 242 */
 };
 
 /* !END!: Do not edit above this line. */

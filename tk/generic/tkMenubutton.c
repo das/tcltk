@@ -240,7 +240,7 @@ Tk_MenubuttonObjCmd(clientData, interp, objc, objv)
     Tk_SetClass(tkwin, "Menubutton");
     mbPtr = TkpCreateMenuButton(tkwin);
 
-    TkSetClassProcs(tkwin, &tkpMenubuttonClass, (ClientData) mbPtr);
+    Tk_SetClassProcs(tkwin, &tkpMenubuttonClass, (ClientData) mbPtr);
 
     /*
      * Initialize the data structure for the button.

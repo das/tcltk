@@ -104,10 +104,9 @@ static void	ButtonExitProc _ANSI_ARGS_((ClientData clientData));
  * The class procedure table for the button widgets.
  */
 
-TkClassProcs tkpButtonProcs = { 
-    NULL,			/* createProc. */
-    TkButtonWorldChanged,	/* geometryProc. */
-    NULL			/* modalProc. */
+Tk_ClassProcs tkpButtonProcs = { 
+    sizeof(Tk_ClassProcs),	/* size */
+    TkButtonWorldChanged,	/* worldChangedProc */
 };
 
 /*

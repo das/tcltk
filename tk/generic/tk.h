@@ -548,6 +548,51 @@ typedef struct Tk_FontMetrics {
 #define TK_IGNORE_NEWLINES	16
 
 /*
+ * Widget class procedures used to implement platform specific widget
+ * behavior.
+ */
+
+typedef Window (Tk_ClassCreateProc) _ANSI_ARGS_((Tk_Window tkwin,
+	Window parent, ClientData instanceData));
+typedef void (Tk_ClassWorldChangedProc) _ANSI_ARGS_((ClientData instanceData));
+typedef void (Tk_ClassModalProc) _ANSI_ARGS_((Tk_Window tkwin,
+	XEvent *eventPtr));
+
+typedef struct Tk_ClassProcs {
+    unsigned int size;
+    Tk_ClassWorldChangedProc *worldChangedProc;
+				/* Procedure to invoke when the widget needs to
+				 * respond in some way to a change in the
+				 * world (font changes, etc.) */
+    Tk_ClassCreateProc *createProc;
+				/* Procedure to invoke when the
+				 * platform-dependent window needs to be
+                                 * created. */
+    Tk_ClassModalProc *modalProc;
+				/* Procedure to invoke after all bindings on a
+				 * widget have been triggered in order to
+				 * handle a modal loop. */
+} Tk_ClassProcs;
+
+/*
+ * Simple accessor for Tk_ClassProcs structure.  Checks that the structure
+ * is not NULL, then checks the size field and returns either the requested
+ * field, if present, or NULL if the structure is too small to have the field
+ * (or NULL if the structure is NULL).
+ *
+ * A more general version of this function may be useful if other
+ * size-versioned structure pop up in the future:
+ *
+ *	#define Tk_GetField(name, who, which) \
+ *	    (((who) == NULL) ? NULL :
+ *	    (((who)->size <= Tk_Offset(name, which)) ? NULL :(name)->which))
+ */
+
+#define Tk_GetClassProc(procs, which) \
+    (((procs) == NULL) ? NULL : \
+    (((procs)->size <= Tk_Offset(Tk_ClassProcs, which)) ? NULL:(procs)->which))
+
+/*
  * Each geometry manager (the packer, the placer, etc.) is represented
  * by a structure of the following form, which indicates procedures
  * to invoke in the geometry manager to carry out certain functions.

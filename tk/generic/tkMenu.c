@@ -363,15 +363,15 @@ static void		UnhookCascadeEntry _ANSI_ARGS_((TkMenuEntry *mePtr));
  * the geometry proc to be called.
  */
 
-static TkClassProcs menuClass = {
-    NULL,			/* createProc. */
-    MenuWorldChanged		/* geometryProc. */
+static Tk_ClassProcs menuClass = {
+    sizeof(Tk_ClassProcs),	/* size */
+    MenuWorldChanged		/* worldChangedProc */
 };
 
 /*
  *--------------------------------------------------------------
  *
- * Tk_CreateMenuCmd --
+ * TkCreateMenuCmd --
  *
  *	Called by Tk at initialization time to create the menu
  *	command.
@@ -523,7 +523,7 @@ MenuCmd(clientData, interp, objc, objv)
     TkMenuInitializeDrawingFields(menuPtr);
 
     Tk_SetClass(menuPtr->tkwin, "Menu");
-    TkSetClassProcs(menuPtr->tkwin, &menuClass, (ClientData) menuPtr);
+    Tk_SetClassProcs(menuPtr->tkwin, &menuClass, (ClientData) menuPtr);
     if (Tk_InitOptions(interp, (char *) menuPtr,
 	    menuPtr->optionTablesPtr->menuOptionTable, menuPtr->tkwin)
 	    != TCL_OK) {

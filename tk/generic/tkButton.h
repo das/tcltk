@@ -287,7 +287,7 @@ typedef struct {
  * Declaration of variables shared between the files in the button module.
  */
 
-extern TkClassProcs tkpButtonProcs;
+extern Tk_ClassProcs tkpButtonProcs;
 
 /*
  * Declaration of procedures used in the implementation of the button

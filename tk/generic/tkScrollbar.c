@@ -153,7 +153,7 @@ Tk_ScrollbarCmd(clientData, interp, argc, argv)
     Tk_SetClass(new, "Scrollbar");
     scrollPtr = TkpCreateScrollbar(new);
 
-    TkSetClassProcs(new, &tkpScrollbarProcs, (ClientData) scrollPtr);
+    Tk_SetClassProcs(new, &tkpScrollbarProcs, (ClientData) scrollPtr);
 
     /*
      * Initialize fields that won't be initialized by ConfigureScrollbar,

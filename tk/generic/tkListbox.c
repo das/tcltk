@@ -434,10 +434,9 @@ static void		MigrateHashEntries _ANSI_ARGS_ ((Tcl_HashTable *table,
  * that can be invoked from generic window code.
  */
 
-static TkClassProcs listboxClass = {
-    NULL,			/* createProc. */
-    ListboxWorldChanged,	/* geometryProc. */
-    NULL			/* modalProc. */
+static Tk_ClassProcs listboxClass = {
+    sizeof(Tk_ClassProcs),	/* size */
+    ListboxWorldChanged,	/* worldChangedProc */
 };
 
 
@@ -576,7 +575,7 @@ Tk_ListboxObjCmd(clientData, interp, objc, objv)
     listPtr->flags 			= 0;
 
     Tk_SetClass(listPtr->tkwin, "Listbox");
-    TkSetClassProcs(listPtr->tkwin, &listboxClass, (ClientData) listPtr);
+    Tk_SetClassProcs(listPtr->tkwin, &listboxClass, (ClientData) listPtr);
     Tk_CreateEventHandler(listPtr->tkwin,
 	    ExposureMask|StructureNotifyMask|FocusChangeMask,
 	    ListboxEventProc, (ClientData) listPtr);

@@ -113,13 +113,13 @@ static pascal void	ThumbActionProc _ANSI_ARGS_((void));
 static void		UpdateControlValues _ANSI_ARGS_((MacScrollbar *macScrollPtr));
 		    
 /*
- * The class procedure table for the scrollbar widget.
+ * The class procedure table for the scrollbar widget.  Leave the proc fields
+ * initialized to NULL, which should happen automatically because of the scope
+ * at which the variable is declared.
  */
 
-TkClassProcs tkpScrollbarProcs = { 
-    NULL,			/* createProc. */
-    NULL,			/* geometryProc. */
-    NULL			/* modalProc */
+Tk_ClassProcs tkpScrollbarProcs = {
+    sizeof(Tk_ClassProcs)	/* size */
 };
 
 /*

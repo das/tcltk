@@ -185,10 +185,9 @@ static void		ScaleSetVariable _ANSI_ARGS_((TkScale *scalePtr));
  * that can be invoked from generic window code.
  */
 
-static TkClassProcs scaleClass = {
-    NULL,			/* createProc. */
-    ScaleWorldChanged,		/* geometryProc. */
-    NULL			/* modalProc. */
+static Tk_ClassProcs scaleClass = {
+    sizeof(Tk_ClassProcs),	/* size */
+    ScaleWorldChanged,		/* worldChangedProc */
 };
 
 
@@ -314,7 +313,7 @@ Tk_ScaleObjCmd(clientData, interp, objc, objv)
     scalePtr->takeFocusPtr	= NULL;
     scalePtr->flags		= NEVER_SET;
 
-    TkSetClassProcs(scalePtr->tkwin, &scaleClass, (ClientData) scalePtr);
+    Tk_SetClassProcs(scalePtr->tkwin, &scaleClass, (ClientData) scalePtr);
     Tk_CreateEventHandler(scalePtr->tkwin,
 	    ExposureMask|StructureNotifyMask|FocusChangeMask,
 	    ScaleEventProc, (ClientData) scalePtr);

@@ -1426,7 +1426,7 @@ Tk_BindEvent(bindingTable, eventPtr, tkwin, numObjects, objectPtr)
     PendingBinding staticPending;
     TkWindow *winPtr = (TkWindow *)tkwin;
     PatternTableKey key;
-
+    Tk_ClassModalProc *modalProc;
     /*
      * Ignore events on windows that don't have names: these are windows
      * like wrapper windows that shouldn't be visible to the
@@ -1805,7 +1805,10 @@ Tk_BindEvent(bindingTable, eventPtr, tkwin, numObjects, objectPtr)
 	winPtr->flags = (winPtr->flags & (unsigned int) ~TK_DEFER_MODAL) 
 	    | (flags & TK_DEFER_MODAL);
 	if (deferModal) {
-	    (*winPtr->classProcsPtr->modalProc)(tkwin, eventPtr);
+	    modalProc = Tk_GetClassProc(winPtr->classProcsPtr, modalProc);
+	    if (modalProc != NULL) {
+		(*modalProc)(tkwin, eventPtr);
+	    }
 	}
     }
 

@@ -451,7 +451,7 @@ CreateFrame(clientData, interp, objc, objv, toplevel, appName)
     /*
      * Store backreference to frame widget in window structure.
      */
-    TkSetClassProcs(new, NULL, (ClientData) framePtr);
+    Tk_SetClassProcs(new, NULL, (ClientData) framePtr);
 
     mask = ExposureMask | StructureNotifyMask | FocusChangeMask;
     if (toplevel) {

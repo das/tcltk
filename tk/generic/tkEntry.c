@@ -736,10 +736,9 @@ static int		ComputeFormat _ANSI_ARGS_((Spinbox *sbPtr));
  * that can be invoked from generic window code.
  */
 
-static TkClassProcs entryClass = {
-    NULL,			/* createProc. */
-    EntryWorldChanged,		/* geometryProc. */
-    NULL			/* modalProc. */
+static Tk_ClassProcs entryClass = {
+    sizeof(Tk_ClassProcs),	/* size */
+    EntryWorldChanged,		/* worldChangedProc */
 };
 
 
@@ -839,7 +838,7 @@ Tk_EntryObjCmd(clientData, interp, objc, objv)
     entryPtr->validate		= VALIDATE_NONE;
 
     Tk_SetClass(entryPtr->tkwin, "Entry");
-    TkSetClassProcs(entryPtr->tkwin, &entryClass, (ClientData) entryPtr);
+    Tk_SetClassProcs(entryPtr->tkwin, &entryClass, (ClientData) entryPtr);
     Tk_CreateEventHandler(entryPtr->tkwin,
 	    ExposureMask|StructureNotifyMask|FocusChangeMask,
 	    EntryEventProc, (ClientData) entryPtr);
@@ -3740,7 +3739,7 @@ Tk_SpinboxObjCmd(clientData, interp, objc, objv)
     sbPtr->buRelief		= TK_RELIEF_FLAT;
 
     Tk_SetClass(entryPtr->tkwin, "Spinbox");
-    TkSetClassProcs(entryPtr->tkwin, &entryClass, (ClientData) entryPtr);
+    Tk_SetClassProcs(entryPtr->tkwin, &entryClass, (ClientData) entryPtr);
     Tk_CreateEventHandler(entryPtr->tkwin,
 	    PointerMotionMask|ExposureMask|StructureNotifyMask|FocusChangeMask,
 	    EntryEventProc, (ClientData) entryPtr);

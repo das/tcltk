@@ -658,7 +658,7 @@ ButtonCreate(clientData, interp, objc, objv, type)
     Tk_SetClass(tkwin, classNames[type]);
     butPtr = TkpCreateButton(tkwin);
 
-    TkSetClassProcs(tkwin, &tkpButtonProcs, (ClientData) butPtr);
+    Tk_SetClassProcs(tkwin, &tkpButtonProcs, (ClientData) butPtr);
 
     /*
      * Initialize the data structure for the button.

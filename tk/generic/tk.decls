@@ -1142,7 +1142,10 @@ declare 241 generic {
     Tk_Window Tk_CreateAnonymousWindow (Tcl_Interp *interp, \
 	    Tk_Window parent, char *screenName)
 }
-
+declare 242 generic {
+    void Tk_SetClassProcs (Tk_Window tkwin, \
+	    Tk_ClassProcs *procs, ClientData instanceData)
+}
 
 # Define the platform specific public Tk interface.  These functions are
 # only available on the designated platform.

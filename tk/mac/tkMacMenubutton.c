@@ -34,10 +34,9 @@ typedef struct MacMenuButton {
  * procedures that can be invoked from generic window code.
  */
 
-TkClassProcs tkpMenubuttonClass = {
-    NULL,			/* createProc. */
-    TkMenuButtonWorldChanged,	/* geometryProc. */
-    NULL			/* modalProc. */
+Tk_ClassProcs tkpMenubuttonClass = {
+    sizeof(Tk_ClassProcs),	/* size */
+    TkMenuButtonWorldChanged,	/* worldChangedProc */
 };
 
 /*

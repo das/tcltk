@@ -396,10 +396,11 @@ declare 83 generic {
     void TkSelPropProc (XEvent *eventPtr)
 }
 
-declare 84 generic {
-    void TkSetClassProcs (Tk_Window tkwin, \
-	    TkClassProcs *procs, ClientData instanceData)
-}
+# Exported publically as Tk_SetClassProcs in 8.4a2
+#declare 84 generic {
+#    void TkSetClassProcs (Tk_Window tkwin, \
+#	    TkClassProcs *procs, ClientData instanceData)
+#}
 
 declare 85 generic {
     void TkSetWindowMenuBar (Tcl_Interp *interp, \

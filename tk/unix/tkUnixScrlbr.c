@@ -32,13 +32,13 @@ typedef struct UnixScrollbar {
 } UnixScrollbar;
 
 /*
- * The class procedure table for the scrollbar widget.
+ * The class procedure table for the scrollbar widget.  All fields except
+ * size are left initialized to NULL, which should happen automatically
+ * since the variable is declared at this scope.
  */
 
-TkClassProcs tkpScrollbarProcs = { 
-    NULL,			/* createProc. */
-    NULL,			/* geometryProc. */
-    NULL			/* modalProc. */
+Tk_ClassProcs tkpScrollbarProcs = {
+    sizeof(Tk_ClassProcs)	/* size */
 };
 
 

@@ -171,7 +171,7 @@ typedef struct TkScrollbar {
  * Declaration of scrollbar class procedures structure.
  */
 
-extern TkClassProcs tkpScrollbarProcs;
+extern Tk_ClassProcs tkpScrollbarProcs;
 
 /*
  * Declaration of scrollbar configuration options.
