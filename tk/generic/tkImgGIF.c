@@ -327,11 +327,12 @@ FileReadGIF(interp, chan, fileName, format, imageHandle, destX, destY,
     while (1) {
 	if (Fread(buf, 1, 1, chan) != 1) {
 	    /*
-	     * Premature end of image.  We should really notify
-	     * the user, but for now just show garbage.
+	     * Premature end of image.
 	     */
 
-	    break;
+	    Tcl_AppendResult(interp,"premature end of image data for this index",
+                             (char *) NULL);
+	    goto error;
 	}
 
 	if (buf[0] == GIF_TERMINATOR) {
