@@ -630,7 +630,18 @@ declare 148 generic {
 
 declare 149 generic {
     CONST Tk_OptionSpec * TkGetOptionSpec (CONST char *name,
-					   Tk_OptionTable optionTable)
+	    Tk_OptionTable optionTable)
+}
+
+# TIP#168
+declare 150 generic {
+    int TkMakeRawCurve (Tk_Canvas canvas,
+	    double *pointPtr, int numPoints, int numSteps,
+	    XPoint xPoints[], double dblPoints[])
+}
+declare 151 generic {
+    void TkMakeRawCurvePostscript (Tcl_Interp *interp,
+	    Tk_Canvas canvas, double *pointPtr, int numPoints)
 }
 
 ##############################################################################
