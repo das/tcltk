@@ -95,13 +95,13 @@ TkIntXlibStubs *tkIntXlibStubsPtr;
 #undef Tk_InitStubs
 #endif
 
-char *
+CONST char *
 Tk_InitStubs(interp, version, exact)
     Tcl_Interp *interp;
     char *version;
     int exact;
 {
-    char *actualVersion;
+    CONST char *actualVersion;
 
     actualVersion = Tcl_PkgRequireEx(interp, "Tk", version, exact,
 		(ClientData *) &tkStubsPtr);
