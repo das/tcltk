@@ -1626,7 +1626,7 @@ proc ::tk::dialog::file::OkCmd {w} {
 	set text [lindex $text 0]
 	set file [::tk::dialog::file::JoinFile $data(selectPath) $text]
 	if {[file isdirectory $file]} {
-	    ::tk::dialog::file::ListInvoke $w $text
+	    ::tk::dialog::file::ListInvoke $w [list $text]
 	    return
 	}
     }
@@ -1699,8 +1699,7 @@ proc ::tk::dialog::file::ListInvoke {w text} {
 	return
     }
 
-    set file [::tk::dialog::file::JoinFile $data(selectPath) \
-	    [lindex $text 0]]
+    set file [::tk::dialog::file::JoinFile $data(selectPath) [lindex $text 0]]
     
     set class [winfo class $w]
     if {[string equal $class TkChooseDir] || [file isdirectory $file]} {
