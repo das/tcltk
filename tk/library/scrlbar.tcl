@@ -164,9 +164,12 @@ proc tkScrollButtonDown {w x y} {
 proc tkScrollButtonUp {w x y} {
     global tkPriv
     tkCancelRepeat
-    $w configure -activerelief $tkPriv(relief)
-    tkScrollEndDrag $w $x $y
-    $w activate [$w identify $x $y]
+    if {[info exists tkPriv(relief)]} {
+	# Avoid error due to spurious release events
+	$w configure -activerelief $tkPriv(relief)
+	tkScrollEndDrag $w $x $y
+	$w activate [$w identify $x $y]
+    }
 }
 
 # tkScrollSelect --
