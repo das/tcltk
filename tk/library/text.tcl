@@ -829,7 +829,7 @@ proc tkTextUpDownLine {w n} {
 
 proc tkTextPrevPara {w pos} {
     set pos [$w index "$pos linestart"]
-    while 1 {
+    while {1} {
 	if {([string equal [$w get "$pos - 1 line"] "\n"] \
 		&& [string compare [$w get $pos] "\n"]) \
 		|| [string equal $pos "1.0"]} {

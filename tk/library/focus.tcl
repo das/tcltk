@@ -24,7 +24,7 @@
 
 proc tk_focusNext w {
     set cur $w
-    while 1 {
+    while {1} {
 
 	# Descend to just before the first child of the current widget.
 
@@ -34,7 +34,7 @@ proc tk_focusNext w {
 
 	# Look for the next sibling that isn't a top-level.
 
-	while 1 {
+	while {1} {
 	    incr i
 	    if {$i < [llength $children]} {
 		set cur [lindex $children $i]
@@ -76,7 +76,7 @@ proc tk_focusNext w {
 
 proc tk_focusPrev w {
     set cur $w
-    while 1 {
+    while {1} {
 
 	# Collect information about the current window's position
 	# among its siblings.  Also, if the window is a top-level,
