@@ -952,6 +952,7 @@ GridRowColumnConfigureCommand(tkwin, interp, objc, objv)
     string = Tcl_GetString(objv[1]);
     masterPtr = GetGrid(master);
     slotType = (*string == 'c') ? COLUMN : ROW;
+    first = last = 0; /* lint */
 
     if ((objc == 4) || (objc == 5)) {
 	if (lObjc != 1) {
