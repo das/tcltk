@@ -700,7 +700,7 @@ TkConsolePrint(interp, devId, buffer, size)
     Tcl_DStringAppend(&output, buffer, size);
 
     Tcl_DStringInit(&command);
-    Tcl_DStringAppend(&command, cmd, strlen(cmd));
+    Tcl_DStringAppend(&command, cmd, (int) strlen(cmd));
     Tcl_DStringAppendElement(&command, output.string);
 
     consoleInterp = info->consoleInterp;
