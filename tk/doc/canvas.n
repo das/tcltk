@@ -1616,7 +1616,7 @@ This option defaults to \fBcenter\fR.
 .TP
 \fB\-font \fIfontName\fR
 Specifies the font to use for the text item.
-\fIFontName\fR may be any string acceptable to \fBTk_GetFontStruct\fR.
+\fIFontName\fR may be any string acceptable to \fBTk_GetFont\fR.
 If this option isn't specified, it defaults to a system-dependent
 font.
 .TP

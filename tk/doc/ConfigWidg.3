@@ -259,7 +259,7 @@ will never match any arguments.
 \fBTK_CONFIG_FONT\fR
 The value must be an ASCII string identifying a font in a form
 suitable for passing to \fBTk_GetFont\fR.  The value is converted
-to an (\fBXFontStruct *\fR) by calling \fBTk_GetFont\fR and the result
+to a \fBTk_Font\fR by calling \fBTk_GetFont\fR and the result
 is stored in the target.
 If TK_CONFIG_NULL_OK is specified in \fIspecFlags\fR then the value
 may be an empty string, in which case the target will be set to NULL.

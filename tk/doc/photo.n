@@ -337,7 +337,6 @@ if this option is not given, is the whole image.
 If this options is specified, the data will not contain color
 information. All pixel data will be transformed into grayscale.
 .RE
-.TP
 .SH "IMAGE FORMATS"
 .PP
 The photo image code is structured to allow handlers for additional

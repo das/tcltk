@@ -12,8 +12,6 @@
 '\" Note:  do not modify the .SH NAME line immediately below!
 .SH NAME
 tk_getOpenFile, tk_getSaveFile \- pop up a dialog box for the user to select a file to open or save.
-.PP
-.PP
 .SH SYNOPSIS
 \fBtk_getOpenFile \fR?\fIoption value ...\fR?
 .br
