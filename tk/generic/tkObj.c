@@ -887,7 +887,7 @@ TkParsePadAmount(interp, tkwin, specObj, halfPtr, allPtr)
     if (Tcl_ListObjGetElements(interp, specObj, &objc, &objv) != TCL_OK) {
 	return TCL_ERROR;
     }
-    if (objc != 1 || objc != 2) {
+    if (objc != 1 && objc != 2) {
 	Tcl_AppendResult(interp,
 		"wrong number of parts to pad specification", NULL);
 	return TCL_ERROR;
