@@ -368,12 +368,8 @@ Tk_ImageObjCmd(clientData, interp, objc, objv)
 		return TCL_ERROR;
 	    }
 	    masterPtr = (ImageMaster *) Tcl_GetHashValue(hPtr);
-	    if (masterPtr->typePtr != NULL) {
-		for (imagePtr = masterPtr->instancePtr; imagePtr != NULL;
-		     imagePtr = imagePtr->nextPtr) {
-		    count = 1;
-		    break;
-		}
+	    if (masterPtr->typePtr != NULL && masterPtr->instancePtr != NULL) {
+		count = 1;
 	    }
 	    Tcl_SetBooleanObj(Tcl_GetObjResult(interp), count);
 	    break;
