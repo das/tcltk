@@ -669,12 +669,13 @@ TkGetWindowFromObj(interp, tkwin, objPtr, windowPtr)
     register Tcl_Obj *objPtr;	/* The object from which to get boolean. */
     Tk_Window *windowPtr;	/* Place to store resulting window. */
 {
-    register int result;
     Tk_Window lastWindow;
 
-    result = SetWindowFromAny(interp, objPtr);
-    if (result != TCL_OK) {
-	return result;
+    if (objPtr->typePtr != &windowObjType) {
+	register int result = SetWindowFromAny(interp, objPtr);
+	if (result != TCL_OK) {
+	    return result;
+	}
     }
 
     lastWindow = (Tk_Window) objPtr->internalRep.twoPtrValue.ptr1;
@@ -690,7 +691,7 @@ TkGetWindowFromObj(interp, tkwin, objPtr, windowPtr)
     }
     *windowPtr = (Tk_Window) objPtr->internalRep.twoPtrValue.ptr2;
 
-    return result;
+    return TCL_OK;
 }
 
 /*
