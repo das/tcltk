@@ -141,7 +141,7 @@ Tk_ChooseColorObjCmd(
     OSErr err;
     static inited = 0;
     static RGBColor in;
-    static char *optionStrings[] = {
+    static CONST char *optionStrings[] = {
 	"-initialcolor",    "-parent",	    "-title",	    NULL
     };
     enum options {
@@ -304,7 +304,7 @@ Tk_GetOpenFileObjCmd(
     Str255 message, title;
     AEDesc initialDesc = {typeNull, NULL};
     FSSpec dirSpec;
-    static char *openOptionStrings[] = {
+    static CONST char *openOptionStrings[] = {
 	    "-defaultextension", "-filetypes", 
 	    "-initialdir", "-initialfile", 
 	    "-message", "-multiple",
@@ -453,7 +453,7 @@ Tk_GetSaveFileObjCmd(
     FSSpec dirSpec;
     Str255 title, message;
     OpenFileData ofd;
-    static char *saveOptionStrings[] = {
+    static CONST char *saveOptionStrings[] = {
 	    "-defaultextension", "-filetypes", "-initialdir", "-initialfile", 
 	    "-message", "-parent",	"-title", 	NULL
     };
@@ -595,7 +595,7 @@ Tk_ChooseDirectoryObjCmd(clientData, interp, objc, objv)
     Str255 message, title;
     int srcRead, dstWrote;
     OpenFileData ofd;
-    static char *chooseOptionStrings[] = {
+    static CONST char *chooseOptionStrings[] = {
 	    "-initialdir", "-message", "-mustexist", "-parent", "-title", NULL
     };
     enum chooseOptions {
