@@ -25,8 +25,8 @@ RCS: @(#) $Id$
 How To Compile And Install Tk:
 ------------------------------
 
-(a) Make sure that the Tcl 8.4 release is present in the directory
-    ../../tcl8.4 (or else use the "--with-tcl" switch described below). 
+(a) Make sure that the Tcl 8.4.1 release is present in the directory
+    ../../tcl8.4.1 (or else use the "--with-tcl" switch described below). 
     This release of Tk will only work with Tcl 8.4. Also, be sure that
     you have configured Tcl before you configure Tk.
 
