@@ -3291,37 +3291,39 @@ Tk_WmCmd(clientData, interp, argc, argv)
 	    if (masterPtr == NULL) {
 		return TCL_ERROR;
 	    }
+	    while (!(masterPtr->flags & TK_TOP_LEVEL)) {
+	        /*
+	         * Ensure that the master window is actually a Tk toplevel.
+	         */
+
+	        masterPtr = masterPtr->parentPtr;
+	    }
+	    Tk_MakeWindowExist((Tk_Window)masterPtr);
+
+	    if (wmPtr->iconFor != NULL) {
+	        Tcl_AppendResult(interp, "can't make \"", argv[2],
+	    	        "\" a transient: it is an icon for ",
+	                Tk_PathName(wmPtr->iconFor),
+	                (char *) NULL);
+	        return TCL_ERROR;
+	    }
+
+	    wmPtr2 = masterPtr->wmInfoPtr;
+
+	    if (wmPtr2->iconFor != NULL) {
+	        Tcl_AppendResult(interp, "can't make \"", argv[3],
+	                "\" a master: it is an icon for ",
+	                Tk_PathName(wmPtr2->iconFor),
+	                (char *) NULL);
+	        return TCL_ERROR;
+	    }
+
 	    if (masterPtr == winPtr) {
-		wmPtr->masterPtr = NULL;
+	        Tcl_AppendResult(interp, "can't make \"", Tk_PathName(winPtr),
+	                "\" its own master",
+	                (char *) NULL);
+	        return TCL_ERROR;
 	    } else if (masterPtr != wmPtr->masterPtr) {
-		Tk_MakeWindowExist((Tk_Window)masterPtr);
-
-		/*
-		 * Ensure that the master window is actually a Tk toplevel.
-		 */
-
-		while (!(masterPtr->flags & TK_TOP_LEVEL)) {
-		    masterPtr = masterPtr->parentPtr;
-		}
-
-		if (wmPtr->iconFor != NULL) {
-		    Tcl_AppendResult(interp, "can't make \"", argv[2],
-		            "\" a transient: it is an icon for ",
-		            Tk_PathName(wmPtr->iconFor),
-		            (char *) NULL);
-		    return TCL_ERROR;
-		}
-
-		wmPtr2 = masterPtr->wmInfoPtr;
-
-		if (wmPtr2->iconFor != NULL) {
-		    Tcl_AppendResult(interp, "can't make \"", argv[3],
-		            "\" a master: it is an icon for ",
-		            Tk_PathName(wmPtr2->iconFor),
-		            (char *) NULL);
-		    return TCL_ERROR;
-		}
-
 		wmPtr->masterPtr = masterPtr;
 		masterPtr->wmInfoPtr->numTransients++;
 

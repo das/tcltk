@@ -2014,7 +2014,14 @@ Tk_WmCmd(clientData, interp, argc, argv)
 	        return TCL_ERROR;
 	    }
 
-	    wmPtr->masterPtr = masterPtr;
+	    if (masterPtr == winPtr) {
+	        Tcl_AppendResult(interp, "can't make \"", Tk_PathName(winPtr),
+	                "\" its own master",
+	                (char *) NULL);
+	        return TCL_ERROR;
+	    } else if (masterPtr != wmPtr->masterPtr) {
+	        wmPtr->masterPtr = masterPtr;
+	    }
 	}
 	if (!(wmPtr->flags & WM_NEVER_MAPPED)) {
 	    Window xwin = (wmPtr->masterPtr == NULL) ? None :
