@@ -509,6 +509,39 @@ test wm-transient-5.3 { remove transient property from window
     wm transient .subject
 } {}
 
+test wm-transient-6.1 { a withdrawn transient does not track
+        state changes in the master } {
+    deleteWindows
+    toplevel .master
+    toplevel .subject
+    update
+    wm transient .subject .master
+    wm withdraw .subject
+    wm withdraw .master
+    wm deiconify .master
+    wm state .subject
+} {withdrawn}
+
+test wm-transient-6.2 { a withdrawn transient does not track
+        state changes in the master } {
+    set results [list]
+    deleteWindows
+    toplevel .master
+    toplevel .subject
+    update
+    wm transient .subject .master
+    wm withdraw .subject
+    wm withdraw .master
+    wm deiconify .master
+    lappend results [wm state .subject]
+    wm deiconify .subject
+    lappend results [wm state .subject]
+    wm withdraw .master
+    lappend results [wm state .subject]
+    wm deiconify .master
+    lappend results [wm state .subject]
+} {withdrawn normal withdrawn normal}
+
 
 test wm-state-1.1 {usage} {
     list [catch {wm state} err] $err
