@@ -78,16 +78,3 @@ test get-2.4 {Tk_GetJustifyFromObj - error} {
 # cleanup
 cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-
-

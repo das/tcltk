@@ -78,7 +78,7 @@ foreach test {
 	lindex [.s configure $name] 4
     } [lindex $test 2]
     incr i
-    if {[lindex $test 3] != ""} {
+    if {[lindex $test 3] ne ""} {
 	test scale-1.$i {configuration options} {
 	    list [catch {.s configure $name [lindex $test 3]} msg] $msg
 	} [list 1 [lindex $test 4]]

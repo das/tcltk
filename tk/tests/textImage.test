@@ -352,16 +352,3 @@ font delete test_font
 # cleanup
 cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -314,16 +314,3 @@ test unixfont-9.2 {GetControlCharSubst procedure: 4 chars subst} unix {
 # cleanup
 cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -163,16 +163,3 @@ if {[testConstraint pseudocolor8]} {
 # cleanup
 cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-
-

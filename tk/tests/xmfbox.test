@@ -141,15 +141,3 @@ test xmfbox-2.6 {tk::MotifFDialog_ActivateFList, ~ in file names} {unixOnly} {
 cleanup
 cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-

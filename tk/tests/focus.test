@@ -642,16 +642,3 @@ bind all <FocusOut> {}
 # cleanup
 cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-
-

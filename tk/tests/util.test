@@ -66,16 +66,3 @@ test util-1.12 {Tk_GetScrollInfo procedure} {
 # cleanup
 cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -89,7 +89,7 @@ set real [file join $dir choosedirTest]
 set parent .
 
 foreach opt {-initialdir -mustexist -parent -title} {
-    test choosedir-1.1 "tk_chooseDirectory command" unixOnly {
+    test choosedir-1.1$opt "tk_chooseDirectory command" unixOnly {
 	list [catch {tk_chooseDirectory $opt} msg] $msg
     } [list 1 "value for \"$opt\" missing"]
 }

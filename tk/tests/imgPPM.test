@@ -151,16 +151,3 @@ eval image delete [image names]
 # cleanup
 cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-
-

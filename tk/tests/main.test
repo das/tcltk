@@ -102,16 +102,3 @@ test main-2.3 {Tk_MainEx: -encoding option} -constraints {
 # cleanup
 cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -34,7 +34,7 @@ if {![file exists $teapotPhotoFile]} {
     set newLib [file dirname [testsDirectory]]
     set teapotPhotoFile [file join $newLib library demos images teapot.ppm]
     if {![file exists $teapotPhotoFile]} {
-	testConstraint hasTeapotPhoto
+	testConstraint hasTeapotPhoto 0
     }
 }
 

@@ -802,16 +802,3 @@ catch {destroy .t}
 # cleanup
 cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-
-

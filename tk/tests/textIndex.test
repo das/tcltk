@@ -871,16 +871,3 @@ rename textimage {}
 catch {destroy .t}
 cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-
-

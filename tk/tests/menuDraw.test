@@ -511,16 +511,3 @@ test menuDraw-17.2 {AdjustMenuCoords - menu} {pcOnly userInteraction} {
 deleteWindows
 cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-
-

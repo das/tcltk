@@ -131,16 +131,3 @@ removeFile bar.ps
 deleteWindows
 cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-
-

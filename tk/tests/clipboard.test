@@ -244,16 +244,3 @@ test clipboard-7.16 {Tk_ClipboardCmd procedure} {
 # cleanup
 cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1034,15 +1034,3 @@ test winMenu-34.1 {TkpMenuInit called at boot time} {emptyTest pcOnly} {} {}
 deleteWindows
 cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-

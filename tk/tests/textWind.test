@@ -27,11 +27,7 @@ if {[tcltest::testConstraint fonts]} {
 
 option add *Text.borderWidth 2
 option add *Text.highlightThickness 2
-if {$tcl_platform(platform) == "windows"} {
-    option add *Text.font {Courier -12}
-} else {   
-    option add *Text.font {Courier -12}
-}
+option add *Text.font {Courier -12}
 
 set fixedFont {Courier -12}
 # 15 on XP, 13 on Solaris 8
@@ -51,11 +47,7 @@ pack append . .t {top expand fill}
 update
 .t debug on
 wm geometry . {}
-if {[winfo depth .t] > 1} {
-    set color green
-} else {
-    set color black
-}
+set color [expr {[winfo depth .t] > 1 ? "green" : "black"}]
   
 # The statements below reset the main window;  it's needed if the window
 # manager is mwm to make mwm forget about a previous minimum size setting.
@@ -885,16 +877,3 @@ option clear
 # cleanup
 cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-
-
