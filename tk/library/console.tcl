@@ -896,7 +896,9 @@ proc ::tk::console::ExpandVariable str {
 	    set vars $ary\([ExpandBestMatch $match $str]
 	    foreach var $match {lappend vars $ary\($var\)}
 	    return $vars
-	} else {set match $ary\($match\)}
+	} elseif {[llength $match] == 1} {
+	    set match $ary\($match\)
+	}
 	## Space transformation avoided for array names.
     } else {
 	set match [EvalAttached [list info vars $str*]]
