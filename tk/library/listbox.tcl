@@ -465,6 +465,10 @@ proc tkListboxCancel w {
     }
     set first [$w index anchor]
     set last $tkPriv(listboxPrev)
+    if { [string equal $last ""] } {
+	# Not actually doing any selection right now
+	return
+    }
     if {$first > $last} {
 	set tmp $first
 	set first $last

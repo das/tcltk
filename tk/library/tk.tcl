@@ -236,7 +236,7 @@ if {[string equal [info commands tk_getOpenFile] ""]} {
 	if {$::tk_strictMotif} {
 	    return [eval tkMotifFDialog open $args]
 	} else {
-	    return [eval tkFDialog open $args]
+	    return [eval ::tk::dialog::file::tkFDialog open $args]
 	}
     }
 }
@@ -245,7 +245,7 @@ if {[string equal [info commands tk_getSaveFile] ""]} {
 	if {$::tk_strictMotif} {
 	    return [eval tkMotifFDialog save $args]
 	} else {
-	    return [eval tkFDialog save $args]
+	    return [eval ::tk::dialog::file::tkFDialog save $args]
 	}
     }
 }
@@ -256,7 +256,7 @@ if {[string equal [info commands tk_messageBox] ""]} {
 }
 if {[string equal [info command tk_chooseDirectory] ""]} {
     proc tk_chooseDirectory {args} {
-	return [eval ::tk::dialog::chooseDir::tkChooseDirectory $args]
+	return [eval ::tk::dialog::file::chooseDir::tkChooseDirectory $args]
     }
 }
 	
