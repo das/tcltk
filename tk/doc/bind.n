@@ -328,7 +328,7 @@ as necessary.
 .br
 Note that Tk provides no useful details for this event type.
 
-.\" Added in wm-enablers patch:
+'\" Added in wm-enablers patch:
 .IP \fBMapRequest\fP
 .IP \fBCirculateRequest\fP
 .IP \fBResizeRequest\fP
