@@ -48,6 +48,12 @@ static char *stateStrings[] = {
  */
 
 static Tk_OptionSpec labelOptionSpecs[] = {
+    {TK_OPTION_BORDER, "-activebackground", "activeBackground", "Foreground",
+	DEF_BUTTON_ACTIVE_BG_COLOR, -1, Tk_Offset(TkButton, activeBorder),
+	0, (ClientData) DEF_BUTTON_ACTIVE_BG_MONO, 0},
+    {TK_OPTION_COLOR, "-activeforeground", "activeForeground", "Background",
+	DEF_BUTTON_ACTIVE_FG_COLOR, -1, Tk_Offset(TkButton, activeFg),
+	TK_OPTION_NULL_OK, (ClientData) DEF_BUTTON_ACTIVE_FG_MONO, 0},
     {TK_OPTION_ANCHOR, "-anchor", "anchor", "Anchor",
 	DEF_BUTTON_ANCHOR, -1, Tk_Offset(TkButton, anchor), 0, 0, 0},
     {TK_OPTION_BORDER, "-background", "background", "Background",
@@ -190,8 +196,7 @@ static Tk_OptionSpec buttonOptionSpecs[] = {
 	DEF_BUTTON_PADY, Tk_Offset(TkButton, padYPtr),
 	Tk_Offset(TkButton, padY), 0, 0, 0},
     {TK_OPTION_RELIEF, "-relief", "relief", "Relief",
-	DEF_BUTTON_RELIEF, -1, Tk_Offset(TkButton, relief),
-	 TK_OPTION_LINK_OK, 0, 0},
+	DEF_BUTTON_RELIEF, -1, Tk_Offset(TkButton, relief), 0, 0, 0},
     {TK_OPTION_STRING_TABLE, "-state", "state", "State",
 	DEF_BUTTON_STATE, -1, Tk_Offset(TkButton, state),
 	0, (ClientData) stateStrings, 0},

@@ -3403,7 +3403,7 @@ DeleteMenuCloneEntries(menuPtr, first, last)
 	}
 	for (i = last + 1; i < menuListPtr->numEntries; i++) {
 	    menuListPtr->entries[i - numDeleted] = menuListPtr->entries[i];
-	    menuListPtr->entries[i - numDeleted]->index = i;
+	    menuListPtr->entries[i - numDeleted]->index = i - numDeleted;
 	}
 	menuListPtr->numEntries -= numDeleted;
 	if (menuListPtr->numEntries == 0) {
