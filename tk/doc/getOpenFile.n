@@ -128,7 +128,7 @@ in the sample code matches files that EITHER have a \fB\.gif\fR
 extension OR belong to the \fImacType\fR \fBGIFF\fR.
 .PP
 On the Unix and Windows platforms, a file matches a file pattern
-if its name matches at at least one of the \fIextension\fR(s) of
+if its name matches at least one of the \fIextension\fR(s) of
 the file pattern. The \fImacType\fRs are ignored.
 .SH "SPECIFYING EXTENSIONS"
 .PP

@@ -509,11 +509,11 @@ by one page (the height of the window).
 The Home and End keys scroll the listbox horizontally to
 the left and right edges, respectively.
 .IP [10]
-Control-Home sets the location cursor to the the first element in
+Control-Home sets the location cursor to the first element in
 the listbox, selects that element, and deselects everything else
 in the listbox.
 .IP [11]
-Control-End sets the location cursor to the the last element in
+Control-End sets the location cursor to the last element in
 the listbox, selects that element, and deselects everything else
 in the listbox.
 .IP [12]
