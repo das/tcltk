@@ -16,6 +16,7 @@
 
 #include "tkScrollbar.h"
 #include "tkMacOSXInt.h"
+#include "tclInt.h"
 
 #include <Carbon/Carbon.h>
 
@@ -673,13 +674,8 @@ ThumbActionProc()
             interp = scrollPtr->interp;
             Tcl_Preserve((ClientData) interp);
             Tcl_GlobalEval(interp, cmdString.string);
-            Tcl_Release((ClientData) interp);
-            Tcl_DStringSetLength(&cmdString, 0);
-            Tcl_DStringAppend(&cmdString, "update idletasks",
-                strlen("update idletasks"));
-            Tcl_Preserve((ClientData) interp);
-            Tcl_GlobalEval(interp, cmdString.string);
-            Tcl_Release((ClientData) interp);
+
+            TclServiceIdle();
         }
     } while ((err == noErr) && trackingResult != kMouseTrackingMouseReleased);
 
