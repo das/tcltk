@@ -458,8 +458,15 @@ set ::tk::Priv(prevPos) {}
 # someone could use the "event generate" command to produce one
 # on other platforms.
 
-bind Text <MouseWheel> {
-    %W yview scroll [expr {- (%D / 120) * 4}] units
+if {[string equal [tk windowingsystem] "classic"]
+	|| [string equal [tk windowingsystem] "aqua"]} {
+    bind Text <MouseWheel> {
+        %W yview scroll [expr {- (%D)}] units
+    }
+} else {
+    bind Text <MouseWheel> {
+        %W yview scroll [expr {- (%D / 120) * 4}] units
+    }
 }
 
 if {[string equal "x11" [tk windowingsystem]]} {
