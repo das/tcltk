@@ -241,6 +241,31 @@ MouseTimerProc(clientData)
 /*
  *----------------------------------------------------------------------
  *
+ * TkWinCancelMouseTimer --
+ *
+ *    If the mouse timer is set, cancel it.
+ *
+ * Results:
+ *    None.
+ *
+ * Side effects:
+ *    May cancel the mouse timer.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TkWinCancelMouseTimer()
+{
+    if (mouseTimerSet) {
+	Tcl_DeleteTimerHandler(mouseTimer);
+	mouseTimerSet = 0;
+    }
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
  * TkGetPointerCoords --
  *
  *	Fetch the position of the mouse pointer.
