@@ -9,14 +9,15 @@
 #
 # RCS: @(#) $Id$
 
+if {[lsearch [namespace children] ::tcltest] == -1} {
+    source [file join [pwd] [file dirname [info script]] defs.tcl]
+}
+
 # Only run this test on the Macintosh
 if {$tcl_platform(platform) != "macintosh"} {
     puts "skipping: Mac only tests..."
+    ::tcltest::cleanupTests
     return
-}
-
-if {[lsearch [namespace children] ::tcltest] == -1} {
-    source [file join [pwd] [file dirname [info script]] defs.tcl]
 }
 
 foreach i [winfo children .] {

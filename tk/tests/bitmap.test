@@ -14,6 +14,7 @@ if {[lsearch [namespace children] ::tcltest] == -1} {
 
 if {[info commands testbitmap] != "testbitmap"} {
     puts "testbitmap command not available; skipping tests"
+    ::tcltest::cleanupTests
     return
 }
 

@@ -8,13 +8,14 @@
 #
 # RCS: @(#) $Id$
 
-if {[info command testwinevent] == ""} {
-    puts "skipping: tests require the testwinevent command"
-    return
-}
-
 if {[lsearch [namespace children] ::tcltest] == -1} {
     source [file join [pwd] [file dirname [info script]] defs.tcl]
+}
+
+if {[info command testwinevent] == ""} {
+    puts "skipping: tests require the testwinevent command"
+    ::tcltest::cleanupTests
+    return
 }
 
 testwinevent debug 1

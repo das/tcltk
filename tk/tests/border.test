@@ -13,6 +13,7 @@ if {[lsearch [namespace children] ::tcltest] == -1} {
 
 if {[info commands testborder] != "testborder"} {
     puts "testborder command not available; skipping tests"
+    ::tcltest::cleanupTests
     return
 }
 
@@ -26,11 +27,13 @@ raise .
 # test file.
 
 if [catch {toplevel .t -visual {pseudocolor 8} -colormap new}] {
+    ::tcltest::cleanupTests
     return
 }
 wm geom .t +0+0
 if {[winfo depth .t] != 8} {
     destroy .t
+    ::tcltest::cleanupTests
     return
 }
 

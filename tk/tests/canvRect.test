@@ -293,7 +293,7 @@ test canvRect-10.1 {TranslateRectOval procedure} {
 # This test is non-portable because different color information
 # will get generated on different displays (e.g. mono displays
 # vs. color).
-test canvRect-11.1 {RectOvalToPostscript procedure} {nonPortable win32sCrash macCrash} {
+test canvRect-11.1 {RectOvalToPostscript procedure} {nonPortable macCrash} {
     # Crashes on Mac because the XGetImage() call isn't implemented, causing a
     # dereference of NULL.
     

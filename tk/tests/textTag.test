@@ -16,6 +16,7 @@ catch {destroy .t}
 if [catch {text .t -font {Courier 12} -width 20 -height 10}] {
     puts "The font needed by these tests isn't available, so I'm"
     puts "going to skip the tests."
+    ::tcltest::cleanupTests
     return
 }
 pack append . .t {top expand fill}

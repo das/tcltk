@@ -185,15 +185,9 @@ test option-14.12 {error conditions} {
     list [catch {option get .gorp.gorp a A} msg] $msg
 } {1 {bad window path name ".gorp.gorp"}}
 
-if {$tcl_platform(os) == "Win32s"} {
-    set option1 [file join $::tcltest::testsDir OPTION~2.FIL]
-    set option2 [file join $::tcltest::testsDir OPTION~1.FIL]
-    set option3 [file join $::tcltest::testsDir OPTION~3.FIL]
-} else {
-    set option1 [file join $::tcltest::testsDir option.file1]
-    set option2 [file join $::tcltest::testsDir option.file2]
-    set option3 [file join $::tcltest::testsDir option.file3]
-}
+set option1 [file join $::tcltest::testsDir option.file1]
+set option2 [file join $::tcltest::testsDir option.file2]
+set option3 [file join $::tcltest::testsDir option.file3]
 
 test option-15.1 {database files} {
     list [catch {option read non-existent} msg] $msg

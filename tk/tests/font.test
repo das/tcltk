@@ -8,13 +8,14 @@
 #
 # RCS: @(#) $Id$
 
-if {[info commands testfont] != "testfont"} {
-    puts "testfont command not available; skipping tests"
-    return
-}
-
 if {[lsearch [namespace children] ::tcltest] == -1} {
     source [file join [pwd] [file dirname [info script]] defs.tcl]
+}
+
+if {[info commands testfont] != "testfont"} {
+    puts "testfont command not available; skipping tests"
+    ::tcltest::cleanupTests
+    return
 }
 
 catch {destroy .b}

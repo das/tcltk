@@ -12,13 +12,14 @@
 #
 # RCS: @(#) $Id$
 
-if {$tcl_platform(platform)!="macintosh"} {
-    puts "skipping: Mac only tests..."
-    return
-}
-
 if {[lsearch [namespace children] ::tcltest] == -1} {
     source [file join [pwd] [file dirname [info script]] defs.tcl]
+}
+
+if {$tcl_platform(platform)!="macintosh"} {
+    puts "skipping: Mac only tests..."
+    ::tcltest::cleanupTests
+    return
 }
 
 catch {destroy .b}
