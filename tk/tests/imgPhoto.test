@@ -29,7 +29,7 @@ update
 
 set README [makeFile {
 README -- Tk test suite design document.
-} README]
+} README-imgPhotot]
 
 # find the teapot.ppm file for use in these tests
 # first look in $tk_library/demos/images/teapot.ppm
@@ -656,6 +656,6 @@ destroy .c
 eval image delete [image names]
 
 # cleanup
-removeFile README
+removeFile README-imgPhoto
 ::tcltest::cleanupTests
 return

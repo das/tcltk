@@ -29,7 +29,7 @@ proc setup1 w {
 	button $w.b.$i -text "Button $w.b.$i"
 	pack $w.b.$i -side left
     }
-    if {[winfo ismapped $w.b.z]} {
+    if {![winfo ismapped $w.b.z]} {
 	tkwait visibility $w.b.z
     }
 }
