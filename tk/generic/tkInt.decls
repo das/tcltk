@@ -615,6 +615,10 @@ declare 135 generic {
         int highlightWidth, Drawable drawable)
 }
 
+declare 136 generic {
+    void TkSetFocusWin (TkWindow *winPtr, int force) 
+}
+
 ##############################################################################
 
 # Define the platform specific internal Tcl interface. These functions are

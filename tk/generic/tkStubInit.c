@@ -338,6 +338,7 @@ TkIntStubs tkIntStubs = {
     TkGenWMConfigureEvent, /* 134 */
 #endif /* MAC_TCL */
     TkpDrawHighlightBorder, /* 135 */
+    TkSetFocusWin, /* 136 */
 };
 
 TkIntPlatStubs tkIntPlatStubs = {
