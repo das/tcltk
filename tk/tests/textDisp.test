@@ -186,6 +186,20 @@ test textDisp-0.4 {double tag elide transition} {
     destroy .txt
 } {}
 
+test textDisp-0.5 {double tag elide transition} {
+    catch {destroy .txt}
+    pack [text .txt]
+    .txt tag configure WELCOME -elide 1
+    .txt tag configure SYSTEM -elide 0
+    .txt tag configure TRAFFIC -elide 1
+
+    .txt insert end "\n" {SYSTEM TRAFFIC}
+    .txt insert end "\n" WELCOME
+    # Crash was here.
+    update
+    destroy .txt
+} {}
+
 test textDisp-1.1 {GetStyle procedure, priorities and tab stops} {
     .t delete 1.0 end
     .t insert 1.0 "x\ty"
