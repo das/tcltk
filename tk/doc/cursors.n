@@ -11,6 +11,7 @@
 '\" Note:  do not modify the .SH NAME line immediately below!
 .SH NAME
 cursors \- mouse cursors available in Tk
+.BE
 
 .SH DESCRIPTION
 .PP
