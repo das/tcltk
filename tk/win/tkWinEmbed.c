@@ -163,10 +163,6 @@ TkpUseWindow(interp, tkwin, string)
     ThreadSpecificData *tsdPtr = (ThreadSpecificData *) 
             Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
-    if (winPtr->window != None) {
-        Tcl_Panic("TkpUseWindow: Already assigned a window");
-    }
-
     if (Tcl_GetInt(interp, string, &id) != TCL_OK) {
         return TCL_ERROR;
     }
@@ -424,6 +420,7 @@ TkWinEmbeddedEventProc(hwnd, message, wParam, lParam)
 	    containerPtr->embeddedMenuHWnd = NULL;
 	    containerPtr->embeddedHWnd = NULL;
 	    containerPtr->parentPtr->flags &= ~TK_BOTH_HALVES;
+	    InvalidateRect(hwnd, NULL, TRUE);
 	    break;
 
 	    case TK_GEOMETRYREQ:
