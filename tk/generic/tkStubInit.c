@@ -948,6 +948,7 @@ TkStubs tkStubs = {
     Tk_PostscriptPath, /* 235 */
     Tk_PostscriptStipple, /* 236 */
     Tk_PostscriptY, /* 237 */
+    Tk_IsViewable, /* 238 */
 };
 
 /* !END!: Do not edit above this line. */

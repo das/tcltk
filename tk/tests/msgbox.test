@@ -165,19 +165,23 @@ foreach spec $specs {
     }
 }
 
+# These tests will hang your test suite if they fail.
+test msgbox-3.1 {tk_messageBox handles withdrawn parent} {nonUnixUserInteraction} {
+    wm withdraw .
+    ChooseMsg . "ok"
+    tk_messageBox -title Hi -message "Please press ok" \
+	    -type ok -default ok
+} "ok"
+wm deiconify .
+
+test msgbox-3.2 {tk_messageBox handles iconified parent} {nonUnixUserInteraction} {
+    wm iconify .
+    ChooseMsg . "ok"
+    tk_messageBox -title Hi -message "Please press ok" \
+	    -type ok -default ok
+} "ok"
+wm deiconify .    
+
 # cleanup
 ::tcltest::cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-
-

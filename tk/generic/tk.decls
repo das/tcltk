@@ -1120,6 +1120,9 @@ declare 236 generic {
 declare 237 generic {
     double Tk_PostscriptY (double y, Tk_PostscriptInfo psInfo)
 }
+declare 238 generic {
+    int Tk_IsViewable (Tk_Window tkwin)
+}
 
 # Define the platform specific public Tk interface.  These functions are
 # only available on the designated platform.

@@ -269,8 +269,13 @@ Tk_ChooseColorObjCmd(clientData, interp, objc, objv)
     }
 
     Tk_MakeWindowExist(parent);
-    chooseColor.hwndOwner = hWnd = Tk_GetHWND(Tk_WindowId(parent));
-
+    chooseColor.hwndOwner = NULL;
+    hWnd = NULL;
+    if (Tk_IsViewable(parent)) {
+	hWnd = Tk_GetHWND(Tk_WindowId(parent));
+	chooseColor.hwndOwner = hWnd;
+    }
+    
     oldMode = Tcl_SetServiceMode(TCL_SERVICE_ALL);
     winCode = ChooseColor(&chooseColor);
     (void) Tcl_SetServiceMode(oldMode);
@@ -1701,8 +1706,11 @@ Tk_MessageBoxObjCmd(clientData, interp, objc, objv)
     }
 
     Tk_MakeWindowExist(parent);
-    hWnd = Tk_GetHWND(Tk_WindowId(parent));
-
+    hWnd = NULL;
+    if ( Tk_IsViewable(parent) ) {
+	hWnd = Tk_GetHWND(Tk_WindowId(parent));
+    }
+    
     flags = 0;
     if (defaultBtn >= 0) {
 	int defaultBtnIdx;

@@ -951,3 +951,37 @@ TkFindStateNumObj(interp, optionPtr, mapPtr, keyPtr)
     }
     return mPtr->numKey;
 }
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * Tk_IsViewable --
+ *
+ *	Given a Tk_Window pointer, determine if that window is viewable.
+ *
+ * Results:
+ *	1 if the window is viewable, 0 otherwise.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+int
+Tk_IsViewable(tkwin)
+    Tk_Window tkwin;		/* Pointer to the window to examine */
+{
+    TkWindow *winPtr = (TkWindow *)tkwin;
+    int viewable = 0;
+    for ( ; ; winPtr = winPtr->parentPtr) {
+	if ((winPtr == NULL) || !(winPtr->flags & TK_MAPPED)) {
+	    break;
+	}
+	if (winPtr->flags & TK_TOP_LEVEL) {
+	    viewable = 1;
+	    break;
+	}
+    }
+    return viewable;
+}
