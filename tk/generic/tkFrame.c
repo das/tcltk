@@ -803,10 +803,18 @@ FrameWidgetObjCmd(clientData, interp, objc, objv)
 			&& (strncmp(arg, "-use", length) == 0))
 			|| ((c == 'v')
 			&& (strncmp(arg, "-visual", length) == 0))) {
-		    Tcl_AppendResult(interp, "can't modify ", arg,
+		    if(c == 'u') {
+			CONST char*string = Tcl_GetString(objv[i+1]);
+			if(TCL_OK == TkpUseWindow(interp, framePtr->tkwin, string)) {
+			    result = TCL_ERROR;
+			    goto done;
+			}
+		    } else {
+			Tcl_AppendResult(interp, "can't modify ", arg,
 			    " option after widget is created", (char *) NULL);
-		    result = TCL_ERROR;
-		    goto done;
+			result = TCL_ERROR;
+			goto done;
+		    }
 		}
 	    }
 	    result = ConfigureFrame(interp, framePtr, objc-2, objv+2);

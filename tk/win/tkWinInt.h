@@ -230,6 +230,6 @@ void	TkpWinToplevelDeiconify		_ANSI_ARGS_((TkWindow *winPtr));
 long	TkpWinToplevelIsControlledByWm	_ANSI_ARGS_((TkWindow *winPtr));
 long	TkpWinToplevelMove		_ANSI_ARGS_((TkWindow *winPtr, int x, int y));
 long	TkpWinToplevelOverrideRedirect	_ANSI_ARGS_((TkWindow *winPtr, int reqValue));
-
+void	TkpWinToplevelDetachWindow	_ANSI_ARGS_((TkWindow *winPtr));
 #endif /* _TKWININT */
 

@@ -115,7 +115,8 @@ TkpUseWindow(interp, tkwin, string)
             Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
     if (winPtr->window != None) {
-	Tcl_Panic("TkUseWindow: X window already assigned");
+	Tcl_AppendResult(interp, "can't modify container after widget is created", (char *) NULL);
+	return TCL_ERROR;
     }
     if (Tcl_GetInt(interp, string, &id) != TCL_OK) {
 	return TCL_ERROR;
