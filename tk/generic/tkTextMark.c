@@ -156,9 +156,10 @@ TkTextMarkCmd(textPtr, interp, objc, objv)
 	    }
 	    str = Tcl_GetStringFromObj(objv[4],&length);
 	    c = str[0];
-	    if ((c == 'l') && (strncmp(str, "left", length) == 0)) {
+	    if ((c == 'l') && (strncmp(str, "left", (unsigned)length) == 0)) {
 		newTypePtr = &tkTextLeftMarkType;
-	    } else if ((c == 'r') && (strncmp(str, "right", length) == 0)) {
+	    } else if ((c == 'r') &&
+		    (strncmp(str, "right", (unsigned)length) == 0)) {
 		newTypePtr = &tkTextRightMarkType;
 	    } else {
 		Tcl_AppendResult(interp, "bad mark gravity \"", str, 
