@@ -1365,7 +1365,7 @@ test unixWm-41.1 {ConfigureEvent procedure, internally generated size changes} u
     sleep 500
     lappend result [winfo width .t] [winfo height .t]
 } {400 150 200 300}
-test unixWm-41.2 {ConfigureEvent procedure, menubars} {nonPortable testmenubar} unix {
+test unixWm-41.2 {ConfigureEvent procedure, menubars} {nonPortable testmenubar} {
     catch {destroy .t}
     toplevel .t -width 300 -height 200 -bd 2 -relief raised
     wm geom .t +0+0
