@@ -221,21 +221,20 @@ void
 TkWinXInit(hInstance)
     HINSTANCE hInstance;
 {
+    INITCOMMONCONTROLSEX comctl;
+
     if (childClassInitialized != 0) {
 	return;
     }
     childClassInitialized = 1;
 
+    comctl.dwSize = sizeof(INITCOMMONCONTROLSEX);
+    comctl.dwICC = ICC_WIN95_CLASSES;
+    if (!InitCommonControlsEx(&comctl)) {
+	Tcl_Panic("Unable to load common controls?!");
+    }
+
     if (TkWinGetPlatformId() == VER_PLATFORM_WIN32_NT) {
-	/*
-	 * This is necessary to enable the use of themeable elements on XP,
-	 * so we don't even try and call it for Win9*.
-	 */
-
-	INITCOMMONCONTROLSEX comctl;
-	ZeroMemory(&comctl, sizeof(comctl));
-	(void) InitCommonControlsEx(&comctl);
-
 	tkWinProcs = &unicodeProcs;
     } else {
 	tkWinProcs = &asciiProcs;
