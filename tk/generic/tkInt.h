@@ -506,6 +506,9 @@ typedef struct TkDisplay {
 				 * defined in below. */
     TkCaret caret;		/* information about the caret for this
 				 * display.  This is not a pointer. */
+
+    int iconDataSize;		/* size of default iconphoto image data */
+    unsigned char *iconDataPtr;	/* default iconphoto image data, if set */
 } TkDisplay;
 
 /*
