@@ -35,7 +35,11 @@ extern "C" {
  * win/configure.in	(as above)
  * README		(sections 0 and 1)
  * macosx/Wish.pbproj/project.pbxproj
- * 			(14 LOC total, 4 LOC patch)
+ * 			(12 LOC Major/Minor, 4 LOC patch)
+ * macosx/Wish.xcode/project.pbxproj
+ * 			(5 LOC Major/Minor, not patchlevel)
+ * macosx/Wish-Info.plist (3 LOC Major/Minor, 2 LOC patch)
+ * macosx/Tk-Info.plist (4 LOC Major/Minor, 2 LOC patch)
  * win/README		(not patchlevel)
  * unix/README		(not patchlevel)
  * unix/tk.spec		(3 LOC Major/Minor, 2 LOC patch)
