@@ -529,7 +529,7 @@ proc tkMotifFDialog_BrowseDList {w} {
     set list [tkMotifFDialog_InterpFilter $w]
     set data(filter) [lindex $list 1]
 
-    case $subdir {
+    switch -- $subdir {
 	. {
 	    set newSpec [tkFDialog_JoinFile $data(selectPath) $data(filter)]
 	}
@@ -571,7 +571,7 @@ proc tkMotifFDialog_ActivateDList {w} {
 
     $data(fList) selection clear 0 end
 
-    case $subdir {
+    switch -- $subdir {
 	. {
 	    set newDir $data(selectPath)
 	}

@@ -86,7 +86,7 @@ static Tk_ConfigSpec configSpecs[] = {
 	"center", Tk_Offset(TextItem, anchor),
 	TK_CONFIG_DONT_SET_DEFAULT},
     {TK_CONFIG_COLOR, "-fill", (char *) NULL, (char *) NULL,
-	"black", Tk_Offset(TextItem, color), 0},
+	"black", Tk_Offset(TextItem, color), TK_CONFIG_NULL_OK},
     {TK_CONFIG_FONT, "-font", (char *) NULL, (char *) NULL,
 	DEF_CANVTEXT_FONT, Tk_Offset(TextItem, tkfont), 0},
     {TK_CONFIG_JUSTIFY, "-justify", (char *) NULL, (char *) NULL,

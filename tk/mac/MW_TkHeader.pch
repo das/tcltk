@@ -31,10 +31,10 @@
 #pragma precompile_target "MW_TkHeader68K"
 #endif
 
-#include "tclMacCommonDefines.h"
+#include "tclMacCommonPch.h"
 
 #ifdef TCL_DEBUG
-#define TK_TEST
+    #define TK_TEST
 #endif
 
 /*

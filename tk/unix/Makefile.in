@@ -194,7 +194,7 @@ TK_LD_SEARCH_FLAGS = @TK_LD_SEARCH_FLAGS@
 # modify any of this stuff by hand.
 #----------------------------------------------------------------
 
-AC_FLAGS =		@DEFS@
+AC_FLAGS =		@EXTRA_CFLAGS@ @DEFS@
 RANLIB =		@RANLIB@
 SRC_DIR =		@srcdir@/..
 TOP_DIR =		@srcdir@/..
