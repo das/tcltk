@@ -1,4 +1,4 @@
-1999-09-16  Jeff Hobbs  <hobbs@scriptics.com>
+1999-09-21  Jeff Hobbs  <hobbs@scriptics.com>
 
 	* generic/tkFont.c: fixed processing of font options and error
 	returned [Bug: 2075]
@@ -7,62 +7,20 @@
 	wrong toplevel, and changed it to not set focus on overridden
 	toplevels
 
-1999-09-15  Jeff Hobbs  <hobbs@scriptics.com>
-
 	* unix/aclocal.m4: added fix for FreeBSD-[1-2] recognition [Bug: 2070]
 	and fix to AIX-* to get ldAix right [Bug: 2624], fixed AIX
-	version check (readjust from 8-21 fix) and several other config
-	fixes for AIX
+	version check and several other config fixes for AIX
+
 	* mac/tkMacMenubutton.c:
 	* unix/tkUnixMenubu.c: fixed permanently stippled menubutton image
 	* win/tkWinButton.c: fixed possible pointer smash [Bug: 2733]
 
-1999-09-14  Jeff Hobbs  <hobbs@scriptics.com>
-
 	* win/tkWinMenu.c: fix for stack overrun in GetTextFace [Bug: 909]
 
-1999-09-01  Jeff Hobbs  <hobbs@scriptics.com>
-
-	* win/tkWinDraw.c:
 	* unix/tkUnixDraw.c: fixed header style for TkpDrawHighlightBorder
+
 	* generic/tkCanvas.c: fixed GC error (bg <> fg) in tkCanvas.c
 	(from code added to support TkpDrawHighlightBorder) [Bug: 2676]
-	* unix/aclocal.m4: added -bnoentry to the AIX-* flags
-	* library/msgbox.tcl: changed the behavior of tk_messageBox on
-	Unix to be more Windows like in handling of <Return> and the
-	default button
-	* library/button.tcl:
-	* library/clrpick.tcl:
-	* library/comdlg.tcl:
-	* library/console.tcl:
-	* library/dialog.tcl:
-	* library/entry.tcl:
-	* library/focus.tcl:
-	* library/listbox.tcl:
-	* library/menu.tcl:
-	* library/msgbox.tcl:
-	* library/palette.tcl:
-	* library/safetk.tcl:
-	* library/scale.tcl:
-	* library/scrlbar.tcl:
-	* library/tearoff.tcl:
-	* library/text.tcl:
-	* library/tk.tcl:
-	* library/tkfbox.tcl:
-	* library/xmfbox.tcl: updated commands to use [string] ops
-	instead of expr equality operators
-
-1999-08-21  Jeff Hobbs  <hobbs@scriptics.com>
-
-	* unix/aclocal.m4: Changed AIX-4.[2-9] check to AIX-4.[1-9]
-	[Bug: 1909]
-
-1999-08-20  Jeff Hobbs  <hobbs@scriptics.com>
-
-	* generic/tkCursor.c: fixed bug in GetCursorFromObj that caused
-	panic [Bug: 2562]
-
-	* TK 8.2.0 RELEASED
 
 1999-08-13  Jim Ingham  <jingham@cygnus.com>
 
@@ -70,8 +28,8 @@
 	wrong.	There is no clean way to stop it, so I use lower level routines
 	here to draw the text.
 	* mac/tkMacProjects.sea.hqx: Rearrange the projects so that the build 
-	directory is separate from the sources.  Much more convenient! 
-        
+	directory is separate from the sources.	 Much more convenient! 
+
 1999-08-10  Jeff Hobbs  <hobbs@scriptics.com>
 
 	* win/tkWinWm.c: changed "wm deiconify" on Windows to raise and
