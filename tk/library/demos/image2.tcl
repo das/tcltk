@@ -25,7 +25,7 @@ proc loadDir w {
     }
 }
 
-# loadDir --
+# selectAndLoadDir --
 # This procedure pops up a dialog to ask for a directory to load into
 # the listobx and (if the user presses OK) reloads the directory
 # listbox from the directory named in the demo's entry.
