@@ -325,5 +325,8 @@ scrollbars and is provided by widgets that support vertical scrolling.
 See the description of \fBxScrollCommand\fR for details
 on how this option is used.
 
+.SH SEE ALSO
+colors, cursors
+
 .SH KEYWORDS
 class, name, standard option, switch

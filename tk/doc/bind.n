@@ -517,7 +517,7 @@ The \fBbgerror\fR command will be executed at global level
 (outside the context of any Tcl procedure).
 
 .SH "SEE ALSO"
-bgerror
+bgerror, keysyms
 
 .SH KEYWORDS
 form, manual
