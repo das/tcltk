@@ -632,8 +632,8 @@ ConfigureScale(interp, scalePtr, objc, objv)
 	    name = Tcl_GetString(scalePtr->varNamePtr);
 	    valuePtr = Tcl_GetVar2Ex(interp, name, NULL, TCL_GLOBAL_ONLY);
 	    if ((valuePtr != NULL) &&
-		    (Tcl_GetDoubleFromObj(interp, valuePtr, &value))
-		    == TCL_OK) {
+		    (Tcl_GetDoubleFromObj(interp, valuePtr, &value)
+		    == TCL_OK)) {
 		scalePtr->value = TkRoundToResolution(scalePtr, value);
 	    }
 	}
