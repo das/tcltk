@@ -410,12 +410,5 @@ proc ::tk::MessageBox {args} {
 
     ::tk::RestoreFocusGrab $w $focus
 
-    # Remove the transient property to insulate the
-    # dialog from changes in the master's state.
-
-    if {[winfo exists $w]} {
-        wm transient $w {}
-    }
-
     return $Priv(button)
 }
