@@ -317,7 +317,7 @@ window at the given place without asking the user for assistance.
 If \fIwho\fR is specified as an empty string, then the current position
 source is cancelled.
 If \fIwho\fR is specified, then the command returns an empty string.
-Otherwise it returns \fBuser\fR or \fBwindow\fR to indicate the
+Otherwise it returns \fBuser\fR or \fBprogram\fR to indicate the
 source of the window's current position, or an empty string if
 no source has been specified yet.  Most window managers interpret
 ``no source'' as equivalent to \fBprogram\fR.
