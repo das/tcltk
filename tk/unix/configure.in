@@ -306,8 +306,8 @@ XFT_CFLAGS=""
 XFT_LIBS=""
 if test "$enable_xft" = "yes" ; then
     AC_MSG_CHECKING([for xft configuration])
-    XFT_CFLAGS=`pkg-config --cflags xft` || enable_xft="no"
-    XFT_LIBS=`pkg-config --libs xft` || enable_xft="no"
+    XFT_CFLAGS=`xft-config --cflags` || enable_xft="no"
+    XFT_LIBS=`xft-config --libs` || enable_xft="no"
     if test "$enable_xft" = "yes" ; then
     	AC_MSG_RESULT([ok])
     else
