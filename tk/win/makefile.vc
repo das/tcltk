@@ -166,7 +166,7 @@ PROJECT	= tk
 
 STUBPREFIX = $(PROJECT)stub
 !if [nmakehlp -g ../generic/tk.h TK_VERSION] == 84
-DOTVERSION	= 8.5
+DOTVERSION	= 8.4
 !elseif [nmakehlp -g ../generic/tk.h TK_VERSION] == 85
 DOTVERSION	= 8.5
 !elseif [nmakehlp -g ../generic/tk.h TK_VERSION] == 86
