@@ -375,5 +375,6 @@ foreach mode $modes {
 set tk_strictMotif $tk_strictMotif_old
 
 # cleanup
+removeFile filebox.tmp
 cleanupTests
 return

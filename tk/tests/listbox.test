@@ -943,6 +943,7 @@ test listbox-4.18 {ConfigureListbox, no listvar -> bad listvar} {
 	"unmatched open quote in list: invalid -listvariable value"]
 test listbox-4.19 {ConfigureListbox, no listvar -> bad non-existent listvar} {
     catch {destroy .l}
+    unset -nocomplain ::foo
     listbox .l -listvar foo
     .l insert end a b c d
     catch {.l configure -listvar ::zoo::bar::foo} result

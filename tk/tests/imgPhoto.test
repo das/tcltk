@@ -23,7 +23,7 @@ update
 
 set README [makeFile {
 README -- Tk test suite design document.
-} README-imgPhotot]
+} README-imgPhoto]
 
 # find the teapot.ppm file for use in these tests
 # first look in $tk_library/demos/images/teapot.ppm

@@ -81,10 +81,9 @@ proc SendButtonPress {parent btn type} {
 #
 #----------------------------------------------------------------------
 # Make a dir for us to rely on for tests
-makeDirectory choosedirTest
-set dir [pwd]
+set real [makeDirectory choosedirTest]
+set dir [file dirname $real]
 set fake [file join $dir non-existant]
-set real [file join $dir choosedirTest]
 
 set parent .
 
@@ -145,5 +144,6 @@ test choosedir-5.1 "tk_chooseDirectory, handles {} entry text" unix {
 } $real
 
 # cleanup
+removeDirectory choosedirTest
 cleanupTests
 return
