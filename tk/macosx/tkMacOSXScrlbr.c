@@ -270,6 +270,18 @@ TkpDisplayScrollbar(
     }
 
     /*
+     * Adjust the control size based on its width...
+     */
+
+    if (macScrollPtr->info.width < 13) {
+        SetControlData(macScrollPtr->sbHandle, kControlNoPart, kControlSizeTag,
+                sizeof(kControlSizeSmall), (void *) kControlSizeSmall);
+    } else {
+        SetControlData(macScrollPtr->sbHandle, kControlNoPart, kControlSizeTag,
+                sizeof(kControlSizeSmall), (void *) kControlSizeLarge);
+    }        
+    
+    /*
      * Update the control values before we draw.
      */
     windowRef  = GetControlOwner (macScrollPtr->sbHandle);
@@ -954,7 +966,7 @@ UpdateControlValues(
      * the grow region if need be.
      */
     if (!strcmp(macDraw->winPtr->geomMgrPtr->name, "place")) {
-        macScrollPtr->macFlags &= AUTO_ADJUST;
+        macScrollPtr->macFlags &= ~AUTO_ADJUST;
     } else {
         macScrollPtr->macFlags |= AUTO_ADJUST;
     }
