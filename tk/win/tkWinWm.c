@@ -4558,7 +4558,8 @@ RaiseWinWhenIdle(clientData)
 {
     register TkWindow *winPtr = (TkWindow *) clientData;
 
-    if ((winPtr == NULL) || (winPtr->flags & TK_ALREADY_DEAD)) {
+    if ((winPtr == NULL)
+	    || (winPtr->flags & (TK_ALREADY_DEAD|TK_DONT_DESTROY_WINDOW))) {
 	return;
     }
     if (winPtr->wmInfoPtr->flags & WM_UPDATE_PENDING) {
