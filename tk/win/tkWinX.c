@@ -28,6 +28,7 @@
 #include <commctrl.h>
 #ifdef _MSC_VER
 #   pragma comment (lib, "comctl32.lib")
+#   pragma comment (lib, "advapi32.lib")
 #endif
 
 /*
