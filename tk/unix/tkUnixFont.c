@@ -189,7 +189,7 @@ static EncodingAlias encodingAliases[] = {
     {"tis620",		"tis620*"},
     {"ksc5601",		"ksc5601*"},
     {"dingbats",	"*dingbats"},
-    {"ucs-2be",		"iso10646*"},
+    {"ucs-2be",		"iso10646-1"},
     {NULL,		NULL}
 };
 
@@ -306,7 +306,7 @@ TkpFontPkgInit(mainPtr)
 	}
 
 	/*
-	 * UCS2BE is unicode in big-endian format.
+	 * UCS-2BE is unicode in big-endian format.
 	 * It is used in iso10646 fonts.
 	 */
 
