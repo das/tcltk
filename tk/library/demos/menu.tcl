@@ -131,6 +131,12 @@ menu $m -tearoff 0
 foreach i {{An entry} {Another entry} {Does nothing} {Does almost nothing} {Make life meaningful}} {
     $m add command -label $i -command [list puts "You invoked \"$i\""]
 }
+$m entryconfigure "Does almost nothing" \
+	-bitmap questhead  -compound left  -command {
+    tk_dialog .compound {Compound Menu Entry} {The menu entry you invoked\
+	    displays both a bitmap and a text string.  Other than this, it\
+	    is just like any other menu entry.} {} 0 OK
+}
 
 set m $w.menu.colors
 $w.menu add cascade -label "Colors" -menu $m -underline 1
