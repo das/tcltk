@@ -18,7 +18,7 @@
 #include "tkInt.h"
 #include <errno.h>
 
-#if defined(__WIN32__)
+#if defined(WIN32)
 #include "tkWinInt.h"
 #elif defined(MAC_TCL)
 #include "tkMacInt.h"
@@ -644,6 +644,13 @@ Tk_TkObjCmd(clientData, interp, objc, objv)
 	    TkWindow *winPtr;
 	    char *string;
 
+	    if (Tcl_IsSafe(interp)) {
+		Tcl_SetResult(interp,
+			"appname not accessible in a safe interpreter",
+			TCL_STATIC);
+		return TCL_ERROR;
+	    }
+
 	    winPtr = (TkWindow *) tkwin;
 
 	    if (objc > 3) {
@@ -741,6 +748,13 @@ Tk_TkObjCmd(clientData, interp, objc, objv)
 	    int skip, width, height;
 	    double d;
 
+	    if (Tcl_IsSafe(interp)) {
+		Tcl_SetResult(interp,
+			"scaling not accessible in a safe interpreter",
+			TCL_STATIC);
+		return TCL_ERROR;
+	    }
+
 	    screenPtr = Tk_Screen(tkwin);
 
 	    skip = TkGetDisplayOf(interp, objc - 2, objv + 2, &tkwin);
@@ -777,6 +791,13 @@ Tk_TkObjCmd(clientData, interp, objc, objv)
 	case TK_USE_IM: {
 	    TkDisplay *dispPtr = ((TkWindow *) tkwin)->dispPtr;
 	    int skip;
+
+	    if (Tcl_IsSafe(interp)) {
+		Tcl_SetResult(interp,
+			"useinputmethods not accessible in a safe interpreter",
+			TCL_STATIC);
+		return TCL_ERROR;
+	    }
 
 	    skip = TkGetDisplayOf(interp, objc-2, objv+2, &tkwin);
 	    if (skip < 0) {
@@ -819,15 +840,15 @@ Tk_TkObjCmd(clientData, interp, objc, objv)
 	        Tcl_WrongNumArgs(interp, 2, objv, NULL);
 		return TCL_ERROR;
 	    }
-	    #if defined(__WIN32__) || defined(_WIN32)	    
+#if defined(WIN32)
 	    windowingsystem = "win32";
-	    #elif defined(MAC_TCL)
+#elif defined(MAC_TCL)
 	    windowingsystem = "classic";
-	    #elif defined(MAC_OSX_TK)
+#elif defined(MAC_OSX_TK)
 	    windowingsystem = "aqua";
-	    #else
+#else
 	    windowingsystem = "x11";
-	    #endif
+#endif
 	    Tcl_SetStringObj(Tcl_GetObjResult(interp), windowingsystem, -1);
 	    break;
 	}
