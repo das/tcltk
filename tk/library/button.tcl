@@ -149,7 +149,7 @@ proc ::tk::ButtonEnter w {
 
 	if {[string equal $Priv(buttonWindow) $w]} {
 	    $w configure -state active -relief sunken
-	} elseif { [string compare [$w cget -overrelief] ""] } {
+	} elseif {[$w cget -overrelief] ne ""} {
 	    set Priv(relief) [$w cget -relief]
 	    $w configure -relief [$w cget -overrelief]
 	}
@@ -176,8 +176,8 @@ proc ::tk::ButtonLeave w {
     # Restore the original button relief if the mouse button is down
     # or there is an -overrelief value.
 
-    if {[string equal $Priv(buttonWindow) $w] || \
-	    [string compare [$w cget -overrelief] ""] } {
+    if {[info exists Priv(relief)] && (($Priv(buttonWindow) eq $w) || \
+	    ([$w cget -overrelief] ne ""))} {
 	$w configure -relief $Priv(relief)
     }
 
@@ -327,7 +327,7 @@ proc ::tk::ButtonEnter {w} {
 
 	if {[string equal $Priv(buttonWindow) $w]} {
 	    $w configure -state active -relief sunken
-	} elseif { [string compare [$w cget -overrelief] ""] } {
+	} elseif {[$w cget -overrelief] ne ""} {
 	    set Priv(relief) [$w cget -relief]
 	    $w configure -relief [$w cget -overrelief]
 	}
@@ -351,12 +351,12 @@ proc ::tk::ButtonLeave w {
     if {[string compare [$w cget -state] "disabled"]} {
 	$w configure -state normal
     }
-    
+
     # Restore the original button relief if the mouse button is down
     # or there is an -overrelief value.
 
-    if {[string equal $Priv(buttonWindow) $w] || \
-	    [string compare [$w cget -overrelief] ""] } {
+    if {[info exists Priv(relief)] && (($Priv(buttonWindow) eq $w) || \
+	    ([$w cget -overrelief] ne ""))} {
 	$w configure -relief $Priv(relief)
     }
 
@@ -457,7 +457,7 @@ proc ::tk::ButtonEnter {w} {
     if {[string compare [$w cget -state] "disabled"]} {
 	if {[string equal $w $Priv(buttonWindow)]} {
 	    $w configure -state active
-	} elseif { [string compare [$w cget -overrelief] ""] } {
+	} elseif {[$w cget -overrelief] ne ""} {
 	    set Priv(relief) [$w cget -relief]
 	    $w configure -relief [$w cget -overrelief]
 	}
@@ -480,7 +480,8 @@ proc ::tk::ButtonLeave w {
     if {[string equal $w $Priv(buttonWindow)]} {
 	$w configure -state normal
     }
-    if { [string compare [$w cget -overrelief] ""] } {
+    if {[info exists Priv(relief)] && (($Priv(buttonWindow) eq $w) || \
+	    ([$w cget -overrelief] ne ""))} {
 	$w configure -relief $Priv(relief)
     }
     set Priv(window) ""
