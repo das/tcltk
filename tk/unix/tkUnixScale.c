@@ -177,7 +177,7 @@ DisplayVerticalScale(scalePtr, drawable, drawnAreaPtr)
 	    (unsigned) scalePtr->width,
 	    (unsigned) (Tk_Height(tkwin) - 2*scalePtr->inset
 		- 2*scalePtr->borderWidth));
-    if (scalePtr->state == tkActiveUid) {
+    if (scalePtr->state == TK_STATE_ACTIVE) {
 	sliderBorder = scalePtr->activeBorder;
     } else {
 	sliderBorder = scalePtr->bgBorder;
@@ -376,7 +376,7 @@ DisplayHorizontalScale(scalePtr, drawable, drawnAreaPtr)
 	    (unsigned) (Tk_Width(tkwin) - 2*scalePtr->inset
 		- 2*scalePtr->borderWidth),
 	    (unsigned) scalePtr->width);
-    if (scalePtr->state == tkActiveUid) {
+    if (scalePtr->state == TK_STATE_ACTIVE) {
 	sliderBorder = scalePtr->activeBorder;
     } else {
 	sliderBorder = scalePtr->bgBorder;
