@@ -136,7 +136,7 @@ proc tkFocusOK w {
 	} elseif {$value == 1} {
 	    return [winfo viewable $w]
 	} else {
-	    set value [uplevel #0 $value $w]
+	    set value [uplevel #0 [list $value $w]]
 	    if {[string compare $value ""]} {
 		return $value
 	    }
