@@ -2299,13 +2299,15 @@ LoadFontRanges(
 		     * metrics are reported as F020 to F0FE.  When we load
 		     * a symbol font, we must fix the character existence
 		     * metrics.
+		     *
+		     * Symbol fonts should only use the symbol encoding
+		     * for 8-bit characters [note Bug: 2406]
 		     */
 
 		    for (i = 0; i < segCount; i++) {
-			if ((startCount[i] & 0xff00) == 0xf000) {
+			if (((startCount[i] & 0xff00) == 0xf000)
+				&& ((endCount[i] & 0xff00) == 0xf000)) {
 			    startCount[i] &= 0xff;
-			}
-			if ((endCount[i] & 0xff00) == 0xf000) {
 			    endCount[i] &= 0xff;
 			}
 		    }
