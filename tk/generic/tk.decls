@@ -1032,6 +1032,13 @@ declare 214 generic {
 	    Tk_SavedOptions *savePtr, int *maskPtr)
 }
 
+declare 215 generic {
+    void Tk_InitConsoleChannels(Tcl_Interp *interp)
+}
+
+declare 216 generic {
+    int Tk_CreateConsoleWindow(Tcl_Interp *interp)
+}
 
 # Define the platform specific public Tk interface.  These functions are
 # only available on the designated platform.

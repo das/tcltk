@@ -784,6 +784,8 @@ TkStubs tkStubs = {
     Tk_MainEx, /* 212 */
     Tk_RestoreSavedOptions, /* 213 */
     Tk_SetOptions, /* 214 */
+    Tk_InitConsoleChannels, /* 215 */
+    Tk_CreateConsoleWindow, /* 216 */
 };
 
 /* !END!: Do not edit above this line. */

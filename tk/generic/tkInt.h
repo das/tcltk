@@ -984,7 +984,7 @@ EXTERN int		Tk_WinfoObjCmd _ANSI_ARGS_((ClientData clientData,
 			    Tcl_Obj *CONST objv[]));
 EXTERN int		Tk_WmCmd _ANSI_ARGS_((ClientData clientData,
 			    Tcl_Interp *interp, int argc, char **argv));
-int	TkConsoleInit _ANSI_ARGS_((Tcl_Interp *interp));
+
 void	TkConsolePrint _ANSI_ARGS_((Tcl_Interp *interp,
 			    int devId, char *buffer, long size));
 

@@ -60,8 +60,6 @@ extern char *		strrchr _ANSI_ARGS_((CONST char *string, int c));
 extern void		TkpDisplayWarning _ANSI_ARGS_((char *msg,
 			    char *title));
 
-extern void TkConsoleCreate_ _ANSI_ARGS_((void));
-
 /*
  * Forward declarations for procedures defined later in this file.
  */
@@ -125,7 +123,7 @@ Tk_MainEx(argc, argv, appInitProc, interp)
     tsdPtr->interp = interp;
 
 #if (defined(__WIN32__) || defined(MAC_TCL))
-    TkConsoleCreate_();
+    Tk_InitConsoleChannels(interp);
 #endif
     
 #ifdef TCL_MEM_DEBUG
