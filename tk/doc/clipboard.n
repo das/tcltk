@@ -86,9 +86,22 @@ the data is to be returned and should be an atom name such as STRING
 or FILE_NAME.  \fIType\fR defaults to STRING.  This command is
 equivalent to \fBselection get -selection CLIPBOARD\fR.
 .VE 8.4
+.SH EXAMPLES
+Get the current contents of the clipboard.
+.CS
+if {[catch {\fBclipboard\fR get} contents]} {
+    # There were no clipboard contents at all
+}
+.CE
+.PP
+Set the clipboard to contain a fixed string.
+.CS
+\fBclipboard\fR clear
+\fBclipboard\fR append "some fixed string"
+.CE
 
 .SH "SEE ALSO"
-selection
+selection(n)
 
 .SH KEYWORDS
 clear, format, clipboard, append, selection, type
