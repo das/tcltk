@@ -854,6 +854,34 @@ test grid-11.15 {^ ^ test with multiple windows} {
 } {{0,0 50,50} {50,0 50,100} {100,0 50,100} {0,50 50,50}}
 grid_reset 11.15
 
+test grid-11.16 {default widget placement} {
+    foreach l {a b c d e} {
+        frame .$l -width 50 -height 50
+    }
+    grid .a .b .c .d -sticky news 
+    grid  x  ^  x .e -sticky news
+    update
+    set res ""
+    lappend res [winfo height .a]
+    lappend res [winfo height .b]
+    lappend res [winfo height .c]
+} {50 100 50}
+grid_reset 11.16
+
+test grid-11.17 {default widget placement} {
+    foreach l {a b c d e} {
+        frame .$l -width 50 -height 50
+    }
+    grid .a .b .c .d -sticky news
+    grid  ^  x  ^ .e -sticky news
+    update
+    set res ""
+    lappend res [winfo height .a]
+    lappend res [winfo height .b]
+    lappend res [winfo height .c]
+} {100 50 100}
+grid_reset 11.17
+
 test grid-12.1 {-sticky} {
     catch {unset data}
     frame .f -width 200 -height 100 -highlightthickness 0 -bg red
