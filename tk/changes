@@ -4546,3 +4546,7 @@ to be too generic and likely to create conflits.
 menubutton bindings.  There was a false assumption that there was
 always a menu attached to the button.  [Bug 1116] (surles)
 
+3/26/99 (feature change) --nameble-shared is now the default and builds
+Tk as a shared library; specify --disable-shared to build a static Tk
+library and shell.
+*** POTENTIAL INCOMPATIBILITY ***
