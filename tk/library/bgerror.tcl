@@ -143,7 +143,7 @@ proc ::bgerror err {
     wm transient .bgerrorDialog .bgerrorDialog
 
     if {$tcl_platform(platform) == "macintosh"} {
-	::tk::unsupported::MacWindowStyle style .bgerrorDialog dBoxProc
+	unsupported1 style .bgerrorDialog dBoxProc
     }
 
     frame .bgerrorDialog.bot

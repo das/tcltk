@@ -100,13 +100,15 @@ TkpInit(
 	tempPath = Tcl_GetVar2(interp, "env", "EXT_FOLDER", TCL_GLOBAL_ONLY);
 	if (tempPath != NULL) {
 	    Tcl_DString libPath;
+	    char *argv[3];
 	    
-	    Tcl_JoinPath(1, &tempPath, &path);
-	    
+	    argv[0] = tempPath;
+	    argv[1] = "Tool Command Language";	    
 	    Tcl_DStringInit(&libPath);
-	    Tcl_DStringAppend(&libPath, ":Tool Command Language:tk", -1);
+	    Tcl_DStringAppend(&libPath, "tk", -1);
 	    Tcl_DStringAppend(&libPath, TK_VERSION, -1);
-	    Tcl_JoinPath(1, &libPath.string, &path);
+	    argv[2] = libPath.string;
+	    Tcl_JoinPath(3, argv, &path);
 	    Tcl_DStringFree(&libPath);
 	    libDir = path.string;
 	}

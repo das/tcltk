@@ -4336,7 +4336,7 @@ TkpMenuNotifyToplevelCreate(
  *----------------------------------------------------------------------
  */
 
-#if __MWERKS__ < 0x2400
+#if __MWERKS__ != 0x2400
 #define MDEF_PROC_OFFSET 0x24
 #else
 #define MDEF_PROC_OFFSET 0x20
