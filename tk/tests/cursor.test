@@ -85,7 +85,7 @@ foreach wincur(num) $wincur(data_octal) {
     append wincur(data_binary) [binary format c 0$wincur(num)]
 }
 set wincur(dir) [::tcltest::makeDirectory {dir with spaces}]
-set wincur(file) [::tcltest::makeFile $curdata "test file.cur" $wincur(dir)]
+set wincur(file) [::tcltest::makeFile $wincur(data_binary) "test file.cur" $wincur(dir)]
 test cursor-2.3 {Tk_GetCursor procedure: cursor specs are lists} {pcOnly} {
     destroy .b1
     button .b1 -cursor [list @$wincur(file)]

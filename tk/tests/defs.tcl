@@ -784,7 +784,10 @@ proc ::tcltest::normalizeMsg {msg} {
 # cleanupTests was called, add it to the $filesMade list, so it will
 # be removed by the next call to cleanupTests.
 #
-proc ::tcltest::makeFile {contents name} {
+proc ::tcltest::makeFile {contents name {directory {}}} {
+    if {[string length $directory]} {
+	set name [file join $directory $name]
+    }
     set fd [open $name w]
     fconfigure $fd -translation lf
     if {[string index $contents [expr {[string length $contents] - 1}]] == "\n"} {
@@ -819,6 +822,7 @@ proc ::tcltest::makeDirectory {name} {
     if {[lsearch -exact $::tcltest::filesMade $fullName] == -1} {
 	lappend ::tcltest::filesMade $fullName
     }
+    return $fullName
 }
 
 proc ::tcltest::removeDirectory {name} {
