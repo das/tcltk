@@ -493,7 +493,7 @@ proc tkMbButtonUp w {
 
     set menu [$w cget -menu]
     set tearoff [expr {($tcl_platform(platform) == "unix") \
-	    || (($menu != {}) && ([ cget -type] == "tearoff"))}]
+	    || (($menu != {}) && ([$menu cget -type] == "tearoff"))}]
     if {($tearoff != 0) && ($tkPriv(postedMb) == $w) 
 	    && ($tkPriv(inMenubutton) == $w)} {
 	tkMenuFirstEntry [$tkPriv(postedMb) cget -menu]
