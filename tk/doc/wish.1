@@ -43,6 +43,11 @@ the window whose identifier is \fIid\fR, instead of being created as an
 independent toplevel window.  \fIId\fR must be specified in the same
 way as the value for the \fB\-use\fR option for toplevel widgets (i.e.
 it has a form like that returned by the \fBwinfo id\fR command).
+.RS
+Note that on some platforms this will only work correctly if \fIid\fR
+refers to a Tk \fBframe\fR or \fBtoplevel\fR that has its
+\fB\-container\fR option enabled.
+.RE
 .IP "\fB\-visual \fIvisual\fR" 20
 Specifies the visual to use for the window.
 \fIVisual\fR may have any of the forms supported by the \fBTk_GetVisual\fR
