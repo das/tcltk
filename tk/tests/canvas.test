@@ -255,7 +255,7 @@ test canvas-9.1 {canvas id creation and deletion} -setup {
     }] 0]
 	
     set x ""
-} {}
+} -result {}
 test canvas-10.1 {find items using tag expressions} -setup {
     catch {destroy .c}
     canvas .c
