@@ -1124,7 +1124,7 @@ Tk_WmCmd(clientData, interp, argc, argv)
     char **argv;		/* Argument strings. */
 {
     Tk_Window tkwin = (Tk_Window) clientData;
-    TkWindow *winPtr;
+    TkWindow *winPtr = NULL;
     register WmInfo *wmPtr;
     int c;
     size_t length;
@@ -4014,7 +4014,7 @@ WmProc(hwnd, message, wParam, lParam)
 			 * leaving move/size mode.  Note that this mechanism
 			 * assumes move/size is only one level deep. */
     LRESULT result;
-    TkWindow *winPtr;
+    TkWindow *winPtr = NULL;
 
     if (TkWinHandleMenuEvent(&hwnd, &message, &wParam, &lParam, &result)) {
 	goto done;
