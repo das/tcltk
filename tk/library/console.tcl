@@ -948,7 +948,7 @@ proc ::tk::console::ExpandVariable str {
 		lappend vars $ary\($var\)
 	    }
 	    return $vars
-	} else {
+	} elseif {[llength $match] == 1} {
 	    set match $ary\($match\)
 	}
 	## Space transformation avoided for array names.
