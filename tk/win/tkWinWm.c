@@ -1128,6 +1128,7 @@ Tk_WmCmd(clientData, interp, argc, argv)
     register WmInfo *wmPtr;
     int c;
     size_t length;
+    TkDisplay *dispPtr = ((TkWindow *) tkwin)->dispPtr;
 
     if (argc < 2) {
 	wrongNumArgs:
@@ -1145,10 +1146,10 @@ Tk_WmCmd(clientData, interp, argc, argv)
 	    return TCL_ERROR;
 	}
 	if (argc == 2) {
-	    Tcl_SetResult(interp, ((winPtr->dispPtr->wmTracing) ? "on" : "off"), TCL_STATIC);
+	    Tcl_SetResult(interp, ((dispPtr->wmTracing) ? "on" : "off"), TCL_STATIC);
 	    return TCL_OK;
 	}
-	return Tcl_GetBoolean(interp, argv[2], &winPtr->dispPtr->wmTracing);
+	return Tcl_GetBoolean(interp, argv[2], &dispPtr->wmTracing);
     }
 
     if (argc < 3) {
