@@ -67,6 +67,13 @@ foreach test {
     incr i
 }
 
+test canvas-1.40 {configure throws error on bad option} {
+    set res [list [catch {.c configure -gorp foo}]]
+    .c create rect 10 10 100 100
+    lappend res [catch {.c configure -gorp foo}]
+    set res
+} [list 1 1]
+
 
 catch {destroy .c}
 canvas .c -width 60 -height 40 -scrollregion {0 0 200 150} -bd 0 \

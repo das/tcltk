@@ -623,7 +623,7 @@ proc tkIconList_Reset {w} {
 namespace eval ::tk::dialog {}
 namespace eval ::tk::dialog::file {}
 
-# tkFDialog --
+# ::tk::dialog::file::tkFDialog --
 #
 #	Implements the TK file selection dialog. This dialog is used when
 #	the tk_strictMotif flag is set to false. This procedure shouldn't
@@ -1155,7 +1155,7 @@ proc ::tk::dialog::file::SetFilter {w type} {
     ::tk::dialog::file::UpdateWhenIdle $w
 }
 
-# tkFDialogResolveFile --
+# tk::dialog::file::ResolveFile --
 #
 #	Interpret the user's text input in a file selection dialog.
 #	Performs:
@@ -1187,7 +1187,7 @@ proc ::tk::dialog::file::SetFilter {w type} {
 #	directory may not be the same as context, because text may contain
 #	a subdirectory name
 #
-proc tkFDialogResolveFile {context text defaultext} {
+proc ::tk::dialog::file::ResolveFile {context text defaultext} {
 
     set appPWD [pwd]
 
@@ -1292,7 +1292,7 @@ proc ::tk::dialog::file::ActivateEnt {w} {
     upvar ::tk::dialog::file::[winfo name $w] data
 
     set text [string trim [$data(ent) get]]
-    set list [tkFDialogResolveFile $data(selectPath) $text \
+    set list [::tk::dialog::file::ResolveFile $data(selectPath) $text \
 		  $data(-defaultextension)]
     set flag [lindex $list 0]
     set path [lindex $list 1]
