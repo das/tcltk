@@ -459,7 +459,7 @@ ConsoleCmd(clientData, interp, argc, argv)
 {
     ConsoleInfo *info = (ConsoleInfo *) clientData;
     char c;
-    int length;
+    size_t length;
     int result;
     Tcl_Interp *consoleInterp;
     Tcl_DString dString;
@@ -536,7 +536,7 @@ InterpreterCmd(clientData, interp, argc, argv)
 {
     ConsoleInfo *info = (ConsoleInfo *) clientData;
     char c;
-    int length;
+    size_t length;
     int result;
     Tcl_Interp *otherInterp;
 
