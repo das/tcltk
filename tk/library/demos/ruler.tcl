@@ -52,11 +52,11 @@ set demo_rulerInfo(normalStyle) "-fill black"
 if {[winfo depth $c] > 1} {
     set demo_rulerInfo(activeStyle) "-fill red -stipple {}"
     set demo_rulerInfo(deleteStyle) [list -fill red \
-	    -stipple @[file join $tk_demoDirectory images gray25.bmp]]
+	    -stipple @[file join $tk_demoDirectory images gray25.xbm]]
 } else {
     set demo_rulerInfo(activeStyle) "-fill black -stipple {}"
     set demo_rulerInfo(deleteStyle) [list -fill black \
-	    -stipple @[file join $tk_demoDirectory images gray25.bmp]]
+	    -stipple @[file join $tk_demoDirectory images gray25.xbm]]
 }
 
 $c create line 1c 0.5c 1c 1c 13c 1c 13c 0.5c -width 1

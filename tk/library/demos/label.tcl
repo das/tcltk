@@ -34,6 +34,6 @@ pack $w.left.l1 $w.left.l2 $w.left.l3 -side top -expand yes -pady 2 -anchor w
 
 # Main widget program sets variable tk_demoDirectory
 label $w.right.bitmap -borderwidth 2 -relief sunken \
-	-bitmap @[file join $tk_demoDirectory images face.bmp]
+	-bitmap @[file join $tk_demoDirectory images face.xbm]
 label $w.right.caption -text "Tcl/Tk Proprietor"
 pack $w.right.bitmap $w.right.caption -side top
