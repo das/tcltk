@@ -173,7 +173,6 @@ LIBS		= @LIBS@ gdi32.lib comdlg32.lib
 RMDIR		= rm -rf
 MKDIR		= mkdir -p
 SHELL		= @SHELL@
-mkinstalldirs	= $(SHELL) $(top_srcdir)/mkinstalldirs
 RM		= rm -f
 COPY		= cp
 CC_OBJNAME	= @CC_OBJNAME@
@@ -365,7 +364,7 @@ install-binaries:
 	    echo "	$$i"; \
 	    if [ ! -d $$i ] ; then \
 		echo "Making directory $$i"; \
-		$(mkinstalldirs) $$i; \
+		$(MKDIR) $$i; \
 		chmod 755 $$i; \
 		else true; \
 		fi; \
@@ -397,7 +396,7 @@ install-libraries:
 	    echo "	$$i"; \
 	    if [ ! -d $$i ] ; then \
 		echo "Making directory $$i"; \
-		$(mkinstalldirs) $$i; \
+		$(MKDIR) $$i; \
 		chmod 755 $$i; \
 		else true; \
 		fi; \
@@ -430,7 +429,7 @@ install-demos:
 	    echo "	$$i"; \
 	    if [ ! -d $$i ] ; then \
 		echo "Making directory $$i"; \
-		$(mkinstalldirs) $$i; \
+		$(MKDIR) $$i; \
 		chmod 755 $$i; \
 		else true; \
 		fi; \
