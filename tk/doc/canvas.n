@@ -165,13 +165,13 @@ item or a tag that selects zero or more items.
 \fItagOrId\fR may contain a logical expressions of
 tags by using operators: '&&', '||', '^' '!', and parenthezised
 subexpressions.  For example:
-.nf
+.CS
       .c find withtag {(a&&!b)|(!a&&b)}
-.fo
+.CE
 or equivalently:
-.nf
+.CS
       .c find withtag {a^b}
-.fo
+.CE
 will find only those items with either "a" or "b" tags, but not both.
 .PP
 Some widget commands only operate on a single item at a
