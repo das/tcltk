@@ -138,6 +138,11 @@ This form is similar to the one above, except that the source is
 used as mask also.  This means that the cursor's background is
 transparent.  This form of the command will not work on Macintosh
 or Windows computers.
+.TP
+\fB@\fIsourceName\fR
+This form only works on Windows, and will load a Windows system
+cursor (\fB.ani\fR or \fB.cur\fR) from the file specified in
+\fIsourceName\fR.
 .PP
 .VS 8.1
 \fBTk_GetCursor\fR is identical to \fBTk_AllocCursorFromObj\fR except

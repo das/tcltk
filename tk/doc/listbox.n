@@ -433,6 +433,10 @@ Most people will probably want to use \fBbrowse\fR mode for
 single selections and \fBextended\fR mode for multiple selections;
 the other modes appear to be useful only in special situations.
 .PP
+Any time the selection changes in the listbox, the virtual event
+\fB<<ListboxSelect>>\fR will be generated.  It is easiest to bind
+to this event to be made aware of any changes to listbox selection.
+.PP
 In addition to the above behavior, the following additional behavior
 is defined by the default bindings:
 .IP [1]
