@@ -26,7 +26,7 @@
 #
 
 ROOT		= ..
-TCLDIR		= ..\..\tcl8.3
+TCLDIR		= ..\..\tcl8.4
 INSTALLDIR      = c:\progra~1\tcl
 
 # Set this to the appropriate value of /MACHINE: for your platform
@@ -56,8 +56,8 @@ NODEBUG = 1
 TCLNAMEPREFIX = tcl
 TKNAMEPREFIX = tk
 WISHNAMEPREFIX = wish
-VERSION = 83
-DOTVERSION = 8.3
+VERSION = 84
+DOTVERSION = 8.4
 
 TCLSTUBPREFIX = $(TCLNAMEPREFIX)stub
 TKSTUBPREFIX  = $(TKNAMEPREFIX)stub
