@@ -946,6 +946,14 @@ test grid-13.1 {-in} {
 } {1 {Window can't be managed in itself}}
 grid_reset 13.1
 
+test grid-13.1.1 {-in} {
+    frame .f -bg red
+    list [winfo manager .f] \
+         [catch {grid .f -in .f} err] $err \
+         [winfo manager .f]
+} {{} 1 {Window can't be managed in itself} {}}
+grid_reset 13.1.1
+
 test grid-13.2 {-in} {
     frame .f -bg red
     list [catch "grid .f -in .bad" msg] $msg

@@ -87,6 +87,12 @@ test place-4.1 {ConfigureSlave procedure, bad -in options} {
 } [list 1 "can't place .t.f2 relative to itself"]
 test place-4.2 {ConfigureSlave procedure, bad -in option} {
     place forget .t.f2
+    list [winfo manager .t.f2] \
+        [catch {place .t.f2 -in .t.f2} err] $err \
+        [winfo manager .t.f2]
+} {{} 1 {can't place .t.f2 relative to itself} {}}
+test place-4.3 {ConfigureSlave procedure, bad -in option} {
+    place forget .t.f2
     list [catch {place .t.f2 -in .} msg] $msg
 } [list 1 "can't place .t.f2 relative to ."]
 
