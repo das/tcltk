@@ -866,7 +866,7 @@ Tk_HandleEvent(eventPtr)
 	    winPtr->flags |= TK_CHECKED_IC;
 	    if (dispPtr->inputMethod != NULL) {
 #if TK_XIM_SPOT
-		if (dispPtr->flags & TK_USE_XIM_SPOT) {
+		if (dispPtr->flags & TK_DISPLAY_XIM_SPOT) {
 		    XVaNestedList preedit_attr;
 		    XPoint spot = {0, 0};
 

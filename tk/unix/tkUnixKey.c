@@ -123,7 +123,7 @@ TkpGetString(winPtr, eventPtr, dsPtr)
 	/*
 	 * Adjust the XIM caret position.
 	 */
-	if (winPtr->dispPtr->flags & TK_USE_XIM_SPOT) {
+	if (winPtr->dispPtr->flags & TK_DISPLAY_XIM_SPOT) {
 	    spot.x = caretX; spot.y = caretY;
 	    preedit_attr = XVaCreateNestedList(0, XNSpotLocation, &spot, NULL);
 	    XSetICValues(winPtr->inputContext,
