@@ -53,12 +53,12 @@ bind Text <B1-Motion> {
 bind Text <Double-1> {
     set tk::Priv(selectMode) word
     tk::TextSelectTo %W %x %y
-    catch {%W mark set insert sel.last}
+    catch {%W mark set insert sel.first}
 }
 bind Text <Triple-1> {
     set tk::Priv(selectMode) line
     tk::TextSelectTo %W %x %y
-    catch {%W mark set insert sel.last}
+    catch {%W mark set insert sel.first}
 }
 bind Text <Shift-1> {
     tk::TextResetAnchor %W @%x,%y
