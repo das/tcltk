@@ -131,4 +131,6 @@ TkpDisplayWarning(msg, title)
 	    (WCHAR *) Tcl_DStringValue(&titleString),
 	    MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL
 	    | MB_SETFOREGROUND | MB_TOPMOST);
+    Tcl_DStringFree(&msgString);
+    Tcl_DStringFree(&titleString);
 }
