@@ -435,13 +435,14 @@ specified then the command returns the current title for the
 If \fImaster\fR is specified, then the window manager is informed
 that \fIwindow\fR is a transient window (e.g. pull-down menu) working
 on behalf of \fImaster\fR (where \fImaster\fR is the
-path name for a top-level window).  Some window managers will use
-this information to manage \fIwindow\fR specially.  If \fImaster\fR
+path name for a top-level window).  If \fImaster\fR
 is specified as an empty string then \fIwindow\fR is marked as not
-being a transient window any more.  If \fImaster\fR is specified,
-then the command returns an empty string.  Otherwise the command
+being a transient window any more.  Otherwise the command
 returns the path name of \fIwindow\fR's current master, or an
 empty string if \fIwindow\fR isn't currently a transient window.
+A transient window will mirror state changes in the master and
+inherit the state of the master when initially mapped. It is an
+error to attempt to make a window a transient of itself.
 .TP
 \fBwm withdraw \fIwindow\fR
 Arranges for \fIwindow\fR to be withdrawn from the screen.  This

@@ -5185,7 +5185,8 @@ address TIP 72 changes (64-bit) in Tcl (fellows)
 --- Released 8.4a4, March 5, 2002 --- See ChangeLog for details ---
 
 2002-05-27 (feature change) [wm transient .t .t] now raises an error (dejong)
+	*** POTENTIAL INCOMPATIBILITY ***
 
 2002-06-12 (feature change) A transient toplevel now mirrors state
 changes in the master. (dejong)
-
+	*** POTENTIAL INCOMPATIBILITY ***
