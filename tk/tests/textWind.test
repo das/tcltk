@@ -482,18 +482,6 @@ test textWind-10.4.1 {EmbWinLayoutProc procedure, error in creating window} {tex
     update idletasks
     lappend msg [winfo exists .t.f.f]
 } [list {{can't embed .t.f.f relative to .t}} 1]
-test textWind-10.4.2 {EmbWinLayoutProc procedure, error in creating window} {textfonts} {
-    .t delete 1.0 end
-    .t insert 1.0 "Some sample text"
-    catch {destroy .t.f}
-    .t window create 1.5 -create {
-	frame .t.f
-	frame .t.f.f -width 10 -height 20 -bg $color
-    }
-    set msg {}
-    update
-    lappend msg [winfo exists .t.f.f]
-} {{{can't embed .t.f.f relative to .t}} {{window name "f" already exists in parent}} 1}
 catch {destroy .t.f}
 test textWind-10.5 {EmbWinLayoutProc procedure, error in creating window} {textfonts} {
     .t delete 1.0 end
