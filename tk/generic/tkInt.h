@@ -898,6 +898,7 @@ extern TkDisplay *tkDisplayList;
 
 #define META_MASK	(AnyModifier<<1)
 #define ALT_MASK	(AnyModifier<<2)
+#define EXTENDED_MASK	(AnyModifier<<3)
 
 /*
  * Object types not declared in tkObj.c need to be mentioned here so

@@ -425,6 +425,7 @@ static ModInfo modArray[] = {
     {"Meta",		META_MASK,	0},
     {"M",		META_MASK,	0},
     {"Alt",		ALT_MASK,	0},
+    {"Extended",	EXTENDED_MASK,	0},
     {"B1",		Button1Mask,	0},
     {"Button1",		Button1Mask,	0},
     {"B2",		Button2Mask,	0},
