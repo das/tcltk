@@ -223,6 +223,8 @@ foreach mode $modes {
 
 	test filebox-2.6 "$command command" {nonUnixUserInteraction} {
 	    toplevel .t1; toplevel .t2
+	    wm geometry .t1 +0+0
+	    wm geometry .t2 +0+0
 	    ToPressButton .t1 ok
 	    set choice {}
 	    lappend choice [$command \

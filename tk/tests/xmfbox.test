@@ -69,6 +69,7 @@ test xmfbox-1.1 {tkMotifFDialog_Create, -parent switch} {unixOnly} {
 test xmfbox-1.2 {tkMotifFDialog_Create, -parent switch} {unixOnly} {
     catch {unset foo}
     toplevel .bar
+    wm geometry .bar +0+0
     set x [tkMotifFDialog_Create foo open {-parent .bar}]
     catch {destroy $x}
     catch {destroy .bar}

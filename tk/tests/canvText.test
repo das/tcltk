@@ -243,6 +243,7 @@ test canvText-7.8 {DisplayText procedure: not selected} {
 test canvText-7.9 {DisplayText procedure: select end} {
     catch {destroy .t}
     toplevel .t
+    wm geometry .t +0+0
     canvas .t.c
     pack .t.c
     set id [.t.c create text 0 0 -text Dummy -anchor nw]

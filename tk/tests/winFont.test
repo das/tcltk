@@ -20,6 +20,7 @@ catch {destroy .b}
 catch {font delete xyz}
 
 toplevel .b
+wm geometry .b +0+0
 update idletasks
 
 set courier {Courier 14}
