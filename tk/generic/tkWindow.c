@@ -1049,8 +1049,6 @@ Tk_CreateAnonymousWindow(interp, parent, screenName)
 	if (NameWindow(interp, winPtr, parentPtr, (char *)NULL) != TCL_OK) {
 	    Tk_DestroyWindow((Tk_Window) winPtr);
 	    return NULL;
-	} else {
-            return (Tk_Window) winPtr;
 	}
 	return (Tk_Window) winPtr;
     } else {

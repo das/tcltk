@@ -4344,8 +4344,6 @@ GetSpinboxElement(sbPtr, x, y)
 	} else {
 	    return SEL_BUTTONUP;
 	}
-    } else {
-	return SEL_ENTRY;
     }
     return SEL_ENTRY;
 }
