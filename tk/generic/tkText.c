@@ -1955,10 +1955,14 @@ TextSearchCmd(textPtr, interp, argc, argv)
 	     * account for embedded windows or any other non-textual info.
 	     * Scan through the line's segments again to adjust both
 	     * matchChar and matchCount.
+	     *
+	     * We will walk through the segments of this line until we have
+	     * either reached the end of the match or we have reached the end
+	     * of the line.
 	     */
 
 	    for (segPtr = linePtr->segPtr, leftToScan = matchByte;
-		    leftToScan >= 0; segPtr = segPtr->nextPtr) {
+		    leftToScan >= 0 && segPtr; segPtr = segPtr->nextPtr) {
 		if (segPtr->typePtr != &tkTextCharType) {
 		    matchByte += segPtr->size;
 		    continue;
