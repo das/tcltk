@@ -461,6 +461,9 @@ $(TMPDIR)\tkSquare.obj: $(ROOT)\generic\tkSquare.c
 $(TMPDIR)\winMain.obj: $(ROOT)\win\winMain.c
 	$(cc32) $(WISH_CFLAGS) -Fo$@ $?
 
+$(TMPDIR)\tkStubLib.obj : $(GENERICDIR)\tkStubLib.c
+	$(cc32) $(TK_CFLAGS) -DSTATIC_BUILD -Fo$@ $?
+
 #
 # Implicit rules
 #

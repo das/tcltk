@@ -516,7 +516,6 @@ TkWinChildProc(hwnd, message, wParam, lParam)
 
 	case WM_CREATE:
 	case WM_ERASEBKGND:
-	case WM_WINDOWPOSCHANGED:
 	    result = 0;
 	    break;
 
