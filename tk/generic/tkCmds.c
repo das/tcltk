@@ -349,7 +349,7 @@ Tk_BindtagsObjCmd(clientData, interp, objc, objv)
 	} else {
 	    for (i = 0; i < winPtr->numTags; i++) {
 		Tcl_ListObjAppendElement(interp, listPtr,
-			Tcl_NewStringObj(winPtr->tagPtr[i], -1));
+			Tcl_NewStringObj((char *)winPtr->tagPtr[i], -1));
 	    }
 	}
 	Tcl_SetObjResult(interp, listPtr);

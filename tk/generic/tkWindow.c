@@ -105,7 +105,7 @@ static TkCmd commands[] = {
     {"event",		NULL,			Tk_EventObjCmd,		1, 1},
     {"focus",		NULL,			Tk_FocusObjCmd,		1, 1},
     {"font",		NULL,			Tk_FontObjCmd,		1, 1},
-    {"grab",		Tk_GrabCmd,		NULL,			0, 1},
+    {"grab",		NULL,			Tk_GrabObjCmd,		0, 1},
     {"grid",		Tk_GridCmd,		NULL,			1, 1},
     {"image",		NULL,			Tk_ImageObjCmd,		1, 1},
     {"lower",		NULL,			Tk_LowerObjCmd,		1, 1},
