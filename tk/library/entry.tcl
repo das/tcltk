@@ -188,6 +188,7 @@ bind Entry <Control-backslash> {
     %W selection clear
 }
 bind Entry <KeyPress> {
+    tk::CancelRepeat
     tk::EntryInsert %W %A
 }
 
