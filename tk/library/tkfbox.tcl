@@ -42,6 +42,7 @@ proc tkIconList {w args} {
 proc tkIconList_Index {w i} {
     upvar #0 $w data
     upvar #0 $w:itemList itemList
+    if {![info exists data(list)]} {set data(list) {}}
     switch -regexp -- $i {
 	"^-?[0-9]+$" {
 	    if { $i < 0 } {
