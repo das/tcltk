@@ -327,6 +327,18 @@ Returns a decimal string giving the y-coordinate, in \fIwindow\fR's
 parent, of the
 upper-left corner of \fIwindow\fR's border (or \fIwindow\fR if it
 has no border).
+.SH EXAMPLE
+Print where the mouse pointer is and what window it is currently over:
+.CS
+lassign [\fBwinfo\fR pointerxy .] x y
+puts -nonewline "Mouse pointer at ($x,$y) which is "
+set win [\fBwinfo\fR containing $x $y]
+if {$win eq ""} {
+    puts "over no window"
+} else {
+    puts "over $win"
+}
+.CE
 
 .SH KEYWORDS
 atom, children, class, geometry, height, identifier, information, interpreters,
