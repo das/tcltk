@@ -44,7 +44,7 @@ extern "C" {
  */
 
 #define TK_MAJOR_VERSION   8
-#define TK_MINOR_VERSION   1
+#define TK_MINOR_VERSION   2
 #define TK_RELEASE_LEVEL   TCL_BETA_RELEASE
 #define TK_RELEASE_SERIAL  1
 
