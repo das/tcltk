@@ -276,13 +276,12 @@ GetCursor(interp, tkwin, string)
     cursorPtr->objRefCount = 0;
     cursorPtr->otherTable = &dispPtr->cursorNameTable;
     cursorPtr->hashPtr = nameHashPtr;
-	cursorPtr->nextPtr = NULL;
+    cursorPtr->nextPtr = existingCursorPtr;
     cursorPtr->idHashPtr = Tcl_CreateHashEntry(&dispPtr->cursorIdTable, 
             (char *) cursorPtr->cursor, &new);
     if (!new) {
 	panic("cursor already registered in Tk_GetCursor");
     }
-    cursorPtr->nextPtr = existingCursorPtr;
     Tcl_SetHashValue(nameHashPtr, cursorPtr);
     Tcl_SetHashValue(cursorPtr->idHashPtr, cursorPtr);
 
@@ -384,6 +383,7 @@ Tk_GetCursorFromData(interp, tkwin, source, mask, width, height,
     cursorPtr->objRefCount = 0;
     cursorPtr->idHashPtr = Tcl_CreateHashEntry(&dispPtr->cursorIdTable, 
             (char *) cursorPtr->cursor, &new);
+    cursorPtr->nextPtr = NULL;
 
     if (!new) {
 	panic("cursor already registered in Tk_GetCursorFromData");
