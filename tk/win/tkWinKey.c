@@ -584,14 +584,6 @@ TkpSetKeycodeAndState(tkwin, keySym, eventPtr)
             eventPtr->xkey.keycode = (KeyCode) (result & 0xff);
 	}
     }
-    {
-        /* Debug log */
-        FILE *fp = fopen("c:\\temp\\tklog.txt", "a");
-        if (fp != NULL) {
-            fprintf(fp, "TkpSetKeycode. Keycode %d State %d Keysym %d\n", eventPtr->xkey.keycode, eventPtr->xkey.state, keySym);
-            fclose(fp);
-        }
-    }
 }
 
 /*
