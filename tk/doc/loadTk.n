@@ -1,4 +1,3 @@
-'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 1995-1996 Sun Microsystems, Inc.
 '\"
@@ -77,3 +76,7 @@ safe(n), interp(n), library(n), load(n), package(n), source(n), unknown(n)
 .SH KEYWORDS
 alias, auto\-loading, auto_mkindex, load, master interpreter, safe
 interpreter, slave interpreter, source
+
+'\" Local Variables:
+'\" mode: nroff
+'\" End:
