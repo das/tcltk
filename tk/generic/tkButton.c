@@ -1348,6 +1348,9 @@ TkButtonWorldChanged(instanceData)
     } else {
 	gcValues.foreground = gcValues.background;
 	mask = GCForeground;
+	if (butPtr->compound != COMPOUND_NONE) {
+	    mask |= GCFont;
+	}
 	if (butPtr->gray == None) {
 	    butPtr->gray = Tk_GetBitmap(NULL, butPtr->tkwin, "gray50");
 	}
