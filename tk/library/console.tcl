@@ -131,6 +131,9 @@ proc ::tk::ConsoleInit {} {
 
     focus $con
 
+    # Avoid listing this console in [winfo interps]
+    if {[info command ::send] eq "::send"} {rename ::send {}}
+
     wm protocol . WM_DELETE_WINDOW { wm withdraw . }
     wm title . [mc "Console"]
     flush stdout
