@@ -450,19 +450,15 @@ static void		PhotoOptionCleanupProc _ANSI_ARGS_((
 /*
  *----------------------------------------------------------------------
  *
- * Tk_CreateOldPhotoImageFormat, Tk_CreatePhotoImageFormat --
+ * PhotoFormatThreadExitProc --
  *
- *	This procedure is invoked by an image file handler to register
- *	a new photo image format and the procedures that handle the
- *	new format.  The procedure is typically invoked during
- *	Tcl_AppInit.
+ *	Clean up the registered list of photo formats.
  *
  * Results:
  *	None.
  *
  * Side effects:
- *	The new image file format is entered into a table used in the
- *	photo image "read" and "write" subcommands.
+ *	The thread's linked lists of photo image formats is deleted.
  *
  *----------------------------------------------------------------------
  */
