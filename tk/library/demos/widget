@@ -220,7 +220,7 @@ proc addFormattedText {formattedText} {
 	    continue
 	}
 	if {[string match @@* $line]} {
-	    set style [string range $line 1 end]
+	    set style [string range $line 2 end]
 	    continue
 	}
 	if {!$isNL} {
