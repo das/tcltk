@@ -18,12 +18,12 @@ label \- Create and manipulate label widgets
 .SO
 \-activebackground         \-activeforeground         \-anchor
 \-background               \-bitmap                   \-borderwidth
-\-cursor                   \-font                     \-foreground
-\-highlightbackground      \-highlightcolor           \-highlightthickness
-\-image                    \-justify                  \-padx
-\-pady                     \-relief                   \-takefocus
-\-text                     \-textvariable             \-underline
-\-wraplength
+\-cursor                   \-disabledforeground       \-font
+\-foreground               \-highlightbackground      \-highlightcolor
+\-highlightthickness       \-image                    \-justify
+\-padx                     \-pady                     \-relief
+\-takefocus                \-text                     \-textvariable
+\-underline                \-wraplength
 .SE
 .SH "WIDGET-SPECIFIC OPTIONS"
 .OP \-height height Height
