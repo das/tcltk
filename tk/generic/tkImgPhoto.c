@@ -1976,7 +1976,6 @@ ImgPhotoGet(tkwin, masterData)
     Colormap colormap;
     int mono, nRed, nGreen, nBlue;
     XVisualInfo visualInfo, *visInfoPtr;
-    XRectangle validBox;
     char buf[TCL_INTEGER_SPACE * 3];
     int numVisuals;
     XColor *white, *black;
