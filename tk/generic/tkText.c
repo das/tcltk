@@ -1624,8 +1624,10 @@ TextSearchCmd(textPtr, interp, argc, argv)
 	Tcl_UtfToLower(pattern);
     }
 
+    Tcl_DStringInit(&line);
     if (TkTextGetIndex(interp, textPtr, argv[i+1], &index) != TCL_OK) {
-	return TCL_ERROR;
+	code = TCL_ERROR;
+	goto done;
     }
     numLines = TkBTreeNumLines(textPtr->tree);
     startingLine = TkBTreeLineIndex(index.linePtr);
@@ -1642,7 +1644,8 @@ TextSearchCmd(textPtr, interp, argc, argv)
     }
     if (argsLeft == 1) {
 	if (TkTextGetIndex(interp, textPtr, argv[i+2], &stopIndex) != TCL_OK) {
-	    return TCL_ERROR;
+	    code = TCL_ERROR;
+	    goto done;
 	}
 	stopLine = TkBTreeLineIndex(stopIndex.linePtr);
 	if (!backwards && (stopLine == numLines)) {
@@ -1666,12 +1669,12 @@ TextSearchCmd(textPtr, interp, argc, argv)
     } else {
 	regexp = Tcl_RegExpCompile(interp, pattern);
 	if (regexp == NULL) {
-	    return TCL_ERROR;
+	    code = TCL_ERROR;
+	    goto done;
 	}
     }
     lineNum = startingLine;
     code = TCL_OK;
-    Tcl_DStringInit(&line);
     for (passes = 0; passes < 2; ) {
 	if (lineNum >= numLines) {
 	    /*
