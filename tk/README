@@ -20,6 +20,7 @@ and improved Macintosh embedding code.
 3. Adopted Nijtmans' compatibility patch to add reserved fields to
 certain Tk structures.  This means extensions should work with
 either vanilla Tk or a dash-patched version.
+4. Modifications to support the Macintosh Appearance manager.
 
 1. Introduction
 ---------------
