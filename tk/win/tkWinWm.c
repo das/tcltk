@@ -4282,9 +4282,18 @@ WmProc(hwnd, message, wParam, lParam)
 	    ActivateEvent *eventPtr;
 	    winPtr = GetTopLevel((HWND) wParam);
 
+	    if (winPtr && (TkGrabState(winPtr) != TK_GRAB_EXCLUDED)) {
+		/*
+		 * This allows us to pass the message onto the
+		 * native menus [Bug: 2272]
+		 */
+		result = DefWindowProc(hwnd, message, wParam, lParam);
+		goto done;
+	    }
+
 	    /*
-	     * Don't activate the window yet since there may be grabs
-	     * that should take precedence.  Instead we need to queue
+	     * Don't activate the window yet since there is a grab
+	     * that takes precedence.  Instead we need to queue
 	     * an event so we can check the grab state right before we
 	     * handle the mouse event.
 	     */
