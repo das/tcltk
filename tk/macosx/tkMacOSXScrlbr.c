@@ -637,7 +637,7 @@ ThumbActionProc()
                 NULL,
                 &trackingResult);
             
-        if ((err==noErr) 
+        if ((err == noErr) 
                 && ((trackingResult == kMouseTrackingMouseDragged)
                 || (trackingResult == kMouseTrackingMouseMoved))) {
         /*
@@ -681,7 +681,7 @@ ThumbActionProc()
             Tcl_GlobalEval(interp, cmdString.string);
             Tcl_Release((ClientData) interp);
         }
-    } while ((err==noErr) && trackingResult!=kMouseTrackingMouseReleased );
+    } while ((err == noErr) && trackingResult != kMouseTrackingMouseReleased);
 
     Tcl_DStringFree(&cmdString);
     return;

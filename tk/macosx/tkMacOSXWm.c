@@ -5029,7 +5029,7 @@ TkMacOSXUnregisterMacWindow(
     if (!windowHashInit) {
 	panic("TkMacOSXUnregisterMacWindow: unmapping before inited");
     }
-    entryPtr=Tcl_FindHashEntry(&windowTable,(char *) macWinPtr);
+    entryPtr = Tcl_FindHashEntry(&windowTable,(char *) macWinPtr);
     if (!entryPtr) {
           fprintf(stderr,"Unregister:failed to find window %08x\n", 
                  (int) macWinPtr );
@@ -5253,15 +5253,15 @@ TkMacOSXWindowOffset(
 
     if (!strucRgn) {
         if(!(strucRgn = NewRgn())) {
-           err=MemError();
+           err = MemError();
         }
     }
     if (!contRgn) {
         if(!(contRgn = NewRgn())) {
-           err=MemError();
+           err = MemError();
         }
     }
-    if (err==noErr) {
+    if (err == noErr) {
         GetWindowRegion(wRef, kWindowStructureRgn, strucRgn);
         GetWindowRegion(wRef, kWindowContentRgn, contRgn);
         GetRegionBounds(strucRgn,&strucRect);
