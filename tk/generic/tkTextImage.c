@@ -314,7 +314,7 @@ EmbImageConfigure(textPtr, eiPtr, objc, objv)
     unsigned int len;		/* length of image name */
     CONST char **argv;
    
-    argv = GetStringsFromObjs(objc, objv);
+    argv = TkGetStringsFromObjs(objc, objv);
     if (Tk_ConfigureWidget(textPtr->interp, textPtr->tkwin, configSpecs,
 	    objc, argv, (char *) &eiPtr->body.ei,TK_CONFIG_ARGV_ONLY)
 	    != TCL_OK) {
