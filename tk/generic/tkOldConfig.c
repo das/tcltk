@@ -184,7 +184,11 @@ Tk_ConfigureWidget(interp, tkwin, specs, argc, argv, widgRec, flags)
 		    return TCL_ERROR;
 		}
 	    } else {
-		value = specPtr->defValue;
+		if (specPtr->defValue != NULL) {
+		    value = Tk_GetUid(specPtr->defValue);
+		} else {
+		    value = NULL;
+		}
 		if ((value != NULL) && !(specPtr->specFlags
 			& TK_CONFIG_DONT_SET_DEFAULT)) {
 		    if (DoConfig(interp, tkwin, specPtr, value, 1, widgRec) !=
