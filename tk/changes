@@ -4260,3 +4260,9 @@ Tcl.  See the bind and event man pages for more details.  The listbox
 and text widgets' default bindings have been updated to understand
 MouseWheel events. (RJ)
 
+10/12/98 (performance improvement) Added hash table to canvas widget
+that holds numeric ids for items.  The hash table makes item lookup
+almost constant time which improves certain canvas operations
+(exspecially for canvases with large number items).  Thanks to Mark
+Weissman <weissman@gte.com> and Jan Nijtmans <Jan.Nijtmans@wxs.nl>
+for submitting this improvement.  (RJ)

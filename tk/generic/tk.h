@@ -670,10 +670,13 @@ typedef struct Tk_Item  {
 					 * pixel drawn in item.  Item area
 					 * includes x1 and y1 but not x2
 					 * and y2. */
+    struct Tk_Item *prevPtr;		/* Previous in display list of all
+					 * items in this canvas. Later items
+					 * in list are drawn just below earlier
+					 * ones. */
     int   reserved1;			/* This padding is for compatibility */
     char *reserved2;			/* with Jan Nijtmans dash patch */
     int   reserved3;
-    char *reserved4;
 
     /*
      *------------------------------------------------------------------
