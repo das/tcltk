@@ -382,7 +382,7 @@ test: binaries $(TKTEST)
 	./$(TKTEST) "$(ROOT_DIR_NATIVE)/tests/all.tcl" $(TESTFLAGS) \
 	| ./$(CAT32)
 
-runtest: tktest
+runtest: $(TKTEST)
 	@TCL_LIBRARY="$(TCL_SRC_DIR_NATIVE)/library"; export TCL_LIBRARY; \
 	TK_LIBRARY="$(ROOT_DIR_NATIVE)/library"; export TK_LIBRARY; \
 	PATH="$(PATH):$(TCL_BIN_DIR)"; export PATH; \
