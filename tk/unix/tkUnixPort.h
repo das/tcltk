@@ -204,14 +204,7 @@ extern int errno;
  */
 
 #define TkpPrintWindowId(buf,w) \
-	sprintf((buf), "0x%x", (unsigned int) (w))
-
-/*
- * TkpScanWindowId is just an alias for Tcl_GetInt on Unix.
- */
-
-#define TkpScanWindowId(i,s,wp) \
-	Tcl_GetInt((i),(s),(int *)(wp))
+	sprintf((buf), "%#08lx", (unsigned long) (w))
 
 /*
  * This macro indicates that entry and text widgets should display

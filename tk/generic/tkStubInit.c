@@ -362,6 +362,7 @@ TkIntPlatStubs tkIntPlatStubs = {
     TkUnixContainerId, /* 5 */
     TkUnixDoOneXEvent, /* 6 */
     TkUnixSetMenubar, /* 7 */
+    TkpScanWindowId, /* 8 */
 #endif /* UNIX */
 #ifdef __WIN32__
     TkAlignImageData, /* 0 */

@@ -21,6 +21,11 @@
 #include "tkWinInt.h"
 #endif
 
+#if !defined(__WIN32__) && !defined(MAC_TCL) /* UNIX */
+#include "tkUnixInt.h"
+#endif
+
+
 /*
  * File structure:
  *
