@@ -96,8 +96,14 @@ TkGetServerInfo(interp, tkwin)
 
     os.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
     GetVersionEx(&os);
-    sprintf(buffer, "Windows %d.%d %d Win32", os.dwMajorVersion,
-	    os.dwMinorVersion, os.dwBuildNumber);
+    sprintf(buffer, "Windows %d.%d %d %s", os.dwMajorVersion,
+	    os.dwMinorVersion, os.dwBuildNumber,
+#ifdef _WIN64
+	    "Win64"
+#else
+	    "Win32"
+#endif
+	);
     Tcl_SetResult(interp, buffer, TCL_VOLATILE);
 }
 
@@ -351,7 +357,7 @@ TkpOpenDisplay(display_name)
     twdPtr->window.winPtr = NULL;
     twdPtr->window.handle = NULL;
     screen->root = (Window)twdPtr;
- 
+
     /*
      * On windows, when creating a color bitmap, need two pieces of 
      * information: the number of color planes and the number of 
