@@ -22,9 +22,8 @@ fi
 srcdir=`cd $srcdir ; pwd`
 TK_SRC_DIR=`cd $srcdir/..; pwd`
 
-AC_PROG_RANLIB
-SC_ENABLE_GCC
 AC_PROG_CC
+AC_PROG_RANLIB
 
 #------------------------------------------------------------------------
 # I'm not sure why these need to come before all of the other tests
