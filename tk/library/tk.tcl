@@ -443,3 +443,113 @@ proc ::tk::TabToWindow {w} {
     focus $w
 }
 
+# ::tk::UnderlineAmpersand --
+# This procedure takes some text with ampersand and returns
+# text w/o ampersand and position of the ampersand.
+# Double ampersands are converted to single ones.
+# Position returned is -1 when there is no ampersand.
+#
+proc ::tk::UnderlineAmpersand {text} {
+    set idx [string first "&" $text]
+    if {$idx >= 0} {
+	set underline $idx
+	# ignore "&&"
+	while {[string match "&" [string index $text [expr {$idx + 1}]]]} {
+	    set base [expr {$idx + 2}]
+	    set idx  [string first "&" [string range $text $base end]]
+	    if {$idx < 0} {
+		break
+	    } else {
+		set underline [expr {$underline + $idx + 1}]
+		incr idx $base
+	    }
+	}
+    }
+    if {$idx >= 0} {
+	regsub -all -- {&([^&])} $text {\1} text
+    } 
+    return [list $text $idx]
+}
+
+# ::tk::SetAmpText -- 
+# Given widget path and text with "magic ampersands",
+# sets -text and -underline options for the widget
+#
+proc ::tk::SetAmpText {widget text} {
+    foreach {newtext under} [::tk::UnderlineAmpersand $text] {
+	$widget configure -text $newtext -underline $under
+    }
+}
+
+# ::tk::AmpWidget --
+# Creates new widget, turning -text option into -text and
+# -underline options, returned by ::tk::UnderlineAmpersand.
+#
+proc ::tk::AmpWidget {class path args} {
+    set wcmd [list $class $path]
+    foreach {opt val} $args {
+	if {[string equal $opt {-text}]} {
+	    foreach {newtext under} [::tk::UnderlineAmpersand $val] {
+		lappend wcmd -text $newtext -underline $under
+	    }
+	} else {
+	    lappend wcmd $opt $val
+	}
+    }
+    eval $wcmd
+    if {$class=="button"} {
+	bind $path <<AltUnderlined>> [list $path invoke]
+    }
+    return $path
+}
+
+# ::tk::FindAltKeyTarget --
+# search recursively through the hierarchy of visible widgets
+# to find button or label which has $char as underlined character
+#
+proc ::tk::FindAltKeyTarget {path char} {
+    switch [winfo class $path] {
+	Button -
+	Label {
+	    if {[string equal -nocase $char \
+		[string index [$path cget -text] \
+		[$path cget -underline]]]} {return $path} else {return {}}
+	}
+	default {
+	    foreach child \
+		[concat [grid slaves $path] \
+		[pack slaves $path] \
+		[place slaves $path] ] {
+		if {""!=[set target [::tk::FindAltKeyTarget $child $char]]} {
+		    return $target
+		}
+	    }
+	}
+    }
+    return {}
+}
+
+# ::tk::AltKeyInDialog --
+# <Alt-Key> event handler for standard dialogs. Sends <<AltUnderlined>>
+# to button or label which has appropriate underlined character
+#
+proc ::tk::AltKeyInDialog {path key} {
+    set target [::tk::FindAltKeyTarget $path $key]
+    if { $target == ""} return
+    event generate $target <<AltUnderlined>>
+}
+
+# ::tk::mcmaxamp --
+# Replacement for mcmax, used for texts with "magic ampersand" in it.
+#
+
+proc ::tk::mcmaxamp {args} {
+    set maxlen 0
+    foreach arg $args {
+	set length [string length [lindex [::tk::UnderlineAmpersand [mc $arg]] 0]]
+	if {$length>$maxlen} {
+	    set maxlen $length
+	}
+    }
+    return $maxlen
+}
