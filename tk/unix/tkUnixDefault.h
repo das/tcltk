@@ -208,6 +208,7 @@
  * Defaults for listboxes:
  */
 
+#define DEF_LISTBOX_ACTIVE_STYLE	"underline"
 #define DEF_LISTBOX_BG_COLOR		NORMAL_BG
 #define DEF_LISTBOX_BG_MONO		WHITE
 #define DEF_LISTBOX_BORDER_WIDTH	"2"
