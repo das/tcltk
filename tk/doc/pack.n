@@ -263,8 +263,8 @@ the stacking order of either the master or the slave.
 # Make the widgets
 label .t \-text "This widget is at the top"    \-bg red
 label .b \-text "This widget is at the bottom" \-bg green
-label .l \-text "Left\nHand\nSide"
-label .r \-text "Right\nHand\nSide"
+label .l \-text "Left\\nHand\\nSide"
+label .r \-text "Right\\nHand\\nSide"
 text .mid
 \.mid insert end "This layout is like Java's BorderLayout"
 # Lay them out
