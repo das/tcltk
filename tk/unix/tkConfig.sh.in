@@ -32,7 +32,7 @@ TK_DBGX=@TK_DBGX@
 TK_LIB_FILE='@TK_LIB_FILE@'
 
 # Additional libraries to use when linking Tk.
-TK_LIBS='@XLIBSW@ @DL_LIBS@ @LIBS@ @MATH_LIBS@'
+TK_LIBS='@XLIBSW@ @LIBS@ @TCL_LIBS@'
 
 # Top-level directory in which Tcl's platform-independent files are
 # installed.
