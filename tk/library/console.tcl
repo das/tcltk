@@ -76,8 +76,13 @@ proc tkConsoleInit {} {
     scrollbar .sb -command ".console yview"
     pack .sb -side right -fill both
     pack .console -fill both -expand 1 -side left
-    if {[string equal $tcl_platform(platform) "macintosh"]} {
-        .console configure -font {Monaco 9 normal} -highlightthickness 0
+    switch -exact $tcl_platform(platform) {
+	"macintosh" {
+	    .console configure -font {Monaco 9 normal} -highlightthickness 0
+	}
+	"windows" {
+	    .console configure -font systemfixed
+	}
     }
 
     tkConsoleBind .console
@@ -467,7 +472,7 @@ proc tkConsoleExit {} {
 proc tkConsoleAbout {} {
     global tk_patchLevel
     tk_messageBox -type ok -message "Tcl for Windows
-Copyright \251 1999 Scriptics Corporation
+Copyright \251 2000 Scriptics Corporation
 
 Tcl [info patchlevel]
 Tk $tk_patchLevel"
