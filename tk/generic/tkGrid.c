@@ -1202,7 +1202,7 @@ GridReqProc(clientData, tkwin)
     register Gridder *gridPtr = (Gridder *) clientData;
 
     gridPtr = gridPtr->masterPtr;
-    if (!(gridPtr->flags & REQUESTED_RELAYOUT)) {
+    if (gridPtr && !(gridPtr->flags & REQUESTED_RELAYOUT)) {
 	gridPtr->flags |= REQUESTED_RELAYOUT;
 	Tcl_DoWhenIdle(ArrangeGrid, (ClientData) gridPtr);
     }
