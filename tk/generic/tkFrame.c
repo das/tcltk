@@ -565,14 +565,20 @@ CreateFrame(clientData, interp, objc, objv, type, appName)
     if (tkwin != NULL) {
 	new = Tk_CreateWindowFromPath(interp, tkwin, Tcl_GetString(objv[1]),
 		screenName);
+    } else if (appName == NULL) {
+	/*
+	 * This occurs when someone tried to create a frame/toplevel
+	 * while we are being destroyed.  Let an error be thrown.
+	 */
+
+	Tcl_AppendResult(interp, "unable to create widget \"",
+		Tcl_GetString(objv[1]), "\"", (char *) NULL);
+	new = NULL;
     } else {
 	/*
 	 * We were called from Tk_Init;  create a new application.
 	 */
 
-	if (appName == NULL) {
-	    panic("TkCreateFrame didn't get application name");
-	}
 	new = TkCreateMainWindow(interp, screenName, appName);
     }
     if (new == NULL) {
