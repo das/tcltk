@@ -50,7 +50,7 @@ Display the console window.  Precisely equivalent to deiconifying the
 Query or modify the title of the console window.  If \fIstring\fR is
 not specified, queries the title of the console window, and sets the
 title of the console window to \fIstring\fR otherwise.  Precisely
-equivalent to using the \fBwm title\fI command in the console
+equivalent to using the \fBwm title\fR command in the console
 interpreter.
 
 .SH "ACCESS TO THE MAIN INTERPRETER"
