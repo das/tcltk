@@ -51,12 +51,14 @@ static int indicatorDimensions[2];
 				/* The dimensions of the indicator space
 				 * in a menu entry. Calculated at init
 				 * time to save time. */
+
 static Tcl_HashTable commandTable;
 				/* A map of command ids to menu entries */
 static int inPostMenu;		/* We cannot be re-entrant like X Windows. */
 static WORD lastCommandID;	/* The last command ID we allocated. */
 static HWND menuHWND;		/* A window to service popup-menu messages
 				 * in. */
+
 static int oldServiceMode;	/* Used while processing a menu; we need
 				 * to set the event mode specially when we
 				 * enter the menu processing modal loop
@@ -66,10 +68,13 @@ static TkMenu *modalMenuPtr;	/* The menu we are processing inside the modal
 				 * active items when menus go away since
 				 * Windows does not see fit to give this
 				 * to us when it sends its WM_MENUSELECT. */
-static OSVERSIONINFO versionInfo;
-				/* So we don't have to keep doing this */
 static Tcl_HashTable winMenuTable;
 				/* Need this to map HMENUs back to menuPtrs */
+
+static OSVERSIONINFO versionInfo;
+				/* So we don't have to keep doing this */
+
+TCL_DECLARE_MUTEX(winmenuMutex)
 
 /*
  * The following are default menu value strings.
@@ -2755,6 +2760,12 @@ void
 TkpMenuInit()
 {
     WNDCLASS wndClass;
+
+    Tcl_MutexLock(&winMenuMutex);
+
+
+    Tcl_MutexUnlock(&winMenuMutex);
+
 
     Tcl_InitHashTable(&winMenuTable, TCL_ONE_WORD_KEYS);
     Tcl_InitHashTable(&commandTable, TCL_ONE_WORD_KEYS);

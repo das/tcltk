@@ -122,7 +122,7 @@ XSetSelectionOwner(display, selection, owner, time)
      * It expects a Tk_Window, even though it only needs a Tk_Display.
      */
 
-    tkwin = (Tk_Window)tkMainWindowList->winPtr;
+    tkwin = (Tk_Window) TkGetMainInfoList()->winPtr;
 
     if (selection == Tk_InternAtom(tkwin, "CLIPBOARD")) {
 

@@ -222,14 +222,6 @@ typedef struct Gridder {
 #define DONT_PROPAGATE		2
 
 /*
- * Hash table used to map from Tk_Window tokens to corresponding
- * Grid structures:
- */
-
-static Tcl_HashTable gridHashTable;
-static int initialized = 0;
-
-/*
  * Prototypes for procedures used only in this file:
  */
 
@@ -1739,10 +1731,11 @@ GetGrid(tkwin)
     register Gridder *gridPtr;
     Tcl_HashEntry *hPtr;
     int new;
+    TkDisplay *dispPtr = ((TkWindow *) tkwin)->dispPtr;
 
-    if (!initialized) {
-	initialized = 1;
-	Tcl_InitHashTable(&gridHashTable, TCL_ONE_WORD_KEYS);
+    if (!dispPtr->gridInit) {
+	Tcl_InitHashTable(&dispPtr->gridHashTable, TCL_ONE_WORD_KEYS);
+	dispPtr->gridInit = 1;
     }
 
     /*
@@ -1750,7 +1743,7 @@ GetGrid(tkwin)
      * then create a new one.
      */
 
-    hPtr = Tcl_CreateHashEntry(&gridHashTable, (char *) tkwin, &new);
+    hPtr = Tcl_CreateHashEntry(&dispPtr->gridHashTable, (char *) tkwin, &new);
     if (!new) {
 	return (Gridder *) Tcl_GetHashValue(hPtr);
     }
@@ -2070,6 +2063,7 @@ GridStructureProc(clientData, eventPtr)
     XEvent *eventPtr;			/* Describes what just happened. */
 {
     register Gridder *gridPtr = (Gridder *) clientData;
+    TkDisplay *dispPtr = ((TkWindow *) gridPtr->tkwin)->dispPtr;
 
     if (eventPtr->type == ConfigureNotify) {
 	if (!(gridPtr->flags & REQUESTED_RELAYOUT)) {
@@ -2097,7 +2091,7 @@ GridStructureProc(clientData, eventPtr)
 	    nextPtr = gridPtr2->nextPtr;
 	    gridPtr2->nextPtr = NULL;
 	}
-	Tcl_DeleteHashEntry(Tcl_FindHashEntry(&gridHashTable,
+	Tcl_DeleteHashEntry(Tcl_FindHashEntry(&dispPtr->gridHashTable,
 		(char *) gridPtr->tkwin));
 	if (gridPtr->flags & REQUESTED_RELAYOUT) {
 	    Tk_CancelIdleCall(ArrangeGrid, (ClientData) gridPtr);

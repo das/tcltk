@@ -14,7 +14,11 @@
 
 #include "tkMenu.h"
 
-static int postCommandGeneration;
+typedef struct ThreadSpecificData {
+    int postCommandGeneration;
+} ThreadSpecificData;
+static Tcl_ThreadDataKey dataKey;
+
 
 static int			PreprocessMenu _ANSI_ARGS_((TkMenu *menuPtr));
 
@@ -43,6 +47,8 @@ PreprocessMenu(menuPtr)
 {
     int index, result, finished;
     TkMenu *cascadeMenuPtr;
+    ThreadSpecificData *tsdPtr = (ThreadSpecificData *) 
+            Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
    
     Tcl_Preserve((ClientData) menuPtr);
     
@@ -74,9 +80,9 @@ PreprocessMenu(menuPtr)
             	    cascadeMenuPtr =
             	    	    menuPtr->entries[index]->childMenuRefPtr->menuPtr;
             	    if (cascadeMenuPtr->postCommandGeneration != 
-            	    	    postCommandGeneration) {
+            	    	    tsdPtr->postCommandGeneration) {
             	    	cascadeMenuPtr->postCommandGeneration = 
-            	    		postCommandGeneration;
+            	    		tsdPtr->postCommandGeneration;
             	        result = PreprocessMenu(cascadeMenuPtr);
             	        if (result != TCL_OK) {
             	            goto done;
@@ -128,7 +134,10 @@ int
 TkPreprocessMenu(menuPtr)
     TkMenu *menuPtr;
 {
-    postCommandGeneration++;
-    menuPtr->postCommandGeneration = postCommandGeneration;
+    ThreadSpecificData *tsdPtr = (ThreadSpecificData *) 
+            Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
+
+    tsdPtr->postCommandGeneration++;
+    menuPtr->postCommandGeneration = tsdPtr->postCommandGeneration;
     return PreprocessMenu(menuPtr);
 }

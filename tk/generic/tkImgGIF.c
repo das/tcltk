@@ -61,6 +61,17 @@ typedef struct mFile {
 #include "tkPort.h"
 
 /*
+ * 			 HACK ALERT!!  HACK ALERT!!  HACK ALERT!!
+ * This code is hard-wired for reading from files.  In order to read
+ * from a data stream, we'll trick fread so we can reuse the same code
+ */
+
+typedef struct ThreadSpecificData {
+    int fromData;
+} ThreadSpecificData;
+static Tcl_ThreadDataKey dataKey;
+
+/*
  * The format record for the GIF file format:
  */
 
@@ -98,14 +109,6 @@ Tk_PhotoImageFormat tkImgFmtGIF = {
 #define MAX_LWZ_BITS		12
 #define LM_to_uint(a,b)         (((b)<<8)|(a))
 #define ReadOK(file,buffer,len)	(Fread(buffer, len, 1, file) != 0)
-
-/*
- * 			 HACK ALERT!!  HACK ALERT!!  HACK ALERT!!
- * This code is hard-wired for reading from files.  In order to read
- * from a data stream, we'll trick fread so we can reuse the same code
- */
- 
-static int fromData=0;
 
 /*
  * Prototypes for local procedures defined in this file:
@@ -443,15 +446,18 @@ StringReadGIF(interp,string,formatString,imageHandle,
     int  width, height;		/*   image to copy */
     int srcX, srcY;
 {
-	int result;
-	MFile handle;
-	mInit((unsigned char *)string,&handle);
-	fromData = 1;
-	result = FileReadGIF(interp, (Tcl_Channel) &handle, "inline data",
-		formatString, imageHandle, destX, destY, width, height,
-		srcX, srcY);
-	fromData = 0;
-	return(result);
+    int result;
+    MFile handle;
+    ThreadSpecificData *tsdPtr = (ThreadSpecificData *) 
+            Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
+
+    mInit((unsigned char *)string,&handle);
+    tsdPtr->fromData = 1;
+    result = FileReadGIF(interp, (Tcl_Channel) &handle, "inline data",
+            formatString, imageHandle, destX, destY, width, height,
+            srcX, srcY);
+    tsdPtr->fromData = 0;
+    return(result);
 }
 
 /*
@@ -1055,7 +1061,10 @@ Fread(dst, hunk, count, chan)
     size_t hunk,count;		/* how many */
     Tcl_Channel chan;
 {
-    if (fromData) {
+    ThreadSpecificData *tsdPtr = (ThreadSpecificData *) 
+            Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
+
+    if (tsdPtr->fromData) {
 	return(Mread(dst, hunk, count, (MFile *) chan));
     } else {
 	return Tcl_Read(chan, (char *) dst, (int) (hunk * count));

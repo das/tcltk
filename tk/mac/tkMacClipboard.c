@@ -241,7 +241,7 @@ TkSuspendClipboard()
     char *buffer, *p, *endPtr, *buffPtr;
     long length;
 
-    dispPtr = tkDisplayList;
+    dispPtr = TkGetDisplayList();
     if ((dispPtr == NULL) || !dispPtr->clipboardActive) {
 	return;
     }

@@ -242,7 +242,7 @@ Tk_GrabCmd(clientData, interp, argc, argv)
 			TCL_STATIC);
 	    }
 	} else {
-	    for (dispPtr = tkDisplayList; dispPtr != NULL;
+	    for (dispPtr = TkGetDisplayList(); dispPtr != NULL;
 		    dispPtr = dispPtr->nextPtr) {
 		if (dispPtr->eventualGrabWinPtr != NULL) {
 		    Tcl_AppendElement(interp,

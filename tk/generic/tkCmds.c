@@ -851,7 +851,7 @@ Tk_UpdateObjCmd(clientData, interp, objc, objv)
 	while (Tcl_DoOneEvent(flags) != 0) {
 	    /* Empty loop body */
 	}
-	for (dispPtr = tkDisplayList; dispPtr != NULL;
+	for (dispPtr = TkGetDisplayList(); dispPtr != NULL;
 		dispPtr = dispPtr->nextPtr) {
 	    XSync(dispPtr->display, False);
 	}

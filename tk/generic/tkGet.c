@@ -20,6 +20,19 @@
 #include "tkPort.h"
 
 /*
+ * One of these structures is created per thread to store 
+ * thread-specific data.  In this case, it is used to house the 
+ * Tk_Uids used by each thread.  The "dataKey" below is used to 
+ * locate the ThreadSpecificData for the current thread.
+ */
+
+typedef struct ThreadSpecificData {
+    int initialized;
+    Tcl_HashTable uidTable;
+} ThreadSpecificData;
+static Tcl_ThreadDataKey dataKey;
+
+/*
  * The following tables defines the string values for reliefs, which are
  * used by Tk_GetAnchorFromObj and Tk_GetJustifyFromObj.
  */
@@ -28,13 +41,6 @@ static char *anchorStrings[] = {"n", "ne", "e", "se", "s", "sw", "w", "nw",
 	"center", (char *) NULL};
 static char *justifyStrings[] = {"left", "right", "center", (char *) NULL};
 
-/*
- * The hash table below is used to keep track of all the Tk_Uids created
- * so far.
- */
-
-static Tcl_HashTable uidTable;
-static int initialized = 0;
 
 /*
  *----------------------------------------------------------------------
@@ -500,13 +506,16 @@ Tk_GetUid(string)
     CONST char *string;		/* String to convert. */
 {
     int dummy;
+    ThreadSpecificData *tsdPtr = (ThreadSpecificData *) 
+            Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
+    Tcl_HashTable *tablePtr = &tsdPtr->uidTable;
 
-    if (!initialized) {
-	Tcl_InitHashTable(&uidTable, TCL_STRING_KEYS);
-	initialized = 1;
+    if (!tsdPtr->initialized) {
+	Tcl_InitHashTable(tablePtr, TCL_STRING_KEYS);
+	tsdPtr->initialized = 1;
     }
-    return (Tk_Uid) Tcl_GetHashKey(&uidTable,
-	    Tcl_CreateHashEntry(&uidTable, string, &dummy));
+    return (Tk_Uid) Tcl_GetHashKey(tablePtr,
+	    Tcl_CreateHashEntry(tablePtr, string, &dummy));
 }
 
 /*

@@ -76,12 +76,6 @@ typedef struct TkDisplayFocusInfo {
 } DisplayFocusInfo;
 
 /*
- * Global used for debugging.
- */
-
-int tclFocusDebug = 0;
-
-/*
  * The following magic value is stored in the "send_event" field of
  * FocusIn and FocusOut events that are generated in this file.  This
  * allows us to separate "real" events coming from the server from
@@ -494,7 +488,7 @@ TkFocusFilterEvent(winPtr, eventPtr)
 	if (eventPtr->xcrossing.focus &&
                 (displayFocusPtr->focusWinPtr == NULL)
 		&& !(winPtr->flags & TK_EMBEDDED)) {
-	    if (tclFocusDebug) {
+	    if (dispPtr->focusDebug) {
 		printf("Focussed implicitly on %s\n",
 			newFocusPtr->pathName);
 	    }
@@ -519,7 +513,7 @@ TkFocusFilterEvent(winPtr, eventPtr)
 
 	if ((dispPtr->implicitWinPtr != NULL)
 		&& !(winPtr->flags & TK_EMBEDDED)) {
-	    if (tclFocusDebug) {
+	    if (dispPtr->focusDebug) {
 		printf("Defocussed implicit Async\n");
 	    }
 	    GenerateFocusEvents(displayFocusPtr->focusWinPtr,
@@ -828,7 +822,7 @@ TkFocusDeadWindow(winPtr)
 	     */
 
 	    if (dispPtr->implicitWinPtr == winPtr) {
-		if (tclFocusDebug) {
+		if (dispPtr->focusDebug) {
 		    printf("releasing focus to root after %s died\n",
 			    tlFocusPtr->topLevelPtr->pathName);
 		}
@@ -856,7 +850,7 @@ TkFocusDeadWindow(winPtr)
 	    tlFocusPtr->focusWinPtr = tlFocusPtr->topLevelPtr;
 	    if ((displayFocusPtr->focusWinPtr == winPtr)
 		    && !(tlFocusPtr->topLevelPtr->flags & TK_ALREADY_DEAD)) {
-		if (tclFocusDebug) {
+		if (dispPtr->focusDebug) {
 		    printf("forwarding focus to %s after %s died\n",
 			    tlFocusPtr->topLevelPtr->pathName,
 			    winPtr->pathName);
@@ -951,7 +945,7 @@ FocusMapProc(clientData, eventPtr)
     if (eventPtr->type == VisibilityNotify) {
 	displayFocusPtr = FindDisplayFocusInfo(winPtr->mainPtr,
 		winPtr->dispPtr);
-	if (tclFocusDebug) {
+	if (winPtr->dispPtr->focusDebug) {
 	    printf("auto-focussing on %s, force %d\n", winPtr->pathName,
 		    displayFocusPtr->forceFocus);
 	}

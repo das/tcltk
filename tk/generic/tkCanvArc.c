@@ -176,6 +176,9 @@ Tk_ItemType tkArcType = {
 static Tk_Uid arcUid =  NULL;
 static Tk_Uid chordUid =  NULL;
 static Tk_Uid pieSliceUid = NULL;
+
+TCL_DECLARE_MUTEX(arcMutex)   /* Used to guard access to Tk_Uids above.*/
+
 
 /*
  *--------------------------------------------------------------
@@ -221,10 +224,14 @@ CreateArc(interp, canvas, itemPtr, argc, argv)
      * Carry out once-only initialization.
      */
 
-    if (arcUid == NULL) {
-	arcUid = Tk_GetUid("arc");
-	chordUid = Tk_GetUid("chord");
-	pieSliceUid = Tk_GetUid("pieslice");
+    if (pieSliceUid == NULL) {
+        Tcl_MutexLock(&arcMutex);
+	if (pieSliceUid == NULL) {
+	    arcUid = Tk_GetUid("arc");
+	    chordUid = Tk_GetUid("chord");
+	    pieSliceUid = Tk_GetUid("pieslice");
+	}
+        Tcl_MutexUnlock(&arcMutex);
     }
 
     /*

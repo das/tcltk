@@ -159,13 +159,6 @@ static Tk_Uid allUid = NULL;
 static Tk_Uid currentUid = NULL;
 
 /*
- * Statistics counters:
- */
-
-static int numIdSearches;
-static int numSlowSearches;
-
-/*
  * Prototypes for procedures defined later in this file:
  */
 
@@ -2213,6 +2206,11 @@ StartTagSearch(canvasPtr, tag, searchPtr)
     Tk_Uid *tagPtr;
     Tk_Uid uid;
     int count;
+    TkWindow *tkwin;
+    TkDisplay *dispPtr;
+
+    tkwin = (TkWindow *) canvasPtr->tkwin;
+    dispPtr = tkwin->dispPtr;
 
     /*
      * Initialize the search.
@@ -2231,15 +2229,15 @@ StartTagSearch(canvasPtr, tag, searchPtr)
     if (isdigit(UCHAR(*tag))) {
 	char *end;
 	Tcl_HashEntry *entryPtr;
-	
-	numIdSearches++;
+
+	dispPtr->numIdSearches++;
 	id = strtoul(tag, &end, 0);
 	if (*end == 0) {
 	    itemPtr = canvasPtr->hotPtr;
-	    lastPtr = canvasPtr->hotPrevPtr;
+            lastPtr = canvasPtr->hotPrevPtr;
 	    if ((itemPtr == NULL) || (itemPtr->id != id) || (lastPtr == NULL)
 		    || (lastPtr->nextPtr != itemPtr)) {
-		numSlowSearches++;
+		dispPtr->numSlowSearches++;
 		entryPtr = Tcl_FindHashEntry(&canvasPtr->idTable, (char *) id);
 		if (entryPtr != NULL) {
 		    itemPtr = (Tk_Item *)Tcl_GetHashValue(entryPtr);

@@ -100,10 +100,14 @@ TkpDefineNativeBitmaps()
     char * name;
     BuiltInIcon *builtInPtr;
     NativeIcon *nativeIconPtr;
+    Tcl_HashTable *tablePtr;
+    ThreadSpecificData *tsdPtr = (ThreadSpecificData *) 
+            Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
     
     for (builtInPtr = builtInIcons; builtInPtr->name != NULL; builtInPtr++) {
 	name = Tk_GetUid(builtInPtr->name);
-	predefHashPtr = Tcl_CreateHashEntry(&tkPredefBitmapTable, name, &new);
+	tablePtr = TkGetBitmapPredefTable();
+	predefHashPtr = Tcl_CreateHashEntry(tablePtr, name, &new);
 	if (!new) {
 	    continue;
 	}

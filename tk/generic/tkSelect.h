@@ -146,14 +146,6 @@ typedef struct TkSelInProgress {
 } TkSelInProgress;
 
 /*
- * Declarations for variables shared among the selection-related files:
- */
-
-extern TkSelInProgress *pendingPtr;
-				/* Topmost search in progress, or
-				 * NULL if none. */
-
-/*
  * Chunk size for retrieving selection.  It's defined both in
  * words and in bytes;  the word size is used to allocate
  * buffer space that's guaranteed to be word-aligned and that
@@ -167,6 +159,11 @@ extern TkSelInProgress *pendingPtr;
  * Declarations for procedures that are used by the selection-related files
  * but shouldn't be used anywhere else in Tk (or by Tk clients):
  */
+
+extern TkSelInProgress * 
+                        TkSelGetInProgress _ANSI_ARGS_((void));
+extern void             TkSelSetInProgress _ANSI_ARGS_((
+                            TkSelInProgress *pendingPtr));
 
 extern void		TkSelClearSelection _ANSI_ARGS_((Tk_Window tkwin,
 			    XEvent *eventPtr));
