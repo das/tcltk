@@ -397,6 +397,14 @@ shell: $(WISH)
 	PATH="$(PATH):$(TCL_BIN_DIR)"; export PATH; \
 	./$(WISH) $(SCRIPT)
 
+# This target can be used to run wish inside either gdb or insight
+gdb: $(WISH)
+	@echo "set env TCL_LIBRARY=$(TCL_SRC_DIR_NATIVE)/library" > gdb.run
+	@echo "set env TK_LIBRARY=$(ROOT_DIR_NATIVE)/library" >> gdb.run
+	PATH="$(PATH):$(TCL_BIN_DIR)"; export PATH; \
+	gdb ./$(WISH) --command=gdb.run
+	rm gdb.run
+
 install: all install-binaries install-libraries install-doc install-demos
 
 install-binaries: binaries
