@@ -292,6 +292,10 @@ proc ::tk::ConsoleBind {w} {
     ## We really didn't want the newline insertion
     bind Console <Control-Key-o> {}
 
+    # For the moment, transpose isn't enabled until the console
+    # gets and overhaul of how it handles input -- hobbs
+    bind Console <Control-Key-t> {}
+
     # Ignore all Alt, Meta, and Control keypresses unless explicitly bound.
     # Otherwise, if a widget binding for one of these is defined, the
 
@@ -393,10 +397,6 @@ proc ::tk::ConsoleBind {w} {
 	} else {
 	    %W delete insert {insert lineend}
 	}
-    }
-    bind Console <<Console_Transpose>> {
-	## Transpose current and previous chars
-	if {[%W compare insert > promptEnd]} { ::tk::TextTranspose %W }
     }
     bind Console <<Console_Clear>> {
 	## Clear console display
