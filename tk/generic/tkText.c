@@ -1817,7 +1817,7 @@ TextEventProc(clientData, eventPtr)
 	 */
 	DestroyText(textPtr);
     } else if ((eventPtr->type == FocusIn) || (eventPtr->type == FocusOut)) {
-	if (eventPtr->xfocus.detail != NotifyInferior
+	if (eventPtr->xfocus.detail == NotifyInferior
 	    || eventPtr->xfocus.detail == NotifyAncestor
 	    || eventPtr->xfocus.detail == NotifyNonlinear
 	    ) {
