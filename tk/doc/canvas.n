@@ -169,7 +169,7 @@ item or a tag that selects zero or more items.
 tags by using operators: '&&', '||', '^' '!', and parenthezised
 subexpressions.  For example:
 .CS
-      .c find withtag {(a&&!b)|(!a&&b)}
+      .c find withtag {(a&&!b)||(!a&&b)}
 .CE
 or equivalently:
 .CS
