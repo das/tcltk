@@ -1044,7 +1044,6 @@ ReconfigureIndividualMenu(
     int count;
     int index;
     TkMenuEntry *mePtr;
-    Str255 itemText;
     int parentDisabled = 0;
 
     for (mePtr = menuPtr->menuRefPtr->parentEntryPtr; mePtr != NULL;
@@ -2158,9 +2157,11 @@ TkMacOSXDispatchMenuEvent(
                 TkMenu *menuPtr = (TkMenu *) Tcl_GetHashValue(commandEntryPtr);
                 if ((currentAppleMenuID == menuID)
                     && (index > menuPtr->numEntries + 1)) {
-                    Str255 itemText;
-
-                    GetMenuItemText(GetMenuHandle(menuID), index, itemText);
+                    /* 
+                     * We don't need to do anything here, the standard
+                     * Application event handler will open the built-in
+                     * Apple menu item for us.
+                     */
                     result = TCL_OK;
                 } else {
                     struct MenuCommandHandlerData *data
