@@ -105,6 +105,7 @@ TKTESTOBJS = \
 	$(TMPDIR)\tkTest.obj \
 	$(TMPDIR)\tkSquare.obj \
 	$(TMPDIR)\testMain.obj \
+	$(TMPDIR)\tkWinTest.obj \
 	$(TCLLIBDIR)\tclThreadTest.obj
 
 XLIBOBJS = \
@@ -139,7 +140,6 @@ TKOBJS = \
 	$(TMPDIR)\tkWinRegion.obj \
 	$(TMPDIR)\tkWinScrlbr.obj \
 	$(TMPDIR)\tkWinSend.obj \
-	$(TMPDIR)\tkWinTest.obj \
 	$(TMPDIR)\tkWinWindow.obj \
 	$(TMPDIR)\tkWinWm.obj \
 	$(TMPDIR)\tkWinX.obj \
@@ -420,6 +420,9 @@ $(TMPDIR)\testMain.obj: $(ROOT)\win\winMain.c
 	$(cc32) $(WISH_CFLAGS) -DTK_TEST -Fo$@ $?
 
 $(TMPDIR)\tkTest.obj: $(ROOT)\generic\tkTest.c
+	$(cc32) $(WISH_CFLAGS) -Fo$@ $?
+
+$(TMPDIR)\tkWinTest.obj: $(ROOT)\generic\tkWinTest.c
 	$(cc32) $(WISH_CFLAGS) -Fo$@ $?
 
 $(TMPDIR)\tkSquare.obj: $(ROOT)\generic\tkSquare.c
