@@ -55,7 +55,9 @@ typedef struct Node {
     int numChildren;			/* Number of children of this node. */
     int numLines;			/* Total number of lines (leaves) in
 					 * the subtree rooted here. */
-    int numPixels;
+    int numPixels;                      /* Total number of vertical
+                                         * display pixels in the
+                                         * subtree rooted here. */
 } Node;
 
 /*
@@ -2837,17 +2839,46 @@ TkTextIsElided(textPtr, indexPtr, elideInfo)
 	}
     }
 
-    if (LOTSA_TAGS < infoPtr->numTags) {
-	ckfree((char *) infoPtr->tagCnts);
-	ckfree((char *) infoPtr->tagPtrs);
-    }
     elide = infoPtr->elide;
-    
+
     if (elideInfo == NULL) {
+        if (LOTSA_TAGS < infoPtr->numTags) {
+	    ckfree((char *) infoPtr->tagCnts);
+	    ckfree((char *) infoPtr->tagPtrs);
+	}
+    
 	ckfree((char*) infoPtr);
     }
 
     return elide;
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkTextFreeElideInfo --
+ *
+ *	This is a utility procedure used to free up any memory
+ *	allocated by the TkTextIsElided function above.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	Memory may be freed.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TkTextFreeElideInfo(elideInfo)
+    TkTextElideInfo *elideInfo; /* Free any allocated memory in this
+                                 * structure. */
+{
+    if (LOTSA_TAGS < elideInfo->numTags) {
+	ckfree((char*)elideInfo->tagCnts);
+	ckfree((char*)elideInfo->tagPtrs);
+    }
 }
 
 /*

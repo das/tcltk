@@ -1012,6 +1012,8 @@ EXTERN TkTextIndex *	TkTextMakeCharIndex _ANSI_ARGS_((TkTextBTree tree,
 			    TkTextIndex *indexPtr));
 EXTERN int		TkTextMeasureDown _ANSI_ARGS_((TkText *textPtr,
 			    TkTextIndex *srcPtr, int distance));
+EXTERN void		TkTextFreeElideInfo _ANSI_ARGS_((
+			    TkTextElideInfo *infoPtr));
 EXTERN int		TkTextIsElided _ANSI_ARGS_((CONST TkText *textPtr,
 			    CONST TkTextIndex *indexPtr, 
 			    TkTextElideInfo *infoPtr));

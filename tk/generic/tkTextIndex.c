@@ -1473,6 +1473,7 @@ TkTextIndexForwChars(textPtr, srcPtr, charCount, dstPtr, type)
     }
   forwardCharDone:
     if (infoPtr != NULL) {
+	TkTextFreeElideInfo(infoPtr);
 	ckfree((char*) infoPtr);
     }
 }
@@ -1662,6 +1663,7 @@ TkTextIndexCount(textPtr, indexPtr1, indexPtr2, type)
     }
   countDone:
     if (infoPtr != NULL) {
+	TkTextFreeElideInfo(infoPtr);
 	ckfree((char*) infoPtr);
     }
     return count;
@@ -1920,6 +1922,7 @@ TkTextIndexBackChars(textPtr, srcPtr, charCount, dstPtr, type)
     }
   backwadCharDone:
     if (infoPtr != NULL) {
+	TkTextFreeElideInfo(infoPtr);
 	ckfree((char*) infoPtr);
     }
 }
