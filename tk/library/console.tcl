@@ -548,9 +548,10 @@ proc ::tk::ConsoleInsert {w s} {
 # string -	The string to be displayed.
 
 proc ::tk::ConsoleOutput {dest string} {
-    .console insert output $string $dest
+    set w .console
+    $w insert output $string $dest
     ::tk::console::ConstrainBuffer $w $::tk::console::maxLines
-    .console see insert
+    $w see insert
 }
 
 # ::tk::ConsoleExit --
