@@ -195,7 +195,9 @@ proc ::tk::MessageBox {args} {
 	    set labels [list &Yes &No &Cancel]
 	}
 	default {
-	    error "bad -type value \"$data(-type)\": must be abortretryignore, ok, okcancel, retrycancel, yesno, or yesnocancel"
+	    error "bad -type value \"$data(-type)\": must be\
+		    abortretryignore, ok, okcancel, retrycancel,\
+		    yesno, or yesnocancel"
 	}
     }
     
@@ -244,6 +246,8 @@ proc ::tk::MessageBox {args} {
     wm title $w $data(-title)
     wm iconname $w Dialog
     wm protocol $w WM_DELETE_WINDOW { }
+    # There is only one background colour for the whole dialog
+    set bg [$w cget -background]
 
     # Message boxes should be transient with respect to their parent so that
     # they always stay on top of the parent window.  But some window managers
@@ -260,9 +264,9 @@ proc ::tk::MessageBox {args} {
 	unsupported::MacWindowStyle style $w dBoxProc
     }
 
-    frame $w.bot
+    frame $w.bot -background $bg
     pack $w.bot -side bottom -fill both
-    frame $w.top
+    frame $w.top -background $bg
     pack $w.top -side top -fill both -expand 1
     if {[string compare $tcl_platform(platform) "macintosh"]} {
 	$w.bot configure -relief raised -bd 1
@@ -280,13 +284,15 @@ proc ::tk::MessageBox {args} {
 	option add *Dialog.msg.font {Times 18} widgetDefault
     }
 
-    label $w.msg -anchor nw -justify left -text $data(-message)
+    label $w.msg -anchor nw -justify left -text $data(-message) \
+	    -background $bg
     if {[string compare $data(-icon) ""]} {
 	if {[string equal $tcl_platform(platform) "macintosh"] \
 		|| ([winfo depth $w] < 4) || $tk_strictMotif} {
-	    label $w.bitmap -bitmap $data(-icon)
+	    label $w.bitmap -bitmap $data(-icon) -background $bg
 	} else {
-	    canvas $w.bitmap -width 32 -height 32 -highlightthickness 0
+	    canvas $w.bitmap -width 32 -height 32 -highlightthickness 0 \
+		    -background $bg
 	    switch $data(-icon) {
 		error {
 		    $w.bitmap create oval 0 0 31 31 -fill red -outline black
@@ -336,8 +342,8 @@ proc ::tk::MessageBox {args} {
 	    set opts [list -text $capName]
 	}
 
-	eval tk::AmpWidget \
-	    button [list $w.$name] $opts [list -command [list set tk::Priv(button) $name]]
+	eval [list tk::AmpWidget button $w.$name] $opts \
+		[list -command [list set tk::Priv(button) $name]]
 
 	if {[string equal $name $data(-default)]} {
 	    $w.$name configure -default active
