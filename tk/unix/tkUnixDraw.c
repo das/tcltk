@@ -94,7 +94,11 @@ TkScrollWindow(tkwin, gc, x, y, width, height, dx, dy, damageRgn)
     }
     Tk_RestrictEvents(oldProc, oldArg, &dummy);
 
-    return XEmptyRegion((Region) damageRgn) ? 0 : 1;
+    if (XEmptyRegion((Region) damageRgn)) {
+	return 0;
+    } else {
+	return 1;
+    }
 }
 
 /*
