@@ -219,7 +219,7 @@ TkpScanWindowId(interp, string, idPtr)
 #ifdef _WIN64
 	(sscanf(string, "0x%p", &number) != 1) &&
 #endif
-	Tcl_GetInt(interp, string, (int *)&number) != TCL_OK) {
+	Tcl_GetInt(interp, (char *) string, (int *)&number) != TCL_OK) {
 	return TCL_ERROR;
     }
 
