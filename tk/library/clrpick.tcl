@@ -84,7 +84,7 @@ proc tkColorDialog {args} {
 
     set oldFocus [focus]
     set oldGrab [grab current $w]
-    if {$oldGrab != ""} {
+    if {[string compare $oldGrab ""]} {
 	set grabStatus [grab status $oldGrab]
     }
     grab $w
@@ -101,8 +101,8 @@ proc tkColorDialog {args} {
     grab release $w
     destroy $w
     unset data
-    if {$oldGrab != ""} {
-	if {$grabStatus == "global"} {
+    if {[string compare $oldGrab ""]} {
+	if {![string compare $grabStatus "global"]} {
 	    grab -global $oldGrab
 	} else {
 	    grab $oldGrab

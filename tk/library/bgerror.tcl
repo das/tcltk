@@ -62,7 +62,7 @@ proc bgerror err {
     wm title $w "Stack Trace for Error"
     wm iconname $w "Stack Trace"
     button $w.ok -text OK -command "destroy $w" -default active
-    if {$tcl_platform(platform) == "macintosh"} {
+    if {![string compare $tcl_platform(platform) "macintosh"]} {
       text $w.text -relief flat -bd 2 -highlightthickness 0 -setgrid true \
 	    -yscrollcommand "$w.scroll set" -width 60 -height 20
     } else {
@@ -94,7 +94,7 @@ proc bgerror err {
     # screen, since they could make it impossible for the user
     # to interact with the stack trace.
 
-    if {[grab current .] != ""} {
+    if {[string compare [grab current .] ""]} {
 	grab release [grab current .]
     }
 }
