@@ -549,6 +549,13 @@ Tk_InitOptions(interp, recordPtr, optionTable, tkwin)
 	    continue;
 	}
 
+	/*
+	 * Bump the reference count on valuePtr, so that it is strongly
+	 * referenced here, and will be properly free'd when finished,
+	 * regardless of what DoObjConfig does.
+	 */
+	Tcl_IncrRefCount(valuePtr);
+	
 	if (DoObjConfig(interp, recordPtr, optionPtr, valuePtr, tkwin,
 		(Tk_SavedOption *) NULL) != TCL_OK) {
 	    if (interp != NULL) {
@@ -573,8 +580,10 @@ Tk_InitOptions(interp, recordPtr, optionTable, tkwin)
 		}
 		Tcl_AddErrorInfo(interp, msg);
 	    }
+	    Tcl_DecrRefCount(valuePtr);
 	    return TCL_ERROR;
 	}
+	Tcl_DecrRefCount(valuePtr);
     }
     return TCL_OK;
 }
