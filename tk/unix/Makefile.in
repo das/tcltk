@@ -838,10 +838,7 @@ dist:   $(UNIX_DIR)/configure
 		$(TOP_DIR)/win/rc/*.ico $(TOP_DIR)/win/rc/*.bmp \
 		$(DISTDIR)/win/rc
 	mkdir $(DISTDIR)/mac
-	sccs edit -s $(TOP_DIR)/mac/tkMacProjects.sea.hqx
-	cp -p tkMacProjects.sea.hqx $(DISTDIR)/mac
-	sccs unedit $(TOP_DIR)/mac/tkMacProjects.sea.hqx
-	rm -f tkMacProjects.sea.hqx
+	cp -p $(TOP_DIR)/mac/tkMacProjects.sea.hqx $(DISTDIR)/mac
 	cp -p $(TOP_DIR)/mac/*.c $(TOP_DIR)/mac/*.h $(TOP_DIR)/mac/*.r \
 		$(DISTDIR)/mac
 	cp -p $(TOP_DIR)/mac/README $(DISTDIR)/mac
