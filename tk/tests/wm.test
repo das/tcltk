@@ -14,16 +14,11 @@
 # platform should be placed in unixWm.test or winWm.test.
 
 package require tcltest 2.1
-namespace import -force tcltest::test
-
-proc deleteWindows {} {
-    foreach i [winfo children .] {
-    	destroy $i
-    }
-}
-
-
-deleteWindows
+namespace import -force tcltest::configure
+namespace import -force tcltest::testsDirectory
+configure -testdir [file join [pwd] [file dirname [info script]]]
+configure -loadfile [file join [testsDirectory] constraints.tcl]
+tcltest::loadTestedCommands
 
 wm deiconify .
 if {![winfo ismapped .]} {

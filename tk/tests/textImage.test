@@ -10,17 +10,14 @@
 # RCS: @(#) $Id$
 
 package require tcltest 2.1
-namespace import -force tcltest::test
-namespace import -force tcltest::testsDirectory
 namespace import -force tcltest::configure
+namespace import -force tcltest::testsDirectory
 configure -testdir [file join [pwd] [file dirname [info script]]]
 configure -loadfile [file join [testsDirectory] constraints.tcl]
 tcltest::loadTestedCommands
-eval configure $argv
 
 # One time setup.  Create a font to insure the tests are font metric invariant.
 
-wm geometry . {}
 catch {destroy .t}
 font create test_font -family courier -size 14
 text .t -font test_font

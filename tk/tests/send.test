@@ -13,24 +13,14 @@
 # RCS: @(#) $Id$
 
 package require tcltest 2.1
-namespace import -force tcltest::test
-namespace import -force tcltest::testsDirectory
 namespace import -force tcltest::configure
+namespace import -force tcltest::testsDirectory
 configure -testdir [file join [pwd] [file dirname [info script]]]
 configure -loadfile [file join [testsDirectory] constraints.tcl]
 tcltest::loadTestedCommands
-eval configure $argv
-
-# 'send' is only available on Unix...
 
 testConstraint xhost [llength [auto_execok xhost]]
 testConstraint testsend [llength [info commands testsend]]
-
-foreach i [winfo children .] {
-    destroy $i
-}
-wm geometry . {}
-raise .
 
 # If send is disabled because of inadequate security, don't run any
 # of these tests at all.
