@@ -585,11 +585,11 @@ RegisterInterp(CONST char *name, RegisteredInterp *riPtr)
     int i, offset;
     CONST char *actualName = name;
     Tcl_DString dString;
-    
+    Tcl_DStringInit(&dString);
+
     hr = GetRunningObjectTable(0, &pROT);
     if (SUCCEEDED(hr)) {
 
-	Tcl_DStringInit(&dString);
 	offset = 0;
 
 	for (i = 1; SUCCEEDED(hr); i++) {
@@ -621,12 +621,13 @@ RegisterInterp(CONST char *name, RegisteredInterp *riPtr)
 		break;
 	}
 	
-	Tcl_DStringFree(&dString);
 	pROT->lpVtbl->Release(pROT);
     }
 
     if (SUCCEEDED(hr))
 	riPtr->name = strdup(actualName);
+
+    Tcl_DStringFree(&dString);
     return hr;
 }
 
