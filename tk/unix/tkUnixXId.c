@@ -561,7 +561,7 @@ TkpScanWindowId(interp, string, idPtr)
     Window *idPtr;
 {
     int value;
-    if (Tcl_GetInt(interp, string, &value) != TCL_OK) {
+    if (Tcl_GetInt(interp, (char *) string, &value) != TCL_OK) {
 	return TCL_ERROR;
     }
     *idPtr = (Window) value;
