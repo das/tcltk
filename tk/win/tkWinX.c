@@ -14,6 +14,17 @@
  */
 
 #include "tkWinInt.h"
+
+/*
+ * The w32api 1.1 package (included in Mingw 1.1) does not define _WIN32_IE
+ * by default. Define it here to gain access to the InitCommonControlsEx API
+ * in commctrl.h.
+ */
+
+#ifndef _WIN32_IE
+#define _WIN32_IE 0x0300
+#endif
+
 #include <commctrl.h>
 
 /*
