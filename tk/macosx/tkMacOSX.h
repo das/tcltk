@@ -1,5 +1,5 @@
 /*
- * tkMacOSXInt.h --
+ * tkMacOSX.h --
  *
  *	Declarations of Macintosh specific exported variables and procedures.
  *
@@ -16,7 +16,9 @@
 #define _TKMAC
 
 #include <Carbon/Carbon.h>
-#include "tkInt.h"
+#ifndef _TK
+#include "tk.h"
+#endif
 
 /*
  * Structures and function types for handling Netscape-type in process
