@@ -76,7 +76,7 @@ Measures the amount of space the string \fItext\fR would use in the given
 \fIfont\fR when displayed in \fIwindow\fR.  \fIfont\fR is a font description;
 see FONT DESCRIPTIONS below.  If the \fIwindow\fR argument is omitted, it
 defaults to the main window.  The return value is the total width in pixels
-of \fItext\fR, not including the extra pixels used by highly exagerrated
+of \fItext\fR, not including the extra pixels used by highly exaggerated
 characters such as cursive ``f''.  If the string contains newlines or tabs,
 those characters are not expanded or treated specially when measuring the
 string.

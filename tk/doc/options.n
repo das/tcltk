@@ -31,7 +31,7 @@ command
 .CS
 \&\fB.a.b.c\0\0configure\0\0\-foreground black\fR
 .CE
-may be used to specify the value \fBblack\fR for the option in the
+may be used to specify the value \fBblack\fR for the option in
 the widget \fB.a.b.c\fR.  Command-line switches may be abbreviated,
 as long as the abbreviation is unambiguous.
 ``Database Name'' refers to the option's name in the option database (e.g.
