@@ -1748,6 +1748,18 @@ Unlink(slavePtr)
 	}
     }
 
+    /*
+     * Clean out any -after or -before references to this slave
+     */
+    for (i = 0; i < masterPtr->numSlaves; i++) {
+	if (masterPtr->slaves[i]->before == slavePtr->tkwin) {
+	    masterPtr->slaves[i]->before = None;
+	}
+	if (masterPtr->slaves[i]->after == slavePtr->tkwin) {
+	    masterPtr->slaves[i]->after = None;
+	}
+    }
+
     masterPtr->flags |= REQUESTED_RELAYOUT;
     if (!(masterPtr->flags & REDRAW_PENDING)) {
 	masterPtr->flags |= REDRAW_PENDING;
