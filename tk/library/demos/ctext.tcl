@@ -27,11 +27,9 @@ label $w.msg -font $font -wraplength 5i -justify left -text "This window display
      the character just after the insertion cursor."
 pack $w.msg -side top
 
-frame $w.buttons
-pack $w.buttons -side bottom -fill x -pady 2m
-button $w.buttons.dismiss -text Dismiss -command "destroy $w"
-button $w.buttons.code -text "See Code" -command "showCode $w"
-pack $w.buttons.dismiss $w.buttons.code -side left -expand 1
+## See Code / Dismiss buttons
+set btns [addSeeDismiss $w.buttons $w]
+pack $btns -side bottom -fill x
 
 canvas $c -relief flat -borderwidth 0 -width 500 -height 350
 pack $w.c -side top -expand yes -fill both

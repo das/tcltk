@@ -16,11 +16,9 @@ wm title $w "Text Demonstration - Basic Facilities"
 wm iconname $w "text"
 positionWindow $w
 
-frame $w.buttons
-pack $w.buttons -side bottom -fill x -pady 2m
-button $w.buttons.dismiss -text Dismiss -command "destroy $w"
-button $w.buttons.code -text "See Code" -command "showCode $w"
-pack $w.buttons.dismiss $w.buttons.code -side left -expand 1
+## See Code / Dismiss buttons
+set btns [addSeeDismiss $w.buttons $w]
+pack $btns -side bottom -fill x
 
 text $w.text -relief sunken -bd 2 -yscrollcommand "$w.scroll set" -setgrid 1 \
 	-height 30 -undo 1 -autosep 1

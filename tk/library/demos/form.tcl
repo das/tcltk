@@ -19,11 +19,9 @@ positionWindow $w
 label $w.msg -font $font -wraplength 4i -justify left -text "This window contains a simple form where you can type in the various entries and use tabs to move circularly between the entries."
 pack $w.msg -side top
 
-frame $w.buttons
-pack $w.buttons -side bottom -fill x -pady 2m
-button $w.buttons.dismiss -text Dismiss -command "destroy $w"
-button $w.buttons.code -text "See Code" -command "showCode $w"
-pack $w.buttons.dismiss $w.buttons.code -side left -expand 1
+## See Code / Dismiss buttons
+set btns [addSeeDismiss $w.buttons $w]
+pack $btns -side bottom -fill x
 
 foreach i {f1 f2 f3 f4 f5} {
     frame $w.$i -bd 2
