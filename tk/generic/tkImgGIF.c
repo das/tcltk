@@ -391,7 +391,7 @@ FileReadGIF(interp, chan, fileName, format, imageHandle, destX, destY,
 	     * marginally improve the speed of the less frequent case, I chose
 	     * to maintain high performance for the common case.
 	     */
-	    if (ReadImage(interp, trashBuffer, chan, fileWidth,
+	    if (ReadImage(interp, (char *) trashBuffer, chan, fileWidth,
 			  fileHeight, colorMap, 0, 0, 0, 0, 0, -1) != TCL_OK) {
 	      goto error;
 	    }

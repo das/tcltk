@@ -1913,3 +1913,30 @@ declare 83 mac {
     void XFillRectangle (Display* display, Drawable d, GC gc, \
 	    int x, int y, unsigned int width, unsigned int height)
 }
+declare 84 mac {
+    void XClearWindow (Display* d, Window w)
+}
+
+declare 85 mac {
+    void XDrawPoint (Display* display, Drawable d, GC gc, int x, int y)
+}
+
+declare 86 mac {
+    void XDrawPoints (Display* display, Drawable d, GC gc, XPoint *points, \
+	    int npoints, int mode)
+}
+
+declare 87 mac {
+    void XWarpPointer (Display* display, Window src_w, Window dest_w, \
+	    int src_x, int src_y, unsigned int src_width, \
+	    unsigned int src_height, int dest_x, int dest_y)
+}
+
+declare 88 mac {
+    void XQueryColor (Display *display, Colormap colormap, XColor *def_in_out)
+}
+
+declare 89 mac {
+    void XQueryColors (Display *display, Colormap colormap, \
+	    XColor *defs_in_out, int ncolors)
+}

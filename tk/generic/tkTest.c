@@ -16,10 +16,6 @@
  * RCS: @(#) $Id$
  */
 
-#ifdef MAC_TCL
-#define USE_OLD_IMAGE
-#endif
-
 #include "tkInt.h"
 #include "tkPort.h"
 #include "tkText.h"

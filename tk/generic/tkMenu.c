@@ -1178,11 +1178,17 @@ DestroyMenuInstance(menuPtr)
 		    parentMasterMenuPtr->entries[cascadePtr->index];
 	    newObjv[0] = menuNamePtr;
 	    newObjv[1] = parentMasterEntryPtr->namePtr;
-	    Tcl_IncrRefCount(newObjv[0]);
-	    Tcl_IncrRefCount(newObjv[1]);
-    	    ConfigureMenuEntry(cascadePtr, 2, newObjv);
-	    Tcl_DecrRefCount(newObjv[0]);
-	    Tcl_DecrRefCount(newObjv[1]);
+	    /*
+	     * It is possible that the menu info is out of sync, and
+	     * these things point to NULL, so verify existence [Bug: 3402]
+	     */
+	    if (newObjv[0] && newObjv[1]) {
+		Tcl_IncrRefCount(newObjv[0]);
+		Tcl_IncrRefCount(newObjv[1]);
+		ConfigureMenuEntry(cascadePtr, 2, newObjv);
+		Tcl_DecrRefCount(newObjv[0]);
+		Tcl_DecrRefCount(newObjv[1]);
+	    }
     	} else {
     	    ConfigureMenuEntry(cascadePtr, 0, (Tcl_Obj **) NULL);
     	}

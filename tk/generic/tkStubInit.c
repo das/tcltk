@@ -664,6 +664,12 @@ TkIntXlibStubs tkIntXlibStubs = {
     XForceScreenSaver, /* 81 */
     XDrawLine, /* 82 */
     XFillRectangle, /* 83 */
+    XClearWindow, /* 84 */
+    XDrawPoint, /* 85 */
+    XDrawPoints, /* 86 */
+    XWarpPointer, /* 87 */
+    XQueryColor, /* 88 */
+    XQueryColors, /* 89 */
 #endif /* MAC_TCL */
 };
 
