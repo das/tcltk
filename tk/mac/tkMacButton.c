@@ -228,7 +228,7 @@ TkpDisplayButton(
     if ((butPtr->type >= TYPE_CHECK_BUTTON) && !butPtr->indicatorOn) { 
 	if (!TkMacHaveAppearance() || !hasImageOrBitmap) {
 	    relief = (butPtr->flags & SELECTED) ? TK_RELIEF_SUNKEN
-		: TK_RELIEF_RAISED;
+		: butPtr->offRelief;
 	}
     }
 

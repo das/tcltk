@@ -387,7 +387,7 @@ TkpDisplayButton(clientData)
     relief = butPtr->relief;
     if ((butPtr->type >= TYPE_CHECK_BUTTON) && !butPtr->indicatorOn) {
 	relief = (butPtr->flags & SELECTED) ? TK_RELIEF_SUNKEN
-		: TK_RELIEF_RAISED;
+		: butPtr->offRelief;
     }
 
     /*

@@ -120,6 +120,11 @@ typedef struct {
 				 * effect for the border, such as
 				 * TK_RELIEF_RAISED, to be used when the mouse
 				 * is over the button. */
+    int offRelief;		/* Value of -offrelief option: specifies a 3-d
+				 * effect for the border, such as
+				 * TK_RELIEF_RAISED, to be used when a
+				 * checkbutton or radiobutton without 
+				 * indicator is off */
     Tcl_Obj *highlightWidthPtr;	/* Value of -highlightthickness option:
 				 * specifies width in pixels of highlight to
 				 * draw around widget when it has the focus.

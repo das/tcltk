@@ -54,6 +54,11 @@ whenever the widget is selected.
 If specified as an empty string then no special color is used for
 displaying when the widget is selected.
 .VS 8.4
+.OP \-offrelief offRelief OffRelief
+Specifies the relief for the checkbutton when the indicator is not drawn and
+the checkbutton is off.  The default value is "raised".
+.VE 8.4
+.VS 8.4
 .OP \-overrelief overRelief OverRelief
 Specifies an alternative relief for the radiobutton, to be used when the
 mouse cursor is over the widget.  This option can be used to make

@@ -85,6 +85,7 @@ foreach test {
     {-indicatoron yes 1 no_way {expected boolean value but got "no_way"}
 	    {0 0 1 1}}
     {-justify right right bogus {bad justification "bogus": must be left, right, or center} {1 1 1 1}}
+    {-offrelief flat flat 1.5 {bad relief "1.5": must be flat, groove, raised, ridge, solid, or sunken} {0 0 1 1}}
     {-offvalue lousy lousy {} {} {0 0 1 0}}
     {-offvalue fantastic fantastic {} {} {0 0 1 0}}
     {-overrelief "" "" 1.5 {bad relief "1.5": must be flat, groove, raised, ridge, solid, or sunken} {0 1 1 1}}
@@ -226,7 +227,7 @@ test button-4.13 {ButtonWidgetCmd procedure, "cget" option} {
 } {1 {unknown option "-onvalue"}}
 test button-4.14 {ButtonWidgetCmd procedure, "configure" option} {
     llength [.c configure]
-} {38}
+} {39}
 test button-4.15 {ButtonWidgetCmd procedure, "configure" option} {
     list [catch {.b configure -gorp} msg] $msg
 } {1 {unknown option "-gorp"}}

@@ -43,6 +43,11 @@ Specifies whether or not the indicator should be drawn.  Must be a
 proper boolean value.  If false, the \fBrelief\fR option is
 ignored and the widget's relief is always sunken if the widget is
 selected and raised otherwise.
+.VS 8.4
+.OP \-offrelief offRelief OffRelief
+Specifies the relief for the checkbutton when the indicator is not drawn and
+the checkbutton is off.  The default value is "raised".
+.VE 8.4
 .OP \-offvalue offValue Value
 Specifies value to store in the button's associated variable whenever
 this button is deselected.  Defaults to ``0''.
