@@ -1336,6 +1336,8 @@ ConfigureListbox(interp, listPtr, objc, objv, flags)
 	/* Make sure the object is a good list object */
 	if (Tcl_ListObjLength(listPtr->interp, listVarObj, &dummy) != TCL_OK) {
 	    Tk_RestoreSavedOptions(&savedOptions);
+	    Tcl_AppendResult(listPtr->interp, ": invalid listvar value",
+		    (char *)NULL);
 	    return TCL_ERROR;
 	}
     
@@ -2822,12 +2824,12 @@ ListboxListVarProc(clientData, interp, name1, name2, flags)
 	/*
 	 * Make sure the new value is a good list; if it's not, disallow
 	 * the change -- the fact that it is a listvar means that it must
-	 * always be a valid list
+	 * always be a valid list -- and return an error message.
 	 */
 	if (Tcl_ListObjLength(listPtr->interp, varListObj, &i) != TCL_OK) {
 	    Tcl_SetVar2Ex(interp, listPtr->listVarName, (char *)NULL,
 		    oldListObj, TCL_GLOBAL_ONLY);
-	    varListObj = oldListObj;
+	    return("invalid listvar value");
 	}
 	
 	listPtr->listObj = varListObj;

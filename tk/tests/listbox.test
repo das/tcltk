@@ -941,7 +941,8 @@ test listbox-4.18 {ConfigureListbox, no listvar -> bad listvar} {
     set x {this is a " bad list}
     catch {.l configure -listvar x} result
     list [.l get 0 end] [.l cget -listvar] $result
-} [list [list a b c d] {} "unmatched open quote in list"]
+} [list [list a b c d] {} \
+	"unmatched open quote in list: invalid listvar value"]
 
 # No tests for DisplayListbox:  I don't know how to test this procedure.
 
@@ -1845,9 +1846,9 @@ test listbox-21.11 {ListboxListVarProc, bad list} {
     catch {unset x}
     listbox .l -listvar x
     set x [list a b c d]
-    set x {this is a " bad list}
-    set x
-} [list a b c d]
+    catch {set x {this is a " bad list}} result
+    set result
+} {can't set "x": invalid listvar value}
 
 # UpdateHScrollbar
 test listbox-22.1 {UpdateHScrollbar} {
