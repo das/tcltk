@@ -115,7 +115,7 @@ static TkCmd commands[] = {
     {"raise",		NULL,			Tk_RaiseObjCmd,		1, 1},
     {"selection",	Tk_SelectionCmd,	NULL,			0, 1},
     {"tk",		NULL,			Tk_TkObjCmd,		0, 1},
-    {"tkwait",		Tk_TkwaitCmd,		NULL,			1, 1},
+    {"tkwait",		NULL,			Tk_TkwaitObjCmd,	1, 1},
 #if defined(__WIN32__) || defined(MAC_TCL)
     {"tk_chooseColor",  NULL,			Tk_ChooseColorObjCmd,	0, 1},
     {"tk_chooseDirectory", NULL,		Tk_ChooseDirectoryObjCmd, 0, 1},
