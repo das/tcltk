@@ -349,7 +349,7 @@ switch $::tcl_platform(platform) {
 	event add <<Paste>> <Control-Key-v> <Key-F4>
 	event add <<PasteSelection>> <ButtonRelease-2>
 	event add <<Clear>> <Clear>
-	event add <<Undo>> <Control-Key-z>
+	event add <<Undo>> <Control-Key-z> <Key-F1>
 	event add <<Redo>> <Control-Key-Z>
     }
 }

@@ -1071,7 +1071,6 @@ dist:   $(UNIX_DIR)/configure
 	cp -p $(TOP_DIR)/license.terms $(DISTDIR)/mac
 	cp -p $(TOP_DIR)/mac/*.pch $(DISTDIR)/mac
 	cp -p $(TOP_DIR)/mac/*.doc $(DISTDIR)/mac
-	cp -p $(TOP_DIR)/mac/*.exp $(DISTDIR)/mac
 	cp -p $(TOP_DIR)/mac/*.tcl $(DISTDIR)/mac
 	mkdir $(DISTDIR)/compat
 	cp -p $(TOP_DIR)/license.terms $(TCLDIR)/compat/unistd.h \

@@ -13,16 +13,6 @@
  * RCS: @(#) $Id$
  */
 
-/*
- * Because of problems with pre-compiled headers on the Mac, we need to
- * do these includes before we add the stubs defines.  This a hack.
- */
-
-#ifdef MAC_TCL
-#include "tkMacInt.h"
-#include "tkInt.h"
-#include "tkPort.h"
-#endif /* MAC_TCL */
 
 /*
  * We need to ensure that we use the stub macros so that this file contains
@@ -41,8 +31,6 @@
 #endif
 #undef USE_TK_STUB_PROCS
 
-#ifndef MAC_TCL
-
 #include "tkPort.h"
 #include "tkInt.h"
 
@@ -50,7 +38,9 @@
 #include "tkWinInt.h"
 #endif
 
-#endif /* !MAC_TCL */
+#ifdef MAC_TCL
+#include "tkMacInt.h"
+#endif
 
 #include "tkDecls.h"
 #include "tkIntDecls.h"

@@ -504,9 +504,8 @@ proc ::tk::ButtonDown w {
 
 	# If this button has a repeatdelay set up, get it going with an after
 	after cancel $Priv(afterId)
+    set Priv(repeated) 0
 	if { ![catch {$w cget -repeatdelay} delay] } {
-	    set delay [$w cget -repeatdelay]
-	    set Priv(repeated) 0
 	    if {$delay > 0} {
 		set Priv(afterId) [after $delay [list tk::ButtonAutoInvoke $w]]
 	    }

@@ -4534,7 +4534,12 @@ TkMacHaveAppearance()
 	if (err == noErr) {
 	    TkMacHaveAppearance = 1;
 	}
+/* even if AppearanceManager 1.1 routines are present,
+we can't call them from 68K code, so we pretend
+to be running Apperarance Mgr 1.0 */
+#if !(GENERATING68K && !GENERATINGCFM)
 	err = Gestalt(gestaltAppearanceVersion, &response);
+#endif
 	if (err == noErr) {
 	    TkMacHaveAppearance = (int) response;
 	}

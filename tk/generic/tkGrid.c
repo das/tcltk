@@ -2554,7 +2554,7 @@ ConfigureSlaves(interp, tkwin, objc, objv)
     firstChar = 0;
     for (numWindows = i = 0; i < objc; i++) {
 	prevChar = firstChar;
-	string = Tcl_GetStringFromObj(objv[i], &length);
+	string = Tcl_GetStringFromObj(objv[i], (int *) &length);
     	firstChar = string[0];
 	
 	if (firstChar == '.') {

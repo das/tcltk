@@ -1221,7 +1221,7 @@ PackAfter(interp, prevPtr, masterPtr, objc, objv)
 	packPtr->flags |= OLD_STYLE;
 	for (index = 0 ; index < optionCount; index++) {
 	    Tcl_Obj *curOptPtr = options[index];
-	    char *curOpt = Tcl_GetStringFromObj(curOptPtr, &length);
+	    char *curOpt = Tcl_GetStringFromObj(curOptPtr, (int *) &length);
 
 	    c = curOpt[0];
 

@@ -326,7 +326,7 @@ TkpFontPkgInit(mainPtr)
 	 */
 	
 	fontMenu = NewMenu('FT', "\px");
-	AddResMenu(fontMenu, 'FONT');
+	AppendResMenu(fontMenu, 'FONT');
 	
 	numFonts = CountMItems(fontMenu);
 	tmpFontNameMap = (FontNameMap *) ckalloc(sizeof(FontNameMap) * numFonts);

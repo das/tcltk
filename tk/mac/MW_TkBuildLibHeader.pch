@@ -1,5 +1,5 @@
 /*
- * MW_TkTestHeader.pch --
+ * MW_TkBuildLibHeader.pch --
  *
  *  This file is the source for a pre-compilied header that gets used
  *  for all files in the Tk projects.  This make compilies go a bit
@@ -24,19 +24,13 @@
  */
 
 #if __POWERPC__
-#pragma precompile_target "MW_TkTestHeaderPPC"
+#pragma precompile_target "MW_TkBuildLibHeaderPPC"
 #elif __CFM68K__
-#pragma precompile_target "MW_TkTestHeaderCFM68K"
+#pragma precompile_target "MW_TkBuildLibHeaderCFM68K"
 #else
-#pragma precompile_target "MW_TkTestHeader68K"
+#pragma precompile_target "MW_TkBuildLibHeader68K"
 #endif
 
 #define BUILD_tk 1
-
-#define STATIC_BUILD 1
-
-#define TCL_DEBUG 1
-
-#define TCL_THREADS 1
 
 #include "MW_TkHeaderCommon.h"
