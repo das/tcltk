@@ -686,11 +686,11 @@ ImgPhotoCmd(clientData, interp, objc, objv)
 
 	if (objc == 2) {
 	    Tk_PhotoBlank(masterPtr);
+	    return TCL_OK;
 	} else {
 	    Tcl_WrongNumArgs(interp, 2, objv, (char *) NULL);
 	    return TCL_ERROR;
 	}
-	break;
 
     case PHOTO_CGET: {
 	char *arg;
@@ -704,17 +704,15 @@ ImgPhotoCmd(clientData, interp, objc, objv)
 	    if (masterPtr->dataString) {
 		Tcl_SetObjResult(interp, masterPtr->dataString);
 	    }
-	    return TCL_OK;
-	}
-	if (strncmp(arg,"-format", length) == 0) {
+	} else if (strncmp(arg,"-format", length) == 0) {
 	    if (masterPtr->format) {
 		Tcl_SetObjResult(interp, masterPtr->format);
 	    }
-	    return TCL_OK;
+	} else {
+	    Tk_ConfigureValue(interp, Tk_MainWindow(interp), configSpecs,
+		    (char *) masterPtr, Tcl_GetString(objv[2]), 0);
 	}
-	Tk_ConfigureValue(interp, Tk_MainWindow(interp), configSpecs,
-		(char *) masterPtr, Tcl_GetString(objv[2]), 0);
-	break;
+	return TCL_OK;
     }
 
     case PHOTO_CONFIGURE:
@@ -877,15 +875,12 @@ ImgPhotoCmd(clientData, interp, objc, objv)
 		+ options.fromY * block.pitch;
 	block.width = options.fromX2 - options.fromX;
 	block.height = options.fromY2 - options.fromY;
-	if (Tk_PhotoPutZoomedBlock(interp, (Tk_PhotoHandle) masterPtr, &block,
+	Tk_PhotoPutZoomedBlock((Tk_PhotoHandle) masterPtr, &block,
 		options.toX, options.toY, options.toX2 - options.toX,
 		options.toY2 - options.toY, options.zoomX, options.zoomY,
 		options.subsampleX, options.subsampleY,
-		options.compositingRule) != TCL_OK) {
-	    return TCL_ERROR;
-	}
-
-	break;
+		options.compositingRule);
+	return TCL_OK;
 
     case PHOTO_DATA: {
 	char *data;
@@ -970,7 +965,6 @@ ImgPhotoCmd(clientData, interp, objc, objv)
 	    ckfree(data);
 	}
 	return result;
-	break;
     }
 
     case PHOTO_GET: {
@@ -1003,7 +997,7 @@ ImgPhotoCmd(clientData, interp, objc, objv)
 	sprintf(string, "%d %d %d", pixelPtr[0], pixelPtr[1],
 		pixelPtr[2]);
 	Tcl_AppendResult(interp, string, (char *) NULL);
-	break;
+	return TCL_OK;
     }
 
     case PHOTO_PUT:
@@ -1127,15 +1121,11 @@ ImgPhotoCmd(clientData, interp, objc, objv)
 	block.offset[1] = 1;
 	block.offset[2] = 2;
 	block.offset[3] = 0;
-	if (Tk_PhotoPutBlock(interp, (ClientData)masterPtr, &block,
+	Tk_PhotoPutBlock((ClientData)masterPtr, &block,
 		options.toX, options.toY, options.toX2 - options.toX,
-		options.toY2 - options.toY,
-		TK_PHOTO_COMPOSITE_SET) != TCL_OK) {
-	    ckfree((char *) block.pixelPtr);
-	    return TCL_ERROR;
-	}
+		options.toY2 - options.toY, TK_PHOTO_COMPOSITE_SET);
 	ckfree((char *) block.pixelPtr);
-	break;
+	return TCL_OK;
 
     case PHOTO_READ: {
 	Tcl_Obj *format;
@@ -1246,7 +1236,6 @@ ImgPhotoCmd(clientData, interp, objc, objv)
 	    Tcl_Close(NULL, chan);
 	}
 	return result;
-	break;
     }
 
     case PHOTO_REDITHER:
@@ -1282,7 +1271,7 @@ ImgPhotoCmd(clientData, interp, objc, objv)
 		    (masterPtr->width - x), (masterPtr->height - y),
 		    masterPtr->width, masterPtr->height);
 	}
-	break;
+	return TCL_OK;
 
     case PHOTO_TRANS: {
 	static CONST char *photoTransOptions[] = {
@@ -1397,10 +1386,11 @@ ImgPhotoCmd(clientData, interp, objc, objv)
 	    Tk_ImageChanged(masterPtr->tkMaster, x, y, 1, 1,
 		    masterPtr->width, masterPtr->height);
 	    masterPtr->flags &= ~IMAGE_CHANGED;
+	    return TCL_OK;
+	}
 	}
 
-	}
-	return TCL_OK;
+	panic("unexpected fallthrough");
     }
 
     case PHOTO_WRITE: {
@@ -1522,7 +1512,8 @@ ImgPhotoCmd(clientData, interp, objc, objv)
     }
 
     }
-    return TCL_OK;
+    panic("unexpected fallthrough");
+    return TCL_ERROR; /* NOT REACHED */
 }
 
 /*
@@ -3968,21 +3959,16 @@ Tk_FindPhoto(interp, imageName)
  *	This procedure is called to put image data into a photo image.
  *
  * Results:
- *	A standard Tcl result code.
+ *	None.
  *
  * Side effects:
  *	The image data is stored.  The image may be expanded.
  *	The Tk image code is informed that the image has changed.
- *	If the result code is TCL_ERROR, an error message will be placed
- *	in the interpreter (if non-NULL).
  *
- *----------------------------------------------------------------------
- */
+ *---------------------------------------------------------------------- */
 
-int
-Tk_PhotoPutBlock(interp, handle, blockPtr, x, y, width, height, compRule)
-    Tcl_Interp *interp;		/* Interpreter for passing back error
-				 * messages, or NULL. */
+void
+Tk_PhotoPutBlock(handle, blockPtr, x, y, width, height, compRule)
     Tk_PhotoHandle handle;	/* Opaque handle for the photo image
 				 * to be updated. */
     register Tk_PhotoImageBlock *blockPtr;
@@ -4015,7 +4001,7 @@ Tk_PhotoPutBlock(interp, handle, blockPtr, x, y, width, height, compRule)
 	height = masterPtr->userHeight - y;
     }
     if ((width <= 0) || (height <= 0)) {
-	return TCL_OK;
+	return;
     }
 
     xEnd = x + width;
@@ -4023,12 +4009,7 @@ Tk_PhotoPutBlock(interp, handle, blockPtr, x, y, width, height, compRule)
     if ((xEnd > masterPtr->width) || (yEnd > masterPtr->height)) {
 	if (ImgPhotoSetSize(masterPtr, MAX(xEnd, masterPtr->width),
 		MAX(yEnd, masterPtr->height)) == TCL_ERROR) {
-	    if (interp != NULL) {
-		Tcl_ResetResult(interp);
-		Tcl_AppendStringsToObj(Tcl_GetObjResult(interp),
-			TK_PHOTO_ALLOC_FAILURE_MESSAGE, (char *) NULL);
-	    }
-	    return TCL_ERROR;
+	    panic(TK_PHOTO_ALLOC_FAILURE_MESSAGE);
 	}
     }
 
@@ -4249,9 +4230,8 @@ Tk_PhotoPutBlock(interp, handle, blockPtr, x, y, width, height, compRule)
      * Tell the core image code that this image has changed.
      */
 
-    Tk_ImageChanged(masterPtr->tkMaster, x, y, width, height,
-	    masterPtr->width, masterPtr->height);
-    return TCL_OK;
+    Tk_ImageChanged(masterPtr->tkMaster, x, y, width, height, masterPtr->width,
+	    masterPtr->height);
 }
 
 /*
@@ -4272,11 +4252,9 @@ Tk_PhotoPutBlock(interp, handle, blockPtr, x, y, width, height, compRule)
  *----------------------------------------------------------------------
  */
 
-int
-Tk_PhotoPutZoomedBlock(interp, handle, blockPtr, x, y, width, height,
-	zoomX, zoomY, subsampleX, subsampleY, compRule)
-    Tcl_Interp *interp;		/* Interpreter for passing back error
-				 * messages, or NULL. */
+void
+Tk_PhotoPutZoomedBlock(handle, blockPtr, x, y, width, height, zoomX, zoomY,
+	subsampleX, subsampleY, compRule)
     Tk_PhotoHandle handle;	/* Opaque handle for the photo image
 				 * to be updated. */
     register Tk_PhotoImageBlock *blockPtr;
@@ -4305,14 +4283,14 @@ Tk_PhotoPutZoomedBlock(interp, handle, blockPtr, x, y, width, height,
     XRectangle rect;
 
     if (zoomX==1 && zoomY==1 && subsampleX==1 && subsampleY==1) {
-	return Tk_PhotoPutBlock(interp, handle, blockPtr, x, y, width, height,
-		compRule);
+	Tk_PhotoPutBlock(handle, blockPtr, x, y, width, height, compRule);
+	return;
     }
 
     masterPtr = (PhotoMaster *) handle;
 
     if (zoomX <= 0 || zoomY <= 0) {
-	return TCL_OK;
+	return;
     }
     if ((masterPtr->userWidth != 0) && ((x + width) > masterPtr->userWidth)) {
 	width = masterPtr->userWidth - x;
@@ -4322,7 +4300,7 @@ Tk_PhotoPutZoomedBlock(interp, handle, blockPtr, x, y, width, height,
 	height = masterPtr->userHeight - y;
     }
     if (width <= 0 || height <= 0) {
-	return TCL_OK;
+	return;
     }
 
     xEnd = x + width;
@@ -4331,12 +4309,7 @@ Tk_PhotoPutZoomedBlock(interp, handle, blockPtr, x, y, width, height,
 	int sameSrc = (blockPtr->pixelPtr == masterPtr->pix32);
 	if (ImgPhotoSetSize(masterPtr, MAX(xEnd, masterPtr->width),
 		MAX(yEnd, masterPtr->height)) == TCL_ERROR) {
-	    if (interp != NULL) {
-		Tcl_ResetResult(interp);
-		Tcl_AppendStringsToObj(Tcl_GetObjResult(interp),
-			TK_PHOTO_ALLOC_FAILURE_MESSAGE, (char *) NULL);
-	    }
-	    return TCL_ERROR;
+	    panic(TK_PHOTO_ALLOC_FAILURE_MESSAGE);
 	}
 	if (sameSrc) {
 	    blockPtr->pixelPtr = masterPtr->pix32;
@@ -4542,7 +4515,6 @@ Tk_PhotoPutZoomedBlock(interp, handle, blockPtr, x, y, width, height,
 
     Tk_ImageChanged(masterPtr->tkMaster, x, y, width, height, masterPtr->width,
 	    masterPtr->height);
-    return TCL_OK;
 }
 
 /*
@@ -5049,10 +5021,8 @@ Tk_PhotoBlank(handle)
  *----------------------------------------------------------------------
  */
 
-int
-Tk_PhotoExpand(interp, handle, width, height)
-    Tcl_Interp *interp;		/* Interpreter for passing back error
-				 * messages, or NULL. */
+void
+Tk_PhotoExpand(handle, width, height)
     Tk_PhotoHandle handle;	/* Handle for the image to be expanded. */
     int width, height;		/* Desired minimum dimensions of the image. */
 {
@@ -5069,17 +5039,11 @@ Tk_PhotoExpand(interp, handle, width, height)
     if ((width != masterPtr->width) || (height != masterPtr->height)) {
 	if (ImgPhotoSetSize(masterPtr, MAX(width, masterPtr->width),
 		MAX(height, masterPtr->height)) == TCL_ERROR) {
-	    if (interp != NULL) {
-		Tcl_ResetResult(interp);
-		Tcl_AppendStringsToObj(Tcl_GetObjResult(interp),
-			TK_PHOTO_ALLOC_FAILURE_MESSAGE, (char *) NULL);
-	    }
-	    return TCL_ERROR;
+	    panic(TK_PHOTO_ALLOC_FAILURE_MESSAGE);
 	}
 	Tk_ImageChanged(masterPtr->tkMaster, 0, 0, 0, 0, masterPtr->width,
 		masterPtr->height);
     }
-    return TCL_OK;
 }
 
 /*
@@ -5133,10 +5097,8 @@ Tk_PhotoGetSize(handle, widthPtr, heightPtr)
  *----------------------------------------------------------------------
  */
 
-int
-Tk_PhotoSetSize(interp, handle, width, height)
-    Tcl_Interp *interp;		/* Interpreter for passing back error
-				 * messages, or NULL. */
+void
+Tk_PhotoSetSize(handle, width, height)
     Tk_PhotoHandle handle;	/* Handle for the image whose size is to
 				 * be set. */
     int width, height;		/* New dimensions for the image. */
@@ -5149,16 +5111,10 @@ Tk_PhotoSetSize(interp, handle, width, height)
     masterPtr->userHeight = height;
     if (ImgPhotoSetSize(masterPtr, ((width > 0) ? width: masterPtr->width),
 	    ((height > 0) ? height: masterPtr->height)) == TCL_ERROR) {
-	if (interp != NULL) {
-	    Tcl_ResetResult(interp);
-	    Tcl_AppendStringsToObj(Tcl_GetObjResult(interp),
-		    TK_PHOTO_ALLOC_FAILURE_MESSAGE, (char *) NULL);
-	}
-	return TCL_ERROR;
+	panic(TK_PHOTO_ALLOC_FAILURE_MESSAGE);
     }
     Tk_ImageChanged(masterPtr->tkMaster, 0, 0, 0, 0,
 	    masterPtr->width, masterPtr->height);
-    return TCL_OK;
 }
 
 /*
@@ -5654,9 +5610,7 @@ ImgPhotoPostscript(clientData, interp, tkwin, psInfo,
  *
  * These backward-compatability functions just exist to fill slots in
  * stubs table.  For the behaviour of *_NoComposite, refer to the
- * corresponding function without the extra suffix, except that the
- * compositing rule is always "overlay" and the function always panics
- * on memory-allocation failure.
+ * corresponding function without the extra suffix.
  *
  *----------------------------------------------------------------------
  */
@@ -5666,10 +5620,8 @@ Tk_PhotoPutBlock_NoComposite(handle, blockPtr, x, y, width, height)
      Tk_PhotoImageBlock *blockPtr;
      int x, y, width, height;
 {
-    if (Tk_PhotoPutBlock(NULL, handle, blockPtr, x, y, width, height,
-	    TK_PHOTO_COMPOSITE_OVERLAY) != TCL_OK) {
-	panic(TK_PHOTO_ALLOC_FAILURE_MESSAGE);
-    }
+    Tk_PhotoPutBlock(handle, blockPtr, x, y, width, height,
+	    TK_PHOTO_COMPOSITE_OVERLAY);
 }
 
 void
@@ -5679,69 +5631,6 @@ Tk_PhotoPutZoomedBlock_NoComposite(handle, blockPtr, x, y, width, height,
      Tk_PhotoImageBlock *blockPtr;
      int x, y, width, height, zoomX, zoomY, subsampleX, subsampleY;
 {
-    if (Tk_PhotoPutZoomedBlock(NULL, handle, blockPtr, x, y, width, height,
-	    zoomX, zoomY, subsampleX, subsampleY,
-	    TK_PHOTO_COMPOSITE_OVERLAY) != TCL_OK) {
-	panic(TK_PHOTO_ALLOC_FAILURE_MESSAGE);
-    }
-}
-
-/*
- *----------------------------------------------------------------------
- *
- * Tk_PhotoExpand_Panic, Tk_PhotoPutBlock_Panic,
- * Tk_PhotoPutZoomedBlock_Panic, Tk_PhotoSetSize_Panic
- *
- * Backward compatability functions for preserving the old behaviour
- * (i.e. panic on memory allocation failure) so that extensions do not
- * need to be significantly updated to take account of TIP #116.  These
- * call the new interface (i.e. the interface without the extra suffix),
- * but panic if an error condition is returned.
- *
- *----------------------------------------------------------------------
- */
-
-void
-Tk_PhotoExpand_Panic(handle, width, height)
-    Tk_PhotoHandle handle;
-    int width, height;
-{
-    if (Tk_PhotoExpand(NULL, handle, width, height) != TCL_OK) {
-	panic(TK_PHOTO_ALLOC_FAILURE_MESSAGE);
-    }
-}
-
-void
-Tk_PhotoPutBlock_Panic(handle, blockPtr, x, y, width, height, compRule)
-    Tk_PhotoHandle handle;
-    Tk_PhotoImageBlock *blockPtr;
-    int x, y, width, height, compRule;
-{
-    if (Tk_PhotoPutBlock(NULL, handle, blockPtr, x, y, width, height,
-	    compRule) != TCL_OK) {
-	panic(TK_PHOTO_ALLOC_FAILURE_MESSAGE);
-    }
-}
-
-void
-Tk_PhotoPutZoomedBlock_Panic(handle, blockPtr, x, y, width, height,
-	zoomX, zoomY, subsampleX, subsampleY, compRule)
-    Tk_PhotoHandle handle;
-    register Tk_PhotoImageBlock *blockPtr;
-    int x, y, width, height, zoomX, zoomY, subsampleX, subsampleY, compRule;
-{
-    if (Tk_PhotoPutZoomedBlock(NULL, handle, blockPtr, x, y, width, height,
-	    zoomX, zoomY, subsampleX, subsampleY, compRule) != TCL_OK) {
-	panic(TK_PHOTO_ALLOC_FAILURE_MESSAGE);
-    }
-}
-
-void
-Tk_PhotoSetSize_Panic(handle, width, height)
-    Tk_PhotoHandle handle;
-    int width, height;
-{
-    if (Tk_PhotoSetSize(NULL, handle, width, height) != TCL_OK) {
-	panic(TK_PHOTO_ALLOC_FAILURE_MESSAGE);
-    }
+    Tk_PhotoPutZoomedBlock(handle, blockPtr, x, y, width, height,
+	    zoomX, zoomY, subsampleX, subsampleY, TK_PHOTO_COMPOSITE_OVERLAY);
 }
