@@ -365,7 +365,7 @@ test canvas-11.1 {canvas poly fill check, bug 5783} {
     pack [canvas .c]
     .c create polygon 0 0 100 100 200 50 \
 	    -fill {} -stipple gray50 -outline black
-} {}
+} 1
 
 # cleanup
 ::tcltest::cleanupTests
