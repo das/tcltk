@@ -316,7 +316,7 @@ proc addSeeDismiss {w show {vars {}}} {
     frame $w.sep -height 2 -relief sunken -bd 2
     grid $w.sep -columnspan 4 -row 0 -sticky ew -pady 2
     button $w.dismiss -text [mc "Dismiss"] \
-	-image ::img::refresh -compound left \
+	-image ::img::delete -compound left \
 	-command [list destroy [winfo toplevel $w]]
     button $w.code -text [mc "See Code"] \
 	-image ::img::view -compound left \
