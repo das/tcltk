@@ -4669,3 +4669,13 @@ that the build directory is separate from the sources.  Fixed bug in
 Tk_DrawChars(). (Jim Ingham)
 
 --------------- Released 8.2.0, August 17, 1999 ----------------------
+
+9/21/99 (bug fix) fixed 'wm deiconify' quirks on Windows. (hobbs)
+
+9/21/99 (bug fix) fix fg<>bg GC swap bug for canvas. [Bug: 2676] (hobbs)
+
+9/21/99 (config fix) fixed AIX config issues for Tk. (hobbs)
+
+9/24/99 (feature change) tk_dialog now uses {Times 12} by default. (hobbs)
+
+--- Released 8.2.1, October 04, 1999 --- See ChangeLog for details ---
