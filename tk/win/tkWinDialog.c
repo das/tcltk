@@ -26,6 +26,21 @@
 #ifdef USE_NEW_CHOOSEDIR
 #include <shlobj.h>     /* includes SHBrowseForFolder */
 
+/* These needed for compilation with VC++ 5.2 */
+#ifndef BIF_EDITBOX
+#define BIF_EDITBOX 0x10
+#endif
+#ifndef BIF_VALIDATE
+#define BIF_VALIDATE 0x0020
+#endif
+#ifndef BFFM_VALIDATEFAILED
+#ifdef UNICODE
+#define BFFM_VALIDATEFAILED 4
+#else
+#define BFFM_VALIDATEFAILED 3
+#endif
+#endif 
+
 /*
  * The following structure is used by the new Tk_ChooseDirectoryObjCmd
  * to pass data between it and its callback. Unqiue to Winodws platform.

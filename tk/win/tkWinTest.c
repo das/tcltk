@@ -27,7 +27,7 @@ static int		TestclipboardObjCmd(ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *CONST objv[]);
 static int		TestwineventCmd(ClientData clientData, 
-			    Tcl_Interp *interp, int argc, char **argv);
+			    Tcl_Interp *interp, int argc, CONST char **argv);
 
 
 /*
@@ -228,7 +228,7 @@ TestwineventCmd(clientData, interp, argc, argv)
     ClientData clientData;		/* Main window for application. */
     Tcl_Interp *interp;			/* Current interpreter. */
     int argc;				/* Number of arguments. */
-    char **argv;			/* Argument strings. */
+    CONST char **argv;			/* Argument strings. */
 {
     HWND hwnd = 0;
     int id;
