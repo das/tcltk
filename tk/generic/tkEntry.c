@@ -694,7 +694,7 @@ static void		EntrySetValue _ANSI_ARGS_((Entry *entryPtr,
 static void		EntrySelectTo _ANSI_ARGS_((
 			    Entry *entryPtr, int index));
 static char *		EntryTextVarProc _ANSI_ARGS_((ClientData clientData,
-			    Tcl_Interp *interp, char *name1, char *name2,
+			    Tcl_Interp *interp, char *name1, CONST char *name2,
 			    int flags));
 static void		EntryUpdateScrollbar _ANSI_ARGS_((Entry *entryPtr));
 static int		EntryValidate _ANSI_ARGS_((Entry *entryPtr,
@@ -3277,7 +3277,7 @@ EntryTextVarProc(clientData, interp, name1, name2, flags)
     ClientData clientData;	/* Information about button. */
     Tcl_Interp *interp;		/* Interpreter containing variable. */
     char *name1;		/* Not used. */
-    char *name2;		/* Not used. */
+    CONST char *name2;		/* Not used. */
     int flags;			/* Information about what happened. */
 {
     Entry *entryPtr = (Entry *) clientData;

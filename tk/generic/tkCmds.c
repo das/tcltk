@@ -32,7 +32,7 @@
 
 static TkWindow *	GetToplevel _ANSI_ARGS_((Tk_Window tkwin));
 static char *		WaitVariableProc _ANSI_ARGS_((ClientData clientData,
-			    Tcl_Interp *interp, char *name1, char *name2,
+			    Tcl_Interp *interp, char *name1, CONST char *name2,
 			    int flags));
 static void		WaitVisibilityProc _ANSI_ARGS_((ClientData clientData,
 			    XEvent *eventPtr));
@@ -856,7 +856,7 @@ WaitVariableProc(clientData, interp, name1, name2, flags)
     ClientData clientData;	/* Pointer to integer to set to 1. */
     Tcl_Interp *interp;		/* Interpreter containing variable. */
     char *name1;		/* Name of variable. */
-    char *name2;		/* Second part of variable name. */
+    CONST char *name2;		/* Second part of variable name. */
     int flags;			/* Information about what happened. */
 {
     int *donePtr = (int *) clientData;

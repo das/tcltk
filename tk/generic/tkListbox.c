@@ -425,7 +425,7 @@ static void		ListboxWorldChanged _ANSI_ARGS_((
 static int		NearestListboxElement _ANSI_ARGS_((Listbox *listPtr,
 			    int y));
 static char *		ListboxListVarProc _ANSI_ARGS_ ((ClientData clientData,
-	                    Tcl_Interp *interp, char *name1, char *name2,
+	                    Tcl_Interp *interp, char *name1, CONST char *name2,
  	                    int flags));
 static void		MigrateHashEntries _ANSI_ARGS_ ((Tcl_HashTable *table,
 			    int first, int last, int offset));
@@ -3224,7 +3224,7 @@ ListboxListVarProc(clientData, interp, name1, name2, flags)
     ClientData clientData;      /* Information about button. */
     Tcl_Interp *interp;         /* Interpreter containing variable. */
     char *name1;                /* Not used. */
-    char *name2;                /* Not used. */
+    CONST char *name2;          /* Not used. */
     int flags;                  /* Information about what happened. */
 {
     Listbox *listPtr = (Listbox *)clientData;
