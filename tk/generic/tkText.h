@@ -474,6 +474,12 @@ typedef struct TkTextTab {
 
 typedef struct TkTextTabArray {
     int numTabs;			/* Number of tab stops. */
+    double lastTab;                     /* The accurate fractional pixel 
+                                         * position of the last tab. */
+    double tabIncrement;                /* The accurate fractional pixel
+                                         * increment between interpolated 
+                                         * tabs we have to create when
+                                         * we exceed numTabs. */
     TkTextTab tabs[1];			/* Array of tabs.  The actual size
 					 * will be numTabs.  THIS FIELD MUST
 					 * BE THE LAST IN THE STRUCTURE. */
