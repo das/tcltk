@@ -117,7 +117,24 @@ test winWm-2.2 {TkpWmSetState} {pcOnly} {
     destroy .t
     set result
 } {normal withdrawn iconic normal}
-test winWm-2.3 {TkpWmSetState} {pcOnly} {
+test winWm-2.2 {TkpWmSetState} {pcOnly} {
+    toplevel .t
+    wm geometry .t 150x50+10+10
+    update
+    set result [wm state .t]
+    wm state .t withdrawn
+    update
+    lappend result [wm state .t]
+    wm state .t iconic
+    update
+    lappend result [wm state .t]
+    wm state .t normal
+    update 
+    lappend result [wm state .t]
+    destroy .t
+    set result
+} {normal withdrawn iconic normal}
+test winWm-2.4 {TkpWmSetState} {pcOnly} {
     set result {}
     toplevel .t
     wm geometry .t 150x50+10+10
@@ -135,7 +152,6 @@ test winWm-2.3 {TkpWmSetState} {pcOnly} {
     destroy .t
     set result
 } {{normal 150x50+10+10} {iconic 150x50+10+10} {iconic 150x50+10+10} {normal 200x50+10+10}}
-
 
 test winWm-3.1 {ConfigureTopLevel: window geometry propagation} {pcOnly} {
     toplevel .t
