@@ -156,7 +156,8 @@ TkWinXInit(hInstance)
      * threads will then write into the same device context.
      * 
      * This is a hack; we should add a subsystem that manages
-     * device context on a per-thread basis.
+     * device context on a per-thread basis.  See also tkWinWm.c,
+     * which also initializes a WNDCLASS structure.
      */
 
 #ifdef TCL_THREADS
