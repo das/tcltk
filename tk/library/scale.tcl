@@ -272,10 +272,12 @@ proc ::tk::ScaleButton2Down {w x y} {
     if {[string equal [$w cget -state] "disabled"]} {
       return
     }
+
     $w configure -state active
     $w set [$w get $x $y]
     set Priv(dragging) 1
     set Priv(initValue) [$w get]
+    set Priv($w,relief) [$w cget -sliderrelief]
     set coords "$x $y"
     set Priv(deltaX) 0
     set Priv(deltaY) 0
