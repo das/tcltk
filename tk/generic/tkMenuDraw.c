@@ -1010,7 +1010,7 @@ TkPostSubmenu(interp, menuPtr, mePtr)
 	subary[0] = mePtr->namePtr;
 	subary[1] = Tcl_NewStringObj("post", -1);
 	subary[2] = Tcl_NewIntObj(x);
-	subary[3] = Tcl_NewIntObj(x);
+	subary[3] = Tcl_NewIntObj(y);
 	Tcl_IncrRefCount(subary[1]);
 	Tcl_IncrRefCount(subary[2]);
 	Tcl_IncrRefCount(subary[3]);
