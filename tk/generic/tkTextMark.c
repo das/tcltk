@@ -265,7 +265,7 @@ TkTextSetMark(textPtr, name, indexPtr)
     CONST char *name;		/* Name of mark to set. */
     TkTextIndex *indexPtr;	/* Where to set mark. */
 {
-    Tcl_HashEntry *hPtr;
+    Tcl_HashEntry *hPtr = NULL;
     TkTextSegment *markPtr;
     TkTextIndex insertIndex;
     int new;

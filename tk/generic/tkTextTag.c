@@ -920,7 +920,7 @@ TkTextCreateTag(textPtr, tagName, newTag)
                                  * or 0 if already exists. */
 {
     register TkTextTag *tagPtr;
-    Tcl_HashEntry *hPtr;
+    Tcl_HashEntry *hPtr = NULL;
     int new;
     CONST char *name;
     

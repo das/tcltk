@@ -731,7 +731,6 @@ GetIndex(interp, sharedPtr, textPtr, string, indexPtr, canCachePtr)
                                  * we can cache the index (or NULL) */
 {
     char *p, *end, *endOfBase;
-    Tcl_HashEntry *hPtr;
     TkTextIndex first, last;
     int wantLast, result;
     char c;
@@ -777,6 +776,7 @@ GetIndex(interp, sharedPtr, textPtr, string, indexPtr, canCachePtr)
     if (p != NULL) {
 	TkTextSearch search;
 	TkTextTag *tagPtr;
+	Tcl_HashEntry *hPtr = NULL;
 	CONST char *tagName;
 	
 	if ((p[1] == 'f') && (strncmp(p+1, "first", 5) == 0)) {

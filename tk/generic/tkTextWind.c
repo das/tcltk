@@ -1306,7 +1306,6 @@ EmbWinDelayedUnmap(clientData)
 					 * be unmapped. */
 {
     TkTextEmbWindowClient *client = (TkTextEmbWindowClient*) clientData;
-    TkTextSegment *ewPtr = client->parent;
 
     if (!client->displayed && (client->tkwin != NULL)) {
 	if (client->textPtr->tkwin != Tk_Parent(client->tkwin)) {
