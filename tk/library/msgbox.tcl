@@ -171,66 +171,66 @@ proc ::tk::MessageBox {args} {
 
     switch -- $data(-type) {
 	abortretryignore {
-	    set maxWidth [::msgcat::mcmax Abort Retry Ignore]
+	    set maxWidth [mcmax Abort Retry Ignore]
 	    set maxWidth [expr {$maxWidth<6?6:$maxWidth}]
 	    set buttons [list \
-		[list abort  -width $maxWidth -text [::msgcat::mc "Abort"] \
+		[list abort  -width $maxWidth -text [mc "Abort"] \
 		    -under 0]\
-		[list retry  -width $maxWidth -text [::msgcat::mc "Retry"] \
+		[list retry  -width $maxWidth -text [mc "Retry"] \
 		    -under 0]\
-		[list ignore -width $maxWidth -text [::msgcat::mc "Ignore"] \
+		[list ignore -width $maxWidth -text [mc "Ignore"] \
 		    -under 0]\
 	    ]
 	}
 	ok {
 	    set buttons [list \
-		[list ok -width [::msgcat::mcmax OK] \
-		    -text [::msgcat::mc {OK}] -under 0] \
+		[list ok -width [mcmax OK] \
+		    -text [mc {OK}] -under 0] \
 	    ]
 	    if {[string equal $data(-default) ""]} {
 		set data(-default) "ok"
 	    }
 	}
 	okcancel {
-	    set maxWidth [::msgcat::mcmax OK Cancel]
+	    set maxWidth [mcmax OK Cancel]
 	    set maxWidth [expr {$maxWidth<6?6:$maxWidth}]
 	    set buttons [list \
 		[list ok     -width $maxWidth \
-		    -text [::msgcat::mc "OK"]     -under 0] \
+		    -text [mc "OK"]     -under 0] \
 		[list cancel -width $maxWidth \
-		    -text [::msgcat::mc "Cancel"] -under 0] \
+		    -text [mc "Cancel"] -under 0] \
 	    ]
 	}
 	retrycancel {
-	    set maxWidth [::msgcat::mcmax Retry Cancel]
+	    set maxWidth [mcmax Retry Cancel]
 	    set maxWidth [expr {$maxWidth<6?6:$maxWidth}]
 	    set buttons [list \
 		[list retry  -width $maxWidth \
-		    -text [::msgcat::mc "Retry"]  -under 0] \
+		    -text [mc "Retry"]  -under 0] \
 		[list cancel -width $maxWidth \
-		    -text [::msgcat::mc "Cancel"] -under 0] \
+		    -text [mc "Cancel"] -under 0] \
 	    ]
 	}
 	yesno {
-	    set maxWidth [::msgcat::mcmax Yes No]
+	    set maxWidth [mcmax Yes No]
 	    set maxWidth [expr {$maxWidth<6?6:$maxWidth}]
 	    set buttons [list \
 		[list yes    -width $maxWidth \
-		    -text [::msgcat::mc "Yes"] -under 0]\
+		    -text [mc "Yes"] -under 0]\
 		[list no     -width $maxWidth \
-		    -text [::msgcat::mc "No"]  -under 0]\
+		    -text [mc "No"]  -under 0]\
 	    ]
 	}
 	yesnocancel {
-	    set maxWidth [::msgcat::mcmax Yes No Cancel]
+	    set maxWidth [mcmax Yes No Cancel]
 	    set maxWidth [expr {$maxWidth<6?6:$maxWidth}]
 	    set buttons [list \
 		[list yes    -width $maxWidth \
-		    -text [::msgcat::mc "Yes"] -under 0]\
+		    -text [mc "Yes"] -under 0]\
 		[list no     -width $maxWidth \
-		    -text [::msgcat::mc "No"]  -under 0]\
+		    -text [mc "No"]  -under 0]\
 		[list cancel -width $maxWidth \
-		    -text [::msgcat::mc "Cancel"] -under 0]\
+		    -text [mc "Cancel"] -under 0]\
 	    ]
 	}
 	default {

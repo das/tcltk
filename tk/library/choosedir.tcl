@@ -13,6 +13,7 @@ namespace eval ::tk::dialog::file {}
 
 # Make the chooseDir namespace inside the dialog namespace
 namespace eval ::tk::dialog::file::chooseDir {
+    namespace import ::tk::msgcat::*
 }
 
 # ::tk::dialog::file::chooseDir:: --
@@ -135,9 +136,9 @@ proc ::tk::dialog::file::chooseDir::Config {dataName argList} {
     tclParseConfigSpec ::tk::dialog::file::$dataName $specs "" $argList
 
     if {$data(-title) == ""} {
-	set data(-title) "[::msgcat::mc "Choose Directory"]"
+	set data(-title) "[mc "Choose Directory"]"
     }
-
+    
     # Stub out the -multiple value for the dialog; it doesn't make sense for
     # choose directory dialogs, but we have to have something there because we
     # share so much code with the file dialogs.
