@@ -76,7 +76,8 @@ frame $w.mid
 pack $w.mid -fill both -expand 1
 
 labelframe $w.dir -text "Directory:"
-set dirName [file join $tk_library demos images]
+# Main widget program sets variable tk_demoDirectory
+set dirName [file join $tk_demoDirectory images]
 entry $w.dir.e -width 30 -textvariable dirName
 button $w.dir.b -pady 0 -padx 2m -text "Select Dir." \
 	-command "selectAndLoadDir $w"

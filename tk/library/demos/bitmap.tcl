@@ -33,7 +33,6 @@ proc bitmapRow {w args} {
 }
 
 set w .bitmap
-global tk_library
 catch {destroy $w}
 toplevel $w
 wm title $w "Bitmap Demonstration"

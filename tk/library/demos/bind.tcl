@@ -66,12 +66,13 @@ foreach tag {d1 d2 d3 d4 d5 d6} {
     $w.text tag bind $tag <Any-Enter> "$w.text tag configure $tag $bold"
     $w.text tag bind $tag <Any-Leave> "$w.text tag configure $tag $normal"
 }
-$w.text tag bind d1 <1> {source [file join $tk_library demos items.tcl]}
-$w.text tag bind d2 <1> {source [file join $tk_library demos plot.tcl]}
-$w.text tag bind d3 <1> {source [file join $tk_library demos ctext.tcl]}
-$w.text tag bind d4 <1> {source [file join $tk_library demos arrow.tcl]}
-$w.text tag bind d5 <1> {source [file join $tk_library demos ruler.tcl]}
-$w.text tag bind d6 <1> {source [file join $tk_library demos cscroll.tcl]}
+# Main widget program sets variable tk_demoDirectory
+$w.text tag bind d1 <1> {source [file join $tk_demoDirectory items.tcl]}
+$w.text tag bind d2 <1> {source [file join $tk_demoDirectory plot.tcl]}
+$w.text tag bind d3 <1> {source [file join $tk_demoDirectory ctext.tcl]}
+$w.text tag bind d4 <1> {source [file join $tk_demoDirectory arrow.tcl]}
+$w.text tag bind d5 <1> {source [file join $tk_demoDirectory ruler.tcl]}
+$w.text tag bind d6 <1> {source [file join $tk_demoDirectory cscroll.tcl]}
 
 $w.text mark set insert 0.0
 $w.text configure -state disabled

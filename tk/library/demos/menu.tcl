@@ -114,8 +114,9 @@ $m invoke 7
 set m $w.menu.icon
 $w.menu add cascade -label "Icons" -menu $m -underline 0
 menu $m -tearoff 0
+# Main widget program sets variable tk_demoDirectory
 $m add command \
-    -bitmap @[file join $tk_library demos images pattern.bmp] \
+    -bitmap @[file join $tk_demoDirectory images pattern.bmp] \
     -hidemargin 1 \
     -command {
 	tk_dialog .pattern {Bitmap Menu Entry} {The menu entry you invoked displays a bitmap rather than a text string.  Other than this, it is just like any other menu entry.} {} 0 OK

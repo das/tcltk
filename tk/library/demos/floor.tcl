@@ -1290,7 +1290,7 @@ proc fg3 {w color} {
 # Below is the "main program" that creates the floorplan demonstration.
 
 set w .floor
-global c tk_library currentRoom colors activeFloor
+global c currentRoom colors activeFloor
 catch {destroy $w}
 toplevel $w
 wm title $w "Floorplan Canvas Demonstration"
