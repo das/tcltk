@@ -416,6 +416,11 @@ LineCoords(interp, canvas, itemPtr, argc, argv)
 		"odd number of coordinates specified for line",
 		(char *) NULL);
 	return TCL_ERROR;
+    } else if (argc < 4) {
+	Tcl_AppendResult(interp,
+		"too few coordinates specified for line",
+		(char *) NULL);
+	return TCL_ERROR;
     } else {
 	numPoints = argc/2;
 	if (linePtr->numPoints != numPoints) {

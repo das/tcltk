@@ -1313,7 +1313,6 @@ PackStructureProc(clientData, eventPtr)
     XEvent *eventPtr;			/* Describes what just happened. */
 {
     register Packer *packPtr = (Packer *) clientData;
-    TkDisplay *dispPtr;
 
     if (eventPtr->type == ConfigureNotify) {
 	if ((packPtr->slavePtr != NULL)
@@ -1345,7 +1344,7 @@ PackStructureProc(clientData, eventPtr)
 	    slavePtr->nextPtr = NULL;
 	}
 	if (packPtr->tkwin != NULL) {
-	    dispPtr = ((TkWindow *) packPtr->tkwin)->dispPtr;
+	    TkDisplay *dispPtr = ((TkWindow *) packPtr->tkwin)->dispPtr;
             Tcl_DeleteHashEntry(Tcl_FindHashEntry(&dispPtr->packerHashTable,
 		    (char *) packPtr->tkwin));
 	}

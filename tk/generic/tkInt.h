@@ -482,7 +482,6 @@ typedef struct TkDisplay {
 #ifdef TK_USE_INPUT_METHODS
     XIM inputMethod;		/* Input method for this display */
 #endif /* TK_USE_INPUT_METHODS */
-    int useInputMethods;	/* Whether to use input methods */
     Tcl_HashTable winTable;	/* Maps from X window ids to TkWindow ptrs. */
 
     int refCount;		/* Reference count of how many Tk applications
@@ -490,12 +489,16 @@ typedef struct TkDisplay {
                                  * the display when we no longer have any
                                  * Tk applications using it.
                                  */
+    /*
+     * The following field were all added for Tk8.3
+     */
     int mouseButtonState;	/* current mouse button state for this
 				 * display */
     int warpInProgress;
     Window warpWindow;
     int warpX;
     int warpY;
+    int useInputMethods;	/* Whether to use input methods */
 } TkDisplay;
 
 /*
