@@ -174,7 +174,13 @@ proc ::tk::dialog::error::bgerror err {
 
     # 2. Fill the top part with bitmap and message
 
-    label .bgerrorDialog.msg -justify left -text $text -font $messageFont
+    # Max-width of message is the width of the screen...
+    set wrapwidth [winfo screenwidth .bgerrorDialog]
+    # ...minus the width of the icon, padding and a fudge factor for
+    # the window manager decorations and aesthetics.
+    set wrapwidth [expr {$wrapwidth-60-[winfo pixels .bgerrorDialog 9m]}]
+    label .bgerrorDialog.msg -justify left -text $text -font $messageFont \
+	    -wraplength $wrapwidth
     if { $tcl_platform(platform) eq "macintosh" } {
 	# On the Macintosh, use the stop bitmap
 	label .bgerrorDialog.bitmap -bitmap stop
@@ -190,9 +196,9 @@ proc ::tk::dialog::error::bgerror err {
 	    -row 0			\
 	    -padx 3m			\
 	    -pady 3m
-    grid configure		.bgerrorDialog.msg -sticky nsw
-    grid rowconfigure		.bgerrorDialog.top 1 -weight 1
-    grid columnconfigure	.bgerrorDialog.top 1 -weight 1
+    grid configure	 .bgerrorDialog.msg -sticky nsw -padx {0 3m}
+    grid rowconfigure	 .bgerrorDialog.top 1 -weight 1
+    grid columnconfigure .bgerrorDialog.top 1 -weight 1
 
     # 3. Create a row of buttons at the bottom of the dialog.
 
