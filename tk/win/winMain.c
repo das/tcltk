@@ -171,7 +171,11 @@ Tcl_AppInit(interp)
     return TCL_OK;
 
 error:
-    WishPanic(Tcl_GetStringResult(interp));
+    MessageBeep(MB_ICONEXCLAMATION);
+    MessageBox(NULL, Tcl_GetStringResult(interp), "Error in Wish",
+	    MB_ICONSTOP | MB_OK | MB_TASKMODAL | MB_SETFOREGROUND);
+    ExitProcess(1);
+    /* we won't reach this, but we need the return */
     return TCL_ERROR;
 }
 
@@ -209,6 +213,7 @@ WishPanic TCL_VARARGS_DEF(char *,arg1)
 #endif
     ExitProcess(1);
 }
+
 /*
  *-------------------------------------------------------------------------
  *
@@ -325,7 +330,6 @@ setargv(argcPtr, argvPtr)
     *argcPtr = argc;
     *argvPtr = argv;
 }
-
 
 /*
  *----------------------------------------------------------------------
