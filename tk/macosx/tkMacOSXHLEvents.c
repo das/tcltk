@@ -73,13 +73,13 @@ OSStatus ApplicationCarbonEventsHandler (EventHandlerCallRef inHandlerCallRef,
          * the show preferences procedure doesn't exist.
          */
      
+            toggleHide = 1;
             if ((interp == NULL) || 
                     (Tcl_GetCommandInfo(interp, 
                     "::tk::mac::OnHide", &dummy)) == 0) {
                 return eventNotHandledErr;
             }
             Tcl_GlobalEval(interp, "::tk::mac::OnHide");
-            toggleHide = 1;
             break;
         case kEventAppShown:
             if (toggleHide == 1) {
