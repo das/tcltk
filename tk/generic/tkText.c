@@ -4923,6 +4923,25 @@ SearchPerform(interp, searchSpecPtr, patObj, fromPtr, toPtr)
      * Find the optional end location, similarly.
      */
     if (toPtr != NULL) {
+	CONST TkTextIndex *indexToPtr, *indexFromPtr;
+	TkText *textPtr = (TkText*)(searchSpecPtr->clientData);
+	
+	indexToPtr = TkTextGetIndexFromObj(interp, textPtr, toPtr);
+	if (indexToPtr == NULL) {
+	    return TCL_ERROR;
+	}
+	indexFromPtr = TkTextGetIndexFromObj(interp, textPtr, fromPtr);
+	/* 
+	 * Check for any empty search range here.  It might be better
+	 * in the future to embed that in SearchCore (whose default
+	 * behaviour is to wrap when given a negative search range).
+	 */
+	if (searchSpecPtr->backwards) {
+	    if (TkTextIndexCmp(indexFromPtr, indexToPtr) == -1) return TCL_OK;
+	} else {
+	    if (TkTextIndexCmp(indexFromPtr, indexToPtr) == 1) return TCL_OK;
+	}
+	
 	if ((*searchSpecPtr->lineIndexProc)(interp, toPtr, searchSpecPtr, 
 		&searchSpecPtr->stopLine,
 		&searchSpecPtr->stopOffset) != TCL_OK) {

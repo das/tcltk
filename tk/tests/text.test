@@ -2677,6 +2677,34 @@ test text-20.175 {TextSearchCmd, regexp search multi-line} {
     set res
 } {2.3 13}
 
+test text-20.176 {TextSearchCmd, empty search range} {
+    deleteWindows
+    pack [text .t2]
+    .t2 insert 1.0 "a\na\na\n"
+    .t2 search -- a 2.0 1.0
+} {}
+
+test text-20.177 {TextSearchCmd, empty search range} {
+    deleteWindows
+    pack [text .t2]
+    .t2 insert 1.0 "a\na\na\n"
+    .t2 search -backwards -- a 1.0 2.0
+} {}
+
+test text-20.178 {TextSearchCmd, empty search range} {
+    deleteWindows
+    pack [text .t2]
+    .t2 insert 1.0 "a\na\na\n"
+    .t2 search -- a 1.0 1.0
+} {}
+
+test text-20.179 {TextSearchCmd, empty search range} {
+    deleteWindows
+    pack [text .t2]
+    .t2 insert 1.0 "a\na\na\n"
+    .t2 search -backwards -- a 2.0 2.0
+} {}
+
 deleteWindows
 text .t2 -highlightthickness 0 -bd 0 -relief flat -padx 0 -width 100
 pack .t2
