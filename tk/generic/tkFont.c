@@ -18,10 +18,6 @@
 #include "tkInt.h"
 #include "tkFont.h"
 
-#ifndef assert
-#include <assert.h>
-#endif
-
 /*
  * The following structure is used to keep track of all the fonts that
  * exist in the current application.  It must be stored in the
@@ -439,7 +435,8 @@ TkFontPkgFree(mainPtr)
 	fprintf(stderr, "Font %s still in cache.\n", 
 		Tcl_GetHashKey(&fiPtr->fontCache, searchPtr));
     }
-    assert(fontsLeft == 0);
+    if (fontsLeft == 0)
+        panic("no fontsLeft");
 #ifdef PURIFY
     if (fontsLeft) {
 	panic("TkFontPkgFree: all fonts should have been freed already");
