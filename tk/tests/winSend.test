@@ -19,6 +19,12 @@ if {$tcl_platform(platform) != "windows"} {
     return
 }
 
+if {[info commands send] != "send"} {
+    puts "skipping: Unimplemented send command"
+    ::tcltest::cleanupTests
+    return
+}
+
 foreach i [winfo children .] {
     destroy $i
 }

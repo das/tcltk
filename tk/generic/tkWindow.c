@@ -2680,6 +2680,9 @@ Tk_SafeInit(interp)
     return Initialize(interp);
 }
 
+
+extern TkStubs tkStubs;
+
 /*
  *----------------------------------------------------------------------
  *
@@ -2937,10 +2940,16 @@ Initialize(interp)
      * Provide Tk and its stub table.
      */
 
-    code = Tcl_PkgProvideEx(interp, "Tk", TK_VERSION, (ClientData) tkStubsPtr);
+    code = Tcl_PkgProvideEx(interp, "Tk", TK_VERSION, (ClientData) &tkStubs);
     if (code != TCL_OK) {
 	goto done;
     }
+
+#ifdef Tk_InitStubs
+#undef Tk_InitStubs
+#endif
+
+    Tk_InitStubs(interp, TK_VERSION, 1);
 
     /*
      * Invoke platform-specific initialization.

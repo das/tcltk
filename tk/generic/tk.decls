@@ -1068,13 +1068,6 @@ declare 5 win {
 	    UINT message, WPARAM wParam, LPARAM lParam, LRESULT *result)
 }
 
-# new for 8.1
-
-declare 6 win {
-    int Tk_DdeObjCmd (ClientData clientData, Tcl_Interp *interp, \
-	    int objc, Tcl_Obj *CONST objv[])
-}
-
 # Mac specific functions
 
 declare 0 mac {

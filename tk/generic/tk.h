@@ -1159,6 +1159,15 @@ struct Tk_PhotoImageFormat {
 #define Tk_Main(argc, argv, proc) \
     Tk_MainEx(argc, argv, proc, Tcl_CreateInterp())
 
+char *Tk_InitStubs _ANSI_ARGS_((Tcl_Interp *interp, char *version, int exact));
+
+#ifndef USE_TK_STUBS
+
+#define Tk_InitStubs(interp, version, exact) \
+    Tcl_PkgRequire(interp, "Tk", version, exact)
+
+#endif
+
 
 /*
  *--------------------------------------------------------------
