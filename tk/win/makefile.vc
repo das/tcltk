@@ -180,7 +180,7 @@ TCLINSTALL	= 1
 !elseif exist($(TCLDIR)\generic\tcl.h)
 TCLINSTALL	= 0
 !else
-!error Don't know where tcl.h is.  Set the TCLDIR macro.
+!error Don't know where tcl.h is.  the TCLDIR macro doesn't appear correct.
 !endif
 !endif
 
@@ -702,6 +702,12 @@ $<
 	$(rc32) -fo $@ -r -i "$(GENERICDIR)" $(TCL_INCLUDES) \
 !if $(DEBUG)
 		-d DEBUG \
+!endif
+!if $(TCL_THREADS)
+		-d TCL_THREADS \
+!endif
+!if $(STATIC_BUILD)
+		-d STATIC_BUILD \
 !endif
 		$<
 
