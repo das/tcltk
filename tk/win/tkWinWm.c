@@ -2222,6 +2222,7 @@ UpdateWrapper(winPtr)
 		|SWP_NOOWNERZORDER);
     }
     TkpWmSetState(winPtr, state);
+    wmPtr->hints.initial_state = state;
 
     if (hSmallIcon != NULL) {
 	SendMessage(wmPtr->wrapper,WM_SETICON,ICON_SMALL,(LPARAM)hSmallIcon);
@@ -2240,6 +2241,10 @@ UpdateWrapper(winPtr)
      */
 
     if (winPtr->flags & TK_EMBEDDED) {
+	if(state != SendMessage(wmPtr->wrapper, TK_STATE, state, 0)) {
+	    TkpWmSetState(winPtr, NormalState);
+	    wmPtr->hints.initial_state = NormalState;
+	}
 	XMapWindow(winPtr->display, winPtr->window);
     }
 
