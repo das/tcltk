@@ -20,7 +20,7 @@ proc loadDir w {
     global dirName
 
     $w.f.list delete 0 end
-    foreach i [lsort [glob [file join $dirName *]]] {
+    foreach i [lsort [glob -directory $dirName *]] {
 	$w.f.list insert end [file tail $i]
     }
 }
