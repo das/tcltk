@@ -934,7 +934,7 @@ proc tkMenuFind {w char} {
 			[$child cget -underline]]
               if {![string compare $char [string tolower $char2]]
                       || ![string compare $char ""]} {
-                  if {[string compare [$child cget $i -state] "disabled"]} {
+                  if {[string compare [$child cget -state] "disabled"]} {
 			return $child
 		    }
 		}
