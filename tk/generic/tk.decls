@@ -708,13 +708,13 @@ declare 143 generic {
 }
 
 declare 144 generic {
-    void Tk_PhotoPutBlock_Old (Tk_PhotoHandle handle, \
+    void Tk_PhotoPutBlock_NoComposite (Tk_PhotoHandle handle, \
 	    Tk_PhotoImageBlock *blockPtr, int x, int y, \
 	    int width, int height)
 }
 
 declare 145 generic {
-    void Tk_PhotoPutZoomedBlock_Old (Tk_PhotoHandle handle, \
+    void Tk_PhotoPutZoomedBlock_NoComposite (Tk_PhotoHandle handle, \
 	    Tk_PhotoImageBlock *blockPtr, int x, int y, \
 	    int width, int height, int zoomX, int zoomY, \
 	    int subsampleX, int subsampleY)
