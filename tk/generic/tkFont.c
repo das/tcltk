@@ -2827,7 +2827,7 @@ Tk_TextLayoutToPostscript(interp, layout)
 			else
 			    buf[used++] = ')';
 			buf[used++] = '/';
-			while( *glyphname ) 
+			while( (*glyphname) && (used < (MAXUSE+27))) 
 			    buf[used++] = *glyphname++ ;
 			buf[used++] = '(';
 		    }
