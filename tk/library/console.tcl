@@ -6,6 +6,7 @@
 #
 # RCS: @(#) $Id$
 #
+# Copyright (c) 1998-1999 Scriptics Corp.
 # Copyright (c) 1995-1997 Sun Microsystems, Inc.
 #
 # See the file "license.terms" for information on usage and redistribution
@@ -470,7 +471,7 @@ proc tkConsoleExit {} {
 proc tkConsoleAbout {} {
     global tk_patchLevel
     tk_messageBox -type ok -message "Tcl for Windows
-Copyright \251 1996 Sun Microsystems, Inc.
+Copyright \251 1999 Scriptics Corporation
 
 Tcl [info patchlevel]
 Tk $tk_patchLevel"

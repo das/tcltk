@@ -19,6 +19,14 @@
 #define _TK
 
 /*
+ * For C++ compilers, use extern "C"
+ */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+    
+/*
  * When version numbers change here, you must also go into the following files
  * and update the version numbers:
  *
@@ -1210,4 +1218,12 @@ typedef int (Tk_SelectionProc) _ANSI_ARGS_((ClientData clientData,
 #undef TCL_STORAGE_CLASS
 #define TCL_STORAGE_CLASS DLLIMPORT
 
+/*
+ * end block for C++
+ */
+    
+#ifdef __cplusplus
+}
+#endif
+    
 #endif /* _TK */
