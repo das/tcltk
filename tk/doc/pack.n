@@ -268,11 +268,11 @@ label .r \-text "Right\\nHand\\nSide"
 text .mid
 \.mid insert end "This layout is like Java's BorderLayout"
 # Lay them out
-pack .t   \-side top    \-fill x
-pack .b   \-side bottom \-fill x
-pack .l   \-side left   \-fill y
-pack .r   \-side right  \-fill y
-pack .mid \-expand 1    \-fill both
+\fBpack\fR .t   \-side top    \-fill x
+\fBpack\fR .b   \-side bottom \-fill x
+\fBpack\fR .l   \-side left   \-fill y
+\fBpack\fR .r   \-side right  \-fill y
+\fBpack\fR .mid \-expand 1    \-fill both
 .CE
 
 .SH "SEE ALSO"

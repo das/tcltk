@@ -133,7 +133,6 @@ of numerical tick marks just to the left of the current value
 (just below the trough for horizontal scales).  Each of these three
 annotations may be enabled or disabled using the
 configuration options.
-
 .SH "WIDGET COMMAND"
 .PP
 The \fBscale\fR command creates a new Tcl command whose
@@ -197,7 +196,6 @@ This command is invoked to change the current value of the scale,
 and hence the position at which the slider is displayed.  \fIValue\fR
 gives the new value for the scale.
 The command has no effect if the scale is disabled.
-
 .SH BINDINGS
 .PP
 Tk automatically creates class bindings for scales that give them

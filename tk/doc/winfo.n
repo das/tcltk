@@ -332,9 +332,9 @@ has no border).
 .SH EXAMPLE
 Print where the mouse pointer is and what window it is currently over:
 .CS
-lassign [\fBwinfo\fR pointerxy .] x y
+lassign [\fBwinfo pointerxy\fR .] x y
 puts -nonewline "Mouse pointer at ($x,$y) which is "
-set win [\fBwinfo\fR containing $x $y]
+set win [\fBwinfo containing\fR $x $y]
 if {$win eq ""} {
     puts "over no window"
 } else {
