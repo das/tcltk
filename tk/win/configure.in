@@ -41,15 +41,15 @@ AC_PROG_CC
 # autoconf 2.50. You can also just set
 # the CC, AR, RANLIB, and RC environment
 # variables if you want to cross compile.
-AC_CHECK_TOOL(AR, ar, :)
-AC_CHECK_TOOL(RANLIB, ranlib, :)
-AC_CHECK_TOOL(RC, windres, :)
+#AC_CHECK_TOOL(AR, ar, :)
+#AC_CHECK_TOOL(RANLIB, ranlib, :)
+#AC_CHECK_TOOL(RC, windres, :)
 
-dnl if test "${GCC}" = "yes" ; then
-    dnl AC_CHECK_PROG(AR, ar, ar)
-    dnl AC_CHECK_PROG(RANLIB, ranlib, ranlib)
-    dnl AC_CHECK_PROG(RC, windres, windres)
-dnl fi
+if test "${GCC}" = "yes" ; then
+    AC_CHECK_PROG(AR, ar, ar)
+    AC_CHECK_PROG(RANLIB, ranlib, ranlib)
+    AC_CHECK_PROG(RC, windres, windres)
+fi
 
 #--------------------------------------------------------------------
 # Checks to see if the make progeam sets the $MAKE variable.
@@ -61,7 +61,7 @@ AC_PROG_MAKE_SET
 # These two macros perform additinal compiler test.
 #--------------------------------------------------------------------
 
-dnl AC_CYGWIN
+AC_CYGWIN
 
 #--------------------------------------------------------------------
 # Determines the correct binary file extension (.o, .obj, .exe etc.)
