@@ -369,6 +369,7 @@ typedef struct TkDisplay {
     Atom applicationAtom;	/* Atom for TK_APPLICATION. */
     Atom windowAtom;		/* Atom for TK_WINDOW. */
     Atom clipboardAtom;		/* Atom for CLIPBOARD. */
+    Atom utf8Atom;		/* Atom for UTF8_STRING. */
 
     Tk_Window clipWindow;	/* Window used for clipboard ownership and to
 				 * retrieve selections between processes. NULL

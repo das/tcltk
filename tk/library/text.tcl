@@ -260,7 +260,7 @@ bind Text <<PasteSelection>> {
     }
 }
 bind Text <Insert> {
-    catch {tkTextInsert %W [selection get -displayof %W]}
+    catch {tkTextInsert %W [::tk::GetSelection %W PRIMARY]}
 }
 bind Text <KeyPress> {
     tkTextInsert %W %A
@@ -627,7 +627,7 @@ proc tkTextKeyExtend {w index} {
 
 proc tkTextPaste {w x y} {
     $w mark set insert [tkTextClosestGap $w $x $y]
-    catch {$w insert insert [selection get -displayof $w]}
+    catch {$w insert insert [::tk::GetSelection $w PRIMARY]}
     if {[string equal [$w cget -state] "normal"]} {focus $w}
 }
 
@@ -974,7 +974,7 @@ proc tk_textPaste w {
 		$w delete sel.first sel.last
 	    }
 	}
-	$w insert insert [selection get -displayof $w -selection CLIPBOARD]
+	$w insert insert [::tk::GetSelection $w CLIPBOARD]
     }
 }
 

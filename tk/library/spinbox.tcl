@@ -60,7 +60,7 @@ bind Spinbox <<Paste>> {
 		%W delete sel.first sel.last
 	    }
 	}
-	%W insert insert [selection get -displayof %W -selection CLIPBOARD]
+	%W insert insert [::tk::GetSelection %W CLIPBOARD]
 	::tk::spinbox::SeeInsert %W
     }
 }
@@ -218,7 +218,7 @@ if {[string equal $tcl_platform(platform) "macintosh"]} {
 # generates the <<Paste>> event, so we don't need to do anything here.
 if {[string compare $tcl_platform(platform) "windows"]} {
     bind Spinbox <Insert> {
-	catch {::tk::spinbox::Insert %W [selection get -displayof %W]}
+	catch {::tk::spinbox::Insert %W [::tk::GetSelection %W PRIMARY]}
     }
 }
 
@@ -504,7 +504,7 @@ proc ::tk::spinbox::Paste {w x} {
     global tkPriv
 
     $w icursor [::tk::spinbox::ClosestGap $w $x]
-    catch {$w insert insert [selection get -displayof $w]}
+    catch {$w insert insert [::tk::GetSelection $w PRIMARY]}
     if {[string equal "disabled" [$w cget -state]]} {focus $w}
 }
 
