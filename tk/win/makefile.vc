@@ -393,8 +393,9 @@ cdebug = -Od -Zi
 cdebug = -Z7 -Od -WX
 !endif
 !else
-# This cranks the optimization level to maximize speed
-cdebug = -O2
+# This cranks the optimization level up.  We can't use -02 because sometimes
+# it causes problems.
+cdebug = -Oti
 !endif
 
 # declarations common to all compiler options
