@@ -36,7 +36,7 @@
 #-------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------
-# The code below creates the default class bindings for entries.
+# The code below creates the default class bindings for text widgets.
 #-------------------------------------------------------------------------
 
 # Standard Motif bindings:
@@ -182,9 +182,11 @@ bind Text <Control-Shift-End> {
 }
 
 bind Text <Tab> {
-    tkTextInsert %W \t
-    focus %W
-    break
+    if { [string equal [%W cget -state] "normal"] } {
+	tkTextInsert %W \t
+	focus %W
+	break
+    }
 }
 bind Text <Shift-Tab> {
     # Needed only to keep <Tab> binding from triggering;  doesn't
@@ -740,7 +742,10 @@ proc tkTextResetAnchor {w index} {
     global tkPriv
 
     if {[string equal [$w tag ranges sel] ""]} {
-	$w mark set anchor $index
+	# Don't move the anchor if there is no selection now; this makes
+	# the widget behave "correctly" when the user clicks once, then
+	# shift-clicks somewhere -- ie, the area between the two clicks will be
+	# selected. [Bug: 5929].
 	return
     }
     set a [$w index $index]
