@@ -19,19 +19,14 @@
 #include "tkInt.h"
 #endif
 
+#ifndef _TKMENU
+#include "tkMenu.h"
+#endif
+
 #ifdef BUILD_tk
 # undef TCL_STORAGE_CLASS
 # define TCL_STORAGE_CLASS DLLEXPORT
 #endif
-
-/*
- * Legal values for the "compound" field of TkButton records.
- */
-
-enum compound {
-    COMPOUND_BOTTOM, COMPOUND_CENTER, COMPOUND_LEFT, COMPOUND_NONE,
-        COMPOUND_RIGHT, COMPOUND_TOP
-};
 
 /*
  * Legal values for the "orient" field of TkMenubutton records.
@@ -172,7 +167,7 @@ typedef struct {
      */
 
     int compound;               /* Value of -compound option; specifies whether
-                                 * the button should show both an image and
+                                 * the menubutton should show both an image and
                                  * text, and, if so, how. */
 
     enum direction direction;	/* Direction for where to pop the menu.

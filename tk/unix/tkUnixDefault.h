@@ -245,6 +245,7 @@
 #define DEF_MENU_ENTRY_BITMAP		None
 #define DEF_MENU_ENTRY_COLUMN_BREAK	"0"
 #define DEF_MENU_ENTRY_COMMAND		(char *) NULL
+#define DEF_MENU_ENTRY_COMPOUND 	"none"
 #define DEF_MENU_ENTRY_FG		(char *) NULL
 #define DEF_MENU_ENTRY_FONT		(char *) NULL
 #define DEF_MENU_ENTRY_HIDE_MARGIN	"0"

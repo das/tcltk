@@ -38,7 +38,7 @@ static char *stateStrings[] = {
 
 /*
  * The following table defines the legal values for the -compound option.
- * It is used with the "enum compound" declaration in tkButton.h
+ * It is used with the "enum compound" declaration in tkMenuButton.h
  */
 
 static char *compoundStrings[] = {
