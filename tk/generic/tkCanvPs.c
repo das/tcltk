@@ -1432,7 +1432,27 @@ GetPostscriptPoints(interp, string, doublePtr)
  *
  *--------------------------------------------------------------
  */
+#ifdef WIN32
+#include <windows.h>
 
+/*
+ * We could just define these instead of pulling in windows.h.
+ #define GetRValue(rgb)	((BYTE)(rgb))
+ #define GetGValue(rgb)	((BYTE)(((WORD)(rgb)) >> 8))
+ #define GetBValue(rgb)	((BYTE)((rgb)>>16))
+*/
+
+static void
+TkImageGetColor(cdata, pixel, red, green, blue)
+    TkColormapData *cdata;              /* Colormap data */
+    unsigned long pixel;                /* Pixel value to look up */
+    double *red, *green, *blue;         /* Color data to return */
+{
+    *red   = (double) GetRValue(pixel) / 255.0;
+    *green = (double) GetGValue(pixel) / 255.0;
+    *blue  = (double) GetBValue(pixel) / 255.0;
+}
+#else
 static void
 TkImageGetColor(cdata, pixel, red, green, blue)
     TkColormapData *cdata;              /* Colormap data */
@@ -1443,26 +1463,16 @@ TkImageGetColor(cdata, pixel, red, green, blue)
 	int r = (pixel & cdata->red_mask) >> cdata->red_shift;
 	int g = (pixel & cdata->green_mask) >> cdata->green_shift;
 	int b = (pixel & cdata->blue_mask) >> cdata->blue_shift;
-#ifdef WIN32
-	/*
-	 * Because XQueryColors is an empty stub on Windows, we need
-	 * to just make this simple calculation.  The TkColormapData
-	 * XColor data is otherwise bogus on Windows.  -- hobbs
-	 */
-	*red   = (double)r / 255.0;
-	*green = (double)g / 255.0;
-	*blue  = (double)b / 255.0;
-#else
-	*red = cdata->colors[r].red / 65535.0;
+	*red   = cdata->colors[r].red / 65535.0;
 	*green = cdata->colors[g].green / 65535.0;
-	*blue = cdata->colors[b].blue / 65535.0;
-#endif
+	*blue  = cdata->colors[b].blue / 65535.0;
     } else {
-	*red = cdata->colors[pixel].red / 65535.0;
+	*red   = cdata->colors[pixel].red / 65535.0;
 	*green = cdata->colors[pixel].green / 65535.0;
-	*blue = cdata->colors[pixel].blue / 65535.0;
+	*blue  = cdata->colors[pixel].blue / 65535.0;
     }
 }
+#endif
 
 /*
  *--------------------------------------------------------------
