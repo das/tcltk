@@ -431,9 +431,14 @@ TkpSetCursor(
     }
     
     if (cursor == None) {
-        if (gCurrentCursor == NULL) {
-            cursorChanged = 0;
-        }
+        /*  
+         * This is a little tricky.  We can't really tell whether
+         * gCurrentCursor is NULL because it was NULL last time around
+         * or because we just freed the current cursor.  So if the input
+         * cursor is NULL, we always need to reset it, we can't trust the
+         * cursorChanged logic.
+         */
+         
         gCurrentCursor = NULL;
     } else {
         if (gCurrentCursor == (TkMacOSXCursor *) cursor) {
