@@ -5907,8 +5907,8 @@ process) when its container is destroyed. (chengyemao)
 Tk and bug fix) Implemented container identification, focus, raise, set 
 title of and move window so that an embedded widget is able to identify 
 a container, to get focus and to receive key press input. Fixed bugs include 
-[1024364] and an incorrect wm overrideredirect for an embedded window. 
-(chengyemao)
+[1024364][1096047] and an incorrect wm overrideredirect for an embedded 
+window. (chengyemao)
 
 2004-12-20 (Windows feature implementation of embedded/embedding Tk) 
 Implemented overrideredirect for an embedded toplevel; correctly updated a 
