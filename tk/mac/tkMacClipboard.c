@@ -66,12 +66,17 @@ TkSelGetSelection(
 	handle = NewHandle(1);
 	length = GetScrap(handle, 'TEXT', &offset);
 	if (length > 0) {
+	    Tcl_DString encodedText;
+
 	    SetHandleSize(handle, (Size) length + 1);
 	    HLock(handle);
 	    (*handle)[length] = '\0';
-	    
-	    result = (*proc)(clientData, interp, *handle);
-	    
+
+	    Tcl_ExternalToUtfDString(NULL, *handle, length, &encodedText);
+	    result = (*proc)(clientData, interp,
+		    Tcl_DStringValue(encodedText));
+	    Tcl_DStringFree(&encodedText);
+
 	    HUnlock(handle);
 	    DisposeHandle(handle);
 	    return result;
@@ -252,6 +257,8 @@ TkSuspendClipboard()
 	    break;
     }
     if (targetPtr != NULL) {
+	Tcl_DString encodedText;
+
 	length = 0;
 	for (cbPtr = targetPtr->firstBufferPtr; cbPtr != NULL;
 		cbPtr = cbPtr->nextPtr) {
@@ -273,7 +280,10 @@ TkSuspendClipboard()
 	}
 
 	ZeroScrap();
-	PutScrap(length, 'TEXT', buffer);
+	Tcl_UtfToExternalDString(NULL, buffer, length, &encodedText);
+	PutScrap(Tcl_DStringLength(&encodedText), 'TEXT',
+		Tcl_DStringValue(&encodedText));
+	Tcl_DStringFree(&encodedText);
 	ckfree(buffer);
     }
 
