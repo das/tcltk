@@ -71,7 +71,7 @@ proc ::tk_dialog {w title text bitmap default args} {
 
     frame $w.bot
     frame $w.top
-    if {[string equal $tcl_platform(platform) "unix"]} {
+    if {[string compare $tcl_platform(platform) "macintosh"]} {
 	$w.bot configure -relief raised -bd 1
 	$w.top configure -relief raised -bd 1
     }
@@ -110,7 +110,8 @@ proc ::tk_dialog {w title text bitmap default args} {
 	} else {
 	    $w.button$i configure -default normal
 	}
-	grid $w.button$i -in $w.bot -column $i -row 0 -sticky ew -padx 10
+	grid $w.button$i -in $w.bot -column $i -row 0 -sticky ew \
+		-padx 10 -pady 4
 	grid columnconfigure $w.bot $i
 	# We boost the size of some Mac buttons for l&f
 	if {[string equal $tcl_platform(platform) "macintosh"]} {
