@@ -199,7 +199,7 @@ extern void		TkWinWmStoreEmbedAssociation _ANSI_ARGS_((
 			    TkWindow *winPtr, HWND hwnd));
 extern void		TkWinXCleanup _ANSI_ARGS_((HINSTANCE hInstance));
 extern void 		TkWinXInit _ANSI_ARGS_((HINSTANCE hInstance));
-
+extern void             TkWinSetForegroundWindow _ANSI_ARGS_((TkWindow *winPtr));
 
 #endif /* _TKWININT */
 

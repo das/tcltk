@@ -4269,3 +4269,35 @@ ActivateWindow(
     
     return 1;
 }
+
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkWinSetForegroundWindow --
+ *
+ *	This function is a wrapper for SetForegroundWindow, calling
+ *      it on the wrapper window because it has no affect on child
+ *      windows.
+ *
+ * Results:
+ *	none
+ *
+ * Side effects:
+ *	May activate the toplevel window.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TkWinSetForegroundWindow(winPtr)
+    TkWindow *winPtr;
+{
+    register WmInfo *wmPtr = winPtr->wmInfoPtr;
+    
+    if (wmPtr->wrapper != NULL) {
+	SetForegroundWindow(wmPtr->wrapper);
+    } else {
+	SetForegroundWindow(Tk_GetHWND(winPtr->window));
+    }
+}
