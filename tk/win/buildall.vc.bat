@@ -12,8 +12,8 @@ echo.
 
 title Building Tk, please wait...
 
-if "%MSVCDir%" == "" call c:\dev\devstudio60\vc98\bin\vcvars32.bat
-::if "%MSVCDir%" == "" call "C:\Program Files\Microsoft Developer Studio\vc98\bin\vcvars32.bat"
+if "%MSDevDir%" == "" call c:\dev\devstudio60\vc98\bin\vcvars32.bat
+::if "%MSDevDir%" == "" call "C:\Program Files\Microsoft Developer Studio\vc98\bin\vcvars32.bat"
 
 set INSTALLDIR=C:\Program Files\Tcl
 
