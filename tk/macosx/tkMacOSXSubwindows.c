@@ -505,8 +505,8 @@ XMoveResizeWindow(
 	    macWin->winPtr->changes.x;
 	deltaY += macParent->yOff + parentBorderwidth +
 	    macWin->winPtr->changes.y;
-            
-        UpdateOffsets(macWin->winPtr, deltaX, deltaY);
+		
+	UpdateOffsets(macWin->winPtr, deltaX, deltaY);
 	TkMacOSXWinBounds(macWin->winPtr, &bounds);
 	InvalWindowRect(GetWindowFromPort(destPort),&bounds);
         GenerateConfigureNotify(macWin->winPtr, 0);
@@ -611,7 +611,7 @@ XMoveWindow(
 	UpdateOffsets(macWin->winPtr, deltaX, deltaY);
 	TkMacOSXWinBounds(macWin->winPtr, &bounds);
 	InvalWindowRect(GetWindowFromPort(destPort),&bounds);
-        GenerateConfigureNotify(macWin->winPtr, 0);        
+	GenerateConfigureNotify(macWin->winPtr, 0);
     }
 }
 

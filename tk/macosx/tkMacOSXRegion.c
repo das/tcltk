@@ -139,7 +139,7 @@ TkUnionRectWithRegion(
         tmpRgn = NewRgn();
     }
     SetRectRgn(tmpRgn, rectangle->x, rectangle->y,
-        rectangle->x + rectangle->width, rectangle->y + rectangle->height);
+	    rectangle->x + rectangle->width, rectangle->y + rectangle->height);
     UnionRgn(srcRgn, tmpRgn, destRgn);
 }
 
@@ -177,11 +177,11 @@ TkRectInRegion(
     SetRectRgn(rectRgn, x,  y, x + width, y + height);
     SectRgn(rgn, rectRgn, destRgn);
     if (EmptyRgn(destRgn)) {
-            result = RectangleOut;
+	result = RectangleOut;
     } else if (EqualRgn(rgn, destRgn)) {
-            result = RectangleIn;
+	result = RectangleIn;
     } else {
-            result = RectanglePart;
+	result = RectanglePart;
     }
     DisposeRgn(rectRgn);
     DisposeRgn(destRgn);

@@ -44,8 +44,8 @@ PBXBUILD		= /usr/bin/pbxbuild
 XCODEBUILD		= /usr/bin/xcodebuild
 
 BUILDCMD		= `if [ -f $(XCODEBUILD) ]; then \
-				echo "$(XCODEBUILD)"; \
-			  	else echo "$(PBXBUILD)"; fi`
+			    echo "$(XCODEBUILD) -project $$(ls -d *.pbproj)"; \
+			    else echo "$(PBXBUILD)"; fi`
 
 MAKE_VARS		:= SYMROOT OBJROOT BINDIR APPLICATION_INSTALL_PATH \
 				TCL_FRAMEWORK_DIR TCLSH_DIR
@@ -127,5 +127,7 @@ cleanup-embedded:
 .PHONY: all install embedded clean develop deploy install-develop install-deploy \
 embedded-develop embedded-deploy install-embedded-develop install-embedded-deploy \
 clean-develop clean-deploy cleanup-embedded
+
+.NOTPARALLEL:
 
 ################################################################################
