@@ -192,15 +192,15 @@ TCL_USE_STATIC_PACKAGES = 0
 # by accident.
 #----------------------------------------------------------
 
-SUFX	    = tsdx
+SUFX	    = tsgx
 
 !if $(DEBUG)
 BUILDDIRTOP = Debug
-DBGX	    = d
+DBGX	    = g
 !else
 BUILDDIRTOP = Release
 DBGX	    =
-SUFX	    = $(SUFX:d=)
+SUFX	    = $(SUFX:g=)
 !endif
 
 TMP_DIRFULL = .\$(BUILDDIRTOP)\$(PROJECT)_ThreadedDynamicStaticX
@@ -322,7 +322,7 @@ Don't know where tcl.h is.  The TCLDIR macro doesn't appear correct.
 #...
 #!endif
 
-TCL_DOTVERSION	= 8.5
+TCL_DOTVERSION	= 8.4
 TCL_VERSION	= $(TCL_DOTVERSION:.=)
 
 !if $(TCLINSTALL)
