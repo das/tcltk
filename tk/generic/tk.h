@@ -42,10 +42,10 @@
 #define TK_MAJOR_VERSION   8
 #define TK_MINOR_VERSION   0
 #define TK_RELEASE_LEVEL   2
-#define TK_RELEASE_SERIAL  3
+#define TK_RELEASE_SERIAL  4
 
 #define TK_VERSION "8.0"
-#define TK_PATCH_LEVEL "8.0.3"
+#define TK_PATCH_LEVEL "8.0.4"
 
 /* 
  * A special definition used to allow this header file to be included 
