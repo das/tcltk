@@ -1,3 +1,4 @@
+'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 1990-1994 The Regents of the University of California.
 '\" Copyright (c) 1994-1996 Sun Microsystems, Inc.
@@ -61,8 +62,8 @@ If this option is less than or equal to zero then the window will
 not request any size at all.
 .OP \-menu menu Menu
 Specifies a menu widget to be used as a menubar. On the Macintosh, the
-menubar will be displayed accross the top of the main monitor. On
-Microsoft Windows and all UNIX platforms, the menu will appear accross
+menubar will be displayed across the top of the main monitor. On
+Microsoft Windows and all UNIX platforms, the menu will appear across
 the toplevel window as part of the window dressing maintained by the
 window manager.
 .OP \-screen "" ""
