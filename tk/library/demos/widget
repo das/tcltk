@@ -327,6 +327,9 @@ addDemoSection "Common Dialogs" {
     filebox	"File selection dialog"
     clrpick	"Color picker"
 }
+addDemoSection "Animation" {
+    anilabel	"Animated labels"
+}
 addDemoSection "Miscellaneous" {
     bitmap	"The built-in bitmaps"
     dialog1	"A dialog box with a local grab"
