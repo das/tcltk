@@ -1245,6 +1245,10 @@ Tk_WinfoObjCmd(clientData, interp, objc, objv)
 	    
 	    Tk_MakeWindowExist(tkwin);
 	    TkpPrintWindowId(buf, Tk_WindowId(tkwin));
+	    /*
+	     * interp result may have changed, refetch it
+	     */
+	    resultPtr = Tcl_GetObjResult(interp);
 	    Tcl_SetStringObj(resultPtr, buf, -1);
 	    break;
 	}
