@@ -367,6 +367,26 @@ test canvas-11.1 {canvas poly fill check, bug 5783} {
 	    -fill {} -stipple gray50 -outline black
 } 1
 
+test canvas-12.1 {canvas mm obj, patch SF-403327, 102471} {
+    destroy .c
+    pack [canvas .c]
+    set qx [expr {1.+1.}] 
+    # qx has type double and no string representation 
+    .c scale all $qx 0 1. 1.
+    # qx has now type MMRep and no string representation 
+    list $qx [string length $qx]
+} {2.0 3}
+test canvas-12.2 {canvas mm obj, patch SF-403327, 102471} {
+    destroy .c
+    pack [canvas .c]
+    set val 10
+    incr val
+    # qx has type double and no string representation 
+    .c scale all $val 0 1 1
+    # qx has now type MMRep and no string representation 
+    incr val
+} {12}
+
 # cleanup
 ::tcltest::cleanupTests
 return
