@@ -59,6 +59,10 @@ TK_BUILD_LIB_SPEC='@TK_BUILD_LIB_SPEC@'
 # installed directory.
 TK_LIB_SPEC='@TK_LIB_SPEC@'
 
+# String to pass to the compiler so that an extension can
+# find installed Tk headers.
+TK_INCLUDE_SPEC='@TK_INCLUDE_SPEC@'
+
 # Location of the top-level source directory from which Tk was built.
 # This is the directory that contains a README file as well as
 # subdirectories such as generic, unix, etc.  If Tk was compiled in a
