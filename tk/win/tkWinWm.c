@@ -2179,7 +2179,7 @@ Tk_SetGrid(tkwin, reqWidth, reqHeight, widthInc, heightInc)
 	    && (wmPtr->widthInc == widthInc)
 	    && (wmPtr->heightInc == heightInc)
 	    && ((wmPtr->sizeHintsFlags & (PBaseSize|PResizeInc))
-		    == PBaseSize|PResizeInc)) {
+		    == (PBaseSize|PResizeInc))) {
 	return;
     }
 
