@@ -4186,7 +4186,8 @@ TkWmProtocolEventProc(winPtr, eventPtr)
  *
  *----------------------------------------------------------------------
  */
-void
+
+static void
 TkWmStackorderToplevelWrapperMap(winPtr, table)
     TkWindow *winPtr;				/* TkWindow to recurse on */
     Tcl_HashTable *table;			/* Maps X id to TkWindow */
