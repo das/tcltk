@@ -852,7 +852,7 @@ Tk_DrawChars(
 	SIZE size;
 
 	if (twdPtr->type != TWD_BITMAP) {
-	    panic("unexpected drawable type in stipple");
+	    Tcl_Panic("unexpected drawable type in stipple");
 	}
 
 	/*

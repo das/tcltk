@@ -472,7 +472,7 @@ UnlinkSlave(slavePtr)
 	for (prevPtr = masterPtr->slavePtr; ;
 		prevPtr = prevPtr->nextPtr) {
 	    if (prevPtr == NULL) {
-		panic("UnlinkSlave couldn't find slave to unlink");
+		Tcl_Panic("UnlinkSlave couldn't find slave to unlink");
 	    }
 	    if (prevPtr->nextPtr == slavePtr) {
 		prevPtr->nextPtr = slavePtr->nextPtr;

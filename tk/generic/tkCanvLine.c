@@ -303,7 +303,7 @@ CreateLine(interp, canvas, itemPtr, objc, objv)
     int i;
 
     if (objc == 0) {
-	panic("canvas did not pass any coords\n");
+	Tcl_Panic("canvas did not pass any coords\n");
     }
 
     /*
@@ -1876,7 +1876,7 @@ ParseArrowShape(clientData, interp, tkwin, value, recordPtr, offset)
     CONST char **argv = NULL;
 
     if (offset != Tk_Offset(LineItem, arrowShapeA)) {
-	panic("ParseArrowShape received bogus offset");
+	Tcl_Panic("ParseArrowShape received bogus offset");
     }
 
     if (Tcl_SplitList(interp, (char *) value, &argc, &argv) != TCL_OK) {

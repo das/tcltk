@@ -105,7 +105,7 @@ Tk_CreateErrorHandler(display, error, request, minorCode, errorProc, clientData)
 
     dispPtr = TkGetDisplay(display);
     if (dispPtr == NULL) {
-	panic("Unknown display passed to Tk_CreateErrorHandler");
+	Tcl_Panic("Unknown display passed to Tk_CreateErrorHandler");
     }
 
     /*

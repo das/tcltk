@@ -2560,7 +2560,7 @@ Unlink(slavePtr)
     } else {
 	for (slavePtr2 = masterPtr->slavePtr; ; slavePtr2 = slavePtr2->nextPtr) {
 	    if (slavePtr2 == NULL) {
-		panic("Unlink couldn't find previous window");
+		Tcl_Panic("Unlink couldn't find previous window");
 	    }
 	    if (slavePtr2->nextPtr == slavePtr) {
 		slavePtr2->nextPtr = slavePtr->nextPtr;

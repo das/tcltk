@@ -685,7 +685,7 @@ EmbWinLayoutProc(textPtr, indexPtr, ewPtr, offset, maxX, maxChars,
     int width, height;
 
     if (offset != 0) {
-	panic("Non-zero offset in EmbWinLayoutProc");
+	Tcl_Panic("Non-zero offset in EmbWinLayoutProc");
     }
 
     if ((ewPtr->body.ew.tkwin == NULL) && (ewPtr->body.ew.create != NULL)) {
@@ -820,10 +820,10 @@ EmbWinCheckProc(ewPtr, linePtr)
     TkTextLine *linePtr;		/* Line containing segment. */
 {
     if (ewPtr->nextPtr == NULL) {
-	panic("EmbWinCheckProc: embedded window is last segment in line");
+	Tcl_Panic("EmbWinCheckProc: embedded window is last segment in line");
     }
     if (ewPtr->size != 1) {
-	panic("EmbWinCheckProc: embedded window has size %d", ewPtr->size);
+	Tcl_Panic("EmbWinCheckProc: embedded window has size %d", ewPtr->size);
     }
 }
 

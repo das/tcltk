@@ -289,7 +289,7 @@ TkTextImageCmd(textPtr, interp, objc, objv)
 	return TCL_OK;
     }
     default:
-	panic("unexpected switch fallthrough");
+	Tcl_Panic("unexpected switch fallthrough");
     }
     return TCL_ERROR;
 }
@@ -535,7 +535,7 @@ EmbImageLayoutProc(textPtr, indexPtr, eiPtr, offset, maxX, maxChars,
     int width, height;
 
     if (offset != 0) {
-	panic("Non-zero offset in EmbImageLayoutProc");
+	Tcl_Panic("Non-zero offset in EmbImageLayoutProc");
     }
 
     /*
@@ -605,10 +605,10 @@ EmbImageCheckProc(eiPtr, linePtr)
     TkTextLine *linePtr;		/* Line containing segment. */
 {
     if (eiPtr->nextPtr == NULL) {
-	panic("EmbImageCheckProc: embedded image is last segment in line");
+	Tcl_Panic("EmbImageCheckProc: embedded image is last segment in line");
     }
     if (eiPtr->size != 1) {
-	panic("EmbImageCheckProc: embedded image has size %d", eiPtr->size);
+	Tcl_Panic("EmbImageCheckProc: embedded image has size %d", eiPtr->size);
     }
 }
 

@@ -137,9 +137,6 @@ extern int errno;
  * in any other header file.
  */
 
-#ifndef panic	/* In a stubs-aware setting, this could confuse the #define */
-extern void 		panic  _ANSI_ARGS_(TCL_VARARGS(char *, string));
-#endif
 #ifndef strcasecmp
 extern int		strcasecmp _ANSI_ARGS_((CONST char *s1,
 			    CONST char *s2));

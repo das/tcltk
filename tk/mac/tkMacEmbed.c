@@ -243,7 +243,7 @@ TkpUseWindow(
     int result;
 
     if (winPtr->window != None) {
-	panic("TkpUseWindow: X window already assigned");
+	Tcl_Panic("TkpUseWindow: X window already assigned");
     }
     
     /*
@@ -516,7 +516,7 @@ TkMacContainerId(winPtr)
 	    return (MacDrawable *) containerPtr->parent;
 	}
     }
-    panic("TkMacContainerId couldn't find window");
+    Tcl_Panic("TkMacContainerId couldn't find window");
     return None;
 }
 
@@ -845,7 +845,7 @@ ContainerEventProc(clientData, eventPtr)
 	    containerPtr->parent != eventPtr->xmaprequest.parent;
 	    containerPtr = containerPtr->nextPtr) {
 	if (containerPtr == NULL) {
-	    panic("ContainerEventProc couldn't find Container record");
+	    Tcl_Panic("ContainerEventProc couldn't find Container record");
 	}
     }
 

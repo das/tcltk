@@ -269,7 +269,7 @@ FindClosestColor(tkwin, desiredColorPtr, actualColorPtr)
 	    visInfoPtr = XGetVisualInfo(Tk_Display(tkwin),
 		    VisualIDMask, &template, &numFound);
 	    if (numFound < 1) {
-		panic("FindClosestColor couldn't lookup visual");
+		Tcl_Panic("FindClosestColor couldn't lookup visual");
 	    }
 	    stressPtr->numColors = visInfoPtr->colormap_size;
 	    XFree((char *) visInfoPtr);
@@ -299,7 +299,7 @@ FindClosestColor(tkwin, desiredColorPtr, actualColorPtr)
 
     while (1)  {
 	if (stressPtr->numColors == 0) {
-	    panic("FindClosestColor ran out of colors");
+	    Tcl_Panic("FindClosestColor ran out of colors");
 	}
 	closestDistance = 1e30;
 	closest = 0;

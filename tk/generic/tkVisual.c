@@ -470,7 +470,7 @@ Tk_FreeColormap(display, colormap)
 
     dispPtr = TkGetDisplay(display);
     if (dispPtr == NULL) {
-	panic("unknown display passed to Tk_FreeColormap");
+	Tcl_Panic("unknown display passed to Tk_FreeColormap");
     }
     for (prevPtr = NULL, cmapPtr = dispPtr->cmapPtr; cmapPtr != NULL;
 	    prevPtr = cmapPtr, cmapPtr = cmapPtr->nextPtr) {
@@ -529,7 +529,7 @@ Tk_PreserveColormap(display, colormap)
 
     dispPtr = TkGetDisplay(display);
     if (dispPtr == NULL) {
-	panic("unknown display passed to Tk_PreserveColormap");
+	Tcl_Panic("unknown display passed to Tk_PreserveColormap");
     }
     for (cmapPtr = dispPtr->cmapPtr; cmapPtr != NULL;
 	    cmapPtr = cmapPtr->nextPtr) {

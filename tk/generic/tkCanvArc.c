@@ -298,7 +298,7 @@ CreateArc(interp, canvas, itemPtr, objc, objv)
     int i;
 
     if (objc == 0) {
-	panic("canvas did not pass any coords\n");
+	Tcl_Panic("canvas did not pass any coords\n");
     }
 
     /*

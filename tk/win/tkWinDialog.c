@@ -16,6 +16,9 @@
 #include "tkFileFilter.h"
 
 #include <commdlg.h>    /* includes common dialog functionality */
+#ifdef _MSC_VER
+#   pragma comment (lib, "comdlg32.lib")
+#endif
 #include <dlgs.h>       /* includes common dialog template defines */
 #include <cderr.h>      /* includes the common dialog error codes */
 
@@ -25,6 +28,9 @@
 #define USE_NEW_CHOOSEDIR 1
 #ifdef USE_NEW_CHOOSEDIR
 #include <shlobj.h>     /* includes SHBrowseForFolder */
+#ifdef _MSC_VER
+#   pragma comment (lib, "shell32.lib")
+#endif
 
 /* These needed for compilation with VC++ 5.2 */
 #ifndef BIF_EDITBOX

@@ -115,7 +115,7 @@ TkpChangeFocus(winPtr, force)
     errHandler = Tk_CreateErrorHandler(dispPtr->display, -1, -1, -1,
 	    (Tk_ErrorProc *) NULL, (ClientData) NULL);
     if (winPtr->window == None) {
-	panic("ChangeXFocus got null X window");
+	Tcl_Panic("ChangeXFocus got null X window");
     }
     XSetInputFocus(dispPtr->display, winPtr->window, RevertToParent,
 	    CurrentTime);

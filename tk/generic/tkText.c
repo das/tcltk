@@ -2465,7 +2465,7 @@ TextFetchSelection(clientData, offset, buffer, maxBytes)
 	 */
 
 	if (!TkBTreeNextTag(&search)) {
-	    panic("TextFetchSelection couldn't find end of range");
+	    Tcl_Panic("TextFetchSelection couldn't find end of range");
 	}
 
 	/*
@@ -2848,7 +2848,7 @@ TextSearchCmd(textPtr, interp, objc, objv)
 	    searchSpec.exact = 0;
 	    break;
 	default:
-	    panic("unexpected switch fallthrough");
+	    Tcl_Panic("unexpected switch fallthrough");
 	}
     }
   endOfSwitchProcessing:
@@ -3539,7 +3539,7 @@ TextDumpCmd(textPtr, interp, objc, objv)
 	    command = Tcl_GetString(objv[arg]);
 	    break;
 	default:
-	    panic("unexpected switch fallthrough");
+	    Tcl_Panic("unexpected switch fallthrough");
 	}
     }
     if (arg >= objc || arg+2 < objc) {

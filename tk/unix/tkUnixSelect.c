@@ -351,7 +351,7 @@ TkSelPropProc(eventPtr)
 		}
 		numItems += length;
 		if (numItems > TK_SEL_BYTES_AT_ONCE) {
-		    panic("selection handler returned too many bytes");
+		    Tcl_Panic("selection handler returned too many bytes");
 		}
 	    }
 	    ((char *) buffer)[numItems] = 0;
@@ -448,7 +448,7 @@ TkSelPropProc(eventPtr)
 		 */
 
 		if (srcLen > TCL_UTF_MAX) {
-		    panic("selection conversion left too many bytes unconverted");
+		    Tcl_Panic("selection conversion left too many bytes unconverted");
 		}
 		memcpy(incrPtr->converts[i].buffer, src, (size_t) srcLen+1);
 		Tcl_DStringFree(&ds);
@@ -934,7 +934,7 @@ ConvertSelection(winPtr, eventPtr)
 		continue;
 	    }
 	    if (numItems > TK_SEL_BYTES_AT_ONCE) {
-		panic("selection handler returned too many bytes");
+		Tcl_Panic("selection handler returned too many bytes");
 	    }
 	    ((char *) buffer)[numItems] = '\0';
 	}

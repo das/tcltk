@@ -519,7 +519,7 @@ UpdateStringOfMM(objPtr)
     mmPtr = (MMRep *) objPtr->internalRep.otherValuePtr;
     /* assert( mmPtr->units == -1 && objPtr->bytes == NULL ); */
     if ((mmPtr->units != -1) || (objPtr->bytes != NULL)) {
-        panic("UpdateStringOfMM: false precondition");
+        Tcl_Panic("UpdateStringOfMM: false precondition");
     }
 
     Tcl_PrintDouble((Tcl_Interp *) NULL, mmPtr->value, buffer);

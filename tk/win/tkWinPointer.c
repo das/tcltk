@@ -469,7 +469,7 @@ TkpChangeFocus(winPtr, force)
     }
 
     if (winPtr->window == None) {
-	panic("ChangeXFocus got null X window");
+	Tcl_Panic("ChangeXFocus got null X window");
     }
  
     /*

@@ -259,7 +259,7 @@ Tk_GetGC(tkwin, valueMask, valuePtr)
     idHashPtr = Tcl_CreateHashEntry(&dispPtr->gcIdTable, 
             (char *) gcPtr->gc, &new);
     if (!new) {
-	panic("GC already registered in Tk_GetGC");
+	Tcl_Panic("GC already registered in Tk_GetGC");
     }
     Tcl_SetHashValue(valueHashPtr, gcPtr);
     Tcl_SetHashValue(idHashPtr, gcPtr);
@@ -298,7 +298,7 @@ Tk_FreeGC(display, gc)
     TkDisplay *dispPtr = TkGetDisplay(display);
 
     if (!dispPtr->gcInit) {
-	panic("Tk_FreeGC called before Tk_GetGC");
+	Tcl_Panic("Tk_FreeGC called before Tk_GetGC");
     }
     if (dispPtr->gcInit < 0) {
 	/*
@@ -311,7 +311,7 @@ Tk_FreeGC(display, gc)
 
     idHashPtr = Tcl_FindHashEntry(&dispPtr->gcIdTable, (char *) gc);
     if (idHashPtr == NULL) {
-	panic("Tk_FreeGC received unknown gc argument");
+	Tcl_Panic("Tk_FreeGC received unknown gc argument");
     }
     gcPtr = (TkGC *) Tcl_GetHashValue(idHashPtr);
     gcPtr->refCount--;
@@ -390,7 +390,7 @@ GCInit(dispPtr)
     TkDisplay *dispPtr;
 {
     if (dispPtr->gcInit < 0) {
-	panic("called GCInit after GCCleanup");
+	Tcl_Panic("called GCInit after GCCleanup");
     }
     dispPtr->gcInit = 1;
     Tcl_InitHashTable(&dispPtr->gcValueTable, sizeof(ValueKey)/sizeof(int));

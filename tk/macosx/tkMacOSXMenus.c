@@ -166,11 +166,11 @@ TkMacOSXInitMenus(
      */
 
     if (TkMacOSXUseMenuID(256) != TCL_OK) {
-            panic("Menu ID 256 is already in use!");
+	Tcl_Panic("Menu ID 256 is already in use!");
     }
     tkAppleMenu = NewMenu(256, "\p\024");
     if (tkAppleMenu == NULL) {
-        panic("memory - menus");
+        Tcl_Panic("memory - menus");
     }
     InsertMenu(tkAppleMenu, 0);
     AppendMenu(tkAppleMenu, "\pAbout Tcl & Tk…");
@@ -180,11 +180,11 @@ TkMacOSXInitMenus(
     */
 
     if (TkMacOSXUseMenuID(kFileMenu) != TCL_OK) {
-            panic("Menu ID %d is already in use!", kFileMenu);
+	Tcl_Panic("Menu ID %d is already in use!", kFileMenu);
     }
     tkFileMenu = NewMenu(kFileMenu, "\pFile");
     if (tkFileMenu == NULL) {
-        panic("memory - menus");
+        Tcl_Panic("memory - menus");
     }
     InsertMenu(tkFileMenu, 0);
     AppendMenu(tkFileMenu, "\pSource…");
@@ -193,11 +193,11 @@ TkMacOSXInitMenus(
     AppendMenu(tkFileMenu, "\pQuit/Q");
 
     if (TkMacOSXUseMenuID(kEditMenu) != TCL_OK) {
-            panic("Menu ID %d is already in use!", kEditMenu);
+	Tcl_Panic("Menu ID %d is already in use!", kEditMenu);
     }
     tkEditMenu = NewMenu(kEditMenu, "\pEdit");
     if (tkEditMenu == NULL) {
-        panic("memory - menus");
+        Tcl_Panic("memory - menus");
     }
     InsertMenu(tkEditMenu, 0);
     AppendMenu(tkEditMenu, "\pCut/X");
@@ -205,7 +205,7 @@ TkMacOSXInitMenus(
     AppendMenu(tkEditMenu, "\pPaste/V");
     AppendMenu(tkEditMenu, "\pClear");
     if (TkMacOSXUseMenuID(kHMHelpMenuID) != TCL_OK) {
-            panic("Help menu ID %s is already in use!", kHMHelpMenuID);
+	Tcl_Panic("Help menu ID %s is already in use!", kHMHelpMenuID);
     }
     
     DrawMenuBar();

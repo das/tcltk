@@ -2672,7 +2672,7 @@ GetSystemFont(display)
     if (fontStructPtr == NULL) {
 	fontStructPtr = XLoadQueryFont(display, "*");
 	if (fontStructPtr == NULL) {
-	    panic("TkpGetFontFromAttributes: cannot get any font");
+	    Tcl_Panic("TkpGetFontFromAttributes: cannot get any font");
 	}
     }
     return fontStructPtr;

@@ -234,7 +234,7 @@ Tk_FocusObjCmd(clientData, interp, objc, objv)
 	    break;
 	}
 	default: {
-	    panic("bad const entries to focusOptions in focus command");
+	    Tcl_Panic("bad const entries to focusOptions in focus command");
 	}
     }
     return TCL_OK;

@@ -371,7 +371,7 @@ TkPutImage(
 	pixmap.pmReserved = 0;
 	pixmap.baseAddr = image->data;
     if (image->bytes_per_line >= 0x4000) {
-    	panic("TkImage too wide!");
+    	Tcl_Panic("TkImage too wide!");
     }
 	pixmap.rowBytes = image->bytes_per_line | 0x8000;
 	

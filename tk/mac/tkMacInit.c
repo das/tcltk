@@ -223,6 +223,6 @@ TkpDisplayWarning(
     Tcl_DStringAppend(&ds, title, -1);
     Tcl_DStringAppend(&ds, ": ", -1);
     Tcl_DStringAppend(&ds, msg, -1);
-    panic(Tcl_DStringValue(&ds));
+    Tcl_Panic(Tcl_DStringValue(&ds));
     Tcl_DStringFree(&ds);
 }

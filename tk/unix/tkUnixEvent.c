@@ -224,7 +224,7 @@ TkpCloseDisplay(dispPtr)
 	if (do_peek) {
 	    peek = (struct XIMPeek *) dispPtr->inputMethod;
 	    if (peek->ic_chain != NULL)
-	        panic("input contexts not freed before XCloseIM");
+	        Tcl_Panic("input contexts not freed before XCloseIM");
 	}
 #endif
 	XCloseIM(dispPtr->inputMethod);

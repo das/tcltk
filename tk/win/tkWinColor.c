@@ -462,7 +462,7 @@ XFreeColors(display, colormap, pixels, npixels, planes)
 	    entryPtr = Tcl_FindHashEntry(&cmap->refCounts,
 		    (char *) pixels[i]);
 	    if (!entryPtr) {
-		panic("Tried to free a color that isn't allocated.");
+		Tcl_Panic("Tried to free a color that isn't allocated.");
 	    }
 	    refCount = (int) Tcl_GetHashValue(entryPtr) - 1;
 	    if (refCount == 0) {
@@ -478,7 +478,7 @@ XFreeColors(display, colormap, pixels, npixels, planes)
 		    ckfree((char *) entries);
 		    cmap->size--;
 		} else {
-		    panic("Tried to free a color that isn't allocated.");
+		    Tcl_Panic("Tried to free a color that isn't allocated.");
 		}
 		Tcl_DeleteHashEntry(entryPtr);
 	    } else {
@@ -576,7 +576,7 @@ XFreeColormap(display, colormap)
 {
     TkWinColormap *cmap = (TkWinColormap *) colormap;
     if (!DeleteObject(cmap->palette)) {
-	panic("Unable to free colormap, palette is still selected.");
+	Tcl_Panic("Unable to free colormap, palette is still selected.");
     }
     Tcl_DeleteHashTable(&cmap->refCounts);
     ckfree((char *) cmap);

@@ -609,7 +609,7 @@ Tk_GetSelection(interp, tkwin, selection, target, proc, clientData)
 	    count = TkSelDefaultSelection(infoPtr, target, buffer,
 		    TK_SEL_BYTES_AT_ONCE, &type);
 	    if (count > TK_SEL_BYTES_AT_ONCE) {
-		panic("selection handler returned too many bytes");
+		Tcl_Panic("selection handler returned too many bytes");
 	    }
 	    if (count < 0) {
 		goto cantget;
@@ -630,7 +630,7 @@ Tk_GetSelection(interp, tkwin, selection, target, proc, clientData)
 		    goto cantget;
 		}
 		if (count > TK_SEL_BYTES_AT_ONCE) {
-		    panic("selection handler returned too many bytes");
+		    Tcl_Panic("selection handler returned too many bytes");
 		}
 		buffer[count] = '\0';
 		result = (*proc)(clientData, interp, buffer);

@@ -798,7 +798,7 @@ ImgBmapCmd(clientData, interp, objc, objv)
 	return code;
       }
       default: {
-	panic("bad const entries to bmapOptions in ImgBmapCmd");
+	Tcl_Panic("bad const entries to bmapOptions in ImgBmapCmd");
       }
     }
     return TCL_OK;
@@ -1025,7 +1025,7 @@ ImgBmapDelete(masterData)
     BitmapMaster *masterPtr = (BitmapMaster *) masterData;
 
     if (masterPtr->instancePtr != NULL) {
-	panic("tried to delete bitmap image when instances still exist");
+	Tcl_Panic("tried to delete bitmap image when instances still exist");
     }
     masterPtr->tkMaster = NULL;
     if (masterPtr->imageCmd != NULL) {

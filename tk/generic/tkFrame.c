@@ -1818,7 +1818,7 @@ TkInstallFrameMenu(tkwin)
 	Frame *framePtr;
 	framePtr = (Frame*) winPtr->instanceData;
 	if (framePtr == NULL) {
-	    panic("TkInstallFrameMenu couldn't get frame pointer");
+	    Tcl_Panic("TkInstallFrameMenu couldn't get frame pointer");
 	}
 	TkpMenuNotifyToplevelCreate(winPtr->mainPtr->interp, 
 		framePtr->menuName);

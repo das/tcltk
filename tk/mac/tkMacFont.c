@@ -311,7 +311,7 @@ TkpFontPkgInit(mainPtr)
 	 */
 	 
 	if (NewGWorld(&gWorld, 0, &rect, NULL, NULL, 0) != noErr) {
-	    panic("TkpFontPkgInit: NewGWorld failed");
+	    Tcl_Panic("TkpFontPkgInit: NewGWorld failed");
 	}
 	
 	/*
@@ -379,7 +379,7 @@ TkpFontPkgInit(mainPtr)
        	    }
        	}
        	if (fontMapOffset != numFonts) {
-       	    panic("TkpFontPkgInit: unexpected number of fonts");
+       	    Tcl_Panic("TkpFontPkgInit: unexpected number of fonts");
        	}
 
        	mapPtr = &newFontNameMap[numFonts];
@@ -2078,7 +2078,7 @@ GetUtfFaceName(
             return mapPtr->utfName;
         }
     }
-    panic("GetUtfFaceName: unexpected nativeName");
+    Tcl_Panic("GetUtfFaceName: unexpected nativeName");
     return NULL;
 }
 

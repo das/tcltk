@@ -425,7 +425,7 @@ XMoveResizeWindow(
 	    
 	    contWinPtr = TkpGetOtherWindow(macWin->winPtr);
 	    if (contWinPtr == NULL) {
-	            panic("XMoveResizeWindow could not find container");
+		Tcl_Panic("XMoveResizeWindow could not find container");
 	    }
 	    macParent = contWinPtr->privatePtr;
 	    
@@ -527,7 +527,7 @@ XMoveWindow(
 	    
 	    contWinPtr = TkpGetOtherWindow(macWin->winPtr);
 	    if (contWinPtr == NULL) {
-	            panic("XMoveWindow could not find container");
+		Tcl_Panic("XMoveWindow could not find container");
 	    }
 	    macParent = contWinPtr->privatePtr;
 	    
@@ -1259,7 +1259,7 @@ Tk_GetPixmap(
 	err = NewGWorld(&gWorld, depth, &bounds, NULL, NULL, useTempMem);
     }
     if (err != noErr) {
-        panic("Out of memory: NewGWorld failed in Tk_GetPixmap");
+        Tcl_Panic("Out of memory: NewGWorld failed in Tk_GetPixmap");
     }
 
     /*

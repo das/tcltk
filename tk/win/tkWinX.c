@@ -26,6 +26,9 @@
 #endif
 
 #include <commctrl.h>
+#ifdef _MSC_VER
+#   pragma comment (lib, "comctl32.lib")
+#endif
 
 /*
  * The zmouse.h file includes the definition for WM_MOUSEWHEEL.
@@ -38,6 +41,9 @@
  */
 
 #include <imm.h>
+#ifdef _MSC_VER
+#   pragma comment (lib, "imm32.lib")
+#endif
 
 static TkWinProcs asciiProcs = {
     0,
@@ -271,7 +277,7 @@ TkWinXInit(hInstance)
     childClass.hCursor = NULL;
 
     if (!RegisterClass(&childClass)) {
-	panic("Unable to register TkChild class");
+	Tcl_Panic("Unable to register TkChild class");
     }
 
     /*
@@ -552,7 +558,7 @@ TkpCloseDisplay(dispPtr)
 	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
     if (dispPtr != tsdPtr->winDisplay) {
-        panic("TkpCloseDisplay: tried to call TkpCloseDisplay on another display");
+        Tcl_Panic("TkpCloseDisplay: tried to call TkpCloseDisplay on another display");
         return;
     }
 

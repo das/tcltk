@@ -1129,7 +1129,7 @@ InitSampleControls()
     windowRef = NewCWindow(NULL, &geometry, "\pempty", false, 
 	    zoomDocProc, (WindowRef) frontWin, true, 0);
     if (windowRef == NULL) {
-	panic("Can't allocate buffer window.");
+	Tcl_Panic("Can't allocate buffer window.");
     }
 	
     /*
@@ -1156,7 +1156,7 @@ InitSampleControls()
 	     
 	err = CreateRootControl(windowRef, &dontCare);
 	if (err != noErr) {
-	    panic("Can't create root control in DrawBufferedControl");
+	    Tcl_Panic("Can't create root control in DrawBufferedControl");
 	}
 	    
 	userPaneHandle = NewControl(windowRef, &geometry, "\p",

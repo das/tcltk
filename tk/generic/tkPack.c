@@ -290,7 +290,7 @@ Tk_PackObjCmd(clientData, interp, objc, objv)
 	} else {
 	    for ( ; ; prevPtr = prevPtr->nextPtr) {
 		if (prevPtr == NULL) {
-		    panic("\"pack before\" couldn't find predecessor");
+		    Tcl_Panic("\"pack before\" couldn't find predecessor");
 		}
 		if (prevPtr->nextPtr == packPtr) {
 		    break;
@@ -797,7 +797,7 @@ ArrangePacking(clientData)
 		y = frameY + (borderTop + frameHeight - height - borderBtm)/2;
 		break;
 	    default:
-		panic("bad frame factor in ArrangePacking");
+		Tcl_Panic("bad frame factor in ArrangePacking");
 	}
 	width -= slavePtr->doubleBw;
 	height -= slavePtr->doubleBw;
@@ -1379,7 +1379,7 @@ Unlink(packPtr)
     } else {
 	for (packPtr2 = masterPtr->slavePtr; ; packPtr2 = packPtr2->nextPtr) {
 	    if (packPtr2 == NULL) {
-		panic("Unlink couldn't find previous window");
+		Tcl_Panic("Unlink couldn't find previous window");
 	    }
 	    if (packPtr2->nextPtr == packPtr) {
 		packPtr2->nextPtr = packPtr->nextPtr;

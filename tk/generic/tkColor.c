@@ -420,7 +420,7 @@ Tk_GCForColor(colorPtr, drawable)
      */
 
     if (tkColPtr->magic != COLOR_MAGIC) {
-	panic("Tk_GCForColor called with bogus color");
+	Tcl_Panic("Tk_GCForColor called with bogus color");
     }
 
     if (tkColPtr->gc == None) {
@@ -466,7 +466,7 @@ Tk_FreeColor(colorPtr)
      */
 
     if (tkColPtr->magic != COLOR_MAGIC) {
-	panic("Tk_FreeColor called with bogus color");
+	Tcl_Panic("Tk_FreeColor called with bogus color");
     }
 
     tkColPtr->resourceRefCount--;
@@ -690,7 +690,7 @@ Tk_GetColorFromObj(tkwin, objPtr)
     }
 
     error:
-    panic(" Tk_GetColorFromObj called with non-existent color!");
+    Tcl_Panic(" Tk_GetColorFromObj called with non-existent color!");
     /*
      * The following code isn't reached; it's just there to please compilers.
      */
@@ -798,7 +798,7 @@ TkDebugColor(tkwin, name)
     if (hashPtr != NULL) {
 	tkColPtr = (TkColor *) Tcl_GetHashValue(hashPtr);
 	if (tkColPtr == NULL) {
-	    panic("TkDebugColor found empty hash table entry");
+	    Tcl_Panic("TkDebugColor found empty hash table entry");
 	}
 	for ( ; (tkColPtr != NULL); tkColPtr = tkColPtr->nextPtr) {
 	    objPtr = Tcl_NewObj();

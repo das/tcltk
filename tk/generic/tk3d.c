@@ -392,7 +392,7 @@ Tk_3DBorderGC(tkwin, border, which)
     } else if (which == TK_3D_DARK_GC){
 	return borderPtr->darkGC;
     }
-    panic("bogus \"which\" value in Tk_3DBorderGC");
+    Tcl_Panic("bogus \"which\" value in Tk_3DBorderGC");
 
     /*
      * The code below will never be executed, but it's needed to
@@ -1314,7 +1314,7 @@ Tk_Get3DBorderFromObj(tkwin, objPtr)
     }
 
     error:
-    panic("Tk_Get3DBorderFromObj called with non-existent border!");
+    Tcl_Panic("Tk_Get3DBorderFromObj called with non-existent border!");
     /*
      * The following code isn't reached; it's just there to please compilers.
      */
@@ -1395,7 +1395,7 @@ TkDebugBorder(tkwin, name)
     if (hashPtr != NULL) {
 	borderPtr = (TkBorder *) Tcl_GetHashValue(hashPtr);
 	if (borderPtr == NULL) {
-	    panic("TkDebugBorder found empty hash table entry");
+	    Tcl_Panic("TkDebugBorder found empty hash table entry");
 	}
 	for ( ; (borderPtr != NULL); borderPtr = borderPtr->nextPtr) {
 	    objPtr = Tcl_NewObj();

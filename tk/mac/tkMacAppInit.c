@@ -246,7 +246,7 @@ MacintoshInit()
     	    NGetTrapAddress(_Unimplemented, ToolTrap))
     	    || (((Gestalt(gestaltSystemVersion, &result) != noErr)
 	    || (result < mask)))) {
-	panic("Tcl/Tk requires System 7 or higher.");
+	Tcl_Panic("Tcl/Tk requires System 7 or higher.");
     }
 
     /*
@@ -256,7 +256,7 @@ MacintoshInit()
      
     if (((Gestalt(gestaltQuickdrawVersion, &result) != noErr)
 	    || (result < gestalt32BitQD13))) {
-	panic("Tk requires Color QuickDraw.");
+	Tcl_Panic("Tk requires Color QuickDraw.");
     }
 
     
@@ -317,7 +317,7 @@ SetupMainInterp(
     return TCL_OK;
 
 error:
-    panic(Tcl_GetStringResult(interp));
+    Tcl_Panic(Tcl_GetStringResult(interp));
     return TCL_ERROR;
 }
 

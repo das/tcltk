@@ -515,7 +515,7 @@ ScrollbarProc(hwnd, message, wParam, lParam)
     Tk_Window tkwin = Tk_HWNDToWindow(hwnd);
 
     if (tkwin == NULL) {
-	panic("ScrollbarProc called on an invalid HWND");
+	Tcl_Panic("ScrollbarProc called on an invalid HWND");
     }
     scrollPtr = (WinScrollbar *)((TkWindow*)tkwin)->instanceData;
 

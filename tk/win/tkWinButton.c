@@ -1155,7 +1155,7 @@ ButtonProc(hwnd, message, wParam, lParam)
     Tk_Window tkwin = Tk_HWNDToWindow(hwnd);
 
     if (tkwin == NULL) {
-	panic("ButtonProc called on an invalid HWND");
+	Tcl_Panic("ButtonProc called on an invalid HWND");
     }
     butPtr = (WinButton *)((TkWindow*)tkwin)->instanceData;
 

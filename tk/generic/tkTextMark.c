@@ -647,7 +647,7 @@ MarkCheckProc(markPtr, linePtr)
     Tcl_HashEntry *hPtr;
 
     if (markPtr->body.mark.linePtr != linePtr) {
-	panic("MarkCheckProc: markPtr->body.mark.linePtr bogus");
+	Tcl_Panic("MarkCheckProc: markPtr->body.mark.linePtr bogus");
     }
 
     /*
@@ -659,7 +659,7 @@ MarkCheckProc(markPtr, linePtr)
 	    &search); hPtr != markPtr->body.mark.hPtr;
 	    hPtr = Tcl_NextHashEntry(&search)) {
 	if (hPtr == NULL) {
-	    panic("MarkCheckProc couldn't find hash table entry for mark");
+	    Tcl_Panic("MarkCheckProc couldn't find hash table entry for mark");
 	}
     }
 }
