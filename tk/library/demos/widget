@@ -118,7 +118,7 @@ if {[tk windowingsystem] eq "classic" || [tk windowingsystem] eq "aqua"} {
 	-command {exit} -accelerator [mc "Meta-Q"]
 . configure -menu .menuBar
 bind . <F1>     {aboutBox}
-bind . <Meta-q> {exit}
+bind . <[mc "Meta-q"]> {exit}
 
 frame .statusBar
 label .statusBar.lab -text "   " -relief sunken -bd 1 \
