@@ -461,8 +461,11 @@ install-libraries:
 		else true; \
 		fi; \
 	    done;
-	@echo "Installing tk.h"
-	@$(INSTALL_DATA) $(GENERIC_DIR)/tk.h $(INCLUDE_INSTALL_DIR)/tk.h
+	@for i in $(GENERIC_DIR)/tk.h $(GENERIC_DIR)/tkDecls.h ; \
+	    do \
+	    echo "Installing $$i"; \
+	    $(INSTALL_DATA) $$i $(INCLUDE_INSTALL_DIR); \
+	    done;
 	for i in $(SRC_DIR)/library/*.tcl $(SRC_DIR)/library/tclIndex $(UNIX_DIR)/tkAppInit.c; \
 	    do \
 	    echo "Installing $$i"; \

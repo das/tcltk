@@ -1413,6 +1413,11 @@ declare 80 win {
 	    int dest_x, int dest_y, unsigned int width, \
 	    unsigned int height)
 }
+# This slot is reserved for use by the clipping rectangle patch:
+#  declare 81 win {
+#      XSetClipRectangles(Display *display, GC gc, int clip_x_origin, \
+#  	    int clip_y_origin, XRectangle rectangles[], int n, int ordering)
+#  }
 
 # X functions for Mac
 
