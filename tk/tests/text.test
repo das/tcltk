@@ -961,6 +961,13 @@ test text-20.34 {TextSearchCmd procedure, firstChar and lastChar} {
 test text-20.35 {TextSearchCmd procedure, firstChar and lastChar} {
     .t search {} end
 } {1.0}
+test text-20.36 {TextSearchCmd procedure, regexp finds empty lines} {
+    # Test for fix of bug #1643
+    .t insert end "\n"
+    tkTextSetCursor .t 4.0
+    .t search -forward -regexp {^$} insert end
+} {4.0}
+    
 catch {destroy .t2}
 toplevel .t2
 wm geometry .t2 +0+0

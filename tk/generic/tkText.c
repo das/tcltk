@@ -1884,7 +1884,8 @@ TextSearchCmd(textPtr, interp, argc, argv)
 		 */
 
 		firstByte = indexInDString;
-		if (firstByte >= Tcl_DStringLength(&line)) {
+		if ((firstByte >= Tcl_DStringLength(&line))
+			&& !((Tcl_DStringLength(&line) == 0) && !exact)) {
 		    goto nextLine;
 		}
 	    } else {
