@@ -1208,7 +1208,7 @@ test grid-17.1 {forget and pending idle handlers} {
     grid forget .t.f
     destroy .t
 
-    toplevel .t -geometry +0+0
+    toplevel .t
     frame .t.f
     label .t.f.l -text foobar
     grid .t.f.l
