@@ -323,8 +323,7 @@ Tk_GetOpenFileObjCmd(
             case OPEN_DEFAULT:
                 break;
             case OPEN_FILETYPES:
-                choice = Tcl_GetStringFromObj(objv[i + 1], NULL);
-                if (TkGetFileFilters(interp, &ofd.fl, choice, 0) 
+                if (TkGetFileFilters(interp, &ofd.fl, objv[i + 1], 0) 
                         != TCL_OK) {
                     result = TCL_ERROR;
                     goto end;

@@ -257,6 +257,24 @@ test winDialog-5.24 {GetFileName: convert \ to /} {nt testwinevent} {
     }
     set x
 } {c:/12x 457}
+test winDialog-5.25 {GetFileName: file types: MakeFilter() succeeds} {nt} {
+    # MacOS type that is correct, but has embedded nulls.
+
+    start {set x [catch {tk_getSaveFile -filetypes {{"foo" .foo {\0\0\0\0}}}}]}
+    then {
+	Click 2
+    }
+    set x
+} {0}
+test winDialog-5.26 {GetFileName: file types: MakeFilter() succeeds} {nt} {
+    # MacOS type that is correct, but has embedded high-bit chars.
+
+    start {set x [catch {tk_getSaveFile -filetypes {{"foo" .foo {\u2022\u2022\u2022\u2022}}}}]}
+    then {
+	Click 2
+    }
+    set x
+} {0}
 
 test winDialog-6.1 {MakeFilter} {emptyTest nt} {} {}
 
