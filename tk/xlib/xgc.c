@@ -150,8 +150,7 @@ XChangeGC(d, gc, mask, values)
  *----------------------------------------------------------------------
  */
 
-void
-XFreeGC(d, gc)
+void XFreeGC(d, gc)
     Display * d;
     GC gc;
 {

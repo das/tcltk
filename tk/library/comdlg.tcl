@@ -52,13 +52,12 @@ proc tclParseConfigSpec {w specs flags argList} {
 	set verproc($cmdsw) [lindex $spec 4]
     }
 
-    if {([llength $argList]%2) != 0} {
-	foreach {cmdsw value} $argList {
-	    if {![info exists cmd($cmdsw)]} {
-	        error "unknown option \"$cmdsw\", must be [tclListValidFlags cmd]"
-	    }
+    if {[llength $argList] & 1} {
+	set cmdsw [lindex $argList end]
+	if {![info exists cmd($cmdsw)]} {
+	    error "bad option \"$cmdsw\": must be [tclListValidFlags cmd]"
 	}
-	error "value for \"[lindex $argList end]\" missing"
+	error "value for \"$cmdsw\" missing"
     }
 
     # 2: set the default values
@@ -71,7 +70,7 @@ proc tclParseConfigSpec {w specs flags argList} {
     #
     foreach {cmdsw value} $argList {
 	if {![info exists cmd($cmdsw)]} {
-	    error "unknown option \"$cmdsw\", must be [tclListValidFlags cmd]"
+	    error "bad option \"$cmdsw\": must be [tclListValidFlags cmd]"
 	}
 	set data($cmdsw) $value
     }
@@ -90,7 +89,7 @@ proc tclListValidFlags {v} {
 	append errormsg "$separator$cmdsw"
 	incr i
 	if {$i == $len} {
-	    set separator " or "
+	    set separator ", or "
 	} else {
 	    set separator ", "
 	}

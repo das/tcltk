@@ -13,6 +13,7 @@
  */
 
 #include <Types.h>
+#include <tcl.h>
 
 /*
  * Forward declarations of procedures defined later in this file:

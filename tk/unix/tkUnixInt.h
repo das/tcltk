@@ -16,11 +16,14 @@
 #ifndef _TKUNIXINT
 #define _TKUNIXINT
 
+#ifndef _TKINT
+#include "tkInt.h"
+#endif
+
 /*
  * Prototypes for procedures that are referenced in files other
  * than the ones they're defined in.
  */
-
 #include "tkIntPlatDecls.h"
 
 #endif /* _TKUNIXINT */

@@ -26,10 +26,11 @@ int
 \fBTk_ConfigureInfo(\fIinterp, tkwin, specs, widgRec, argvName, flags\fB)\fR
 .sp
 int
+\fBTk_ConfigureValue(\fIinterp, tkwin, specs, widgRec, argvName, flags\fB)\fR
 .sp
 \fBTk_FreeOptions(\fIspecs, widgRec, display, flags\fB)\fR
 .SH ARGUMENTS
-.AS Tk_ConfigSpec *widgRec
+.AS Tk_ConfigSpec *widgRec in/out
 .AP Tcl_Interp *interp in
 Interpreter to use for returning error messages.
 .AP Tk_Window tkwin in

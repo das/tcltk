@@ -110,9 +110,10 @@ TkpDisplayMenuButton(
     SetGWorld(destPort, NULL);
     macDraw = (MacDrawable *) Tk_WindowId(tkwin);
 
-    if ((mbPtr->state == tkDisabledUid) && (mbPtr->disabledFg != NULL)) {
+    if ((mbPtr->state == STATE_DISABLED) && (mbPtr->disabledFg != NULL)) {
 	gc = mbPtr->disabledGC;
-    } else if ((mbPtr->state == tkActiveUid) && !Tk_StrictMotif(mbPtr->tkwin)) {
+    } else if ((mbPtr->state == STATE_ACTIVE)
+	    && !Tk_StrictMotif(mbPtr->tkwin)) {
 	gc = mbPtr->activeTextGC;
     } else {
 	gc = mbPtr->normalTextGC;
@@ -162,10 +163,10 @@ TkpDisplayMenuButton(
      * foreground color, generate the stippled effect.
      */
 
-    if ((mbPtr->state == tkDisabledUid)
-	    && ((mbPtr->disabledFg == NULL) || (mbPtr->image != NULL))) {
-	XFillRectangle(mbPtr->display, Tk_WindowId(tkwin), mbPtr->disabledGC,
-		mbPtr->inset, mbPtr->inset,
+    if (mbPtr->state == STATE_DISABLED && mbPtr->disabledFg != NULL) {
+            || (mbPtr->image != NULL))) {
+	XFillRectangle(mbPtr->display, Tk_WindowId(tkwin), 
+                mbPtr->disabledGC, mbPtr->inset, mbPtr->inset,
 		(unsigned) (Tk_Width(tkwin) - 2*mbPtr->inset),
 		(unsigned) (Tk_Height(tkwin) - 2*mbPtr->inset));
     }
@@ -220,9 +221,6 @@ TkpDisplayMenuButton(
 	LineTo(r.right, r.bottom);
 	LineTo(r.left + kShadowOffset, r.bottom);
     }
-    
-	if (mbPtr->state == tkDisabledUid) {
-	}
     
     if (mbPtr->highlightWidth != 0) {
 	GC gc;

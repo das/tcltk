@@ -6,7 +6,7 @@
  *	in a window according to a particular aspect ratio.
  *
  * Copyright (c) 1990-1994 The Regents of the University of California.
- * Copyright (c) 1994-1995 Sun Microsystems, Inc.
+ * Copyright (c) 1994-1997 Sun Microsystems, Inc.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -40,7 +40,7 @@ typedef struct {
 
     char *string;		/* String displayed in message. */
     int numChars;		/* Number of characters in string, not
-				 * including terminating NULL character. */
+				 * including terminating NULL. */
     char *textVarName;		/* Name of variable (malloc'ed) or NULL.
 				 * If non-NULL, message displays the contents
 				 * of this variable. */
@@ -274,7 +274,7 @@ Tk_MessageCmd(clientData, interp, argc, argv)
 	goto error;
     }
 
-    interp->result = Tk_PathName(msgPtr->tkwin);
+    Tcl_SetResult(interp, Tk_PathName(msgPtr->tkwin), TCL_STATIC);
     return TCL_OK;
 
     error:
@@ -401,7 +401,7 @@ DestroyMessage(memPtr)
  *
  * Results:
  *	The return value is a standard Tcl result.  If TCL_ERROR is
- *	returned, then interp->result contains an error message.
+ *	returned, then the interp's result contains an error message.
  *
  * Side effects:
  *	Configuration information, such as text string, colors, font,
@@ -465,7 +465,7 @@ ConfigureMessage(interp, msgPtr, argc, argv, flags)
      * that couldn't be specified to Tk_ConfigureWidget.
      */
 
-    msgPtr->numChars = strlen(msgPtr->string);
+    msgPtr->numChars = Tcl_NumUtfChars(msgPtr->string, -1);
 
     Tk_SetBackgroundFromBorder(msgPtr->tkwin, msgPtr->border);
 
@@ -834,8 +834,8 @@ MessageTextVarProc(clientData, interp, name1, name2, flags)
     if (msgPtr->string != NULL) {
 	ckfree(msgPtr->string);
     }
-    msgPtr->numChars = strlen(value);
-    msgPtr->string = (char *) ckalloc((unsigned) (msgPtr->numChars + 1));
+    msgPtr->numChars = Tcl_NumUtfChars(value, -1);
+    msgPtr->string = (char *) ckalloc((unsigned) (strlen(value) + 1));
     strcpy(msgPtr->string, value);
     ComputeMessageGeometry(msgPtr);
 

@@ -930,7 +930,8 @@ TkMacGetDrawablePort(
 	contWinPtr = TkpGetOtherWindow(macWin->toplevel->winPtr);
 	
     	if (contWinPtr != NULL) {
-    	    resultPort = TkMacGetDrawablePort((Drawable) contWinPtr->privatePtr);
+    	    resultPort = TkMacGetDrawablePort(
+		(Drawable) contWinPtr->privatePtr);
     	} else if (gMacEmbedHandler != NULL) {
 	    resultPort = gMacEmbedHandler->getPortProc(
                     (Tk_Window) macWin->winPtr);

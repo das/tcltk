@@ -57,12 +57,14 @@ static int initialized = 0;
 static int hArrowWidth, hThumb; /* Horizontal control metrics. */
 static int vArrowWidth, vArrowHeight, vThumb; /* Vertical control metrics. */
 
+TCL_DECLARE_MUTEX(winScrlbrMutex)
+
 /*
  * This variable holds the default width for a scrollbar in string
  * form for use in a Tk_ConfigSpec.
  */
 
-static char defWidth[8];
+static char defWidth[TCL_INTEGER_SPACE];
 
 /*
  * Declarations for functions defined in this file.
@@ -116,8 +118,10 @@ TkpCreateScrollbar(tkwin)
     TkWindow *winPtr = (TkWindow *)tkwin;
     
     if (!initialized) {
+        Tcl_MutexLock(&winScrlbrMutex);
 	UpdateScrollbarMetrics();
 	initialized = 1;
+	Tcl_MutexUnlock(&winScrlbrMutex);
     }
 
     scrollPtr = (WinScrollbar *) ckalloc(sizeof(WinScrollbar));

@@ -32,7 +32,7 @@
  * Results:
  *	The return value is a standard Tcl return value.
  *	If an error occurs (such as no selection exists)
- *	then an error message is left in interp->result.
+ *	then an error message is left in the interp's result.
  *
  * Side effects:
  *	None.
@@ -241,7 +241,7 @@ TkSuspendClipboard()
     char *buffer, *p, *endPtr, *buffPtr;
     long length;
 
-    dispPtr = tkDisplayList;
+    dispPtr = TkGetDisplayList();
     if ((dispPtr == NULL) || !dispPtr->clipboardActive) {
 	return;
     }

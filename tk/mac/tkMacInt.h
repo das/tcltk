@@ -208,10 +208,4 @@ typedef TkMenuDefProcPtr TkMenuDefUPP;
 	(whichItemPtr), (globalsPtr))
 #endif
 
-/*
- * Internal procedures shared among Macintosh Tk modules but not exported
- * to the outside world:
- */
-#include "tkIntPlatDecls.h"
-
 #endif /* _TKMACINT */

@@ -12,8 +12,8 @@
  * RCS: @(#) $Id$
  */
 
-#include <tk3d.h>
-#include <tkWinInt.h>
+#include "tkWinInt.h"
+#include "tk3d.h"
 
 /*
  * This structure is used to keep track of the extra colors used by

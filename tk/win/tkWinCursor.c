@@ -152,7 +152,7 @@ TkCreateCursorFromData(tkwin, source, mask, width, height, xHot, yHot,
 /*
  *----------------------------------------------------------------------
  *
- * TkFreeCursor --
+ * TkpFreeCursor --
  *
  *	This procedure is called to release a cursor allocated by
  *	TkGetCursorByName.
@@ -167,11 +167,10 @@ TkCreateCursorFromData(tkwin, source, mask, width, height, xHot, yHot,
  */
 
 void
-TkFreeCursor(cursorPtr)
+TkpFreeCursor(cursorPtr)
     TkCursor *cursorPtr;
 {
     TkWinCursor *winCursorPtr = (TkWinCursor *) cursorPtr;
-    ckfree((char *) winCursorPtr);
 }
 
 /*

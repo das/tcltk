@@ -31,7 +31,7 @@
  *
  * Results:
  *	A standard Tcl completion code (TCL_OK or TCL_ERROR).  Also
- *	leaves information in interp->result.
+ *	leaves information in the interp's result.
  *
  * Side effects:
  *	Sets "tk_library" Tcl variable, runs "tk.tcl" script.

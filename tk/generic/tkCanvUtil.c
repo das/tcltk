@@ -177,7 +177,7 @@ Tk_CanvasWindowCoords(canvas, x, y, screenXPtr, screenYPtr)
  *	TCL_OK is returned, then everything went well and the
  *	canvas coordinate is stored at *doublePtr;  otherwise
  *	TCL_ERROR is returned and an error message is left in
- *	interp->result.
+ *	the interp's result.
  *
  * Side effects:
  *	None.

@@ -80,7 +80,7 @@ and \fBcancel\fR.
 .SH EXAMPLE
 .CS
 set answer [tk_messageBox \-message "Really quit?" \-type yesno \-icon question]
-case $answer {
+switch -- $answer {
     yes exit
     no {tk_messageBox \-message "I know you like this application!" \-type ok}
 }
