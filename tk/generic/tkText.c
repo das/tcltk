@@ -1945,9 +1945,10 @@ TextBlinkProc(clientData)
 		textPtr->insertOnTime, TextBlinkProc, (ClientData) textPtr);
     }
     TkTextMarkSegToIndex(textPtr, textPtr->insertMarkPtr, &index);
-    TkTextCharBbox(textPtr, &index, &x, &y, &w, &h);
-    TkTextRedrawRegion(textPtr, x - textPtr->insertWidth / 2, y,
-	    textPtr->insertWidth, h);
+    if (TkTextCharBbox(textPtr, &index, &x, &y, &w, &h) == 0) {
+	TkTextRedrawRegion(textPtr, x - textPtr->insertWidth / 2, y,
+		textPtr->insertWidth, h);
+    }
 }
 
 /*
