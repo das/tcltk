@@ -4380,7 +4380,7 @@ ElideMeasureProc(chunkPtr, x)
  *
  *	This procedure is the "layoutProc" for character segments.
  *
-n * Results:
+ * Results:
  *	If there is something to display for the chunk then a
  *	non-zero value is returned and the fields of chunkPtr
  *	will be filled in (see the declaration of TkTextDispChunk
