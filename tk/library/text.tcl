@@ -972,9 +972,19 @@ proc ::tk::TextTranspose w {
     if {[$w compare "$pos - 1 char" == 1.0]} {
 	return
     }
+    # ensure this is seen as an atomic op to undo
+    set autosep [$w cget -autoseparators]
+    if {$autosep} {
+	$w configure -autoseparators 0
+	$w edit separator
+    }
     $w delete "$pos - 2 char" $pos
     $w insert insert $new
     $w see insert
+    if {$autosep} {
+	$w edit separator
+	$w configure -autoseparators $autosep
+    }
 }
 
 # ::tk_textCopy --
