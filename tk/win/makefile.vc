@@ -75,11 +75,9 @@ TKTEST 		= $(OUTDIR)\$(TKNAMEPREFIX)test.exe
 DUMPEXTS 	= $(TMPDIR)\dumpexts.exe
 
 WISHOBJS = \
-	$(TMPDIR)\tkConsole.obj \
 	$(TMPDIR)\winMain.obj
 
 TKTESTOBJS = \
-	$(TMPDIR)\tkConsole.obj \
 	$(TMPDIR)\tkTest.obj \
 	$(TMPDIR)\tkSquare.obj \
 	$(TMPDIR)\testMain.obj
@@ -92,6 +90,7 @@ XLIBOBJS = \
 	$(TMPDIR)\xutil.obj
 
 TKOBJS = \
+	$(TMPDIR)\tkConsole.obj \
 	$(TMPDIR)\tkUnixMenubu.obj \
 	$(TMPDIR)\tkUnixScale.obj \
 	$(XLIBOBJS) \
@@ -359,9 +358,6 @@ $(DUMPEXTS): $(TCLDIR)\win\winDumpExts.c
 
 $(TMPDIR)\testMain.obj: $(ROOT)\win\winMain.c
 	$(cc32) $(TK_CFLAGS) -DSTATIC_BUILD -DTK_TEST -Fo$@ $?
-
-$(TMPDIR)\tkConsole.obj: $(ROOT)\generic\tkConsole.c
-	$(cc32) $(TK_CFLAGS) -DSTATIC_BUILD -Fo$@ $?
 
 $(TMPDIR)\tkTest.obj: $(ROOT)\generic\tkTest.c
 	$(cc32) $(TK_CFLAGS) -DSTATIC_BUILD -Fo$@ $?
