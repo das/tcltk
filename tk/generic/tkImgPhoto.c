@@ -399,6 +399,8 @@ static Tcl_ObjCmdProc *	PhotoOptionFind _ANSI_ARGS_((Tcl_Interp * interp,
 			    Tcl_Obj *obj));
 static void		DitherInstance _ANSI_ARGS_((PhotoInstance *instancePtr,
 			    int x, int y, int width, int height));
+static void		PhotoOptionCleanupProc _ANSI_ARGS_((
+			    ClientData clientData, Tcl_Interp *interp));
 
 #undef MIN
 #define MIN(a, b)	((a) < (b)? (a): (b))
