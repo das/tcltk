@@ -533,6 +533,7 @@ proc ::tk::IconList_Btn1 {w x y} {
     set x [expr {int([$data(canvas) canvasx $x])}]
     set y [expr {int([$data(canvas) canvasy $y])}]
     set i [IconList_Index $w @${x},${y}]
+    if {$i==""} return
     IconList_Selection $w clear 0 end
     IconList_Selection $w set $i
     IconList_Selection $w anchor $i
@@ -546,6 +547,7 @@ proc ::tk::IconList_CtrlBtn1 {w x y} {
 	set x [expr {int([$data(canvas) canvasx $x])}]
 	set y [expr {int([$data(canvas) canvasy $y])}]
 	set i [IconList_Index $w @${x},${y}]
+	if {$i==""} return
 	if { [IconList_Selection $w includes $i] } {
 	    IconList_Selection $w clear $i
 	} else {
@@ -563,6 +565,7 @@ proc ::tk::IconList_ShiftBtn1 {w x y} {
 	set x [expr {int([$data(canvas) canvasx $x])}]
 	set y [expr {int([$data(canvas) canvasy $y])}]
 	set i [IconList_Index $w @${x},${y}]
+	if {$i==""} return
 	set a [IconList_Index $w anchor]
 	if { [string equal $a ""] } {
 	    set a $i
@@ -582,6 +585,7 @@ proc ::tk::IconList_Motion1 {w x y} {
     set x [expr {int([$data(canvas) canvasx $x])}]
     set y [expr {int([$data(canvas) canvasy $y])}]
     set i [IconList_Index $w @${x},${y}]
+    if {$i==""} return
     IconList_Selection $w clear 0 end
     IconList_Selection $w set $i
 }
@@ -642,6 +646,7 @@ proc ::tk::IconList_UpDown {w amount} {
 	set i 0
     } else {
 	set i [tk::IconList_Index $w anchor]
+	if {$i==""} return
 	incr i $amount
     }
     IconList_Selection $w clear 0 end
@@ -670,6 +675,7 @@ proc ::tk::IconList_LeftRight {w amount} {
 	set i 0
     } else {
 	set i [IconList_Index $w anchor]
+	if {$i==""} return
 	incr i [expr {$amount*$data(itemsPerColumn)}]
     }
     IconList_Selection $w clear 0 end
