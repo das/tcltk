@@ -467,8 +467,6 @@ ConfigureMessage(interp, msgPtr, argc, argv, flags)
 
     msgPtr->numChars = Tcl_NumUtfChars(msgPtr->string, -1);
 
-    Tk_SetBackgroundFromBorder(msgPtr->tkwin, msgPtr->border);
-
     if (msgPtr->highlightWidth < 0) {
 	msgPtr->highlightWidth = 0;
     }
@@ -500,11 +498,15 @@ MessageWorldChanged(instanceData)
     ClientData instanceData;	/* Information about widget. */
 {
     XGCValues gcValues;
-    GC gc;
+    GC gc = None;
     Tk_FontMetrics fm;
     Message *msgPtr;
 
     msgPtr = (Message *) instanceData;
+
+    if (msgPtr->border != NULL) {
+	Tk_SetBackgroundFromBorder(msgPtr->tkwin, msgPtr->border);
+    }
 
     gcValues.font = Tk_FontId(msgPtr->tkfont);
     gcValues.foreground = msgPtr->fgColorPtr->pixel;
@@ -644,13 +646,23 @@ DisplayMessage(clientData)
     register Message *msgPtr = (Message *) clientData;
     register Tk_Window tkwin = msgPtr->tkwin;
     int x, y;
+    int borderWidth = msgPtr->highlightWidth;
 
     msgPtr->flags &= ~REDRAW_PENDING;
     if ((msgPtr->tkwin == NULL) || !Tk_IsMapped(tkwin)) {
 	return;
     }
-    Tk_Fill3DRectangle(tkwin, Tk_WindowId(tkwin), msgPtr->border, 0, 0,
-	    Tk_Width(tkwin), Tk_Height(tkwin), 0, TK_RELIEF_FLAT);
+    if (msgPtr->border != NULL) {
+	borderWidth += msgPtr->borderWidth;
+    }
+    if (msgPtr->relief == TK_RELIEF_FLAT) {
+	borderWidth = msgPtr->highlightWidth;
+    }
+    Tk_Fill3DRectangle(tkwin, Tk_WindowId(tkwin), msgPtr->border,
+	    borderWidth, borderWidth,
+	    Tk_Width(tkwin) - 2 * borderWidth,
+	    Tk_Height(tkwin) - 2 * borderWidth,
+	    0, TK_RELIEF_FLAT);
 
     /*
      * Compute starting y-location for message based on message size
@@ -662,7 +674,7 @@ DisplayMessage(clientData)
     Tk_DrawTextLayout(Tk_Display(tkwin), Tk_WindowId(tkwin), msgPtr->textGC,
 	    msgPtr->textLayout, x, y, 0, -1);
 
-    if (msgPtr->relief != TK_RELIEF_FLAT) {
+    if (borderWidth > msgPtr->highlightWidth) {
 	Tk_Draw3DRectangle(tkwin, Tk_WindowId(tkwin), msgPtr->border,
 		msgPtr->highlightWidth, msgPtr->highlightWidth,
 		Tk_Width(tkwin) - 2*msgPtr->highlightWidth,

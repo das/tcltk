@@ -1040,6 +1040,18 @@ declare 216 generic {
     int Tk_CreateConsoleWindow(Tcl_Interp *interp)
 }
 
+declare 217 generic {
+    void Tk_CreateSmoothMethod(Tcl_Interp *interp, Tk_SmoothMethod *method)
+}
+
+#declare 218 generic {
+#    void Tk_CreateCanvasVisitor(Tcl_Interp *interp, VOID *typePtr)
+#}
+
+#declare 219 generic {
+#    VOID *Tk_GetCanvasVisitor(Tcl_Interp *interp, CONST char *name)
+#}
+
 # Define the platform specific public Tk interface.  These functions are
 # only available on the designated platform.
 

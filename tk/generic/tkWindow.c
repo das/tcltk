@@ -134,10 +134,10 @@ static TkCmd commands[] = {
      */
 
     {"button",		NULL,			Tk_ButtonObjCmd,	1, 0},
-    {"canvas",		Tk_CanvasCmd,		NULL,			1, 1},
+    {"canvas",		NULL,			Tk_CanvasObjCmd,	1, 1},
     {"checkbutton",	NULL,			Tk_CheckbuttonObjCmd,	1, 0},
     {"entry",		NULL,                   Tk_EntryObjCmd,		1, 0},
-    {"frame",		Tk_FrameCmd,		NULL,			1, 1},
+    {"frame",		NULL,			Tk_FrameObjCmd,		1, 1},
     {"label",		NULL,			Tk_LabelObjCmd,		1, 0},
     {"listbox",		NULL,			Tk_ListboxObjCmd,	1, 0},
     {"menubutton",	NULL,                   Tk_MenubuttonObjCmd,	1, 0},
@@ -146,7 +146,7 @@ static TkCmd commands[] = {
     {"scale",		NULL,	                Tk_ScaleObjCmd,		1, 0},
     {"scrollbar",	Tk_ScrollbarCmd,	NULL,			1, 1},
     {"text",		Tk_TextCmd,		NULL,			1, 1},
-    {"toplevel",	Tk_ToplevelCmd,		NULL,			0, 1},
+    {"toplevel",	NULL,			Tk_ToplevelObjCmd,	0, 1},
 
     /*
      * Misc.
@@ -431,6 +431,11 @@ GetScreen(interp, screenName, screenPtr)
 	    dispPtr->firstGrabEventPtr = NULL;
 	    dispPtr->lastGrabEventPtr = NULL;
 	    dispPtr->grabFlags = 0;
+	    dispPtr->mouseButtonState = 0;
+	    dispPtr->warpInProgress = 0;
+	    dispPtr->warpWindow = None;
+	    dispPtr->warpX = 0;
+	    dispPtr->warpY = 0;
 	    dispPtr->gridInit = 0;
 	    dispPtr->imageId = 0;
 	    dispPtr->packInit = 0;

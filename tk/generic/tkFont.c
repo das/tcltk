@@ -1818,6 +1818,16 @@ Tk_ComputeTextLayout(tkfont, string, numChars, wrapLength, justify, flags,
     Tcl_DStringInit(&lineBuffer);
     
     fontPtr = (TkFont *) tkfont;
+    if ((fontPtr == NULL) || (string == NULL)) {
+	if (widthPtr != NULL) {
+	    *widthPtr = 0;
+	}
+	if (heightPtr != NULL) {
+	    *heightPtr = 0;
+	}
+	return NULL;
+    }
+
     fmPtr = &fontPtr->fm;
 
     height = fmPtr->ascent + fmPtr->descent;

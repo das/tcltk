@@ -125,7 +125,14 @@ Tk_ConfigureWidget(interp, tkwin, specs, argc, argv, widgRec, flags)
      */
 
     for ( ; argc > 0; argc -= 2, argv += 2) {
-	specPtr = FindConfigSpec(interp, specs, *argv, needFlags, hateFlags);
+	char *arg;
+
+	if (flags & TK_CONFIG_OBJS) {
+	    arg = Tcl_GetStringFromObj((Tcl_Obj *) *argv, NULL);
+	} else {
+	    arg = *argv;
+	}
+	specPtr = FindConfigSpec(interp, specs, arg, needFlags, hateFlags);
 	if (specPtr == NULL) {
 	    return TCL_ERROR;
 	}
@@ -135,11 +142,16 @@ Tk_ConfigureWidget(interp, tkwin, specs, argc, argv, widgRec, flags)
 	 */
 
 	if (argc < 2) {
-	    Tcl_AppendResult(interp, "value for \"", *argv,
+	    Tcl_AppendResult(interp, "value for \"", arg,
 		    "\" missing", (char *) NULL);
 	    return TCL_ERROR;
 	}
-	if (DoConfig(interp, tkwin, specPtr, argv[1], 0, widgRec) != TCL_OK) {
+	if (flags & TK_CONFIG_OBJS) {
+	    arg = Tcl_GetString((Tcl_Obj *) argv[1]);
+	} else {
+	    arg = argv[1];
+	}
+	if (DoConfig(interp, tkwin, specPtr, arg, 0, widgRec) != TCL_OK) {
 	    char msg[100];
 
 	    sprintf(msg, "\n    (processing \"%.40s\" option)",

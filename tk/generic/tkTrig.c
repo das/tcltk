@@ -1066,6 +1066,14 @@ TkMakeBezierCurve(canvas, pointPtr, numPoints, numSteps, xPoints, dblPoints)
      * just put the first point into the output.
      */
 
+    if (!pointPtr) {
+	/* Of pointPtr == NULL, this function returns an upper limit.
+	 * of the array size to store the coordinates. This can be
+	 * used to allocate storage, before the actual coordinates
+	 * are calculated. */
+	return 1 + numPoints * numSteps;
+    }
+
     outputPoints = 0;
     if ((pointPtr[0] == pointPtr[numCoords-2])
 	    && (pointPtr[1] == pointPtr[numCoords-1])) {
