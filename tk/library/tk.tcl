@@ -350,18 +350,12 @@ switch [tk windowingsystem] {
 	# that is returned when the user presses <Shift-Tab>.  In order for
 	# tab traversal to work, we have to add these keysyms to the 
 	# PrevWindow event.
-	# The info exists is necessary, because tcl_platform(os) doesn't
-	# exist in safe interpreters.
-	if {[info exists tcl_platform(os)]} {
-	    switch $tcl_platform(os) {
-		"IRIX"  -
-		"Linux" { event add <<PrevWindow>> <ISO_Left_Tab> }
-		"HP-UX" {
-		    # This seems to be correct on *some* HP systems.
-		    catch { event add <<PrevWindow>> <hpBackTab> }
-		}
-	    }
-	}
+	# We use catch just in case the keysym isn't recognized.
+	# This is needed for XFree86 systems
+	catch { event add <<PrevWindow>> <ISO_Left_Tab> }
+	# This seems to be correct on *some* HP systems.
+	catch { event add <<PrevWindow>> <hpBackTab> }
+
 	trace variable ::tk_strictMotif w ::tk::EventMotifBindings
 	set ::tk_strictMotif $::tk_strictMotif
     }
