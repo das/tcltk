@@ -454,9 +454,9 @@ typedef struct TkTextTabArray {
 /* enum definining the types used in an edit stack */
 
 typedef enum {
-    SEPARATOR,				/* Marker */
-    INSERT,				/* The undo is an insert */
-    DELETE				/* The undo is a delete */
+    TK_EDIT_SEPARATOR,			/* Marker */
+    TK_EDIT_INSERT,			/* The undo is an insert */
+    TK_EDIT_DELETE			/* The undo is a delete */
 } TkTextEditType;
 
 /* strcut defining the basic undo/redo stack element */
