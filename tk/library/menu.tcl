@@ -870,7 +870,9 @@ proc ::tk::MenuNextEntry {menu count} {
 	    incr i -$length
 	}
 	if {[catch {$menu entrycget $i -state} state] == 0} {
-	    if {[string compare $state "disabled"]} {
+	    if {$state!="disabled" && 
+		($i!=0 || [$menu cget -type]!="tearoff" 
+			|| [$menu type 0]!="tearoff")} {
 		break
 	    }
 	}
