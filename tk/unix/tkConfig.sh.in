@@ -69,8 +69,8 @@ TK_SRC_DIR='@TK_SRC_DIR@'
 
 # Needed if you want to make a 'fat' shared library library
 # containing tk objects or link a different wish.
-TK_CC_SEARCH_FLAGS='@TK_CC_SEARCH_FLAGS@'
-TK_LD_SEARCH_FLAGS='@TK_LD_SEARCH_FLAGS@'
+TK_CC_SEARCH_FLAGS='@CC_SEARCH_FLAGS@'
+TK_LD_SEARCH_FLAGS='@LD_SEARCH_FLAGS@'
 
 # The name of the Tk stub library (.a):
 TK_STUB_LIB_FILE='@TK_STUB_LIB_FILE@'
