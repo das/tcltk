@@ -479,7 +479,7 @@ void TkWmCleanup(dispPtr)
 	    ckfree(wmPtr->iconName);
 	}
 	if (wmPtr->iconDataPtr != NULL) {
-	    ckfree(wmPtr->iconDataPtr);
+	    ckfree((char *)wmPtr->iconDataPtr);
 	}
 	if (wmPtr->leaderName != NULL) {
 	    ckfree(wmPtr->leaderName);
@@ -506,7 +506,7 @@ void TkWmCleanup(dispPtr)
 	ckfree((char *) wmPtr);
     }
     if (dispPtr->iconDataPtr != NULL) {
-	ckfree(dispPtr->iconDataPtr);
+	ckfree((char *)dispPtr->iconDataPtr);
 	dispPtr->iconDataPtr = NULL;
     }
 }
@@ -813,7 +813,7 @@ TkWmDeadWindow(winPtr)
 	ckfree(wmPtr->iconName);
     }
     if (wmPtr->iconDataPtr != NULL) {
-	ckfree(wmPtr->iconDataPtr);
+	ckfree((char *)wmPtr->iconDataPtr);
     }
     if (wmPtr->hints.flags & IconPixmapHint) {
 	Tk_FreeBitmap(winPtr->display, wmPtr->hints.icon_pixmap);
@@ -2198,7 +2198,7 @@ WmIconphotoCmd(tkwin, winPtr, interp, objc, objv)
 	}
     }
     if (wmPtr->iconDataPtr != NULL) {
-	ckfree(wmPtr->iconDataPtr);
+	ckfree((char *)wmPtr->iconDataPtr);
 	wmPtr->iconDataPtr = NULL;
     }
     if (isDefault) {
