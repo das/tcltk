@@ -254,7 +254,8 @@ GenerateEditEvent(
     event.y_root = where.v;
     event.state = TkMacOSXButtonKeyState();
     event.same_screen = true;
-    
+    event.user_data = NULL;
+
     switch (flag) {
         case EDIT_CUT:
             event.name = Tk_GetUid("Cut");
