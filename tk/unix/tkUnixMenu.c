@@ -1545,7 +1545,7 @@ TkpComputeStandardMenuGeometry(
 	    if (height > mePtr->height) {
 	    	mePtr->height = height;
 	    }
-	    if (mePtr->hideMargin) {
+	    if (!mePtr->hideMargin) {
 		width += MENU_MARGIN_WIDTH;
 	    }
 	    if (width > accelWidth) {
@@ -1557,7 +1557,7 @@ TkpComputeStandardMenuGeometry(
 	    if (height > mePtr->height) {
 	    	mePtr->height = height;
 	    }
-	    if (mePtr->hideMargin) {
+	    if (!mePtr->hideMargin) {
 		width += MENU_MARGIN_WIDTH;
 	    }
 	    if (width > indicatorSpace) {
