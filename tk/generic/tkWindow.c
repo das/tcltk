@@ -3057,6 +3057,8 @@ Initialize(interp)
     code = Tcl_PkgProvideEx(interp, "Tk", TK_VERSION, (ClientData) &tkStubs);
     if (code != TCL_OK) {
 	goto done;
+    } else {
+	Tcl_SetMainLoop(Tk_MainLoop);
     }
 
 #ifdef Tk_InitStubs
