@@ -161,6 +161,31 @@ test textDisp-0.2 {double tag elide transition} {
     destroy .top
 } {}
 
+test textDisp-0.3 {double tag elide transition} {
+    catch {destroy .txt}
+    pack [text .txt]
+    # Note that TRAFFIC should have a higher priority than SYSTEM
+    # in terms of the tag effects.
+    .txt tag configure SYSTEM -elide 0
+    .txt tag configure TRAFFIC -elide 1
+    .txt insert end "\n" {TRAFFIC SYSTEM}
+    update
+    destroy .txt
+} {}
+
+test textDisp-0.4 {double tag elide transition} {
+    catch {destroy .txt}
+    pack [text .txt]
+    # Note that TRAFFIC should have a higher priority than SYSTEM
+    # in terms of the tag effects.
+    .txt tag configure SYSTEM -elide 0
+    .txt tag configure TRAFFIC -elide 1
+    .txt insert end "\n" {SYSTEM TRAFFIC}
+    # Crash was here.
+    update
+    destroy .txt
+} {}
+
 test textDisp-1.1 {GetStyle procedure, priorities and tab stops} {
     .t delete 1.0 end
     .t insert 1.0 "x\ty"

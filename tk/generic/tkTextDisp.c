@@ -955,6 +955,7 @@ LayoutDLine(textPtr, indexPtr)
      */
     elide = TkTextIsElided(textPtr, indexPtr);		/* save a malloc */
     if (elide && indexPtr->byteIndex==0) {
+	int tagElidePriority = -1;
 	maxBytes = 0;
 	for (segPtr = indexPtr->linePtr->segPtr;
 	     segPtr != NULL;
@@ -969,11 +970,25 @@ LayoutDLine(textPtr, indexPtr)
 		    break;
 		}
 		maxBytes += segPtr->size;
+		/* 
+		 * Reset tag elide priority, since we're on a new
+		 * character.
+		 */
+		tagElidePriority = -1;
 	    } else if ((segPtr->typePtr == &tkTextToggleOffType)
-		    || (segPtr->typePtr == &tkTextToggleOnType)) {
-		if (segPtr->body.toggle.tagPtr->elideString != NULL) {
-		    elide = (segPtr->typePtr == &tkTextToggleOffType)
-			^ segPtr->body.toggle.tagPtr->elide;
+		       || (segPtr->typePtr == &tkTextToggleOnType)) {
+		TkTextTag *tagPtr = segPtr->body.toggle.tagPtr;
+		if (tagPtr->elideString != NULL) {
+		    /* 
+		     * Only update the elide status if this tag has
+		     * higher priority than any other we've so far
+		     * seen at this index.
+		     */
+		    if (tagPtr->priority > tagElidePriority) {
+			elide = ((segPtr->typePtr == &tkTextToggleOffType)
+				 ^ tagPtr->elide);
+			tagElidePriority = tagPtr->priority;
+		    }
 		}
 	    }
 	}
