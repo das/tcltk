@@ -513,7 +513,6 @@ typedef struct TkText {
 				 * it here. */
     int state;			/* Either STATE_NORMAL or STATE_DISABLED. A
 				 * text widget is read-only when disabled. */
-
     /*
      * Default information for displaying (may be overridden by tags
      * applied to ranges of characters).
@@ -707,6 +706,10 @@ typedef struct TkText {
  *				for the duration of button presses.
  * UPDATE_SCROLLBARS:		Non-zero means scrollbar(s) should be updated
  *				during next redisplay operation.
+ * NEED_REPICK                  This appears unused and should probably
+ *                              be ignored
+ * OPTIONS_FREED                The widget's options have been freed
+ * DESTROYED                    The widget is going away                            				
  */
 
 #define GOT_SELECTION		1
@@ -715,6 +718,8 @@ typedef struct TkText {
 #define BUTTON_DOWN		8
 #define UPDATE_SCROLLBARS	0x10
 #define NEED_REPICK		0x20
+#define OPTIONS_FREED		0x40
+#define DESTROYED		0x80
 
 /*
  * Records of the following type define segment types in terms of

@@ -1187,7 +1187,7 @@ TkTextBindProc(clientData, eventPtr)
 	TkTextPickCurrent(textPtr, eventPtr);
     }
     if ((textPtr->numCurTags > 0) && (textPtr->bindingTable != NULL)
-	    && (textPtr->tkwin != NULL)) {
+	    && (textPtr->tkwin != NULL) && !(textPtr->flags & DESTROYED)) {
 	Tk_BindEvent(textPtr->bindingTable, eventPtr, textPtr->tkwin,
 		textPtr->numCurTags, (ClientData *) textPtr->curTagArrayPtr);
     }
@@ -1359,7 +1359,8 @@ TkTextPickCurrent(textPtr, eventPtr)
     oldArrayPtr = textPtr->curTagArrayPtr;
     textPtr->curTagArrayPtr = newArrayPtr;
     if (numOldTags != 0) {
-	if ((textPtr->bindingTable != NULL) && (textPtr->tkwin != NULL)) {
+	if ((textPtr->bindingTable != NULL) && (textPtr->tkwin != NULL)
+	  && !(textPtr->flags & DESTROYED)) {
 	    event = textPtr->pickEvent;
 	    event.type = LeaveNotify;
 
@@ -1387,7 +1388,8 @@ TkTextPickCurrent(textPtr, eventPtr)
 	    textPtr->pickEvent.xcrossing.y, &index);
     TkTextSetMark(textPtr, "current", &index);
     if (numNewTags != 0) {
-	if ((textPtr->bindingTable != NULL) && (textPtr->tkwin != NULL)) {
+	if ((textPtr->bindingTable != NULL) && (textPtr->tkwin != NULL)
+	  && !(textPtr->flags & DESTROYED)) {
 	    event = textPtr->pickEvent;
 	    event.type = EnterNotify;
 	    event.xcrossing.detail = NotifyAncestor;
