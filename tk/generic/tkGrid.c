@@ -575,8 +575,15 @@ Tk_GridCmd(clientData, interp, argc, argv)
 	if (Tcl_GetBoolean(interp, argv[3], &propagate) != TCL_OK) {
 	    return TCL_ERROR;
 	}
+	
+	/* Only request a relayout if the propagation bit changes */
+	
 	if ((!propagate) ^ (masterPtr->flags&DONT_PROPAGATE)) {
-	    masterPtr->flags  ^= DONT_PROPAGATE;
+	    if (propagate) {
+		masterPtr->flags &= ~DONT_PROPAGATE;
+	    } else {
+		masterPtr->flags |= DONT_PROPAGATE;
+	    }
       
 	    /*
 	     * Re-arrange the master to allow new geometry information to
