@@ -168,7 +168,7 @@ CC		= @CC@
 RC		= @RC@
 RES		= @RES@
 TK_RES		= @TK_RES@
-AC_FLAGS	= @EXTRA_CFLAGS@ @DEFS@
+AC_FLAGS	= @EXTRA_CFLAGS@ @DEFS@ @TCL_DEFS@
 CPPFLAGS	= @CPPFLAGS@
 LDFLAGS		= @LDFLAGS@ @LDFLAGS_DEFAULT@
 LDFLAGS_CONSOLE	= @LDFLAGS_CONSOLE@
@@ -530,6 +530,9 @@ $(TKTEST): $(TK_LIB_FILE) $(TKTEST_OBJS) wish.$(RES) $(CAT32)
 	$(CC) $(CFLAGS) $(TKTEST_OBJS) $(TCL_LIB_FILE) \
 	$(TK_LIB_FILE) $(LIBS) \
 	wish.$(RES) $(CC_EXENAME) $(LDFLAGS_WINDOW)
+
+# Msys make requires this next rule for some reason.
+$(TCL_SRC_DIR)/win/cat.c:
 
 cat32.${OBJEXT}: $(TCL_SRC_DIR)/win/cat.c
 	$(CC) -c $(CC_SWITCHES) @DEPARG@ $(CC_OBJNAME)
