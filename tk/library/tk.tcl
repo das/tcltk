@@ -262,6 +262,7 @@ proc ::tk::EventMotifBindings {n1 dummy dummy} {
     event $op <<Cut>> <Control-Key-w>
     event $op <<Copy>> <Meta-Key-w> 
     event $op <<Paste>> <Control-Key-y>
+    event $op <<Undo>> <Control-underscore>
 }
 
 #----------------------------------------------------------------------
