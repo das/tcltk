@@ -174,7 +174,7 @@ TCL_EXE			= tclsh
 SHLIB_CFLAGS		= @SHLIB_CFLAGS@
 
 # To enable support for stubs in Tcl.
-STUB_LIB_FILE		= @STUB_LIB_FILE@
+STUB_LIB_FILE		= @TK_STUB_LIB_FILE@
 
 TK_STUB_LIB_FILE	= @TK_STUB_LIB_FILE@
 #TK_STUB_LIB_FILE	= libtkstub.a
