@@ -155,9 +155,9 @@ extern int errno;
  * needed for X.
  */
 
-#define TkPutImage(colors, ncolors, display, pixels, gc, image, destx, desty, srcx, srcy, width, height) \
-	XPutImage(display, pixels, gc, image, destx, desty, srcx, \
-	srcy, width, height);
+#define TkPutImage(colors, ncolors, display, pixels, gc, image, srcx, srcy, destx, desty, width, height) \
+	XPutImage(display, pixels, gc, image, srcx, srcy, destx, \
+	desty, width, height);
 
 /*
  * Supply macros for seek offsets, if they're not already provided by
