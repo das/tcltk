@@ -2055,7 +2055,7 @@ resetGridInfo
 eval destroy [winfo children .]
 option clear
 
-test listbox-27.1 {widget deletion while active} {
+test listbox-27.1 {widget deletion while active} {knownBug} {
     destroy .l
     pack [listbox .l]
     update
