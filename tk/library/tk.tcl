@@ -147,6 +147,24 @@ proc ::tk::RestoreFocusGrab {grab focus {destroy destroy}} {
     }
 }
 
+# ::tk::GetSelection --
+#   This tries to obtain the default selection.
+#   This shadows the 8.4 version which handles UTF8_STRING as well.
+# Arguments:
+#   w	The widget for which the selection will be retrieved.
+#	Important for the -displayof property.
+#   sel	The source of the selection (PRIMARY or CLIPBOARD)
+# Results:
+#   Returns the selection, or an error if none could be found
+#
+proc ::tk::GetSelection {w {sel PRIMARY}} {
+    if {[catch {selection get -displayof $w -selection $sel} txt]} {
+	return -code error "could not find default selection"
+    } else {
+	return $txt
+    }
+}
+
 # tkScreenChanged --
 # This procedure is invoked by the binding mechanism whenever the
 # "current" screen is changing.  The procedure does two things.
