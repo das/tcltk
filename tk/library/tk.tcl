@@ -313,6 +313,7 @@ if {[string compare $tcl_platform(platform) "macintosh"] && \
     source [file join $tk_library menu.tcl]
     source [file join $tk_library scale.tcl]
     source [file join $tk_library scrlbar.tcl]
+    source [file join $tk_library spinbox.tcl]
     source [file join $tk_library text.tcl]
 }
 

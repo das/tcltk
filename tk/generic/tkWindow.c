@@ -145,6 +145,7 @@ static TkCmd commands[] = {
     {"radiobutton",	NULL,			Tk_RadiobuttonObjCmd,	1, 0},
     {"scale",		NULL,	                Tk_ScaleObjCmd,		1, 0},
     {"scrollbar",	Tk_ScrollbarCmd,	NULL,			1, 1},
+    {"spinbox",		NULL,                   Tk_SpinboxObjCmd,	1, 0},
     {"text",		Tk_TextCmd,		NULL,			1, 1},
     {"toplevel",	NULL,			Tk_ToplevelObjCmd,	0, 1},
 

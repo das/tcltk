@@ -336,7 +336,7 @@ proc tkEntryButton1 {w x} {
     set tkPriv(pressX) $x
     $w icursor [tkEntryClosestGap $w $x]
     $w selection from insert
-    if {[string compare [$w cget -state] "disabled"]} {focus $w}
+    if {[string compare "disabled" [$w cget -state]]} {focus $w}
 }
 
 # tkEntryMouseSelect --
@@ -406,7 +406,7 @@ proc tkEntryPaste {w x} {
 
     $w icursor [tkEntryClosestGap $w $x]
     catch {$w insert insert [selection get -displayof $w]}
-    if {[string equal [$w cget -state] "normal"]} {focus $w}
+    if {[string compare "disabled" [$w cget -state]]} {focus $w}
 }
 
 # tkEntryAutoScan --
