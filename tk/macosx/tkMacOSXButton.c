@@ -309,7 +309,7 @@ TkpDisplayButton(
             fullWidth = 0;
             fullHeight = 0;
             
-            switch ((enum compound) butPtr->compound) {
+            switch ((enum compound) butPtr->compound)
                 case COMPOUND_TOP: 
                 case COMPOUND_BOTTOM: {
                     /* Image is above or below text */
@@ -324,9 +324,8 @@ TkpDisplayButton(
                     textXOffset = (fullWidth - butPtr->textWidth)/2;
                     imageXOffset = (fullWidth - width)/2;
                     break;
-                }
                 case COMPOUND_LEFT:
-                case COMPOUND_RIGHT: {
+                case COMPOUND_RIGHT:
                     /* 
                      * Image is left or right of text 
                      */
@@ -342,8 +341,7 @@ TkpDisplayButton(
                     textYOffset = (fullHeight - butPtr->textHeight)/2;
                     imageYOffset = (fullHeight - height)/2;
                     break;
-                }
-                case COMPOUND_CENTER: {
+                case COMPOUND_CENTER:
                     /* 
                      * Image and text are superimposed 
                      */
@@ -357,8 +355,8 @@ TkpDisplayButton(
                     textYOffset = (fullHeight - butPtr->textHeight)/2;
                     imageYOffset = (fullHeight - height)/2;
                     break;
-                }
-                case COMPOUND_NONE: {break;}
+                case COMPOUND_NONE:
+		  break;
             }
             
             TkComputeAnchor(butPtr->anchor, tkwin, butPtr->padX, butPtr->padY,
@@ -967,9 +965,15 @@ TkMacOSXDrawControl(
         Tk_Font    font;
         int        len;
         
-        len = TkFontGetFirstTextLayout(butPtr->textLayout, 
-                &font, controlTitle);
-        controlTitle[len] = 0;
+        if (((mbPtr->info.image == NULL) && (mbPtr->info.bitmap == None))
+               || (mbPtr->info.compound != COMPOUND_NONE)) {
+            len = TkFontGetFirstTextLayout(butPtr->textLayout, 
+                    &font, controlTitle);
+            controlTitle[len] = 0;
+        } else {
+            len = 0;
+            controlTitle[0] = 0;
+        }
         if (bcmp(mbPtr->controlTitle, controlTitle, len+1)) {
             CFStringRef cf;    	    
             cf = CFStringCreateWithCString(NULL,
