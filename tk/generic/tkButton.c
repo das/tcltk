@@ -1028,7 +1028,7 @@ ConfigureButton(interp, butPtr, objc, objv)
 {
     Tk_SavedOptions savedOptions;
     Tcl_Obj *errorResult = NULL;
-    int error;
+    int error, haveImage;
     Tk_Image image;
 
     /*
@@ -1169,7 +1169,11 @@ ConfigureButton(interp, butPtr, objc, objv)
 	}
 	butPtr->selectImage = image;
 
-	if ((butPtr->imagePtr == NULL) && (butPtr->bitmap == None)
+	haveImage = 0;
+	if (butPtr->imagePtr != NULL || butPtr->bitmap != None) {
+	    haveImage = 1;
+	}
+	if ((!haveImage || butPtr->compound != COMPOUND_NONE)
 		&& (butPtr->textVarNamePtr != NULL)) {
 	    /*
 	     * The button must display the value of a variable: set up a trace
