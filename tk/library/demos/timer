@@ -7,6 +7,9 @@ exec wish "$0" "$@"
 #
 # RCS: @(#) $Id$
 
+package require Tcl 8.4
+package require Tk
+
 label .counter -text 0.00 -relief raised -width 10 -padx 2m -pady 1m
 button .start -text Start -command {
     if {$stopped} {
