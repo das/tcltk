@@ -555,7 +555,7 @@ Tk_GetOption(tkwin, name, className)
 	 */
 	
 	classNameLength	= (unsigned int)(masqName - name);
-	masqClass	= (char *)malloc(classNameLength + 1);
+	masqClass	= (char *)ckalloc(classNameLength + 1);
 	strncpy(masqClass, name, classNameLength);
 	masqClass[classNameLength] = '\0';
 	
