@@ -10,7 +10,7 @@ proc ::tk::CreatePostscriptEncoding {encoding} {
     for {set i 0} {$i<256} {incr i 8} {
         for {set j 0} {$j<8} {incr j} {
 	    set enc [encoding convertfrom $encoding [format %c [expr {$i+$j}]]]
-	    if {[catch {format %04X [scan $enc %c]} hexcode]} continue
+	    if {[catch {format %04X [scan $enc %c]} hexcode]} {set hexcode {}}
 	    if [info exists ::tk::psglyphs($hexcode)] {
 		append result "/$::tk::psglyphs($hexcode)"
 	    } else {
