@@ -25,27 +25,23 @@
  * unix/configure.in
  * win/makefile.bc
  * win/makefile.vc
- * library/tk.tcl
- * README, win/README, unix/README, and mac/README
- *
- * The release level should be  0 for alpha, 1 for beta, and 2 for
- * final/patch.  The release serial value is the number that follows the
- * "a", "b", or "p" in the patch level; for example, if the patch level
- * is 4.3b2, TK_RELEASE_SERIAL is 2.  It restarts at 1 whenever the
- * release level is changed, except for the final release, which should
- * be 0.
- *
+ * README
+ * library/tk.tcl	(only if major.minor changes, not patchlevel)
+ * mac/README		(only if major.minor changes, not patchlevel)
+ * win/README		(only if major.minor changes, not patchlevel)
+ * unix/README		(only if major.minor changes, not patchlevel)
+
  * You may also need to update some of these files when the numbers change
  * for the version of Tcl that this release of Tk is compiled against.
  */
 
 #define TK_MAJOR_VERSION   8
 #define TK_MINOR_VERSION   1
-#define TK_RELEASE_LEVEL   1
-#define TK_RELEASE_SERIAL  2
+#define TK_RELEASE_LEVEL   TCL_BETA_RELEASE
+#define TK_RELEASE_SERIAL  3
 
 #define TK_VERSION "8.1"
-#define TK_PATCH_LEVEL "8.1b1"
+#define TK_PATCH_LEVEL "8.1b3"
 
 /* 
  * A special definition used to allow this header file to be included 
