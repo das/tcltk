@@ -348,7 +348,7 @@ install-binaries:
 	@echo "Installing tkConfig.sh"
 	@if test "$(TK_STUB_LIB_FILE)" != "" ; then \
 	    if [ -f $(TK_STUB_LIB_FILE) ]; then \
-	        @$(INSTALL_DATA) tkConfig.sh $(LIB_INSTALL_DIR)/tkConfig.sh; \
+	        $(INSTALL_DATA) tkConfig.sh $(LIB_INSTALL_DIR)/tkConfig.sh; \
 	        echo "Installing $(TK_STUB_LIB_FILE)"; \
 	        $(INSTALL_DATA) $(TK_STUB_LIB_FILE) \
 			 $(LIB_INSTALL_DIR)/$(TK_STUB_LIB_FILE); \
