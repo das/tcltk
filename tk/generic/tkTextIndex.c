@@ -64,7 +64,7 @@ TkTextMakeByteIndex(tree, lineIndex, byteIndex, indexPtr)
 {
     TkTextSegment *segPtr;
     int index;
-    char *p, *start;
+    CONST char *p, *start;
     Tcl_UniChar ch;
 
     indexPtr->tree = tree;
@@ -977,7 +977,7 @@ TkTextIndexBackChars(srcPtr, charCount, dstPtr)
 {
     TkTextSegment *segPtr, *oldPtr;
     int lineIndex, segSize;
-    char *p, *start, *end;
+    CONST char *p, *start, *end;
 
     if (charCount <= 0) {
 	TkTextIndexForwChars(srcPtr, -charCount, dstPtr);

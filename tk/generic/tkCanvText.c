@@ -1376,7 +1376,8 @@ GetSelText(canvas, itemPtr, offset, buffer, maxBytes)
 {
     TextItem *textPtr = (TextItem *) itemPtr;
     int byteCount; 
-    char *text, *selStart, *selEnd;
+    char *text;
+    CONST char *selStart, *selEnd;
     Tk_CanvasTextInfo *textInfoPtr = textPtr->textInfoPtr;
 
     if ((textInfoPtr->selectFirst < 0) ||

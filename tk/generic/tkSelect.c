@@ -1336,7 +1336,7 @@ HandleTclCommand(clientData, offset, buffer, maxBytes)
     Tcl_DString oldResult;
     Tcl_Obj *objPtr;
     int extraBytes, charOffset, count, numChars;
-    char *p;
+    CONST char *p;
 
     /*
      * We must also protect the interpreter and the command from being

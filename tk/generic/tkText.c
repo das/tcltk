@@ -1964,7 +1964,7 @@ TextSearchCmd(textPtr, interp, argc, argv)
 		i = p - startOfLine;
 		thisLength = patLength;
 	    } else {
-		char *start, *end;
+		CONST char *start, *end;
 		int match;
 
 		match = Tcl_RegExpExec(interp, regexp,

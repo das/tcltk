@@ -461,7 +461,7 @@ GetEntryText(mePtr)
 		: Tcl_GetStringFromObj(mePtr->labelPtr, NULL);
 	char *accel = (mePtr->accelPtr == NULL) ? "" 
 		: Tcl_GetStringFromObj(mePtr->accelPtr, NULL);
-	char *p, *next;
+	CONST char *p, *next;
 	Tcl_DString itemString;
 
 	/*
@@ -1728,8 +1728,8 @@ DrawMenuUnderline(
 {
     if (mePtr->underline >= 0) {
 	char *label = Tcl_GetStringFromObj(mePtr->labelPtr, NULL);
-	char *start = Tcl_UtfAtIndex(label, mePtr->underline);
-	char *end = Tcl_UtfNext(start);
+	CONST char *start = Tcl_UtfAtIndex(label, mePtr->underline);
+	CONST char *end = Tcl_UtfNext(start);
 
     	Tk_UnderlineChars(menuPtr->display, d,
     		gc, tkfont, label, x + mePtr->indicatorSpace,
