@@ -1180,18 +1180,18 @@ TkMacSetUpGraphicsPort(
 	gPenPat = NewPixPat();
     }
     
-    if (TkSetMacColor(gc->foreground, &macColor)) {
+    if (TkSetMacColor(gc->foreground, &macColor) == true) {
         /* TODO: cache RGBPats for preformace - measure gains...  */
 	MakeRGBPat(gPenPat, &macColor);
     
-    PenNormal();
-    if(gc->function == GXxor) {
-	PenMode(patXor);
+        PenNormal();
+        if(gc->function == GXxor) {
+	    PenMode(patXor);
+        }
+        if (gc->line_width > 1) {
+	    PenSize(gc->line_width, gc->line_width);
+        }
     }
-    if (gc->line_width > 1) {
-	PenSize(gc->line_width, gc->line_width);
-    }
-}
 }
 
 /*
