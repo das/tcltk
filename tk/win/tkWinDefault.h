@@ -93,6 +93,7 @@
 #define DEF_BUTTON_TAKE_FOCUS		(char *) NULL
 #define DEF_BUTTON_TEXT			""
 #define DEF_BUTTON_TEXT_VARIABLE	""
+#define DEF_BUTTON_TRISTATE_VALUE	""
 #define DEF_BUTTON_UNDERLINE		"-1"
 #define DEF_BUTTON_VALUE		""
 #define DEF_BUTTON_WIDTH		"0"

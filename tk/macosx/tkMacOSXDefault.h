@@ -75,6 +75,7 @@
 #define DEF_BUTTON_JUSTIFY		"center"
 #define DEF_BUTTON_OFF_VALUE		"0"
 #define DEF_BUTTON_ON_VALUE		"1"
+#define DEF_BUTTON_TRISTATE_VALUE	""
 #define DEF_BUTTON_OVER_RELIEF		""
 #define DEF_BUTTON_PADX			"12"
 #define DEF_LABCHKRAD_PADX		"1"

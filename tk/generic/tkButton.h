@@ -96,6 +96,13 @@ typedef struct {
     Tk_Image selectImage;	/* Derived from selectImagePtr by calling
 				 * Tk_GetImage, or NULL if selectImagePtr
 				 * is NULL. */
+    Tcl_Obj *tristateImagePtr;	/* Value of -tristateimage option: specifies
+				 * image to display in window when selected,
+				 * or NULL if none.  Ignored if imagePtr is
+				 * NULL. */
+    Tk_Image tristateImage;	/* Derived from tristateImagePtr by calling
+				 * Tk_GetImage, or NULL if tristateImagePtr
+				 * is NULL. */
 
     /*
      * Information used when displaying widget:
@@ -228,6 +235,10 @@ typedef struct {
 				 * to store in variable when this button
 				 * isn't selected.  Used only by
 				 * checkbuttons. */
+    Tcl_Obj *tristateValuePtr;	/* Value of -tristatevalue option: specifies value
+                                 * to display Tristate or Multivalue mode when
+                                 * variable matches this value.  Used by check-
+                                 * buttons. */
 
     /*
      * Miscellaneous information:
@@ -286,6 +297,7 @@ typedef struct {
 #define SELECTED		(1 << 1)
 #define GOT_FOCUS		(1 << 2)
 #define BUTTON_DELETED		(1 << 3)
+#define TRISTATED		(1 << 4)
 /*
  * Declaration of variables shared between the files in the button module.
  */
