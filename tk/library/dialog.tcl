@@ -32,6 +32,18 @@
 proc tk_dialog {w title text bitmap default args} {
     global tkPriv tcl_platform
 
+    # Check that $default was properly given
+    if {[string is int $default]} {
+	if {$default >= [llength $args]} {
+	    return -code error "default button index greater than number of\
+		    buttons specified for tk_dialog"
+	}
+    } elseif {[string equal {} $default]} {
+	set default -1
+    } else {
+	set default [lsearch -exact $args $default]
+    }
+
     # 1. Create the top-level window and divide it into top
     # and bottom parts.
 
