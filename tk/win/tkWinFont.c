@@ -764,7 +764,7 @@ Tk_MeasureChars(
 
         end = p;
         p = source;
-        ch = 0;
+        ch = ' ';
         while (p < end) {
             next = p + Tcl_UtfToUniChar(p, &ch2);
             if ((ch != ' ') && (ch2 == ' ')) {
