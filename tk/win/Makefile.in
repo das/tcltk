@@ -359,7 +359,7 @@ runtest: tktest
 
 install: all install-binaries install-libraries install-doc install-demos
 
-install-binaries: installdirs
+install-binaries:
 	@for i in $(LIB_INSTALL_DIR) $(BIN_INSTALL_DIR) ; \
 	    do \
 	    echo "	$$i"; \
