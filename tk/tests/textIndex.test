@@ -640,6 +640,17 @@ test textIndex-15.15 {StartEnd} {
     list [catch {.t index {2.12 word}} msg] $msg
 } {1 {bad text index "2.12 word"}}
 
+test testIndex-16.1 {TkTextPrintIndex} {
+    set t [text .t2]
+    $t insert end \n
+    $t window create end -window [button $t.b]
+    set result [$t index end-2c]
+    pack $t
+    catch {destroy $t}
+
+    set result
+} 1.1
+
 # cleanup
 rename textimage {}
 catch {destroy .t}

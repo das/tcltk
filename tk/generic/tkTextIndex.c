@@ -561,7 +561,7 @@ TkTextPrintIndex(indexPtr, string)
     numBytes = indexPtr->byteIndex;
     charIndex = 0;
     for (segPtr = indexPtr->linePtr->segPtr; ; segPtr = segPtr->nextPtr) {
-	if (numBytes < segPtr->size) {
+	if (numBytes <= segPtr->size) {
 	    break;
 	}
 	if (segPtr->typePtr == &tkTextCharType) {
