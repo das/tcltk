@@ -866,8 +866,8 @@ TkWmDeadWindow(winPtr)
 	            WmWaitMapProc, (ClientData) wmPtr2->winPtr);
 	    wmPtr2->masterPtr = NULL;
 	    if (!(wmPtr2->flags & WM_NEVER_MAPPED)) {
-		XSetTransientForHint(wmPtr2->winPtr->display,
-		        wmPtr2->wrapperPtr->window, None);
+		XDeleteProperty(winPtr->display, wmPtr2->wrapperPtr->window,
+			Tk_InternAtom((Tk_Window) winPtr, "WM_TRANSIENT_FOR"));
 		/* FIXME: Need a call like Win32's UpdateWrapper() so
 		   we can recreate the wrapper and get rid of the
 		   transient window decorations. */
@@ -3084,10 +3084,13 @@ WmTransientCmd(tkwin, winPtr, interp, objc, objv)
 		return TCL_ERROR;
 	    }
 	} else {
-	    Window xwin = (wmPtr->masterPtr == NULL) ? None :
-		    wmPtr->masterPtr->wmInfoPtr->wrapperPtr->window;
-	    XSetTransientForHint(winPtr->display, wmPtr->wrapperPtr->window,
-		    xwin);
+	    if (wmPtr->masterPtr != NULL) {
+		XSetTransientForHint(winPtr->display, wmPtr->wrapperPtr->window,
+			wmPtr->masterPtr->wmInfoPtr->wrapperPtr->window);
+	    } else {
+		XDeleteProperty(winPtr->display, wmPtr->wrapperPtr->window,
+			Tk_InternAtom((Tk_Window)winPtr, "WM_TRANSIENT_FOR"));
+	    }
 	}
     }
     return TCL_OK;
