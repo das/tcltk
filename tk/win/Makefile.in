@@ -330,6 +330,7 @@ TK_OBJS = \
 	tkScale.$(OBJEXT) \
 	tkScrollbar.$(OBJEXT) \
 	tkSelect.$(OBJEXT) \
+	tkStyle.$(OBJEXT) \
 	tkText.$(OBJEXT) \
 	tkTextBTree.$(OBJEXT) \
 	tkTextDisp.$(OBJEXT) \

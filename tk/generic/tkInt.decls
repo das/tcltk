@@ -661,6 +661,13 @@ declare 145 {mac win} {
     void TkSubtractRegion (TkRegion sra, TkRegion srcb, TkRegion dr_return)
 }
 
+declare 146 generic {
+    void TkStylePkgInit (TkMainInfo *mainPtr)
+}
+declare 147 generic {
+    void TkStylePkgFree (TkMainInfo *mainPtr)
+}
+
 ##############################################################################
 
 # Define the platform specific internal Tcl interface. These functions are

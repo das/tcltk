@@ -281,6 +281,8 @@ TkIntStubs tkIntStubs = {
 #ifdef MAC_TCL
     TkSubtractRegion, /* 145 */
 #endif /* MAC_TCL */
+    TkStylePkgInit, /* 146 */
+    TkStylePkgFree, /* 147 */
 };
 
 TkIntPlatStubs tkIntPlatStubs = {
@@ -899,6 +901,22 @@ TkStubs tkStubs = {
     Tk_PhotoPutBlock, /* 246 */
     Tk_PhotoPutZoomedBlock, /* 247 */
     Tk_CollapseMotionEvents, /* 248 */
+    Tk_RegisterStyleEngine, /* 249 */
+    Tk_GetStyleEngine, /* 250 */
+    Tk_RegisterStyledElement, /* 251 */
+    Tk_GetElementId, /* 252 */
+    Tk_CreateStyle, /* 253 */
+    Tk_GetStyle, /* 254 */
+    Tk_FreeStyle, /* 255 */
+    Tk_NameOfStyle, /* 256 */
+    Tk_AllocStyleFromObj, /* 257 */
+    Tk_GetStyleFromObj, /* 258 */
+    Tk_FreeStyleFromObj, /* 259 */
+    Tk_GetStyledElement, /* 260 */
+    Tk_GetElementSize, /* 261 */
+    Tk_GetElementBox, /* 262 */
+    Tk_GetElementBorderWidth, /* 263 */
+    Tk_DrawElement, /* 264 */
 };
 
 /* !END!: Do not edit above this line. */

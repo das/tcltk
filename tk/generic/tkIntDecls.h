@@ -499,6 +499,10 @@ EXTERN void		TkSubtractRegion _ANSI_ARGS_((TkRegion sra,
 EXTERN void		TkSubtractRegion _ANSI_ARGS_((TkRegion sra, 
 				TkRegion srcb, TkRegion dr_return));
 #endif /* MAC_TCL */
+/* 146 */
+EXTERN void		TkStylePkgInit _ANSI_ARGS_((TkMainInfo * mainPtr));
+/* 147 */
+EXTERN void		TkStylePkgFree _ANSI_ARGS_((TkMainInfo * mainPtr));
 
 typedef struct TkIntStubs {
     int magic;
@@ -738,6 +742,8 @@ typedef struct TkIntStubs {
 #ifdef MAC_TCL
     void (*tkSubtractRegion) _ANSI_ARGS_((TkRegion sra, TkRegion srcb, TkRegion dr_return)); /* 145 */
 #endif /* MAC_TCL */
+    void (*tkStylePkgInit) _ANSI_ARGS_((TkMainInfo * mainPtr)); /* 146 */
+    void (*tkStylePkgFree) _ANSI_ARGS_((TkMainInfo * mainPtr)); /* 147 */
 } TkIntStubs;
 
 #ifdef __cplusplus
@@ -1369,6 +1375,14 @@ extern TkIntStubs *tkIntStubsPtr;
 	(tkIntStubsPtr->tkSubtractRegion) /* 145 */
 #endif
 #endif /* MAC_TCL */
+#ifndef TkStylePkgInit
+#define TkStylePkgInit \
+	(tkIntStubsPtr->tkStylePkgInit) /* 146 */
+#endif
+#ifndef TkStylePkgFree
+#define TkStylePkgFree \
+	(tkIntStubsPtr->tkStylePkgFree) /* 147 */
+#endif
 
 #endif /* defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS) */
 

@@ -864,6 +864,7 @@ TkCreateMainWindow(interp, screenName, baseName)
     TkEventInit();
     TkBindInit(mainPtr);
     TkFontPkgInit(mainPtr);
+    TkStylePkgInit(mainPtr);
     mainPtr->tlFocusPtr = NULL;
     mainPtr->displayFocusPtr = NULL;
     mainPtr->optionRootPtr = NULL;
@@ -1446,6 +1447,7 @@ Tk_DestroyWindow(tkwin)
 	    TkDeleteAllImages(winPtr->mainPtr);
 	    TkFontPkgFree(winPtr->mainPtr);
 	    TkFocusFree(winPtr->mainPtr);
+	    TkStylePkgFree(winPtr->mainPtr);
 
             /*
              * When embedding Tk into other applications, make sure 
