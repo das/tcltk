@@ -558,7 +558,6 @@ TkpCloseDisplay(dispPtr)
         ckfree((char *) display->screens);
     }
     ckfree((char *) display);
-    ckfree((char *) dispPtr);
 }
 
 /*

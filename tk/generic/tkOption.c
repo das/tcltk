@@ -787,7 +787,7 @@ TkOptionDeadWindow(winPtr)
      * database.
      */
 
-    if ((winPtr->mainPtr->winPtr == winPtr)
+    if ((winPtr->mainPtr != NULL) && (winPtr->mainPtr->winPtr == winPtr)
 	    && (winPtr->mainPtr->optionRootPtr != NULL)) {
 	ClearOptionTree(winPtr->mainPtr->optionRootPtr);
 	winPtr->mainPtr->optionRootPtr = NULL;

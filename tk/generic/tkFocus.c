@@ -813,6 +813,14 @@ TkFocusDeadWindow(winPtr)
     TkDisplay *dispPtr = winPtr->dispPtr;
 
     /*
+     * Certain special windows like those used for send and clipboard
+     * have no mainPtr.
+     */
+
+    if (winPtr->mainPtr == NULL)
+        return;
+
+    /*
      * Search for focus records that refer to this window either as
      * the top-level window or the current focus window.
      */

@@ -172,15 +172,16 @@ TkpCloseDisplay(dispPtr)
 	XFreeFontSet(dispPtr->display, dispPtr->inputXfs);
     }
 #endif
-#if ! defined(SOLARIS2) || defined(HAVE_X11R6)
     if (dispPtr->inputMethod) {
 	/*
-	 * This causes core dumps on some systems (e.g. Solaris 2.3 as of
-	 * 1/6/95), but is OK with X11R6
+	 * This caused core dumps on some systems (Solaris 2.3 1/6/95).
+	 * The most likely cause of this is a bug in X that accesses
+	 * memory that was already deallocated inside XCloseIM().
+	 * One can work around this issue by making sure a XDestroyIC()
+	 * gets invoked for each XCreateIC().
 	 */
 	XCloseIM(dispPtr->inputMethod);
     }
-#endif
 #endif
 
     if (dispPtr->display != 0) {
@@ -188,8 +189,6 @@ TkpCloseDisplay(dispPtr)
 	(void) XSync(dispPtr->display, False);
 	(void) XCloseDisplay(dispPtr->display);
     }
-
-    ckfree((char *) dispPtr);
 }
 
 /*
@@ -610,12 +609,10 @@ OpenIM(dispPtr)
 
     if (dispPtr->inputMethod) {
 	/*
-	 * This causes core dumps on some systems (e.g. Solaris 2.3 as of
-	 * 1/6/95), but is OK with X11R6
+	 * This call should not suffer from any core dumping problems
+	 * since we have not allocated any input contexts.
 	 */
-#if ! defined (SOLARIS2) || defined (HAVE_X11R6)
 	XCloseIM(dispPtr->inputMethod);
-#endif
 	dispPtr->inputMethod = NULL;
     }
 }

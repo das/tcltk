@@ -1907,6 +1907,13 @@ TkBindDeadWindow(winPtr)
     BindInfo *bindInfoPtr;
     PendingBinding *curPtr;
 
+    /*
+     * Certain special windows like those used for send and clipboard
+     * have no mainPtr.
+     */
+    if (winPtr->mainPtr == NULL)
+        return;
+
     bindInfoPtr = (BindInfo *) winPtr->mainPtr->bindInfo;
     curPtr = bindInfoPtr->pendingList;
     while (curPtr != NULL) {

@@ -888,6 +888,8 @@ Tk_HandleEvent(eventPtr)
 
 		    preedit_attr = XVaCreateNestedList(0, XNSpotLocation,
 			    &spot, XNFontSet, dispPtr->inputXfs, NULL);
+		    if (winPtr->inputContext != NULL)
+		        panic("inputContext not NULL");
 		    winPtr->inputContext = XCreateIC(dispPtr->inputMethod,
 			    XNInputStyle, XIMPreeditPosition|XIMStatusNothing,
 			    XNClientWindow, winPtr->window,
@@ -897,6 +899,8 @@ Tk_HandleEvent(eventPtr)
 		    XFree(preedit_attr);
 		} else
 #endif
+		    if (winPtr->inputContext != NULL)
+		        panic("inputContext not NULL");
 		    winPtr->inputContext = XCreateIC(dispPtr->inputMethod,
 			    XNInputStyle, XIMPreeditNothing|XIMStatusNothing,
 			    XNClientWindow, winPtr->window,
