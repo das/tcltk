@@ -73,7 +73,7 @@ XCreateGC(display, d, mask, values)
     gp->plane_mask = 	(mask & GCPlaneMask) 	?values->plane_mask 	:~0;
     gp->foreground = 	(mask & GCForeground) 	?values->foreground 	:0;
     gp->background = 	(mask & GCBackground) 	?values->background 	:0xffffff;
-    gp->line_width = 	(mask & GCLineWidth)	?values->line_width	:0;	
+    gp->line_width = 	(mask & GCLineWidth)	?values->line_width	:1;	
     gp->line_style = 	(mask & GCLineStyle)	?values->line_style	:LineSolid;
     gp->cap_style =  	(mask & GCCapStyle)	?values->cap_style	:0;
     gp->join_style = 	(mask & GCJoinStyle)	?values->join_style	:0;
