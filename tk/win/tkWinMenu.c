@@ -1142,7 +1142,7 @@ TkWinHandleMenuEvent(phwnd, pMessage, pwParam, plParam, plResult)
 	case WM_MEASUREITEM: {
 	    LPMEASUREITEMSTRUCT itemPtr = (LPMEASUREITEMSTRUCT) *plParam;
     
-	    if (itemPtr != NULL) {
+	    if (itemPtr != NULL && tsdPtr->modalMenuPtr != NULL) {
 		mePtr = (TkMenuEntry *) itemPtr->itemData;
 		menuPtr = mePtr->menuPtr;
 
@@ -1171,7 +1171,7 @@ TkWinHandleMenuEvent(phwnd, pMessage, pwParam, plParam, plResult)
 	    Tk_FontMetrics fontMetrics;
 	    int drawArrow = 0;
 
-	    if (itemPtr != NULL) {
+	    if (itemPtr != NULL && tsdPtr->modalMenuPtr != NULL) {
 		Tk_Font tkfont;
 
 		mePtr = (TkMenuEntry *) itemPtr->itemData;
