@@ -347,14 +347,6 @@ bind Text <<Redo>> {
     catch { %W edit redo }
 }
 
-if {[string compare $tcl_platform(platform) "windows"]} {
-bind Text <Control-v> {
-    if {!$tk_strictMotif} {
-	tk::TextScrollPages %W 1
-    }
-}
-}
-
 bind Text <Meta-b> {
     if {!$tk_strictMotif} {
 	tk::TextSetCursor %W [tk::TextPrevPos %W insert tcl_startOfPreviousWord]
@@ -427,6 +419,9 @@ bind Text <Shift-Option-Up> {
 }
 bind Text <Shift-Option-Down> {
     tk::TextKeySelect %W [tk::TextNextPara %W insert]
+}
+bind Text <Control-v> {
+    tk::TextScrollPages %W 1
 }
 
 # End of Mac only bindings
