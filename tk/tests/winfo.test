@@ -367,15 +367,3 @@ foreach i [winfo children .] {
 # cleanup
 ::tcltest::cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-
