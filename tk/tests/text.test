@@ -1366,22 +1366,15 @@ test text-24.1 {bug fix - 1642} {
     .t search -backward -regexp "\$" insert 1.0
 } {2.6}
 
+test text-26.1 {bug fix - 624372, ControlUtfProc long lines} {
+    destroy .t
+    pack [text .t -wrap none]
+    .t insert end [string repeat "\1" 500]
+} {}
+
 eval destroy [winfo child .]
 option clear
 
 # cleanup
 ::tcltest::cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-
-
