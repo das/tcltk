@@ -1228,6 +1228,9 @@ Tk_WmCmd(clientData, interp, argc, argv)
 	    if (wmPtr2->wrapperPtr == NULL) {
 		CreateWrapper(wmPtr2);
 	    }
+	    if (wmPtr->leaderName != NULL) {
+		ckfree(wmPtr->leaderName);
+	    }
 	    wmPtr->hints.window_group = Tk_WindowId(wmPtr2->wrapperPtr);
 	    wmPtr->hints.flags |= WindowGroupHint;
 	    wmPtr->leaderName = ckalloc((unsigned) (strlen(argv[3])+1));
@@ -1354,6 +1357,9 @@ Tk_WmCmd(clientData, interp, argc, argv)
 		    TCL_STATIC);
 	    return TCL_OK;
 	} else {
+	    if (wmPtr->iconName != NULL) {
+		ckfree((char *) wmPtr->iconName);
+	    }
 	    wmPtr->iconName = ckalloc((unsigned) (strlen(argv[3]) + 1));
 	    strcpy(wmPtr->iconName, argv[3]);
 	    if (!(wmPtr->flags & WM_NEVER_MAPPED)) {
@@ -1847,6 +1853,9 @@ Tk_WmCmd(clientData, interp, argc, argv)
 		    TCL_STATIC);
 	    return TCL_OK;
 	} else {
+	    if (wmPtr->title != NULL) {
+		ckfree((char *) wmPtr->title);
+	    }
 	    wmPtr->title = ckalloc((unsigned) (strlen(argv[3]) + 1));
 	    strcpy(wmPtr->title, argv[3]);
 	    if (!(wmPtr->flags & WM_NEVER_MAPPED)) {
@@ -1903,6 +1912,9 @@ Tk_WmCmd(clientData, interp, argc, argv)
 		CreateWrapper(wmPtr2);
 	    }
 	    wmPtr->master = Tk_WindowId(wmPtr2->wrapperPtr);
+	    if (wmPtr->masterWindowName != NULL) {
+		ckfree((char *) wmPtr->masterWindowName);
+	    }
 	    wmPtr->masterWindowName = ckalloc((unsigned) (strlen(argv[3])+1));
 	    strcpy(wmPtr->masterWindowName, argv[3]);
 	}
