@@ -2144,8 +2144,9 @@ TkMacOSXDispatchMenuEvent(
     	    	if ((helpMenuRef != NULL) && (helpMenuRef->menuPtr != NULL)) {
 		    MenuRef outHelpMenu;
 		    MenuItemIndex itemIndex;
+		    int newIndex;
 		    HMGetHelpMenu(&outHelpMenu, &itemIndex);
-    	    	    int newIndex = index - itemIndex;
+    	    	    newIndex = index - itemIndex;
     	    	    result = TkInvokeMenu(currentMenuBarInterp,
     	    	    	    helpMenuRef->menuPtr, newIndex);
     	    	}
