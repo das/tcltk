@@ -309,10 +309,7 @@ FileReadGIF(interp, chan, fileName, format, imageHandle, destX, destY,
 	return TCL_OK;
     }
 
-    if (Tk_PhotoExpand(interp, imageHandle,
-	    destX + width, destY + height) != TCL_OK) {
-	return TCL_ERROR;
-    }
+    Tk_PhotoExpand(imageHandle, destX + width, destY + height);
 
     block.width = width;
     block.height = height;
@@ -327,11 +324,12 @@ FileReadGIF(interp, chan, fileName, format, imageHandle, destX, destY,
     while (1) {
 	if (Fread(buf, 1, 1, chan) != 1) {
 	    /*
-	     * Premature end of image.  We should really notify
-	     * the user, but for now just show garbage.
+	     * Premature end of image.
 	     */
 
-	    break;
+	    Tcl_AppendResult(interp,"premature end of image data for this index",
+                             (char *) NULL);
+	    goto error;
 	}
 
 	if (buf[0] == GIF_TERMINATOR) {
@@ -477,10 +475,8 @@ FileReadGIF(interp, chan, fileName, format, imageHandle, destX, destY,
 	break;
     }
 
-    if (Tk_PhotoPutBlock(interp, imageHandle, &block, destX, destY,
-	    width, height, TK_PHOTO_COMPOSITE_SET) != TCL_OK) {
-	goto error;
-    }
+    Tk_PhotoPutBlock(imageHandle, &block, destX, destY, width, height,
+	    TK_PHOTO_COMPOSITE_SET);
 
     noerror:
     /*
