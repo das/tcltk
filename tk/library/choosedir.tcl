@@ -135,7 +135,7 @@ proc ::tk::dialog::file::chooseDir::Config {dataName argList} {
     tclParseConfigSpec ::tk::dialog::file::$dataName $specs "" $argList
 
     if {$data(-title) == ""} {
-	set data(-title) "Choose Directory"
+	set data(-title) "[::msgcat::mc "Choose Directory"]"
     }
 
     # Stub out the -multiple value for the dialog; it doesn't make sense for
