@@ -25,7 +25,6 @@ button \- Create and manipulate button widgets
 \-compound	\-justify	\-underline
 \-cursor	\-padx	\-wraplength
 \-disabledforeground	\-pady
-
 .SE
 .SH "WIDGET-SPECIFIC OPTIONS"
 .OP \-command command Command

@@ -91,7 +91,7 @@ proc setupBindtagsForTreeDelivery {widget} {
         lappend tags $w
     }
     lappend tags all
-    bindtags $widget $tags
+    \fBbindtags\fR $widget $tags
 }
 .CE
 

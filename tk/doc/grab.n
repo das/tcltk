@@ -129,7 +129,7 @@ clicked.
 pack [button .b1 \-text "Click me! #1" \-command {destroy .b1}]
 pack [button .b2 \-text "Click me! #2" \-command {destroy .b2}]
 pack [button .b3 \-text "Click me! #3" \-command {destroy .b3}]
-grab .b2
+\fBgrab\fR .b2
 .CE
 
 .SH KEYWORDS

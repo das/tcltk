@@ -130,7 +130,7 @@ Not all platforms have the \fBconsole\fR command, so debugging code
 often has the following code fragment in it so output produced by
 \fBputs\fR can be seen while during development:
 .CS
-catch {\fBconsole\fR show}
+catch {\fBconsole show\fR}
 .CE
 
 .SH KEYWORDS

@@ -654,9 +654,9 @@ Returns the type of the menu entry given by \fIindex\fR.
 This is the \fItype\fR argument passed to the \fBadd\fR widget
 command when the entry was created, such as \fBcommand\fR
 or \fBseparator\fR, or \fBtearoff\fR for a tear-off entry.
-.VS
 .TP
 \fIpathName \fBunpost\fR
+.VS
 Unmap the window so that it is no longer displayed.  If a
 lower-level cascaded menu is posted, unpost that menu.  Returns an
 empty string. This subcommand does not work on Windows and the
