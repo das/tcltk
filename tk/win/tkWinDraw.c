@@ -591,7 +591,9 @@ TkPutImage(colors, ncolors, display, d, gc, image, src_x, src_y, dest_x,
     }
     if(!bitmap) {
 	panic("Fail to allocate bitmap\n");
-	return
+	DeleteDC(dcMem);
+    	TkWinReleaseDrawableDC(d, dc, &state);
+	return;
     }
     bitmap = SelectObject(dcMem, bitmap);
     BitBlt(dc, dest_x, dest_y, width, height, dcMem, src_x, src_y, SRCCOPY);
