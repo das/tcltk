@@ -706,7 +706,14 @@ TkSmoothParseProc(clientData, interp, tkwin, value, widgRec, offset)
     if (smooth) {
 	*smoothPtr = smooth;
 	return TCL_OK;
+    } else if (strncmp(value, tkBezierSmoothMethod.name, length) == 0) {
+	/*
+	 * We need to do handle the built-in bezier method.
+	 */
+	*smoothPtr = &tkBezierSmoothMethod;
+	return TCL_OK;
     }
+
 
     if (Tcl_GetBoolean(interp, (char *) value, &b) != TCL_OK) {
 	return TCL_ERROR;

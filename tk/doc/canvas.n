@@ -1397,8 +1397,12 @@ If this option isn't specified then it defaults to \fBmiter\fR.
 If the line only contains two points then this option is
 irrelevant.
 .TP
-\fB\-smooth \fIboolean\fR
-\fIBoolean\fR must have one of the forms accepted by \fBTk_GetBoolean\fR.
+\fB\-smooth \fIsmoothMethod\fR
+\fIsmoothMethod\fR must have one of the forms accepted by
+\fBTk_GetBoolean\fR or a line smoothing method.  Only \fBbezier\fR is
+supported in the core, but more can be added at runtime.  If a boolean
+false value or empty string is given, no smoothing is applied.  A boolean
+truth value assume \fBbezier\fR smoothing.
 It indicates whether or not the line should be drawn as a curve.
 If so, the line is rendered as a set of parabolic splines: one spline
 is drawn for the first and second line segments, one for the second
