@@ -57,7 +57,7 @@ int tkpWinRopModes[] = {
 #define SRCORREVERSE	(DWORD)0x00DD0228 /* dest = source OR (NOT dest) */
 #define SRCNAND		(DWORD)0x007700E6 /* dest = NOT (source AND dest) */
 
-static int bltModes[] = {
+int tkpWinBltModes[] = {
     BLACKNESS,			/* GXclear */
     SRCAND,			/* GXand */
     SRCERASE,			/* GXandReverse */
@@ -328,7 +328,7 @@ XCopyArea(display, src, dest, gc, src_x, src_y, width, height, dest_x, dest_y)
     }
 
     BitBlt(destDC, dest_x, dest_y, width, height, srcDC, src_x, src_y,
-	    bltModes[gc->function]);
+	    tkpWinBltModes[gc->function]);
 
     SelectClipRgn(destDC, NULL);
 
