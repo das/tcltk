@@ -153,6 +153,7 @@ extern Tcl_Encoding TkMacOSXCarbonEncoding;
 extern int TkMacOSXUseAntialiasedText(Tcl_Interp *interp, int enable);
 extern int TkMacOSXInitCGDrawing(Tcl_Interp *interp, int enable, int antiAlias);
 extern void TkMacOSXDefaultStartupScript(void);
+extern int TkMacOSXGenerateFocusEvent( Window window, int activeFlag);
 
 #include "tkIntPlatDecls.h"
 

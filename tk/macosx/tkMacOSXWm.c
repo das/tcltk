@@ -5049,6 +5049,7 @@ TkpMakeMenuWindow(
     }
 }
 
+
 /*
  *----------------------------------------------------------------------
  *
@@ -5156,7 +5157,7 @@ TkMacOSXMakeRealWindowExist(
     listPtr->winPtr = winPtr;
     tkMacOSXWindowListPtr = listPtr;
     
-    macWin->grafPtr = GetWindowPort ( newWindow );
+    macWin->grafPtr = GetWindowPort (newWindow);
     macWin->rootControl = rootControl;
     MoveWindowStructure(newWindow, geometry.left, geometry.top);
     SetPort(GetWindowPort(newWindow));
