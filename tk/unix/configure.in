@@ -91,6 +91,8 @@ SC_LOAD_TCLCONFIG
 # Recompute the necessary flags to run the compiler
 #--------------------------------------------------------------------
 
+SC_ENABLE_SHARED
+
 SC_CONFIG_CFLAGS
 
 SC_ENABLE_SYMBOLS
@@ -347,8 +349,6 @@ SC_BUGGY_STRTOD
 #	The statements below define a collection of symbols related to
 #	building libtk as a shared library instead of a static library.
 #--------------------------------------------------------------------
-
-SC_ENABLE_SHARED
 
 eval eval "TK_SHARED_LIB_SUFFIX=${SHARED_LIB_SUFFIX}"
 eval eval "TK_UNSHARED_LIB_SUFFIX=${UNSHARED_LIB_SUFFIX}"
