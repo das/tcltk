@@ -15,6 +15,7 @@
 #include "tkUnixInt.h"
 #include "tkFont.h"
 #include <netinet/in.h>		/* for htons() prototype */
+#include <arpa/inet.h>		/* inet_ntoa() */
 
 /*
  * The preferred font encodings.
