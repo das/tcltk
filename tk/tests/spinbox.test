@@ -1557,6 +1557,21 @@ test spinbox-21.1 {spinbox button, out of range checking} {
 
 } {-10 20 20 -10 -10 -10 20 20 18 -10 -10 -8 -10 -8 -10 20 18 20}
 
+test spinbox-22.1 {spinbox config, -from changes SF bug 559078} {
+    set val 5
+    destroy .s
+    spinbox .s -from 1 -to 10 -textvariable val
+    set val
+} {5}
+test spinbox-22.2 {spinbox config, -from changes SF bug 559078} {
+    .s configure -from 3 -to 10
+    set val
+} {5}
+test spinbox-22.3 {spinbox config, -from changes SF bug 559078} {
+    .s configure -from 6 -to 10
+    set val
+} {6}
+
 destroy .e
 catch {unset ::e ::vVals}
 
