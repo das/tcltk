@@ -882,6 +882,7 @@ Tk_HandleEvent(eventPtr)
      */
     dispPtr = winPtr->dispPtr;
     if ((dispPtr->flags & TK_DISPLAY_USE_IM)) {
+	long im_event_mask = 0L;
 	if (!(winPtr->flags & (TK_CHECKED_IC|TK_ALREADY_DEAD))) {
 	    winPtr->flags |= TK_CHECKED_IC;
 	    if (dispPtr->inputMethod != NULL) {
@@ -935,6 +936,16 @@ Tk_HandleEvent(eventPtr)
 			XNFocusWindow, winPtr->window,
 			NULL);
 #endif
+	    }
+	}
+	if (winPtr->inputContext != NULL &&
+	    (eventPtr->xany.type == FocusIn)) {
+	    XGetICValues(winPtr->inputContext,
+			 XNFilterEvents, &im_event_mask, NULL);
+	    if (im_event_mask != 0L) {
+		XSelectInput(winPtr->display, winPtr->window,
+			     winPtr->atts.event_mask | im_event_mask);
+		XSetICFocus(winPtr->inputContext);
 	    }
 	}
 	if (XFilterEvent(eventPtr, None)) {
