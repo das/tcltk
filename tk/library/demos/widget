@@ -331,6 +331,7 @@ addDemoSection "Animation" {
     anilabel	"Animated labels"
     aniwave	"Animated wave"
     pendulum	"Pendulum simulation"
+    goldberg	"A celebration of Rube Goldberg"
 }
 addDemoSection "Miscellaneous" {
     bitmap	"The built-in bitmaps"
