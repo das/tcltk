@@ -934,13 +934,13 @@ EXTERN void		TkpWmSetState _ANSI_ARGS_((TkWindow *winPtr,
 			    int state));
 EXTERN void		TkQueueEventForAllChildren _ANSI_ARGS_((
 			    TkWindow *winPtr, XEvent *eventPtr));
-#ifndef TkRectInRegion
 EXTERN int		TkReadBitmapFile _ANSI_ARGS_((Display* display,
 			    Drawable d, CONST char* filename,
 			    unsigned int* width_return,
 			    unsigned int* height_return,
 			    Pixmap* bitmap_return,
 			    int* x_hot_return, int* y_hot_return));
+#ifndef TkRectInRegion
 EXTERN int		TkRectInRegion _ANSI_ARGS_((TkRegion rgn,
 			    int x, int y, unsigned int width,
 			    unsigned int height));
