@@ -441,7 +441,7 @@ TkTextTagCmd(textPtr, interp, objc, objv)
 		    tagPtr->tabArrayPtr = NULL;
 		}
 		if (tagPtr->tabStringPtr != NULL) {
-		    tagPtr->tabArrayPtr = TkTextGetTabs(interp, textPtr->tkwin,
+		    tagPtr->tabArrayPtr = TkTextGetTabs(interp, textPtr,
 			    tagPtr->tabStringPtr);
 		    if (tagPtr->tabArrayPtr == NULL) {
 			return TCL_ERROR;
