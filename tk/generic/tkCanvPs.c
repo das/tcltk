@@ -1209,7 +1209,7 @@ TkPostscriptImage(interp, tkwin, psInfo, ximage, x, y, width, height)
     int bytesPerLine=0, maxWidth=0;
     int level = psInfoPtr->colorLevel;
     Colormap cmap;
-    int i, depth, ncolors;
+    int i, ncolors;
     Visual *visual;
     TkColormapData cdata;
 
@@ -1218,7 +1218,6 @@ TkPostscriptImage(interp, tkwin, psInfo, ximage, x, y, width, height)
     }
 
     cmap = Tk_Colormap(tkwin);
-    depth = Tk_Depth(tkwin);
     visual = Tk_Visual(tkwin);
 
     /*
