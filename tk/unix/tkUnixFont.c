@@ -2412,16 +2412,11 @@ GetFontAttributes(display, fontStructPtr, faPtr)
     FontAttributes *faPtr;	/* For storing attributes of screen font. */
 {
     unsigned long value;
-    char *p, *name;
+    char *name;
     
     if ((XGetFontProperty(fontStructPtr, XA_FONT, &value) != False) &&
 	    (value != 0)) {
 	name = XGetAtomName(display, (Atom) value);
-	for (p = name; *p != '\0'; p++) {
-	    if (isupper(UCHAR(*p))) { /* INTL: native text */
-		*p = tolower(UCHAR(*p)); /* INTL: native text */
-	    }
-	}
 	if (TkFontParseXLFD(name, &faPtr->fa, &faPtr->xa) != TCL_OK) {
 	    faPtr->fa.family = Tk_GetUid(name);
 	    faPtr->xa.foundry = Tk_GetUid("");
