@@ -146,7 +146,7 @@ loses focus.
 .IP \fBall\fR 10
 \fBvalidateCommand\fR will be called for all above conditions.
 .PP
-It is posible to perform percent substitutions on the \fBvalidateCommand\fR
+It is possible to perform percent substitutions on the \fBvalidateCommand\fR
 and \fBinvalidCommand\fR,
 just as you would in a \fBbind\fR script.  The following substitutions
 are recognized:
