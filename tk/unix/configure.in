@@ -102,6 +102,12 @@ if test "${TCL_THREADS}" = 1; then
     AC_DEFINE(_THREAD_SAFE)
 fi
 
+if test "${TCL_VERSION}" != "${TK_VERSION}"; then
+    AC_MSG_ERROR([${TCL_BIN_DIR}/tclConfig.sh is for Tcl ${TCL_VERSION}.
+Tk ${TK_VERSION}${TK_PATCH_LEVEL} needs Tcl ${TK_VERSION}.
+Use --with-tcl= option to indicate location of tclConfig.sh file for Tcl ${TK_VERSION}.])
+fi
+
 #--------------------------------------------------------------------
 # Recompute the necessary flags to run the compiler
 #--------------------------------------------------------------------
