@@ -400,7 +400,7 @@ wish: $(WISH_OBJS) $(TK_LIB_FILE) $(TK_STUB_LIB_FILE)
 # building tcltest in the Tcl bin directory. Just do it for them.
 ${TCL_BIN_DIR}/tcltest:
 	cd ${TCL_BIN_DIR} ; \
-	make tcltest
+	$(MAKE) tcltest
 
 tktest: ${TCL_BIN_DIR}/tcltest $(TKTEST_OBJS) $(TK_LIB_FILE)
 	${CC} $(LDFLAGS) $(TKTEST_OBJS) \

@@ -521,7 +521,7 @@ tktest : $(TKTEST)
 # building tcltest in the Tcl bin directory. Just do it for them.
 $(TCLTEST):
 	cd ${TCL_BIN_DIR} ; \
-	make tcltest
+	$(MAKE) tcltest
 
 $(TKTEST): $(TCLTEST) $(TK_LIB_FILE) $(TKTEST_OBJS) wish.$(RES) $(CAT32)
 	$(CC) $(CFLAGS) $(TKTEST_OBJS_NATIVE) $(TCL_LIB_FILE) \
