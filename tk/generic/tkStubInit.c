@@ -292,6 +292,8 @@ TkIntStubs tkIntStubs = {
     TkStylePkgFree, /* 147 */
     TkToplevelWindowForCommand, /* 148 */
     TkGetOptionSpec, /* 149 */
+    TkMakeRawCurve, /* 150 */
+    TkMakeRawCurvePostscript, /* 151 */
 };
 
 TkIntPlatStubs tkIntPlatStubs = {
