@@ -33,6 +33,10 @@ if {[info exists auto_path] && [string compare {} $tk_library] && \
 
 set tk_strictMotif 0
 
+# Turn on useinputmethods (X Input Methods) by default.
+
+tk useinputmethods 1
+
 # Create a ::tk namespace
 
 namespace eval ::tk {

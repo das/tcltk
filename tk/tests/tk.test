@@ -101,9 +101,8 @@ test tk-4.6 {tk command: useinputmethods: set new} {unixOnly} {
     if {[tk useinputmethods 1] == 0} {
 	puts "this wish doesn't have XIM (X Input Methods) support"
     }
-    # We should always start with XIM support off
     set useim
-} 0
+} $useim
 test tk-4.7 {tk command: useinputmethods: set new} {macOrPc} {
     # Mac and Windows don't have X Input Methods, so this should
     # always return 0
