@@ -3193,6 +3193,10 @@ ListboxListVarProc(clientData, interp, name1, name2, flags)
 	}
     }
 
+    if (oldLength != listPtr->nElements) {
+	listPtr->flags |= UPDATE_V_SCROLLBAR;
+    }
+
     /*
      * The computed maxWidth may have changed as a result of this operation.
      * However, we don't want to recompute it every time this trace fires
