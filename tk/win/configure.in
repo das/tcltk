@@ -6,6 +6,7 @@
 # RCS: @(#) $Id$
 
 AC_INIT(../generic/tk.h)
+AC_PREREQ(2.13)
 
 TK_VERSION=8.4
 TK_MAJOR_VERSION=8
