@@ -74,7 +74,7 @@ test imgPPM-2.1 {FileWritePPM procedure} {
 } {1 {couldn't open "not_a_dir/bar/baz/gorp": no such file or directory} {posix enoent {no such file or directory}}}
 test imgPPM-2.2 {FileWritePPM procedure} {
     catch {unset data}
-    p1 write test2.ppm
+    p1 write -format ppm test2.ppm
     set fd [open test2.ppm]
     set data [read $fd]
     close $fd
