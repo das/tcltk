@@ -1315,8 +1315,8 @@ Tk_DestroyWindow(tkwin)
                 
 	    Tcl_DeleteHashTable(&winPtr->mainPtr->nameTable);
 	    TkBindFree(winPtr->mainPtr);
-	    TkFontPkgFree(winPtr->mainPtr);
 	    TkDeleteAllImages(winPtr->mainPtr);
+	    TkFontPkgFree(winPtr->mainPtr);
 
             /*
              * When embedding Tk into other applications, make sure 
