@@ -941,8 +941,6 @@ GetTranslatedKey(xkey)
     while ((xkey->nbytes < XMaxTransChars)
 	    && PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE)) {
 	if ((msg.message == WM_CHAR) || (msg.message == WM_SYSCHAR)) {
-	    xkey->trans_chars[xkey->nbytes] = (char) msg.wParam;
-	    xkey->nbytes++;
 	    GetMessage(&msg, NULL, 0, 0);
 
 	    /*
