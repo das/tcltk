@@ -2673,8 +2673,12 @@ ChangeListboxOffset(listPtr, offset)
     /*
      * Make sure that the new offset is within the allowable range, and
      * round it off to an even multiple of xScrollUnit.
+     *
+     * Add half a scroll unit to do entry/text-like synchronization.
+     * [Bug #225025]
      */
 
+    offset += listPtr->xScrollUnit / 2;
     maxOffset = listPtr->maxWidth - (Tk_Width(listPtr->tkwin) -
 	    2*listPtr->inset - 2*listPtr->selBorderWidth)
 	    + listPtr->xScrollUnit - 1;
