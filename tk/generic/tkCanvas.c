@@ -1840,18 +1840,17 @@ DisplayCanvas(clientData)
 	}
 	if (canvasPtr->highlightWidth != 0) {
 	    GC fgGC, bgGC;
-    
-             
-	    bgGC = Tk_GCForColor(canvasPtr->highlightColorPtr,
+
+	    bgGC = Tk_GCForColor(canvasPtr->highlightBgColorPtr,
 		    Tk_WindowId(tkwin));
 	    if (canvasPtr->textInfo.gotFocus) {
-		fgGC = Tk_GCForColor(canvasPtr->highlightBgColorPtr,
+		fgGC = Tk_GCForColor(canvasPtr->highlightColorPtr,
 			Tk_WindowId(tkwin));
-	    	TkpDrawHighlightBorder(tkwin, fgGC, bgGC, canvasPtr->highlightWidth,
-		        Tk_WindowId(tkwin));
+	    	TkpDrawHighlightBorder(tkwin, fgGC, bgGC,
+			canvasPtr->highlightWidth, Tk_WindowId(tkwin));
 	    } else {
-	    	TkpDrawHighlightBorder(tkwin, bgGC, bgGC, canvasPtr->highlightWidth,
-		        Tk_WindowId(tkwin));
+	    	TkpDrawHighlightBorder(tkwin, bgGC, bgGC,
+			canvasPtr->highlightWidth, Tk_WindowId(tkwin));
 	    }
 	}
     }

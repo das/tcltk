@@ -658,6 +658,7 @@ Tk_GetCursorFromObj(tkwin, objPtr)
     Tcl_Obj *objPtr;		/* The object from which to get pixels. */
 {
     TkCursor *cursorPtr = GetCursorFromObj(tkwin, objPtr);
+    /* GetCursorFromObj should never return NULL */
     return cursorPtr->cursor;
 }
 
@@ -716,7 +717,7 @@ GetCursorFromObj(tkwin, objPtr)
 
     for (cursorPtr = (TkCursor *) Tcl_GetHashValue(hashPtr);
 	    cursorPtr != NULL; cursorPtr = cursorPtr->nextPtr) {
-	if (Tk_Display(tkwin) != cursorPtr->display) {
+	if (Tk_Display(tkwin) == cursorPtr->display) {
 	    objPtr->internalRep.twoPtrValue.ptr1 = (VOID *) cursorPtr;
 	    cursorPtr->objRefCount++;
 	    return cursorPtr;
