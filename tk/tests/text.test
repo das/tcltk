@@ -2899,6 +2899,24 @@ test text-26.1 {bug fix - 624372, ControlUtfProc long lines} {
     .t insert end [string repeat "\1" 500]
 } {}
 
+test text-27.1 {tabs - must be positive and must be increasing} {
+    destroy .t
+    pack [text .t -wrap none]
+    list [catch {.t configure -tabs {0}} msg] $msg
+} {1 {tab stop "0" is not at a positive distance}}
+
+test text-27.2 {tabs - must be positive and must be increasing} {
+    destroy .t
+    pack [text .t -wrap none]
+    list [catch {.t configure -tabs {-5}} msg] $msg
+} {1 {tab stop "-5" is not at a positive distance}}
+
+test text-27.3 {tabs - must be positive and must be increasing} {
+    destroy .t
+    pack [text .t -wrap none]
+    list [catch {.t configure -tabs {10c 5c}} msg] $msg
+} {1 {tabs must be monotonically increasing, but "5c" is smaller than or equal to the previous tab}}
+
 deleteWindows
 option clear
 

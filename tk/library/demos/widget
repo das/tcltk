@@ -298,7 +298,7 @@ addDemoSection "Text" {
     text	"Basic editable text"
     style	"Text display styles"
     bind	"Hypertext (tag bindings)"
-    twind	"A text widget with embedded windows"
+    twind	"A text widget with embedded windows and other features"
     search	"A search tool built with a text widget"
 }
 addDemoSection "Canvases" {

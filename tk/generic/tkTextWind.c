@@ -997,9 +997,9 @@ EmbWinBboxProc(chunkPtr, index, y, lineHeight, baseline, xPtr, yPtr,
     int *xPtr, *yPtr;			/* Gets filled in with coords of
 					 * character's upper-left pixel. */
     int *widthPtr;			/* Gets filled in with width of
-					 * character, in pixels. */
+					 * window, in pixels. */
     int *heightPtr;			/* Gets filled in with height of
-					 * character, in pixels. */
+					 * window, in pixels. */
 {
     TkTextSegment *ewPtr = (TkTextSegment *) chunkPtr->clientData;
     Tk_Window tkwin;
