@@ -683,6 +683,11 @@ UpdateWrapper(winPtr)
 	    wmPtr->exStyle = EX_TOPLEVEL_STYLE;
 	}
 
+	if ((wmPtr->flags & WM_WIDTH_NOT_RESIZABLE)
+		&& (wmPtr->flags & WM_HEIGHT_NOT_RESIZABLE)) {
+	    wmPtr->style &= ~ (WS_MAXIMIZEBOX | WS_SIZEBOX);
+	}
+
 	/*
 	 * Compute the geometry of the parent and child windows.
 	 */
@@ -2381,6 +2386,11 @@ UpdateGeometryInfo(clientData)
 	return;
     }
 
+    if (wmPtr->flags & WM_UPDATE_SIZE_HINTS) {
+	wmPtr->flags &= ~WM_UPDATE_SIZE_HINTS;
+	UpdateWrapper(winPtr);
+    }
+	   
     /*
      * Compute the border size for the current window style.  This
      * size will include the resize handles, the title bar and the
@@ -3954,6 +3964,15 @@ WmProc(hwnd, message, wParam, lParam)
 
 	case WM_ENTERSIZEMOVE:
 	    inMoveSize = 1;
+
+	    /*
+	     * Cancel any current mouse timer.  If the mouse timer
+	     * fires during the size/move mouse capture, it will
+	     * release the capture, which is wrong.
+	     */
+
+	    TkWinCancelMouseTimer();
+
 	    oldMode = Tcl_SetServiceMode(TCL_SERVICE_ALL);
 	    break;
 
