@@ -35,6 +35,7 @@ namespace eval ::tk::panedwindow {}
 #   None
 #
 proc ::tk::panedwindow::MarkSash {w x y proxy} {
+    if {[$w cget -opaqueresize]} { set proxy 0 }
     set what [$w identify $x $y]
     if { [llength $what] == 2 } {
 	foreach {index which} $what break
@@ -44,6 +45,8 @@ proc ::tk::panedwindow::MarkSash {w x y proxy} {
 	    foreach {sx sy} [$w sash coord $index] break
 	    set ::tk::Priv(dx) [expr {$sx-$x}]
 	    set ::tk::Priv(dy) [expr {$sy-$y}]
+	    # Do this to init the proxy location
+	    DragSash $w $x $y $proxy
 	}
     }
 }
@@ -61,6 +64,7 @@ proc ::tk::panedwindow::MarkSash {w x y proxy} {
 #   Moves sash
 #
 proc ::tk::panedwindow::DragSash {w x y proxy} {
+    if {[$w cget -opaqueresize]} { set proxy 0 }
     if { [info exists ::tk::Priv(sash)] } {
 	if {$proxy} {
 	    $w proxy place \
@@ -83,6 +87,7 @@ proc ::tk::panedwindow::DragSash {w x y proxy} {
 #   Returns ...
 #
 proc ::tk::panedwindow::ReleaseSash {w proxy} {
+    if {[$w cget -opaqueresize]} { set proxy 0 }
     if { [info exists ::tk::Priv(sash)] } {
 	if {$proxy} {
 	    foreach {x y} [$w proxy coord] break
