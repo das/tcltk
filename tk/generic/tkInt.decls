@@ -1505,6 +1505,10 @@ declare 104 win {
     void XDrawLine (Display* d, Drawable dr, GC g, int x1, int y1, \
 	    int x2, int y2)
 }
+declare 106 win {
+    void XFillRectangle (Display* display, Drawable d, GC gc, \
+	    int x, int y, unsigned int width, unsigned int height)
+}
 
 # X functions for Mac
 
@@ -1880,4 +1884,8 @@ declare 81 mac {
 declare 82 mac {
     void XDrawLine (Display* d, Drawable dr, GC g, int x1, int y1, \
 	    int x2, int y2)
+}
+declare 83 mac {
+    void XFillRectangle (Display* display, Drawable d, GC gc, \
+	    int x, int y, unsigned int width, unsigned int height)
 }

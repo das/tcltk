@@ -566,6 +566,8 @@ TkIntXlibStubs tkIntXlibStubs = {
     XSetWMClientMachine, /* 102 */
     XStringListToTextProperty, /* 103 */
     XDrawLine, /* 104 */
+    NULL, /* 105 */
+    XFillRectangle, /* 106 */
 #endif /* __WIN32__ */
 #ifdef MAC_TCL
     NULL, /* 0 */
@@ -651,6 +653,7 @@ TkIntXlibStubs tkIntXlibStubs = {
     XDrawSegments, /* 80 */
     XForceScreenSaver, /* 81 */
     XDrawLine, /* 82 */
+    XFillRectangle, /* 83 */
 #endif /* MAC_TCL */
 };
 
