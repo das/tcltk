@@ -167,6 +167,15 @@ TkpInit(interp)
          * then use the Tk based console interpreter.
          */
     
+        /* REMOVE ME: Close stdin & stdout for remote debugging otherwise we
+         * will fight with gdb for stdin & stdout 
+         */
+            
+        if (getenv ("XCNOSTDIN") != NULL) {
+            close (0);
+            close (1);
+        }
+        
         if (!isatty(0)) {
             struct stat st;
             if (fstat(0, &st) || (S_ISCHR(st.st_mode) && st.st_blocks == 0)) {
