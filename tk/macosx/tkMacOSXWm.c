@@ -761,11 +761,8 @@ Tcl_Obj *CONST objv[];	/* Argument objects. */
 
     if (objc < 3) {
 configArgs:
-        Tcl_AppendResult(interp, "wrong # arguments: must be \"",
-                         Tcl_GetStringFromObj (objv[0], NULL), " attributes window",
-                         " ?-modified ?bool??",
-                         " ?-titlepath ?path??",
-                         "\"", (char *) NULL);
+	Tcl_WrongNumArgs(interp, 1, objv,
+		"attributes window ?-modified ?bool?? ?-titlepath ?path??");
         return TCL_ERROR;
     }
     macWindow = GetWindowFromPort(TkMacOSXGetDrawablePort(winPtr->window));

@@ -1850,9 +1850,7 @@ TkWinMenuKeyObjCmd(clientData, interp, objc, objv)
     int i;
 
     if (objc != 3) {
-	Tcl_AppendResult(interp, "wrong # args: should be \"",
-	        Tcl_GetString(objv[0]),
-	        " window keySym\"", (char *) NULL);
+	Tcl_WrongNumArgs(interp, 1, objv, "window keySym");
 	return TCL_ERROR;
     }
 
