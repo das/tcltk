@@ -9,14 +9,8 @@
 # RCS: @(#) $Id$
 
 package require tcltest 2.1
-namespace import -force tcltest::configure
-namespace import -force tcltest::testsDirectory
-configure -testdir [file join [pwd] [file dirname [info script]]]
-configure -loadfile [file join [testsDirectory] constraints.tcl]
+eval tcltest::configure $argv
 tcltest::loadTestedCommands
-
-namespace import -force tcltest::makeFile
-namespace import -force tcltest::removeFile
 
 catch {destroy .op1}
 catch {destroy .op2}
@@ -231,7 +225,7 @@ catch {destroy .op1}
 catch {destroy .op2}
 
 # cleanup
-::tcltest::cleanupTests
+cleanupTests
 return
 
 

@@ -8,10 +8,7 @@
 # RCS: @(#) $Id$
 
 package require tcltest 2.1
-namespace import -force tcltest::configure
-namespace import -force tcltest::testsDirectory
-configure -testdir [file join [pwd] [file dirname [info script]]]
-configure -loadfile [file join [testsDirectory] constraints.tcl]
+eval tcltest::configure $argv
 tcltest::loadTestedCommands
 
 test bgerror-1.1 {bgerror / tkerror compat} {
@@ -59,7 +56,7 @@ catch {rename tkerror {}}
 # to emulate.
 
 # cleanup
-::tcltest::cleanupTests
+cleanupTests
 return
 
 

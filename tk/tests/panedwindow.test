@@ -9,10 +9,7 @@
 # RCS: @(#) $Id$
 
 package require tcltest 2.1
-namespace import -force tcltest::configure
-namespace import -force tcltest::testsDirectory
-configure -testdir [file join [pwd] [file dirname [info script]]]
-configure -loadfile [file join [testsDirectory] constraints.tcl]
+eval tcltest::configure $argv
 tcltest::loadTestedCommands
 
 set i 1
@@ -2476,5 +2473,5 @@ test panedwindow-30.1 {display on depths other than the default one} {
 }
 
 # cleanup
-::tcltest::cleanupTests
+cleanupTests
 return

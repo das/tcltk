@@ -14,6 +14,8 @@
 package require Tcl 8.4
 package require tcltest 2.1
 tcltest::configure -testdir [file join [pwd] [file dirname [info script]]]
+tcltest::configure -loadfile \
+	[file join [tcltest::testsDirectory] constraints.tcl]
 tcltest::configure -singleproc 1
 eval tcltest::configure $argv
 tcltest::runAllTests

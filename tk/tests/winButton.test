@@ -11,10 +11,7 @@
 # RCS: @(#) $Id$
 
 package require tcltest 2.1
-namespace import -force tcltest::configure
-namespace import -force tcltest::testsDirectory
-configure -testdir [file join [pwd] [file dirname [info script]]]
-configure -loadfile [file join [testsDirectory] constraints.tcl]
+eval tcltest::configure $argv
 tcltest::loadTestedCommands
 
 proc bogusTrace args {
@@ -146,5 +143,5 @@ test winbutton-1.9 {TkpComputeButtonGeometry procedure} {pcOnly} {
 
 # cleanup
 deleteWindows
-::tcltest::cleanupTests
+cleanupTests
 return

@@ -8,10 +8,7 @@
 # RCS: @(#) $Id$
 
 package require tcltest 2.1
-namespace import -force tcltest::configure
-namespace import -force tcltest::testsDirectory
-configure -testdir [file join [pwd] [file dirname [info script]]]
-configure -loadfile [file join [testsDirectory] constraints.tcl]
+eval tcltest::configure $argv
 tcltest::loadTestedCommands
 
 test menuDraw-1.1 {TkMenuInitializeDrawingFields} {
@@ -520,7 +517,7 @@ test menuDraw-17.2 {AdjustMenuCoords - menu} {pcOnly userInteraction} {
 
 # cleanup
 deleteWindows
-::tcltest::cleanupTests
+cleanupTests
 return
 
 
