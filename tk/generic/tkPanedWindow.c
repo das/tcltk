@@ -368,7 +368,7 @@ Tk_PanedWindowObjCmd(clientData, interp, objc, objv)
 	pwOpts->slaveOpts = Tk_CreateOptionTable(interp, slaveOptionSpecs);
     }
 
-    Tk_SetClass(tkwin, "PanedWindow");
+    Tk_SetClass(tkwin, "Panedwindow");
 
     /*
      * Allocate and initialize the widget record.

@@ -6,18 +6,18 @@
 # RCS: @(#) $Id$
 #
 
-bind PanedWindow <Button-1> { ::tk::panedwindow::MarkSash %W %x %y 1 }
-bind PanedWindow <Button-2> { ::tk::panedwindow::MarkSash %W %x %y 0 }
+bind Panedwindow <Button-1> { ::tk::panedwindow::MarkSash %W %x %y 1 }
+bind Panedwindow <Button-2> { ::tk::panedwindow::MarkSash %W %x %y 0 }
 
-bind PanedWindow <B1-Motion> { ::tk::panedwindow::DragSash %W %x %y 1 }
-bind PanedWindow <B2-Motion> { ::tk::panedwindow::DragSash %W %x %y 0 }
+bind Panedwindow <B1-Motion> { ::tk::panedwindow::DragSash %W %x %y 1 }
+bind Panedwindow <B2-Motion> { ::tk::panedwindow::DragSash %W %x %y 0 }
 
-bind PanedWindow <ButtonRelease-1> {::tk::panedwindow::ReleaseSash %W 1}
-bind PanedWindow <ButtonRelease-2> {::tk::panedwindow::ReleaseSash %W 0}
+bind Panedwindow <ButtonRelease-1> {::tk::panedwindow::ReleaseSash %W 1}
+bind Panedwindow <ButtonRelease-2> {::tk::panedwindow::ReleaseSash %W 0}
 
-bind PanedWindow <Motion> { ::tk::panedwindow::Motion %W %x %y }
+bind Panedwindow <Motion> { ::tk::panedwindow::Motion %W %x %y }
 
-bind PanedWindow <Leave> { ::tk::panedwindow::Leave %W }
+bind Panedwindow <Leave> { ::tk::panedwindow::Leave %W }
 
 # Initialize namespace
 namespace eval ::tk::panedwindow {}
@@ -139,7 +139,7 @@ proc ::tk::panedwindow::Motion {w x y} {
 # ::tk::panedwindow::Cursor --
 #
 #   Handles returning the normal cursor when we are no longer over the
-#   sash area.  This needs to be done this way, because the PanedWindow
+#   sash area.  This needs to be done this way, because the panedwindow
 #   won't see Leave events when the mouse moves from the sash to a
 #   paned child, although the child does receive an Enter event.
 #
