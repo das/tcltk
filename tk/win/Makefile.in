@@ -326,6 +326,8 @@ TK_OBJS = \
 STUB_OBJS = \
 	tkStubLib.$(OBJEXT)
 
+DEMOPROGS = browse hello ixset rmt rolodex square tcolor timer widget
+
 # Main targets.  The default target -- all -- builds the binaries, 
 # performs any post processing on libraries or documents.
 
