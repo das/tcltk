@@ -240,6 +240,19 @@ test canvText-7.8 {DisplayText procedure: not selected} {
     .c select clear
     update
 } {}
+test canvText-7.9 {DisplayText procedure: select end} {
+    catch {destroy .t}
+    toplevel .t
+    canvas .t.c
+    pack .t.c
+    set id [.t.c create text 0 0 -text Dummy -anchor nw]
+    update
+    .t.c select from $id 0
+    .t.c select to $id end
+    update
+    #catch {destroy .t}
+    update
+} {}
 
 test canvText-8.1 {TextInsert procedure: 0 length insert} {
     .c insert test end {}
