@@ -176,7 +176,7 @@ static Tcl_ThreadDataKey dataKey;
  */
  
 static EncodingAlias encodingAliases[] = {
-    {"gb2312",		"gb2312*"},
+    {"gb2312-raw",	"gb2312*"},
     {"big5",		"big5*"},
     {"cns11643-1",	"cns11643*-1"},
     {"cns11643-1",	"cns11643*.1-0"},
