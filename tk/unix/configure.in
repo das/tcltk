@@ -17,6 +17,8 @@ fi
 if test "${exec_prefix}" = "NONE"; then
     exec_prefix=$prefix
 fi
+# Make sure srcdir is fully qualified!
+srcdir=`cd $srcdir ; pwd`
 TK_SRC_DIR=`cd $srcdir/..; pwd`
 
 AC_PROG_RANLIB
