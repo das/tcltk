@@ -22,6 +22,12 @@
 #include <zmouse.h>
 
 /*
+ * imm.h is needed by HandleIMEComposition
+ */
+
+#include <imm.h>
+
+/*
  * Declarations of static variables used in this file.
  */
 
