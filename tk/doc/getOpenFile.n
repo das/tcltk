@@ -77,7 +77,7 @@ Allows the user to choose multiple files from the Open dialog.
 On the Macintosh, this is only available when Navigation Services are
 installed.
 .TP
-\fB\-message\fR
+\fB\-message\fR \fIstring\fR
 Specifies a message to include in the client area of the dialog.
 This is only available on the Macintosh, and only when Navigation
 Services are installed.
