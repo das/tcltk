@@ -1964,7 +1964,7 @@ test listbox-23.5 {ConfigureListboxItem, multiple calls} {
     catch {destroy .l}
     listbox .l
     set i 0
-    foreach color {red orange yellow green blue darkblue violet} {
+    foreach color {red orange yellow green blue white violet} {
 	.l insert end $color
 	.l itemconfigure $i -bg $color
 	incr i
@@ -1974,7 +1974,7 @@ test listbox-23.5 {ConfigureListboxItem, multiple calls} {
     list [.l itemcget 0 -bg] [.l itemcget 1 -bg] [.l itemcget 2 -bg] \
 	    [.l itemcget 3 -bg] [.l itemcget 4 -bg] [.l itemcget 5 -bg] \
 	    [.l itemcget 6 -bg]
-} {red orange yellow green blue darkblue violet}
+} {red orange yellow green blue white violet}
 catch {destroy .l}
 listbox .l
 .l insert end a b c d
@@ -2055,7 +2055,7 @@ resetGridInfo
 eval destroy [winfo children .]
 option clear
 
-test listbox-27.1 {widget deletion while active} {knownBug} {
+test listbox-27.1 {widget deletion while active} {
     destroy .l
     pack [listbox .l]
     update
