@@ -727,7 +727,7 @@ ImageToPostscript(interp, canvas, itemPtr, prepass)
     Tk_Image image;
     Tk_State state = itemPtr->state;
 
-    if(state == TK_STATE_NULL) {
+    if (state == TK_STATE_NULL) {
 	state = ((TkCanvas *)canvas)->canvas_state;
     }
 
@@ -741,6 +741,12 @@ ImageToPostscript(interp, canvas, itemPtr, prepass)
 	    image = imgPtr->disabledImage;
 	}
     }
+    if (image == NULL) {
+	/*
+	 * Image item without actual image specified.
+	 */
+	return TCL_OK;
+    }
     Tk_SizeOfImage(image, &width, &height);
 
     /*
@@ -750,7 +756,7 @@ ImageToPostscript(interp, canvas, itemPtr, prepass)
 
     x = imgPtr->x;
     y = Tk_CanvasPsY(canvas, imgPtr->y);
-    
+
     switch (imgPtr->anchor) {
 	case TK_ANCHOR_NW:			y -= height;		break;
 	case TK_ANCHOR_N:	x -= width/2.0; y -= height;		break;
@@ -763,10 +769,6 @@ ImageToPostscript(interp, canvas, itemPtr, prepass)
 	case TK_ANCHOR_CENTER:	x -= width/2.0; y -= height/2.0;	break;
     }
 
-    if (image == NULL) {
-        return TCL_OK;
-    }
-    
     if (!prepass) {
 	sprintf(buffer, "%.15g %.15g", x, y);
 	Tcl_AppendResult(interp, buffer, " translate\n", (char *) NULL);
