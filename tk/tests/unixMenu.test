@@ -972,16 +972,3 @@ test unixMenu-26.1 {TkpMenuInit - nothing to do} {} {}
 deleteWindows
 ::tcltest::cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-
-

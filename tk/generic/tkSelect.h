@@ -95,6 +95,10 @@ typedef struct TkSelRetrievalInfo {
     int idleTime;		/* Number of seconds that have gone by
 				 * without hearing anything from the
 				 * selection owner. */
+    Tcl_EncodingState encState;	/* Holds intermediate state during translations
+				 * of data that cross buffer boundaries. */
+    int encFlags;		/* Encoding translation state flags. */
+    Tcl_DString buf;		/* Buffer to hold translation data. */
     struct TkSelRetrievalInfo *nextPtr;
 				/* Next in list of all pending
 				 * selection retrievals.  NULL means
