@@ -435,8 +435,6 @@ TkFontPkgFree(mainPtr)
 	fprintf(stderr, "Font %s still in cache.\n", 
 		Tcl_GetHashKey(&fiPtr->fontCache, searchPtr));
     }
-    if (fontsLeft == 0)
-        panic("no fontsLeft");
 #ifdef PURIFY
     if (fontsLeft) {
 	panic("TkFontPkgFree: all fonts should have been freed already");
