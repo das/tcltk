@@ -1101,8 +1101,8 @@ TkWinHandleMenuEvent(phwnd, pMessage, pwParam, plParam, plResult)
 	    TkMenuInit();
 
 	    if ((flags == 0xFFFF) && (*plParam == 0)) {
-		Tcl_SetServiceMode(tsdPtr->oldServiceMode);
 		if (tsdPtr->modalMenuPtr != NULL) {
+		    Tcl_SetServiceMode(tsdPtr->oldServiceMode);
 		    RecursivelyClearActiveMenu(tsdPtr->modalMenuPtr);
 		}
 	    } else {
