@@ -17,7 +17,9 @@
 package require -exact Tk 8.4
 package require -exact Tcl 8.4
 package require msgcat
-::msgcat::mcload [file join $::tk_library msgs]
+if { ![interp issafe] } {
+    ::msgcat::mcload [file join $::tk_library msgs]
+}
 
 # Add Tk's directory to the end of the auto-load search path, if it
 # isn't already on the path:

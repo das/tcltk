@@ -217,9 +217,12 @@ proc tkMotifFDialog_Config {dataName type argList} {
 	{-initialfile "" "" ""}
 	{-parent "" "" "."}
 	{-title "" "" ""}
-	{-multiple "" "" "0"}
+    }
+    if { [string equal $type "open"] } {
+	lappend specs {-multiple "" "" "0"}
     }
 
+    set data(-multiple) 0
     # 2: default values depending on the type of the dialog
     #
     if {![info exists data(selectPath)]} {
