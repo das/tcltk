@@ -761,19 +761,27 @@ test pack-12.18.1 {command options and errors} {
 test pack-12.19 {command options and errors} {
     pack forget .pack.a .pack.b .pack.c .pack.d
     list [catch {pack .pack.a -ipadx abc} msg] $msg
-} {1 {bad pad value "abc": must be positive screen distance}}
+} {1 {bad ipadx value "abc": must be positive screen distance}}
 test pack-12.20 {command options and errors} {
     pack forget .pack.a .pack.b .pack.c .pack.d
     list [catch {pack .pack.a -ipadx -1} msg] $msg
-} {1 {bad pad value "-1": must be positive screen distance}}
+} {1 {bad ipadx value "-1": must be positive screen distance}}
+test pack-12.20.1 {command options and errors} {
+    pack forget .pack.a .pack.b .pack.c .pack.d
+    list [catch {pack .pack.a -ipadx {5 5}} msg] $msg
+} {1 {bad ipadx value "5 5": must be positive screen distance}}
 test pack-12.21 {command options and errors} {
     pack forget .pack.a .pack.b .pack.c .pack.d
     list [catch {pack .pack.a -ipady abc} msg] $msg
-} {1 {bad pad value "abc": must be positive screen distance}}
+} {1 {bad ipady value "abc": must be positive screen distance}}
 test pack-12.22 {command options and errors} {
     pack forget .pack.a .pack.b .pack.c .pack.d
     list [catch {pack .pack.a -ipady -1} msg] $msg
-} {1 {bad pad value "-1": must be positive screen distance}}
+} {1 {bad ipady value "-1": must be positive screen distance}}
+test pack-12.22.1 {command options and errors} {
+    pack forget .pack.a .pack.b .pack.c .pack.d
+    list [catch {pack .pack.a -ipady {5 5}} msg] $msg
+} {1 {bad ipady value "5 5": must be positive screen distance}}
 test pack-12.23 {command options and errors} {
     pack forget .pack.a .pack.b .pack.c .pack.d
     list [catch {pack .pack.a -side bac} msg] $msg

@@ -1691,15 +1691,29 @@ ConfigureSlaves(interp, tkwin, objc, objv)
 		    positionGiven = 1;
 		}
 	    } else if (index == CONF_IPADX) {
-		if (TkParsePadAmount(interp, slave, objv[i+1],
-			0, &slavePtr->iPadX) != TCL_OK) {
+		if ((Tk_GetPixelsFromObj(interp, slave, objv[i+1], &tmp)
+			!= TCL_OK)
+			|| (tmp < 0)) {
+		    Tcl_ResetResult(interp);
+		    Tcl_AppendResult(interp, "bad ipadx value \"",
+			    Tcl_GetString(objv[i+1]),
+			    "\": must be positive screen distance",
+			    (char *) NULL);
 		    return TCL_ERROR;
 		}
+		slavePtr->iPadX = tmp * 2;
 	    } else if (index == CONF_IPADY) {
-		if (TkParsePadAmount(interp, slave, objv[i+1],
-			0, &slavePtr->iPadY) != TCL_OK) {
+		if ((Tk_GetPixelsFromObj(interp, slave, objv[i+1], &tmp)
+			!= TCL_OK)
+			|| (tmp < 0)) {
+		    Tcl_ResetResult(interp);
+		    Tcl_AppendResult(interp, "bad ipady value \"",
+			    Tcl_GetString(objv[i+1]),
+			    "\": must be positive screen distance",
+			    (char *) NULL);
 		    return TCL_ERROR;
 		}
+		slavePtr->iPadY = tmp * 2;
 	    } else if (index == CONF_PADX) {
 		if (TkParsePadAmount(interp, slave, objv[i+1],
 			&slavePtr->padLeft, &slavePtr->padX) != TCL_OK) {
