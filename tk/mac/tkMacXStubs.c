@@ -274,6 +274,15 @@ DefaultErrorHandler(
 }
 
 
+
+void
+Tk_FreeXId (
+    Display *display,
+    XID xid)
+{
+    /* no-op function needed for stubs implementation */
+}
+
 char *
 XGetAtomName(
     Display * display,
@@ -707,3 +716,24 @@ TkGetDefaultScreenName(
     }
     return screenName;
 }
+
+void Tk_3DHorizontalBevel (
+    Tk_Window tkwin,
+    Drawable drawable, Tk_3DBorder border, int x,
+    int y, int width, int height, int leftIn,
+    int rightIn, int topBevel, int relief )
+{
+    /* no-op required for stubs implementation */
+    /* this function will probably be filled in at some point */
+}
+
+void Tk_3DVerticalBevel (
+    Tk_Window tkwin,
+    Drawable drawable, Tk_3DBorder border, int x,
+    int y, int width, int height, int leftBevel,
+    int relief )
+{
+    /* no-op required for stubs implementation */
+    /* this function will probably be filled in at some point */
+}
+

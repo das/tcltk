@@ -28,6 +28,7 @@
 # define TCL_STORAGE_CLASS DLLEXPORT
 #endif
 
+
 /*
  * The following messages are use to communicate between a Tk toplevel
  * and its container window.
@@ -46,17 +47,7 @@
  *
  *--------------------------------------------------------------
  */
-
-EXTERN Window		Tk_AttachHWND _ANSI_ARGS_((Tk_Window tkwin,
-			    HWND hwnd));
-EXTERN HINSTANCE 	Tk_GetHINSTANCE _ANSI_ARGS_((void));
-EXTERN HWND		Tk_GetHWND _ANSI_ARGS_((Window window));
-EXTERN Tk_Window	Tk_HWNDToWindow _ANSI_ARGS_((HWND hwnd));
-EXTERN void		Tk_PointerEvent _ANSI_ARGS_((HWND hwnd,
-			    int x, int y));
-EXTERN int		Tk_TranslateWinEvent _ANSI_ARGS_((HWND hwnd,
-			    UINT message, WPARAM wParam, LPARAM lParam,
-			    LRESULT *result));
+#include "tkPlatDecls.h"
 
 # undef TCL_STORAGE_CLASS
 # define TCL_STORAGE_CLASS DLLIMPORT

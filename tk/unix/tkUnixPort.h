@@ -176,13 +176,6 @@ extern int errno;
 #endif
 
 /*
- * Declarations for various library procedures that may not be declared
- * in any other header file.
- */
-
-extern void		panic _ANSI_ARGS_(TCL_VARARGS(char *, string));
-
-/*
  * These functions do nothing under Unix, so we just eliminate calls to them.
  */
 
@@ -221,10 +214,13 @@ extern void		panic _ANSI_ARGS_(TCL_VARARGS(char *, string));
 #define ALWAYS_SHOW_SELECTION
 
 /*
- * The following declaration is used to get access to a private Tcl interface
- * that is needed for portability reasons.
+ * tclInt.h is included to get declarations of the following functions.
+ *	void		panic _ANSI_ARGS_(TCL_VARARGS(char *,format));
+ *	void		TclpGetTime _ANSI_ARGS_((Tcl_Time *time));
  */
-
-EXTERN void		TclpGetTime _ANSI_ARGS_((Tcl_Time *time));
+  
+#ifndef _TCLINT
+#   include <tclInt.h>
+#endif
 
 #endif /* _UNIXPORT */

@@ -141,7 +141,7 @@ TkpGetNativeFont(tkwin, name)
      */
 
     hasSpace = dashes = hasWild = 0;
-    for (p = name; *p != '\0'; p++) {
+    for (p = (char *) name; *p != '\0'; p++) {
 	if (*p == ' ') {
 	    if (p[1] == '-') {
 		return NULL;

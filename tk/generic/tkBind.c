@@ -17,6 +17,10 @@
 #include "tkPort.h"
 #include "tkInt.h"
 
+#ifdef __WIN32__
+#include "tkWinInt.h"
+#endif
+
 /*
  * File structure:
  *

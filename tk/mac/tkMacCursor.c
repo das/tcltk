@@ -385,7 +385,8 @@ TkpSetCursor(
  *----------------------------------------------------------------------
  */
 
-void Tk_MacTkOwnsCursor(
+void
+Tk_MacTkOwnsCursor(
     int tkOwnsIt)
 {
     gTkOwnsCursor = tkOwnsIt;

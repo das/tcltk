@@ -14,6 +14,10 @@
 
 #include <tk3d.h>
 
+#if !defined(__WIN32__) && !defined(MAC_TCL)
+#include "tkUnixInt.h"
+#endif
+
 /*
  * This structure is used to keep track of the extra colors used
  * by Unix 3d borders.

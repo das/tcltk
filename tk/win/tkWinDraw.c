@@ -926,6 +926,8 @@ XDrawLines(display, d, gc, points, npoints, mode)
 /*
  *----------------------------------------------------------------------
  *
+#if 0
+
  * XFillPolygon --
  *
  *	Draws a filled polygon.
