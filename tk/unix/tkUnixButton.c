@@ -266,9 +266,13 @@ TkpDisplayButton(clientData)
 	    XSetClipOrigin(butPtr->display, gc, 0, 0);
 	}
 
-	Tk_DrawTextLayout(butPtr->display, pixmap, gc, butPtr->textLayout,
-		x + textXOffset, y + textYOffset, 0, -1);
-	Tk_UnderlineTextLayout(butPtr->display, pixmap, gc,
+	/*
+	 * Use normalTextGC in this case since we have both text and image,
+	 * the whole button will later be stippled 50% grey.
+	 */
+	Tk_DrawTextLayout(butPtr->display, pixmap, butPtr->normalTextGC,
+		butPtr->textLayout, x + textXOffset, y + textYOffset, 0, -1);
+	Tk_UnderlineTextLayout(butPtr->display, pixmap, butPtr->normalTextGC,
 		butPtr->textLayout, x + textXOffset, y + textYOffset,
 		butPtr->underline);
 	y += fullHeight/2;
