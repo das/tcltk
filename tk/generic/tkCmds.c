@@ -726,7 +726,7 @@ Tk_TkObjCmd(clientData, interp, objc, objv)
 		return TCL_ERROR;
 	    }
 	    Tcl_SetBooleanObj(Tcl_GetObjResult(interp),
-		    (dispPtr->flags & TK_DISPLAY_USE_IM));
+		    (int) (dispPtr->flags & TK_DISPLAY_USE_IM));
 	    break;
 	}
     }
