@@ -692,8 +692,9 @@ MenuWidgetObjCmd(clientData, interp, objc, objv)
 		goto done;
 	    }
 	    if ((index >= 0) 
-		    && (menuPtr->entries[index]->type == SEPARATOR_ENTRY)
-		    && (menuPtr->entries[index]->state == ENTRY_DISABLED)) {
+		    && ((menuPtr->entries[index]->type == SEPARATOR_ENTRY)
+			    || (menuPtr->entries[index]->state
+				    == ENTRY_DISABLED))) {
 		index = -1;
 	    }
 	    result = TkActivateMenuEntry(menuPtr, index);
