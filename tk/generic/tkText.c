@@ -5530,6 +5530,15 @@ SearchCore(interp, searchSpecPtr, patObj)
 			    || info.extendStart < 0) {
 			    break;
 			}
+			/*
+			 * If there is a match, but that match starts
+			 * after the end of the first line, then we'll
+			 * handle that next time around, when we're
+			 * actually looking at that line.
+			 */
+			if (match && (info.matches[0].start >= lastOffset)) {
+			    break;
+			}
 			if (match && ((firstOffset + info.matches[0].end) 
 				      >= prevFullLine)) {
 			    linesSearched = extraLines;

@@ -2648,7 +2648,7 @@ test text-20.172 {TextSearchCmd, regexp search multi-line} {knownBug} {
     # Should match at 1.0 for a true greedy match
 } {1.0}
 
-test text-20.172.1 {TextSearchCmd, regexp search multi-line} {knownBug} {
+test text-20.172.1 {TextSearchCmd, regexp search multi-line} {
     deleteWindows
     pack [text .t2]
     .t2 insert 1.0 "line0\nline1\nline1\nline1\nline1\nline2\nline2\nline2\nline3\n"
