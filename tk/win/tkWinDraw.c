@@ -1269,7 +1269,7 @@ TkWinFillRect(dc, x, y, width, height, pixel)
     ExtTextOut(dc, 0, 0, ETO_OPAQUE, &rect, NULL, 0, NULL);
     SetBkColor(dc, oldColor);
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1293,13 +1293,12 @@ TkWinFillRect(dc, x, y, width, height, pixel)
  */
 
 void 
-TkpDrawHighlightBorder (
-        Tk_Window tkwin, 
-        GC fgGC, 
-        GC bgGC, 
-        int highlightWidth,
-        Drawable drawable)
+TkpDrawHighlightBorder(tkwin, fgGC, bgGC, highlightWidth, drawable)
+    Tk_Window tkwin;
+    GC fgGC;
+    GC bgGC;
+    int highlightWidth;
+    Drawable drawable;
 {
-    TkDrawInsetFocusHighlight (tkwin, fgGC, highlightWidth, drawable, 0);
+    TkDrawInsetFocusHighlight(tkwin, fgGC, highlightWidth, drawable, 0);
 }
-        

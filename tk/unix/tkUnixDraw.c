@@ -172,7 +172,7 @@ ScrollRestrictProc(arg, eventPtr)
     }
     return TK_DISCARD_EVENT;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -196,13 +196,12 @@ ScrollRestrictProc(arg, eventPtr)
  */
 
 void 
-TkpDrawHighlightBorder (
-        Tk_Window tkwin, 
-        GC fgGC, 
-        GC bgGC, 
-        int highlightWidth,
-        Drawable drawable)
+TkpDrawHighlightBorder(tkwin, fgGC, bgGC, highlightWidth, drawable)
+    Tk_Window tkwin;
+    GC fgGC;
+    GC bgGC;
+    int highlightWidth;
+    Drawable drawable;
 {
-    TkDrawInsetFocusHighlight (tkwin, fgGC, highlightWidth, drawable, 0);
+    TkDrawInsetFocusHighlight(tkwin, fgGC, highlightWidth, drawable, 0);
 }
-        
