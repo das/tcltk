@@ -542,7 +542,7 @@ Tk_DrawChars(
 	TextSize(fontPtr->size);
 	TextFace(fontPtr->style);
 	
-	if (TkSetMacColor(gc->foreground, &macColor) == true) {
+	if (TkSetMacColor(gc->foreground, &macColor)) {
 	    RGBForeColor(&macColor);
 	}
 
