@@ -10,7 +10,7 @@ TK_MAJOR_VERSION=8
 TK_MINOR_VERSION=4
 TK_PATCH_LEVEL="a1"
 VERSION=${TK_VERSION}
-LOCALES=de en es fr
+LOCALES="de en es fr"
 
 if test "${prefix}" = "NONE"; then
     prefix=/usr/local
@@ -256,7 +256,7 @@ if test "$tk_checkBoth" = 1; then
     LIBS="$LIBS -lsocket -lnsl"
     AC_CHECK_FUNC(accept, tk_checkNsl=0, [LIBS=$tk_oldLibs])
 fi
-AC_CHECK_FUNC(gethostbyname, , AC_CHECK_LIB(nsl, main, [LIBS="$LIBS -lnsl"]))
+AC_CHECK_FUNC(gethostbyname, , [AC_CHECK_LIB(nsl, main, [LIBS="$LIBS -lnsl"])])
 
 # Add the threads support libraries
 
