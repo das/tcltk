@@ -528,7 +528,7 @@ $(TKTEST): $(TKTESTOBJS) $(TKIMPLIB)
 	$(link32) $(ldebug) $(guilflags) -out:$@ $(guilibs) $(TCLIMPLIB) $**
 
 
-$(CAT32): $(WINDIR)\cat.c
+$(CAT32): $(TCLDIR)\win\cat.c
 	$(cc32) $(CON_CFLAGS) -Fo$(TMP_DIR)\ $?
 	$(link32) $(conlflags) -out:$@ -stack:16384 $(TMP_DIR)\cat.obj $(baselibs)
 
