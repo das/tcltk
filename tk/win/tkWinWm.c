@@ -6407,7 +6407,7 @@ InstallColormaps(hwnd, message, isForemost)
     ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
             Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
-    if (winPtr == NULL) {
+    if (winPtr == NULL || (winPtr->flags & TK_ALREADY_DEAD) ) {
 	return 0;
     }
 
