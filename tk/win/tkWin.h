@@ -48,6 +48,7 @@
 #define TK_WITHDRAW	    (WM_USER+8)	    /* an embedded window requests to withdraw */
 #define TK_GETFRAMEWID	    (WM_USER+9)	    /* an embedded window requests a frame window id */
 #define TK_OVERRIDEREDIRECT (WM_USER+10)    /* an embedded window requests to overrideredirect */
+#define TK_SETMENU	    (WM_USER+11)    /* an embedded window requests to setup menu */
 
 /*
  *--------------------------------------------------------------

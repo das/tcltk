@@ -33,6 +33,7 @@ typedef struct Container {
 					 * window, or NULL if the
 					 * embedded application isn't in
 					 * this process. */
+    HWND embeddedMenuHWnd;		/* Tk's embedded menu window handler */
     struct Container *nextPtr;		/* Next in list of all containers in
 					 * this process. */
 } Container;
@@ -416,6 +417,7 @@ TkWinEmbeddedEventProc(hwnd, message, wParam, lParam)
 	    break;
 
 	    case TK_DETACHWINDOW:
+	    containerPtr->embeddedMenuHWnd = NULL;
 	    containerPtr->embeddedHWnd = NULL;
 	    containerPtr->parentPtr->flags &= ~TK_BOTH_HALVES;
 	    break;
@@ -475,7 +477,13 @@ TkWinEmbeddedEventProc(hwnd, message, wParam, lParam)
 	    result = TkpWinToplevelOverrideRedirect(containerPtr->parentPtr, wParam);
 	    break;
 
-	     /*
+	    case TK_SETMENU:
+	    containerPtr->embeddedMenuHWnd = (HWND)lParam;
+	    TkWinSetMenu((Tk_Window)containerPtr->parentPtr, (HMENU)wParam);
+	    result = 1;
+	    break;
+
+	    /*
 	     * Return 0 since the current Tk container implementation 
 	     * is unable to provide following services.
 	     *  
@@ -649,6 +657,41 @@ Tk_GetEmbeddedHWnd(winPtr)
 	    containerPtr = containerPtr->nextPtr) {
 	if (containerPtr->parentPtr == winPtr) {
 	    return containerPtr->embeddedHWnd;
+	}
+    }
+    return NULL;
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * Tk_GetEmbeddedMenuHWND --
+ *
+ *	This function returns the embedded menu window id.
+ *
+ * Results:
+ *	If winPtr is a container, the return value is the HWND for the
+ *	embedded menu window. Otherwise it returns NULL.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+HWND
+Tk_GetEmbeddedMenuHWND(tkwin)
+    Tk_Window tkwin;
+{
+    TkWindow *winPtr = (TkWindow*)tkwin;
+    Container *containerPtr;
+    ThreadSpecificData *tsdPtr = (ThreadSpecificData *) 
+            Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
+
+    for (containerPtr = tsdPtr->firstContainerPtr; containerPtr != NULL;
+	    containerPtr = containerPtr->nextPtr) {
+	if (containerPtr->parentPtr == winPtr) {
+	    return containerPtr->embeddedMenuHWnd;
 	}
     }
     return NULL;
