@@ -161,6 +161,7 @@ proc addDemoSection {title demos} {
 
 addDemoSection "Labels, buttons, checkbuttons, and radiobuttons" {
     label	"Labels (text and bitmaps)"
+    unicodeout	"Labels and UNICODE text"
     button	"Buttons"
     check	"Check-buttons (select any of a group)"
     radio	"Radio-buttons (select one of a group)"
