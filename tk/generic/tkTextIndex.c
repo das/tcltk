@@ -377,6 +377,7 @@ TkTextGetIndex(interp, textPtr, string, indexPtr)
 		&last);
 	TkBTreeStartSearch(&first, &last, tagPtr, &search);
 	if (!TkBTreeCharTagged(&first, tagPtr) && !TkBTreeNextTag(&search)) {
+	    Tcl_ResetResult(interp);
 	    Tcl_AppendResult(interp,
 		    "text doesn't contain any characters tagged with \"",
 		    Tcl_GetHashKey(&textPtr->tagTable, hPtr), "\"",
@@ -527,6 +528,7 @@ TkTextGetIndex(interp, textPtr, string, indexPtr)
     return TCL_OK;
 
     error:
+    Tcl_ResetResult(interp);
     Tcl_AppendResult(interp, "bad text index \"", string, "\"",
 	    (char *) NULL);
     return TCL_ERROR;
