@@ -452,7 +452,7 @@ If a field of a widget record has its offset stored in the \fIobjOffset\fR
 or \fIinternalOffset\fR field of a Tk_OptionSpec structure then the
 procedures described here will handle all of the storage allocation and
 resource management issues associated with the field.  When the value
-of an option is changed, \fBTk_SetOptions\fR (or \fBTk_FreeSavedOptions\fR
+of an option is changed, \fBTk_SetOptions\fR (or \fBTk_FreeSavedOptions\fR)
 will automatically free any resources associated with the old value, such as
 Tk_Fonts for TK_OPTION_FONT options or dynamically allocated memory for
 TK_OPTION_STRING options.  For an option stored as an object using the
