@@ -815,6 +815,11 @@ EXTERN int		Tk_PostscriptStipple _ANSI_ARGS_((
 /* 237 */
 EXTERN double		Tk_PostscriptY _ANSI_ARGS_((double y, 
 				Tk_PostscriptInfo psInfo));
+/* 238 */
+EXTERN int		Tk_PostscriptPhoto _ANSI_ARGS_((Tcl_Interp * interp, 
+				Tk_PhotoImageBlock * blockPtr, 
+				Tk_PostscriptInfo psInfo, int width, 
+				int height));
 
 typedef struct TkStubHooks {
     struct TkPlatStubs *tkPlatStubs;
@@ -1065,6 +1070,7 @@ typedef struct TkStubs {
     void (*tk_PostscriptPath) _ANSI_ARGS_((Tcl_Interp * interp, Tk_PostscriptInfo psInfo, double * coordPtr, int numPoints)); /* 235 */
     int (*tk_PostscriptStipple) _ANSI_ARGS_((Tcl_Interp * interp, Tk_Window tkwin, Tk_PostscriptInfo psInfo, Pixmap bitmap)); /* 236 */
     double (*tk_PostscriptY) _ANSI_ARGS_((double y, Tk_PostscriptInfo psInfo)); /* 237 */
+    int (*tk_PostscriptPhoto) _ANSI_ARGS_((Tcl_Interp * interp, Tk_PhotoImageBlock * blockPtr, Tk_PostscriptInfo psInfo, int width, int height)); /* 238 */
 } TkStubs;
 
 #ifdef __cplusplus
@@ -2026,6 +2032,10 @@ extern TkStubs *tkStubsPtr;
 #ifndef Tk_PostscriptY
 #define Tk_PostscriptY \
 	(tkStubsPtr->tk_PostscriptY) /* 237 */
+#endif
+#ifndef Tk_PostscriptPhoto
+#define Tk_PostscriptPhoto \
+	(tkStubsPtr->tk_PostscriptPhoto) /* 238 */
 #endif
 
 #endif /* defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS) */
