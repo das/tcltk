@@ -332,6 +332,7 @@ TkWinXCleanup(clientData)
      */
     
     TkWinWmCleanup(hInstance);
+    TkWinCleanupContainerList();
 }
 
 /*
