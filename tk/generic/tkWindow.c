@@ -2109,6 +2109,15 @@ Tk_NameToWindow(interp, pathName, tkwin)
 {
     Tcl_HashEntry *hPtr;
 
+    if (tkwin == NULL) {
+	/*
+	 * Either we're not really in Tk, or the main window was destroyed and
+	 * we're on our way out of the application
+	 */
+	Tcl_AppendResult(interp, "NULL main window", (char *)NULL);
+	return NULL;
+    }
+    
     hPtr = Tcl_FindHashEntry(&((TkWindow *) tkwin)->mainPtr->nameTable,
 	    pathName);
     if (hPtr == NULL) {

@@ -90,6 +90,15 @@ Tk_ConfigureWidget(interp, tkwin, specs, argc, argv, widgRec, flags)
     int hateFlags;		/* If a spec contains any bits here, it's
 				 * not considered. */
 
+    if (tkwin == NULL) {
+	/*
+	 * Either we're not really in Tk, or the main window was destroyed and
+	 * we're on our way out of the application
+	 */
+	Tcl_AppendResult(interp, "NULL main window", (char *)NULL);
+	return TCL_ERROR;
+    }
+
     needFlags = flags & ~(TK_CONFIG_USER_BIT - 1);
     if (Tk_Depth(tkwin) <= 1) {
 	hateFlags = TK_CONFIG_COLOR_ONLY;
