@@ -45,7 +45,7 @@ this command will reenable them and recreate the \fBsend\fR
 command.
 .VS 8.4
 .TP
-\fBtk caret window \fR?\fB\-x \fIx\fR? \fR?\fB\-y \fIy\fR? \fR?\fB\-height \fIheight\fR?
+\fBtk caret window \fR?\fB\-x \fIx\fR? ?\fB\-y \fIy\fR? ?\fB\-height \fIheight\fR?
 .
 Sets and queries the caret location for the display of the specified
 Tk window \fIwindow\fR.  The caret is the per-display cursor location
