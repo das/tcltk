@@ -150,3 +150,4 @@ bind .t.c <Control-x> {.t.c delete current}
 
 
 
+
