@@ -1081,8 +1081,10 @@ Tk_WinfoObjCmd(clientData, interp, objc, objv)
 
 	    winPtr = winPtr->childList;
 	    for ( ; winPtr != NULL; winPtr = winPtr->nextPtr) {
-		strPtr = Tcl_NewStringObj(winPtr->pathName, -1);
-		Tcl_ListObjAppendElement(NULL, resultPtr, strPtr);
+		if (!(winPtr->flags & TK_ANONYMOUS_WINDOW)) {
+		    strPtr = Tcl_NewStringObj(winPtr->pathName, -1);
+		    Tcl_ListObjAppendElement(NULL, resultPtr, strPtr);
+		}
 	    }
 	    break;
 	}

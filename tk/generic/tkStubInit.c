@@ -951,6 +951,7 @@ TkStubs tkStubs = {
     Tk_PostscriptPhoto, /* 238 */
     Tk_CreateClientMessageHandler, /* 239 */
     Tk_DeleteClientMessageHandler, /* 240 */
+    Tk_CreateAnonymousWindow, /* 241 */
 };
 
 /* !END!: Do not edit above this line. */

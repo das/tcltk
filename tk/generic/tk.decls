@@ -1136,6 +1136,12 @@ declare 240 generic {
     void Tk_DeleteClientMessageHandler (Tk_ClientMessageProc *proc)
 }
 
+declare 241 generic {
+    Tk_Window Tk_CreateAnonymousWindow (Tcl_Interp *interp, \
+	    Tk_Window parent, char *screenName)
+}
+
+
 # Define the platform specific public Tk interface.  These functions are
 # only available on the designated platform.
 

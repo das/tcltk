@@ -783,6 +783,8 @@ typedef struct Tk_FakeWin {
  *				concerned it isn't a child of its Tk
  *				parent.  Initially this is used only for
  *				special Unix menubar windows.
+ * TK_ANONYMOUS_WINDOW:		1 means that this window has no name, and is
+ *				thus not accessible from Tk.
  */
 
 
@@ -800,6 +802,7 @@ typedef struct Tk_FakeWin {
 #define TK_DEFER_MODAL		0x800
 #define TK_WRAPPER		0x1000
 #define TK_REPARENTED		0x2000
+#define TK_ANONYMOUS_WINDOW	0x4000
 
 /*
  *--------------------------------------------------------------
