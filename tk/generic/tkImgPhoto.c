@@ -3572,7 +3572,7 @@ MatchFileFormat(interp, chan, fileName, formatObj, imageFormatPtr,
 	    }
 	}
 	if (formatPtr->fileMatchProc != NULL) {
-	    (void) Tcl_Seek(chan, 0L, SEEK_SET);
+	    (void) Tcl_Seek(chan, Tcl_LongAsWide(0L), SEEK_SET);
 	    
 	    if ((*formatPtr->fileMatchProc)(chan, fileName, formatObj,
 		    widthPtr, heightPtr, interp)) {
@@ -3603,7 +3603,7 @@ MatchFileFormat(interp, chan, fileName, formatObj, imageFormatPtr,
 	    }
 	}
 	if (formatPtr->fileMatchProc != NULL) {
-	    (void) Tcl_Seek(chan, 0L, SEEK_SET);
+	    (void) Tcl_Seek(chan, Tcl_LongAsWide(0L), SEEK_SET);
 	    if ((*formatPtr->fileMatchProc)(chan, fileName, (Tcl_Obj *) formatString,
 		    widthPtr, heightPtr, interp)) {
 		if (*widthPtr < 1) {
@@ -3633,7 +3633,7 @@ MatchFileFormat(interp, chan, fileName, formatObj, imageFormatPtr,
 
     *imageFormatPtr = formatPtr;
     *oldformat = useoldformat;
-    (void) Tcl_Seek(chan, 0L, SEEK_SET);
+    (void) Tcl_Seek(chan, Tcl_LongAsWide(0L), SEEK_SET);
     return TCL_OK;
 }
 

@@ -192,7 +192,7 @@ FileReadPPM(interp, chan, fileName, formatString, imageHandle, destX, destY,
     Tk_PhotoExpand(imageHandle, destX + width, destY + height);
 
     if (srcY > 0) {
-	Tcl_Seek(chan, (srcY * block.pitch), SEEK_CUR);
+	Tcl_Seek(chan, (Tcl_WideInt)(srcY * block.pitch), SEEK_CUR);
     }
 
     nLines = (MAX_MEMORY + block.pitch - 1) / block.pitch;

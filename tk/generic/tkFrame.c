@@ -920,7 +920,7 @@ ConfigureFrame(interp, framePtr, objc, objv)
 {
     Tk_SavedOptions savedOptions;
     char *oldMenuName;
-    Tk_Window oldWindow;
+    Tk_Window oldWindow = NULL;
     Labelframe *labelframePtr = (Labelframe *) framePtr;
 
     /*
