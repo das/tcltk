@@ -172,6 +172,11 @@ EXTERN void	TkWinUpdatingClipboard(int mode);
 EXTERN HICON	TkWinGetIcon(Tk_Window tkw, DWORD iconsize);
 
 /*
+ * Used by tkWinX.c on for certain system display change messages
+ */
+EXTERN void	TkWinDisplayChanged(Display *display);
+
+/*
  * The following structure keeps track of whether we are using the 
  * multi-byte or the wide-character interfaces to the operating system.
  * System calls should be made through the following function table.
