@@ -1,7 +1,7 @@
 # $Id$
 # This file is the basis for a binary Tk Linux RPM.
 
-%define version 8.3.0
+%define version 8.3.1
 %define directory /usr/local
 
 Summary: Tk graphical toolkit for the Tcl scripting language.
@@ -14,7 +14,7 @@ Source: ftp://ftp.scriptics.com/pub/tcl/tcl8_3/tk%{version}.tar.gz
 URL: http://www.scriptics.com/
 Packager: Scriptics Corporation
 Buildroot: /var/tmp/%{name}%{version}
-Requires: XFree86-libs >= 3.3.3, XFree86-devel >= 3.3.3, tcl = 8.3.0
+Requires: XFree86-libs >= 3.3.3, XFree86-devel >= 3.3.3, tcl = 8.3.1
 
 %description
 The Tcl (Tool Command Language) provides a powerful platform for

@@ -280,8 +280,7 @@ proc tkMessageBox {args} {
 	option add *Dialog.msg.font {Times 18} widgetDefault
     }
 
-    label $w.msg -justify left -text $data(-message)
-    pack $w.msg -in $w.top -side right -expand 1 -fill both -padx 3m -pady 3m
+    label $w.msg -anchor nw -justify left -text $data(-message)
     if {[string compare $data(-icon) ""]} {
 	if {[string equal $tcl_platform(platform) "macintosh"] \
 		|| ([winfo depth $w] < 4) || $tk_strictMotif} {
@@ -320,8 +319,10 @@ proc tkMessageBox {args} {
 		}
 	    }
 	}
-	pack $w.bitmap -in $w.top -side left -padx 3m -pady 3m
     }
+    grid $w.bitmap $w.msg -in $w.top -sticky news -padx 2m -pady 2m
+    grid columnconfigure $w.top 1 -weight 1
+    grid rowconfigure $w.top 0 -weight 1
 
     # 5. Create a row of buttons at the bottom of the dialog.
 
