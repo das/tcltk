@@ -1096,9 +1096,9 @@ TkWinHandleMenuEvent(phwnd, pMessage, pwParam, plParam, plResult)
 		    Tcl_BackgroundError(interp);
 		}
 		Tcl_Release((ClientData)interp);
+		*plResult = 0;
+		returnResult = 1;
 	    }
-	    *plResult = 0;
-	    returnResult = 1;
 	    break;
 	}
 
@@ -1210,9 +1210,9 @@ TkWinHandleMenuEvent(phwnd, pMessage, pwParam, plParam, plResult)
 			- itemPtr->rcItem.top, 0, drawArrow);
 
 		ckfree((char *) twdPtr);
-		*plResult = 1;
-		returnResult = 1;
 	    }
+    	    *plResult = 1;
+	    returnResult = 1;
 	    break;
 	}
 
@@ -1262,6 +1262,8 @@ TkWinHandleMenuEvent(phwnd, pMessage, pwParam, plParam, plResult)
 		    }
 		    MenuSelectEvent(menuPtr);
 		    Tcl_ServiceAll();
+		    *plResult = 0;
+		    returnResult = 1;
 		}
 	    }
 	    break;
