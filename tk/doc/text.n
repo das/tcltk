@@ -1060,11 +1060,15 @@ Ignore case differences between the pattern and the text.
 .TP
 \fB\-count\fI varName\fR
 The argument following \fB\-count\fR gives the name of a variable;
-if a match is found, the number of characters in the matching
-range will be stored in the variable.
+if a match is found, the number of index positions between beginning and
+end of the matching range will be stored in the variable.  If there are no
+embedded images or windows in the matching range, this is equivalent to the
+number of characters matched.  In either case, the range \fImatchIdx\fR to
+\fImatchIdx + $count chars\fR will return the entire matched text.
 .TP
 \fB\-elide\fR
-Find elidden (hidden) text as well. By default only displayed text is found.
+Find elidden (hidden) text as well. By default only displayed text is
+searched.
 .TP
 \fB\-\|\-\fR
 This switch has no effect except to terminate the list of switches:
