@@ -201,11 +201,11 @@ typedef struct Tk_OptionSpec {
  * carefully.
  */
 
-#define TK_OPTION_NULL_OK		1
-#define TK_OPTION_DONT_SET_DEFAULT	8
+#define TK_OPTION_NULL_OK		(1 << 0)
+#define TK_OPTION_DONT_SET_DEFAULT	(1 << 3)
 
 /* This widget allows the link relief */
-#define TK_OPTION_LINK_OK		(1 << 9) 
+#define TK_OPTION_LINK_OK		(1 << 6) 
 
 /*
  * Macro to use to fill in "offset" fields of the Tk_OptionSpec.
@@ -363,14 +363,14 @@ typedef enum {
  * tkOldConfig.c (internal-use-only flags are defined there).
  */
 
-#define TK_CONFIG_NULL_OK		1
-#define TK_CONFIG_COLOR_ONLY		2
-#define TK_CONFIG_MONO_ONLY		4
-#define TK_CONFIG_DONT_SET_DEFAULT	8
-#define TK_CONFIG_OPTION_SPECIFIED	0x10
-#define TK_CONFIG_USER_BIT		0x100
+#define TK_CONFIG_NULL_OK		(1 << 0)
+#define TK_CONFIG_COLOR_ONLY		(1 << 1)
+#define TK_CONFIG_MONO_ONLY		(1 << 2)
+#define TK_CONFIG_DONT_SET_DEFAULT	(1 << 3)
+#define TK_CONFIG_OPTION_SPECIFIED      (1 << 4)
 /* This widget allows the link relief */
-#define TK_CONFIG_LINK_OK		(1 << 9)
+#define TK_CONFIG_LINK_OK		(1 << 6)
+#define TK_CONFIG_USER_BIT		0x100
 #endif /* __NO_OLD_CONFIG */
 
 /*

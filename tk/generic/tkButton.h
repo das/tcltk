@@ -25,6 +25,15 @@
 #endif
 
 /*
+ * Legal values for the "compound" field of TkButton records.
+ */
+
+enum compound {
+    COMPOUND_BOTTOM, COMPOUND_CENTER, COMPOUND_LEFT, COMPOUND_NONE,
+	COMPOUND_RIGHT, COMPOUND_TOP
+};
+
+/*
  * Legal values for the "state" field of TkButton records.
  */
 
@@ -226,6 +235,15 @@ typedef struct {
 				 * to execute when button is invoked.  If
 				 * widget is label or has no command, this
 				 * is NULL. */
+    int compound;		/* Value of -compound option; specifies whether
+				 * the button should show both an image and
+				 * text, and, if so, how. */
+    int repeatDelay;		/* Value of -repeatdelay option; specifies
+				 * the number of ms after which the button will
+				 * start to auto-repeat its command. */
+    int repeatInterval;		/* Value of -repeatinterval option; specifies
+				 * the number of ms between auto-repeat
+				 * invocataions of the button command. */
     int flags;			/* Various flags;  see below for
 				 * definitions. */
 } TkButton;
@@ -255,13 +273,15 @@ typedef struct {
  * BUTTON_DELETED:		Non-zero needs that this button has been
  *				deleted, or is in the process of being
  *				deleted.
+ * MOUSE_IN_BUTTON:		Non-zero means that the mouse is currently
+ *				over the button.
  */
 
-#define REDRAW_PENDING		1
-#define SELECTED		2
-#define GOT_FOCUS		4
-#define BUTTON_DELETED		0x8
-
+#define REDRAW_PENDING		(1 << 0)
+#define SELECTED		(1 << 1)
+#define GOT_FOCUS		(1 << 2)
+#define BUTTON_DELETED		(1 << 3)
+#define MOUSE_IN_BUTTON		(1 << 4)
 /*
  * Declaration of variables shared between the files in the button module.
  */
