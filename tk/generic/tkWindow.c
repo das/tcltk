@@ -2465,6 +2465,11 @@ OpenIM(dispPtr)
 #else
     unsigned short i;
     XIMStyles *stylePtr;
+    char *modifier_list;
+
+    if ((modifier_list = XSetLocaleModifiers("")) == NULL) {
+	goto error;
+    }
 
     dispPtr->inputMethod = XOpenIM(dispPtr->display, NULL, NULL, NULL);
     if (dispPtr->inputMethod == NULL) {
