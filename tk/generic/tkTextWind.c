@@ -870,18 +870,21 @@ TkTextEmbWinDisplayProc(chunkPtr, x, y, lineHeight, baseline,
     TkTextSegment *ewPtr = (TkTextSegment *) chunkPtr->clientData;
     int lineX, windowX, windowY, width, height;
     Tk_Window tkwin;
-
+    TkText *textPtr;
+    
     tkwin = ewPtr->body.ew.tkwin;
     if (tkwin == NULL) {
 	return;
     }
+    
+    textPtr = ewPtr->body.ew.textPtr;
     if ((x + chunkPtr->width) <= 0) {
 	/*
 	 * The window is off-screen;  just unmap it.
 	 */
 
-	if (ewPtr->body.ew.textPtr->tkwin != Tk_Parent(tkwin)) {
-	    Tk_UnmaintainGeometry(tkwin, ewPtr->body.ew.textPtr->tkwin);
+	if (textPtr->tkwin != Tk_Parent(tkwin)) {
+	    Tk_UnmaintainGeometry(tkwin, textPtr->tkwin);
 	} else {
 	    Tk_UnmapWindow(tkwin);
 	}
@@ -894,10 +897,10 @@ TkTextEmbWinDisplayProc(chunkPtr, x, y, lineHeight, baseline,
      */
 
     EmbWinBboxProc(chunkPtr, 0, screenY, lineHeight, baseline, &lineX,
-	    &windowY, &width, &height);
+		   &windowY, &width, &height);
     windowX = lineX - chunkPtr->x + x;
 
-    if (ewPtr->body.ew.textPtr->tkwin == Tk_Parent(tkwin)) {
+    if (textPtr->tkwin == Tk_Parent(tkwin)) {
 	if ((windowX != Tk_X(tkwin)) || (windowY != Tk_Y(tkwin))
 		|| (Tk_ReqWidth(tkwin) != Tk_Width(tkwin))
 		|| (height != Tk_Height(tkwin))) {
@@ -905,8 +908,8 @@ TkTextEmbWinDisplayProc(chunkPtr, x, y, lineHeight, baseline,
 	}
 	Tk_MapWindow(tkwin);
     } else {
-	Tk_MaintainGeometry(tkwin, ewPtr->body.ew.textPtr->tkwin,
-		windowX, windowY, width, height);
+	Tk_MaintainGeometry(tkwin, textPtr->tkwin,
+			    windowX, windowY, width, height);
     }
 
     /*

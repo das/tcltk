@@ -951,7 +951,7 @@ EXTERN void		TkTextEmbWinDisplayProc _ANSI_ARGS_((
 			    int lineHeight, int baseline, Display *display,
 			    Drawable dst, int screenY));
 EXTERN TkTextTag *	TkTextCreateTag _ANSI_ARGS_((TkText *textPtr,
-			    CONST char *tagName));
+			    CONST char *tagName, int *newTag));
 EXTERN void		TkTextFreeDInfo _ANSI_ARGS_((TkText *textPtr));
 EXTERN void		TkTextFreeTag _ANSI_ARGS_((TkText *textPtr,
 			    TkTextTag *tagPtr));
