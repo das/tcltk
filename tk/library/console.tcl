@@ -6,8 +6,8 @@
 #
 # RCS: @(#) $Id$
 #
-# Copyright (c) 1998-1999 Scriptics Corp.
 # Copyright (c) 1995-1997 Sun Microsystems, Inc.
+# Copyright (c) 1998-2000 Ajuba Solutions.
 #
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -476,7 +476,7 @@ proc tkConsoleExit {} {
 proc tkConsoleAbout {} {
     global tk_patchLevel
     tk_messageBox -type ok -message "[::msgcat::mc {Tcl for Windows}]
-Copyright \251 2000 Scriptics Corporation
+Copyright \251 2000 Ajuba Solutions
 
 Tcl [info patchlevel]
 Tk $tk_patchLevel"
