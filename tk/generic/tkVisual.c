@@ -175,12 +175,12 @@ Tk_GetVisual(interp, tkwin, string, depthPtr, colormapPtr)
 	int visualId;
 
 	/*
-	* This is a visual ID.
-	*/
+	 * This is a visual ID.
+	 */
 
 	if (Tcl_GetInt(interp, string, &visualId) == TCL_ERROR) {
 	    Tcl_ResetResult(interp);
-	    Tcl_AppendResult(interp, "bad X identifier for visual: ",
+	    Tcl_AppendResult(interp, "bad X identifier for visual: \"",
 		    string, "\"", (char *) NULL);
 	    return NULL;
 	}
