@@ -516,6 +516,24 @@ proc ::tk::AmpWidget {class path args} {
     return $path
 }
 
+# ::tk::AmpMenuArgs --
+# Processes arguments for a menu entry, turning -label option into
+# -label and -underline options, returned by ::tk::UnderlineAmpersand.
+#
+proc ::tk::AmpMenuArgs {widget add type args} {
+    set resultArgs [list $widget add $type]
+    foreach {opt val} $args {
+	if {[string equal $opt {-label}]} {
+	    foreach {newlabel under} [::tk::UnderlineAmpersand $val] {
+		lappend resultArgs -label $newlabel -underline $under
+	    }
+	} else {
+	    lappend resultArgs $opt $val
+	}
+    }
+    eval $resultArgs
+}
+
 # ::tk::FindAltKeyTarget --
 # search recursively through the hierarchy of visible widgets
 # to find button or label which has $char as underlined character
