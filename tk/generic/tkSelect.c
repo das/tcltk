@@ -200,9 +200,10 @@ Tk_CreateSelHandler(tkwin, selection, target, proc, clientData, format)
 		     * The clientData is selection controlled memory, so
 		     * we should make a copy for this selPtr.
 		     */
-		    selPtr->clientData =
-			(ClientData) ckalloc(sizeof(clientData));
-		    memcpy(selPtr->clientData, clientData, sizeof(clientData));
+		    unsigned cmdInfoLen = sizeof(CommandInfo) + 
+			    ((CommandInfo*)clientData)->cmdLength - 3;
+		    selPtr->clientData = (ClientData)ckalloc(cmdInfoLen);
+		    memcpy(selPtr->clientData, clientData, cmdInfoLen);
 		} else {
 		    selPtr->clientData = clientData;
 		}
