@@ -22,12 +22,13 @@ proc ::tk::dialog::chooseDir::tkChooseDirectory { args } {
 
     # Error messages
     append err(usage) "tk_chooseDirectory "
-    append err(usage) "?-initialdir directory? ?-mustexist? "
+    append err(usage) "?-initialdir directory? ?-mustexist boolean? "
     append err(usage) "?-parent window? ?-title title?"
 
     set err(wrongNumArgs) "wrong # args: should be \"$err(usage)\""
     set err(valueMissing) "value for \"%s\" missing: should be \"$err(usage)\""
     set err(unknownOpt)   "unknown option \"%s\": should be \"$err(usage)\""
+    set err(badWindow)    "bad window path name \"%s\""
 
     # Default values
     set opts(-initialdir)	[pwd]
@@ -40,36 +41,26 @@ proc ::tk::dialog::chooseDir::tkChooseDirectory { args } {
     for { set i 0 } { $i < $len } {incr i} {
 	set flag [lindex $args $i]
 	incr i
+	if { $i >= $len } {
+	    error [format $err(valueMissing) $flag]
+	}
 	switch -glob -- $flag {
-	    "-initialdir" {
-		if { $i >= $len } {
-		    error [format $err(valueMissing) $flag]
-		}
-		set opts($flag) [lindex $args $i]
-	    }
-	    "-mustexist" {
-		set opts($flag) 1
-		incr i -1
-	    }
-	    "-parent" {
-		if { $i >= $len } {
-		    error [format $err(valueMissing) $flag]
-		}
-		set opts($flag) [lindex $args $i]
-	    }
+	    "-initialdir" -
+	    "-mustexist"  -
+	    "-parent"     -
 	    "-title" {
-		if { $i >= $len } {
-		    error [format $err(valueMissing) $flag]
-		}
 		set opts($flag) [lindex $args $i]
 	    }
 	    default {
-		error [format $err(unknownOpt) [lindex $args $i]]
+		error [format $err(unknownOpt) $flag]
 	    }
 	}
     }
 	    
     # Handle default parent window
+    if { ![winfo exists $opts(-parent)] } {
+	error [format $err(badWindow) $opts(-parent)]
+    }
     if {[string equal $opts(-parent) "."]} {
 	set opts(-parent) ""
     }
