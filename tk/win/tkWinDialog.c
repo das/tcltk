@@ -32,7 +32,7 @@ typedef struct ThreadSpecificData {
 static Tcl_ThreadDataKey dataKey;
 
 /*
- * The following structures are used by Tk_MessageBox() to parse 
+ * The following structures are used by Tk_MessageBoxCmd() to parse 
  * arguments and return results.
  */
 

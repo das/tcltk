@@ -66,7 +66,7 @@ enum {
 
 /*
  * Cached information about the boxes bitmap, and the default border 
- * width for a button in string form for use in Tk_OptionSpecs for 
+ * width for a button in string form for use in Tk_OptionSpec for 
  * the various button widget classes.
  */
 

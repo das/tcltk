@@ -71,7 +71,7 @@ static Tcl_ObjType borderObjType = {
  * Side effects:
  *	The border is added to an internal database with a reference
  *	count. For each call to this procedure, there should eventually
- *	be a call to Tk_FreeBorderFromObj so that the database is
+ *	be a call to FreeBorderObjProc so that the database is
  *	cleaned up when borders aren't in use anymore.
  *
  *----------------------------------------------------------------------

@@ -193,9 +193,9 @@ typedef struct Tk_OptionSpec {
 #define TK_OPTION_NULL_OK		1
 
 /*
- * Macro to use to fill in "offset" fields of Tk_OptionSpecs.
- * Computes number of bytes from beginning of structure to a
- * given field.
+ * Macro to use to fill in "offset" fields of the Tk_OptionSpec.
+ * struct.  Computes number of bytes from beginning of structure
+ * to a given field.
  */
 
 #ifdef offsetof

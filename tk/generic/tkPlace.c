@@ -839,7 +839,7 @@ RecomputePlacement(clientData)
 	/*
 	 * Step 5: reconfigure the window and map it if needed.  If the
 	 * slave is a child of the master, we do this ourselves.  If the
-	 * slave isn't a child of the master, let Tk_MaintainWindow do
+	 * slave isn't a child of the master, let Tk_MaintainGeometry do
 	 * the work (it will re-adjust things as relevant windows map,
 	 * unmap, and move).
 	 */

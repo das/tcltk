@@ -39,7 +39,7 @@
 
 /*
  * The following two structures are used along with Tk_OptionSpec
- * structures to manage configuration options.  Tk_OptionSpecs are
+ * structures to manage configuration options.  Tk_OptionSpec is
  * static templates that are compiled into the code of a widget
  * or other object manager.  However, to look up options efficiently
  * we need to supplement the static information with additional

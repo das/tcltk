@@ -72,7 +72,7 @@ TkDrawInsetFocusHighlight(tkwin, gc, width, drawable, padding)
      * two things to worry about:
      *
      * 1) The widget must draw the background color covering
-     *    the focus ring area before calling Tk_DrawFocus.
+     *    the focus ring area before calling Tk_DrawFocusHighlight.
      * 2) It is impossible to draw a focus ring of width 1.
      *    (For the Macintosh Look & Feel use width of 3)
      */

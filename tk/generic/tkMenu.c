@@ -1204,7 +1204,7 @@ DestroyMenuInstance(menuPtr)
 
     /*
      * Free up all the stuff that requires special handling, then
-     * let Tk_FreeConfigurationOptions handle all the standard option-related
+     * let Tk_FreeConfigOptions handle all the standard option-related
      * stuff.
      */
 
@@ -1403,7 +1403,7 @@ DestroyMenuEntry(memPtr)
 
     /*
      * Free up all the stuff that requires special handling, then
-     * let Tk_FreeConfigurationOptions handle all the standard option-related
+     * let Tk_FreeConfigOptions handle all the standard option-related
      * stuff.
      */
 

@@ -4936,7 +4936,7 @@ NextTabStop(tkfont, x, tabOrigin)
  *
  *	Determine the number of characters from the string that will fit
  *	in the given horizontal span.  The measurement is done under the
- *	assumption that Tk_DisplayChars will be used to actually display
+ *	assumption that Tk_DrawTextLayout will be used to actually display
  *	the characters.
  *
  *	If tabs are encountered in the string, they will be expanded

@@ -825,7 +825,7 @@ TkBindFree(mainPtr)
  *
  * Results:
  *	The return value is a token for the new table, which must
- *	be passed to procedures like Tk_CreatBinding.
+ *	be passed to procedures like Tk_CreateBinding.
  *
  * Side effects:
  *	Memory is allocated for the new table.
@@ -2976,7 +2976,7 @@ DeleteVirtualEvent(interp, vetPtr, virtString, eventString)
 		} else {
 		    for ( ; ; prevPtr = prevPtr->nextSeqPtr) {
 			if (prevPtr == NULL) {
-			    panic("Tk_DeleteVirtualEvent couldn't find on hash chain");
+			    panic("DeleteVirtualEvent couldn't find on hash chain");
 			}
 			if (prevPtr->nextSeqPtr == psPtr) {
 			    prevPtr->nextSeqPtr = psPtr->nextSeqPtr;

@@ -99,8 +99,8 @@ Tk_ConfigureWidget(interp, tkwin, specs, argc, argv, widgRec, flags)
 
     /*
      * Pass one:  scan through all the option specs, replacing strings
-     * with Tk_Uids (if this hasn't been done already) and clearing
-     * the TK_CONFIG_OPTION_SPECIFIED flags.
+     * with Tk_Uid structs (if this hasn't been done already) and
+     * clearing the TK_CONFIG_OPTION_SPECIFIED flags.
      */
 
     for (specPtr = specs; specPtr->type != TK_CONFIG_END; specPtr++) {

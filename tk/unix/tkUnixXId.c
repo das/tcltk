@@ -69,7 +69,7 @@ static void		WindowIdCleanup2 _ANSI_ARGS_((ClientData clientData));
  *	None.
  *
  * Side effects:
- *	The official allocator for the display is set up to be Tk_AllocXID.
+ *	The official allocator for the display is set up to be AllocXId.
  *
  *----------------------------------------------------------------------
  */

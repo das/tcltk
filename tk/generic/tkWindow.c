@@ -38,7 +38,7 @@ typedef struct ThreadSpecificData {
 static Tcl_ThreadDataKey dataKey;
 
 /* 
- * The Mutex below is used to lock access to the Tk_Uids above. 
+ * The Mutex below is used to lock access to the Tk_Uid structs above. 
  */
 
 TCL_DECLARE_MUTEX(windowMutex)

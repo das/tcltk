@@ -403,8 +403,7 @@ Tk_NameOfColor(colorPtr)
 GC
 Tk_GCForColor(colorPtr, drawable)
     XColor *colorPtr;		/* Color for which a GC is desired. Must
-				 * have been allocated by Tk_GetColor or
-				 * Tk_GetColorByName. */
+				 * have been allocated by Tk_GetColor. */
     Drawable drawable;		/* Drawable in which the color will be
 				 * used (must have same screen and depth
 				 * as the one for which the color was
