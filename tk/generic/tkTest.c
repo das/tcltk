@@ -151,7 +151,7 @@ static int		TestwrapperCmd _ANSI_ARGS_((ClientData dummy,
  * External (platform specific) initialization routine:
  */
 
-EXTERN int		TkplatformtestInit _ANSI_ARGS_((
+extern int		TkplatformtestInit _ANSI_ARGS_((
 			    Tcl_Interp *interp));
 #ifndef MAC_TCL
 #define TkplatformtestInit(x) TCL_OK
