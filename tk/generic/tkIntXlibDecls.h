@@ -799,7 +799,13 @@ typedef struct TkIntXlibStubs {
 #endif /* MAC_TCL */
 } TkIntXlibStubs;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 extern TkIntXlibStubs *tkIntXlibStubsPtr;
+#ifdef __cplusplus
+}
+#endif
 
 #if defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS)
 

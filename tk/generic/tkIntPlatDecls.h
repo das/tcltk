@@ -429,7 +429,13 @@ typedef struct TkIntPlatStubs {
 #endif /* MAC_TCL */
 } TkIntPlatStubs;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 extern TkIntPlatStubs *tkIntPlatStubsPtr;
+#ifdef __cplusplus
+}
+#endif
 
 #if defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS)
 

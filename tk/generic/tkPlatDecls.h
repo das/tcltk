@@ -111,7 +111,13 @@ typedef struct TkPlatStubs {
 #endif /* MAC_TCL */
 } TkPlatStubs;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 extern TkPlatStubs *tkPlatStubsPtr;
+#ifdef __cplusplus
+}
+#endif
 
 #if defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS)
 

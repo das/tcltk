@@ -4582,3 +4582,16 @@ selection instead of the widget contents, which can be different if the
 
 --------------- Released 8.1b3, April 6, 1999 ----------------------
 
+4/20/99 (compiler fix) changed definition of Status type to use a
+typedef instead of a #define to avoid conflicting with the cygwin win32
+headers. (redman)
+
+4/22/99 (bug fix) Set the -translation and -encoding options to binary
+for image files. (redman)
+
+4/27 (bug fix) Changed to avoid the need for forward declarations in
+stub initializers.  Added extern "C" blocks around stub table pointer
+declarations so the stubs can be used from C++ code. (stanton)
+
+--------------- Released 8.1 final, April 29, 1999 ----------------------
+

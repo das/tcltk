@@ -979,7 +979,13 @@ typedef struct TkStubs {
     int (*tk_CreateConsoleWindow) _ANSI_ARGS_((Tcl_Interp * interp)); /* 216 */
 } TkStubs;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 extern TkStubs *tkStubsPtr;
+#ifdef __cplusplus
+}
+#endif
 
 #if defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS)
 
