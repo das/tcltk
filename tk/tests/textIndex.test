@@ -647,9 +647,17 @@ test testIndex-16.1 {TkTextPrintIndex} {
     set result [$t index end-2c]
     pack $t
     catch {destroy $t}
+} 0
 
-    set result
-} 1.1
+
+test testIndex-16.2 {TkTextPrintIndex} {
+    set t [text .t2]
+    $t insert end \n
+    $t window create end -window [button $t.b]
+    set result [$t tag add {} end-2c]
+    pack $t
+    catch {destroy $t}
+} 0
 
 # cleanup
 rename textimage {}

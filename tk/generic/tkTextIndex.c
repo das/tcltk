@@ -1015,7 +1015,7 @@ TkTextIndexBackChars(srcPtr, charCount, dstPtr)
 		charCount--;
 	    }
 	} else {
-	    if (charCount < segSize) {
+	    if (charCount <= segSize) {
 		dstPtr->byteIndex -= charCount;
 		return;
 	    }
