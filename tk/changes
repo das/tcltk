@@ -5305,7 +5305,7 @@ Rewrote Tk test suite to use tcltest package.
 
 2002-09-02 (bug fix)[565485] button height on windows (hobbs)
 
-2002-09-02 (new feature)[TIP ???] new comand [tk windowingsystem] (steffen)
+2002-09-02 (new feature)[TIP 108] new comand [tk windowingsystem] (steffen)
 
 2002-09-02 (new feature)[TIP 107][601518] [raise] is non-blocking (english)
 
