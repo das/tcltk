@@ -234,10 +234,14 @@ proc tkListboxMotion {w el} {
 	    $w selection clear 0 end
 	    $w selection set $el
 	    set tkPriv(listboxPrev) $el
-          event generate $w <<ListboxSelect>>
+	    event generate $w <<ListboxSelect>>
 	}
 	extended {
 	    set i $tkPriv(listboxPrev)
+	    if {[string equal {} $i]} {
+		set i $el
+		$w selection set $el
+	    }
 	    if {[$w selection includes anchor]} {
 		$w selection clear $i $el
 		$w selection set anchor $el
@@ -258,7 +262,7 @@ proc tkListboxMotion {w el} {
 		incr i -1
 	    }
 	    set tkPriv(listboxPrev) $el
-          event generate $w <<ListboxSelect>>
+	    event generate $w <<ListboxSelect>>
 	}
     }
 }

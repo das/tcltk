@@ -26,22 +26,25 @@
 #			char, word, or line.
 # x, y -		Last known mouse coordinates for scanning
 #			and auto-scanning.
+# data -		Used for Cut and Copy
 #-------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------
 # The code below creates the default class bindings for entries.
 #-------------------------------------------------------------------------
 bind Entry <<Cut>> {
-    if {![catch {set data [tkEntryGetSelection %W]}]} {
+    if {![catch {tkEntryGetSelection %W} tkPriv(data)]} {
 	clipboard clear -displayof %W
-	clipboard append -displayof %W $data
+	clipboard append -displayof %W $tkPriv(data)
 	%W delete sel.first sel.last
+	unset tkPriv(data)
     }
 }
 bind Entry <<Copy>> {
-    if {![catch {set data [tkEntryGetSelection %W]}]} {
+    if {![catch {tkEntryGetSelection %W} tkPriv(data)]} {
 	clipboard clear -displayof %W
-	clipboard append -displayof %W $data
+	clipboard append -displayof %W $tkPriv(data)
+	unset tkPriv(data)
     }
 }
 bind Entry <<Paste>> {
