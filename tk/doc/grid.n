@@ -84,7 +84,7 @@ grid geometry manager requests a size from the containing window.
 If only an option is specified, with no value,
 the current value of that option is returned.
 If only the master window and index is specified, all the current settings
-are returned in an list of "-option value" pairs.
+are returned in a list of "-option value" pairs.
 .TP
 \fBgrid configure \fIslave \fR?\fIslave ...\fR? ?\fIoptions\fR?
 The arguments consist of the names of one or more slave windows
@@ -126,7 +126,7 @@ It defaults to 0.
 .TP
 \fB\-ipady \fIamount\fR
 The \fIamount\fR specifies how much vertical internal padding to
-leave on on the top and bottom of the slave(s).
+leave on the top and bottom of the slave(s).
 This space is added inside the slave(s) border.
 The \fIamount\fR  defaults to 0.
 .TP
@@ -244,7 +244,7 @@ grid geometry manager requests a size from the containing window.
 If only an option is specified, with no value,
 the current value of that option is returned.
 If only the master window and index is specified, all the current settings
-are returned in an list of "-option value" pairs.
+are returned in a list of "-option value" pairs.
 .TP
 \fBgrid remove \fIslave \fR?\fIslave ...\fR?
 Removes each of the \fIslave\fRs from grid for its
@@ -349,7 +349,7 @@ For masters whose size is smaller than the requested layout, space is taken
 away from columns and rows according to their weights.  However, once a 
 column or row shrinks to its minsize, its weight is taken to be zero.
 If more space needs to be removed from a layout than would be permitted, as
-when all the rows or columns are at there minimum sizes, the layout is
+when all the rows or columns are at their minimum sizes, the layout is
 placed and clipped according to the \fIanchor\fR value.
 .VE
 .SH "GEOMETRY PROPAGATION"

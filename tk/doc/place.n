@@ -96,7 +96,7 @@ If \fIsize\fR is an empty string, or if no \fB\-height\fR or
 internally by the window will be used.
 .TP
 \fB\-in \fImaster\fR
-\fIMaster\fR specifes the path name of the window relative
+\fIMaster\fR specifies the path name of the window relative
 to which \fIwindow\fR is to be placed.
 \fIMaster\fR must either be \fIwindow\fR's parent or a descendant
 of \fIwindow\fR's parent.

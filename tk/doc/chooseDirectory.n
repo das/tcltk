@@ -40,7 +40,7 @@ Specifies a string to display as the title of the dialog box. If this
 option is not specified, then a default title will be displayed.
 .TP
 \fB\-mustexist\fR \fIboolean\fR
-Specifies whether the user may specify non-existant directories.  If
+Specifies whether the user may specify non-existent directories.  If
 this parameter is true, then the user may only select directories that
 already exist.  The default value is \fIfalse\fR.
 .SH EXAMPLE

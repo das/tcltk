@@ -108,7 +108,7 @@ of two values to specify padding for left and right separately.
 \fB\-pady \fIamount\fR
 \fIAmount\fR specifies how much vertical external padding to
 leave on each side of the slave(s).  \fIAmount\fR may be a list
-of two values to specify padding for top and bottom separtely.
+of two values to specify padding for top and bottom separately.
 \fIAmount\fR defaults to 0.
 .TP
 \fB\-side \fIside\fR
