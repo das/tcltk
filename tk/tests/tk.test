@@ -19,7 +19,7 @@ test tk-1.1 {tk command: general} {
 } {1 {wrong # args: should be "tk option ?arg?"}}
 test tk-1.2 {tk command: general} {
     list [catch {tk xyz} msg] $msg
-} {1 {bad option "xyz": must be appname, caret, scaling, or useinputmethods}}
+} {1 {bad option "xyz": must be appname, caret, scaling, useinputmethods, or windowingsystem}}
 
 set appname [tk appname]
 test tk-2.1 {tk command: appname} {
