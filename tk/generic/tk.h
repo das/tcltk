@@ -25,7 +25,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-    
+
 /*
  * When version numbers change here, you must also go into the following files
  * and update the version numbers:
@@ -46,11 +46,11 @@ extern "C" {
 
 #define TK_MAJOR_VERSION   8
 #define TK_MINOR_VERSION   3
-#define TK_RELEASE_LEVEL   TCL_BETA_RELEASE
-#define TK_RELEASE_SERIAL  2
+#define TK_RELEASE_LEVEL   TCL_FINAL_RELEASE
+#define TK_RELEASE_SERIAL  0
 
 #define TK_VERSION	"8.3"
-#define TK_PATCH_LEVEL	"8.3b2"
+#define TK_PATCH_LEVEL	"8.3.0"
 
 /*
  * The following definitions set up the proper options for Macintosh
