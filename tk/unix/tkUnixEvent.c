@@ -26,6 +26,17 @@ typedef struct ThreadSpecificData {
 } ThreadSpecificData;
 static Tcl_ThreadDataKey dataKey;
 
+#if defined(TK_USE_INPUT_METHODS) && defined(PEEK_XCLOSEIM)
+/*
+ * Structure used to peek into internal XIM data structure.
+ * Enabled only on systems where we are sure it works.
+ */
+struct XIMPeek {
+    void *junk1, *junk2;
+    XIC  ic_chain;
+};
+#endif
+
 /*
  * Prototypes for procedures that are referenced only in this file:
  */
@@ -180,6 +191,12 @@ TkpCloseDisplay(dispPtr)
 	 * One can work around this issue by making sure a XDestroyIC()
 	 * gets invoked for each XCreateIC().
 	 */
+
+#if defined(TK_USE_INPUT_METHODS) && defined(PEEK_XCLOSEIM)
+	struct XIMPeek *peek = (struct XIMPeek *) dispPtr->inputMethod;
+	if (peek->ic_chain != NULL)
+	    panic("input contexts not freed before XCloseIM");
+#endif
 	XCloseIM(dispPtr->inputMethod);
     }
 #endif
