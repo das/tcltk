@@ -825,7 +825,7 @@ proc tkMotifFDialog_ActivateSEnt {w} {
 	    if {[string equal $data(type) save]} {
 	    set message [format %s%s \
 		[::msgcat::mc {File "%1$s" already exists.\n\n} \
-		    $selectFilePath ]
+		    $selectFilePath ] \
 		[::msgcat::mc {Replace existing file?}]]
 		set answer [tk_messageBox -icon warning -type yesno \
 				-message $message]
