@@ -272,7 +272,7 @@ Tk_ScaleObjCmd(clientData, interp, objc, objv)
     scalePtr->fromValue = 0.0;
     scalePtr->toValue = 0.0;
     scalePtr->tickInterval = 0.0;
-    scalePtr->resolution = 1;
+    scalePtr->resolution = 1.0;
     scalePtr->digits = 0;
     scalePtr->bigIncrement = 0.0;
     scalePtr->commandPtr = NULL;
