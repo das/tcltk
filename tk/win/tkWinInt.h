@@ -148,6 +148,7 @@ extern int tkpWinRopModes[];
 
 #include "tkIntPlatDecls.h"
 
+extern void TkWinSetForegroundWindow(TkWindow *winPtr);
 extern LRESULT CALLBACK TkWinChildProc (HWND hwnd, UINT message,
 	WPARAM wParam, LPARAM lParam);
 

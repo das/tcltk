@@ -441,7 +441,7 @@ TkpChangeFocus(winPtr, force)
      */
 
     if (force) {
-	SetForegroundWindow(Tk_GetHWND(winPtr->window));
+	TkWinSetForegroundWindow(winPtr);
     }
     XSetInputFocus(dispPtr->display, winPtr->window, RevertToParent,
 	    CurrentTime);
