@@ -2558,7 +2558,7 @@ ExpandPercents(winPtr, before, eventPtr, keySym, dsPtr)
 		goto doNumber;
 	    case 'P':
 		if (flags & PROP) {
-		    string = Tk_GetAtomName(winPtr, eventPtr->xproperty.atom);
+		    string = Tk_GetAtomName((Tk_Window) winPtr, eventPtr->xproperty.atom);
 		}
 		goto doString;
 	    case 'R':
