@@ -18,7 +18,6 @@
  * Prototypes for local procedures defined in this file:
  */
 
-static void		InitKeymapInfo _ANSI_ARGS_((TkDisplay *dispPtr));
 
 
 /*
@@ -173,7 +172,7 @@ TkpGetKeySym(dispPtr, eventPtr)
      */
 
     if (dispPtr->bindInfoStale) {
-	InitKeymapInfo(dispPtr);
+	TkpInitKeymapInfo(dispPtr);
     }
 
     /*
@@ -226,7 +225,7 @@ TkpGetKeySym(dispPtr, eventPtr)
 /*
  *--------------------------------------------------------------
  *
- * InitKeymapInfo --
+ * TkpInitKeymapInfo --
  *
  *	This procedure is invoked to scan keymap information
  *	to recompute stuff that's important for binding, such
@@ -242,8 +241,8 @@ TkpGetKeySym(dispPtr, eventPtr)
  *--------------------------------------------------------------
  */
 
-static void
-InitKeymapInfo(dispPtr)
+void
+TkpInitKeymapInfo(dispPtr)
     TkDisplay *dispPtr;		/* Display for which to recompute keymap
 				 * information. */
 {

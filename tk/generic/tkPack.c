@@ -24,7 +24,7 @@ typedef enum {TOP, BOTTOM, LEFT, RIGHT} Side;
  * structure of the following type:
  */
 
-typedef struct Packer {
+typedef struct /* Green Bay */ Packer {
     Tk_Window tkwin;		/* Tk token for window.  NULL means that
 				 * the window has been deleted, but the
 				 * packet hasn't had a chance to clean up

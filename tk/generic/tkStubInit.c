@@ -346,6 +346,7 @@ TkIntStubs tkIntStubs = {
     TkSetFocusWin, /* 136 */
     TkpSetKeycodeAndState, /* 137 */
     TkpGetKeySym, /* 138 */
+    TkpInitKeymapInfo, /* 139 */
 };
 
 TkIntPlatStubs tkIntPlatStubs = {

@@ -628,6 +628,9 @@ declare 138 generic {
     KeySym TkpGetKeySym (TkDisplay *dispPtr, XEvent *eventPtr)
 }
 
+declare 139 generic {
+    void TkpInitKeymapInfo (TkDisplay *dispPtr)
+}
 
 ##############################################################################
 

@@ -3250,7 +3250,31 @@ HandleEventGenerate(interp, mainWin, objc, objv)
 
     flags = flagArray[event.xany.type];
     if (flags & (KEY_BUTTON_MOTION_VIRTUAL)) {
-	event.xkey.state = pat.needMods;
+	int eventState;
+	TkDisplay *dispPtr = ((TkWindow *) tkwin)->dispPtr;
+	/*
+	 * Refresh the mapping information if it's stale
+	 */
+	
+	if (dispPtr->bindInfoStale) {
+	    TkpInitKeymapInfo(dispPtr);
+	}
+
+	eventState = pat.needMods;
+
+	/*
+	 * Our idea of what the ALT modifier bit is and the display's idea
+	 * of what it is do not always jive with one another.  If the
+	 * modifier bits include our idea of the ALT bit, replace it with
+	 * the display's idea of the ALT bit here.  Same for the META bit.
+	 */
+	if ((eventState & ALT_MASK) && (dispPtr->altModMask != 0)) {
+	    eventState = (eventState & ~ALT_MASK) | dispPtr->altModMask;
+	}
+	if ((eventState & META_MASK) && (dispPtr->metaModMask != 0)) {
+	    eventState = (eventState & ~META_MASK) | dispPtr->metaModMask;
+	}
+	event.xkey.state = eventState;
 	if ((flags & KEY) && (event.xany.type != MouseWheelEvent)) {
 	    TkpSetKeycodeAndState(tkwin, pat.detail.keySym, &event);
 	} else if (flags & BUTTON) {

@@ -40,6 +40,17 @@ test event-1.1 {Tk_HandleEvent procedure, filter events for dead windows} {
     set x
 } {destroy}
 
+test event-1.2 {event generate <Alt-z>} {
+	catch {destroy .e}
+	catch {unset ::event12result}
+	set ::event12result 0
+	pack [entry .e]
+	update
+	bind .e <Alt-z> {set ::event12result "1"}
+	focus -force .e ; event generate .e <Alt-z>
+	destroy .e
+	set ::event12result
+} 1
 # cleanup
 ::tcltest::cleanupTests
 return
