@@ -745,15 +745,13 @@ RenderObject(dc, gc, points, npoints, mode, pen, func)
 	}
 
 	/*
-	 * Grow the bounding box enough to account for wide lines.
+	 * Grow the bounding box enough to account for line width.
 	 */
 
-	if (gc->line_width > 1) {
-	    rect.left -= gc->line_width;
-	    rect.top -= gc->line_width;
-	    rect.right += gc->line_width;
-	    rect.bottom += gc->line_width;
-	}
+	rect.left -= gc->line_width;
+	rect.top -= gc->line_width;
+	rect.right += gc->line_width;
+	rect.bottom += gc->line_width;
 
 	width = rect.right - rect.left;
 	height = rect.bottom - rect.top;
