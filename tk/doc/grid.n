@@ -30,8 +30,8 @@ argument to \fBgrid configure\fR, either a window name (any value
 starting with \fB.\fP) or one of the characters \fBx\fP or \fB^\fP 
 (see the ``RELATIVE PLACEMENT'' section below), then the command is
 processed in the same way as \fBgrid configure\fR.
-.TP
 .VS 8.5
+.TP
 \fBgrid anchor \fImaster\fR ?\fIanchor\fR?
 The anchor value controls how to place the grid within the master
 when no row/column has any weight.  See ``THE GRID ALGORITHM'' below
