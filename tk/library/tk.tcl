@@ -153,8 +153,12 @@ proc ::tk::SetFocusGrab {grab {focus {}}} {
 #
 proc ::tk::RestoreFocusGrab {grab focus {destroy destroy}} {
     set index "$grab,$focus"
-    foreach {oldFocus oldGrab oldStatus} $::tk::FocusGrab($index) { break }
-    unset ::tk::FocusGrab($index)
+    if {[info exists ::tk::FocusGrab($index)]} {
+	foreach {oldFocus oldGrab oldStatus} $::tk::FocusGrab($index) { break }
+	unset ::tk::FocusGrab($index)
+    } else {
+	set oldGrab ""
+    }
 
     catch {focus $oldFocus}
     grab release $grab
