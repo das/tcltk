@@ -23,7 +23,6 @@
 #include "tkMacOSX.h"
 #include "tkMacOSXEvent.h"
 
-#include "tclPort.h"
 #include <signal.h> 
 
 extern TclStubs tclStubs;
