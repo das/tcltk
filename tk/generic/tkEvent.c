@@ -161,6 +161,8 @@ static Tcl_ThreadDataKey dataKey;
 static void		DelayedMotionProc _ANSI_ARGS_((ClientData clientData));
 static int		WindowEventProc _ANSI_ARGS_((Tcl_Event *evPtr,
 			    int flags));
+static int		TkXErrorHandler _ANSI_ARGS_((ClientData clientData,
+			    XErrorEvent *errEventPtr));
 
 
 /*
