@@ -2941,7 +2941,7 @@ ListboxSelect(listPtr, first, last, select)
     int select;				/* 1 means select items, 0 means
 					 * deselect them. */
 {
-    int i, firstRedisplay, increment, oldCount;
+    int i, firstRedisplay, oldCount;
     Tcl_HashEntry *entry;
     int new;
     
@@ -2961,7 +2961,6 @@ ListboxSelect(listPtr, first, last, select)
     }
     oldCount = listPtr->numSelected;
     firstRedisplay = -1;
-    increment = select ? 1 : -1;
 
     /*
      * For each index in the range, find it in our selection hash table.
