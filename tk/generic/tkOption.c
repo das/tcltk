@@ -1125,8 +1125,8 @@ ReadOptionFile(interp, tkwin, fileName, priority)
      * overallocate if we are performing CRLF translation.
      */
     
-    bufferSize = Tcl_Seek(chan, 0L, SEEK_END);
-    (void) Tcl_Seek(chan, 0L, SEEK_SET);
+    bufferSize = (int) Tcl_Seek(chan, (Tcl_WideInt) 0, SEEK_END);
+    (void) Tcl_Seek(chan, (Tcl_WideInt) 0, SEEK_SET);
 
     if (bufferSize < 0) {
 	Tcl_AppendResult(interp, "error seeking to end of file \"",
