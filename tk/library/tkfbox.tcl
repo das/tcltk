@@ -1661,7 +1661,7 @@ proc ::tk::dialog::file::CancelCmd {w} {
     upvar ::tk::dialog::file::[winfo name $w] data
     variable ::tk::Priv
 
-    $data(okBtn) configure <Destroy> {}
+    bind $data(okBtn) <Destroy> {}
     set Priv(selectFilePath) ""
 }
 
@@ -1792,6 +1792,6 @@ proc ::tk::dialog::file::Done {w {selectFilePath ""}} {
 	    }
 	}
     }
-    $data(okBtn) configure <Destroy> {}
+    bind $data(okBtn) <Destroy> {}
     set Priv(selectFilePath) $selectFilePath
 }
