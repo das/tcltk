@@ -783,16 +783,3 @@ option clear
 # cleanup
 ::tcltest::cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-
-

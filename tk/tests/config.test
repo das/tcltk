@@ -819,21 +819,19 @@ test config-12.16 {GetObjectForOption - null values} {
 	    [.a cget -cursor] [.a cget -window]
 } {{} {} {} {} {} {} {} {}}
 
+test config-13.1 {proper cleanup of options with widget destroy} {
+    foreach type {
+	button canvas entry frame listbox menu menubutton message
+	scale scrollbar text radiobutton checkbutton
+    } {
+	destroy .w
+	$type .w -cursor crosshair
+	destroy .w	
+    }
+} {}
+
 # cleanup
 eval destroy [winfo children .]
 killTables
 ::tcltest::cleanupTests
 return
-
-
-
-
-
-
-
-
-
-
-
-
-
