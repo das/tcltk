@@ -1181,6 +1181,11 @@ EXTERN void		TkpBuildRegionFromAlphaData _ANSI_ARGS_((
 			    unsigned int width, unsigned int height,
 			    unsigned char *dataPtr, unsigned int pixelStride,
 			    unsigned int lineStride));
+EXTERN void		TkPrintPadAmount _ANSI_ARGS_((Tcl_Interp *interp,
+			    char *buffer, int pad1, int pad2));
+EXTERN int		TkParsePadAmount _ANSI_ARGS_((Tcl_Interp *interp,
+			    Tk_Window tkwin, Tcl_Obj *objPtr,
+			    int *pad1Ptr, int *pad2Ptr));
 
 /* 
  * Unsupported commands.

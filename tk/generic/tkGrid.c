@@ -303,14 +303,6 @@ static void	StickyToString _ANSI_ARGS_((int flags, char *result));
 static int	StringToSticky _ANSI_ARGS_((char *string));
 static void	Unlink _ANSI_ARGS_((Gridder *gridPtr));
 
-/*
- * Prototypes for procedures contained in other files but not exported
- * using tkIntDecls.h
- */
-
-void TkPrintPadAmount _ANSI_ARGS_((Tcl_Interp*, char*, int, int));
-int  TkParsePadAmount _ANSI_ARGS_((Tcl_Interp*, Tk_Window, Tcl_Obj*, int*, int*));
-
 static Tk_GeomMgr gridMgrType = {
     "grid",			/* name */
     GridReqProc,		/* requestProc */
