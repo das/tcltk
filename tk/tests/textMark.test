@@ -79,7 +79,7 @@ test textMark-2.1 {TkTextMarkCmd - "names" option} courier12 {
 } {1 {wrong # args: should be ".t mark names"}}
 .t mark unset x
 test textMark-2.2 {TkTextMarkCmd - "names" option} courier12 {
-    lsort [.t mark n]
+    lsort [.t mark na]
 } {current insert}
 test textMark-2.3 {TkTextMarkCmd - "names" option} courier12 {
     .t mark set a 1.1
