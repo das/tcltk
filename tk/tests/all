@@ -73,5 +73,7 @@ if {[info exists TMP_DIR]} {
     cd $currentDir
 }
 
-catch {destroy .}
-exit
+# exit if Tk is running in non-interactive mode.
+if {[info exists tk_version] && !$tcl_interactive} {
+    exit
+}
