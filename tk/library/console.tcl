@@ -4,7 +4,7 @@
 # can be used by non-unix systems that do not have built-in support
 # for shells.
 #
-# RCS: @(#) $Id$
+# SCCS: @(#) console.tcl 1.47 98/01/02 17:42:06
 #
 # Copyright (c) 1995-1997 Sun Microsystems, Inc.
 #
@@ -141,7 +141,7 @@ proc tkConsoleInvoke {args} {
 	.console tag delete input
 	set result [consoleinterp record $cmd]
 	if {$result != ""} {
-	    .console insert insert "$result\n"
+	    puts $result
 	}
 	tkConsoleHistory reset
 	tkConsolePrompt

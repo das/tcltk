@@ -8,7 +8,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * RCS: @(#) $Id$
+ * SCCS:@(#) tkMacInt.h 1.69 98/02/18 10:50:53
  */
 
 #ifndef _TKMACINT

@@ -9,7 +9,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * RCS: @(#) $Id$
+ * SCCS: @(#) tkMacAppInit.c 1.36 97/11/07 21:20:46
  */
 
 #include <Gestalt.h>
@@ -18,7 +18,6 @@
 #include <Dialogs.h>
 #include <SegLoad.h>
 #include <Traps.h>
-#include <Appearance.h>
 
 #include "tk.h"
 #include "tkInt.h"
@@ -109,7 +108,7 @@ main(
  *
  * Results:
  *	Returns a standard Tcl completion code, and leaves an error
- *	message in interp->result if an error occurs.
+ *	message in the interp's result if an error occurs.
  *
  * Side effects:
  *	Depends on the startup script.
@@ -222,17 +221,6 @@ MacintoshInit()
      */
     tcl_macQdPtr = &qd;
 
-    /*
-     * If appearance is present, then register Tk as an Appearance client
-     * This means that the mapping from non-Appearance to Appearance cdefs
-     * will be done for Tk regardless of the setting in the Appearance
-     * control panel.  
-     */
-     
-     if (TkMacHaveAppearance()) {
-         RegisterAppearanceClient();
-     }
-
     InitGraf(&tcl_macQdPtr->thePort);
     InitFonts();
     InitWindows();
@@ -319,7 +307,7 @@ SetupMainInterp(
     return TCL_OK;
 
 error:
-    panic(interp->result);
+    panic(Tcl_GetStringResult(interp));
     return TCL_ERROR;
 }
 

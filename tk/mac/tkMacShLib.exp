@@ -84,7 +84,6 @@ TkGetMenuHashTable
 TkGetMenuIndex
 TkGetMiterPoints
 TkGetPointerCoords
-TkGetProlog
 TkGetServerInfo
 TkGetTransientMaster
 TkGrabDeadWindow
@@ -545,7 +544,7 @@ XChangeWindowAttributes
 XConfigureWindow
 XCopyArea
 XCopyPlane
-TkCreateBitmapFromData
+XCreateBitmapFromData
 XCreateColormap
 XCreateGC
 XCreateImage
@@ -584,7 +583,7 @@ XMoveWindow
 XParseColor
 XQueryPointer
 XRaiseWindow
-TkReadBitmapFile
+XReadBitmapFile
 XRefreshKeyboardMapping
 XResizeWindow
 XRootWindow

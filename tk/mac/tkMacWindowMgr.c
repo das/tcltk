@@ -3,12 +3,12 @@
  *
  *	Implements common window manager functions for the Macintosh.
  *
- * Copyright (c) 1995-1997 Sun Microsystems, Inc.
+ * Copyright (c) 1995-1998 Sun Microsystems, Inc.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * RCS: @(#) $Id$
+ * SCCS: @(#) tkMacWindowMgr.c 1.62 98/01/16 10:42:51
  */
 
 #include <Events.h>
@@ -63,7 +63,7 @@ static int 	GenerateActivateEvents _ANSI_ARGS_((EventRecord *eventPtr,
 static int 	GenerateFocusEvent _ANSI_ARGS_((EventRecord *eventPtr,
 			Window window));
 static int	GenerateKeyEvent _ANSI_ARGS_((EventRecord *eventPtr,
-			Window window));
+			Window window, UInt32 savedCode));
 static int	GenerateUpdateEvent _ANSI_ARGS_((EventRecord *eventPtr,
 			Window window));
 static void 	GenerateUpdates _ANSI_ARGS_((RgnHandle updateRgn,
@@ -679,12 +679,18 @@ GenerateFocusEvent(
 static int
 GenerateKeyEvent(
     EventRecord *eventPtr,	/* Incoming Mac event */
-    Window window)		/* Root X window for event. */
+    Window window,		/* Root X window for event. */
+    UInt32 savedKeyCode)	/* If non-zero, this is a lead byte which
+    				 * should be combined with the character
+    				 * in this event to form one multi-byte 
+    				 * character. */
 {
     Point where;
     Tk_Window tkwin;
     XEvent event;
-
+    unsigned char byte;
+    char buf[16];
+    
     /*
      * The focus must be in the FrontWindow on the Macintosh.
      * We then query Tk to determine the exact Tk window
@@ -696,6 +702,17 @@ GenerateKeyEvent(
     if (tkwin == NULL) {
 	return false;
     }
+    byte = (unsigned char) (eventPtr->message & charCodeMask);
+    if ((savedKeyCode == 0) && 
+            (Tcl_ExternalToUtf(NULL, NULL, (char *) &byte, 1, 0, NULL, 
+            	    buf, sizeof(buf), NULL, NULL, NULL) != TCL_OK)) {
+        /*
+         * This event specifies a lead byte.  Wait for the second byte
+         * to come in before sending the XEvent.
+         */
+         
+        return false;
+    }   
 
     where.v = eventPtr->where.v;
     where.h = eventPtr->where.h;
@@ -710,7 +727,10 @@ GenerateKeyEvent(
     GlobalToLocal(&where);
     Tk_TopCoordsToWindow(tkwin, where.h, where.v, 
 	    &event.xkey.x, &event.xkey.y);
-    event.xkey.keycode = eventPtr->message;
+    
+    event.xkey.keycode = byte |
+            ((savedKeyCode & charCodeMask) << 8) |
+            ((eventPtr->message & keyCodeMask) << 8);
 
     event.xany.serial = Tk_Display(tkwin)->request;
     event.xkey.window = Tk_WindowId(tkwin);
@@ -1110,6 +1130,7 @@ TkMacConvertEvent(
     WindowRef whichWindow;
     Window window;
     int eventFound = false;
+    static UInt32 savedKeyCode;
     
     switch (eventPtr->what) {
 	case nullEvent:
@@ -1153,11 +1174,28 @@ TkMacConvertEvent(
 		    break;
 		}
 	    }
+	    /* fall through */
+	    
 	case keyUp:
 	    whichWindow = FrontWindow();
+	    if (whichWindow == NULL) {
+	        /*
+	         * This happens if we get a key event before Tk has had a
+	         * chance to actually create and realize ".", if they type
+	         * when "." is withdrawn(!), or between the time "." is 
+	         * destroyed and the app exits.
+	         */
+	         
+	        return false;
+	    }
 	    window = TkMacGetXWindow(whichWindow);
-	    eventFound |= GenerateKeyEvent(eventPtr, window);
+	    if (GenerateKeyEvent(eventPtr, window, savedKeyCode) == 0) {
+	        savedKeyCode = eventPtr->message;
+	        return false;
+	    }
+	    eventFound = true;
 	    break;
+	    	    
 	case activateEvt:
 	    window = TkMacGetXWindow((WindowRef) eventPtr->message);
 	    eventFound |= GenerateActivateEvents(eventPtr, window);
@@ -1210,6 +1248,7 @@ TkMacConvertEvent(
 	    break;
     }
     
+    savedKeyCode = 0;
     return eventFound;
 }
 
@@ -1237,6 +1276,7 @@ TkMacConvertTkEvent(
 {
     int eventFound = false;
     Point where;
+    static UInt32 savedKeyCode;
     
     /*
      * By default, assume it is legal for us to set the cursor 
@@ -1292,9 +1332,16 @@ TkMacConvertTkEvent(
 		    break;
 		}
 	    }
+	    /* fall through. */
+	    
 	case keyUp:
-	    eventFound |= GenerateKeyEvent(eventPtr, window);
+	    if (GenerateKeyEvent(eventPtr, window, savedKeyCode) == 0) {
+	        savedKeyCode = eventPtr->message;
+	        return false;
+	    }	        
+	    eventFound = true;
 	    break;
+	    
 	case activateEvt:
         /*
          * It is probably not legal for us to set the cursor
@@ -1358,7 +1405,7 @@ TkMacConvertTkEvent(
 	    }
 	    break;
     }
-    
+    savedKeyCode = 0;    
     return eventFound;
 }
 

@@ -9,7 +9,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * RCS: @(#) $Id$
+ * SCCS: @(#) tkUnixInit.c 1.26 98/01/02 17:45:36
  */
 
 #include "tkInt.h"
@@ -20,6 +20,13 @@
  * defined in tkInitScript.h
  */
 #include "tkInitScript.h"
+
+
+/*
+ * Default directory in which to look for libraries:
+ */
+
+static char defaultLibraryDir[200] = TK_LIBRARY;
 
 
 /*
@@ -32,7 +39,7 @@
  *
  * Results:
  *	Returns a standard Tcl result.  Leaves an error message or result
- *	in interp->result.
+ *	in the interp's result.
  *
  * Side effects:
  *	Sets "tk_library" Tcl variable, runs "tk.tcl" script.
@@ -44,6 +51,12 @@ int
 TkpInit(interp)
     Tcl_Interp *interp;
 {
+    char *libDir;
+
+    libDir = Tcl_GetVar(interp, "tk_library", TCL_GLOBAL_ONLY);
+    if (libDir == NULL) {
+	Tcl_SetVar(interp, "tk_library", defaultLibraryDir, TCL_GLOBAL_ONLY);
+    }
     TkCreateXEventSource();
     return Tcl_Eval(interp, initScript);
 }
@@ -109,9 +122,9 @@ TkpDisplayWarning(msg, title)
 {
     Tcl_Channel errChannel = Tcl_GetStdChannel(TCL_STDERR);
     if (errChannel) {
-	Tcl_Write(errChannel, title, -1);
-	Tcl_Write(errChannel, ": ", 2);
-	Tcl_Write(errChannel, msg, -1);
-	Tcl_Write(errChannel, "\n", 1);
+	Tcl_WriteChars(errChannel, title, -1);
+	Tcl_WriteChars(errChannel, ": ", 2);
+	Tcl_WriteChars(errChannel, msg, -1);
+	Tcl_WriteChars(errChannel, "\n", 1);
     }
 }

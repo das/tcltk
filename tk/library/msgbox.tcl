@@ -3,7 +3,7 @@
 #	Implements messageboxes for platforms that do not have native
 #	messagebox support.
 #
-# RCS: @(#) $Id$
+# SCCS: @(#) msgbox.tcl 1.11 97/12/19 16:07:48
 #
 # Copyright (c) 1994-1997 Sun Microsystems, Inc.
 #
@@ -49,7 +49,7 @@ proc tkMessageBox {args} {
     tclParseConfigSpec $w $specs "" $args
 
     if {[lsearch {info warning error question} $data(-icon)] == -1} {
-	error "invalid icon \"$data(-icon)\", must be error, info, question or warning"
+	error "bad -icon value \"$data(-icon)\": must be error, info, question, or warning"
     }
     if {$tcl_platform(platform) == "macintosh"} {
 	if {$data(-icon) == "error"} {
@@ -107,7 +107,7 @@ proc tkMessageBox {args} {
 	    }
 	}
 	default {
-	    error "invalid message box type \"$data(-type)\", must be abortretryignore, ok, okcancel, retrycancel, yesno or yesnocancel"
+	    error "bad -type value \"$data(-type)\": must be abortretryignore, ok, okcancel, retrycancel, yesno, or yesnocancel"
 	}
     }
 
@@ -120,7 +120,7 @@ proc tkMessageBox {args} {
 	    }
 	}
 	if {!$valid} {
-	    error "invalid default button \"$data(-default)\""
+	    error "bad -default value \"$data(-default)\": must be abort, retry, ignore, ok, cancel, no, or yes"
 	}
     }
 
@@ -156,14 +156,17 @@ proc tkMessageBox {args} {
     }
 
     # 4. Fill the top part with bitmap and message (use the option
-    # database for -wraplength so that it can be overridden by
-    # the caller).
+    # database for -wraplength and -font so that they can be
+    # overridden by the caller).
 
     option add *Dialog.msg.wrapLength 3i widgetDefault
-    label $w.msg -justify left -text $data(-message)
-    catch {$w.msg configure -font \
-		-Adobe-Times-Medium-R-Normal--*-180-*-*-*-*-*-*
+    if {$tcl_platform(platform) == "macintosh"} {
+	option add *Dialog.msg.font system widgetDefault
+    } else {
+	option add *Dialog.msg.font {Times 18} widgetDefault
     }
+
+    label $w.msg -justify left -text $data(-message)
     pack $w.msg -in $w.top -side right -expand 1 -fill both -padx 3m -pady 3m
     if {$data(-icon) != ""} {
 	label $w.bitmap -bitmap $data(-icon)

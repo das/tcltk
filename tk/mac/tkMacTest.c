@@ -9,10 +9,11 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * RCS: @(#) $Id$
+ * SCCS: @(#) tkMacTest.c 1.3 97/09/23 16:25:54
  */
 
 #include <Types.h>
+#include <tcl.h>
 
 /*
  * Forward declarations of procedures defined later in this file:

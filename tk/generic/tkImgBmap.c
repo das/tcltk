@@ -9,7 +9,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * RCS: @(#) $Id$
+ * SCCS: @(#) tkImgBmap.c 1.34 97/11/07 21:17:15
  */
 
 #include "tkInt.h"
@@ -227,7 +227,7 @@ ImgBmapCreate(interp, name, argc, argv, typePtr, master, clientDataPtr)
  *
  * Results:
  *	A standard Tcl return value.  If TCL_ERROR is returned then
- *	an error message is left in masterPtr->interp->result.
+ *	an error message is left in the masterPtr->interp's result.
  *
  * Side effects:
  *	Existing instances of the image will be redisplayed to match
@@ -278,7 +278,8 @@ ImgBmapConfigureMaster(masterPtr, argc, argv, flags)
     if ((masterPtr->maskFileString != NULL)
 	    || (masterPtr->maskDataString != NULL)) {
 	if (masterPtr->data == NULL) {
-	    masterPtr->interp->result = "can't have mask without bitmap";
+	    Tcl_SetResult(masterPtr->interp, "can't have mask without bitmap",
+		    TCL_STATIC);
 	    return TCL_ERROR;
 	}
 	masterPtr->maskData = TkGetBitmapData(masterPtr->interp,
@@ -291,7 +292,8 @@ ImgBmapConfigureMaster(masterPtr, argc, argv, flags)
 		|| (maskHeight != masterPtr->height)) {
 	    ckfree(masterPtr->maskData);
 	    masterPtr->maskData = NULL;
-	    masterPtr->interp->result = "bitmap and mask have different sizes";
+	    Tcl_SetResult(masterPtr->interp,
+		    "bitmap and mask have different sizes", TCL_STATIC);
 	    return TCL_ERROR;
 	}
     }
@@ -451,7 +453,7 @@ ImgBmapConfigureInstance(instancePtr)
  *	*heightPtr.  *hotXPtr and *hotYPtr are set to the bitmap
  *	hotspot if one is defined, otherwise they are set to -1, -1.
  *	If an error occurred, NULL is returned and an error message is
- *	left in interp->result.
+ *	left in the interp's result.
  *
  * Side effects:
  *	A bitmap is created.
@@ -462,7 +464,7 @@ ImgBmapConfigureInstance(instancePtr)
 char *
 TkGetBitmapData(interp, string, fileName, widthPtr, heightPtr,
 	hotXPtr, hotYPtr)
-    Tcl_Interp *interp;			/* For reporting errors, or NULL. */
+    Tcl_Interp *interp;			/* For reporting errors. */
     char *string;			/* String describing bitmap.  May
 					 * be NULL. */
     char *fileName;			/* Name of file containing bitmap
@@ -481,7 +483,7 @@ TkGetBitmapData(interp, string, fileName, widthPtr, heightPtr,
 
     pi.string = string;
     if (string == NULL) {
-        if ((interp != NULL) && Tcl_IsSafe(interp)) {
+        if (Tcl_IsSafe(interp)) {
             Tcl_AppendResult(interp, "can't get bitmap data from a file in a",
                     " safe interpreter", (char *) NULL);
             return NULL;
@@ -493,12 +495,9 @@ TkGetBitmapData(interp, string, fileName, widthPtr, heightPtr,
 	pi.chan = Tcl_OpenFileChannel(interp, expandedFileName, "r", 0);
 	Tcl_DStringFree(&buffer);
 	if (pi.chan == NULL) {
-	    if (interp != NULL) {
-		Tcl_ResetResult(interp);
-		Tcl_AppendResult(interp, "couldn't read bitmap file \"",
-			fileName, "\": ", Tcl_PosixError(interp),
-			(char *) NULL);
-	    }
+	    Tcl_ResetResult(interp);
+	    Tcl_AppendResult(interp, "couldn't read bitmap file \"",
+		    fileName, "\": ", Tcl_PosixError(interp), (char *) NULL);
 	    return NULL;
 	}
     } else {
@@ -576,11 +575,9 @@ TkGetBitmapData(interp, string, fileName, widthPtr, heightPtr,
 		}
 	    }
 	} else if ((pi.word[0] == '{') && (pi.word[1] == 0)) {
-	    if (interp != NULL) {
-		Tcl_AppendResult(interp, "format error in bitmap data; ",
-			"looks like it's an obsolete X10 bitmap file",
-			(char *) NULL);
-	    }
+	    Tcl_AppendResult(interp, "format error in bitmap data; ",
+		    "looks like it's an obsolete X10 bitmap file",
+		    (char *) NULL);
 	    goto errorCleanup;
 	}
     }
@@ -620,9 +617,7 @@ TkGetBitmapData(interp, string, fileName, widthPtr, heightPtr,
     return data;
 
     error:
-    if (interp != NULL) {
-	interp->result = "format error in bitmap data";
-    }
+    Tcl_SetResult(interp, "format error in bitmap data", TCL_STATIC);
     errorCleanup:
     if (data != NULL) {
 	ckfree(data);
@@ -732,9 +727,8 @@ ImgBmapCmd(clientData, interp, argc, argv)
     size_t length;
 
     if (argc < 2) {
-	sprintf(interp->result,
-		"wrong # args: should be \"%.50s option ?arg arg ...?\"",
-		argv[0]);
+	Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
+		" option ?arg arg ...?\"", (char *) NULL);
 	return TCL_ERROR;
     }
     c = argv[1][0];

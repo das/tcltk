@@ -2,7 +2,7 @@
 #
 # Support procs to use Tk in safe interpreters.
 #
-# RCS: @(#) $Id$
+# SCCS: @(#) safetk.tcl 1.13 98/01/15 13:40:46
 #
 # Copyright (c) 1997 Sun Microsystems, Inc.
 #
@@ -22,7 +22,7 @@
 #
 
 # We use opt (optional arguments parsing)
-package require opt 0.1;
+package require opt 0.4.1;
 
 namespace eval ::safe {
 

@@ -8,7 +8,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * RCS: @(#) $Id$
+ * SCCS: @(#) tkMacCursor.c 1.24 98/01/22 17:00:29
  */
 
 #include "tkPort.h"
@@ -109,13 +109,23 @@ FindCursorByName(
 {
     Handle resource;
     Str255 curName;
+    int destWrote, inCurLen;
     
-    curName[0] = strlen(string);
-    if (curName[0] > 255) {
+    inCurLen = strlen(string);
+    if (inCurLen > 255) {
         return;
     }
-    
-    strcpy((char *) curName + 1, string);
+
+    /*
+     * macRoman is the encoding that the resource fork uses.
+     */
+
+    Tcl_UtfToExternal(NULL, Tcl_GetEncoding(NULL, "macRoman"), string,
+	    inCurLen, 0, NULL, 
+	    (char *) &curName[1],
+	    255, NULL, &destWrote, NULL); /* Internalize native */
+    curName[0] = destWrote;
+
     resource = GetNamedResource('crsr', curName);
 
     if (resource != NULL) {
@@ -252,7 +262,7 @@ TkCreateCursorFromData(
 /*
  *----------------------------------------------------------------------
  *
- * TkFreeCursor --
+ * TkpFreeCursor --
  *
  *	This procedure is called to release a cursor allocated by
  *	TkGetCursorByName.
@@ -267,7 +277,7 @@ TkCreateCursorFromData(
  */
 
 void
-TkFreeCursor(
+TkpFreeCursor(
     TkCursor *cursorPtr)
 {
     TkMacCursor *macCursorPtr = (TkMacCursor *) cursorPtr;
@@ -284,8 +294,6 @@ TkFreeCursor(
     if (macCursorPtr == gCurrentCursor) {
 	gCurrentCursor = NULL;
     }
-    
-    ckfree((char *) macCursorPtr);
 }
 
 /*

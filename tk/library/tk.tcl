@@ -3,7 +3,7 @@
 # Initialization script normally executed in the interpreter for each
 # Tk-based application.  Arranges class bindings for widgets.
 #
-# RCS: @(#) $Id$
+# SCCS: @(#) tk.tcl 1.101 97/12/19 16:16:40
 #
 # Copyright (c) 1992-1994 The Regents of the University of California.
 # Copyright (c) 1994-1996 Sun Microsystems, Inc.
@@ -13,8 +13,8 @@
 
 # Insist on running with compatible versions of Tcl and Tk.
 
-package require -exact Tk 8.0
-package require -exact Tcl 8.0
+package require -exact Tk 8.1
+package require -exact Tcl 8.1
 
 # Add Tk's directory to the end of the auto-load search path, if it
 # isn't already on the path:
@@ -113,6 +113,40 @@ proc tkEventMotifBindings {n1 dummy dummy} {
 }
 
 #----------------------------------------------------------------------
+# Define common dialogs on platforms where they are not implemented 
+# using compiled code.
+#----------------------------------------------------------------------
+
+if {[info commands tk_chooseColor] == ""} {
+    proc tk_chooseColor {args} {
+	return [eval tkColorDialog $args]
+    }
+}
+if {[info commands tk_getOpenFile] == ""} {
+    proc tk_getOpenFile {args} {
+	if {$::tk_strictMotif} {
+	    return [eval tkMotifFDialog open $args]
+	} else {
+	    return [eval tkFDialog open $args]
+	}
+    }
+}
+if {[info commands tk_getSaveFile] == ""} {
+    proc tk_getSaveFile {args} {
+	if {$::tk_strictMotif} {
+	    return [eval tkMotifFDialog save $args]
+	} else {
+	    return [eval tkFDialog save $args]
+	}
+    }
+}
+if {[info commands tk_messageBox] == ""} {
+    proc tk_messageBox {args} {
+	return [eval tkMessageBox $args]
+    }
+}
+	
+#----------------------------------------------------------------------
 # Define the set of common virtual events.
 #----------------------------------------------------------------------
 
@@ -121,7 +155,6 @@ switch $tcl_platform(platform) {
 	event add <<Cut>> <Control-Key-x> <Key-F20> 
 	event add <<Copy>> <Control-Key-c> <Key-F16>
 	event add <<Paste>> <Control-Key-v> <Key-F18>
-	event add <<PasteSelection>> <ButtonRelease-2>
 	trace variable tk_strictMotif w tkEventMotifBindings
 	set tk_strictMotif $tk_strictMotif
     }
@@ -129,13 +162,11 @@ switch $tcl_platform(platform) {
 	event add <<Cut>> <Control-Key-x> <Shift-Key-Delete>
 	event add <<Copy>> <Control-Key-c> <Control-Key-Insert>
 	event add <<Paste>> <Control-Key-v> <Shift-Key-Insert>
-	event add <<PasteSelection>> <ButtonRelease-2>
     }
     "macintosh" {
 	event add <<Cut>> <Control-Key-x> <Key-F2> 
 	event add <<Copy>> <Control-Key-c> <Key-F3>
 	event add <<Paste>> <Control-Key-v> <Key-F4>
-	event add <<PasteSelection>> <ButtonRelease-2>
 	event add <<Clear>> <Clear>
     }
 }

@@ -9,11 +9,11 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * RCS: @(#) $Id$
+ * SCCS: @(#) tkWinColor.c 1.21 97/10/29 10:37:34
  */
 
-#include <tkColor.h>
-#include <tkWinInt.h>
+#include "tkWinInt.h"
+#include "tkColor.h"
 
 /*
  * The following structure is used to keep track of each color that is

@@ -7,7 +7,7 @@
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 #
-# RCS: @(#) $Id$
+# SCCS: @(#) filebox.test 1.7 97/10/20 14:49:37
 #
 
 set tk_strictMotif_old $tk_strictMotif
@@ -40,11 +40,7 @@ proc PressButton {btn} {
 
 proc EnterFileByKey {parent fileName fileDir} {
     global tk_strictMotif
-    if {$parent == "."} {
-	set w .__tk_filedialog
-    } else {
-	set w $parent.__tk_filedialog
-    }
+    set w .__tk_filedialog
     upvar #0 [winfo name $w] data
 
     if {$tk_strictMotif} {
@@ -61,11 +57,7 @@ proc EnterFileByKey {parent fileName fileDir} {
 
 proc SendButtonPress {parent btn type} {
     global tk_strictMotif
-    if {$parent == "."} {
-	set w .__tk_filedialog
-    } else {
-	set w $parent.__tk_filedialog
-    }
+    set w .__tk_filedialog
     upvar #0 [winfo name $w] data
 
     set button $data($btn\Btn)
@@ -100,7 +92,7 @@ if {$tcl_platform(platform) == "unix"} {
     set modes 1
 }
 
-set unknownOptionsMsg {1 {unknown option "-foo", must be -defaultextension, -filetypes, -initialdir, -initialfile, -parent or -title}}
+set unknownOptionsMsg {1 {bad option "-foo": must be -defaultextension, -filetypes, -initialdir, -initialfile, -parent, or -title}}
 
 foreach mode $modes {
 
@@ -118,11 +110,11 @@ foreach mode $modes {
     #
 
     foreach command "tk_getOpenFile tk_getSaveFile" {
-
 	test filebox-1.1 "$command command" {
 	    list [catch {$command -foo} msg] $msg
 	} $unknownOptionsMsg
 
+	catch {$command -foo 1} msg
 	regsub -all ,      $msg "" options
 	regsub \"-foo\" $options "" options
 
@@ -179,7 +171,6 @@ foreach mode $modes {
 	    $command -title "Press Cancel ($verylongstring)" -parent $parent
 	} ""
 
-
 	if {$command == "tk_getSaveFile"} {
 	    set fileName "12x 455"
 	    set fileDir [pwd]
@@ -205,45 +196,6 @@ foreach mode $modes {
 	    set choice [$command -title "Enter \"$fileName\" and press Ok" \
 			    -parent $parent -initialdir $fileDir]
 	} $pathName
-
-	test filebox-2.4 "$command command" {
-	    ToPressButton $parent ok
-	    set choice [$command -title "Enter \"$fileName\" and press Ok" \
-			    -parent $parent -initialdir . \
-			    -initialfile $fileName]
-	} $pathName
-
-	test filebox-2.5 "$command command" {
-	    ToPressButton $parent ok
-	    set choice [$command -title "Enter \"$fileName\" and press Ok" \
-			    -parent $parent -initialdir /badpath \
-			    -initialfile $fileName]
-	} $pathName
-
-	test filebox-2.6 "$command command" {
-	    toplevel .t1; toplevel .t2
-	    ToPressButton .t1 ok
-	    set choice {}
-	    lappend choice [$command \
-		    -title "Enter \"$fileName\" and press Ok" \
-		    -parent .t1 -initialdir $fileDir \
-		    -initialfile $fileName]
-	    ToPressButton .t2 ok
-	    lappend choice [$command \
-		    -title "Enter \"$fileName\" and press Ok" \
-		    -parent .t2 -initialdir $fileDir \
-		    -initialfile $fileName]
-	    ToPressButton .t1 ok
-	    lappend choice [$command \
-		    -title "Enter \"$fileName\" and press Ok" \
-		    -parent .t1 -initialdir $fileDir \
-		    -initialfile $fileName]
-	    destroy .t1
-	    destroy .t2
-	    set choice
-	} [list $pathName $pathName $pathName]
- 
-
 
 	set filters(1) {}
 

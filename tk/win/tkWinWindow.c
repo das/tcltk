@@ -4,12 +4,12 @@
  *	Xlib emulation routines for Windows related to creating,
  *	displaying and destroying windows.
  *
- * Copyright (c) 1995 Sun Microsystems, Inc.
+ * Copyright (c) 1995-1997 Sun Microsystems, Inc.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * RCS: @(#) $Id$
+ * SCCS: @(#) tkWinWindow.c 1.25 97/12/08 15:16:32
  */
 
 #include "tkWinInt.h"
@@ -190,7 +190,7 @@ TkpPrintWindowId(buf, window)
  *	The return value is normally TCL_OK;  in this case *idPtr
  *	will be set to the X Window id equivalent to string.  If
  *	string is improperly formed then TCL_ERROR is returned and
- *	an error message will be left in interp->result.  If the
+ *	an error message will be left in the interp's result.  If the
  *	number does not correspond to a Tk Window, then *idPtr will
  *	be set to None.
  *
@@ -261,9 +261,9 @@ TkpMakeWindow(winPtr, parent)
      * stacking order.
      */
 
-    hwnd = CreateWindowEx(WS_EX_NOPARENTNOTIFY, TK_WIN_CHILD_CLASS_NAME, NULL,
-	    style, Tk_X(winPtr), Tk_Y(winPtr), Tk_Width(winPtr),
-	    Tk_Height(winPtr), parentWin, NULL, Tk_GetHINSTANCE(), NULL);
+    hwnd = CreateWindow(TK_WIN_CHILD_CLASS_NAME, NULL, style,
+	    Tk_X(winPtr), Tk_Y(winPtr), Tk_Width(winPtr), Tk_Height(winPtr),
+	    parentWin, NULL, Tk_GetHINSTANCE(), NULL);
     SetWindowPos(hwnd, HWND_TOP, 0, 0, 0, 0,
 		    SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE);
     return Tk_AttachHWND((Tk_Window)winPtr, hwnd);
