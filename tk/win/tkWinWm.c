@@ -3496,7 +3496,7 @@ Tk_WmCmd(clientData, interp, argc, argv)
 		"focusmodel, frame, geometry, grid, group, iconbitmap, ",
 		"iconify, iconmask, iconname, iconposition, ",
 		"iconwindow, maxsize, minsize, overrideredirect, ",
-		"positionfrom, protocol, resizable, sizefrom, stackorder ",
+		"positionfrom, protocol, resizable, sizefrom, stackorder, ",
 		"state, title, transient, or withdraw",
 		(char *) NULL);
 	return TCL_ERROR;
