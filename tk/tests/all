@@ -73,5 +73,10 @@ if {[info exists TMP_DIR]} {
     cd $currentDir
 }
 
-catch {destroy .}
-exit
+# Don't exit at the end of all the tests on the Mac, since
+# this destroys the window that contains the test results...
+
+if {[string compare $tcl_platform(platform) macintosh]} {
+    catch {destroy .}
+    exit
+}
