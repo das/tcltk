@@ -14,11 +14,11 @@
 .SH NAME
 focus \- Manage the input focus
 .SH SYNOPSIS
+.nf
 \fBfocus\fR
-.sp
 \fBfocus \fIwindow\fR
-.sp
 \fBfocus \fIoption\fR ?\fIarg arg ...\fR?
+.fi
 .BE
 
 .SH DESCRIPTION

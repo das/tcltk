@@ -14,13 +14,12 @@
 .SH NAME
 option \- Add/retrieve window options to/from the option database
 .SH SYNOPSIS
+.nf
 \fBoption add \fIpattern value \fR?\fIpriority\fR?
-.sp
 \fBoption clear\fR
-.sp
 \fBoption get \fIwindow name class\fR
-.sp
 \fBoption readfile \fIfileName \fR?\fIpriority\fR?
+.fi
 .BE
 
 .SH DESCRIPTION
