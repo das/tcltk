@@ -350,8 +350,10 @@ proc tkMbPost {w {x {}} {y {}}} {
     set tkPriv(tearoff) $tearoff
     if {$tearoff != 0} {
     	focus $menu
-    	tkSaveGrabInfo $w
-    	grab -global $w
+	if {[winfo viewable $w]} {
+	    tkSaveGrabInfo $w
+	    grab -global $w
+	}
     }
 }
 
@@ -561,7 +563,8 @@ proc tkMenuButtonDown menu {
         return
     }
     $menu postcascade active
-    if {[string compare $tkPriv(postedMb) ""]} {
+    if {[string compare $tkPriv(postedMb) ""] && \
+	    [winfo viewable $tkPriv(postedMb)]} {
 	grab -global $tkPriv(postedMb)
     } else {
 	while {[string equal [$menu cget -type] "normal"] \
