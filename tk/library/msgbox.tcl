@@ -252,7 +252,7 @@ proc ::tk::MessageBox {args} {
     # "grab"bed windows.  So only make the message box transient if the parent
     # is viewable.
     #
-    if { [winfo viewable [winfo toplevel $data(-parent)]] } {
+    if {[winfo viewable [winfo toplevel $data(-parent)]] } {
 	wm transient $w $data(-parent)
     }    
 

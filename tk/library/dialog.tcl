@@ -61,7 +61,7 @@ proc ::tk_dialog {w title text bitmap default args} {
     # window, this can hang the entire application.  Therefore we only make
     # the dialog transient if the parent is viewable.
     #
-    if { [winfo viewable [winfo toplevel [winfo parent $w]]] } {
+    if {[winfo viewable [winfo toplevel [winfo parent $w]]] } {
 	wm transient $w [winfo toplevel [winfo parent $w]]
     }    
 
