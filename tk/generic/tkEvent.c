@@ -1726,6 +1726,10 @@ TkQueueEventForAllChildren(winPtr, eventPtr)
 {
     TkWindow *childPtr;
 
+    if (!Tk_IsMapped(winPtr)) {
+        return;
+    }
+
     eventPtr->xany.window = winPtr->window;
     Tk_QueueWindowEvent(eventPtr, TCL_QUEUE_TAIL);
     
