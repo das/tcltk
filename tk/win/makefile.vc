@@ -206,8 +206,7 @@ TKTESTOBJS = \
 	$(TMP_DIR)\tkTest.obj \
 	$(TMP_DIR)\tkSquare.obj \
 	$(TMP_DIR)\testMain.obj \
-	$(TMP_DIR)\tkWinTest.obj \
-	$(TCLTMP_DIR)\tclThreadTest.obj
+	$(TMP_DIR)\tkWinTest.obj
 
 XLIBOBJS = \
 	$(TMP_DIR)\xcolors.obj \
