@@ -199,8 +199,12 @@ addDemoSection "Canvases" {
     cscroll	"A simple scrollable canvas"
 }
 addDemoSection "Scales" {
-    vscale	"Vertical scale"
     hscale	"Horizontal scale"
+    vscale	"Vertical scale"
+}
+addDemoSection "Paned Windows" {
+    paned1	"Horizontal paned window"
+    paned2	"Vertical paned window"
 }
 addDemoSection "Menus" {
     menu	"Menus and cascades (sub-menus)"
@@ -381,7 +385,7 @@ Copyright (c) 1996-1997 Sun Microsystems, Inc.
 
 Copyright (c) 1997-2000 Ajuba Solutions, Inc.
 
-Copyright (c) 2001 Donal K. Fellows"
+Copyright (c) 2001-2002 Donal K. Fellows"
 }
 
 # Local Variables:

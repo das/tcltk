@@ -71,7 +71,7 @@ proc ::tk::panedwindow::DragSash {w x y proxy} {
 # Results:
 #   Returns ...
 #
-proc ::tk::panedwindow::ReleaseSash {w proxy} {
+proc ::tk::panedwindow::ReleaseSash {w x y proxy} {
     if { [info exists ::tk::Priv(sash)] } {
 	if {$proxy} {
 	    foreach {x y} [$w proxy coord] break

@@ -357,12 +357,12 @@ switch $::tcl_platform(platform) {
 # Read in files that define all of the class bindings.
 # ----------------------------------------------------------------------
 
-if {[string compare $::tcl_platform(platform) "macintosh"] && \
-	[string compare {} $::tk_library]} {
+if {$::tcl_platform(platform) ne "macintosh" && $::tk_library ne ""} {
     source [file join $::tk_library button.tcl]
     source [file join $::tk_library entry.tcl]
     source [file join $::tk_library listbox.tcl]
     source [file join $::tk_library menu.tcl]
+    source [file join $::tk_library panedwindow.tcl]
     source [file join $::tk_library scale.tcl]
     source [file join $::tk_library scrlbar.tcl]
     source [file join $::tk_library spinbox.tcl]
