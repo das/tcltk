@@ -88,8 +88,7 @@ TkSetMacColor(
 	case MENU_BACKGROUND_PIXEL:
 	case MENU_DISABLED_PIXEL:
 	case MENU_TEXT_PIXEL:
-	    GetMenuPartColor((pixel >> 24), macColor);
-	    return true;
+	    return GetMenuPartColor((pixel >> 24), macColor);
 	case APPEARANCE_PIXEL:
 	    return false;
 	case PIXEL_MAGIC:
@@ -431,8 +430,19 @@ GetMenuPartColor(
     RGBColor backColor, foreColor;
     GDHandle maxDevice;
     Rect globalRect;
-    MCEntryPtr mcEntryPtr = GetMCEntry(0, 0);
+    MCEntryPtr mcEntryPtr;
     
+    /* Under Appearance, we don't want to set any menu colors when we
+       are asked for the standard menu colors.  So we return false (which
+       means don't use this color... */
+       
+    if (TkMacHaveAppearance() > 1) {
+        macColor->red = 0xFFFF;
+        macColor->green = 0;
+        macColor->blue = 0;
+        return 0;
+    } else {
+        mcEntryPtr = GetMCEntry(0, 0);
     switch (pixel) {
     	case MENU_ACTIVE_PIXEL:
     	    if (mcEntryPtr == NULL) {
@@ -490,4 +500,5 @@ GetMenuPartColor(
     	    return 1;
     }
     return 0;
+}
 }
