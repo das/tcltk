@@ -353,6 +353,7 @@ TkpMakeContainer(tkwin)
     containerPtr->parentHWnd = Tk_GetHWND(Tk_WindowId(tkwin));
     containerPtr->embeddedHWnd = NULL;
     containerPtr->embeddedPtr = NULL;
+    containerPtr->embeddedMenuHWnd = NULL;
     containerPtr->nextPtr = tsdPtr->firstContainerPtr;
     tsdPtr->firstContainerPtr = containerPtr;
     winPtr->flags |= TK_CONTAINER;
