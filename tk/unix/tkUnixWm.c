@@ -4239,6 +4239,7 @@ UpdateSizeHints(winPtr)
 	    hintsPtr->min_width = winPtr->reqWidth;
 	}
 	hintsPtr->max_width = hintsPtr->min_width;
+	hintsPtr->flags |= PMaxSize;
     }
     if (wmPtr->flags & WM_HEIGHT_NOT_RESIZABLE) {
 	if (wmPtr->height >= 0) {
@@ -4247,6 +4248,7 @@ UpdateSizeHints(winPtr)
 	    hintsPtr->min_height = winPtr->reqHeight + wmPtr->menuHeight;
 	}
 	hintsPtr->max_height = hintsPtr->min_height;
+	hintsPtr->flags |= PMaxSize;
     }
 
     XSetWMNormalHints(winPtr->display, wmPtr->wrapperPtr->window, hintsPtr);
