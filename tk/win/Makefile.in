@@ -259,6 +259,7 @@ TK_OBJS = \
 	tkWinRegion.$(OBJEXT) \
 	tkWinScrlbr.$(OBJEXT) \
 	tkWinSend.$(OBJEXT) \
+	tkWinSendCom.$(OBJEXT) \
 	tkWinWindow.$(OBJEXT) \
 	tkWinWm.$(OBJEXT) \
 	tkWinX.$(OBJEXT) \
