@@ -848,6 +848,9 @@ TkDebugCursor(tkwin, name)
     Tcl_Obj *resultPtr, *objPtr;
     TkDisplay *dispPtr = ((TkWindow *) tkwin)->dispPtr;
 
+    if (!dispPtr->cursorInit) {
+	CursorInit(dispPtr);
+    }
     resultPtr = Tcl_NewObj();
     hashPtr = Tcl_FindHashEntry(&dispPtr->cursorNameTable, name);
     if (hashPtr != NULL) {
