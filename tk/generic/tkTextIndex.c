@@ -17,6 +17,7 @@
 #include "tkPort.h"
 #include "tkInt.h"
 #include "tkText.h"
+#include <tclInt.h>
 
 /*
  * Index to use to select last character in line (very large integer):
