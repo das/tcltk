@@ -846,7 +846,7 @@ NavServicesGetFile(
         }
         if ((selectDescPtr != NULL)
                 && (selectDescPtr->descriptorType != typeNull)) {
-            NavCustomControl(dialogRef, kNavCtlSetSelection, &selectDescPtr);
+            NavCustomControl(dialogRef, kNavCtlSetSelection, selectDescPtr);
         }
         
         if ((err = NavDialogRun(dialogRef)) != noErr ){
