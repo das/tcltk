@@ -1848,7 +1848,7 @@ ResolveConstraints(masterPtr, slotType, maxOffset)
 		    UniformGroup *old = uniformGroupPtr;
 		    memcpy((VOID *) new, (VOID *) old, oldSize);
 		    if (old != uniformPre) {
-			Tcl_Free((char *) old);
+			ckfree((char *) old);
 		    }
 		    uniformGroupPtr = new;
 		    uniformGroupsAlloced += UNIFORM_PREALLOC;
@@ -1888,7 +1888,7 @@ ResolveConstraints(masterPtr, slotType, maxOffset)
     }
 
     if (uniformGroupPtr != uniformPre) {
-	Tcl_Free((char *) uniformGroupPtr);
+	ckfree((char *) uniformGroupPtr);
     }
 
     /*
@@ -2074,7 +2074,7 @@ ResolveConstraints(masterPtr, slotType, maxOffset)
 
     --layoutPtr;
     if (layoutPtr != layoutData) {
-	Tcl_Free((char *)layoutPtr);
+	ckfree((char *)layoutPtr);
     }
     return requiredSize;
 }
@@ -2254,7 +2254,7 @@ CheckSlotData(masterPtr, slot, slotType, checkOnly)
 		    masterPtr->masterDataPtr->columnPtr;
 	    memcpy((VOID *) new, (VOID *) old, oldSize );
 	    memset((VOID *) (new+numSlot), 0, newSize - oldSize );
-	    Tcl_Free((char *) old);
+	    ckfree((char *) old);
 	    if (slotType == ROW) {
 	 	masterPtr->masterDataPtr->rowPtr = new ;
 	    	masterPtr->masterDataPtr->rowSpace = newNumSlot ;
@@ -2405,14 +2405,14 @@ DestroyGrid(memPtr)
 
     if (gridPtr->masterDataPtr != NULL) {
 	if (gridPtr->masterDataPtr->rowPtr != NULL) {
-	    Tcl_Free((char *) gridPtr->masterDataPtr -> rowPtr);
+	    ckfree((char *) gridPtr->masterDataPtr -> rowPtr);
 	}
 	if (gridPtr->masterDataPtr->columnPtr != NULL) {
-	    Tcl_Free((char *) gridPtr->masterDataPtr -> columnPtr);
+	    ckfree((char *) gridPtr->masterDataPtr -> columnPtr);
 	}
-	Tcl_Free((char *) gridPtr->masterDataPtr);
+	ckfree((char *) gridPtr->masterDataPtr);
     }
-    Tcl_Free((char *) gridPtr);
+    ckfree((char *) gridPtr);
 }
 
 /*

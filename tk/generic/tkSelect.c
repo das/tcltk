@@ -325,7 +325,7 @@ Tk_DeleteSelHandler(tkwin, selection, target)
 	 */
 
 	((CommandInfo*)selPtr->clientData)->interp = NULL;
-	Tcl_EventuallyFree(selPtr->clientData, Tcl_Free);
+	Tcl_EventuallyFree(selPtr->clientData, TCL_DYNAMIC);
     }
     ckfree((char *) selPtr);
 }
@@ -1122,7 +1122,7 @@ TkSelDeadWindow(winPtr)
 	     */
 
 	    ((CommandInfo*)selPtr->clientData)->interp = NULL;
-	    Tcl_EventuallyFree(selPtr->clientData, Tcl_Free);
+	    Tcl_EventuallyFree(selPtr->clientData, TCL_DYNAMIC);
 	}
 	ckfree((char *) selPtr);
     }
