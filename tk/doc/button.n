@@ -16,15 +16,15 @@ button \- Create and manipulate button widgets
 .SH SYNOPSIS
 \fBbutton\fR \fIpathName \fR?\fIoptions\fR?
 .SO
-\-activebackground      \-activeforeground       \-anchor
-\-background            \-bitmap                 \-borderwidth
-\-cursor                \-disabledforeground     \-font
-\-foreground            \-highlightbackground    \-highlightcolor
-\-highlightthickness    \-image                  \-justify
-\-padx                  \-pady                   \-relief
-\-repeatdelay           \-repeatinterval         \-takefocus
-\-text                  \-textvariable           \-underline
-\-wraplength
+\-activebackground	\-foreground	\-repeatdelay
+\-activeforeground	\-highlightbackground	\-repeatinterval
+\-anchor	\-highlightcolor	\-takefocus
+\-background	\-highlightthickness	\-text
+\-bitmap	\-image	\-textvariable
+\-borderwidth	\-justify	\-underline
+\-cursor	\-padx	\-wraplength
+\-disabledforeground	\-pady
+\-font	\-relief
 .SE
 .SH "WIDGET-SPECIFIC OPTIONS"
 .OP \-command command Command

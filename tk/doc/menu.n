@@ -16,9 +16,11 @@ menu \- Create and manipulate menu widgets
 .SH SYNOPSIS
 \fBmenu\fR \fIpathName \fR?\fIoptions\fR?
 .SO
-\-activebackground	\-background	\-disabledforeground	\-relief
-\-activeborderwidth	\-borderwidth	\-font	\-takefocus
-\-activeforeground	\-cursor	\-foreground
+\-activebackground	\-borderwidth		\-foreground
+\-activeborderwidth	\-cursor		\-relief
+\-activeforeground	\-disabledforeground	\-takefocus
+\-background	\-font
+
 .SE
 .SH "WIDGET-SPECIFIC OPTIONS"
 .VS

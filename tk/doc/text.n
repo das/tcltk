@@ -16,12 +16,14 @@ text \- Create and manipulate text widgets
 .SH SYNOPSIS
 \fBtext\fR \fIpathName \fR?\fIoptions\fR?
 .SO
-\-background	\-highlightbackground	\-insertontime	\-selectborderwidth
-\-borderwidth	\-highlightcolor	\-insertwidth	\-selectforeground
-\-cursor	\-highlightthickness	\-padx	\-setgrid
-\-exportselection	\-insertbackground	\-pady	\-takefocus
-\-font	\-insertborderwidth	\-relief	\-xscrollcommand
-\-foreground	\-insertofftime	\-selectbackground	\-yscrollcommand
+\-background	\-highlightthickness	\-relief
+\-borderwidth	\-insertbackground	\-selectbackground
+\-cursor	\-insertborderwidth	\-selectborderwidth
+\-exportselection	\-insertofftime	\-selectforeground
+\-font	\-insertontime	\-setgrid
+\-foreground	\-insertwidth	\-takefocus
+\-highlightbackground	\-padx	\-xscrollcommand
+\-highlightcolor	\-pady	\-yscrollcommand
 .SE
 .SH "WIDGET-SPECIFIC OPTIONS"
 .OP \-height height Height

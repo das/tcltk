@@ -16,12 +16,14 @@ menubutton \- Create and manipulate menubutton widgets
 .SH SYNOPSIS
 \fBmenubutton\fR \fIpathName \fR?\fIoptions\fR?
 .SO
-\-activebackground	\-cursor	\-highlightthickness	\-takefocus
-\-activeforeground	\-disabledforeground	\-image	\-text
-\-anchor	\-font	\-justify	\-textvariable
-\-background	\-foreground	\-padx	\-underline
-\-bitmap	\-highlightbackground	\-pady	\-wraplength
-\-borderwidth	\-highlightcolor	\-relief
+\-activebackground	\-font	\-pady
+\-activeforeground	\-foreground	\-relief
+\-anchor	\-highlightbackground	\-takefocus
+\-background	\-highlightcolor	\-text
+\-bitmap	\-highlightthickness	\-textvariable
+\-borderwidth	\-image	\-underline
+\-cursor	\-justify	\-wraplength
+\-disabledforeground	\-padx
 .SE
 .SH "WIDGET-SPECIFIC OPTIONS"
 .VS
