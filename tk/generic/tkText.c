@@ -2503,7 +2503,7 @@ static void pushStack ( stack, elem )
  *    None.
  */
  
-TkTextEditAtom * popStack ( stack )
+static TkTextEditAtom * popStack ( stack )
     TkTextEditAtom ** stack ;
 { 
     TkTextEditAtom * elem = NULL;
@@ -2866,7 +2866,7 @@ TextEditCmd(textPtr, interp, argc, argv)
  *    Memory will be allocated for the DString.  Remember to free it.
  */
 
-void 
+static void 
 TextGetText(indexPtr1,indexPtr2, dsPtr)
     TkTextIndex *indexPtr1;
     TkTextIndex *indexPtr2;
