@@ -139,7 +139,9 @@ safe to conclude that any errors represent portability problems in the
 test suite and not fundamental flaws with Tk.
 
 There are also a number of visual tests for things such as screen layout,
-Postscript generation, etc.  These tests all have to be run manually and
-the results have to be verified visually.  To run the tests, cd to the
-"tests" directory and run the script "visual".  It will present a main
-window with a bunch of menus, which you can use to select various tests.
+Postscript generation, etc.  These tests all have to be run by manually
+enabling the "userInteraction" constraint when testing, and the results
+have to be verified visually..  This can be done with
+     make test TESTFLAGS="-constraints userInteraction"
+Some tests will present a main window with a bunch of menus, which you can
+use to select various tests.
