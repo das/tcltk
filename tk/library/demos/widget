@@ -329,6 +329,8 @@ addDemoSection "Common Dialogs" {
 }
 addDemoSection "Animation" {
     anilabel	"Animated labels"
+    aniwave	"Animated wave"
+    pendulum	"Pendulum simulation"
 }
 addDemoSection "Miscellaneous" {
     bitmap	"The built-in bitmaps"
