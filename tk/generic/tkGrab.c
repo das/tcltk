@@ -15,6 +15,10 @@
 #include "tkPort.h"
 #include "tkInt.h"
 
+#if !defined(__WIN32__) && !defined(MAC_TCL)
+#include "tkUnixInt.h"
+#endif
+
 /*
  * The grab state machine has four states: ungrabbed, button pressed,
  * grabbed, and button pressed while grabbed.  In addition, there are

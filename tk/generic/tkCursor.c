@@ -330,7 +330,8 @@ Tk_GetCursorFromData(interp, tkwin, source, mask, width, height,
     register TkCursor *cursorPtr;
     int new;
     XColor fgColor, bgColor;
-    TkDisplay *dispPtr;
+    TkDisplay *dispPtr = ((TkWindow *) tkwin)->dispPtr;
+
 
     if (!dispPtr->cursorInit) {
 	CursorInit(dispPtr);

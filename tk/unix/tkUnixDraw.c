@@ -14,6 +14,10 @@
 #include "tkPort.h"
 #include "tkInt.h"
 
+#if !defined(__WIN32__) && !defined(MAC_TCL)
+#include "tkUnixInt.h"
+#endif
+
 /*
  * The following structure is used to pass information to
  * ScrollRestrictProc from TkScrollWindow.

@@ -515,6 +515,47 @@ XForceScreenSaver(
      */
     display->request++;
 }
+
+void
+Tk_FreeXId (
+    Display *display,
+    XID xid)
+{
+    /* no-op function needed for stubs implementation. */
+}
+
+void
+Tk_3DHorizontalBevel (
+    Tk_Window tkwin,
+    Drawable d,
+    Tk_3DBorder b,
+    int x,
+    int y,
+    int width,
+    int height,
+    int leftIn,
+    int rightIn,
+    int topBevel,
+    int relief)
+{
+    /* no-op function needed for stubs implementation. */
+}
+
+void
+Tk_3DVerticalBevel (
+    Tk_Window tkwin,
+    Drawable d,
+    Tk_3DBorder b,
+    int x,
+    int y,
+    int width,
+    int height,
+    int leftBevel,
+    int relief)
+{
+    /* no-op function needed for stubs implementation. */
+}
+
 
 /*
  *----------------------------------------------------------------------

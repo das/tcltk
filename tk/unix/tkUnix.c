@@ -78,3 +78,31 @@ TkGetDefaultScreenName(interp, screenName)
     }
     return screenName;
 }
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * Tk_UpdatePointer --
+ *
+ *	Unused function in UNIX
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+Tk_UpdatePointer(tkwin, x, y, state)
+    Tk_Window tkwin;		/* Window to which pointer event
+				 * is reported. May be NULL. */
+    int x, y;			/* Pointer location in root coords. */
+    int state;			/* Modifier state mask. */
+{
+  /*
+   * This function intentionally left blank
+   */
+}

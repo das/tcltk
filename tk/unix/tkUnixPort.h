@@ -179,7 +179,6 @@ extern int errno;
  * in any other header file.
  */
 
-extern void		panic _ANSI_ARGS_(TCL_VARARGS(char *, string));
 
 /*
  * These functions do nothing under Unix, so we just eliminate calls to them.
@@ -225,6 +224,8 @@ extern void		panic _ANSI_ARGS_(TCL_VARARGS(char *, string));
  * that is needed for portability reasons.
  */
 
-EXTERN void		TclpGetTime _ANSI_ARGS_((Tcl_Time *time));
+#ifndef _TCLINT
+#include <tclInt.h>
+#endif
 
 #endif /* _UNIXPORT */

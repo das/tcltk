@@ -23,6 +23,10 @@
 #include "tclMath.h"
 #include <ctype.h>
 
+#ifdef __WIN32__
+#include "tkWinInt.h"
+#endif
+
 /*
  * Declaration for internal Xlib function used here:
  */
@@ -125,6 +129,9 @@ typedef struct ColorTable {
  * MAP_COLORS:			1 means pixel values should be mapped
  *				through pixelMap.
  */
+#ifdef COLOR_WINDOW
+#undef COLOR_WINDOW
+#endif
 
 #define BLACK_AND_WHITE		1
 #define COLOR_WINDOW		2

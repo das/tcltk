@@ -16,7 +16,14 @@
  * Temporary flag for working on new config package.
  */
 
+#if 0
+
+/*
+ * used only for removing the old config code
+ */
+
 #define __NO_OLD_CONFIG
+#endif
 
 #include "tk.h"
 #include "tkInt.h"

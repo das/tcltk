@@ -68,7 +68,15 @@
  *
  */
 
+#if 0
+
+/*
+ * used only to test for old config code
+ */
+
 #define __NO_OLD_CONFIG
+#endif
+
 #include "tkPort.h"
 #include "tkMenu.h"
 

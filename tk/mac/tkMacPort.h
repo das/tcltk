@@ -99,7 +99,6 @@ extern int		strncasecmp _ANSI_ARGS_((CONST char *s1,
 #define TkpCmapStressed(tkwin,colormap) (0)
 #define TkpFreeColor(tkColPtr)
 #define TkSetPixmapColormap(p,c) {}
-#define Tk_FreeXId(display,xid)
 #define TkpSync(display)
 
 /*

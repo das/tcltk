@@ -111,7 +111,8 @@ struct timezone {
     int tz_dsttime;
 };
 
-extern int gettimeofday(struct timeval *, struct timezone *);
-EXTERN void		panic _ANSI_ARGS_(TCL_VARARGS(char *,format));
+#ifndef _TCLINT
+#include <tclInt.h>
+#endif
 
 #endif /* _WINPORT */

@@ -16,6 +16,10 @@
 
 #include "tkInt.h"
 
+#ifdef __WIN32__
+#include "tkWinInt.h"
+#endif
+
 #ifdef MAC_TCL
 #define Cursor XCursor
 #endif

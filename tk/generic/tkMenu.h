@@ -558,7 +558,6 @@ EXTERN void		TkpDrawMenuEntry _ANSI_ARGS_((TkMenuEntry *mePtr,
 			    int y, int width, int height, int strictMotif,
 			    int drawArrow));
 EXTERN void		TkpMenuInit _ANSI_ARGS_((void));
-EXTERN void		TkpMenuThreadInit _ANSI_ARGS_((void));
 EXTERN int		TkpMenuNewEntry _ANSI_ARGS_((TkMenuEntry *mePtr));
 EXTERN int		TkpNewMenu _ANSI_ARGS_((TkMenu *menuPtr));
 EXTERN int		TkpPostMenu _ANSI_ARGS_((Tcl_Interp *interp,

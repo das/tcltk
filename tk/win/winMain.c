@@ -19,13 +19,13 @@
 #include <malloc.h>
 #include <locale.h>
 
+#include "tkInt.h"
+
 /*
  * The following declarations refer to internal Tk routines.  These
  * interfaces are available for use, but are not supported.
  */
 
-EXTERN void		TkConsoleCreate(void);
-EXTERN int		TkConsoleInit(Tcl_Interp *interp);
 
 /*
  * Forward declarations for procedures defined later in this file:
@@ -100,7 +100,6 @@ WinMain(hInstance, hPrevInstance, lpszCmdLine, nCmdShow)
      */
 
     consoleRequired = TRUE;
-    TkConsoleCreate();
 
     Tk_Main(argc, argv, Tcl_AppInit);
     return 1;
