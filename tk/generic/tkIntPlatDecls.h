@@ -290,6 +290,8 @@ EXTERN Tk_Window	Tk_TopCoordsToWindow _ANSI_ARGS_((Tk_Window tkwin,
 EXTERN MacDrawable *	TkMacContainerId _ANSI_ARGS_((TkWindow * winPtr));
 /* 64 */
 EXTERN MacDrawable *	TkMacGetHostToplevel _ANSI_ARGS_((TkWindow * winPtr));
+/* 65 */
+EXTERN void		TkMacPreprocessMenu _ANSI_ARGS_((void));
 #endif /* MAC_TCL */
 
 typedef struct TkIntPlatStubs {
@@ -408,6 +410,7 @@ typedef struct TkIntPlatStubs {
     Tk_Window (*tk_TopCoordsToWindow) _ANSI_ARGS_((Tk_Window tkwin, int rootX, int rootY, int * newX, int * newY)); /* 62 */
     MacDrawable * (*tkMacContainerId) _ANSI_ARGS_((TkWindow * winPtr)); /* 63 */
     MacDrawable * (*tkMacGetHostToplevel) _ANSI_ARGS_((TkWindow * winPtr)); /* 64 */
+    void (*tkMacPreprocessMenu) _ANSI_ARGS_((void)); /* 65 */
 #endif /* MAC_TCL */
 } TkIntPlatStubs;
 
@@ -824,6 +827,10 @@ extern TkIntPlatStubs *tkIntPlatStubsPtr;
 #ifndef TkMacGetHostToplevel
 #define TkMacGetHostToplevel \
 	(tkIntPlatStubsPtr->tkMacGetHostToplevel) /* 64 */
+#endif
+#ifndef TkMacPreprocessMenu
+#define TkMacPreprocessMenu \
+	(tkIntPlatStubsPtr->tkMacPreprocessMenu) /* 65 */
 #endif
 #endif /* MAC_TCL */
 

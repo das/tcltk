@@ -207,13 +207,14 @@ WindowManagerMouse(
 	    {
 		int oldMode;
 		KeyMap theKeys;
-		void TkpPreprocessMacMenu(void);
 
 		GetKeys(theKeys);
 		oldMode = Tcl_SetServiceMode(TCL_SERVICE_ALL);
 		TkMacClearMenubarActive();
-		/* POSTCOMMAND??? */
-		TkpPreprocessMacMenu();
+		/*
+		 * Handle -postcommand
+		 */
+		TkMacPreprocessMenu();
 		TkMacHandleMenuSelect(MenuSelect(eventPtr->where),
 			theKeys[1] & 4);
 		Tcl_SetServiceMode(oldMode);

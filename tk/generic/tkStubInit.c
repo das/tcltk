@@ -456,6 +456,7 @@ TkIntPlatStubs tkIntPlatStubs = {
     Tk_TopCoordsToWindow, /* 62 */
     TkMacContainerId, /* 63 */
     TkMacGetHostToplevel, /* 64 */
+    TkMacPreprocessMenu, /* 65 */
 #endif /* MAC_TCL */
 };
 

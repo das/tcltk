@@ -1032,6 +1032,10 @@ declare 64 mac {
     MacDrawable * TkMacGetHostToplevel  (TkWindow *winPtr)
 }
 
+declare 65 mac {
+    void TkMacPreprocessMenu (void)
+}
+
 
 ##############################################################################
 
