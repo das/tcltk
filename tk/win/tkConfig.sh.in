@@ -13,6 +13,8 @@
 #
 # RCS: @(#) $Id$
 
+TK_DLL_FILE="@TK_DLL_FILE@"
+
 # Tk's version number.
 TK_VERSION='@TK_VERSION@'
 TK_MAJOR_VERSION='@TK_MAJOR_VERSION@'
