@@ -82,6 +82,10 @@ MANN_INSTALL_DIR	= $(MAN_INSTALL_DIR)/mann
 # been replaced by the configure script):
 TCL_GENERIC_DIR		= @TCL_SRC_DIR@/generic
 
+# The directory containing the platform specific Tcl sources and headers
+# appropriate for this version of Tk:
+TCL_PLATFORM_DIR	= @TCL_SRC_DIR@/unix
+
 # The directory containing the Tcl library archive file appropriate
 # for this version of Tk:
 TCL_BIN_DIR		= @TCL_BIN_DIR@
@@ -282,7 +286,7 @@ CC			= @CC@
 
 CC_SWITCHES_NO_STUBS = ${CFLAGS} ${CFLAGS_WARNING} ${SHLIB_CFLAGS} \
 -I${UNIX_DIR} -I${GENERIC_DIR} \
--I${BMAP_DIR} -I${TCL_GENERIC_DIR} ${X11_INCLUDES} \
+-I${BMAP_DIR} -I${TCL_GENERIC_DIR} -I${TCL_PLATFORM_DIR} ${X11_INCLUDES} \
 ${AC_FLAGS} ${PROTO_FLAGS} \
 ${SECURITY_FLAGS} ${MEM_DEBUG_FLAGS} ${KEYSYM_FLAGS} ${NO_DEPRECATED_FLAGS}
 
@@ -290,7 +294,7 @@ CC_SWITCHES = ${CC_SWITCHES_NO_STUBS} ${TCL_STUB_FLAGS}
 
 DEPEND_SWITCHES = ${CFLAGS} -I${UNIX_DIR} -I${GENERIC_DIR} \
 -I${BMAP_DIR} \
--I${TCL_GENERIC_DIR} ${X11_INCLUDES} \
+-I${TCL_GENERIC_DIR} -I${TCL_PLATFORM_DIR} ${X11_INCLUDES} \
 ${AC_FLAGS} ${PROTO_FLAGS} ${SECURITY_FLAGS} ${MEM_DEBUG_FLAGS} \
 ${KEYSYM_FLAGS}
 
