@@ -517,7 +517,7 @@ test entry-3.81 {EntryWidgetCmd procedure, "xview" widget command} {
     lappend x [.e xview]
     .e xview moveto .12
     lappend x [.e xview]
-} {{0.0957447 0.308511} {0.106383 0.319149} {0.117021 0.351064}}
+} {{0.0957447 0.308511} {0.106383 0.319149} {0.117021 0.329787}}
 test entry-3.82 {EntryWidgetCmd procedure} {
     list [catch {.e gorp} msg] $msg
 } {1 {bad option "gorp": must be bbox, cget, configure, delete, get, icursor, index, insert, scan, selection, or xview}}
