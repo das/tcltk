@@ -354,5 +354,3 @@ XKeysymToString(keysym)
 {
     return NULL;
 }
-
-
