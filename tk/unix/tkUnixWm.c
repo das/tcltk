@@ -424,7 +424,7 @@ TkWmNewWindow(winPtr)
     wmPtr->clientMachine = NULL;
     wmPtr->flags = WM_NEVER_MAPPED;
     wmPtr->nextPtr = (WmInfo *) dispPtr->firstWmPtr;
-    (WmInfo *) dispPtr->firstWmPtr = wmPtr;
+    dispPtr->firstWmPtr = wmPtr;
     winPtr->wmInfoPtr = wmPtr;
 
     UpdateVRootGeometry(wmPtr);
@@ -630,7 +630,7 @@ TkWmDeadWindow(winPtr)
 	return;
     }
     if ((WmInfo *) winPtr->dispPtr->firstWmPtr == wmPtr) {
-	(WmInfo *) winPtr->dispPtr->firstWmPtr = wmPtr->nextPtr;
+	winPtr->dispPtr->firstWmPtr = wmPtr->nextPtr;
     } else {
 	register WmInfo *prevPtr;
 
