@@ -879,6 +879,7 @@ TkStubs tkStubs = {
     Tk_SetClassProcs, /* 242 */
     Tk_SetInternalBorderEx, /* 243 */
     Tk_SetMinimumRequestSize, /* 244 */
+    Tk_SetCaretPos, /* 245 */
 };
 
 /* !END!: Do not edit above this line. */

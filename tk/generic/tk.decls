@@ -1158,6 +1158,12 @@ declare 244 generic {
             int minWidth, int minHeight)
 }
 
+# New in 8.4a5
+#
+declare 245 generic {
+    void Tk_SetCaretPos (Tk_Window tkwin, int x, int y, int height)
+}
+
 # Define the platform specific public Tk interface.  These functions are
 # only available on the designated platform.
 
