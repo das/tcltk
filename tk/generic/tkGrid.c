@@ -1973,18 +1973,15 @@ Unlink(slavePtr)
     register Gridder *slavePtr;		/* Window to unlink. */
 {
     register Gridder *masterPtr, *slavePtr2;
-    GridMaster *gridPtr;	/* pointer to grid data */
 
     masterPtr = slavePtr->masterPtr;
     if (masterPtr == NULL) {
 	return;
     }
 
-    gridPtr = masterPtr->masterDataPtr;
     if (masterPtr->slavePtr == slavePtr) {
 	masterPtr->slavePtr = slavePtr->nextPtr;
-    }
-    else {
+    } else {
 	for (slavePtr2 = masterPtr->slavePtr; ; slavePtr2 = slavePtr2->nextPtr) {
 	    if (slavePtr2 == NULL) {
 		panic("Unlink couldn't find previous window");
@@ -2003,9 +2000,7 @@ Unlink(slavePtr)
 	*masterPtr->abortPtr = 1;
     }
 
-    if ((slavePtr->numCols+slavePtr->column == gridPtr->columnMax)
-	    || (slavePtr->numRows+slavePtr->row == gridPtr->rowMax)) {
-    }
+    SetGridSize(slavePtr->masterPtr);
     slavePtr->masterPtr = NULL;
 }
 
