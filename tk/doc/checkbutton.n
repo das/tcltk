@@ -16,14 +16,14 @@ checkbutton \- Create and manipulate checkbutton widgets
 .SH SYNOPSIS
 \fBcheckbutton\fI pathName \fR?\fIoptions\fR?
 .SO
-\-activebackground	\-font	\-pady
-\-activeforeground	\-foreground	\-relief
-\-anchor	\-highlightbackground	\-takefocus
-\-background	\-highlightcolor	\-text
-\-bitmap	\-highlightthickness	\-textvariable
-\-borderwidth	\-image	\-underline
+\-activebackground	\-disabledforeground	\-padx
+\-activeforeground	\-font	\-pady
+\-anchor	\-foreground	\-relief
+\-background	\-highlightbackground	\-takefocus
+\-bitmap	\-highlightcolor	\-text
+\-borderwidth	\-highlightthickness	\-textvariable
+\-compound	\-image	\-underline
 \-cursor	\-justify	\-wraplength
-\-disabledforeground	\-padx
 .SE
 .SH "WIDGET-SPECIFIC OPTIONS"
 .OP \-command command Command
