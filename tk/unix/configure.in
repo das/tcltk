@@ -35,16 +35,6 @@ AC_HAVE_HEADERS(unistd.h limits.h)
 
 SC_ENABLE_THREADS
 
-#------------------------------------------------------------------------
-# Set the warning flags depending on whether or not we are using gcc
-#------------------------------------------------------------------------
-
-if test "${GCC}" = "yes" ; then
-    CFLAGS_WARNING="-Wall -Wconversion -Wno-implicit-int"
-else
-    CFLAGS_WARNING=""
-fi
-
 #------------------------------------------------------------------------------
 # If we're using GCC, see if the compiler understands -pipe.  If so, use it.
 # It makes compiling go faster.  (This is only a performance feature.)
@@ -427,10 +417,7 @@ AC_SUBST(TCL_STUB_FLAGS)
 AC_SUBST(TK_BUILD_EXP_FILE)
 AC_SUBST(TK_EXP_FILE)
 
-AC_SUBST(CFLAGS_DEBUG)
 AC_SUBST(CFLAGS_DEFAULT)
-AC_SUBST(CFLAGS_OPTIMIZE)
-AC_SUBST(CFLAGS_WARNING)
 AC_SUBST(TK_DBGX)
 AC_SUBST(DL_LIBS)
 AC_SUBST(EXTRA_CFLAGS)

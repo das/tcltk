@@ -943,7 +943,6 @@ dist:   $(UNIX_DIR)/configure
 	cp $(UNIX_DIR)/configure $(UNIX_DIR)/configure.in \
 		$(UNIX_DIR)/aclocal.m4 \
 		$(UNIX_DIR)/tkConfig.sh.in $(TCLDIR)/unix/install-sh \
-		$(UNIX_DIR)/porting.notes $(UNIX_DIR)/porting.old \
 		$(UNIX_DIR)/README $(DISTDIR)/unix
 	chmod 775 $(DISTDIR)/unix/configure $(DISTDIR)/unix/configure.in
 	chmod +x $(DISTDIR)/unix/install-sh
