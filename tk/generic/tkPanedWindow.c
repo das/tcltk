@@ -418,8 +418,8 @@ Tk_PanedWindowObjCmd(clientData, interp, objc, objv)
 	    (ClientData) pwPtr);
     
     if (ConfigurePanedWindow(interp, pwPtr, objc - 2, objv + 2) != TCL_OK) {
-	Tk_DestroyWindow(pwPtr->tkwin);
 	Tk_DestroyWindow(pwPtr->proxywin);
+	Tk_DestroyWindow(pwPtr->tkwin);
 	ckfree((char *) pwPtr);
 	return TCL_ERROR;
     }
@@ -1309,8 +1309,8 @@ PanedWindowCmdDeletedProc(clientData)
      */
 
     if (!(pwPtr->flags & WIDGET_DELETED)) {
-	Tk_DestroyWindow(pwPtr->tkwin);
 	Tk_DestroyWindow(pwPtr->proxywin);
+	Tk_DestroyWindow(pwPtr->tkwin);
     }
 }
 
