@@ -1934,6 +1934,13 @@ DestroyCanvas(memPtr)
     TagSearchExpr *expr, *next;
 #endif
 
+    if (canvasPtr->tkwin != NULL) {
+      Tcl_DeleteCommandFromToken(canvasPtr->interp, canvasPtr->widgetCmd);
+    }
+    if (canvasPtr->flags & REDRAW_PENDING) {
+      Tcl_CancelIdleCall(DisplayCanvas, (ClientData) canvasPtr);
+    }
+
     /*
      * Free up all of the items in the canvas.
      */
@@ -2440,16 +2447,7 @@ CanvasEventProc(clientData, eventPtr)
 	    canvasPtr->flags |= REDRAW_BORDERS;
 	}
     } else if (eventPtr->type == DestroyNotify) {
-	if (canvasPtr->tkwin != NULL) {
-	    canvasPtr->tkwin = NULL;
-	    Tcl_DeleteCommandFromToken(canvasPtr->interp,
-		    canvasPtr->widgetCmd);
-	}
-	if (canvasPtr->flags & REDRAW_PENDING) {
-	    Tcl_CancelIdleCall(DisplayCanvas, (ClientData) canvasPtr);
-	}
-	Tcl_EventuallyFree((ClientData) canvasPtr,
-		(Tcl_FreeProc *) DestroyCanvas);
+	DestroyCanvas((char *) canvasPtr);
     } else if (eventPtr->type == ConfigureNotify) {
 	canvasPtr->flags |= UPDATE_SCROLLBARS;
 

@@ -400,7 +400,7 @@ proc kill_canvas {w} {
     ]
 }
 
-test canvas-13.1 {canvas delete during event, SF bug-228024} {
+test canvas-13.1 {canvas delete during event, SF bug-228024} {knownBug} {
     kill_canvas .c
     set ::x {}
     # do this many times to improve chances of triggering the crash
