@@ -11,6 +11,9 @@ INSTALL_ROOT	?=
 
 BUILD_DIR	?= ${CURDIR}/../../build
 
+TCL_FRAMEWORK_DIR	?= ${BUILD_DIR}
+TCLSH_DIR	?= ${TCL_FRAMEWORK_DIR}
+
 TARGET		= Wish
 
 DEVBUILDSTYLE	= Development
@@ -18,7 +21,8 @@ DEPBUILDSTYLE	= Deployment
 
 PBXBUILD	= /usr/bin/pbxbuild
 
-BUILD		= ${PBXBUILD} SYMROOT="${BUILD_DIR}" -target "${TARGET}"
+BUILD		= ${PBXBUILD} SYMROOT="${BUILD_DIR}" -target "${TARGET}" \
+			  TCL_FRAMEWORK_DIR="${TCL_FRAMEWORK_DIR}" TCLSH_DIR="${TCLSH_DIR}"
 
 DEVBUILD	= ${BUILD} -buildstyle "${DEVBUILDSTYLE}"
 DEPBUILD	= ${BUILD} -buildstyle "${DEPBUILDSTYLE}"
@@ -89,7 +93,7 @@ cleanup-embedded:
 
 .PHONY: all install embedded clean develop deploy install-develop install-deploy \
 embedded-develop embedded-deploy install-embedded-develop install-embedded-deploy \
-clean-develop clean-deploy forceRelinkTcl \
+clean-develop clean-deploy forceRelink \
 cleanup-embedded
 
 ################################################################################
