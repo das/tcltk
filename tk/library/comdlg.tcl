@@ -279,6 +279,15 @@ proc ::tk::FDGetFileTypes {string} {
 	    continue
 	}
 
+	# Validate each macType.  This is to agree with the 
+	# behaviour of TkGetFileFilters().  This list may be
+	# empty.
+	foreach macType [lindex $t 2] {
+	    if {[string length $macType] != 4} {
+		error "bad Macintosh file type \"$macType\""
+	    }
+	}
+	
 	set name "$label ("
 	set sep ""
 	set doAppend 1
