@@ -1279,7 +1279,18 @@ test unixWm-37.3 {Tk_WmCmd procedure, "transient" option} {unixOnly} {
     destroy .t2
     set result
 } {{} {} .t 0 {} 0x0}
-test unixWm-37.4 {Tk_WmCmd procedure, "transient" option, create master wrapper} {unixOnly} {
+test unixWm-37.4 {TkWmDeadWindow, destroy on master should clear transient} {unixOnly} {
+    catch {destroy .t2}
+    toplevel .t2
+    catch {destroy .t3}
+    toplevel .t3
+    wm transient .t2 .t3
+    update
+    destroy .t3
+    update
+    list [wm transient .t2] [testprop [testwrapper .t2] WM_TRANSIENT_FOR]
+} {{} 0x0}
+test unixWm-37.5 {Tk_WmCmd procedure, "transient" option, create master wrapper} {unixOnly} {
     catch {destroy .t2}
     catch {destroy .t3}
     toplevel .t2 -width 120 -height 300
