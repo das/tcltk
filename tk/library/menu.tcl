@@ -920,8 +920,7 @@ proc ::tk::MenuFind {w char} {
 
     foreach child $windowlist {
 	# Don't descend into other toplevels.
-        if {[string compare [winfo toplevel [focus]] \
-		[winfo toplevel $child]]} {
+        if {[string compare [winfo toplevel $w] [winfo toplevel $child]]} {
 	    continue
 	}
 	if {[string equal [winfo class $child] "Menu"] && \
@@ -948,8 +947,7 @@ proc ::tk::MenuFind {w char} {
 
     foreach child $windowlist {
 	# Don't descend into other toplevels.
-        if {[string compare [winfo toplevel [focus]] \
-		[winfo toplevel $child]]} {
+        if {[string compare [winfo toplevel $w] [winfo toplevel $child]]} {
 	    continue
 	}
 	switch [winfo class $child] {
