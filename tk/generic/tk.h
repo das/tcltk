@@ -681,6 +681,9 @@ typedef struct {
     unsigned int state;	    /* key or button mask */
     Tk_Uid name;	    /* Name of virtual event. */
     Bool same_screen;	    /* same screen flag */
+    Tcl_Obj *user_data;     /* application-specific data reference; Tk will
+			     * decrement the reference count *once* when it
+			     * has finished processing the event. */
 } XVirtualEvent;
 
 typedef struct {
