@@ -854,7 +854,7 @@ test text-19.3 {TkTextLostSelection procedure} {
 .t insert end "xxyz xyz x. the\nfoo -forward bar xxxxx BaR foo\nxyz xxyzx"
 test text-20.1 {TextSearchCmd procedure, argument parsing} {
     list [catch {.t search -} msg] $msg
-} {1 {bad switch "-": must be -forward, -backward, -exact, -regexp, -nocase, -count, -hidden, or --}}
+} {1 {bad switch "-": must be -forward, -backward, -exact, -regexp, -nocase, -count, -elide, or --}}
 test text-20.2 {TextSearchCmd procedure, -backwards option} {
     .t search -backwards xyz 1.4
 } {1.1}
