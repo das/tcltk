@@ -65,7 +65,7 @@ static Tcl_ObjType borderObjType = {
 /*
  *----------------------------------------------------------------------
  *
- * Tk_AllocBorderFromObj --
+ * Tk_Alloc3DBorderFromObj --
  *
  *	Given a Tcl_Obj *, map the value to a corresponding
  *	Tk_3DBorder structure based on the tkwin given.
