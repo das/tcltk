@@ -99,7 +99,7 @@ static TkCmd commands[] = {
 
     {"bell",		NULL,			Tk_BellObjCmd,		0, 1},
     {"bind",		Tk_BindCmd,		NULL,			1, 1},
-    {"bindtags",	Tk_BindtagsCmd,		NULL,			1, 1},
+    {"bindtags",	NULL,			Tk_BindtagsObjCmd,	1, 1},
     {"clipboard",	NULL,			Tk_ClipboardObjCmd,	0, 1},
     {"destroy",		NULL,			Tk_DestroyObjCmd,	1, 1},
     {"event",		NULL,			Tk_EventObjCmd,		1, 1},

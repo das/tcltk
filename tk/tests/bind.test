@@ -84,10 +84,10 @@ test bind-1.10 {bind command} {
 
 test bind-2.1 {bindtags command} {
     list [catch {bindtags} msg] $msg
-} {1 {wrong # args: should be "bindtags window ?tags?"}}
+} {1 {wrong # args: should be "bindtags window ?taglist?"}}
 test bind-2.2 {bindtags command} {
     list [catch {bindtags a b c} msg] $msg
-} {1 {wrong # args: should be "bindtags window ?tags?"}}
+} {1 {wrong # args: should be "bindtags window ?taglist?"}}
 test bind-2.3 {bindtags command} {
     list [catch {bindtags .foo} msg] $msg
 } {1 {bad window path name ".foo"}}
