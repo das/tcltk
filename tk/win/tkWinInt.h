@@ -193,7 +193,13 @@ EXTERN TkWinProcs *tkWinProcs;
 #undef TCL_STORAGE_CLASS
 #define TCL_STORAGE_CLASS DLLIMPORT
 
+/*
+ * The following allows us to cache these encoding for multiple functions.
+ */
+
+
 extern Tcl_Encoding TkWinGetKeyInputEncoding _ANSI_ARGS_((void));
+extern Tcl_Encoding TkWinGetUnicodeEncoding _ANSI_ARGS_((void));
 
 #endif /* _TKWININT */
 

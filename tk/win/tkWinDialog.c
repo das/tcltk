@@ -495,7 +495,6 @@ GetFileNameW(clientData, interp, objc, objv, open)
     int open;			/* 1 to call GetOpenFileName(), 0 to 
 				 * call GetSaveFileName(). */
 {
-    Tcl_Encoding unicodeEncoding = Tcl_GetEncoding(NULL, "unicode");
     OPENFILENAMEW ofn;
     WCHAR file[TK_MULTI_MAX_PATH];
     int result, winCode, oldMode, i, multi = 0;
@@ -504,6 +503,7 @@ GetFileNameW(clientData, interp, objc, objv, open)
     HWND hWnd;
     Tcl_DString utfFilterString, utfDirString;
     Tcl_DString extString, filterString, dirString, titleString;
+    Tcl_Encoding unicodeEncoding = TkWinGetUnicodeEncoding();
     ThreadSpecificData *tsdPtr = (ThreadSpecificData *) 
             Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
     static CONST char *saveOptionStrings[] = {
@@ -2424,13 +2424,13 @@ Tk_MessageBoxObjCmd(clientData, interp, objc, objv)
     int objc;			/* Number of arguments. */
     Tcl_Obj *CONST objv[];	/* Argument objects. */
 {
-    Tcl_Encoding unicodeEncoding = Tcl_GetEncoding(NULL, "unicode");
     Tk_Window tkwin, parent;
     HWND hWnd;
     char *message, *title;
     int defaultBtn, icon, type;
     int i, oldMode, flags, winCode;
     Tcl_DString messageString, titleString;
+    Tcl_Encoding unicodeEncoding = TkWinGetUnicodeEncoding();
     static CONST char *optionStrings[] = {
 	"-default",	"-icon",	"-message",	"-parent",
 	"-title",	"-type",	NULL

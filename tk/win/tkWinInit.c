@@ -124,8 +124,8 @@ TkpDisplayWarning(msg, title)
     CONST char *msg;		/* Message to be displayed. */
     CONST char *title;		/* Title of warning. */
 {
-    Tcl_Encoding unicodeEncoding = Tcl_GetEncoding(NULL, "unicode");
     Tcl_DString msgString, titleString;
+    Tcl_Encoding unicodeEncoding = TkWinGetUnicodeEncoding();
 
     Tcl_UtfToExternalDString(unicodeEncoding, msg, -1, &msgString);
     Tcl_UtfToExternalDString(unicodeEncoding, title, -1, &titleString);
