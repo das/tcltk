@@ -480,7 +480,12 @@ Tk_InitOptions(interp, recordPtr, optionTable, tkwin)
     for (optionPtr = tablePtr->options, count = tablePtr->numOptions;
 	    count > 0; optionPtr++, count--) {
 
-	if (optionPtr->specPtr->type == TK_OPTION_SYNONYM) {
+	/*
+	 * If we specify TK_OPTION_DONT_SET_DEFAULT, then the user has
+	 * processed and set a default for this already.
+	 */
+	if ((optionPtr->specPtr->type == TK_OPTION_SYNONYM) ||
+		(optionPtr->specPtr->flags & TK_OPTION_DONT_SET_DEFAULT)) {
 	    continue;
 	}
 	source = TABLE_DEFAULT;
@@ -503,7 +508,6 @@ Tk_InitOptions(interp, recordPtr, optionTable, tkwin)
 	/*
 	 * Second, check for a system-specific default value.
 	 */
-
 	if ((valuePtr == NULL)
 		&& (optionPtr->dbNameUID != NULL)) {
 	    valuePtr = TkpGetSystemDefault(tkwin, optionPtr->dbNameUID,
