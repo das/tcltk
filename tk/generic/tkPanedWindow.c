@@ -1518,14 +1518,21 @@ PanedWindowReqProc(clientData, tkwin)
     Tk_Window tkwin;		/* Other Tk-related information
 				 * about the window. */
 {
-    Slave *panePtr = (Slave *) clientData;
-    PanedWindow *pwPtr = (PanedWindow *) (panePtr->masterPtr);
+    Slave *slavePtr = (Slave *) clientData;
+    PanedWindow *pwPtr = (PanedWindow *) (slavePtr->masterPtr);
     if (Tk_IsMapped(pwPtr->tkwin)) {
 	if (!(pwPtr->flags & RESIZE_PENDING)) {
 	    pwPtr->flags |= RESIZE_PENDING;
 	    Tcl_DoWhenIdle(ArrangePanes, (ClientData) pwPtr);
 	}
     } else {
+	int doubleBw = 2 * Tk_Changes(slavePtr->tkwin)->border_width;
+	if (slavePtr->width <= 0) {
+	    slavePtr->paneWidth = Tk_ReqWidth(slavePtr->tkwin) + doubleBw;
+	}
+	if (slavePtr->height <= 0) {
+	    slavePtr->paneHeight = Tk_ReqHeight(slavePtr->tkwin) + doubleBw;
+	}
 	ComputeGeometry(pwPtr);
     }
 }
