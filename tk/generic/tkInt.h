@@ -478,7 +478,6 @@ typedef struct TkDisplay {
      */
     int mouseButtonState;	/* current mouse button state for this
 				 * display */
-    int warpInProgress;
     Window warpWindow;
     int warpX;
     int warpY;
@@ -495,18 +494,21 @@ typedef struct TkDisplay {
  * Flag values for TkDisplay flags.
  *  TK_DISPLAY_COLLAPSE_MOTION_EVENTS:	(default on)
  *	Indicates that we should collapse motion events on this display
- *  TK_DISPLAY_USE_IM:			(default on)
+ *  TK_DISPLAY_USE_IM:			(default on, set via tk.tcl)
  *	Whether to use input methods for this display
  *  TK_DISPLAY_XIM_SPOT:		(default off)
  *	Indicates that we should use over-the-spot XIM on this display
  *  TK_DISPLAY_WM_TRACING:		(default off)
  *	Whether we should do wm tracing on this display.
+ *  TK_DISPLAY_IN_WARP:			(default off)
+ *	Indicates that we are in a pointer warp
  */
 
 #define TK_DISPLAY_COLLAPSE_MOTION_EVENTS	(1 << 0)
 #define TK_DISPLAY_USE_IM			(1 << 1)
 #define TK_DISPLAY_XIM_SPOT			(1 << 2)
 #define TK_DISPLAY_WM_TRACING			(1 << 3)
+#define TK_DISPLAY_IN_WARP			(1 << 4)
 
 /*
  * One of the following structures exists for each error handler

@@ -3792,9 +3792,9 @@ HandleEventGenerate(interp, mainWin, objc, objv)
     if ((warp != 0) && Tk_IsMapped(tkwin)) {
 	TkDisplay *dispPtr;
 	dispPtr = TkGetDisplay(event.xmotion.display);
-	if (!dispPtr->warpInProgress) {
+	if (!(dispPtr->flags & TK_DISPLAY_IN_WARP)) {
 	    Tcl_DoWhenIdle(DoWarp, (ClientData) dispPtr);
-	    dispPtr->warpInProgress = 1;
+	    dispPtr->flags |= TK_DISPLAY_IN_WARP;
 	}
 	dispPtr->warpWindow = event.xany.window;
 	dispPtr->warpX = event.xkey.x;
@@ -3863,7 +3863,7 @@ DoWarp(clientData)
     XWarpPointer(dispPtr->display, (Window) None, (Window) dispPtr->warpWindow,
                      0, 0, 0, 0, (int) dispPtr->warpX, (int) dispPtr->warpY);
     XForceScreenSaver(dispPtr->display, ScreenSaverReset);
-    dispPtr->warpInProgress = 0;
+    dispPtr->flags &= ~TK_DISPLAY_IN_WARP;
 }
 
 /*
