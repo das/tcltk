@@ -1093,10 +1093,12 @@ ImgPhotoCmd(clientData, interp, objc, objv)
 	}
         if (Tcl_SetChannelOption(interp, chan, "-translation", "binary")
 		!= TCL_OK) {
+	    Tcl_Close(NULL, chan);
             return TCL_ERROR;
         }
         if (Tcl_SetChannelOption(interp, chan, "-encoding", "binary")
 		!= TCL_OK) {
+	    Tcl_Close(NULL, chan);
             return TCL_ERROR;
         }
     
@@ -1710,10 +1712,12 @@ ImgPhotoConfigureMaster(interp, masterPtr, objc, objv, flags)
 	}
         if (Tcl_SetChannelOption(interp, chan, "-translation", "binary")
 		!= TCL_OK) {
+	    Tcl_Close(NULL, chan);
             return TCL_ERROR;
         }
         if (Tcl_SetChannelOption(interp, chan, "-encoding", "binary")
 		!= TCL_OK) {
+	    Tcl_Close(NULL, chan);
             return TCL_ERROR;
         }
 	if (MatchFileFormat(interp, chan, masterPtr->fileString,

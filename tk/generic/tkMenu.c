@@ -2716,7 +2716,10 @@ CloneMenu(menuPtr, newMenuNamePtr, newMenuTypePtr)
    	    		== 0) {
    	    	    Tcl_Obj *newElementPtr = Tcl_NewStringObj(
    	    	    	    Tk_PathName(newMenuPtr->masterMenuPtr->tkwin), -1);
-		    Tcl_IncrRefCount(newElementPtr);
+		    /* 
+		     * The newElementPtr will have its refCount incremented
+		     * here, so we don't need to worry about it any more.
+		     */
    	    	    Tcl_ListObjReplace(menuPtr->interp, bindingsPtr,
    	    	    	    i + 1, 0, 1, &newElementPtr);
    	    	    newArgv[2] = Tcl_GetStringFromObj(bindingsPtr, NULL);

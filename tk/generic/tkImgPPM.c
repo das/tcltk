@@ -274,10 +274,12 @@ FileWritePPM(interp, fileName, formatString, blockPtr)
 
     if (Tcl_SetChannelOption(interp, chan, "-translation", "binary")
 	    != TCL_OK) {
+	Tcl_Close(NULL, chan);
 	return TCL_ERROR;
     }
     if (Tcl_SetChannelOption(interp, chan, "-encoding", "binary")
 	    != TCL_OK) {
+	Tcl_Close(NULL, chan);
 	return TCL_ERROR;
     }
     
