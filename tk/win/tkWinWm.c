@@ -18,11 +18,13 @@
 #include "tkWinInt.h"
 #include <shellapi.h>
 
-#ifndef WS_EX_LAYERED
 /*
- * This is only valid on Win2K/XP+.
+ * These next two defines are only valid on Win2K/XP+.
  */
+#ifndef WS_EX_LAYERED
 #define WS_EX_LAYERED	0x00080000
+#endif
+#ifndef LWA_ALPHA
 #define LWA_ALPHA	0x00000002
 #endif
 
