@@ -1182,7 +1182,7 @@ TkWinGetIcon(Tk_Window tkwin, DWORD iconsize)
     if (icon == (HICON) NULL) {
 #ifdef _WIN64
 	icon = (HICON) GetClassLongPtr(wmPtr->wrapper,
-		(iconsize == ICON_BIG) ? GCLP_HICON : GCLP_ICONSM);
+		(iconsize == ICON_BIG) ? GCLP_HICON : GCLP_HICONSM);
 #else
 	icon = (HICON) GetClassLong(wmPtr->wrapper,
 		(iconsize == ICON_BIG) ? GCL_HICON : GCL_HICONSM);
