@@ -248,6 +248,30 @@ test winWm-6.3 {wm attributes} {pcOnly} {
 
 destroy .t
 
+test winWm-6.1 {deiconify on an unmapped toplevel
+        will raise the window and set the focus} {pcOnly} {
+    destroy .t
+    toplevel .t
+    lower .t
+    focus -force .
+    wm deiconify .t
+    update
+    list [wm stackorder .t isabove .] [focus]
+} {1 .t}
+
+test winWm-6.2 {deiconify on an already mapped toplevel
+        will raise the window and set the focus} {pcOnly} {
+    destroy .t
+    toplevel .t
+    lower .t
+    update
+    focus -force .
+    wm deiconify .t
+    update
+    list [wm stackorder .t isabove .] [focus]
+} {1 .t}
+
+
 # cleanup
 ::tcltest::cleanupTests
 return
