@@ -309,7 +309,10 @@ FileReadGIF(interp, chan, fileName, format, imageHandle, destX, destY,
 	return TCL_OK;
     }
 
-    Tk_PhotoExpand(imageHandle, destX + width, destY + height);
+    if (Tk_PhotoExpand(interp, imageHandle,
+	    destX + width, destY + height) != TCL_OK) {
+	return TCL_ERROR;
+    }
 
     block.width = width;
     block.height = height;
@@ -474,8 +477,10 @@ FileReadGIF(interp, chan, fileName, format, imageHandle, destX, destY,
 	break;
     }
 
-    Tk_PhotoPutBlock(imageHandle, &block, destX, destY, width, height,
-	    TK_PHOTO_COMPOSITE_SET);
+    if (Tk_PhotoPutBlock(interp, imageHandle, &block, destX, destY,
+	    width, height, TK_PHOTO_COMPOSITE_SET) != TCL_OK) {
+	goto error;
+    }
 
     noerror:
     /*
