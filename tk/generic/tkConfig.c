@@ -1432,9 +1432,11 @@ Tk_RestoreSavedOptions(savePtr)
 		}
 		case TK_OPTION_CUSTOM: {
 		    Tk_ObjCustomOption *custom = optionPtr->extra.custom;
-		    custom->restoreProc(custom->clientData, savePtr->tkwin,
-			    internalPtr,
-			    (char *)&savePtr->items[i].internalForm);
+		    if (custom->restoreProc != NULL) {
+			custom->restoreProc(custom->clientData, savePtr->tkwin,
+				internalPtr,
+				(char *)&savePtr->items[i].internalForm);
+		    }
 		    break;
 		}
 		default: {
