@@ -339,7 +339,7 @@ tktest: setup $(TKTEST) $(CAT32)
 test:	setup $(TKTEST) $(TKLIB) $(CAT32)
 	set TCL_LIBRARY=$(TCLDIR)/library
 	set PATH=$(TCLDIR)\win\$(TMPDIRNAME);$(PATH)
-	$(TKTEST) $(ROOT)/tests/all.tcl
+	$(TKTEST) $(ROOT)/tests/all.tcl | $(CAT32)
 
 #       copy $(TCLDIR)\bin\pkgIndex.tcl $(OUTDIR)
 
