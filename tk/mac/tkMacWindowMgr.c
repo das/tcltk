@@ -729,6 +729,10 @@ GenerateKeyEvent(
 
     dispPtr = TkGetDisplayList();
     tkwin = Tk_IdToWindow(dispPtr->display, window);
+    
+    if (tkwin == NULL) {
+        return false;
+    }
     tkwin = (Tk_Window) ((TkWindow *) tkwin)->dispPtr->focusPtr;
     if (tkwin == NULL) {
 	return false;
