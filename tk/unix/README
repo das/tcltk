@@ -6,11 +6,11 @@ UNIX versions of Tk.  This directory also contains source files for Tk
 that are specific to UNIX.
 
 The information in this file is maintained at:
-	http://dev.scriptics.com/doc/howto/compile.html
+	http://www.tcl-tk.net/doc/howto/compile.html
 
 For information on platforms where Tcl/Tk is known to compile, along
 with any porting notes for getting it to work on those platforms, see:
-	http://dev.scriptics.com/software/tcltk/platforms.html
+	http://www.tcl-tk.net/software/tcltk/platforms.html
 
 The rest of this file contains instructions on how to do this.  The
 release should compile and run either "out of the box" or with trivial
@@ -25,9 +25,9 @@ RCS: @(#) $Id$
 How To Compile And Install Tk:
 ------------------------------
 
-(a) Make sure that the Tcl 8.4 release is present in the directory
-    ../../tcl8.4 (or else use the "--with-tcl" switch described below). 
-    This release of Tk will only work with Tcl 8.4. Also, be sure that
+(a) Make sure that the Tcl 8.3 release is present in the directory
+    ../../tcl8.3 (or else use the "--with-tcl" switch described below). 
+    This release of Tk will only work with Tcl 8.3. Also, be sure that
     you have configured Tcl before you configure Tk.
 
 (b) Check for patches as described in ../README.
@@ -94,9 +94,9 @@ How To Compile And Install Tk:
     TCL_LIBRARY environment variable as well (see the Tcl README file
     for information on this).  Note that installed versions of wish,
     libtk.a, libtk.so, and the Tk library have a version number in their
-    names, such as "wish8.4" or "libtk8.4.so"; to use the installed
+    names, such as "wish8.3" or "libtk8.3.so"; to use the installed
     versions, either specify the version number or create a symbolic
-    link (e.g. from "wish" to "wish8.4").
+    link (e.g. from "wish" to "wish8.3").
 
 If you have trouble compiling Tk, see the URL noted above about working
 platforms.  It contains information that people have provided about changes
