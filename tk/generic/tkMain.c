@@ -225,6 +225,7 @@ Tk_MainEx(argc, argv, appInitProc, interp)
      */
 
     if (fileName != NULL) {
+	Tcl_ResetResult(interp);
 	code = Tcl_EvalFile(interp, fileName);
 	if (code != TCL_OK) {
 	    /*
