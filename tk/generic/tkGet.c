@@ -548,7 +548,7 @@ Tk_GetScreenMM(interp, tkwin, string, doublePtr)
     Tk_Window tkwin;		/* Window whose screen determines conversion
 				 * from centimeters and other absolute
 				 * units. */
-    char *string;		/* String describing a screen distance. */
+    CONST char *string;		/* String describing a screen distance. */
     double *doublePtr;		/* Place to store converted result. */
 {
     char *end;
@@ -624,7 +624,7 @@ Tk_GetPixels(interp, tkwin, string, intPtr)
     Tk_Window tkwin;		/* Window whose screen determines conversion
 				 * from centimeters and other absolute
 				 * units. */
-    char *string;		/* String describing a number of pixels. */
+    CONST char *string;		/* String describing a number of pixels. */
     int *intPtr;		/* Place to store converted result. */
 {
     double d;

@@ -627,7 +627,7 @@ ConfigureMenuButton(interp, mbPtr, objc, objv)
        * current value.
        */
 
-      char *value;
+      CONST char *value;
 
       value = Tcl_GetVar(interp, mbPtr->textVarName, TCL_GLOBAL_ONLY);
       if (value == NULL) {
@@ -872,7 +872,7 @@ MenuButtonTextVarProc(clientData, interp, name1, name2, flags)
     int flags;			/* Information about what happened. */
 {
     register TkMenuButton *mbPtr = (TkMenuButton *) clientData;
-    char *value;
+    CONST char *value;
 
     /*
      * If the variable is unset, then immediately recreate it unless

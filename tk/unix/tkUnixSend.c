@@ -603,7 +603,7 @@ ValidateName(dispPtr, name, commWindow, oldOK)
     Atom actualType;
     char *property;
     Tk_ErrorHandler handler;
-    char **argv;
+    CONST char **argv;
 
     property = NULL;
 
@@ -1508,7 +1508,7 @@ SendEventProc(clientData, eventPtr)
 		Tcl_DStringAppend(&reply, Tcl_GetStringResult(remoteInterp),
 			-1);
 		if (result == TCL_ERROR) {
-		    char *varValue;
+		    CONST char *varValue;
     
 		    varValue = Tcl_GetVar2(remoteInterp, "errorInfo",
 			    (char *) NULL, TCL_GLOBAL_ONLY);

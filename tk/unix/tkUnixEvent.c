@@ -118,7 +118,7 @@ DisplayExitHandler(clientData)
 
 TkDisplay *
 TkpOpenDisplay(display_name)
-    char *display_name;
+    CONST char *display_name;
 {
     TkDisplay *dispPtr;
     Display *display = XOpenDisplay(display_name);

@@ -250,7 +250,7 @@ TkTextTagCmd(textPtr, interp, argc, argv)
 	    command = Tk_GetBinding(interp, textPtr->bindingTable,
 		    (ClientData) tagPtr, argv[4]);
 	    if (command == NULL) {
-		char *string = Tcl_GetStringResult(interp); 
+		CONST char *string = Tcl_GetStringResult(interp); 
 
 		/*
 		 * Ignore missing binding errors.  This is a special hack
@@ -804,7 +804,7 @@ TkTextTagCmd(textPtr, interp, argc, argv)
 TkTextTag *
 TkTextCreateTag(textPtr, tagName)
     TkText *textPtr;		/* Widget in which tag is being used. */
-    char *tagName;		/* Name of desired tag. */
+    CONST char *tagName;	/* Name of desired tag. */
 {
     register TkTextTag *tagPtr;
     Tcl_HashEntry *hPtr;

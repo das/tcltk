@@ -54,7 +54,7 @@ int
 TkpInit(
     Tcl_Interp *interp)		/* Interp to initialize. */
 {
-    char *libDir, *tempPath;
+    CONST char *libDir, *tempPath;
     Tcl_DString path, ds;
     int result;
 
@@ -115,7 +115,7 @@ tkInit";
     tempPath = TclGetEnv("EXT_FOLDER", &ds);
     if ((tempPath != NULL) && (tempPath[0] != '\0')) {
 	    Tcl_DString libPath;
-	    char *argv[3];
+	    CONST char *argv[3];
 	    
 	    argv[0] = tempPath;
 	    argv[1] = "Tool Command Language";	    
@@ -169,7 +169,7 @@ TkpGetAppName(
     Tcl_DString *namePtr)	/* A previously initialized Tcl_DString. */
 {
     int argc;
-    char **argv = NULL, *name, *p;
+    CONST char **argv = NULL, *name, *p;
     Handle h = NULL;
 
     h = GetNamedResource('STR ', "\pTk App Name");
@@ -222,8 +222,8 @@ TkpGetAppName(
 
 void
 TkpDisplayWarning(
-    char *msg,			/* Message to be displayed. */
-    char *title)		/* Title of warning. */
+    CONST char *msg,		/* Message to be displayed. */
+    CONST char *title)		/* Title of warning. */
 {
     Tcl_DString ds;
     Tcl_DStringInit(&ds);

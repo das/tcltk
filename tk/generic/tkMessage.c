@@ -479,7 +479,7 @@ ConfigureMessage(interp, msgPtr, objc, objv, flags)
      */
 
     if (msgPtr->textVarName != NULL) {
-	char *value;
+	CONST char *value;
 
 	value = Tcl_GetVar(interp, msgPtr->textVarName, TCL_GLOBAL_ONLY);
 	if (value == NULL) {
@@ -852,7 +852,7 @@ MessageTextVarProc(clientData, interp, name1, name2, flags)
     int flags;			/* Information about what happened. */
 {
     register Message *msgPtr = (Message *) clientData;
-    char *value;
+    CONST char *value;
 
     /*
      * If the variable is unset, then immediately recreate it unless

@@ -1872,7 +1872,7 @@ ParseArrowShape(clientData, interp, tkwin, value, recordPtr, offset)
     LineItem *linePtr = (LineItem *) recordPtr;
     double a, b, c;
     int argc;
-    char **argv = NULL;
+    CONST char **argv = NULL;
 
     if (offset != Tk_Offset(LineItem, arrowShapeA)) {
 	panic("ParseArrowShape received bogus offset");

@@ -111,7 +111,7 @@ TkGetCursorByName(interp, tkwin, string)
     }
     if (string[0] == '@') {
 	int argc;
-	char **argv = NULL;
+	CONST char **argv = NULL;
 	if (Tcl_SplitList(interp, string, &argc, &argv) != TCL_OK) {
 	    return NULL;
 	}

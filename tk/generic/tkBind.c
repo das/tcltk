@@ -2941,7 +2941,7 @@ DeleteVirtualEvent(interp, vetPtr, virtString, eventString)
 	eventPSPtr = FindSequence(interp, &vetPtr->patternTable, NULL,
 		eventString, 0, 0, &eventMask);
 	if (eventPSPtr == NULL) {
-	    char *string;
+	    CONST char *string;
 
 	    string = Tcl_GetStringResult(interp); 
 	    return (string[0] != '\0') ? TCL_ERROR : TCL_OK;

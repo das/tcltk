@@ -2469,7 +2469,7 @@ MenuVarProc(clientData, interp, name1, name2, flags)
 {
     TkMenuEntry *mePtr = (TkMenuEntry *) clientData;
     TkMenu *menuPtr;
-    char *value;
+    CONST char *value;
     char *name = Tcl_GetStringFromObj(mePtr->namePtr, NULL);
     char *onValue;
 

@@ -189,7 +189,7 @@ int
 Tk_CanvasGetCoord(interp, canvas, string, doublePtr)
     Tcl_Interp *interp;		/* Interpreter for error reporting. */
     Tk_Canvas canvas;		/* Canvas to which coordinate applies. */
-    char *string;		/* Describes coordinate (any screen
+    CONST char *string;		/* Describes coordinate (any screen
 				 * coordinate form may be used here). */
     double *doublePtr;		/* Place to store converted coordinate. */
 {
@@ -376,7 +376,7 @@ Tk_CanvasTagsParseProc(clientData, interp, tkwin, value, widgRec, offset)
 {
     register Tk_Item *itemPtr = (Tk_Item *) widgRec;
     int argc, i;
-    char **argv;
+    CONST char **argv;
     Tk_Uid *newPtr;
 
     /*
@@ -454,7 +454,7 @@ Tk_CanvasTagsPrintProc(clientData, tkwin, widgRec, offset, freeProcPtr)
 	return (char *) itemPtr->tagPtr[0];
     }
     *freeProcPtr = TCL_DYNAMIC;
-    return Tcl_Merge(itemPtr->numTags, (char **) itemPtr->tagPtr);
+    return Tcl_Merge(itemPtr->numTags, (CONST char **) itemPtr->tagPtr);
 }
 
 
@@ -777,7 +777,7 @@ Tk_GetDash(interp, value, dash)
 				 * store dash information. */
 {
     int argc, i;
-    char **largv, **argv = NULL;
+    CONST char **largv, **argv = NULL;
     char *pt;
 
     if ((value==(char *) NULL) || (*value==0) ) {

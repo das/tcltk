@@ -90,7 +90,7 @@ int _XInitImageFuncPtrs _ANSI_ARGS_((XImage *image));
 
 TkDisplay *
 TkpOpenDisplay(
-    char *display_name)
+    CONST char *display_name)
 {
     Display *display;
     Screen *screen;
@@ -793,10 +793,10 @@ XCreateIC(
  *----------------------------------------------------------------------
  */
 
-char *
+CONST char *
 TkGetDefaultScreenName(
     Tcl_Interp *interp,		/* Not used. */
-    char *screenName)		/* If NULL, use default string. */
+    CONST char *screenName)	/* If NULL, use default string. */
 {
     if ((screenName == NULL) || (screenName[0] == '\0')) {
 	screenName = macScreenName;

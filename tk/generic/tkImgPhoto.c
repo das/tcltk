@@ -578,8 +578,8 @@ ImgPhotoCmd(clientData, interp, objc, objv)
     int dataWidth, dataHeight;
     struct SubcommandOptions options;
     int listArgc;
-    char **listArgv;
-    char **srcArgv;
+    CONST char **listArgv;
+    CONST char **srcArgv;
     unsigned char *pixelPtr;
     Tk_PhotoImageBlock block;
     Tk_Window tkwin;

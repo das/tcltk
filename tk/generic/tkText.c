@@ -676,7 +676,7 @@ TextWidgetCmd(clientData, interp, argc, argv)
     } else if ((c == 'i') && (strncmp(argv[1], "insert", length) == 0)
 	    && (length >= 3)) {
 	int i, j, numTags;
-	char **tagNames;
+	CONST char **tagNames;
 	TkTextTag **oldTagArrayPtr;
 
 	if (argc < 4) {
@@ -2125,7 +2125,7 @@ TkTextGetTabs(interp, tkwin, string)
 					 * the text manual entry for details. */
 {
     int argc, i, count, c;
-    char **argv;
+    CONST char **argv;
     TkTextTabArray *tabArrayPtr;
     TkTextTab *tabPtr;
     Tcl_UniChar ch;
@@ -2458,7 +2458,7 @@ DumpSegment(interp, key, value, command, index, what)
 	Tcl_AppendElement(interp, buffer);
 	return TCL_OK;
     } else {
-	char *argv[4];
+	CONST char *argv[4];
 	char *list;
 	int result;
 	argv[0] = key;

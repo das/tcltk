@@ -834,7 +834,7 @@ EXTERN int		TkTextDLineInfo _ANSI_ARGS_((TkText *textPtr,
 			    TkTextIndex *indexPtr, int *xPtr, int *yPtr,
 			    int *widthPtr, int *heightPtr, int *basePtr));
 EXTERN TkTextTag *	TkTextCreateTag _ANSI_ARGS_((TkText *textPtr,
-			    char *tagName));
+			    CONST char *tagName));
 EXTERN void		TkTextFreeDInfo _ANSI_ARGS_((TkText *textPtr));
 EXTERN void		TkTextFreeTag _ANSI_ARGS_((TkText *textPtr,
 			    TkTextTag *tagPtr));

@@ -76,7 +76,7 @@ TkpGetAppName(interp, namePtr)
     Tcl_DString *namePtr;	/* A previously initialized Tcl_DString. */
 {
     int argc;
-    char **argv = NULL, *name, *p;
+    CONST char **argv = NULL, *name, *p;
 
     name = Tcl_GetVar(interp, "argv0", TCL_GLOBAL_ONLY);
     if (name != NULL) {
@@ -119,8 +119,8 @@ TkpGetAppName(interp, namePtr)
 
 void
 TkpDisplayWarning(msg, title)
-    char *msg;			/* Message to be displayed. */
-    char *title;		/* Title of warning. */
+    CONST char *msg;		/* Message to be displayed. */
+    CONST char *title;		/* Title of warning. */
 {
     Tcl_Encoding unicodeEncoding = Tcl_GetEncoding(NULL, "unicode");
     Tcl_DString msgString, titleString;

@@ -470,7 +470,8 @@ TkCanvPostscriptCmd(canvasPtr, interp, argc, argv)
     int result;
     Tk_Item *itemPtr;
 #define STRING_LENGTH 400
-    char string[STRING_LENGTH+1], *p;
+    char string[STRING_LENGTH+1];
+    CONST char *p;
     time_t now;
     size_t length;
     Tk_Window tkwin = canvasPtr->tkwin;
@@ -967,7 +968,7 @@ Tk_PostscriptColor(interp, psInfo, colorPtr)
      */
 
     if (psInfoPtr->colorVar != NULL) {
-	char *cmdString;
+	CONST char *cmdString;
 
 	cmdString = Tcl_GetVar2(interp, psInfoPtr->colorVar,
 		Tk_NameOfColor(colorPtr), 0);
@@ -1047,9 +1048,10 @@ Tk_PostscriptFont(interp, psInfo, tkfont)
     Tcl_DStringInit(&ds);
     
     if (psInfoPtr->fontVar != NULL) {
-	char *list, **argv;
+	CONST char *list;
 	int argc;
 	double size;
+	CONST char **argv;
 	char *name;
 
 	name = Tk_NameOfFont(tkfont);

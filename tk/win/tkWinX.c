@@ -325,10 +325,10 @@ TkWinGetPlatformId()
  *----------------------------------------------------------------------
  */
 
-char *
+CONST char *
 TkGetDefaultScreenName(interp, screenName)
     Tcl_Interp *interp;		/* Not used. */
-    char *screenName;		/* If NULL, use default string. */
+    CONST char *screenName;	/* If NULL, use default string. */
 {
     if ((screenName == NULL) || (screenName[0] == '\0')) {
 	screenName = winScreenName;
@@ -355,7 +355,7 @@ TkGetDefaultScreenName(interp, screenName)
 
 TkDisplay *
 TkpOpenDisplay(display_name)
-    char *display_name;
+    CONST char *display_name;
 {
     Screen *screen;
     HDC dc;

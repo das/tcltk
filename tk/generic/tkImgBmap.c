@@ -498,7 +498,8 @@ TkGetBitmapData(interp, string, fileName, widthPtr, heightPtr,
     int *hotXPtr, *hotYPtr;		/* Position of hot spot or -1,-1. */
 {
     int width, height, numBytes, hotX, hotY;
-    char *p, *end, *expandedFileName;
+    CONST char *expandedFileName;
+    char *p, *end;
     ParseInfo pi;
     char *data = NULL;
     Tcl_DString buffer;

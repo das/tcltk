@@ -154,7 +154,7 @@ TkGetCursorByName(interp, tkwin, string)
     TkUnixCursor *cursorPtr = NULL;
     Cursor cursor = None;
     int argc;
-    char **argv = NULL;
+    CONST char **argv = NULL;
     Pixmap source = None;
     Pixmap mask = None;
     Display *display = Tk_Display(tkwin);
