@@ -20,13 +20,9 @@
 #include <cderr.h>      /* includes the common dialog error codes */
 
 /*
- * The new choose directory dialog is almost ready for prime time, but
- * it has a very long first load time that needs to be checked to see
- * if it can be sped up, as well as checked for cleanup. -- hobbs
- * See Patch #468139
- *
-#define USE_NEW_CHOOSEDIR 1
+ * This controls the use of the new style tk_chooseDirectory dialog.
  */
+#define USE_NEW_CHOOSEDIR 1
 #ifdef USE_NEW_CHOOSEDIR
 #include <shlobj.h>     /* includes SHBrowseForFolder */
 
