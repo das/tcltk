@@ -3,6 +3,8 @@
 //  Base resources needed by Tk whether it's a DLL or a static library.
 //
 
+#include <windows.h>
+
 //
 //  Tk Icon
 //
