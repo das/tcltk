@@ -511,9 +511,9 @@ EXTERN KeySym		TkpGetKeySym _ANSI_ARGS_((TkDisplay * dispPtr,
 				XEvent * eventPtr));
 /* 139 */
 EXTERN void		TkpInitKeymapInfo _ANSI_ARGS_((TkDisplay * dispPtr));
-
 /* 140 */
-EXTERN TkRegion		TkPhotoGetValidRegion _ANSI_ARGS_((Tk_PhotoHandle handle));
+EXTERN TkRegion		TkPhotoGetValidRegion _ANSI_ARGS_((
+				Tk_PhotoHandle handle));
 
 typedef struct TkIntStubs {
     int magic;

@@ -70,7 +70,7 @@ EXTERN void		TkpPrintWindowId _ANSI_ARGS_((char * buf,
 				Window window));
 /* 6 */
 EXTERN int		TkpScanWindowId _ANSI_ARGS_((Tcl_Interp * interp, 
-				char * string, int * idPtr));
+				char * string, Window * idPtr));
 /* 7 */
 EXTERN void		TkpSetCapture _ANSI_ARGS_((TkWindow * winPtr));
 /* 8 */
@@ -315,7 +315,7 @@ typedef struct TkIntPlatStubs {
     unsigned long (*tkpGetMS) _ANSI_ARGS_((void)); /* 3 */
     void (*tkPointerDeadWindow) _ANSI_ARGS_((TkWindow * winPtr)); /* 4 */
     void (*tkpPrintWindowId) _ANSI_ARGS_((char * buf, Window window)); /* 5 */
-    int (*tkpScanWindowId) _ANSI_ARGS_((Tcl_Interp * interp, char * string, int * idPtr)); /* 6 */
+    int (*tkpScanWindowId) _ANSI_ARGS_((Tcl_Interp * interp, char * string, Window * idPtr)); /* 6 */
     void (*tkpSetCapture) _ANSI_ARGS_((TkWindow * winPtr)); /* 7 */
     void (*tkpSetCursor) _ANSI_ARGS_((TkpCursor cursor)); /* 8 */
     void (*tkpWmSetState) _ANSI_ARGS_((TkWindow * winPtr, int state)); /* 9 */

@@ -703,7 +703,7 @@ declare 5 win {
 }
 
 declare 6 win {
-    int TkpScanWindowId (Tcl_Interp *interp, char *string, int *idPtr)
+    int TkpScanWindowId (Tcl_Interp *interp, char *string, Window *idPtr)
 }
 
 declare 7 win {
