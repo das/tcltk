@@ -1083,6 +1083,7 @@ mInit(string, handle)
 {
    handle->data = string;
    handle->state = 0;
+   handle->c = 0;
 }
 
 /*
@@ -1160,7 +1161,7 @@ Mgetc(handle)
 
     if (c>GIF_SPECIAL) {
 	handle->state = GIF_DONE;
-	return(handle->state ? handle->c : GIF_DONE);
+	return handle->c;
     }
 
     switch (handle->state++) {
