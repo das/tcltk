@@ -586,12 +586,11 @@ DrawMenuEntryIndicator(menuPtr, mePtr, d, border, indicatorColor, disableColor,
      */
 
     if ((mePtr->type == CHECK_BUTTON_ENTRY) && mePtr->indicatorOn) {
-	int dim, top, left;
+	int top, left;
 	int activeBorderWidth;
 	int disabled = (mePtr->state == ENTRY_DISABLED);
 	XColor *bg;
 
-	dim = (int) mePtr->platformEntryData;
 	Tk_GetPixelsFromObj(NULL, menuPtr->tkwin,
 		menuPtr->activeBorderWidthPtr, &activeBorderWidth);
 	bg = Tk_3DBorderColor(border);
@@ -609,12 +608,11 @@ DrawMenuEntryIndicator(menuPtr, mePtr, d, border, indicatorColor, disableColor,
      */
 
     if ((mePtr->type == RADIO_BUTTON_ENTRY) && mePtr->indicatorOn) {
-	int dim, top, left;
+	int top, left;
 	int activeBorderWidth;
 	int disabled = (mePtr->state == ENTRY_DISABLED);
 	XColor *bg;
 
-	dim = (int) mePtr->platformEntryData;
 	Tk_GetPixelsFromObj(NULL, menuPtr->tkwin,
 		menuPtr->activeBorderWidthPtr, &activeBorderWidth);
 	bg = Tk_3DBorderColor(border);

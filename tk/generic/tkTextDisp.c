@@ -6120,7 +6120,6 @@ DlineXOfIndex(textPtr, dlPtr, byteIndex)
                                  * coordinate. */
 {
     register TkTextDispChunk *chunkPtr = dlPtr->chunkPtr;
-    TkTextIndex index;
     int x;
     
     if (byteIndex == 0 || chunkPtr == NULL) return 0;
@@ -6130,7 +6129,6 @@ DlineXOfIndex(textPtr, dlPtr, byteIndex)
      * the desired byte index.
      */
 
-    index = dlPtr->index;
     chunkPtr = dlPtr->chunkPtr;
     while (byteIndex > 0) {
 	if (byteIndex < chunkPtr->numBytes) {
