@@ -348,6 +348,7 @@ install-libraries:
 	@mkd "$(INCLUDE_INSTALL_DIR)\X11"
 	copy "$(GENERICDIR)\tk.h"             "$(INCLUDE_INSTALL_DIR)"
 	copy "$(GENERICDIR)\tkDecls.h"        "$(INCLUDE_INSTALL_DIR)"
+	copy "$(GENERICDIR)\tkPlatDecls.h"    "$(INCLUDE_INSTALL_DIR)"
 	copy "$(GENERICDIR)\tkIntXlibDecls.h" "$(INCLUDE_INSTALL_DIR)"
 	xcopy "$(XLIBDIR)\X11\*.h"            "$(INCLUDE_INSTALL_DIR)\X11"
 	@mkd "$(SCRIPT_INSTALL_DIR)"
