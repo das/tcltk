@@ -728,13 +728,13 @@ test unixWm-20.8 {Tk_WmCmd procedure, "grid" option} unix {
 } {1 {expected integer but got "bar"}}
 test unixWm-20.9 {Tk_WmCmd procedure, "grid" option} unix {
     list [catch {wm grid .t 10 11 -2 13} msg] $msg
-} {1 {widthInc can't be < 0}}
+} {1 {widthInc can't be <= 0}}
 test unixWm-20.10 {Tk_WmCmd procedure, "grid" option} unix {
     list [catch {wm grid .t 10 11 12 bogus} msg] $msg
 } {1 {expected integer but got "bogus"}}
 test unixWm-20.11 {Tk_WmCmd procedure, "grid" option} unix {
     list [catch {wm grid .t 10 11 12 -1} msg] $msg
-} {1 {heightInc can't be < 0}}
+} {1 {heightInc can't be <= 0}}
 
 catch {destroy .t}
 catch {destroy .icon}
