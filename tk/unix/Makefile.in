@@ -926,6 +926,7 @@ dist:   $(UNIX_DIR)/configure
 	mkdir $(DISTDIR)/generic
 	cp -p $(GENERIC_DIR)/*.c $(GENERIC_DIR)/*.h $(GENERIC_DIR)/prolog.ps \
 		$(DISTDIR)/generic
+	cp -p $(GENERIC_DIR)/*.decls $(DISTDIR)/generic
 	cp -p $(GENERIC_DIR)/README $(DISTDIR)/generic
 	cp -p $(TOP_DIR)/changes $(TOP_DIR)/README $(TOP_DIR)/license.terms \
 		$(DISTDIR)
