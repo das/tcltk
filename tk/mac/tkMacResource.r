@@ -94,6 +94,8 @@ read 'TEXT' (TK_LIBRARY_RESOURCES+16, "msgbox", purgeable)
 	"::library:msgbox.tcl";
 read 'TEXT' (TK_LIBRARY_RESOURCES+17, "comdlg", purgeable) 
 	"::library:comdlg.tcl";
+read 'TEXT' (TK_LIBRARY_RESOURCES+18, "msgcat", purgeable) 
+	":::tcl:library:msgcat:msgcat.tcl";
 
 
 /*
