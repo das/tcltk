@@ -287,7 +287,7 @@ TkpBuildRegionFromAlphaData(
 
     for (y1 = 0; y1 < height; y1++) {
 	lineDataPtr = dataPtr;
-	for {x1 = 0; x1 < width; x1 = end) {
+	for (x1 = 0; x1 < width; x1 = end) {
 	    /* search for first non-transparent pixel */
 	    while ((x1 < width) && !*lineDataPtr) {
 		x1++;
