@@ -240,6 +240,9 @@ TK_SHLIB_LD_EXTRAS	= @TK_SHLIB_LD_EXTRAS@
 CC_SEARCH_FLAGS	= @CC_SEARCH_FLAGS@
 LD_SEARCH_FLAGS	= @LD_SEARCH_FLAGS@
 
+# support for embedded libraries on Darwin / Mac OS X
+DYLIB_INSTALL_DIR	= ${LIB_RUNTIME_DIR}
+
 #----------------------------------------------------------------
 # The information below is modified by the configure script when
 # Makefile is generated from Makefile.in.  You shouldn't normally
