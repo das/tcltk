@@ -105,6 +105,7 @@ TkpUseWindow(interp, tkwin, string)
 				 * for tkwin;  must be an integer value. */
 {
     TkWindow *winPtr = (TkWindow *) tkwin;
+    TkWindow *usePtr;
     int id, anyError;
     Window parent;
     Tk_ErrorHandler handler;
@@ -120,6 +121,15 @@ TkpUseWindow(interp, tkwin, string)
 	return TCL_ERROR;
     }
     parent = (Window) id;
+
+    usePtr = (TkWindow *) Tk_IdToWindow(winPtr->display, parent);
+    if (usePtr != NULL) {
+	if (!(usePtr->flags & TK_CONTAINER)) {
+	    Tcl_AppendResult(interp, "window \"", usePtr->pathName,
+                    "\" doesn't have -container option set", (char *) NULL);
+	    return TCL_ERROR;
+	}
+    }
 
     /*
      * Tk sets the window colormap to the screen default colormap in

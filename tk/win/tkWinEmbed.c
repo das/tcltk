@@ -148,6 +148,7 @@ TkpUseWindow(interp, tkwin, string)
 				 * for tkwin;  must be an integer value. */
 {
     TkWindow *winPtr = (TkWindow *) tkwin;
+    TkWindow *usePtr;
     int id;
     HWND hwnd;
     Container *containerPtr;
@@ -175,6 +176,15 @@ TkpUseWindow(interp, tkwin, string)
                     "\" doesn't exist", (char *) NULL);
         }
         return TCL_ERROR;
+    }
+
+    usePtr = (TkWindow *) Tk_HWNDToWindow(hwnd);
+    if (usePtr != NULL) {
+        if (!(usePtr->flags & TK_CONTAINER)) {
+	    Tcl_AppendResult(interp, "window \"", usePtr->pathName,
+                    "\" doesn't have -container option set", (char *) NULL);
+	    return TCL_ERROR;
+	}
     }
 
     /*
