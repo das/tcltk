@@ -222,8 +222,8 @@ proc tkCancelRepeat {} {
 
 proc tkTabToWindow {w} {
     if {![string compare [winfo class $w] Entry]} {
-	$w select range 0 end
-	$w icur end
+	$w selection range 0 end
+	$w icursor end
     }
     focus $w
 }

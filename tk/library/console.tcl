@@ -70,7 +70,7 @@ proc tkConsoleInit {} {
 	    -command tkConsoleAbout
     }
 
-    . conf -menu .menubar
+    . configure -menu .menubar
 
     text .console  -yscrollcommand ".sb set" -setgrid true 
     scrollbar .sb -command ".console yview"
