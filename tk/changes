@@ -5311,4 +5311,4 @@ Rewrote Tk test suite to use tcltest package.
 
 2002-09-02 (platfrom support) 64-bit compile on HP-11 (martin)
 
---- Released 8.4.0, September X, 2002 --- See ChangeLog for details ---
+--- Released 8.4.0, September 10, 2002 --- See ChangeLog for details ---
