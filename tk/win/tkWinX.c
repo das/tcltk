@@ -249,6 +249,12 @@ TkWinXInit(hInstance)
     if (!RegisterClass(&childClass)) {
 	panic("Unable to register TkChild class");
     }
+
+    /*
+     * Make sure we cleanup on finalize.
+     */
+    Tcl_CreateExitHandler((Tcl_ExitProc *) TkWinXCleanup,
+	    (ClientData) hInstance);
 }
 
 /*

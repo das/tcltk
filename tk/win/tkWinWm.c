@@ -1680,6 +1680,11 @@ TkWinWmCleanup(hInstance)
     }
 #endif
 
+    if (!initialized) {
+	return;
+    }
+    initialized = 0;
+
     tsdPtr = (ThreadSpecificData *)
             Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
