@@ -101,9 +101,9 @@ test safe-4.1 {testing loadTk} {
     # eventually see a new toplevel
     set i [safe::loadTk [safe::interpCreate]]
     interp eval $i {button .b -text "hello world!"; pack .b}
-# lets don't update because it might impy that the user has
-# to position the window (if the wm does not do it automatically)
-# and thus make the test suite not runable non interactively
+    # lets don't update because it might imply that the user has
+    # to position the window (if the wm does not do it automatically)
+    # and thus make the test suite not runable non interactively
     safe::interpDelete $i
 } {}
 
