@@ -1945,8 +1945,8 @@ test listbox-23.2 {ConfigureListboxItem} {
 	{-bg -background} \
 	{-fg -foreground} \
 	{-foreground foreground Foreground {} {}} \
-	{-selectbackground selectBackground Background {} {}} \
-	{-selectforeground selectForeground Foreground {} {}}]
+	{-selectbackground selectBackground Foreground {} {}} \
+	{-selectforeground selectForeground Background {} {}}]
 test listbox-23.3 {ConfigureListboxItem, itemco shortcut} {
     catch {destroy .l}
     listbox .l
