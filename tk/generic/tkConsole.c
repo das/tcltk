@@ -47,9 +47,6 @@ TCL_DECLARE_MUTEX(consoleMutex)
  * The first three will be used in the tk app shells...
  */
  
-void	TkConsolePrint _ANSI_ARGS_((Tcl_Interp *interp,
-			    int devId, char *buffer, long size));
-
 static int	ConsoleCmd _ANSI_ARGS_((ClientData clientData,
 		    Tcl_Interp *interp, int argc, char **argv));
 static void	ConsoleDeleteProc _ANSI_ARGS_((ClientData clientData));

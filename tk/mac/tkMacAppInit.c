@@ -52,12 +52,6 @@ extern char *		__ttyname _ANSI_ARGS_((long fildes));
 short			SIOUXHandleOneEvent _ANSI_ARGS_((EventRecord *event));
 
 /*
- * Prototypes for functions from the tkConsole.c file.
- */
- 
-EXTERN void		TkConsolePrint _ANSI_ARGS_((Tcl_Interp *interp,
-			    int devId, char *buffer, long size));
-/*
  * Forward declarations for procedures defined later in this file:
  */
 
