@@ -295,4 +295,13 @@ typedef struct TkCanvas {
 extern int		TkCanvPostscriptCmd _ANSI_ARGS_((TkCanvas *canvasPtr,
 			    Tcl_Interp *interp, int argc, CONST char **argv));
 
+/*
+ * Other procedures that are shared among Tk canvas modules but not exported
+ * to the outside world:
+ */
+extern int 		TkCanvTranslatePath _ANSI_ARGS_((TkCanvas *canvPtr,
+			    int numVertex, double *coordPtr, int closed,
+			    XPoint *outPtr));
+
+
 #endif /* _TKCANVAS */

@@ -848,11 +848,10 @@ DisplayLine(canvas, itemPtr, display, drawable, x, y, width, height)
 					 * must be redisplayed (not used). */
 {
     LineItem *linePtr = (LineItem *) itemPtr;
-    XPoint staticPoints[MAX_STATIC_POINTS];
+    XPoint staticPoints[MAX_STATIC_POINTS*3];
     XPoint *pointPtr;
-    XPoint *pPtr;
-    double *coordPtr, linewidth;
-    int i, numPoints;
+    double linewidth;
+    int numPoints;
     Tk_State state = itemPtr->state;
     Pixmap stipple = linePtr->outline.stipple;
 
@@ -897,7 +896,7 @@ DisplayLine(canvas, itemPtr, display, drawable, x, y, width, height)
     if (numPoints <= MAX_STATIC_POINTS) {
 	pointPtr = staticPoints;
     } else {
-	pointPtr = (XPoint *) ckalloc((unsigned) (numPoints * sizeof(XPoint)));
+	pointPtr = (XPoint *)ckalloc((unsigned)(numPoints * 3*sizeof(XPoint)));
     }
 
     if ((linePtr->smooth) && (linePtr->numPoints > 2)) {
@@ -905,11 +904,8 @@ DisplayLine(canvas, itemPtr, display, drawable, x, y, width, height)
 		linePtr->numPoints, linePtr->splineSteps, pointPtr,
 		(double *) NULL);
     } else {
-	for (i = 0, coordPtr = linePtr->coordPtr, pPtr = pointPtr;
-		i < linePtr->numPoints;  i += 1, coordPtr += 2, pPtr++) {
-	    Tk_CanvasDrawableCoords(canvas, coordPtr[0], coordPtr[1],
-		    &pPtr->x, &pPtr->y);
-	}
+	numPoints = TkCanvTranslatePath((TkCanvas*)canvas, numPoints,
+		linePtr->coordPtr, 0, pointPtr);
     }
 
     /*
