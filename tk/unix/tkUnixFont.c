@@ -2054,7 +2054,7 @@ FontMapLoadPage(subFontPtr, row)
     int row;			/* Index of the page to be loaded into 
 				 * the cache. */
 {
-    char src[TCL_UTF_MAX], buf[16];
+    char buf[16], src[TCL_UTF_MAX];
     int minHi, maxHi, minLo, maxLo, scale, checkLo;
     int i, end, bitOffset, isTwoByteFont, n;
     Tcl_Encoding encoding;
@@ -2091,7 +2091,7 @@ FontMapLoadPage(subFontPtr, row)
     end = (row + 1) << FONTMAP_SHIFT;
     for (i = row << FONTMAP_SHIFT; i < end; i++) {
 	int hi, lo;
-	
+
 	if (Tcl_UtfToExternal(NULL, encoding, src, Tcl_UniCharToUtf(i, src),
         	TCL_ENCODING_STOPONERROR, NULL, buf, sizeof(buf), NULL, 
 		NULL, NULL) != TCL_OK) {
