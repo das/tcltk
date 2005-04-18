@@ -2026,14 +2026,14 @@ Control-Next and Control-Prior scroll the view right or left by one page
 without moving the insertion cursor or affecting the selection.
 .IP [13]
 Home and Control-a move the insertion cursor to the
-beginning of its line and clear any selection in the widget.
-Shift-Home moves the insertion cursor to the beginning of the line
+beginning of its display line and clear any selection in the widget.
+Shift-Home moves the insertion cursor to the beginning of the display line
 and also extends the selection to that point.
 .IP [14]
 End and Control-e move the insertion cursor to the
-end of the line and clear any selection in the widget.
-Shift-End moves the cursor to the end of the line and extends the selection
-to that point.
+end of the display line and clear any selection in the widget.
+Shift-End moves the cursor to the end of the display line and extends 
+the selection to that point.
 .IP [15]
 Control-Home and Meta-< move the insertion cursor to the beginning of
 the text and clear any selection in the widget.

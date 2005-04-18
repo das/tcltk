@@ -155,16 +155,16 @@ bind Text <Control-Next> {
 }
 
 bind Text <Home> {
-    tk::TextSetCursor %W {insert linestart}
+    tk::TextSetCursor %W {insert display linestart}
 }
 bind Text <Shift-Home> {
-    tk::TextKeySelect %W {insert linestart}
+    tk::TextKeySelect %W {insert display linestart}
 }
 bind Text <End> {
-    tk::TextSetCursor %W {insert lineend}
+    tk::TextSetCursor %W {insert display lineend}
 }
 bind Text <Shift-End> {
-    tk::TextKeySelect %W {insert lineend}
+    tk::TextKeySelect %W {insert display lineend}
 }
 bind Text <Control-Home> {
     tk::TextSetCursor %W 1.0
@@ -173,10 +173,10 @@ bind Text <Control-Shift-Home> {
     tk::TextKeySelect %W 1.0
 }
 bind Text <Control-End> {
-    tk::TextSetCursor %W {end - 1 char}
+    tk::TextSetCursor %W {end - 1 indices}
 }
 bind Text <Control-Shift-End> {
-    tk::TextKeySelect %W {end - 1 char}
+    tk::TextKeySelect %W {end - 1 indices}
 }
 
 bind Text <Tab> {
@@ -284,7 +284,7 @@ if {[string equal [tk windowingsystem] "aqua"]} {
 
 bind Text <Control-a> {
     if {!$tk_strictMotif} {
-	tk::TextSetCursor %W {insert linestart}
+	tk::TextSetCursor %W {insert display linestart}
     }
 }
 bind Text <Control-b> {
@@ -299,7 +299,7 @@ bind Text <Control-d> {
 }
 bind Text <Control-e> {
     if {!$tk_strictMotif} {
-	tk::TextSetCursor %W {insert lineend}
+	tk::TextSetCursor %W {insert display lineend}
     }
 }
 bind Text <Control-f> {
