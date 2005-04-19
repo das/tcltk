@@ -511,15 +511,15 @@ Tk_MeasureChars(tkfont, source, numBytes, maxLength, flags, lengthPtr)
     curByte = 0;
     sawNonSpace = 0;
     while (numBytes > 0) {
-	clen = FcUtf8ToUcs4((FcChar8 *) source, &c, numBytes);
+	Tcl_UniChar unichar;
+
+	clen = Tcl_UtfToUniChar(source, &unichar);
+	c = (FcChar32)unichar;
 
 	if (clen <= 0) {
-	    /*
-	     * This should not happen, but it can, due to bugs in Tcl
-	     * (i.e., [encoding convertfrom identity]).
-	     */
+	    /* This can't happen (but see #1185640) */
 	    *lengthPtr = curX;
-	    return ++curByte;
+	    return curByte;
 	}
 
 	source += clen;
