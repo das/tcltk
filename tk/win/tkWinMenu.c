@@ -1239,8 +1239,8 @@ TkWinHandleMenuEvent(phwnd, pMessage, pwParam, plParam, plResult)
 		if (menuPtr != NULL) {
 		    long entryIndex = LOWORD(*pwParam);
 	    	    mePtr = NULL;
-		    if (flags != 0xFFFF && entryIndex < menuPtr->numEntries) {
-			if (flags & MF_POPUP) {
+		    if (flags != 0xFFFF) {
+			if ((flags & MF_POPUP) && (entryIndex < menuPtr->numEntries)) {
 			    mePtr = menuPtr->entries[entryIndex];
 			} else {
 			    hashEntryPtr = Tcl_FindHashEntry(
