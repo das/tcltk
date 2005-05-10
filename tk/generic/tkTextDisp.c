@@ -5808,8 +5808,8 @@ GetXView(interp, textPtr, report)
     if (dInfoPtr->maxLength > 0) {
 	first = ((double) dInfoPtr->curXPixelOffset)
 		/ dInfoPtr->maxLength;
-	last = first + ((double) (dInfoPtr->maxX - dInfoPtr->x))
-		/ dInfoPtr->maxLength;
+	last = ((double) (dInfoPtr->curXPixelOffset + dInfoPtr->maxX
+		- dInfoPtr->x))/dInfoPtr->maxLength;
 	if (last > 1.0) {
 	    last = 1.0;
 	}
