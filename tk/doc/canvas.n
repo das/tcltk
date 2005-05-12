@@ -1396,7 +1396,7 @@ irrelevant.
 .TP
 \fB\-smooth \fIsmoothMethod\fR
 \fIsmoothMethod\fR must have one of the forms accepted by
-\fBTk_GetBoolean\fR or a line smoothing method.  Only \fBbezier\fR is
+\fBTcl_GetBoolean\fR or a line smoothing method.  Only \fBbezier\fR is
 supported in the core, but more can be added at runtime.  If a boolean
 false value or empty string is given, no smoothing is applied.  A boolean
 truth value assume \fBbezier\fR smoothing.
@@ -1516,7 +1516,7 @@ of the outline.
 If this option isn't specified then it defaults to \fBmiter\fR.
 .TP
 \fB\-smooth \fIboolean\fR
-\fIBoolean\fR must have one of the forms accepted by \fBTk_GetBoolean\fR.
+\fIBoolean\fR must have one of the forms accepted by \fBTcl_GetBoolean\fR.
 It indicates whether or not the polygon should be drawn with a
 curved perimeter.
 If so, the outline of the polygon becomes a set of parabolic splines,
