@@ -888,7 +888,7 @@ proc ::tk::TextPrevPara {w pos} {
 		    dummy index]} {
 		set pos [$w index "$pos + [lindex $index 0] chars"]
 	    }
-	    if {[$w compare $pos != insert] || [string equal $pos 1.0]} {
+	    if {[$w compare $pos != insert] || [lindex [split $pos .] 0] == 1} {
 		return $pos
 	    }
 	}

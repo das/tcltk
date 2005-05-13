@@ -667,6 +667,17 @@ test testIndex-16.2 {TkTextPrintIndex} {
     catch {destroy $t}
 } 0
 
+test textIndex-23.1 {text paragraph start} {
+    pack [text .t2]
+    .t2 insert end " Text"
+    set res 2.0
+    for {set i 0} {$i < 2} {incr i} {
+	lappend res [::tk::TextPrevPara .t2 [lindex $res end]]
+    }
+    destroy .t2
+    set res
+} {2.0 1.1 1.1}
+
 # cleanup
 rename textimage {}
 catch {destroy .t}
