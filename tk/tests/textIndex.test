@@ -886,7 +886,7 @@ test textIndex-22.13 {text index wordstart, unicode} {
     text_test_word wordstart "\uc700\uc700 abc" 8
 } 3
 
-test textIndex-23.1 {text paragraph start} {
+test textIndex-23.1 {text index wordstart, unicode} {
     pack [text .t2]
     .t2 insert end " Text"
     set res 2.0
