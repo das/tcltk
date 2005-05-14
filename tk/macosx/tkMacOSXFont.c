@@ -87,7 +87,7 @@ static TkStateMap scriptMap[] = {
     {smEastEurRoman,    "macCentEuro"},
     {smVietnamese,      "macVietnam"},
     {smExtArabic,       "macSindhi"},
-    {NULL,               NULL}
+    {0,                 NULL}
 };    
 
 static TkStateMap romanMap[] = {
@@ -97,13 +97,13 @@ static TkStateMap romanMap[] = {
     {langRomanian,        "macRomania"},
     {langTurkish,         "macTurkish"},
     {langGreek,           "macGreek"},
-    {NULL,                NULL}
+    {0,                   NULL}
 };
 
 static TkStateMap cyrillicMap[] = {
     {langUkrainian,        "macUkraine"},
     {langBulgarian,        "macBulgaria"},
-    {NULL,                NULL}
+    {0,                    NULL}
 };
 
 /*

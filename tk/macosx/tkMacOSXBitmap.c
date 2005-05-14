@@ -240,7 +240,7 @@ TkpGetNativeAppBitmap(
     }
     
     if (resource == NULL) {
-        return NULL;
+        return (Pixmap) NULL;
     }
     
     pix = Tk_GetPixmap(display, None, 32, 32, 0);

@@ -482,7 +482,7 @@ FSRefToDString(const FSRef *fsref, Tcl_DString *ds)
 
     err = FSRefMakePath(fsref, fileName, sizeof(fileName));
     if (err == noErr) {
-        Tcl_ExternalToUtfDString(NULL, fileName, -1, ds);
+        Tcl_ExternalToUtfDString(NULL, (char*) fileName, -1, ds);
     }
     return err;
 }

@@ -30,6 +30,7 @@
 #define LATIN1_MAX       255
 #define MAC_KEYCODE_MAX  0x7F
 #define MAC_KEYCODE_MASK 0x7F
+#undef ALT_MASK
 #define ALT_MASK         Mod1Mask
 #define OPTION_MASK      Mod2Mask
 

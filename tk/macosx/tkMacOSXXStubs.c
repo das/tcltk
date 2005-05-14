@@ -365,7 +365,7 @@ XGetImage(display, d, x, y, width, height, plane_mask, format)
     int format;
 { 
     XImage *   imagePtr = NULL;
-    Pixmap     pixmap = NULL;
+    Pixmap     pixmap = (Pixmap) NULL;
     Tk_Window  win = (Tk_Window) ((MacDrawable *) d)->winPtr;
     GC         gc;
     int        depth = 32;
