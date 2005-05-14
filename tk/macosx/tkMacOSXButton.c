@@ -965,7 +965,7 @@ TkMacOSXDrawControl(
         if (((mbPtr->info.image == NULL) && (mbPtr->info.bitmap == None))
                || (mbPtr->info.compound != COMPOUND_NONE)) {
             len = TkFontGetFirstTextLayout(butPtr->textLayout, 
-                    &font, controlTitle);
+                    &font, (char*) controlTitle);
             controlTitle[len] = 0;
         } else {
             len = 0;
@@ -974,7 +974,7 @@ TkMacOSXDrawControl(
         if (bcmp(mbPtr->controlTitle, controlTitle, len+1)) {
             CFStringRef cf;    	    
             cf = CFStringCreateWithCString(NULL,
-                  controlTitle, kCFStringEncodingUTF8);
+                  (char*) controlTitle, kCFStringEncodingUTF8);
             if (cf != NULL) {
             SetControlTitleWithCFString(mbPtr->control, cf);
             CFRelease(cf);
