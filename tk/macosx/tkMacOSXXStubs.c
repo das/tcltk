@@ -761,10 +761,11 @@ TkMacOSXXGetPixel(
     int x,
     int y)
 {
-    CGrafPtr grafPtr;
+    CGrafPtr grafPtr, oldPort;
     RGBColor cPix;
     unsigned long r, g, b, c;
     grafPtr = (CGrafPtr)image->data;
+    GetPort(&oldPort);
     SetPort(grafPtr);
     GetCPixel(x,y,&cPix);
     if (image->obdata) {
@@ -778,6 +779,7 @@ TkMacOSXXGetPixel(
         b = cPix . blue;
     }
     c = (r<<16)|(g<<8)|(b);
+    SetPort(oldPort);
     return c;
 }
 
@@ -788,10 +790,11 @@ TkMacOSXXPutPixel(
     int y,
     unsigned long pixel)
 {
-    CGrafPtr grafPtr;
+    CGrafPtr grafPtr, oldPort;
     RGBColor cPix;
     unsigned long r, g, b;
     grafPtr = (CGrafPtr)image->data;
+    GetPort(&oldPort);
     SetPort(grafPtr);
     r  = (pixel & image->red_mask)>>16;
     g  = (pixel & image->green_mask)>>8;
@@ -807,6 +810,7 @@ TkMacOSXXPutPixel(
         cPix . blue = b;
     }
     SetCPixel(x,y,&cPix);
+    SetPort(oldPort);
     return 0;
 }
 
