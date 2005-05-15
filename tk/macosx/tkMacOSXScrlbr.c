@@ -1095,7 +1095,6 @@ UpdateControlValues(
     controlValue = (SInt32) (SCROLLBAR_SCALING_DVALUE * scrollPtr->firstFraction);
 
     SetControlViewSize(macScrollPtr->sbHandle,viewSize);
-    SetControl32BitValue(macScrollPtr->sbHandle, controlValue);
     SetControl32BitMaximum(macScrollPtr->sbHandle, controlMax);
 
 #if 0             
@@ -1121,6 +1120,7 @@ UpdateControlValues(
             HiliteControl(macScrollPtr->sbHandle, 0);
         }
     }
+    SetControl32BitValue(macScrollPtr->sbHandle, controlValue);
     
     if ( !IsControlVisible (macScrollPtr -> sbHandle) ) {
         SetControlVisibility(macScrollPtr->sbHandle,TRUE,FALSE);

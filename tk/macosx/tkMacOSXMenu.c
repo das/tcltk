@@ -991,7 +991,7 @@ TkpConfigureMenuEntry(
 	char *accelString = (mePtr->accelPtr == NULL) ? ""
 		: Tcl_GetStringFromObj(mePtr->accelPtr, NULL);
 	char *accel = accelString;
-	mePtr->entryFlags |= ~ENTRY_ACCEL_MASK;
+	mePtr->entryFlags &= ~ENTRY_ACCEL_MASK;
 	    
 	mePtr->entryFlags |= ParseAccelerators(&accelString);
 	
