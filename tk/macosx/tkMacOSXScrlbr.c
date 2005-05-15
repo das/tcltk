@@ -674,6 +674,7 @@ ThumbActionProc()
             interp = scrollPtr->interp;
             Tcl_Preserve((ClientData) interp);
             Tcl_GlobalEval(interp, cmdString.string);
+	    Tcl_Release ((ClientData) interp);
 
             TclServiceIdle();
         }
