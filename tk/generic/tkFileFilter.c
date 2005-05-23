@@ -470,7 +470,7 @@ FreeGlobPatterns(clausePtr)
 {
     GlobPattern *globPtr = clausePtr->patterns;
 
-    while (globPtr != null) {
+    while (globPtr != NULL) {
 	GlobPattern *toFree = globPtr;
 	globPtr = globPtr->next;
 
