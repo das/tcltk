@@ -160,8 +160,11 @@ TkpInit(interp)
          * FIXME: Should we come up with a more generic way of doing this?
          */
          
+#ifdef TK_FRAMEWORK
         if (Tcl_MacOSXOpenVersionedBundleResources(interp, 
-                "com.tcltk.tklibrary", TK_FRAMEWORK_VERSION, 1, PATH_MAX, tkLibPath) != TCL_OK) {
+                "com.tcltk.tklibrary", TK_FRAMEWORK_VERSION, 1, PATH_MAX, tkLibPath) != TCL_OK)
+#endif
+            {
             /* Tk.framework not found, check if resource file is open */
             Handle rsrc = Get1NamedResource('CURS', "\phand");
             if (rsrc) {
