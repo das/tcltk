@@ -681,7 +681,7 @@ install-libraries: libraries
 	    do \
 	    $(INSTALL_DATA) $$i $(INCLUDE_INSTALL_DIR); \
 	    done;
-	@for i in $(@TK_WINDOWINGSYSTEM@_XLIB_HDRS) ; \
+	@list='$(@TK_WINDOWINGSYSTEM@_XLIB_HDRS)'; for i in $$list ; \
 	    do \
 	    $(INSTALL_DATA) $$i $(INCLUDE_INSTALL_DIR)/X11; \
 	    done;
