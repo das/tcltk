@@ -1262,6 +1262,13 @@ declare 268 generic {
     int Tk_PhotoSetSize(Tcl_Interp *interp, Tk_PhotoHandle handle,
 	    int width, int height)
 }
+# TIP#245
+declare 269 generic {
+    long Tk_GetUserInactiveTime(Display *dpy)
+}
+declare 270 generic {
+    void Tk_ResetUserInactiveTime(Display *dpy)
+}
 
 # Define the platform specific public Tk interface.  These functions are
 # only available on the designated platform.

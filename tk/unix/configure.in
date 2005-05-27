@@ -323,6 +323,29 @@ if test -d /usr/include/mit ; then
 fi
 
 #--------------------------------------------------------------------
+# Check whether the header and library for the XScreenSaver
+# extension are available, and set HAVE_XSS if so.
+# XScreenSaver is needed for Tk_GetUserInactiveTime().
+#--------------------------------------------------------------------
+AC_MSG_CHECKING([for XScreenSaver support])
+tk_oldCFlags=$CFLAGS
+CFLAGS="$CFLAGS $XINCLUDES"
+tk_oldLibs=$LIBS
+LIBS="$LIBS $XLIBSW -lXss -lXext"
+AC_TRY_LINK([
+    #include <X11/Xlib.h>
+    #include <X11/extensions/scrnsaver.h>
+] , [
+    XScreenSaverAllocInfo();
+], [
+    AC_MSG_RESULT(yes)
+    XLIBSW="$XLIBSW -lXss -lXext"
+    AC_DEFINE([HAVE_XSS])
+], AC_MSG_RESULT(no))
+CFLAGS=$tk_oldCFlags
+LIBS=$tk_oldLibs
+
+#--------------------------------------------------------------------
 #	Check for freetype / fontconfig / Xft support.
 #--------------------------------------------------------------------
 
