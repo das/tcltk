@@ -344,7 +344,7 @@ if test $tk_aqua = no; then
     ], [
         AC_MSG_RESULT(yes)
         XLIBSW="$XLIBSW -lXss -lXext"
-        AC_DEFINE([HAVE_XSS])
+        AC_DEFINE(HAVE_XSS, 1, [Is XScreenSaver available?])
     ], AC_MSG_RESULT(no))
     CFLAGS=$tk_oldCFlags
     LIBS=$tk_oldLibs
