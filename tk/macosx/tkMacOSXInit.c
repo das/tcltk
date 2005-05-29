@@ -206,7 +206,7 @@ TkpInit(interp)
                     err = FSPathMakeRef(fileName, &ref, NULL);
                     if (err != noErr) break;
                     err = FSOpenResourceFile(&ref, 0, NULL, fsRdPerm, &refNum);
-                    if (err != noErr) fprintf(stderr,"FSOpenResourceFile error %d\n",err);
+                    if (err != noErr) fprintf(stderr,"FSOpenResourceFile error %ld\n",err);
                     break;
                 }
                 if (fd != -1) {

@@ -63,7 +63,7 @@ Tk_MacOSXSetupTkNotifier()
          * the main thread.  Calling GetMainEventQueue will force this to
          * happen.
          */
-        EventQueueRef mainEventQueue = GetMainEventQueue();
+        GetMainEventQueue();
 
         tsdPtr->initialized = 1;
         /* Install Carbon events event source in main event loop thread. */
