@@ -2113,7 +2113,7 @@ GetUtfFaceName(
             return mapPtr->utfName;
         }
     }
-    panic("GetUtfFaceName: unexpected nativeName");
+    Tcl_Panic("GetUtfFaceName: unexpected nativeName");
     return NULL;
 }
 
