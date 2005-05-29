@@ -1060,5 +1060,5 @@ Tk_GetUserInactiveTime(Display *dpy)
 void
 Tk_ResetUserInactiveTime(Display *dpy)
 {
-    UpdateSystemActivity(0);
+    UpdateSystemActivity(OverallAct);
 }

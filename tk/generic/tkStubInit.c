@@ -336,8 +336,6 @@ TkIntPlatStubs tkIntPlatStubs = {
     TkWinGetPlatformId, /* 33 */
     TkWinSetHINSTANCE, /* 34 */
     TkWinGetPlatformTheme, /* 35 */
-    TkWinCleanupContainerList, /* 36 */
-    TkpWmGetState, /* 37 */
 #endif /* __WIN32__ */
 #ifdef MAC_OSX_TK
     TkGenerateActivateEvents, /* 0 */
@@ -629,8 +627,6 @@ TkPlatStubs tkPlatStubs = {
     Tk_HWNDToWindow, /* 3 */
     Tk_PointerEvent, /* 4 */
     Tk_TranslateWinEvent, /* 5 */
-    Tk_GetMenuHWND, /* 6 */
-    Tk_GetEmbeddedMenuHWND, /* 7 */
 #endif /* __WIN32__ */
 #ifdef MAC_OSX_TK
     Tk_MacOSXSetEmbedHandler, /* 0 */
@@ -926,6 +922,8 @@ TkStubs tkStubs = {
     Tk_PhotoPutBlock, /* 266 */
     Tk_PhotoPutZoomedBlock, /* 267 */
     Tk_PhotoSetSize, /* 268 */
+    Tk_GetUserInactiveTime, /* 269 */
+    Tk_ResetUserInactiveTime, /* 270 */
 };
 
 /* !END!: Do not edit above this line. */
