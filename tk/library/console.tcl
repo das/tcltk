@@ -137,6 +137,12 @@ proc ::tk::ConsoleInit {} {
     tk::TextSetCursor $con end
     $con mark set promptEnd insert
     $con mark gravity promptEnd left
+
+    ConsolePrompt
+    if {$tcl_platform(platform) eq "windows"} {
+	# Subtle work-around to erase the '% ' that tclMain.c prints out
+	after idle [list $con delete 1.0 output]
+    }
 }
 
 # ::tk::ConsoleSource --
