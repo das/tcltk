@@ -137,7 +137,19 @@ proc ::tk::ConsoleInit {} {
     $con mark set promptEnd insert
     $con mark gravity promptEnd left
 
-    ConsolePrompt
+    # A variant of ConsolePrompt to avoid a 'puts' call
+    set w $con
+    set temp [$w index "end - 1 char"]
+    $w mark set output end
+    if {![consoleinterp eval "info exists tcl_prompt1"]} {
+	set string [EvalAttached $::tk::console::defaultPrompt]
+	$w insert output $string stdout
+    }
+    $w mark set output $temp
+    ::tk::TextSetCursor $w end
+    $w mark set promptEnd insert
+    $w mark gravity promptEnd left
+
     if {$tcl_platform(platform) eq "windows"} {
 	# Subtle work-around to erase the '% ' that tclMain.c prints out
 	after idle [list $con delete 1.0 output]
