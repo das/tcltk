@@ -1921,13 +1921,13 @@ Tk_ResetUserInactiveTime(dpy)
 {
     INPUT inp;
 
-    inp.type=INPUT_MOUSE;
-    inp.mi.dx=0;
-    inp.mi.dy=0;
-    inp.mi.mouseData=0;
-    inp.mi.dwFlags=MOUSEEVENTF_MOVE;
-    inp.mi.time=0;
-    inp.mi.dwExtraInfo=NULL;
+    inp.type           = INPUT_MOUSE;
+    inp.mi.dx          = 0;
+    inp.mi.dy          = 0;
+    inp.mi.mouseData   = 0;
+    inp.mi.dwFlags     = MOUSEEVENTF_MOVE;
+    inp.mi.time        = 0;
+    inp.mi.dwExtraInfo = (ULONG_PTR) NULL;
 
     SendInput(1, &inp, sizeof(inp));
 }
