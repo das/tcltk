@@ -222,7 +222,7 @@ static Tk_ConfigSpec configSpecs[] = {
 
 static Tk_ItemType *typeList = NULL;	/* NULL means initialization hasn't
 					 * been done yet. */
-TCL_DECLARE_MUTEX(typeListMutex);
+TCL_DECLARE_MUTEX(typeListMutex)
 
 #ifndef USE_OLD_TAG_SEARCH
 /*
