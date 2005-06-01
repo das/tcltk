@@ -194,12 +194,13 @@ Tk_GetUserInactiveTime(dpy)
 {
     long inactiveTime = -1;
 #ifdef HAVE_XSS
-    int eventBase;
-    int errorBase;
+    int eventBase, errorBase, major, minor;
 
-    if (XScreenSaverQueryExtension(dpy, &eventBase, &errorBase)) {
+    if (XScreenSaverQueryExtension(dpy, &eventBase, &errorBase) &&
+	XScreenSaverQueryVersion(dpy, &major, &minor) &&
+	major == 1 && minor == 0 ) {
+	
 	XScreenSaverInfo *info = XScreenSaverAllocInfo();
-
 	XScreenSaverQueryInfo(dpy, DefaultRootWindow(dpy), info);
 	inactiveTime = info->idle;
 	XFree(info);
