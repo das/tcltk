@@ -196,11 +196,17 @@ Tk_GetUserInactiveTime(dpy)
 #ifdef HAVE_XSS
     int eventBase, errorBase, major, minor;
 
+    /* Calling XScreenSaverQueryVersion seems to be needed to prevent
+     * a crash on some buggy versions of XFree86 */
     if (XScreenSaverQueryExtension(dpy, &eventBase, &errorBase) &&
-	XScreenSaverQueryVersion(dpy, &major, &minor) &&
-	major == 1 && minor == 0 ) {
-	
+	XScreenSaverQueryVersion(dpy, &major, &minor)) {
+
 	XScreenSaverInfo *info = XScreenSaverAllocInfo();
+
+	if (info == NULL) {
+	    /* we are out of memory */
+	    Tcl_Panic("Out of memory: XScreenSaverAllocInfo failed in Tk_GetUserInactiveTime");
+	}
 	if (XScreenSaverQueryInfo(dpy, DefaultRootWindow(dpy), info)) {
 	    inactiveTime = info->idle;
 	}
