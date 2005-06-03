@@ -265,11 +265,16 @@ InvokeFocusHandlers(winPtrPtr, mask, eventPtr)
 	return 1;
     }
 
-    if (mask & (KeyPressMask|KeyReleaseMask|MouseWheelMask)) {
+#ifdef MAC_OSX_TK
+    /* MouseWheel events are not focus specific on Mac OS X */
+    if (mask & (KeyPressMask|KeyReleaseMask)) {
+#else
+      if (mask & (KeyPressMask|KeyReleaseMask|MouseWheelMask)) {
+#endif
 	(*winPtrPtr)->dispPtr->lastEventTime = eventPtr->xkey.time;
 	*winPtrPtr = TkFocusKeyEvent(*winPtrPtr, eventPtr);
 	if (*winPtrPtr == NULL) {
-	    return 1;
+	  return 1;
 	}
     }
 
