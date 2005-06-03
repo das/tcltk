@@ -140,8 +140,6 @@ clean-${PROJECT} distclean-${PROJECT} test-${PROJECT}: \
 
 DO_MAKE			= +${MAKE} -C ${OBJ_DIR} ${target} ${MAKE_ARGS_V} ${MAKE_ARGS} ${EXTRA_MAKE_ARGS}
 
-${PROJECT}:		override INSTALL_ROOT := ${OBJ_DIR}/
-
 #-------------------------------------------------------------------------------------------------------
 # locations for custom tk install actions
 
@@ -161,7 +159,8 @@ TK_FMWK_DIR		:= ${FMWK_DIR}/${PRODUCT_NAME}.framework/Versions/${VERSION}
 #-------------------------------------------------------------------------------------------------------
 # build rules
 
-${PROJECT}: install-${PROJECT}
+${PROJECT}:
+	${MAKE} install-${PROJECT} INSTALL_ROOT=${OBJ_DIR}/
 
 ${OBJ_DIR}/Makefile: ${UNIX_DIR}/Makefile.in ${UNIX_DIR}/configure
 	mkdir -p ${OBJ_DIR} && cd ${OBJ_DIR} && ${UNIX_DIR}/configure -C \
