@@ -5819,3 +5819,9 @@ display/resizing (south)
 Documentation improvements [1087842,1081527,1115907,etc.]
 
 --- Released 8.4.10, June 4, 2005 --- See ChangeLog for details ---
+
+2005-06-03 (bug fix)[1016385] allow [rename console] (fellows)
+
+2005-06-04 (bug fix)[1114977] UID thread-safety in canvas (fellows)
+
+--- Released 8.4.11, June 24, 2005 --- See ChangeLog for details ---
