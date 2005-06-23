@@ -803,7 +803,7 @@ TkConsolePrint(interp, devId, buffer, size)
     }
 
     info = (ConsoleInfo *) Tcl_GetAssocData(interp, TK_CONSOLE_INFO_KEY, NULL);
-    if (info->consoleInterp == NULL) {
+    if (info == NULL || info->consoleInterp == NULL) {
 	return;
     }
 
