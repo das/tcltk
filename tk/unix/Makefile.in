@@ -563,7 +563,7 @@ test: tktest
 	TCL_LIBRARY=@TCL_SRC_DIR@/library; export TCL_LIBRARY; \
 	TK_LIBRARY=@TK_SRC_DIR@/library; export TK_LIBRARY; \
 	./tktest $(TOP_DIR)/tests/all.tcl -geometry +0+0 \
-	$(TESTFLAGS) $(TCLTESTARGS)
+	$(TESTFLAGS)
 
 # Tests with different languages
 testlang: tktest
@@ -575,7 +575,7 @@ testlang: tktest
 	do \
 	LANG=$(lang); export LANG; \
 	./tktest $(TOP_DIR)/tests/all.tcl -geometry +0+0 \
-	$(TESTFLAGS) $(TCLTESTARGS); \
+	$(TESTFLAGS); \
 	done
 
 # Useful target to launch a built tktest with the proper path,...
