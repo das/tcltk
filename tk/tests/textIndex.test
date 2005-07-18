@@ -886,7 +886,7 @@ test textIndex-22.13 {text index wordstart, unicode} {
     text_test_word wordstart "\uc700\uc700 abc" 8
 } 3
 
-test textIndex-23.1 {text index wordstart, unicode} {
+test textIndex-23.1 {text paragraph start} {
     pack [text .t2]
     .t2 insert end " Text"
     set res 2.0
@@ -897,6 +897,16 @@ test textIndex-23.1 {text index wordstart, unicode} {
     set res
 } {2.0 1.1 1.1}
 
+test textIndex-24.1 {text mark prev} {
+    pack [text .t2]
+    .t2 insert end [string repeat "1 2 3 4 5 6 7 8 9 0\n" 12]
+    .t2 mark set 1.0 10.0
+    update
+    # then this crash Tk:
+    set res [.t2 mark previous 10.10]
+    destroy .t2
+    set res
+} {1.0}
 
 # cleanup
 rename textimage {}

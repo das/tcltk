@@ -883,7 +883,7 @@ MarkFindPrev(interp, textPtr, string)
 		Tcl_SetResult(interp, "current", TCL_STATIC);
 	    } else if (prevPtr == textPtr->insertMarkPtr) {
 		Tcl_SetResult(interp, "insert", TCL_STATIC);
-	    } else if (segPtr->body.mark.textPtr != textPtr) {
+	    } else if (prevPtr->body.mark.textPtr != textPtr) {
 		/* Ignore widget-specific marks for the other widgets */
 		continue;
 	    } else {
