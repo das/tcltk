@@ -14,11 +14,11 @@
  */
 
 /*
- * Make sure the SendInput API is available:
+ * Make sure the SendInput API is available (NT SP 3):
  */
 #if (_WIN32_WINNT <= 0x0400)
 #undef _WIN32_WINNT
-#define _WIN32_WINNT 0x0401
+#define _WIN32_WINNT 0x0403
 #endif
 
 #include "tkWinInt.h"
