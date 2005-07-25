@@ -174,7 +174,7 @@ proc ::tk::RecolorTree {w colors} {
 	    # dbOption, then use it, otherwise use the defaults
 	    # for the widget.
 	    set defaultcolor [option get $w $dbOption $class]
-	    if {[string match {} $defaultcolor] || \
+	    if {$defaultcolor eq "" || \
 		    ([info exists prototype] && \
 		    [$prototype cget $option] ne "$defaultcolor")} {
 		set defaultcolor [winfo rgb . [lindex $value 3]]

@@ -18,7 +18,7 @@
 # The code below creates the default class bindings for buttons.
 #-------------------------------------------------------------------------
 
-if {[string equal [tk windowingsystem] "aqua"]} {
+if {[tk windowingsystem] eq "aqua"} {
     bind Radiobutton <Enter> {
 	tk::ButtonEnter %W
     }
@@ -38,7 +38,7 @@ if {[string equal [tk windowingsystem] "aqua"]} {
 	tk::ButtonUp %W
     }
 }
-if {[string equal "windows" $tcl_platform(platform)]} {
+if {"windows" eq $tcl_platform(platform)} {
     bind Checkbutton <equal> {
 	tk::CheckRadioInvoke %W select
     }
@@ -68,7 +68,7 @@ if {[string equal "windows" $tcl_platform(platform)]} {
 	tk::CheckRadioEnter %W
     }
 }
-if {[string equal "x11" [tk windowingsystem]]} {
+if {"x11" eq [tk windowingsystem]} {
     bind Checkbutton <Return> {
 	if {!$tk_strictMotif} {
 	    tk::CheckRadioInvoke %W
@@ -127,7 +127,7 @@ bind Radiobutton <Leave> {
     tk::ButtonLeave %W
 }
 
-if {[string equal "windows" $tcl_platform(platform)]} {
+if {"windows" eq $tcl_platform(platform)} {
 
 #########################
 # Windows implementation 
@@ -308,7 +308,7 @@ proc ::tk::CheckRadioDown w {
 
 }
 
-if {[string equal "x11" [tk windowingsystem]]} {
+if {"x11" eq [tk windowingsystem]} {
 
 #####################
 # Unix implementation
@@ -416,7 +416,7 @@ proc ::tk::ButtonDown w {
 
 proc ::tk::ButtonUp w {
     variable ::tk::Priv
-    if {[string equal $w $Priv(buttonWindow)]} {
+    if {$w eq $Priv(buttonWindow)} {
 	set Priv(buttonWindow) ""
 
 	# Restore the button's relief if it was cached.
@@ -444,7 +444,7 @@ proc ::tk::ButtonUp w {
 
 }
 
-if {[string equal [tk windowingsystem] "aqua"]} {
+if {[tk windowingsystem] eq "aqua"} {
 
 ####################
 # Mac implementation

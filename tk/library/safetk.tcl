@@ -126,7 +126,7 @@ proc ::safe::loadTk {} {}
 		set nDisplay $display
 	    }
 	}
-	if {[string compare $nDisplay $display]} {
+	if {$nDisplay ne $display} {
 	    if {$displayGiven} {
 		error "conflicting -display $display and -use\
 			$use -> $nDisplay"
