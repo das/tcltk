@@ -205,7 +205,7 @@ proc ::tk::FocusGroup_In {t w detail} {
     variable FocusIn
     variable ::tk::Priv
 
-    if {$detail ne "NotifyNonlinear" && $detail ne "NotifyNonlinearVirtual"]} {
+    if {$detail ne "NotifyNonlinear" && $detail ne "NotifyNonlinearVirtual"} {
 	# This is caused by mouse moving out&in of the window *or*
 	# ordinary keypresses some window managers (ie: CDE [Bug: 2960]).
 	return
