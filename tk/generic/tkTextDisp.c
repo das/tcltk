@@ -6178,7 +6178,7 @@ GetYView(interp, textPtr, report)
 	code = Tcl_VarEval(interp, textPtr->yScrollCmd, buf1, buf2, NULL);
 	if (code != TCL_OK) {
 	    Tcl_AddErrorInfo(interp,
-		    "\n	   (vertical scrolling command executed by text)");
+		    "\n    (vertical scrolling command executed by text)");
 	    Tcl_BackgroundError(interp);
 	}
     }
