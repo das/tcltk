@@ -139,7 +139,7 @@ proc ::tk::dialog::error::bgerror err {
 
     if {($tcl_platform(platform) eq "macintosh")
             || ([tk windowingsystem] eq "aqua")} {
-	::tk::unsupported::MacWindowStyle style .bgerrorDialog dBoxProc
+	::tk::unsupported::MacWindowStyle style .bgerrorDialog zoomDocProc
     }
 
     frame .bgerrorDialog.bot
