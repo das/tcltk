@@ -678,6 +678,22 @@ declare 149 generic {
 					   Tk_OptionTable optionTable)
 }
 
+# TIP#168 - 8.5+
+#declare 150 generic {
+#    int TkMakeRawCurve (Tk_Canvas canvas,
+#	    double *pointPtr, int numPoints, int numSteps,
+#	    XPoint xPoints[], double dblPoints[])
+#}
+#declare 151 generic {
+#    void TkMakeRawCurvePostscript (Tcl_Interp *interp,
+#	    Tk_Canvas canvas, double *pointPtr, int numPoints)
+#}
+
+declare 152 generic {
+    void TkpDrawFrame(Tk_Window tkwin, Tk_3DBorder border,
+		      int highlightWidth, int borderWidth, int relief)
+}
+
 ##############################################################################
 
 # Define the platform specific internal Tcl interface. These functions are

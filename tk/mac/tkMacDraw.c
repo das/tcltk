@@ -1156,7 +1156,7 @@ InvertByte(
 /*
  *----------------------------------------------------------------------
  *
- * TkpDrawpHighlightBorder --
+ * TkpDrawHighlightBorder --
  *
  *	This procedure draws a rectangular ring around the outside of
  *	a widget to indicate that it has received the input focus.
@@ -1193,4 +1193,31 @@ TkpDrawHighlightBorder (
             TkDrawInsetFocusHighlight (tkwin, fgGC, highlightWidth - 1, drawable, 0);
         }
     }
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkpDrawFrame --
+ *
+ *	This procedure draws the rectangular frame area.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	Draws inside the tkwin area.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TkpDrawFrame (Tk_Window tkwin, Tk_3DBorder border,
+	int highlightWidth, int borderWidth, int relief)
+{
+    Tk_Fill3DRectangle(tkwin, Tk_WindowId(tkwin),
+	    border, highlightWidth, highlightWidth,
+	    Tk_Width(tkwin) - 2 * highlightWidth,
+	    Tk_Height(tkwin) - 2 * highlightWidth,
+	    borderWidth, relief);
 }
