@@ -1177,11 +1177,12 @@ EXTERN int		TkParsePadAmount _ANSI_ARGS_((Tcl_Interp *interp,
 			    Tk_Window tkwin, Tcl_Obj *objPtr,
 			    int *pad1Ptr, int *pad2Ptr));
 
-/* 
+/*
  * Unsupported commands.
  */
-EXTERN int		TkUnsupported1Cmd _ANSI_ARGS_((ClientData clientData,
-			    Tcl_Interp *interp, int argc, CONST char **argv));
+EXTERN int		TkUnsupported1ObjCmd _ANSI_ARGS_((
+			    ClientData clientData, Tcl_Interp *interp,
+			    int objc, Tcl_Obj *CONST objv[]));
 
 # undef TCL_STORAGE_CLASS
 # define TCL_STORAGE_CLASS DLLIMPORT

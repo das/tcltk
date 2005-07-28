@@ -177,7 +177,7 @@ static TkCmd commands[] = {
 
 #if defined(MAC_TCL) || defined(MAC_OSX_TK)
     {"::tk::unsupported::MacWindowStyle",
-	    		TkUnsupported1Cmd,	NULL,			1, 1},
+	    		NULL,	TkUnsupported1ObjCmd,			1, 1},
 #endif
     {(char *) NULL,	(int (*) _ANSI_ARGS_((ClientData, Tcl_Interp *, int, CONST char **))) NULL, NULL, 0}
 };
