@@ -30,8 +30,6 @@
 
 static int TkMacOSXProcessAppleEvent(
         TkMacOSXEvent * eventPtr, MacEventStatus * statusPtr);
-static int TkMacOSXProcessEvent(
-        TkMacOSXEvent * eventPtr, MacEventStatus * statusPtr);
 
 static int ReceiveAndProcessEvent (void);
 
@@ -184,7 +182,7 @@ TkMacOSXProcessAppleEvent(TkMacOSXEvent * eventPtr, MacEventStatus * statusPtr)
  *----------------------------------------------------------------------
  */
 
-static int  
+int  
 TkMacOSXProcessEvent(TkMacOSXEvent * eventPtr, MacEventStatus * statusPtr)
 {
     switch (eventPtr->eClass) {
@@ -219,8 +217,7 @@ TkMacOSXProcessEvent(TkMacOSXEvent * eventPtr, MacEventStatus * statusPtr)
             break;
     }   
     return 0;
-}   
-
+}
 
 /*
  *----------------------------------------------------------------------
@@ -260,6 +257,7 @@ ReceiveAndProcessEvent()
     } else {
         macEvent.eClass = GetEventClass(macEvent.eventRef);
         macEvent.eKind = GetEventKind(macEvent.eventRef);
+        macEvent.interp = NULL;
         bzero(&eventStatus, sizeof(eventStatus));
         TkMacOSXProcessEvent(&macEvent,&eventStatus);
         if (!eventStatus.stopProcessing) {

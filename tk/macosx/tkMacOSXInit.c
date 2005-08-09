@@ -132,6 +132,7 @@ TkpInit(interp)
     	tkMacOSXInitialized = true;
 
         TkMacOSXInitAppleEvents(interp);
+        TkMacOSXInitCarbonEvents(interp);
         TkMacOSXInitMenus(interp);
         TkMacOSXUseAntialiasedText(interp, TRUE);
         TkMacOSXInitCGDrawing(interp, TRUE, 3);

@@ -178,7 +178,7 @@ TkpCloseDisplay(
 {
     Display *display = displayPtr->display;
     if (gMacDisplay != displayPtr) {
-        panic("TkpCloseDisplay: tried to call TkpCloseDisplay on bad display");
+        Tcl_Panic("TkpCloseDisplay: tried to call TkpCloseDisplay on bad display");
     }
 
     gMacDisplay = NULL;
@@ -319,7 +319,7 @@ DefaultErrorHandler(
      * This call should never be called.  Tk replaces
      * it with its own error handler.
      */
-    panic("Warning hit bogus error handler!");
+    Tcl_Panic("Warning hit bogus error handler!");
     return 0;
 }
 

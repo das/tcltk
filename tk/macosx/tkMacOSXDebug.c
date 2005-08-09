@@ -49,6 +49,8 @@
  *      acting in its behalf permission to use and distribute the
  *      software in accordance with the terms specified in this
  *      license.
+ *
+ * RCS: @(#) $Id$
  */
 
 #include "tkMacOSXDebug.h"

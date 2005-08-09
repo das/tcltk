@@ -294,7 +294,7 @@ TkpFontPkgInit(mainPtr)
          * Used for saving and restoring state while drawing and measuring.
          */
         if (NewGWorld(&gWorld, 0, &rect, NULL, NULL, 0) != noErr) {
-            panic("TkpFontPkgInit: NewGWorld failed");
+            Tcl_Panic("TkpFontPkgInit: NewGWorld failed");
         }
         /*
          * The name of each font is stored in the encoding of that font.
@@ -361,7 +361,7 @@ TkpFontPkgInit(mainPtr)
             }
         }
         if (fontMapOffset != numFonts) {
-            panic("TkpFontPkgInit: unexpected number of fonts");
+            Tcl_Panic("TkpFontPkgInit: unexpected number of fonts");
         }
 
         mapPtr = &newFontNameMap[numFonts];
@@ -2113,7 +2113,7 @@ GetUtfFaceName(
             return mapPtr->utfName;
         }
     }
-    panic("GetUtfFaceName: unexpected nativeName");
+    Tcl_Panic("GetUtfFaceName: unexpected nativeName");
     return NULL;
 }
 
@@ -2260,7 +2260,8 @@ TkMacOSXAntialiasedTextVariableProc(clientData, interp, name1, name2, flags)
     return (char *) NULL;
 }
 
-int TkMacOSXUseAntialiasedText(interp, enable)
+int
+TkMacOSXUseAntialiasedText(interp, enable)
         Tcl_Interp *interp;
         int enable;
 {

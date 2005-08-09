@@ -1322,7 +1322,7 @@ declare 40 aqua {
 }
 
 declare 41 aqua {
-    int  TkMacOSXZoomToplevel (WindowPtr whichWindow, Point where, short zoomPart)
+    int  TkMacOSXZoomToplevel (WindowPtr whichWindow, short zoomPart)
 }
 
 declare 42 aqua {

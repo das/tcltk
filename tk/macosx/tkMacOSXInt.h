@@ -68,6 +68,7 @@ typedef struct TkMacOSXWindowList {
 #define TK_CLIP_INVALID		2
 #define TK_HOST_EXISTS		4
 #define TK_DRAWN_UNDER_MENU	8
+#define TK_MAPPED_IN_PARENT	16
 
 /*
  * I am reserving TK_EMBEDDED = 0x100 in the MacDrawable flags
@@ -151,6 +152,7 @@ extern TkMacOSXWindowList *tkMacOSXWindowListPtr;
 extern Tcl_Encoding TkMacOSXCarbonEncoding;
 
 extern int TkMacOSXUseAntialiasedText(Tcl_Interp *interp, int enable);
+extern void TkMacOSXInitCarbonEvents(Tcl_Interp *interp);
 extern int TkMacOSXInitCGDrawing(Tcl_Interp *interp, int enable, int antiAlias);
 extern void TkMacOSXDefaultStartupScript(void);
 extern int TkMacOSXGenerateFocusEvent( Window window, int activeFlag);
