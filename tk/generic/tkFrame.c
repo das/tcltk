@@ -1439,14 +1439,12 @@ DisplayFrame(clientData)
 
     if (framePtr->type != TYPE_LABELFRAME) {
 	/*
-	 * There is no label so there is just a simple rectangle to draw.
+	 * Pass to platform specific draw function.  In general, it just
+	 * draws a simple rectangle, but it may "theme" the background.
 	 */
 
 	noLabel:
-	Tk_Fill3DRectangle(tkwin, Tk_WindowId(tkwin),
-		framePtr->border, hlWidth, hlWidth,
-		Tk_Width(tkwin) - 2 * hlWidth,
-		Tk_Height(tkwin) - 2 * hlWidth,
+	TkpDrawFrame(tkwin, framePtr->border, hlWidth,
 		framePtr->borderWidth, framePtr->relief);
     } else {
 	Labelframe *labelframePtr = (Labelframe *) framePtr;

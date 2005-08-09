@@ -71,7 +71,7 @@ TkMacOSXInitAppleEvents(
     AEEventHandlerUPP        OappHandlerUPP, RappHandlerUPP, OdocHandlerUPP,
         PrintHandlerUPP, QuitHandlerUPP, ScriptHandlerUPP,
         PrefsHandlerUPP;
-        
+
     /*
      * Install event handlers for the core apple events.
      */

@@ -137,7 +137,7 @@ proc ::tk::dialog::error::bgerror err {
     wm protocol .bgerrorDialog WM_DELETE_WINDOW { }
 
     if {[tk windowingsystem] eq "aqua"} {
-	::tk::unsupported::MacWindowStyle style .bgerrorDialog dBoxProc
+	::tk::unsupported::MacWindowStyle style .bgerrorDialog zoomDocProc
     }
 
     frame .bgerrorDialog.bot

@@ -416,7 +416,7 @@ MacScaleEventProc(clientData, eventPtr)
 	return;
     }
     
-    part = TrackControl(macScalePtr->scaleHandle, where, (void *) -1);
+    part = TrackControl(macScalePtr->scaleHandle, where, scaleActionProc);
     
     /*
      * Update the value for the widget.
@@ -428,7 +428,6 @@ MacScaleEventProc(clientData, eventPtr)
      * The TrackControl call will "eat" the ButtonUp event.  We now
      * generate a ButtonUp event so Tk will unset implicit grabs etc.
      */
-    GetMouse(&where);
     XQueryPointer(NULL, None, &dummyWin, &dummyWin, &x,
 	&y, &dummy, &dummy, &state);
     TkGenerateButtonEvent(x, y, Tk_WindowId(macScalePtr->info.tkwin), state);

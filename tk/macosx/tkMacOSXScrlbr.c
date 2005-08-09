@@ -269,7 +269,7 @@ TkpDisplayScrollbar(
          * If we are foremost then make us active.
          */
         
-        frontNonFloating = FrontNonFloatingWindow();
+        frontNonFloating = ActiveNonFloatingWindow();
         
         if ((windowRef == FrontWindow()) || TkpIsWindowFloating(windowRef)) {
             macScrollPtr->macFlags |= ACTIVE;
@@ -877,7 +877,6 @@ ScrollbarBindProc(
          * The TrackControl call will "eat" the ButtonUp event.  We now
          * generate a ButtonUp event so Tk will unset implicit grabs etc.
          */
-        GetMouse(&where);
         XQueryPointer(NULL, None, &window, &window, &x,
             &y, &dummy, &dummy, &state);
         window = Tk_WindowId(scrollPtr->tkwin);

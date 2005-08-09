@@ -294,6 +294,7 @@ TkIntStubs tkIntStubs = {
     TkGetOptionSpec, /* 149 */
     TkMakeRawCurve, /* 150 */
     TkMakeRawCurvePostscript, /* 151 */
+    TkpDrawFrame, /* 152 */
 };
 
 TkIntPlatStubs tkIntPlatStubs = {

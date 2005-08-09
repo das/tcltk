@@ -141,7 +141,6 @@ $m entryconfigure "Does almost nothing" -bitmap questhead -compound left \
 		"The menu entry you invoked displays both a bitmap and a\
 		text string.  Other than this, it is just like any other\
 		menu entry." {} 0 OK ]
-}
 
 set m $w.menu.colors
 $w.menu add cascade -label "Colors" -menu $m -underline 1

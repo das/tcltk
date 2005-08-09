@@ -2260,7 +2260,8 @@ TkMacOSXAntialiasedTextVariableProc(clientData, interp, name1, name2, flags)
     return (char *) NULL;
 }
 
-int TkMacOSXUseAntialiasedText(interp, enable)
+MODULE_SCOPE int
+TkMacOSXUseAntialiasedText(interp, enable)
         Tcl_Interp *interp;
         int enable;
 {

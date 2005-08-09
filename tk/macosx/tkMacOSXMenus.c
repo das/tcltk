@@ -104,7 +104,7 @@ TkMacOSXHandleMenuSelect(
                     break;
                 case kCloseItem:
                     /* Send close event */
-                    window = TkMacOSXGetXWindow(FrontNonFloatingWindow());
+                    window = TkMacOSXGetXWindow(ActiveNonFloatingWindow());
                     dispPtr = TkGetDisplayList();
                     tkwin = Tk_IdToWindow(dispPtr->display, window);
                     TkGenWMDestroyEvent(tkwin);
@@ -229,7 +229,7 @@ GenerateEditEvent(
     Window window;
     TkDisplay *dispPtr;
 
-    window = TkMacOSXGetXWindow(FrontNonFloatingWindow());
+    window = TkMacOSXGetXWindow(ActiveNonFloatingWindow());
     dispPtr = TkGetDisplayList();
     tkwin = Tk_IdToWindow(dispPtr->display, window);
     tkwin = (Tk_Window) ((TkWindow *) tkwin)->dispPtr->focusPtr;
@@ -246,13 +246,13 @@ GenerateEditEvent(
     event.subwindow = None;
     event.time = TkpGetMS();
     
-    GetMouse(&where);
+    XQueryPointer(NULL, None, NULL, NULL,
+            &event.x_root, &event.y_root, NULL, NULL, &event.state);
+    where.h = event.x_root;
+    where.v = event.y_root;
+    GlobalToLocal(&where);
     tkwin = Tk_TopCoordsToWindow(tkwin, where.h, where.v, 
             &event.x, &event.y);
-    LocalToGlobal(&where);
-    event.x_root = where.h;
-    event.y_root = where.v;
-    event.state = TkMacOSXButtonKeyState();
     event.same_screen = true;
     event.user_data = NULL;
 
