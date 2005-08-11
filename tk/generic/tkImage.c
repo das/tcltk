@@ -172,9 +172,9 @@ Tk_ImageObjCmd(clientData, interp, objc, objv)
     Image *imagePtr;
     Tcl_HashEntry *hPtr;
     Tcl_HashSearch search;
-    char idString[16 + TCL_INTEGER_SPACE], *name;
+    char idString[16 + TCL_INTEGER_SPACE];
     TkDisplay *dispPtr = winPtr->dispPtr;
-    CONST char *arg;
+    char *arg, *name;
     ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
             Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
@@ -429,6 +429,8 @@ Tk_ImageObjCmd(clientData, interp, objc, objv)
 	    Tcl_SetIntObj(Tcl_GetObjResult(interp), masterPtr->width);
 	    break;
 	}
+	default:
+	    Tcl_Panic("can't happen");
 	break;
     }
     return TCL_OK;

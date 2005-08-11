@@ -124,7 +124,6 @@ static void		DestroyPacker(char *memPtr);
 static Packer *		GetPacker(Tk_Window tkwin);
 static int		PackAfter(Tcl_Interp *interp, Packer *prevPtr,
 			    Packer *masterPtr, int objc,Tcl_Obj *CONST objv[]);
-static void		PackReqProc(ClientData clientData, Tk_Window tkwin);
 static void		PackStructureProc(ClientData clientData,
 			    XEvent *eventPtr);
 static void		Unlink(Packer *packPtr);
@@ -450,6 +449,7 @@ Tk_PackObjCmd(clientData, interp, objc, objv)
 	    Tk_UnmapWindow(packPtr->tkwin);
 	}
 	break;
+    }
     }
 
     return TCL_OK;

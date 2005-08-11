@@ -2494,7 +2494,7 @@ CheckSlotData(masterPtr, slot, slotType, checkOnly)
 	    	masterPtr->masterDataPtr->rowSpace = newNumSlot;
 	    } else {
 	    	masterPtr->masterDataPtr->columnPtr = newSI;
-	    	masterPtr->masterDataPtr->columnSpace = newNumSlotSI;
+	    	masterPtr->masterDataPtr->columnSpace = newNumSlot;
 	    }
 	}
 	if (slot >= end && checkOnly != CHECK_SPACE) {
