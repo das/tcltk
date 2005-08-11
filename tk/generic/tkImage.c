@@ -428,9 +428,9 @@ Tk_ImageObjCmd(clientData, interp, objc, objv)
 	case IMAGE_WIDTH:
 	    Tcl_SetIntObj(Tcl_GetObjResult(interp), masterPtr->width);
 	    break;
-	}
 	default:
 	    Tcl_Panic("can't happen");
+	}
 	break;
     }
     return TCL_OK;
