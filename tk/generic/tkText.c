@@ -2042,7 +2042,7 @@ ConfigureText(interp, textPtr, objc, objv)
 		    &first);
 	    TkTextMakeByteIndex(textPtr->sharedTextPtr->tree, NULL,
 		    TkBTreeNumLines(textPtr->sharedTextPtr->tree, NULL),
-		    &last);
+		    0, &last);
 	    TkBTreeStartSearch(&first, &last, textPtr->selTagPtr, &search);
 	    if (!TkBTreeCharTagged(&first, textPtr->selTagPtr)
 		    && !TkBTreeNextTag(&search)) {
