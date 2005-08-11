@@ -149,7 +149,7 @@ Tk_FocusObjCmd(clientData, interp, objc, objv)
      */
 
     if (objc == 2) {
-	windowName = Tcl_GetStringFromObj(objv[1], (int *) NULL);
+	windowName = Tcl_GetStringFromObj(objv[1], NULL);
 
 	/*
 	 * The empty string case exists for backwards compatibility.
@@ -180,7 +180,7 @@ Tk_FocusObjCmd(clientData, interp, objc, objv)
     }
     switch (index) {
         case 0: {        /* -displayof */
-	    windowName = Tcl_GetStringFromObj(objv[2], (int *) NULL);
+	    windowName = Tcl_GetStringFromObj(objv[2], NULL);
 	    newPtr = (TkWindow *) Tk_NameToWindow(interp, windowName, tkwin);
 	    if (newPtr == NULL) {
 		return TCL_ERROR;
@@ -192,7 +192,7 @@ Tk_FocusObjCmd(clientData, interp, objc, objv)
 	    break;
 	}
         case 1: {        /* -force */
-	    windowName = Tcl_GetStringFromObj(objv[2], (int *) NULL);
+	    windowName = Tcl_GetStringFromObj(objv[2], NULL);
 
 	    /*
 	     * The empty string case exists for backwards compatibility.
@@ -209,7 +209,7 @@ Tk_FocusObjCmd(clientData, interp, objc, objv)
 	    break;
 	}
         case 2: {        /* -lastfor */
-	    windowName = Tcl_GetStringFromObj(objv[2], (int *) NULL);
+	    windowName = Tcl_GetStringFromObj(objv[2], NULL);
 	    newPtr = (TkWindow *) Tk_NameToWindow(interp, windowName, tkwin);
 	    if (newPtr == NULL) {
 		return TCL_ERROR;

@@ -349,7 +349,7 @@ Tk_PanedWindowObjCmd(clientData, interp, objc, objv)
     }
 
     tkwin = Tk_CreateWindowFromPath(interp, Tk_MainWindow(interp), 
-	    Tcl_GetStringFromObj(objv[1], NULL), (char *) NULL);
+	    Tcl_GetStringFromObj(objv[1], NULL), NULL);
     if (tkwin == NULL) {
 	return TCL_ERROR;
     }

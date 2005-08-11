@@ -1158,7 +1158,7 @@ GetOptionFromObj(interp, objPtr, tablePtr)
      * The answer isn't cached.
      */
 
-    name = Tcl_GetStringFromObj(objPtr, (int *) NULL);
+    name = Tcl_GetStringFromObj(objPtr, NULL);
     bestPtr = GetOption(name, tablePtr);
     if (bestPtr == NULL) {
 	goto error;
