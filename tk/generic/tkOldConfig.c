@@ -132,7 +132,7 @@ Tk_ConfigureWidget(interp, tkwin, specs, argc, argv, widgRec, flags)
 	 */
 
 	for (specPtr=specs ; specPtr->type != TK_CONFIG_END ; specPtr++) {
-	    entryCount += sizeof(Tk_ConfigSpec);
+	    entrySpace += sizeof(Tk_ConfigSpec);
 	}
 
 	/*
@@ -165,7 +165,7 @@ Tk_ConfigureWidget(interp, tkwin, specs, argc, argv, widgRec, flags)
 	    specPtr->specFlags &= ~TK_CONFIG_OPTION_SPECIFIED;
 	}
     } else {
-	cachedSpecPtr = (Tk_ConfigSpec *) Tk_GetHashValue(entryPtr);
+	cachedSpecPtr = (Tk_ConfigSpec *) Tcl_GetHashValue(entryPtr);
     }
 
     /*
@@ -681,7 +681,7 @@ Tk_ConfigureInfo(interp, tkwin, specs, widgRec, argvName, flags)
     specCacheTablePtr = (Tcl_HashTable *)
 	    Tcl_GetAssocData(interp, "tkConfigSpec.threadTable", NULL);
     entryPtr = Tcl_FindHashEntry(specCacheTablePtr, (char *) specs);
-    cachedSpecPtr = (Tk_ConfigSpec *) Tk_GetHashValue(entryPtr);
+    cachedSpecPtr = (Tk_ConfigSpec *) Tcl_GetHashValue(entryPtr);
 
     /*
      * If information is only wanted for a single configuration spec, then
@@ -996,7 +996,7 @@ Tk_ConfigureValue(interp, tkwin, specs, widgRec, argvName, flags)
     specCacheTablePtr = (Tcl_HashTable *)
 	    Tcl_GetAssocData(interp, "tkConfigSpec.threadTable", NULL);
     entryPtr = Tcl_FindHashEntry(specCacheTablePtr, (char *) specs);
-    cachedSpecPtr = (Tk_ConfigSpec *) Tk_GetHashValue(entryPtr);
+    cachedSpecPtr = (Tk_ConfigSpec *) Tcl_GetHashValue(entryPtr);
 
     specPtr = FindConfigSpec(interp, cachedSpecPtr, argvName, needFlags,
 	    hateFlags);
