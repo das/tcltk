@@ -1927,7 +1927,7 @@ Tk_ResetUserInactiveTime(dpy)
     inp.mi.mouseData   = 0;
     inp.mi.dwFlags     = MOUSEEVENTF_MOVE;
     inp.mi.time        = 0;
-    inp.mi.dwExtraInfo = (ULONG_PTR) NULL;
+    inp.mi.dwExtraInfo = (DWORD) NULL;
 
     SendInput(1, &inp, sizeof(inp));
 }
