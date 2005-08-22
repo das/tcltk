@@ -204,7 +204,7 @@ TkpDisplayButton(
     int borderWidth;
     Pixmap pixmap;
     int wasUsingControl;
-    int imageWidth, imageHeight;
+    int imageWidth = 0, imageHeight = 0;
     int imageXOffset = 0, imageYOffset = 0; /* image information that will
 					     * be used to restrict disabled
 					     * pixmap as well */
