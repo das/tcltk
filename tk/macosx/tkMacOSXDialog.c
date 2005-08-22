@@ -1291,7 +1291,7 @@ Tk_MessageBoxObjCmd(
     int                     defaultNativeButtonIndex;    /* 1, 2, 3: right to left. */
     int                     typeIndex;
     int                     i;
-    int                     indexDefaultOption;
+    int                     indexDefaultOption = 0;
     int                     result = TCL_OK;
     
     static CONST char *movableAlertStrings[] = {
