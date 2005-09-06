@@ -5835,7 +5835,7 @@ Tk_PhotoGetImage(handle, blockPtr)
     blockPtr->offset[3] = 3;
     return 1;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -5895,7 +5895,7 @@ PhotoOptionFind(interp, obj)
     }
     return proc;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -5927,7 +5927,7 @@ PhotoOptionCleanupProc(clientData, interp)
 	ckfree((char *) ptr);
     }
 }
-
+
 /*
  *--------------------------------------------------------------
  *
