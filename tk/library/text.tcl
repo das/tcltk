@@ -454,9 +454,9 @@ bind Text <B2-Motion> {
 }
 set ::tk::Priv(prevPos) {}
 
-# The MouseWheel will typically only fire on Windows.  However,
-# someone could use the "event generate" command to produce one
-# on other platforms.
+# The MouseWheel will typically only fire on Windows and MacOS X.
+# However, someone could use the "event generate" command to produce
+# one on other platforms.
 
 if {[string equal [tk windowingsystem] "classic"]
 	|| [string equal [tk windowingsystem] "aqua"]} {

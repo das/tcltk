@@ -170,11 +170,21 @@ CarbonEventsCheckProc(clientData, flags)
     ClientData clientData;
     int flags;
 {
+    int numFound;
+    OSStatus err = noErr;
+    
     if (!(flags & TCL_WINDOW_EVENTS)) {
 	return;
     }
 
-    if (GetNumEventsInQueue((EventQueueRef)clientData)) {
-        TkMacOSXCountAndProcessMacEvents();
+    numFound = GetNumEventsInQueue((EventQueueRef)clientData);
+    
+    /* Avoid starving other event sources: */
+    if (numFound > 4) {
+        numFound = 4;
+    }
+    while (numFound > 0 && err == noErr) {
+        err = TkMacOSXReceiveAndProcessEvent();
+        numFound--;
     }
 }

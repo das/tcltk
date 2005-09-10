@@ -253,6 +253,9 @@ if test $tk_aqua = yes; then
     LIBS="$LIBS -framework Carbon"
     CFLAGS="$CFLAGS -fpascal-strings"
     TK_WINDOWINGSYSTEM=AQUA
+    if test "${enable_symbols+set}" = set; then
+        AC_DEFINE(TK_MAC_DEBUG, 1, [Are TkAqua debug messages enabled?])
+    fi
 else
     #--------------------------------------------------------------------
     #	Locate the X11 header files and the X11 library archive.  Try

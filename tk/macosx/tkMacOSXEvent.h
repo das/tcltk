@@ -59,10 +59,6 @@
 #include <Carbon/Carbon.h>
 #include <tcl.h>
 
-enum {
- kEventClassWish = 'WiSH'
-};
-
 typedef struct {
     int stopProcessing;
     int err;
@@ -79,13 +75,18 @@ typedef struct {
     Tcl_Interp *interp; /* Interp to handle events in */
 } TkMacOSXEvent;
 
-int TkMacOSXCountAndProcessMacEvents _ANSI_ARGS_(());
-void tkMacOSXFlushWindows _ANSI_ARGS_(()); 
-int TkMacOSXProcessEvent(TkMacOSXEvent * eventPtr, MacEventStatus * statusPtr);
-int TkMacOSXProcessMouseEvent(TkMacOSXEvent * e, MacEventStatus * statusPtr);
-int TkMacOSXProcessWindowEvent(TkMacOSXEvent * e, MacEventStatus * statusPtr);
-int TkMacOSXProcessKeyboardEvent(TkMacOSXEvent * e, MacEventStatus * statusPtr);
-int TkMacOSXProcessApplicationEvent(TkMacOSXEvent * e, MacEventStatus * statusPtr);
+OSStatus TkMacOSXReceiveAndProcessEvent();
+void TkMacOSXFlushWindows(); 
+int TkMacOSXProcessEvent(TkMacOSXEvent *eventPtr, 
+        MacEventStatus *statusPtr);
+int TkMacOSXProcessMouseEvent(TkMacOSXEvent *e,
+        MacEventStatus *statusPtr);
+int TkMacOSXProcessWindowEvent(TkMacOSXEvent *e,
+        MacEventStatus *statusPtr);
+int TkMacOSXProcessKeyboardEvent(TkMacOSXEvent *e,
+        MacEventStatus *statusPtr);
+int TkMacOSXProcessApplicationEvent(TkMacOSXEvent *e,
+        MacEventStatus *statusPtr);
 
 int TkMacOSXKeycodeToUnicode(
         UniChar * uniChars, int maxChars,
