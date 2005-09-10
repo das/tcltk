@@ -67,6 +67,12 @@
 #endif
 */
 
+#ifdef TK_MAC_DEBUG_CARBON_EVENTS
+/* Carbon-internal event debugging routines (c.f. Technote 2124): */
+void _DebugPrintEvent(EventRef inEvent);
+void _TraceEventByName(CFStringRef eventName);
+#endif /* TK_MAC_DEBUG_CARBON_EVENTS */
+
 /* Declarations of functions used only in this file */
 static OSStatus CarbonEventHandlerProc (
                               EventHandlerCallRef callRef,
