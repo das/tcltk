@@ -96,7 +96,7 @@ static int GenerateActivateEvents( Window window, int activeFlag);
  *----------------------------------------------------------------------
  */
  
-int
+MODULE_SCOPE int
 TkMacOSXProcessApplicationEvent(
         TkMacOSXEvent *eventPtr, 
         MacEventStatus *statusPtr)
@@ -122,10 +122,7 @@ TkMacOSXProcessApplicationEvent(
             HideFloatingWindows();
             break;
         case kEventAppQuit:
-        case kEventAppLaunchNotification:
-        case kEventAppLaunched:
-        case kEventAppTerminated:
-        case kEventAppFrontSwitched:
+            statusPtr->stopProcessing = 1;
             break;
         case kEventAppHidden:
         /*
@@ -176,7 +173,7 @@ TkMacOSXProcessApplicationEvent(
  *----------------------------------------------------------------------
  */
 
-int
+MODULE_SCOPE int
 TkMacOSXProcessWindowEvent(
         TkMacOSXEvent * eventPtr, 
         MacEventStatus * statusPtr)
@@ -202,7 +199,9 @@ TkMacOSXProcessWindowEvent(
             sizeof(whichWindow), NULL,
             &whichWindow);
     if (status != noErr) {
+#ifdef TK_MAC_DEBUG
         fprintf ( stderr, "TkMacOSXHandleWindowEvent:Failed to retrieve window" );
+#endif
         return 0;
     }
     

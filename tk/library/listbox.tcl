@@ -175,12 +175,27 @@ bind Listbox <B2-Motion> {
     %W scan dragto %x %y
 }
 
-# The MouseWheel will typically only fire on Windows.  However,
-# someone could use the "event generate" command to produce one
-# on other platforms.
+# The MouseWheel will typically only fire on Windows and Mac OS X.
+# However, someone could use the "event generate" command to produce
+# one on other platforms.
 
-bind Listbox <MouseWheel> {
-    %W yview scroll [expr {- (%D / 120) * 4}] units
+if {[tk windowingsystem] eq "aqua"} {
+    bind Listbox <MouseWheel> {
+        %W yview scroll [expr {- (%D)}] units
+    }
+    bind Listbox <Option-MouseWheel> {
+        %W yview scroll [expr {-10 * (%D)}] units
+    }
+    bind Listbox <Shift-MouseWheel> {
+        %W xview scroll [expr {- (%D)}] units
+    }
+    bind Listbox <Shift-Option-MouseWheel> {
+        %W xview scroll [expr {-10 * (%D)}] units
+    }
+} else {
+    bind Listbox <MouseWheel> {
+        %W yview scroll [expr {- (%D / 120) * 4}] units
+    }
 }
 
 if {"x11" eq [tk windowingsystem]} {

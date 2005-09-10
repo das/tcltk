@@ -55,6 +55,8 @@
 
 #include "tkMacOSXDebug.h"
 
+#ifdef TK_MAC_DEBUG
+
 typedef struct {
  EventKind kind;
  char     * name;
@@ -439,3 +441,5 @@ char * MouseTrackingResultToAscii(MouseTrackingResult r, char * buf)
     sprintf(buf, "Unknown mouse tracking result : %d", r);
     return buf;
 }
+
+#endif /* TK_MAC_DEBUG */

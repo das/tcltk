@@ -820,7 +820,7 @@ FindColor(name, colorPtr)
     const char *name;
     XColor *colorPtr;
 {
-    int l, u, r, i;
+    int l, u, r, i = 0;
 
     /*
      * Count the number of elements in the color array if we haven't

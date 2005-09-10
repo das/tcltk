@@ -709,6 +709,14 @@ Tk_FreeXId (
 {
     /* no-op function needed for stubs implementation. */
 }
+
+int
+XSync (Display *display, Bool flag)
+{
+    TkMacOSXFlushWindows();
+    display->request++;
+    return 0;
+}
 
 /*
  *----------------------------------------------------------------------

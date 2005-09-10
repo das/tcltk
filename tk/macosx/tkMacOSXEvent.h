@@ -59,10 +59,6 @@
 #include <Carbon/Carbon.h>
 #include <tcl.h>
 
-enum {
- kEventClassWish = 'WiSH'
-};
-
 typedef struct {
     int stopProcessing;
     int err;
@@ -79,15 +75,20 @@ typedef struct {
     Tcl_Interp *interp; /* Interp to handle events in */
 } TkMacOSXEvent;
 
-int TkMacOSXCountAndProcessMacEvents _ANSI_ARGS_(());
-void tkMacOSXFlushWindows _ANSI_ARGS_(()); 
-int TkMacOSXProcessEvent(TkMacOSXEvent * eventPtr, MacEventStatus * statusPtr);
-int TkMacOSXProcessMouseEvent(TkMacOSXEvent * e, MacEventStatus * statusPtr);
-int TkMacOSXProcessWindowEvent(TkMacOSXEvent * e, MacEventStatus * statusPtr);
-int TkMacOSXProcessKeyboardEvent(TkMacOSXEvent * e, MacEventStatus * statusPtr);
-int TkMacOSXProcessApplicationEvent(TkMacOSXEvent * e, MacEventStatus * statusPtr);
+MODULE_SCOPE OSStatus TkMacOSXReceiveAndProcessEvent();
+MODULE_SCOPE void TkMacOSXFlushWindows(); 
+MODULE_SCOPE int TkMacOSXProcessEvent(TkMacOSXEvent *eventPtr, 
+        MacEventStatus *statusPtr);
+MODULE_SCOPE int TkMacOSXProcessMouseEvent(TkMacOSXEvent *e,
+        MacEventStatus *statusPtr);
+MODULE_SCOPE int TkMacOSXProcessWindowEvent(TkMacOSXEvent *e,
+        MacEventStatus *statusPtr);
+MODULE_SCOPE int TkMacOSXProcessKeyboardEvent(TkMacOSXEvent *e,
+        MacEventStatus *statusPtr);
+MODULE_SCOPE int TkMacOSXProcessApplicationEvent(TkMacOSXEvent *e,
+        MacEventStatus *statusPtr);
 
-int TkMacOSXKeycodeToUnicode(
+MODULE_SCOPE int TkMacOSXKeycodeToUnicode(
         UniChar * uniChars, int maxChars,
         EventKind eKind,
         UInt32 keycode, UInt32 modifiers,

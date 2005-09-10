@@ -207,7 +207,9 @@ TkpInit(interp)
                     err = FSPathMakeRef(fileName, &ref, NULL);
                     if (err != noErr) break;
                     err = FSOpenResourceFile(&ref, 0, NULL, fsRdPerm, &refNum);
+#ifdef TK_MAC_DEBUG
                     if (err != noErr) fprintf(stderr,"FSOpenResourceFile error %ld\n",err);
+#endif
                     break;
                 }
                 if (fd != -1) {

@@ -370,9 +370,9 @@ TkMacOSXInstallCursor(
         if (cursor) {
             SetCursor(*cursor);
         } else {
-            /*
+#ifdef TK_MAC_DEBUG
             fprintf(stderr,"Resize cursor failed, %d\n", ResError());
-             */
+#endif
         }
     } else if (macCursorPtr == NULL) {
         SetThemeCursor(kThemeArrowCursor);
