@@ -2281,7 +2281,7 @@ UpdateWrapper(winPtr)
     if (childStateInfo) {
 	if (wmPtr->numTransients > 0) {
 	    /*
-	     * Reset all transient children for whom this is the master
+	     * Reset all alive transient children for whom this is the master
 	     */
 	    WmInfo *wmPtr2;
 
@@ -2289,7 +2289,8 @@ UpdateWrapper(winPtr)
 	    for (wmPtr2 = winPtr->dispPtr->firstWmPtr; wmPtr2 != NULL;
 		 wmPtr2 = wmPtr2->nextPtr) {
 		if (wmPtr2->masterPtr == winPtr) {
-		    if (!(wmPtr2->flags & WM_NEVER_MAPPED)) {
+		    if (  !(wmPtr2->flags & WM_NEVER_MAPPED) 
+			&& (wmPtr2->winPtr->flags & TK_ALREADY_DEAD)) {
 			UpdateWrapper(wmPtr2->winPtr);
 			TkpWmSetState(wmPtr2->winPtr, childStateInfo[state++]);
 		    }
