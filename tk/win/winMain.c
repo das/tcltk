@@ -30,7 +30,7 @@
  * Forward declarations for procedures defined later in this file:
  */
 
-static void		WishPanic _ANSI_ARGS_(TCL_VARARGS(CONST char *,format));
+static void		WishPanic _ANSI_ARGS_((CONST char *format, ...));
 #ifdef TK_TEST
 extern int		Tktest_Init(Tcl_Interp *interp);
 #endif /* TK_TEST */
@@ -226,13 +226,12 @@ error:
  */
 
 void
-WishPanic TCL_VARARGS_DEF(CONST char *,arg1)
+WishPanic(CONST char *format, ...)
 {
     va_list argList;
     char buf[1024];
-    CONST char *format;
     
-    format = TCL_VARARGS_START(CONST char *,arg1,argList);
+    va_start(argList, format);
     vsprintf(buf, format, argList);
 
     MessageBeep(MB_ICONEXCLAMATION);
