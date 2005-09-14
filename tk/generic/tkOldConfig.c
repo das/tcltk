@@ -1065,7 +1065,7 @@ GetCachedSpecs(
 				/* Value to cache a copy of; it is also used
 				 * as a key into the cache. */
 {
-    Tk_ConfigSpec *specsPtr, *cachedSpecPtr;
+    Tk_ConfigSpec *specPtr, *cachedSpecs;
     Tcl_HashTable *specCacheTablePtr;
     Tcl_HashEntry *entryPtr;
     int isNew;
@@ -1090,7 +1090,7 @@ GetCachedSpecs(
      * which will have the writable specs as its associated value.
      */
 
-    entryPtr = Tcl_CreateHashEntry(specCacheTablePtr, (char *) staticTable,
+    entryPtr = Tcl_CreateHashEntry(specCacheTablePtr, (char *) staticSpecs,
 	    &isNew);
     if (isNew) {
 	unsigned int entrySpace = sizeof(Tk_ConfigSpec);
@@ -1100,8 +1100,7 @@ GetCachedSpecs(
 	 * how much space to allocate first.
 	 */
 
-	for (specPtr=staticTable ; specPtr->type != TK_CONFIG_END ;
-		specPtr++) {
+	for (specPtr=staticSpecs ; specPtr->type!=TK_CONFIG_END ; specPtr++) {
 	    entrySpace += sizeof(Tk_ConfigSpec);
 	}
 
@@ -1110,9 +1109,9 @@ GetCachedSpecs(
 	 * from the master copy.
 	 */
 
-	cachedSpecPtr = (Tk_ConfigSpec *) ckalloc(entrySpace);
-	memcpy((void *) cachedSpecPtr, (void *) staticSpecs, entrySpace);
-	Tcl_SetHashValue(entryPtr, (ClientData) cachedSpecPtr);
+	cachedSpecs = (Tk_ConfigSpec *) ckalloc(entrySpace);
+	memcpy((void *) cachedSpecs, (void *) staticSpecs, entrySpace);
+	Tcl_SetHashValue(entryPtr, (ClientData) cachedSpecs);
 
 	/*
 	 * Finally, go through and replace database names, database classes
@@ -1120,7 +1119,7 @@ GetCachedSpecs(
 	 * per-thread.
 	 */
 
-	for (specPtr=cachedSpecPtr; specPtr->type!=TK_CONFIG_END; specPtr++) {
+	for (specPtr=cachedSpecs; specPtr->type!=TK_CONFIG_END; specPtr++) {
 	    if (specPtr->argvName != NULL) {
 		if (specPtr->dbName != NULL) {
 		    specPtr->dbName = Tk_GetUid(specPtr->dbName);
@@ -1135,10 +1134,10 @@ GetCachedSpecs(
 	    specPtr->specFlags &= ~TK_CONFIG_OPTION_SPECIFIED;
 	}
     } else {
-	cachedSpecPtr = (Tk_ConfigSpec *) Tcl_GetHashValue(entryPtr);
+	cachedSpecs = (Tk_ConfigSpec *) Tcl_GetHashValue(entryPtr);
     }
 
-    return cachedSpecPtr;
+    return cachedSpecs;
 }
 
 /*
