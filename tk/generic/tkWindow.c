@@ -2677,6 +2677,10 @@ DeleteWindowsExitProc(clientData)
     Tcl_Interp *interp;
     ThreadSpecificData *tsdPtr = (ThreadSpecificData *) clientData;
 
+    if (tsdPtr == NULL) {
+	return;
+    }
+
     /*
      * Finish destroying any windows that are in a half-dead state. We must
      * protect the interpreter while destroying the window, because of
@@ -3133,17 +3137,18 @@ Initialize(interp)
      */
 
     code = TkpInit(interp);
-    if(code != TCL_OK) {
+    if (code != TCL_OK) {
 	goto done;
     }
 
     /*
-     * Create exit handler to delete all windows when the application exits.
-     * This handler needs to be invoked before other platform specific
-     * cleanups take place to avoid panics in finalization.
+     * Create exit handlers to delete all windows when the application or
+     * thread exits. These handler need to be invoked before other platform
+     * specific cleanups take place to avoid panics in finalization.
      */
 
-    TkCreateExitHandler(DeleteWindowsExitProc, (ClientData) tsdPtr);
+    TkCreateExitHandler(DeleteWindowsExitProc, (ClientData) NULL);
+    TkCreateThreadExitHandler(DeleteWindowsExitProc, (ClientData) tsdPtr);
 
   done:
     if (argv != NULL) {
