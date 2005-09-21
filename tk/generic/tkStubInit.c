@@ -295,6 +295,8 @@ TkIntStubs tkIntStubs = {
     TkMakeRawCurve, /* 150 */
     TkMakeRawCurvePostscript, /* 151 */
     TkpDrawFrame, /* 152 */
+    TkCreateThreadExitHandler, /* 153 */
+    TkDeleteThreadExitHandler, /* 154 */
 };
 
 TkIntPlatStubs tkIntPlatStubs = {
