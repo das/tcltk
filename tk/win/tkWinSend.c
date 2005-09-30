@@ -16,6 +16,7 @@
 
 #include "tkPort.h"
 #include "tkInt.h"
+#include "tclInt.h"		/* TCL_TSD_INIT */
 #include "tkWinSendCom.h"
 
 /* Should be defined in WTypes.h but mingw 1.0 is missing them */
