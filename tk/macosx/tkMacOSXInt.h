@@ -33,6 +33,14 @@
 
 #include <Carbon/Carbon.h>
 
+/*
+ * Should be defined by configure, but some extensions may access
+ * this file without setting it.
+ */
+#ifndef MODULE_SCOPE
+#define MODULE_SCOPE __private_extern__
+#endif
+
 struct TkWindowPrivate {
     TkWindow *winPtr;     	/* Ptr to tk window or NULL if Pixmap */
     CGrafPtr  grafPtr;
