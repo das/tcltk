@@ -63,7 +63,7 @@ proc ::tk_dialog {w title text bitmap default args} {
     #
     if {[winfo viewable [winfo toplevel [winfo parent $w]]] } {
 	wm transient $w [winfo toplevel [winfo parent $w]]
-    }    
+    }
 
     if {[string equal $tcl_platform(platform) "macintosh"]
 	    || [string equal [tk windowingsystem] "aqua"]} {
@@ -93,10 +93,9 @@ proc ::tk_dialog {w title text bitmap default args} {
 
     label $w.msg -justify left -text $text
     pack $w.msg -in $w.top -side right -expand 1 -fill both -padx 3m -pady 3m
-    if {[string compare $bitmap ""]} {
-	if {([string equal $tcl_platform(platform) "macintosh"]
-	     || [string equal [tk windowingsystem] "aqua"]) &&\
-		[string equal $bitmap "error"]} {
+    if {$bitmap ne ""} {
+	if {($tcl_platform(platform) eq "macintosh"
+	     || [tk windowingsystem] eq "aqua") && ($bitmap eq "error")} {
 	    set bitmap "stop"
 	}
 	label $w.bitmap -bitmap $bitmap
@@ -165,14 +164,16 @@ proc ::tk_dialog {w title text bitmap default args} {
 	set y 0
     }
     wm maxsize $w [winfo screenwidth $w] [winfo screenheight $w]
-    wm geom $w +$x+$y
+    wm geometry $w +$x+$y
     wm deiconify $w
+
+    tkwait visibility $w
 
     # 7. Set a grab and claim the focus too.
 
     set oldFocus [focus]
     set oldGrab [grab current $w]
-    if {[string compare $oldGrab ""]} {
+    if {$oldGrab ne ""} {
 	set grabStatus [grab status $oldGrab]
     }
     grab $w
@@ -198,11 +199,11 @@ proc ::tk_dialog {w title text bitmap default args} {
 	bind $w <Destroy> {}
 	destroy $w
     }
-    if {[string compare $oldGrab ""]} {
-      if {[string compare $grabStatus "global"]} {
+    if {$oldGrab ne ""} {
+	if {$grabStatus ne "global"} {
 	    grab $oldGrab
-      } else {
-          grab -global $oldGrab
+	} else {
+	    grab -global $oldGrab
 	}
     }
     return $Priv(button)
