@@ -63,7 +63,7 @@ proc ::tk_dialog {w title text bitmap default args} {
     #
     if {[winfo viewable [winfo toplevel [winfo parent $w]]] } {
 	wm transient $w [winfo toplevel [winfo parent $w]]
-    }    
+    }
 
     if {[tk windowingsystem] eq "aqua"} {
 	::tk::unsupported::MacWindowStyle style $w dBoxProc
@@ -163,6 +163,8 @@ proc ::tk_dialog {w title text bitmap default args} {
     wm maxsize $w [winfo screenwidth $w] [winfo screenheight $w]
     wm geometry $w +$x+$y
     wm deiconify $w
+
+    tkwait visibility $w
 
     # 7. Set a grab and claim the focus too.
 
