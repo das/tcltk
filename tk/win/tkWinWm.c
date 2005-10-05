@@ -7226,11 +7226,11 @@ InvalidateSubTreeDepth(winPtr)
     for (childPtr = winPtr->childList; childPtr != NULL;
 	 childPtr = childPtr->nextPtr) {
 	/*
-	 * We can stop the descent when we hit a toplevel window, as it
-	 * should get its own message.
+	 * We can stop the descent when we hit a non-embedded toplevel window, 
+	 * as it should get its own message.
 	 */
 
-	if (!Tk_TopWinHierarchy(childPtr)) {
+	if (childPtr->flags & TK_EMBEDDED || !Tk_TopWinHierarchy(childPtr)) {
 	    InvalidateSubTreeDepth(childPtr);
 	}
     }
