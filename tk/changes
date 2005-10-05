@@ -6062,3 +6062,6 @@ display/resizing (south)
 Documentation improvements [1087842,1081527,1115907,etc.]
 
 --- Released 8.5a3, June 4, 2005 --- See ChangeLog for details ---
+
+2005-10-04 (bug fix)[1311734] Fixed the problems that an embedded windows failed
+to respond to display changes (Windows platform) (chengyemao)
