@@ -2303,11 +2303,3 @@ StartEnd(textPtr, string, indexPtr)
   done:
     return p;
 }
-
-/*
- * Local Variables:
- * mode: c
- * c-basic-offset: 4
- * fill-column: 78
- * End:
- */

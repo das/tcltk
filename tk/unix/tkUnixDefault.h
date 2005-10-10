@@ -515,6 +515,7 @@
 #define DEF_TEXT_SPACING3		"0"
 #define DEF_TEXT_STATE			"normal"
 #define DEF_TEXT_TABS			""
+#define DEF_TEXT_TABSTYLE		"tabular"
 #define DEF_TEXT_TAKE_FOCUS		(char *) NULL
 #define DEF_TEXT_UNDO    		"0"
 #define DEF_TEXT_WIDTH			"80"

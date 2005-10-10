@@ -331,7 +331,7 @@ TkTextWindowCmd(textPtr, interp, objc, objv)
 		TkTextIndex index2;
 
 		TkTextIndexForwChars(NULL, &index, 1, &index2, COUNT_INDICES);
-		TkBTreeDeleteChars(textPtr->sharedTextPtr->tree, &index, &index2);
+		TkBTreeDeleteIndexRange(textPtr->sharedTextPtr->tree, &index, &index2);
 		return TCL_ERROR;
 	    }
 	    TkTextInvalidateLineMetrics(textPtr->sharedTextPtr, NULL, 

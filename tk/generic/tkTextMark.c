@@ -595,7 +595,7 @@ TkTextInsertDisplayProc(textPtr, chunkPtr, x, y, height, baseline, display,
       
     if(textPtr->insertCursorType) {
 	TkTextMarkSegToIndex(textPtr, textPtr->insertMarkPtr, &index);
-	TkTextCharBbox(textPtr, &index, &ix, &iy, &iw, &ih, &charWidth);
+	TkTextIndexBbox(textPtr, &index, &ix, &iy, &iw, &ih, &charWidth);
 	rightSideWidth = charWidth + halfWidth;
     } else {
 	rightSideWidth = halfWidth;

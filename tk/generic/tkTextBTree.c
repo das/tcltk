@@ -1269,7 +1269,7 @@ CleanupLine(linePtr)
 /*
  *----------------------------------------------------------------------
  *
- * TkBTreeDeleteChars --
+ * TkBTreeDeleteIndexRange --
  *
  *	Delete a range of characters from a B-tree. The caller must make sure
  *	that the final newline of the B-tree is never deleted.
@@ -1287,7 +1287,7 @@ CleanupLine(linePtr)
  */
 
 void
-TkBTreeDeleteChars(tree, index1Ptr, index2Ptr)
+TkBTreeDeleteIndexRange(tree, index1Ptr, index2Ptr)
     TkTextBTree tree;		/* Tree to delete from */
     register TkTextIndex *index1Ptr;
 				/* Indicates first character that is to be
@@ -4832,11 +4832,3 @@ ToggleCheckProc(segPtr, linePtr)
 	}
     }
 }
-
-/*
- * Local Variables:
- * mode: c
- * c-basic-offset: 4
- * fill-column: 78
- * End:
- */
