@@ -115,7 +115,8 @@ toplevel .t -width 550 -height 400
 frame .t.f -width 80 -height 60 -bd 2 -relief raised
 place .t.f -x 50 -y 50
 wm geom .t +0+0
-update
+tkwait visibility .t.f
+
 test winfo-4.1 {"winfo containing" command} {
     list [catch {winfo containing 22} msg] $msg
 } {1 {wrong # args: should be "winfo containing ?-displayof window? rootX rootY"}}
