@@ -226,7 +226,7 @@ Tk_CreateOptionTable(interp, templatePtr)
 	numOptions++;
     }
     tablePtr = (OptionTable *) (ckalloc(sizeof(OptionTable)
-	    + ((numOptions - 1)  * sizeof(Option))));
+	    + (numOptions * sizeof(Option))));
     tablePtr->refCount = 1;
     tablePtr->hashEntryPtr = hashEntryPtr;
     tablePtr->nextPtr = NULL;
@@ -354,7 +354,7 @@ Tk_DeleteOptionTable(optionTable)
 	Tk_DeleteOptionTable((Tk_OptionTable) tablePtr->nextPtr);
     }
 
-    for (count = tablePtr->numOptions - 1, optionPtr = tablePtr->options;
+    for (count = tablePtr->numOptions, optionPtr = tablePtr->options;
 	    count > 0;  count--, optionPtr++) {
 	if (optionPtr->defaultPtr != NULL) {
 	    Tcl_DecrRefCount(optionPtr->defaultPtr);
