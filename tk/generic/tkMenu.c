@@ -1328,10 +1328,6 @@ TkDestroyMenu(menuPtr)
  *	a reference to a 'TkMenuReferences' structure, and therefore
  *	no such structure contains a reference to this menu entry either.
  *
- *	At the end of this function, the menu entry no longer contains
- *	a reference to a 'TkMenuReferences' structure, and therefore
- *	no such structure contains a reference to this menu entry either.
- *
  * Results:
  *	None
  *
