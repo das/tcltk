@@ -386,6 +386,7 @@ typedef struct TkMenu {
 				/* We actually have to allocate these because
 				 * multiple menus get changed during one
 				 * ConfigureMenu call. */
+    int refCount;
 } TkMenu;
 
 /*

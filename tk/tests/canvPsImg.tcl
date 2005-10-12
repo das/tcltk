@@ -69,9 +69,11 @@ foreach l { monochrome gray color } {
     pack .t.$l -in .t.top.r -anchor w
 }
 
-set BitmapImage [image create bitmap -file $tk_library/demos/images/face.xbm \
+set BitmapImage [image create bitmap \
+	-file [file join [file dirname [info script]] face.xbm] \
 	-background white -foreground black]
-set PhotoImage [image create photo -file $tk_library/demos/images/teapot.ppm]
+set PhotoImage [image create photo \
+	-file [file join [file dirname [info script]] teapot.ppm]]
 
 BuildTestImage
 

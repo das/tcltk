@@ -140,7 +140,7 @@ test canvPs-3.1 {test ps generation with an embedded window} -setup {
 	    -dash {4 4} -stipple question -outline red -fill green
 
     image create photo logo \
-	    -file [file join $tk_library images pwrdLogo150.gif]
+	-file [file join [file dirname [info script]] pwrdLogo150.gif]
     .c create image 200 50 -image logo -anchor nw
 
     entry .c.e -background pink -foreground blue -width 14
