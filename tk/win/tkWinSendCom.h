@@ -16,10 +16,14 @@
 #ifndef _tkWinSendCom_h_INCLUDE
 #define _tkWinSendCom_h_INCLUDE
 
-#include "tkPort.h"
-#include "tkInt.h"
-
+#include "tkWinInt.h"
 #include <ole2.h>
+
+#ifdef _MSC_VER
+#   pragma comment (lib, "ole32.lib")
+#   pragma comment (lib, "oleaut32.lib")
+#   pragma comment (lib, "uuid.lib")
+#endif
 
 /*
  * TkWinSendCom CoClass structure 

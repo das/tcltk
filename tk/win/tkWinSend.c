@@ -14,9 +14,6 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkPort.h"
-#include "tkInt.h"
-#include "tclInt.h"		/* TCL_TSD_INIT */
 #include "tkWinSendCom.h"
 
 /* Should be defined in WTypes.h but mingw 1.0 is missing them */
@@ -113,19 +110,21 @@ Tk_SetAppName(tkwin, name)
 				 * "send" commands.  Must be globally
 				 * unique. */
 {
-    ThreadSpecificData *tsdPtr;
+    ThreadSpecificData *tsdPtr = NULL;
     TkWindow *winPtr = (TkWindow *)tkwin;
     RegisteredInterp *riPtr = NULL;
     Tcl_Interp *interp;
     HRESULT hr = S_OK;
 
-    tsdPtr = TCL_TSD_INIT(&dataKey);
     interp = winPtr->mainPtr->interp;
 
     /*
      * Temporarily disabled for bug #858822
      */
     return name;
+
+    tsdPtr = (ThreadSpecificData *)
+	Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
     /* 
      * Initialise the COM library for this interpreter just once.
