@@ -426,7 +426,7 @@ proc ::tk::MenuUnpost menu {
 		$parent postcascade none
 		GenerateMenuSelect $parent
 		set type [$parent cget -type]
-		if {$type eq "menubar" || $type eq "tearoff"]} {
+		if {$type eq "menubar" || $type eq "tearoff"} {
 		    break
 		}
 		set menu $parent
