@@ -904,6 +904,15 @@ TextWidgetObjCmd(clientData, interp, objc, objv)
 		 */
 
 		index = *indexFromPtr;
+		index.byteIndex = 0;
+		
+		/*
+		 * We're going to count up all display lines in the
+		 * logical line of 'indexFromPtr' up to, but not
+		 * including the logical line of 'indexToPtr', and
+		 * then subtract off what we didn't what from 'from'
+		 * and add on what we didn't count from 'to.
+		 */
 		while (index.linePtr != indexToPtr->linePtr) {
 		    value += TkTextUpdateOneLine(textPtr, fromPtr, 0,&index,0);
 
