@@ -1,4 +1,4 @@
-/* 
+/*
  * tkEvent.c --
  *
  *	This file provides basic low-level facilities for managing X events in
@@ -1290,7 +1290,7 @@ Tk_HandleEvent(
     TkWindow *winPtr;
     unsigned long mask;
     InProgress ip;
-    Tcl_Interp *interp = (Tcl_Interp *) NULL;
+    Tcl_Interp *interp = NULL;
     ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
 	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
@@ -1431,7 +1431,7 @@ Tk_HandleEvent(
      */
 
   releaseInterpreter:
-    if (interp != (Tcl_Interp *) NULL) {
+    if (interp != NULL) {
 	Tcl_Release((ClientData) interp);
     }
 
