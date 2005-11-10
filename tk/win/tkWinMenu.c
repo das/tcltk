@@ -3017,7 +3017,6 @@ SetDefaults(
     char sizeString[TCL_INTEGER_SPACE];
     char faceName[LF_FACESIZE];
     HDC scratchDC;
-    Tcl_DString boldItalicDString;
     int bold = 0;
     int italic = 0;
     TEXTMETRIC tm;
@@ -3066,16 +3065,19 @@ SetDefaults(
     sprintf(sizeString, "%d", pointSize);
     Tcl_DStringAppendElement(&menuFontDString, sizeString);
 
-    if (bold == 1 || italic == 1) {
+    if (bold || italic) {
+	Tcl_DString boldItalicDString;
+
 	Tcl_DStringInit(&boldItalicDString);
-	if (bold == 1) {
+	if (bold) {
 	    Tcl_DStringAppendElement(&boldItalicDString, "bold");
 	}
-	if (italic == 1) {
+	if (italic) {
 	    Tcl_DStringAppendElement(&boldItalicDString, "italic");
 	}
 	Tcl_DStringAppendElement(&menuFontDString,
 		Tcl_DStringValue(&boldItalicDString));
+	Tcl_DStringFree(&boldItalicDString);
     }
 
     /*

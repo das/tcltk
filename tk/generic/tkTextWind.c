@@ -926,6 +926,7 @@ EmbWinLayoutProc(textPtr, indexPtr, ewPtr, offset, maxX, maxChars,
 	Tcl_ResetResult(textPtr->interp);
 	ewPtr->body.ew.tkwin = Tk_NameToWindow(textPtr->interp,
 		Tcl_DStringValue(&name), textPtr->tkwin);
+	Tcl_DStringFree(&name);
 	if (ewPtr->body.ew.tkwin == NULL) {
 	    goto createError;
 	}
