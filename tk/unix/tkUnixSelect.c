@@ -1396,7 +1396,7 @@ SelCvtToX(
     int *numLongsPtr)		/* Number of 32-bit words contained in the
 				 * result. */
 {
-    char **field;
+    const char **field;
     int numFields, i;
     long *propPtr;
 
