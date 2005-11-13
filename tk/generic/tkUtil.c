@@ -781,7 +781,7 @@ TkComputeAnchor(
     Tk_Window tkwin,		/* Anchored with respect to this window. */
     int padX, int padY,		/* Use this extra padding inside window, in
 				 * addition to the internal border. */
-    int innerWidth, int innerHeight;
+    int innerWidth, int innerHeight,
 				/* Size of rectangle to anchor in window. */
     int *xPtr, int *yPtr)	/* Returns upper-left corner of anchored
 				 * rectangle. */
