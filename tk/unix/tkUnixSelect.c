@@ -453,12 +453,14 @@ TkSelPropProc(eventPtr)
 			formatType, (Tk_Window) incrPtr->winPtr,
 			&numItems);
 
+		if (propPtr == NULL) {
+		    numItems = 0;
+		}
+		XChangeProperty(eventPtr->xproperty.display,
+			eventPtr->xproperty.window, eventPtr->xproperty.atom,
+			formatType, 32, PropModeReplace,
+			(unsigned char *) propPtr, numItems);
 		if (propPtr != NULL) {
-		    XChangeProperty(eventPtr->xproperty.display,
-			    eventPtr->xproperty.window,
-			    eventPtr->xproperty.atom, formatType, 32,
-			    PropModeReplace, (unsigned char *) propPtr,
-			    numItems);
 		    ckfree(propPtr);
 		}
 	    }
@@ -989,13 +991,14 @@ ConvertSelection(
 	} else {
 	    propPtr = (char *) SelCvtToX((char *) buffer,
 		    type, (Tk_Window) winPtr, &numItems);
-	    if (propPtr != NULL) {
-		format = 32;
-		XChangeProperty(reply.display, reply.requestor, property, type,
-			format, PropModeReplace, (unsigned char *) propPtr,
-			numItems);
-		ckfree(propPtr);
+	    if (propPtr == NULL) {
+		goto refuse;
 	    }
+	    format = 32;
+	    XChangeProperty(reply.display, reply.requestor, property, type,
+		    format, PropModeReplace, (unsigned char *) propPtr,
+		    numItems);
+	    ckfree(propPtr);
 	}
     }
 
@@ -1437,7 +1440,7 @@ SelCvtToX(
      * Release the parsed list.
      */
 
-    ckfree((char *) &field);
+    ckfree((char *) field);
     *numLongsPtr = i;
     return propPtr;
 }
