@@ -1479,29 +1479,31 @@ TkSelDefaultSelection(
 
     if (target == dispPtr->targetsAtom) {
 	register TkSelHandler *selPtr;
-	CONST char *atomString;
-	int length, atomLength;
+	int length;
+	Tcl_DString ds;
 
 	if (maxBytes < 50) {
 	    return -1;
 	}
-	strcpy(buffer, "MULTIPLE TARGETS TIMESTAMP TK_APPLICATION TK_WINDOW");
-	length = strlen(buffer);
+	Tcl_DStringInit(&ds);
+	Tcl_DStringAppend(&ds,
+		"MULTIPLE TARGETS TIMESTAMP TK_APPLICATION TK_WINDOW", -1);
 	for (selPtr = winPtr->selHandlerList; selPtr != NULL;
 		selPtr = selPtr->nextPtr) {
 	    if ((selPtr->selection == infoPtr->selection)
 		    && (selPtr->target != dispPtr->applicationAtom)
 		    && (selPtr->target != dispPtr->windowAtom)) {
-		atomString = Tk_GetAtomName((Tk_Window) winPtr,
+		CONST char *atomString = Tk_GetAtomName((Tk_Window) winPtr,
 			selPtr->target);
-		atomLength = strlen(atomString) + 1;
-		if ((length + atomLength) >= maxBytes) {
-		    return -1;
-		}
-		sprintf(buffer+length, " %s", atomString);
-		length += atomLength;
+		Tcl_DStringAppendElement(&ds, atomString);
 	    }
 	}
+	length = Tcl_DStringLength(&ds);
+	if (length >= maxBytes) {
+	    return -1;
+	}
+	memcpy(buffer, Tcl_DStringValue(&ds), (unsigned) (1+length));
+	Tcl_DStringFree(&ds);
 	*typePtr = XA_ATOM;
 	return length;
     }
