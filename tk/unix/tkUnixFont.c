@@ -466,8 +466,8 @@ static int
 Ucs2beToUtfProc(
     ClientData clientData,	/* Not used. */
     CONST char *src,		/* Source string in Unicode. */
-    int srcLen			/* Source string length in bytes. */
-    int flags			/* Conversion control flags. */
+    int srcLen,			/* Source string length in bytes. */
+    int flags,			/* Conversion control flags. */
     Tcl_EncodingState *statePtr,/* Place for conversion routine to store state
 				 * information used during a piecewise
 				 * conversion. Contents of statePtr are
@@ -1661,7 +1661,7 @@ ReleaseSubFont(
 static FontFamily *
 AllocFontFamily(
     Display *display,		/* Display in which font will be used. */
-    XFontStruct *fontStructPtr	/* Screen font whose FontFamily is to be
+    XFontStruct *fontStructPtr,	/* Screen font whose FontFamily is to be
 				 * returned. */
     int base)			/* Non-zero if this font family is to be used
 				 * in the base font of a font object. */
