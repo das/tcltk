@@ -101,14 +101,15 @@ proc ::tk::dialog::error::bgerror err {
     }
 
 
-    # Truncate the message if it is too wide (longer than 30 characacters) or
-    # too tall (more than 4 newlines).  Truncation occurs at the first point at
+    # Truncate the message if it is too wide (>maxLine characters) or
+    # too tall (>4 lines).  Truncation occurs at the first point at
     # which one of those conditions is met.
     set displayedErr ""
     set lines 0
+    set maxLine 45
     foreach line [split $err \n] {
-	if { [string length $line] > 30 } {
-	    append displayedErr "[string range $line 0 29]..."
+	if { [string length $line] > $maxLine } {
+	    append displayedErr "[string range $line 0 [expr {$maxLine-3}]]..."
 	    break
 	}
 	if { $lines > 4 } {
