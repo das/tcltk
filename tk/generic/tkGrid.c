@@ -2337,7 +2337,7 @@ GetGrid(tkwin)
 {
     register Gridder *gridPtr;
     Tcl_HashEntry *hPtr;
-    int new;
+    int isNew;
     TkDisplay *dispPtr = ((TkWindow *) tkwin)->dispPtr;
 
     if (!dispPtr->gridInit) {
@@ -2350,8 +2350,8 @@ GetGrid(tkwin)
      * one.
      */
 
-    hPtr = Tcl_CreateHashEntry(&dispPtr->gridHashTable, (char *) tkwin, &new);
-    if (!new) {
+    hPtr = Tcl_CreateHashEntry(&dispPtr->gridHashTable, (char*) tkwin, &isNew);
+    if (!isNew) {
 	return (Gridder *) Tcl_GetHashValue(hPtr);
     }
     gridPtr = (Gridder *) ckalloc(sizeof(Gridder));

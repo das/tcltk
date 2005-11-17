@@ -189,7 +189,7 @@ Tk_Get3DBorder(
 {
     Tcl_HashEntry *hashPtr;
     TkBorder *borderPtr, *existingBorderPtr;
-    int new;
+    int isNew;
     XGCValues gcValues;
     XColor *bgColorPtr;
     TkDisplay *dispPtr;
@@ -200,8 +200,8 @@ Tk_Get3DBorder(
 	BorderInit(dispPtr);
     }
 
-    hashPtr = Tcl_CreateHashEntry(&dispPtr->borderTable, colorName, &new);
-    if (!new) {
+    hashPtr = Tcl_CreateHashEntry(&dispPtr->borderTable, colorName, &isNew);
+    if (!isNew) {
 	existingBorderPtr = (TkBorder *) Tcl_GetHashValue(hashPtr);
 	for (borderPtr = existingBorderPtr; borderPtr != NULL;
 		borderPtr = borderPtr->nextPtr) {
@@ -221,7 +221,7 @@ Tk_Get3DBorder(
 
     bgColorPtr = Tk_GetColor(interp, tkwin, colorName);
     if (bgColorPtr == NULL) {
-	if (new) {
+	if (isNew) {
 	    Tcl_DeleteHashEntry(hashPtr);
 	}
 	return NULL;

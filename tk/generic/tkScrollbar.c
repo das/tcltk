@@ -130,7 +130,7 @@ Tk_ScrollbarCmd(
 {
     Tk_Window tkwin = (Tk_Window) clientData;
     register TkScrollbar *scrollPtr;
-    Tk_Window new;
+    Tk_Window newWin;
 
     if (argc < 2) {
 	Tcl_AppendResult(interp, "wrong # args: should be \"",
@@ -138,15 +138,15 @@ Tk_ScrollbarCmd(
 	return TCL_ERROR;
     }
 
-    new = Tk_CreateWindowFromPath(interp, tkwin, argv[1], NULL);
-    if (new == NULL) {
+    newWin = Tk_CreateWindowFromPath(interp, tkwin, argv[1], NULL);
+    if (newWin == NULL) {
 	return TCL_ERROR;
     }
 
-    Tk_SetClass(new, "Scrollbar");
-    scrollPtr = TkpCreateScrollbar(new);
+    Tk_SetClass(newWin, "Scrollbar");
+    scrollPtr = TkpCreateScrollbar(newWin);
 
-    Tk_SetClassProcs(new, &tkpScrollbarProcs, (ClientData) scrollPtr);
+    Tk_SetClassProcs(newWin, &tkpScrollbarProcs, (ClientData) scrollPtr);
 
     /*
      * Initialize fields that won't be initialized by ConfigureScrollbar, or
@@ -154,8 +154,8 @@ Tk_ScrollbarCmd(
      * resource pointers).
      */
 
-    scrollPtr->tkwin = new;
-    scrollPtr->display = Tk_Display(new);
+    scrollPtr->tkwin = newWin;
+    scrollPtr->display = Tk_Display(newWin);
     scrollPtr->interp = interp;
     scrollPtr->widgetCmd = Tcl_CreateCommand(interp,
 	    Tk_PathName(scrollPtr->tkwin), ScrollbarWidgetCmd,

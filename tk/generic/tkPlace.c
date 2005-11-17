@@ -376,11 +376,11 @@ CreateSlave(
 {
     Tcl_HashEntry *hPtr;
     register Slave *slavePtr;
-    int new;
+    int isNew;
     TkDisplay *dispPtr = ((TkWindow *) tkwin)->dispPtr;
 
-    hPtr = Tcl_CreateHashEntry(&dispPtr->slaveTable, (char *) tkwin, &new);
-    if (new) {
+    hPtr = Tcl_CreateHashEntry(&dispPtr->slaveTable, (char *) tkwin, &isNew);
+    if (isNew) {
 	slavePtr = (Slave *) ckalloc(sizeof(Slave));
 	memset(slavePtr, 0, sizeof(Slave));
 	slavePtr->tkwin = tkwin;
@@ -523,11 +523,11 @@ CreateMaster(
 {
     Tcl_HashEntry *hPtr;
     register Master *masterPtr;
-    int new;
+    int isNew;
     TkDisplay * dispPtr = ((TkWindow *) tkwin)->dispPtr;
 
-    hPtr = Tcl_CreateHashEntry(&dispPtr->masterTable, (char *) tkwin, &new);
-    if (new) {
+    hPtr = Tcl_CreateHashEntry(&dispPtr->masterTable, (char *) tkwin, &isNew);
+    if (isNew) {
 	masterPtr = (Master *) ckalloc(sizeof(Master));
 	masterPtr->tkwin = tkwin;
 	masterPtr->slavePtr = NULL;

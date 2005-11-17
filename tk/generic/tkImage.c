@@ -166,7 +166,7 @@ Tk_ImageObjCmd(clientData, interp, objc, objv)
 	IMAGE_TYPE, IMAGE_TYPES, IMAGE_WIDTH
     };
     TkWindow *winPtr = (TkWindow *) clientData;
-    int i, new, firstOption,  index;
+    int i, isNew, firstOption,  index;
     Tk_ImageType *typePtr;
     ImageMaster *masterPtr;
     Image *imagePtr;
@@ -261,8 +261,8 @@ Tk_ImageObjCmd(clientData, interp, objc, objv)
 	 * Create the data structure for the new image.
 	 */
 
-	hPtr = Tcl_CreateHashEntry(&winPtr->mainPtr->imageTable, name, &new);
-	if (new) {
+	hPtr = Tcl_CreateHashEntry(&winPtr->mainPtr->imageTable, name, &isNew);
+	if (isNew) {
 	    masterPtr = (ImageMaster *) ckalloc(sizeof(ImageMaster));
 	    masterPtr->typePtr = NULL;
 	    masterPtr->masterData = NULL;

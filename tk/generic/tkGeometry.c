@@ -341,7 +341,7 @@ Tk_MaintainGeometry(slave, master, x, y, width, height)
     Tcl_HashEntry *hPtr;
     MaintainMaster *masterPtr;
     register MaintainSlave *slavePtr;
-    int new, map;
+    int isNew, map;
     Tk_Window ancestor, parent;
     TkDisplay *dispPtr = ((TkWindow *) master)->dispPtr;
 
@@ -379,8 +379,8 @@ Tk_MaintainGeometry(slave, master, x, y, width, height)
 
     parent = Tk_Parent(slave);
     hPtr = Tcl_CreateHashEntry(&dispPtr->maintainHashTable,
-	    (char *) master, &new);
-    if (!new) {
+	    (char *) master, &isNew);
+    if (!isNew) {
 	masterPtr = (MaintainMaster *) Tcl_GetHashValue(hPtr);
     } else {
 	masterPtr = (MaintainMaster *) ckalloc(sizeof(MaintainMaster));

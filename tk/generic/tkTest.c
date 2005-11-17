@@ -2462,7 +2462,7 @@ CustomOptionSet(clientData,interp, tkwin, value, recordPtr, internalOffset,
     int flags;
 {
     int objEmpty, length;
-    char *new, *string, *internalPtr;
+    char *newStr, *string, *internalPtr;
     
     objEmpty = 0;
 
@@ -2500,13 +2500,13 @@ CustomOptionSet(clientData,interp, tkwin, value, recordPtr, internalOffset,
     if (internalPtr != NULL) {
 	if ((*value) != NULL) {
 	    string = Tcl_GetStringFromObj((*value), &length);
-	    new = ckalloc((size_t) (length + 1));
-	    strcpy(new, string);
+	    newStr = ckalloc((size_t) (length + 1));
+	    strcpy(newStr, string);
 	} else {
-	    new = NULL;
+	    newStr = NULL;
 	}
 	*((char **) saveInternalPtr) = *((char **) internalPtr);
-	*((char **) internalPtr) = new;
+	*((char **) internalPtr) = newStr;
     }
 
     return TCL_OK;

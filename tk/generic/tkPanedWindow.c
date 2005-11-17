@@ -752,7 +752,7 @@ ConfigureSlaves(
     int i, firstOptionArg, j, found, doubleBw, index, numNewSlaves, haveLoc;
     int insertIndex;
     Tk_Window tkwin = NULL, ancestor, parent;
-    Slave *slavePtr, **inserts, **new;
+    Slave *slavePtr, **inserts, **newSlaves;
     Slave options;
     char *arg;
 
@@ -986,16 +986,16 @@ ConfigureSlaves(
      */
 
     i = sizeof(Slave *) * (pwPtr->numSlaves+numNewSlaves);
-    new = (Slave **)ckalloc((unsigned) i);
-    memset(new, 0, (size_t) i);
+    newSlaves = (Slave **)ckalloc((unsigned) i);
+    memset(newSlaves, 0, (size_t) i);
     if (index == -1) {
 	/*
 	 * If none of the existing slaves have to be moved, just copy the old
 	 * and append the new.
 	 */
-	memcpy((void *)&(new[0]), pwPtr->slaves,
+	memcpy((void *)&(newSlaves[0]), pwPtr->slaves,
 		sizeof(Slave *) * pwPtr->numSlaves);
-	memcpy((void *)&(new[pwPtr->numSlaves]), inserts,
+	memcpy((void *)&(newSlaves[pwPtr->numSlaves]), inserts,
 		sizeof(Slave *) * numNewSlaves);
     } else {
 	/*
@@ -1009,17 +1009,17 @@ ConfigureSlaves(
 
 	for (i = 0, j = 0; i < index; i++) {
 	    if (pwPtr->slaves[i] != NULL) {
-		new[j] = pwPtr->slaves[i];
+		newSlaves[j] = pwPtr->slaves[i];
 		j++;
 	    }
 	}
 
-	memcpy((void *)&(new[j]), inserts, sizeof(Slave *) * (insertIndex));
+	memcpy((void *)&(newSlaves[j]), inserts, sizeof(Slave *)*insertIndex);
 	j += firstOptionArg - 2;
 
 	for (i = index; i < pwPtr->numSlaves; i++) {
 	    if (pwPtr->slaves[i] != NULL) {
-		new[j] = pwPtr->slaves[i];
+		newSlaves[j] = pwPtr->slaves[i];
 		j++;
 	    }
 	}
@@ -1031,7 +1031,7 @@ ConfigureSlaves(
 
     ckfree((void *)pwPtr->slaves);
     ckfree((void *)inserts);
-    pwPtr->slaves = new;
+    pwPtr->slaves = newSlaves;
 
     /*
      * Set the paned window's slave count to the new value.
