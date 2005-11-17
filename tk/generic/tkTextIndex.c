@@ -839,7 +839,7 @@ GetIndex(interp, sharedPtr, textPtr, string, indexPtr, canCachePtr)
 	    Tcl_ResetResult(interp);
 	    Tcl_AppendResult(interp,
 		    "text doesn't contain any characters tagged with \"",
-		    tagName, "\"", (char *) NULL);
+		    tagName, "\"", NULL);
 	    Tcl_DStringFree(&copy);
 	    return TCL_ERROR;
 	}
@@ -1003,7 +1003,7 @@ GetIndex(interp, sharedPtr, textPtr, string, indexPtr, canCachePtr)
   error:
     Tcl_DStringFree(&copy);
     Tcl_ResetResult(interp);
-    Tcl_AppendResult(interp, "bad text index \"", string, "\"", (char *)NULL);
+    Tcl_AppendResult(interp, "bad text index \"", string, "\"", NULL);
     return TCL_ERROR;
 }
 

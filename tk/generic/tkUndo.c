@@ -14,7 +14,8 @@
 
 #include "tkUndo.h"
 
-static int EvaluateActionList(Tcl_Interp *interp, TkUndoSubAtom *action);
+static int		EvaluateActionList(Tcl_Interp *interp,
+			    TkUndoSubAtom *action);
 
 /*
  *----------------------------------------------------------------------

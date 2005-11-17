@@ -373,7 +373,7 @@ Tk_ClipboardAppend(
 	Tcl_AppendResult(interp, "format \"", Tk_GetAtomName(tkwin, format),
 		"\" does not match current format \"",
 		Tk_GetAtomName(tkwin, targetPtr->format),"\" for ",
-		Tk_GetAtomName(tkwin, type), (char *) NULL);
+		Tk_GetAtomName(tkwin, type), NULL);
 	return TCL_ERROR;
     }
 
@@ -478,7 +478,7 @@ Tk_ClipboardObjCmd(
 	    i++;
 	    if (i >= objc) {
 		Tcl_AppendResult(interp, "value for \"", string,
-			"\" missing", (char *) NULL);
+			"\" missing", NULL);
 		return TCL_ERROR;
 	    }
 	    switch ((enum appendOptions) subIndex) {
@@ -567,7 +567,7 @@ Tk_ClipboardObjCmd(
 	    i++;
 	    if (i >= objc) {
 		Tcl_AppendResult(interp, "value for \"", string,
-			"\" missing", (char *) NULL);
+			"\" missing", NULL);
 		return TCL_ERROR;
 	    }
 	    switch ((enum getOptions) subIndex) {
