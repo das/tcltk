@@ -1499,6 +1499,7 @@ TkSelDefaultSelection(
 	}
 	length = Tcl_DStringLength(&ds);
 	if (length >= maxBytes) {
+	    Tcl_DStringFree(&ds);
 	    return -1;
 	}
 	memcpy(buffer, Tcl_DStringValue(&ds), (unsigned) (1+length));
