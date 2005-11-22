@@ -848,7 +848,7 @@ proc ::tk::dialog::file:: {type args} {
     # Add traces on the selectPath variable
     #
 
-    trace variable data(selectPath) w "::tk::dialog::file::SetPath $w"
+    trace variable data(selectPath) w [list ::tk::dialog::file::SetPath $w]
     $data(dirMenuBtn) configure \
 	    -textvariable ::tk::dialog::file::${dataName}(selectPath)
 
