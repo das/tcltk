@@ -95,7 +95,7 @@ namespace eval ::tk::unsupported {
 	tkIconList_Config		::tk::IconList_Config
 	tkIconList_Create		::tk::IconList_Create
 	tkIconList_CtrlBtn1		::tk::IconList_CtrlBtn1
-	tkIconList_Curselection		::tk::IconList_Curselection
+	tkIconList_Curselection		::tk::IconList_CurSelection
 	tkIconList_DeleteAll		::tk::IconList_DeleteAll
 	tkIconList_Double1		::tk::IconList_Double1
 	tkIconList_DrawSelection	::tk::IconList_DrawSelection
