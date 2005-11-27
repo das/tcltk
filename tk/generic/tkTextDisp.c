@@ -3210,7 +3210,8 @@ MeasureUp(textPtr, srcPtr, distance, dstPtr)
     int lineNum;		/* Number of current line. */
     int bytesToCount;		/* Maximum number of bytes to measure in
 				 * current line. */
-    TkTextIndex bestIndex;	/* Best candidate seen so far for result. */
+    TkTextIndex bestIndex = {NULL, NULL, 0}; /* Best candidate seen so far for
+					      * result. Silence gcc 4 warning */
     TkTextIndex index;
     DLine *dlPtr, *lowestPtr;
     int noBestYet;		/* 1 means bestIndex hasn't been set. */

@@ -815,6 +815,7 @@ TkIntXlibStubs tkIntXlibStubs = {
     XQueryColor, /* 88 */
     XQueryColors, /* 89 */
     XQueryTree, /* 90 */
+    XSync, /* 91 */
 #endif /* MAC_OSX_TK */
 };
 

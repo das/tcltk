@@ -302,8 +302,8 @@ EXTERN Window		TkMacOSXGetXWindow _ANSI_ARGS_((WindowRef macWinPtr));
 EXTERN int		TkMacOSXGrowToplevel _ANSI_ARGS_((
 				WindowRef whichWindow, Point start));
 /* 18 */
-EXTERN void		TkMacOSXHandleMenuSelect _ANSI_ARGS_((long mResult, 
-				int optionKeyPressed));
+EXTERN void		TkMacOSXHandleMenuSelect _ANSI_ARGS_((MenuID theMenu, 
+				MenuItemIndex theItem, int optionKeyPressed));
 /* Slot 19 is reserved */
 /* Slot 20 is reserved */
 /* 21 */
@@ -553,7 +553,7 @@ typedef struct TkIntPlatStubs {
     void *reserved15;
     Window (*tkMacOSXGetXWindow) _ANSI_ARGS_((WindowRef macWinPtr)); /* 16 */
     int (*tkMacOSXGrowToplevel) _ANSI_ARGS_((WindowRef whichWindow, Point start)); /* 17 */
-    void (*tkMacOSXHandleMenuSelect) _ANSI_ARGS_((long mResult, int optionKeyPressed)); /* 18 */
+    void (*tkMacOSXHandleMenuSelect) _ANSI_ARGS_((MenuID theMenu, MenuItemIndex theItem, int optionKeyPressed)); /* 18 */
     void *reserved19;
     void *reserved20;
     void (*tkMacOSXInvalidateWindow) _ANSI_ARGS_((MacDrawable * macWin, int flag)); /* 21 */

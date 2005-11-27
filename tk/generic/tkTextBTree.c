@@ -2466,7 +2466,7 @@ TkTextIsElided(textPtr, indexPtr)
     register Node *nodePtr;
     register TkTextLine *siblingLinePtr;
     register TkTextSegment *segPtr;
-    register TkTextTag *tagPtr;
+    register TkTextTag *tagPtr = NULL; /* silence gcc 4 warning */
     register int i, index;
 
 	/* almost always avoid malloc, so stay out of system calls */

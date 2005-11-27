@@ -398,6 +398,7 @@ XSetClipMask(display, gc, pixmap)
  * Some additional dummy functions (hopefully implemented soon).
  */
 
+#if 0
 Cursor
 XCreateFontCursor(display, shape)
     Display* display;
@@ -417,6 +418,7 @@ XDrawImageString(display, d, gc, x, y, string, length)
     int length;
 {
 }
+#endif
 
 void
 XDrawPoint(display, d, gc, x, y)
@@ -457,6 +459,7 @@ XDrawSegments(display, d, gc, segments, nsegments)
 }
 #endif
 
+#if 0
 char *
 XFetchBuffer(display, nbytes_return, buffer)
     Display* display;
@@ -504,7 +507,8 @@ XPutImage(display, d, gc, image, src_x, src_y, dest_x, dest_y, width, height)
 {
 }
 
-void XQueryTextExtents(display, font_ID, string, nchars, direction_return,
+void
+XQueryTextExtents(display, font_ID, string, nchars, direction_return,
 	font_ascent_return, font_descent_return, overall_return)
     Display* display;
     XID font_ID;
@@ -549,3 +553,4 @@ XUndefineCursor(display, w)
     Window w;
 {
 }
+#endif

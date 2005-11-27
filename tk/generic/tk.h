@@ -36,8 +36,6 @@ extern "C" {
  * win/makefile.vc	(not patchlevel)
  * README		(sections 0 and 1)
  * mac/README		(not patchlevel)
- * macosx/Wish.pbproj/project.pbxproj
- * 			(14 LOC total, 4 LOC patch)
  * win/README		(not patchlevel)
  * unix/README		(not patchlevel)
  * unix/tk.spec		(3 LOC Major/Minor, 2 LOC patch)
