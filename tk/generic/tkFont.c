@@ -343,6 +343,8 @@ static int		SetFontFromAny(Tcl_Interp *interp, Tcl_Obj *objPtr);
 static void		TheWorldHasChanged(ClientData clientData);
 static void		UpdateDependentFonts(TkFontInfo *fiPtr,
 			    Tk_Window tkwin, Tcl_HashEntry *namedHashPtr);
+MODULE_SCOPE int	TkFontGetFirstTextLayout(Tk_TextLayout layout,
+			    Tk_Font *font, char *dst);
 
 /*
  * The following structure defines the implementation of the "font" Tcl

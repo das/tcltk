@@ -239,14 +239,6 @@ static SearchUids *	GetStaticUids(void);
 #endif /* USE_OLD_TAG_SEARCH */
 
 /*
- * Standard item types provided by Tk:
- */
-
-extern Tk_ItemType tkArcType, tkBitmapType, tkImageType, tkLineType;
-extern Tk_ItemType tkOvalType, tkPolygonType;
-extern Tk_ItemType tkRectangleType, tkTextType, tkWindowType;
-
-/*
  * Prototypes for functions defined later in this file:
  */
 

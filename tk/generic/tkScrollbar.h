@@ -167,28 +167,28 @@ typedef struct TkScrollbar {
  * Declaration of scrollbar class functions structure.
  */
 
-extern Tk_ClassProcs tkpScrollbarProcs;
+MODULE_SCOPE Tk_ClassProcs tkpScrollbarProcs;
 
 /*
  * Declaration of scrollbar configuration options.
  */
 
-extern Tk_ConfigSpec tkpScrollbarConfigSpecs[];
+MODULE_SCOPE Tk_ConfigSpec tkpScrollbarConfigSpecs[];
 
 /*
  * Declaration of functions used in the implementation of the scrollbar
  * widget.
  */
 
-EXTERN void		TkScrollbarEventProc(ClientData clientData,
+MODULE_SCOPE void	TkScrollbarEventProc(ClientData clientData,
 			    XEvent *eventPtr);
-EXTERN void		TkScrollbarEventuallyRedraw(TkScrollbar *scrollPtr);
-EXTERN void		TkpComputeScrollbarGeometry(TkScrollbar *scrollPtr);
-EXTERN TkScrollbar *	TkpCreateScrollbar(Tk_Window tkwin);
-EXTERN void 		TkpDestroyScrollbar(TkScrollbar *scrollPtr);
-EXTERN void		TkpDisplayScrollbar(ClientData clientData);
-EXTERN void		TkpConfigureScrollbar(TkScrollbar *scrollPtr);
-EXTERN int		TkpScrollbarPosition(TkScrollbar *scrollPtr,
+MODULE_SCOPE void	TkScrollbarEventuallyRedraw(TkScrollbar *scrollPtr);
+MODULE_SCOPE void	TkpComputeScrollbarGeometry(TkScrollbar *scrollPtr);
+MODULE_SCOPE TkScrollbar *TkpCreateScrollbar(Tk_Window tkwin);
+MODULE_SCOPE void 	TkpDestroyScrollbar(TkScrollbar *scrollPtr);
+MODULE_SCOPE void	TkpDisplayScrollbar(ClientData clientData);
+MODULE_SCOPE void	TkpConfigureScrollbar(TkScrollbar *scrollPtr);
+MODULE_SCOPE int	TkpScrollbarPosition(TkScrollbar *scrollPtr,
 			    int x, int y);
 
 # undef TCL_STORAGE_CLASS

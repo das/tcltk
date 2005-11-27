@@ -87,12 +87,17 @@ MODULE_SCOPE int TkMacOSXProcessKeyboardEvent(TkMacOSXEvent *e,
         MacEventStatus *statusPtr);
 MODULE_SCOPE int TkMacOSXProcessApplicationEvent(TkMacOSXEvent *e,
         MacEventStatus *statusPtr);
-
+MODULE_SCOPE int TkMacOSXProcessMenuEvent(TkMacOSXEvent *e,
+        MacEventStatus *statusPtr);
+MODULE_SCOPE int TkMacOSXProcessCommandEvent(TkMacOSXEvent *e,
+        MacEventStatus *statusPtr);
 MODULE_SCOPE int TkMacOSXKeycodeToUnicode(
         UniChar * uniChars, int maxChars,
         EventKind eKind,
         UInt32 keycode, UInt32 modifiers,
         UInt32 * deadKeyStatePtr);
+MODULE_SCOPE OSStatus TkMacOSXStartTclEventLoopCarbonTimer();
+MODULE_SCOPE OSStatus TkMacOSXStopTclEventLoopCarbonTimer();
 
 
 #endif

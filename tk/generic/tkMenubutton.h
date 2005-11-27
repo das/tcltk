@@ -209,17 +209,17 @@ typedef struct {
  * Declaration of variables shared between the files in the button module.
  */
 
-extern Tk_ClassProcs tkpMenubuttonClass;
+MODULE_SCOPE Tk_ClassProcs tkpMenubuttonClass;
 
 /*
  * Declaration of procedures used in the implementation of the button widget.
  */
 
-EXTERN void		TkpComputeMenuButtonGeometry(TkMenuButton *mbPtr);
-EXTERN TkMenuButton *	TkpCreateMenuButton(Tk_Window tkwin);
-EXTERN void		TkpDisplayMenuButton(ClientData clientData);
-EXTERN void 		TkpDestroyMenuButton(TkMenuButton *mbPtr);
-EXTERN void		TkMenuButtonWorldChanged(ClientData instanceData);
+MODULE_SCOPE void	TkpComputeMenuButtonGeometry(TkMenuButton *mbPtr);
+MODULE_SCOPE TkMenuButton *TkpCreateMenuButton(Tk_Window tkwin);
+MODULE_SCOPE void	TkpDisplayMenuButton(ClientData clientData);
+MODULE_SCOPE void 	TkpDestroyMenuButton(TkMenuButton *mbPtr);
+MODULE_SCOPE void	TkMenuButtonWorldChanged(ClientData instanceData);
 
 # undef TCL_STORAGE_CLASS
 # define TCL_STORAGE_CLASS DLLIMPORT

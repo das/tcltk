@@ -55,6 +55,11 @@
 
 #ifndef _TKMACDEBUG
 #define _TKMACDEBUG
+
+#ifndef _TKINT
+#include "tkInt.h"
+#endif
+
 #include <Carbon/Carbon.h>
 
 /* The following define enables printing of debug messages to stderr: */
@@ -62,17 +67,17 @@
 
 #ifdef TK_MAC_DEBUG
 
-char * CarbonEventToAscii(EventRef eventRef, char * buf );
-char * ClassicEventToAscii(EventRecord * eventPtr, char * buf );
+MODULE_SCOPE char * CarbonEventToAscii(EventRef eventRef, char * buf );
+MODULE_SCOPE char * ClassicEventToAscii(EventRecord * eventPtr, char * buf );
 
-void printRect(char * tag, Rect * r );
-void printPoint(char * tag, Point * p );
+MODULE_SCOPE void printRect(char * tag, Rect * r );
+MODULE_SCOPE void printPoint(char * tag, Point * p );
 
-void printRegion(char * tag, RgnHandle rgn );
-void printWindowTitle(char * tag, WindowRef window );
-char * TkMacOSXMenuMessageToAscii(int msg, char * s);
+MODULE_SCOPE void printRegion(char * tag, RgnHandle rgn );
+MODULE_SCOPE void printWindowTitle(char * tag, WindowRef window );
+MODULE_SCOPE char * TkMacOSXMenuMessageToAscii(int msg, char * s);
 
-char * MouseTrackingResultToAscii(MouseTrackingResult r, char * buf );
+MODULE_SCOPE char * MouseTrackingResultToAscii(MouseTrackingResult r, char * buf );
 
 #endif
 

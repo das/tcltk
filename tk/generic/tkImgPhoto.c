@@ -5929,7 +5929,7 @@ PhotoOptionCleanupProc(
  *--------------------------------------------------------------
  */
 
-void
+MODULE_SCOPE void
 Tk_CreatePhotoOption(
     Tcl_Interp *interp,		/* Interpreter */
     CONST char *name,		/* Option name */

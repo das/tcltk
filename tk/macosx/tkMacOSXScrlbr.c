@@ -1123,7 +1123,7 @@ UpdateControlValues(
 	    / (1.0 - (scrollPtr->lastFraction - scrollPtr->firstFraction)));
 
     SetControlViewSize(macScrollPtr->sbHandle,viewSize);
-    SetControl32BitValue(macScrollPtr->sbHandle, 
+    SetControl32BitValue(macScrollPtr->sbHandle,
 			 (middle) );
 #endif
     contrlHilite = GetControlHilite(macScrollPtr->sbHandle);

@@ -34,7 +34,7 @@
  * Shared with button widget.
  */
 
-extern void		TkpDrawCheckIndicator(Tk_Window tkwin,
+MODULE_SCOPE void	TkpDrawCheckIndicator(Tk_Window tkwin,
 			    Display *display, Drawable d, int x, int y,
 			    Tk_3DBorder bgBorder, XColor *indicatorColor,
 			    XColor *selectColor, XColor *disColor, int on,

@@ -6346,3 +6346,87 @@ ObjectIsEmpty(objPtr)
     Tcl_GetStringFromObj(objPtr, &length);
     return (length == 0);
 }
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkpTesttextCmd --
+ *
+ *	This function implements the "testtext" command. It provides a set of
+ *	functions for testing text widgets and the associated functions in
+ *	tkText*.c.
+ *
+ * Results:
+ *	A standard Tcl result.
+ *
+ * Side effects:
+ *	Depends on option; see below.
+ *
+ *----------------------------------------------------------------------
+ */
+
+int
+TkpTesttextCmd(
+    ClientData clientData,	/* Main window for application. */
+    Tcl_Interp *interp,		/* Current interpreter. */
+    int argc,			/* Number of arguments. */
+    CONST char **argv)		/* Argument strings. */
+{
+    TkText *textPtr;
+    size_t len;
+    int lineIndex, byteIndex, byteOffset;
+    TkTextIndex index;
+    char buf[64];
+    Tcl_CmdInfo info;
+
+    if (argc < 3) {
+	return TCL_ERROR;
+    }
+
+    if (Tcl_GetCommandInfo(interp, argv[1], &info) == 0) {
+	return TCL_ERROR;
+    }
+    if (info.isNativeObjectProc) {
+	textPtr = (TkText *) info.objClientData;
+    } else {
+        textPtr = (TkText *) info.clientData;
+    }
+    len = strlen(argv[2]);
+    if (strncmp(argv[2], "byteindex", len) == 0) {
+	if (argc != 5) {
+	    return TCL_ERROR;
+	}
+	lineIndex = atoi(argv[3]) - 1;
+	byteIndex = atoi(argv[4]);
+
+	TkTextMakeByteIndex(textPtr->sharedTextPtr->tree, textPtr, lineIndex,
+		byteIndex, &index);
+    } else if (strncmp(argv[2], "forwbytes", len) == 0) {
+	if (argc != 5) {
+	    return TCL_ERROR;
+	}
+	if (TkTextGetIndex(interp, textPtr, argv[3], &index) != TCL_OK) {
+	    return TCL_ERROR;
+	}
+	byteOffset = atoi(argv[4]);
+	TkTextIndexForwBytes(textPtr, &index, byteOffset, &index);
+    } else if (strncmp(argv[2], "backbytes", len) == 0) {
+	if (argc != 5) {
+	    return TCL_ERROR;
+	}
+	if (TkTextGetIndex(interp, textPtr, argv[3], &index) != TCL_OK) {
+	    return TCL_ERROR;
+	}
+	byteOffset = atoi(argv[4]);
+	TkTextIndexBackBytes(textPtr, &index, byteOffset, &index);
+    } else {
+	return TCL_ERROR;
+    }
+
+    TkTextSetMark(textPtr, "insert", &index);
+    TkTextPrintIndex(textPtr, &index, buf);
+    sprintf(buf + strlen(buf), " %d", index.byteIndex);
+    Tcl_AppendResult(interp, buf, NULL);
+
+    return TCL_OK;
+}

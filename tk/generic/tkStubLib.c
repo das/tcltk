@@ -50,11 +50,17 @@
 
 /*
  * Ensure that Tk_InitStubs is built as an exported symbol.  The other stub
- * functions should be built as non-exported symbols.
+ * symbols should be built as non-exported symbols.
  */
 
 #undef TCL_STORAGE_CLASS
 #define TCL_STORAGE_CLASS DLLEXPORT
+
+MODULE_SCOPE TkStubs *tkStubsPtr;
+MODULE_SCOPE TkPlatStubs *tkPlatStubsPtr;
+MODULE_SCOPE TkIntStubs *tkIntStubsPtr;
+MODULE_SCOPE TkIntPlatStubs *tkIntPlatStubsPtr;
+MODULE_SCOPE TkIntXlibStubs *tkIntXlibStubsPtr;
 
 TkStubs *tkStubsPtr;
 TkPlatStubs *tkPlatStubsPtr;
@@ -85,7 +91,7 @@ TkIntXlibStubs *tkIntXlibStubsPtr;
 #undef Tk_InitStubs
 #endif
 
-CONST char *
+MODULE_SCOPE CONST char *
 Tk_InitStubs(interp, version, exact)
     Tcl_Interp *interp;
     char *version;

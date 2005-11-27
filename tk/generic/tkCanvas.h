@@ -290,10 +290,17 @@ typedef struct TkCanvas {
  * to the outside world:
  */
 
-extern int		TkCanvPostscriptCmd(TkCanvas *canvasPtr,
+MODULE_SCOPE int	TkCanvPostscriptCmd(TkCanvas *canvasPtr,
 			    Tcl_Interp *interp, int argc, CONST char **argv);
-extern int 		TkCanvTranslatePath(TkCanvas *canvPtr,
+MODULE_SCOPE int 	TkCanvTranslatePath(TkCanvas *canvPtr,
 			    int numVertex, double *coordPtr, int closed,
 			    XPoint *outPtr);
+/*
+ * Standard item types provided by Tk:
+ */
+
+MODULE_SCOPE Tk_ItemType tkArcType, tkBitmapType, tkImageType, tkLineType;
+MODULE_SCOPE Tk_ItemType tkOvalType, tkPolygonType;
+MODULE_SCOPE Tk_ItemType tkRectangleType, tkTextType, tkWindowType;
 
 #endif /* _TKCANVAS */

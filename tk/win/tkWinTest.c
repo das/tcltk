@@ -22,7 +22,6 @@ HWND tkWinCurrentDialog;
  * Forward declarations of procedures defined later in this file:
  */
 
-int			TkplatformtestInit(Tcl_Interp *interp);
 static int		TestclipboardObjCmd(ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *CONST objv[]);

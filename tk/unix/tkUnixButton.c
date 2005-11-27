@@ -15,6 +15,16 @@
 #include "tk3d.h"
 
 /*
+ * Shared with menu widget.
+ */
+
+MODULE_SCOPE void	TkpDrawCheckIndicator(Tk_Window tkwin,
+			    Display *display, Drawable d, int x, int y,
+			    Tk_3DBorder bgBorder, XColor *indicatorColor,
+			    XColor *selectColor, XColor *disColor, int on,
+			    int disabled, int mode);
+
+/*
  * Declaration of Unix specific button structure.
  */
 

@@ -16,8 +16,8 @@
 #ifndef _TKSCALE
 #define _TKSCALE
 
-#ifndef _TK
-#include "tk.h"
+#ifndef _TKINT
+#include "tkInt.h"
 #endif
 
 #ifdef BUILD_tk
@@ -231,16 +231,16 @@ typedef struct TkScale {
  * Declaration of procedures used in the implementation of the scale widget.
  */
 
-EXTERN void		TkEventuallyRedrawScale(TkScale *scalePtr, int what);
-EXTERN double		TkRoundToResolution(TkScale *scalePtr, double value);
-EXTERN TkScale *	TkpCreateScale(Tk_Window tkwin);
-EXTERN void		TkpDestroyScale(TkScale *scalePtr);
-EXTERN void		TkpDisplayScale(ClientData clientData);
-EXTERN int		TkpScaleElement(TkScale *scalePtr, int x, int y);
-EXTERN void		TkScaleSetValue(TkScale *scalePtr, double value,
+MODULE_SCOPE void	TkEventuallyRedrawScale(TkScale *scalePtr, int what);
+MODULE_SCOPE double	TkRoundToResolution(TkScale *scalePtr, double value);
+MODULE_SCOPE TkScale *	TkpCreateScale(Tk_Window tkwin);
+MODULE_SCOPE void	TkpDestroyScale(TkScale *scalePtr);
+MODULE_SCOPE void	TkpDisplayScale(ClientData clientData);
+MODULE_SCOPE int	TkpScaleElement(TkScale *scalePtr, int x, int y);
+MODULE_SCOPE void	TkScaleSetValue(TkScale *scalePtr, double value,
 			    int setVar, int invokeCommand);
-EXTERN double		TkScalePixelToValue(TkScale *scalePtr, int x, int y);
-EXTERN int		TkScaleValueToPixel(TkScale *scalePtr, double value);
+MODULE_SCOPE double	TkScalePixelToValue(TkScale *scalePtr, int x, int y);
+MODULE_SCOPE int	TkScaleValueToPixel(TkScale *scalePtr, double value);
 
 # undef TCL_STORAGE_CLASS
 # define TCL_STORAGE_CLASS DLLIMPORT

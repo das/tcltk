@@ -74,10 +74,10 @@ typedef struct TkColor {
  */
 
 #ifndef TkpFreeColor
-EXTERN void		TkpFreeColor(TkColor *tkColPtr);
+MODULE_SCOPE void	TkpFreeColor(TkColor *tkColPtr);
 #endif
-EXTERN TkColor *	TkpGetColor(Tk_Window tkwin, Tk_Uid name);
-EXTERN TkColor *	TkpGetColorByValue(Tk_Window tkwin, XColor *colorPtr);
+MODULE_SCOPE TkColor *	TkpGetColor(Tk_Window tkwin, Tk_Uid name);
+MODULE_SCOPE TkColor *	TkpGetColorByValue(Tk_Window tkwin, XColor *colorPtr);
 
 #undef TCL_STORAGE_CLASS
 #define TCL_STORAGE_CLASS DLLIMPORT

@@ -86,9 +86,9 @@ typedef struct TkBorder {
  * Declarations for platform specific interfaces used by this module.
  */
 
-EXTERN TkBorder *	TkpGetBorder(void);
-EXTERN void		TkpGetShadows(TkBorder *borderPtr, Tk_Window tkwin);
-EXTERN void		TkpFreeBorder(TkBorder *borderPtr);
+MODULE_SCOPE TkBorder	*TkpGetBorder(void);
+MODULE_SCOPE void	TkpGetShadows(TkBorder *borderPtr, Tk_Window tkwin);
+MODULE_SCOPE void	TkpFreeBorder(TkBorder *borderPtr);
 
 # undef TCL_STORAGE_CLASS
 # define TCL_STORAGE_CLASS DLLIMPORT

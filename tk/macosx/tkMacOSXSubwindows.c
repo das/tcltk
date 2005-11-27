@@ -176,7 +176,7 @@ XDestroyWindow(
  *----------------------------------------------------------------------
  */
 
-void
+static void
 FixMappingFlags (TkWindow *winPtr, int on)
 {
     TkWindow *childPtr;
@@ -770,6 +770,7 @@ XRaiseWindow(
     }
 }
 
+#if 0
 /*
  *----------------------------------------------------------------------
  *
@@ -800,6 +801,7 @@ XLowerWindow(
     	/* TODO: this should generate damage */
     }
 }
+#endif
 
 /*
  *----------------------------------------------------------------------

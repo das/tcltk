@@ -77,9 +77,9 @@ typedef struct FileFilterList {
     int numFilters;		/* number of filters in the list */
 } FileFilterList;
 
-EXTERN void		TkFreeFileFilters(FileFilterList *flistPtr);
-EXTERN void		TkInitFileFilters(FileFilterList *flistPtr);
-EXTERN int		TkGetFileFilters(Tcl_Interp *interp,
+MODULE_SCOPE void	TkFreeFileFilters(FileFilterList *flistPtr);
+MODULE_SCOPE void	TkInitFileFilters(FileFilterList *flistPtr);
+MODULE_SCOPE int	TkGetFileFilters(Tcl_Interp *interp,
     			    FileFilterList *flistPtr, Tcl_Obj *valuePtr,
 			    int isWindows);
 

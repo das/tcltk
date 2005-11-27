@@ -13,14 +13,12 @@
  * RCS: @(#) $Id$
  */
 
-#include <tcl.h>
-#include <Carbon/Carbon.h>
+#include "tkMacOSXInt.h"
 
 /*
  * Forward declarations of procedures defined later in this file:
  */
 
-int			TkplatformtestInit _ANSI_ARGS_((Tcl_Interp *interp));
 static int		DebuggerCmd _ANSI_ARGS_((ClientData dummy,
 			    Tcl_Interp *interp, int argc, CONST char **argv));
 

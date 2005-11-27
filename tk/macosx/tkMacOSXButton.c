@@ -109,8 +109,8 @@ static void SetupBevelButton _ANSI_ARGS_((MacButton *butPtr,
         ControlRef controlHandle, 
         GWorldPtr destPort, GC gc, Pixmap pixmap));
 
-extern int TkFontGetFirstTextLayout(Tk_TextLayout layout, Tk_Font * font, char * dst); 
-extern void TkMacOSXInitControlFontStyle(Tk_Font tkfont,ControlFontStylePtr fsPtr);
+MODULE_SCOPE int TkFontGetFirstTextLayout(Tk_TextLayout layout, Tk_Font * font, char * dst); 
+MODULE_SCOPE void TkMacOSXInitControlFontStyle(Tk_Font tkfont,ControlFontStylePtr fsPtr);
 
 /*
  * The class procedure table for the button widgets.
@@ -797,7 +797,7 @@ TkpDestroyButton(
  *----------------------------------------------------------------------
  */
 
-int
+static int
 TkMacOSXInitControl (
     MacButton *mbPtr,                /* Mac button. */
     GWorldPtr  destPort,
