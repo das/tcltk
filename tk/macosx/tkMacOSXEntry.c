@@ -59,7 +59,7 @@
 #include "tkMacOSXDefault.h"
 #include "tkEntry.h"
 
-ThemeButtonKind ComputeIncDecParameters (int height, int *width);
+static ThemeButtonKind ComputeIncDecParameters (int height, int *width);
 
 /*
  *--------------------------------------------------------------
@@ -78,7 +78,7 @@ ThemeButtonKind ComputeIncDecParameters (int height, int *width);
  *
  *--------------------------------------------------------------
  */
-ThemeButtonKind
+static ThemeButtonKind
 ComputeIncDecParameters (int height, int *width)
 {
     static int version = 0;

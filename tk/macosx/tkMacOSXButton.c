@@ -789,7 +789,7 @@ TkpDestroyButton(
  *----------------------------------------------------------------------
  */
 
-int
+static int
 TkMacOSXInitControl (
     MacButton *mbPtr,                /* Mac button. */
     GWorldPtr  destPort,

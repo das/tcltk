@@ -52,10 +52,10 @@ static int useThemedFrame = 0;
  */
 static unsigned char    InvertByte _ANSI_ARGS_((unsigned char data));
 
-void TkMacOSXSetUpCGContext(MacDrawable *macWin,
+static void TkMacOSXSetUpCGContext(MacDrawable *macWin,
     CGrafPtr destPort, GC gc,  CGContextRef *contextPtr);
-void TkMacOSXReleaseCGContext(MacDrawable *macWin, CGrafPtr destPort, 
-        CGContextRef *context);
+static void TkMacOSXReleaseCGContext(MacDrawable *macWin, CGrafPtr destPort, 
+        CGContextRef *context);
 static inline double radians(double degrees) { return degrees * PI / 180.0f; }
 
 int 
@@ -881,6 +881,7 @@ XDrawRectangle(
     SetGWorld(saveWorld, saveDevice);
 }
 
+#if 0
 /*
  *----------------------------------------------------------------------
  *
@@ -963,6 +964,7 @@ XDrawRectangles(
     }
     SetGWorld(saveWorld, saveDevice);
 }
+#endif
 
 /*
  *----------------------------------------------------------------------
@@ -1074,6 +1076,7 @@ XDrawArc(
     SetGWorld(saveWorld, saveDevice);
 }
 
+#if 0
 /* 
  *----------------------------------------------------------------------
  * 
@@ -1183,6 +1186,7 @@ XDrawArcs(
     }
     SetGWorld(saveWorld, saveDevice);
 }
+#endif
 
 /*
  *----------------------------------------------------------------------
@@ -1328,6 +1332,7 @@ XFillArc(
     SetGWorld(saveWorld, saveDevice);
 }
 
+#if 0
 /*  
  *----------------------------------------------------------------------
  *  
@@ -1509,7 +1514,9 @@ XFillArcs(
     }
     SetGWorld(saveWorld, saveDevice);
 }
+#endif
 
+#if 0
 /* 
  *----------------------------------------------------------------------
  * 
@@ -1522,6 +1529,7 @@ XMaxRequestSize(Display *display)
 {
     return (SHRT_MAX / 4);
 }
+#endif
 
 /*
  *----------------------------------------------------------------------
@@ -1729,7 +1737,7 @@ TkMacOSXSetUpGraphicsPort(
  *----------------------------------------------------------------------
  */
 
-void
+static void
 TkMacOSXSetUpCGContext(
     MacDrawable *macWin,
     CGrafPtr destPort,
@@ -1836,7 +1844,7 @@ TkMacOSXSetUpCGContext(
     }
 }
 
-void
+static void
 TkMacOSXReleaseCGContext(
         MacDrawable *macWin,
         CGrafPtr destPort, 

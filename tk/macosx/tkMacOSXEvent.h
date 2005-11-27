@@ -87,12 +87,17 @@ int TkMacOSXProcessKeyboardEvent(TkMacOSXEvent *e,
         MacEventStatus *statusPtr);
 int TkMacOSXProcessApplicationEvent(TkMacOSXEvent *e,
         MacEventStatus *statusPtr);
-
+int TkMacOSXProcessMenuEvent(TkMacOSXEvent *e,
+        MacEventStatus *statusPtr);
+int TkMacOSXProcessCommandEvent(TkMacOSXEvent *e,
+        MacEventStatus *statusPtr);
 int TkMacOSXKeycodeToUnicode(
         UniChar * uniChars, int maxChars,
         EventKind eKind,
         UInt32 keycode, UInt32 modifiers,
         UInt32 * deadKeyStatePtr);
+OSStatus TkMacOSXStartTclEventLoopCarbonTimer();
+OSStatus TkMacOSXStopTclEventLoopCarbonTimer();
 
 
 #endif

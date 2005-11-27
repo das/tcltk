@@ -157,6 +157,14 @@ extern int TkMacOSXInitCGDrawing(Tcl_Interp *interp, int enable, int antiAlias);
 extern void TkMacOSXDefaultStartupScript(void);
 extern int TkMacOSXGenerateFocusEvent( Window window, int activeFlag);
 extern WindowClass TkMacOSXWindowClass(TkWindow *winPtr);
+extern void* TkMacOSXGetNamedSymbol(const char* module, const char* symbol);
+
+/* Macro to abstract common use of TkMacOSXGetNamedSymbol to initialize named symbols */
+#define TkMacOSXInitNamedSymbol(module, ret, symbol, ...) \
+    static ret (* symbol)(__VA_ARGS__) = (void*)(-1L); \
+    if (symbol == (void*)(-1L)) { \
+        symbol = TkMacOSXGetNamedSymbol(STRINGIFY(module), STRINGIFY(_##symbol));\
+    }
 
 #include "tkIntPlatDecls.h"
 

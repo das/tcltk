@@ -13,8 +13,7 @@
  * RCS: @(#) $Id$
  */
 
-#include <tcl.h>
-#include <Carbon/Carbon.h>
+#include "tkMacOSXInt.h"
 
 /*
  * Forward declarations of procedures defined later in this file:
