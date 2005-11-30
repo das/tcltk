@@ -983,11 +983,11 @@ Tk_HandleEvent(eventPtr)
 		    Tk_InternAtom((Tk_Window) winPtr, "WM_PROTOCOLS")) {
 		TkWmProtocolEventProc(winPtr, eventPtr);
 	    } else {
-		/* 
+		/*
 		 * Finally, invoke any ClientMessage event handlers.
 		 */
 
-		for (genPrevPtr = NULL, genericPtr = tsdPtr->cmList;  
+		for (genPrevPtr = NULL, genericPtr = tsdPtr->cmList;
 		     genericPtr != NULL; ) {
 		    if (genericPtr->deleteFlag) {
 			if (!tsdPtr->handlersActive) {
@@ -1006,7 +1006,7 @@ Tk_HandleEvent(eventPtr)
 				genPrevPtr->nextPtr = tmpPtr;
 			    }
 			    if (tmpPtr == NULL) {
-				tsdPtr->lastGenericPtr = genPrevPtr;
+				tsdPtr->lastCmPtr = genPrevPtr;
 			    }
 			    (void) ckfree((char *) genericPtr);
 			    genericPtr = tmpPtr;
