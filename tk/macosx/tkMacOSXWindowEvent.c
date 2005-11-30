@@ -106,12 +106,12 @@ TkMacOSXProcessApplicationEvent(
         MacEventStatus *statusPtr)
 {
     Tcl_CmdInfo dummy;
-    
-    /* 
+
+    /*
      * This is a bit of a hack.  We get "show" events both when we come back
-     * from being hidden, and whenever we are activated.  I only want to run the
-     * "show" proc when we have been hidden already, not as a substitute for
-     * <Activate>.  So I use this toggle...
+     * from being hidden, and whenever we are activated.  I only want to run
+     * the "show" proc when we have been hidden already, not as a substitute
+     * for <Activate>.  So I use this toggle...
      */
     static int toggleHide = 0;
 
@@ -129,10 +129,10 @@ TkMacOSXProcessApplicationEvent(
             statusPtr->stopProcessing = 1;
             break;
         case kEventAppHidden:
-        /*
-         * Don't bother if we don't have an interp or
-         * the show preferences procedure doesn't exist.
-         */
+	    /*
+	     * Don't bother if we don't have an interp or
+	     * the show preferences procedure doesn't exist.
+	     */
             toggleHide = 1;
             if ((eventPtr->interp == NULL) || 
                     (Tcl_GetCommandInfo(eventPtr->interp, 
@@ -154,6 +154,14 @@ TkMacOSXProcessApplicationEvent(
             }
             statusPtr->stopProcessing = 1;
             break;
+	case kEventAppAvailableWindowBoundsChanged: {
+            TkDisplay *dispPtr = TkGetDisplayList();
+            TkMacOSXDisplayChanged(dispPtr->display);
+	    /*
+	     * Should we call ::tk::mac::OnDisplayChanged?
+	     */
+	    break;
+	}
         default:
             break;
     }

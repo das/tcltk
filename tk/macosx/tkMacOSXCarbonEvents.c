@@ -196,6 +196,7 @@ TkMacOSXInitCarbonEvents (
 	    {kEventClassWindow,		kEventWindowExpanded},
 	    {kEventClassApplication,	kEventAppHidden},
 	    {kEventClassApplication,	kEventAppShown},
+	    {kEventClassApplication,    kEventAppAvailableWindowBoundsChanged},
     };
     EventHandlerUPP handler = NewEventHandlerUPP(CarbonEventHandlerProc);
 
