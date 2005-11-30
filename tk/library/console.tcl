@@ -153,7 +153,9 @@ proc ::tk::ConsoleInit {} {
 
     if {$tcl_platform(platform) eq "windows"} {
 	# Subtle work-around to erase the '% ' that tclMain.c prints out
-	after idle [list $con delete 1.0 output]
+	after idle [subst -nocommand {
+	    if {[$con get 1.0 output] eq "% "} { $con delete 1.0 output }
+	}]
     }
 }
 
