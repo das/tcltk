@@ -2123,7 +2123,9 @@ UpdateWrapper(winPtr)
 	wmPtr->x = place.rcNormalPosition.left;
 	wmPtr->y = place.rcNormalPosition.top;
 
-	TkInstallFrameMenu((Tk_Window) winPtr);
+	if (!(winPtr->flags & TK_ALREADY_DEAD)) {
+	    TkInstallFrameMenu((Tk_Window) winPtr);
+	}
 
 	if (oldWrapper && (oldWrapper != wmPtr->wrapper)
 		&& !(wmPtr->exStyle & WS_EX_TOPMOST)) {
