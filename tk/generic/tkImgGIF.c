@@ -1838,7 +1838,7 @@ output(val)
     obuf |= val << obits;
     obits += out_bits;
     while (obits >= 8) {
-	block_out(obuf&0xff);
+	block_out(UCHAR(obuf&0xff));
 	obuf >>= 8;
 	obits -= 8;
     }
@@ -1850,7 +1850,7 @@ output_flush()
 {
     DEBUGMSG(("output_flush\n"));
     if (obits > 0) {
-	block_out(obuf);
+	block_out(UCHAR(obuf));
     }
     block_flush();
 }
