@@ -1353,12 +1353,12 @@ dist:
 	cp -p $(TOP_DIR)/win/lamp.bmp $(DISTDIR)/win
 	cp -p $(TOP_DIR)/license.terms $(DISTDIR)/win
 	mkdir $(DISTDIR)/win/rc
-	cp -p $(TOP_DIR)/win/rc/wish.exe.manifest.in $(DISTDIR)/win/rc/
+	cp -p $(TOP_DIR)/win/wish.exe.manifest.in $(DISTDIR)/win/
 	cp -p $(TOP_DIR)/win/rc/*.rc $(TOP_DIR)/win/rc/*.cur \
 		$(TOP_DIR)/win/rc/*.ico $(TOP_DIR)/win/rc/*.bmp \
 		$(DISTDIR)/win/rc
 	$(TCL_EXE) $(TOOL_DIR)/eolFix.tcl -crlf $(DISTDIR)/win/rc/*.rc
-	$(TCL_EXE) $(TOOL_DIR)/eolFix.tcl -crlf $(DISTDIR)/win/rc/wish.exe.manifest.in
+	$(TCL_EXE) $(TOOL_DIR)/eolFix.tcl -crlf $(DISTDIR)/win/wish.exe.manifest.in
 	mkdir $(DISTDIR)/mac
 	cp -p $(TOP_DIR)/mac/tkMacProjects.sea.hqx $(DISTDIR)/mac
 	cp -p $(TOP_DIR)/mac/*.c $(TOP_DIR)/mac/*.h $(TOP_DIR)/mac/*.r \
