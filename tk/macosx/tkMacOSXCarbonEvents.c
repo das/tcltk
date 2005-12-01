@@ -196,6 +196,7 @@ TkMacOSXInitCarbonEvents (
 	    {kEventClassWindow,		kEventWindowExpanded},
 	    {kEventClassApplication,	kEventAppHidden},
 	    {kEventClassApplication,	kEventAppShown},
+	    {kEventClassApplication,    kEventAppAvailableWindowBoundsChanged},
     };
     EventHandlerUPP handler = NewEventHandlerUPP(CarbonEventHandlerProc);
 
@@ -247,6 +248,7 @@ TkMacOSXInitCarbonEvents (
 	_TraceEventByName(CFSTR("kEventWindowExpanded"));
 	_TraceEventByName(CFSTR("kEventAppHidden"));
 	_TraceEventByName(CFSTR("kEventAppShown"));
+	_TraceEventByName(CFSTR("kEventAppAvailableWindowBoundsChanged"));
     }
 #endif /* TK_MAC_DEBUG_CARBON_EVENTS */
 }
