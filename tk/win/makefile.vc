@@ -831,21 +831,13 @@ RCSTATIC = -d STATIC_BUILD
 RCSTATIC =
 !endif
 
-$(TMP_DIR)\tk.res: $(RCDIR)\tk.rc $(TMP_DIR)\wish.exe.manifest
+{$(RCDIR)}.rc{$(TMP_DIR)}.res:
 	$(rc32) -fo $@ -r -i "$(GENERICDIR)" -i "$(TMP_DIR)" $(TCL_INCLUDES) \
 		$(RCDEBUG) $(RCTHREADS) $(RCSTATIC) \
-		$(RCDIR)\tk.rc
+		$<
 
-$(TMP_DIR)\tk_base.res: $(RCDIR)\tk_base.rc $(TMP_DIR)\wish.exe.manifest
-	$(rc32) -fo $@ -r -i "$(GENERICDIR)" $(TCL_INCLUDES) \
-		$(RCDEBUG) $(RCTHREADS) $(RCSTATIC) \
-		-d MANIFEST_FILE="$(TMP_DIR)\wish.exe.manifest"
-		$(RCDIR)\tk_base.rc
-
-$(TMP_DIR)\wish.res: $(RCDIR)\wish.rc $(TMP_DIR)\wish.exe.manifest
-	$(rc32) -fo $@ -r -i "$(GENERICDIR)" $(TCL_INCLUDES) -i "$(TMP_DIR)" \
-		$(RCDEBUG) $(RCTHREADS) $(RCSTATIC) \
-		$(RCDIR)\wish.rc
+$(TMP_DIR)\tk.res: $(TMP_DIR)\wish.exe.manifest
+$(TMP_DIR)\wish.res: $(TMP_DIR)\wish.exe.manifest
 
 #---------------------------------------------------------------------
 # Clean up
