@@ -3091,7 +3091,8 @@ WmAttributesCmd(tkwin, winPtr, interp, objc, objv)
 		} else {
 		    *stylePtr &= ~styleBit;
 		}
-		if (setLayeredWindowAttributesProc != NULL) {
+		if ((setLayeredWindowAttributesProc != NULL)
+			&& (wmPtr->wrapper != NULL)) {
 		    /*
 		     * Set the window directly regardless of UpdateWrapper.
 		     * The user supplies a double from [0..1], but Windows
@@ -3126,6 +3127,17 @@ WmAttributesCmd(tkwin, winPtr, interp, objc, objv)
 	    } else {
 		*stylePtr &= ~styleBit;
 	    }
+	}
+	if ((styleBit == WS_EX_TOPMOST) && (wmPtr->wrapper != NULL)) {
+	    /*
+	     * Force the topmost position aspect to ensure that switching
+	     * between (no)topmost reflects properly when rewrapped.
+	     */
+	    SetWindowPos(wmPtr->wrapper,
+		    ((exStyle & WS_EX_TOPMOST) ?
+			    HWND_TOPMOST : HWND_NOTOPMOST), 0, 0, 0, 0,
+		    SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE|SWP_NOSENDCHANGING
+		    |SWP_NOOWNERZORDER);
 	}
     }
     if (wmPtr->styleConfig != style) {
