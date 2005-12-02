@@ -190,7 +190,7 @@ TkGetServerInfo(
  */
 
 HINSTANCE
-Tk_GetHINSTANCE(vpod)
+Tk_GetHINSTANCE(void)
 {
     if (tkInstance == NULL) {
 	tkInstance = GetModuleHandle(NULL);
@@ -367,7 +367,7 @@ TkWinXCleanup(
  */
 
 int
-TkWinGetPlatformId(vpod
+TkWinGetPlatformId(void)
 {
     if (tkPlatformId == 0) {
 	OSVERSIONINFO os;
