@@ -431,7 +431,7 @@ XAllocColor(
 void
 XFreeColors(
     Display *display,
-    Colormap colormap;,
+    Colormap colormap,
     unsigned long *pixels,
     int npixels,
     unsigned long planes)
