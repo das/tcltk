@@ -141,7 +141,7 @@ extern int tkpWinBltModes[];
 #define TK_3D_DARK2 TK_3D_DARK_GC+2
 
 /*
- * Internal procedures used by more than one source file.
+ * Internal functions used by more than one source file.
  */
 
 #include "tkIntPlatDecls.h"

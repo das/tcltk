@@ -234,7 +234,7 @@ ConvertPoints(
     RECT *bbox)			/* Bounding box of points. */
 {
     ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
-            Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
+	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
     int i;
 
     /*

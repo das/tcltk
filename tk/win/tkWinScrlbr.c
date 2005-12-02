@@ -116,7 +116,7 @@ TkpCreateScrollbar(
     TkWindow *winPtr = (TkWindow *)tkwin;
 
     if (!initialized) {
-        Tcl_MutexLock(&winScrlbrMutex);
+	Tcl_MutexLock(&winScrlbrMutex);
 	UpdateScrollbarMetrics();
 	initialized = 1;
 	Tcl_MutexUnlock(&winScrlbrMutex);

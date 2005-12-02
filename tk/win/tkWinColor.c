@@ -105,7 +105,7 @@ FindSystemColor(
 {
     int l, u, r, i;
     ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
-            Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
+	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
     /*
      * Count the number of elements in the color array if we haven't done so

@@ -56,7 +56,7 @@ TkplatformtestInit(
     Tcl_CreateObjCommand(interp, "testclipboard", TestclipboardObjCmd,
 	    (ClientData) Tk_MainWindow(interp), NULL);
     Tcl_CreateCommand(interp, "testwinevent", TestwineventCmd,
-            (ClientData) Tk_MainWindow(interp), NULL);
+	    (ClientData) Tk_MainWindow(interp), NULL);
 
     return TCL_OK;
 }
@@ -138,7 +138,7 @@ AppendSystemError(
     }
 
     sprintf(id, "%ld", error);
-    Tcl_SetErrorCode(interp, "WINDOWS", id, msg, (char *) NULL);
+    Tcl_SetErrorCode(interp, "WINDOWS", id, msg, NULL);
     Tcl_AppendToObj(resultPtr, msg, length);
 
     if (length != 0) {

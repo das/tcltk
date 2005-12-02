@@ -455,9 +455,9 @@ TkpGetShadows(
 	    lightColor.blue = (tmp1 > tmp2) ? tmp1 : tmp2;
 	}
 
-       /*
-        * Allocate the light shadow color and its GC
-        */
+	/*
+	 * Allocate the light shadow color and its GC
+	 */
 
 	borderPtr->lightColorPtr = Tk_GetColorByValue(tkwin, &lightColor);
 	gcValues.foreground = borderPtr->lightColorPtr->pixel;
