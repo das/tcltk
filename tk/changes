@@ -5868,4 +5868,7 @@ Documentation improvements [1087842,1081527,1115907,etc.]
 
 2005-12-01 (bug fix)[1353416] [tk_popup] wrong post location (fvogelnew1,hobbs)
 
---- Released 8.4.12, Decemeber 1, 2005 --- See ChangeLog for details ---
+2005-12-01 (workaround)[905830] Disable SCIM usage by Tk until properly
+handled (max)
+
+--- Released 8.4.12, Decemeber 5, 2005 --- See ChangeLog for details ---
