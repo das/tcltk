@@ -664,7 +664,7 @@ OpenIM(dispPtr)
     while ((modifiers = strchr(modifiers, '@')) != NULL) {
 	if (strncmp(modifiers, "@im=", 4) == 0) {
 	    /* The first "@im=" entry wins */
-	    const char const *scim = "@im=SCIM";
+	    const char *scim = "@im=SCIM";
 	    if (strncmp(modifiers, scim, strlen(scim)) == 0) {
 		/* If it is SCIM, we override it */
 		if (XSetLocaleModifiers("@im=local") == NULL) {
