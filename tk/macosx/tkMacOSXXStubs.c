@@ -854,11 +854,11 @@ TkMacOSXXPutPixel(
     b  = (pixel & image->blue_mask);
     if (image->obdata) {
         /* Image from XGetImage, 16 bit color values */
-        cPix . red = r << 8;  
+        cPix . red = r << 8;
         cPix . green = g << 8;
         cPix . blue = b << 8;
     } else {
-        cPix . red = r;  
+        cPix . red = r;
         cPix . green = g;
         cPix . blue = b;
     }
@@ -965,7 +965,7 @@ XSetWindowColormap(
     Debugger();
 }
 
-Status		
+Status
 XStringListToTextProperty(
     char** list, 
     int count, 
