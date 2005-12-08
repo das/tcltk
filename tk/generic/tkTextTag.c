@@ -624,7 +624,7 @@ TkTextTagCmd(
 	     */
 
 	    arrayPtr[i] = textPtr->selTagPtr;
-	    arraySize = textPtr->sharedTextPtr->numTags;
+	    arraySize = ++i;
 	} else {
 	    if (TkTextGetObjIndex(interp, textPtr, objv[3],
 		    &index1) != TCL_OK) {
