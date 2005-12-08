@@ -15,8 +15,6 @@
  */
 #include <Carbon/Carbon.h>
 
-#include "tclInt.h"
-
 #include "tkMacOSXInt.h"
 #include "tkFont.h"
 

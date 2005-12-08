@@ -15,7 +15,6 @@
  * RCS: @(#) $Id$
  */
 
-#include "tclInt.h"
 #include "tkInt.h"
 #include "tkMacOSXEvent.h"
 #include <pthread.h>
@@ -54,7 +53,8 @@ static void CarbonEventsCheckProc(ClientData clientData, int flags);
 void
 Tk_MacOSXSetupTkNotifier()
 {
-    ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
+    ThreadSpecificData *tsdPtr = Tcl_GetThreadData(&dataKey,
+	    sizeof(ThreadSpecificData));
     
     if (!tsdPtr->initialized) {
         /* HACK ALERT: There is a bug in Jaguar where when it goes to make
@@ -107,7 +107,8 @@ static void
 TkMacOSXNotifyExitHandler(clientData)
     ClientData clientData;	/* Not used. */
 {
-    ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
+    ThreadSpecificData *tsdPtr = Tcl_GetThreadData(&dataKey,
+	    sizeof(ThreadSpecificData));
 
     Tcl_DeleteEventSource(CarbonEventsSetupProc, 
             CarbonEventsCheckProc, GetMainEventQueue());
