@@ -14,7 +14,6 @@
  * RCS: @(#) $Id$
  */
 
-#include "tclInt.h"
 #include "tkInt.h"
 #include "X11/X.h"
 #include "X11/Xlib.h"

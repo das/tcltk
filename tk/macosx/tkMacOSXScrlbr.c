@@ -16,7 +16,7 @@
 
 #include "tkScrollbar.h"
 #include "tkMacOSXInt.h"
-#include "tclInt.h"
+#include "tclInt.h" /* for TclServiceIdle() */
 
 #include <Carbon/Carbon.h>
 
