@@ -348,7 +348,6 @@ TkIntPlatStubs tkIntPlatStubs = {
     TkWinGetPlatformId, /* 33 */
     TkWinSetHINSTANCE, /* 34 */
     TkWinGetPlatformTheme, /* 35 */
-    TkplatformtestInit, /* 36 */
 #endif /* __WIN32__ */
 #ifdef MAC_OSX_TK
     TkGenerateActivateEvents, /* 0 */
@@ -405,7 +404,6 @@ TkIntPlatStubs tkIntPlatStubs = {
     TkGenWMDestroyEvent, /* 51 */
     NULL, /* 52 */
     TkpGetMS, /* 53 */
-    TkplatformtestInit, /* 54 */
 #endif /* MAC_OSX_TK */
 #if !(defined(__WIN32__) || defined(MAC_OSX_TK)) /* X11 */
     TkCreateXEventSource, /* 0 */

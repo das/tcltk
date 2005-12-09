@@ -27,7 +27,9 @@ static int		TestclipboardObjCmd(ClientData clientData,
 			    Tcl_Obj *CONST objv[]);
 static int		TestwineventCmd(ClientData clientData,
 			    Tcl_Interp *interp, int argc, CONST char **argv);
+MODULE_SCOPE int	TkplatformtestInit(Tcl_Interp *interp);
 
+
 /*
  *----------------------------------------------------------------------
  *

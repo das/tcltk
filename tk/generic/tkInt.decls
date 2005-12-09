@@ -693,10 +693,6 @@ declare 34 win {
 declare 35 win {
     int TkWinGetPlatformTheme(void)
 }
-# only needed by tktest:
-declare 36 win {
-    int TkplatformtestInit(Tcl_Interp *interp)
-}
 
 ########################
 # Mac OS X specific functions
@@ -878,10 +874,6 @@ declare 51 aqua {
 
 declare 53 aqua {
     unsigned long TkpGetMS(void)
-}
-# only needed by tktest:
-declare 54 aqua {
-    int TkplatformtestInit(Tcl_Interp *interp)
 }
 
 ##############################################################################
