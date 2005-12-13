@@ -193,6 +193,7 @@ TkMacOSXInitCarbonEvents (
 	    {kEventClassMenu,		kEventMenuBeginTracking},
 	    {kEventClassMenu,		kEventMenuEndTracking},
 	    {kEventClassCommand,	kEventCommandProcess},
+	    {kEventClassMouse,		kEventMouseWheelMoved},
 	    {kEventClassWindow,		kEventWindowExpanded},
 	    {kEventClassApplication,	kEventAppHidden},
 	    {kEventClassApplication,	kEventAppShown},
@@ -231,6 +232,7 @@ TkMacOSXInitCarbonEvents (
 	_TraceEventByName(CFSTR("kEventMouseDown"));
 	_TraceEventByName(CFSTR("kEventMouseUp"));
 	_TraceEventByName(CFSTR("kEventMouseWheelMoved"));
+	_TraceEventByName(CFSTR("kEventMouseScroll"));
 	_TraceEventByName(CFSTR("kEventWindowUpdate"));
 	_TraceEventByName(CFSTR("kEventWindowActivated"));
 	_TraceEventByName(CFSTR("kEventWindowDeactivated"));
