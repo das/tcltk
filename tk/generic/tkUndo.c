@@ -373,12 +373,12 @@ TkUndoSetDepth(
     TkUndoRedoStack *stack,	/* An Undo/Redo stack */
     int maxdepth)		/* The maximum stack depth */
 {
-    TkUndoAtom *elem, *prevelem;
-    int sepNumber = 0;
-
     stack->maxdepth = maxdepth;
 
     if (stack->maxdepth>0 && stack->depth>stack->maxdepth) {
+	TkUndoAtom *elem, *prevelem;
+	int sepNumber = 0;
+
 	/*
 	 * Maximum stack depth exceeded. We have to remove the last compound
 	 * elements on the stack.
@@ -386,8 +386,8 @@ TkUndoSetDepth(
 
 	elem = stack->undoStack;
 	prevelem = NULL;
-	while (sepNumber <= stack->maxdepth) {
-	    if (elem != NULL && elem->type == TK_UNDO_SEPARATOR) {
+	while ((elem != NULL) && (sepNumber <= stack->maxdepth)) {
+	    if (elem->type == TK_UNDO_SEPARATOR) {
 		sepNumber++;
 	    }
 	    prevelem = elem;
@@ -400,6 +400,7 @@ TkUndoSetDepth(
 
 	    while (sub->next != NULL) {
 		TkUndoSubAtom *next = sub->next;
+
 		if (sub->action != NULL) {
 		    Tcl_DecrRefCount(sub->action);
 		}
@@ -485,35 +486,9 @@ void
 TkUndoInsertUndoSeparator(
     TkUndoRedoStack *stack)
 {
-    /*
-     * TkUndoAtom * elem;
-     * TkUndoAtom * prevelem;
-     * int sepNumber = 0;
-     */
-
     if (TkUndoInsertSeparator(&stack->undoStack)) {
 	stack->depth++;
 	TkUndoSetDepth(stack, stack->maxdepth);
-#ifdef OBSOLETE_OR_BUGGY_CODE
-	if (stack->maxdepth>0 && stack->depth>stack->maxdepth) {
-	    elem = stack->undoStack;
-	    prevelem = NULL;
-	    while (sepNumber < stack->depth) {
-		if (elem != NULL && elem->type == TK_UNDO_SEPARATOR) {
-		    sepNumber++;
-		}
-		prevelem = elem;
-		elem = elem->next;
-	    }
-	    prevelem->next = NULL;
-	    while (elem) {
-		prevelem = elem;
-		elem = elem->next;
-		ckfree((char *) elem);
-	    }
-	    stack->depth;
-	}
-#endif /* OBSOLETE_OR_BUGGY_CODE */
     }
 }
 
