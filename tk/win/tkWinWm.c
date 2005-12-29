@@ -1648,7 +1648,7 @@ ReadIconOrCursorFromFile(
     Tcl_Obj *fileName,
     BOOL isIcon)
 {
-    BlockOfIconImagesPtr lpIR, lpNew;
+    BlockOfIconImagesPtr lpIR;
     Tcl_Channel channel;
     int i;
     DWORD dwBytesRead;
