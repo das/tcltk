@@ -17,6 +17,7 @@
 
 #include "tkMacOSXInt.h"
 #include "tkFont.h"
+#include "tclInt.h" /* for Tcl_CreateNamespace() */
 
 /*
  * For doing things with Mac strings and Fixed numbers.  This probably should move 

@@ -23,6 +23,7 @@
 #include "tkMacOSXInt.h"
 #include "tkPort.h"
 #include "tkMacOSXDebug.h"
+#include "tclInt.h" /* for Tcl_CreateNamespace() */
 
 #ifndef PI
 #    define PI 3.14159265358979323846
