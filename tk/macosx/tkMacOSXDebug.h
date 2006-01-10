@@ -79,6 +79,15 @@ MODULE_SCOPE char * TkMacOSXMenuMessageToAscii(int msg, char * s);
 
 MODULE_SCOPE char * MouseTrackingResultToAscii(MouseTrackingResult r, char * buf );
 
+MODULE_SCOPE void* TkMacOSXGetNamedDebugSymbol(const char* module, const char* symbol);
+
+/* Macro to abstract common use of TkMacOSXGetNamedDebugSymbol to initialize named symbols */
+#define TkMacOSXInitNamedDebugSymbol(module, ret, symbol, ...) \
+    static ret (* symbol)(__VA_ARGS__) = (void*)(-1L); \
+    if (symbol == (void*)(-1L)) { \
+        symbol = TkMacOSXGetNamedDebugSymbol(STRINGIFY(module), STRINGIFY(_##symbol));\
+    }
+
 #endif
 
 #endif

@@ -25,6 +25,12 @@
 #include "tkMacOSXDebug.h"
 #include <CoreFoundation/CFString.h>
 
+/*
+#ifdef	TK_MAC_DEBUG
+#define TK_MAC_DEBUG_MENUS
+#endif
+*/
+
 #if !defined(MAC_OS_X_VERSION_10_3) || \
         (MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_3)
     /* Define constants only available on Mac OS X 10.3 or later */
@@ -1066,6 +1072,14 @@ ReconfigureIndividualMenu(
     TkMenuEntry *mePtr;
     int parentDisabled = 0;
 
+#if defined(TK_MAC_DEBUG) && defined(TK_MAC_DEBUG_MENUS)
+    /* Carbon-internal menu debugging (c.f. Technote 2124) */
+    TkMacOSXInitNamedDebugSymbol(HIToolbox, void, DebugPrintMenu, MenuRef menu);
+    if (DebugPrintMenu) {
+        DebugPrintMenu(macMenuHdl);
+    }
+#endif
+
     for (mePtr = menuPtr->menuRefPtr->parentEntryPtr; mePtr != NULL;
     	    mePtr = mePtr->nextCascadePtr) {
     	char *name = (mePtr->namePtr == NULL) ? ""
@@ -1150,10 +1164,6 @@ ReconfigureIndividualMenu(
 	    	    	    ((MacMenu *) mePtr->childMenuRefPtr
 			    ->menuPtr->platformData)->menuHdl;
 
-		    if (childMenuHdl == NULL) {
-		        childMenuHdl = ((MacMenu *) mePtr->childMenuRefPtr
-			    	->menuPtr->platformData)->menuHdl;
-		    }
 		    if (childMenuHdl != NULL) {
 		        {
 		            SetMenuItemHierarchicalID(macMenuHdl, base + index,

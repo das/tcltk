@@ -170,12 +170,13 @@ TkpInit(interp)
             if (rsrc) {
                 ReleaseResource(rsrc);
             } else {
+#ifndef __LP64__
                 const struct mach_header *image;
                 char *data = NULL;
                 uint32_t size;
                 int fd = -1;
                 char fileName[L_tmpnam + 15];
-                int i, n;
+                uint32_t i, n;
 
                 /* Get resource data from __tk_rsrc section of tk library file */
                 n = _dyld_image_count();
@@ -216,6 +217,7 @@ TkpInit(interp)
                     unlink(fileName);
                     close(fd);
                 }
+#endif /* __LP64__ */
             }
         }
                  

@@ -186,7 +186,8 @@ build-${PROJECT}: ${OBJ_DIR}/Makefile
 	rm -rf ./${LIBDIR} ./${BINDIR} && ln -fs ${SYMROOT} ./${LIBDIR} && \
 	ln -fs ${SYMROOT} ./${BINDIR} && ln -fs ${OBJ_DIR}/tktest ${SYMROOT}
 ifeq (${TK_X11},)
-	@rm -f ${OBJ_DIR}/${BINDIR}
+	@rm -f ${OBJ_DIR}/${BINDIR} && \
+	ln -fs Wish.app/Contents/MacOS/Wish ${SYMROOT}/${WISH}
 endif
 # Create symbolic link to Tcl.framework in ${SYMROOT}if necessary
 	@cd ${SYMROOT} && if [ ! -e Tcl.framework -o -L Tcl.framework ]; then \
