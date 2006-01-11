@@ -1072,7 +1072,7 @@ ReconfigureIndividualMenu(
     TkMenuEntry *mePtr;
     int parentDisabled = 0;
 
-#ifdef TK_MAC_DEBUG_MENUS
+#if defined(TK_MAC_DEBUG) && defined(TK_MAC_DEBUG_MENUS)
     /* Carbon-internal menu debugging (c.f. Technote 2124) */
     TkMacOSXInitNamedDebugSymbol(HIToolbox, void, DebugPrintMenu, MenuRef menu);
     if (DebugPrintMenu) {
