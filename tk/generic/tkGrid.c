@@ -1067,6 +1067,12 @@ GridRowColumnConfigureCommand(tkwin, interp, objc, objv)
 	}
 
 	/*
+	 * Reset any lingering error from e.g GetInt.
+	 */
+
+	Tcl_ResetResult(interp);
+
+	/*
 	 * The outer loop is only to handle "all".
 	 */
 
