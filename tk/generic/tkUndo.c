@@ -395,19 +395,29 @@ TkUndoSetDepth(
 	}
 	prevelem->next = NULL;
 	while (elem != NULL) {
-	    TkUndoSubAtom *sub = elem->apply;
 	    prevelem = elem;
+	    if (elem->type != TK_UNDO_SEPARATOR) {
+		TkUndoSubAtom *sub = elem->apply;
+		while (sub->next != NULL) {
+		    TkUndoSubAtom *next = sub->next;
 
-	    while (sub->next != NULL) {
-		TkUndoSubAtom *next = sub->next;
-
-		if (sub->action != NULL) {
-		    Tcl_DecrRefCount(sub->action);
+		    if (sub->action != NULL) {
+			Tcl_DecrRefCount(sub->action);
+		    }
+		    ckfree((char *)sub);
+		    sub = next;
 		}
-		ckfree((char *)sub);
-		sub = next;
-	    }
+		sub = elem->revert;
+		while (sub->next != NULL) {
+		    TkUndoSubAtom *next = sub->next;
 
+		    if (sub->action != NULL) {
+			Tcl_DecrRefCount(sub->action);
+		    }
+		    ckfree((char *)sub);
+		    sub = next;
+		}
+	    }
 	    elem = elem->next;
 	    ckfree((char *) prevelem);
 	}
