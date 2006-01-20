@@ -449,8 +449,10 @@ InvokeInputMethods(
 		XSetICFocus(winPtr->inputContext);
 	    }
 	}
-	if (XFilterEvent(eventPtr, None)) {
-	    return 1;
+	if (eventPtr->type == KeyPress || eventPtr->type == KeyRelease) {
+	    if (XFilterEvent(eventPtr, None)) {
+		return 1;
+	    }
 	}
     }
     return 0;
