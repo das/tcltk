@@ -948,8 +948,10 @@ Tk_HandleEvent(eventPtr)
 		XSetICFocus(winPtr->inputContext);
 	    }
 	}
-	if (XFilterEvent(eventPtr, None)) {
-	    goto done;
+	if (eventPtr->type == KeyPress || eventPtr->type == KeyRelease) {
+	    if (XFilterEvent(eventPtr, None)) {
+		goto done;
+	    }
 	}
     }
 #endif /* TK_USE_INPUT_METHODS */
