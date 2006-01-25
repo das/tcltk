@@ -147,10 +147,10 @@ proc ::tk::MotifFDialog_FileTypes {w} {
     upvar ::tk::dialog::file::[winfo name $w] data
 
     set f $w.top.f3.types
-    catch {destroy $f}
+    destroy $f
 
     # No file types: use "*" as the filter and display no radio-buttons
-    if {$data(-filetypes) == ""} {
+    if {$data(-filetypes) eq ""} {
 	set data(filter) *
 	return
     }
@@ -168,7 +168,7 @@ proc ::tk::MotifFDialog_FileTypes {w} {
 
     frame $f
     set cnt 0
-    if {$data(-filetypes) != {}} {
+    if {$data(-filetypes) ne {}} {
 	foreach type $data(-filetypes) {
 	    set title  [lindex [lindex $type 0] 0]
 	    set filter [lindex $type 1]
@@ -887,8 +887,7 @@ proc ::tk::ListBoxKeyAccel_Unset {w} {
     variable ::tk::Priv
 
     catch {after cancel $Priv(lbAccel,$w,afterId)}
-    catch {unset Priv(lbAccel,$w)}
-    catch {unset Priv(lbAccel,$w,afterId)}
+    unset -nocomplain Priv(lbAccel,$w) Priv(lbAccel,$w,afterId)
 }
 
 # ::tk::ListBoxKeyAccel_Key--
@@ -908,7 +907,7 @@ proc ::tk::ListBoxKeyAccel_Unset {w} {
 proc ::tk::ListBoxKeyAccel_Key {w key} {
     variable ::tk::Priv
 
-    if { $key == "" } {
+    if { $key eq "" } {
 	return
     }
     append Priv(lbAccel,$w) $key
@@ -950,7 +949,7 @@ proc ::tk::ListBoxKeyAccel_Goto {w string} {
 proc ::tk::ListBoxKeyAccel_Reset {w} {
     variable ::tk::Priv
 
-    catch {unset Priv(lbAccel,$w)}
+    unset -nocomplain Priv(lbAccel,$w)
 }
 
 proc ::tk_getFileType {} {

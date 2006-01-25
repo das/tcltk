@@ -542,7 +542,7 @@ proc ::tk::ConsoleBind {w} {
     }
 
     bind PostConsole <KeyPress> {
-	if {"%A" != ""} {
+	if {"%A" ne ""} {
 	    ::tk::console::TagProc %W
 	}
 	break
@@ -635,7 +635,7 @@ proc ::tk::console::TagProc w {
     }
     set exp "\[^\\\\\]\[\[ \t\n\r\;{}\"\$\]"
     set i [$w search -backwards -regexp $exp insert-1c promptEnd-1c]
-    if {$i == ""} {
+    if {$i eq ""} {
 	set i promptEnd
     } else {
 	append i +2c
@@ -805,7 +805,7 @@ proc ::tk::console::ConstrainBuffer {w size} {
 proc ::tk::console::Expand {w {type ""}} {
     set exp "\[^\\\\\]\[\[ \t\n\r\\\{\"\\\\\$\]"
     set tmp [$w search -backwards -regexp $exp insert-1c promptEnd-1c]
-    if {$tmp == ""} {
+    if {$tmp eq ""} {
 	set tmp promptEnd
     } else {
 	append tmp +2c
@@ -827,7 +827,7 @@ proc ::tk::console::Expand {w {type ""}} {
 	default {
 	    set res {}
 	    foreach t {Pathname Procname Variable} {
-		if {![catch {Expand$t $str} res] && ($res != "")} {
+		if {![catch {Expand$t $str} res] && ($res ne "")} {
 		    break
 		}
 	    }

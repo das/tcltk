@@ -83,16 +83,16 @@ proc ::tk::PlaceWindow {w {place ""} {anchor ""}} {
 	set x [expr {([winfo screenwidth $w]-[winfo reqwidth $w])/2}]
 	set y [expr {([winfo screenheight $w]-[winfo reqheight $w])/2}]
 	set checkBounds 0
-    } elseif {[string equal -len [string length $place] $place "pointer"]} {
+    } elseif {[string equal -length [string length $place] $place "pointer"]} {
 	## place at POINTER (centered if $anchor == center)
-	if {[string equal -len [string length $anchor] $anchor "center"]} {
+	if {[string equal -length [string length $anchor] $anchor "center"]} {
 	    set x [expr {[winfo pointerx $w]-[winfo reqwidth $w]/2}]
 	    set y [expr {[winfo pointery $w]-[winfo reqheight $w]/2}]
 	} else {
 	    set x [winfo pointerx $w]
 	    set y [winfo pointery $w]
 	}
-    } elseif {[string equal -len [string length $place] $place "widget"] && \
+    } elseif {[string equal -length [string length $place] $place "widget"] && \
 	    [winfo exists $anchor] && [winfo ismapped $anchor]} {
 	## center about WIDGET $anchor, widget must be mapped
 	set x [expr {[winfo rootx $anchor] + \
@@ -363,7 +363,7 @@ switch -- [tk windowingsystem] {
 	# This seems to be correct on *some* HP systems.
 	catch { event add <<PrevWindow>> <hpBackTab> }
 
-	trace variable ::tk_strictMotif w ::tk::EventMotifBindings
+	trace add variable ::tk_strictMotif write ::tk::EventMotifBindings
 	set ::tk_strictMotif $::tk_strictMotif
     }
     "win32" {
@@ -554,7 +554,7 @@ proc ::tk::FindAltKeyTarget {path char} {
 #
 proc ::tk::AltKeyInDialog {path key} {
     set target [FindAltKeyTarget $path $key]
-    if { $target == ""} return
+    if { $target eq ""} return
     event generate $target <<AltUnderlined>>
 }
 
