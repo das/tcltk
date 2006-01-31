@@ -124,7 +124,7 @@ proc ::tk::dialog::error::bgerror err {
 
     set w .bgerrorDialog
     set title [mc "Application Error"]
-    set text "Error: $displayedErr"
+    set text [mc "Error: %1\$s" $displayedErr]
     set buttons [list ok $ok dismiss [mc "Skip Messages"] \
 	    function [mc "Details >>"]]
 
