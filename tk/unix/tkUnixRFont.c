@@ -41,10 +41,10 @@ typedef struct {
  * Forward declarations...
  */
 
+static void		FinishedWithFont(UnixFtFont *fontPtr);
 static XftFont *	GetFont(UnixFtFont *fontPtr, FcChar32 ucs4);
 static UnixFtFont *	InitFont(Tk_Window tkwin, FcPattern *pattern,
 			    UnixFtFont *fontPtr);
-static void		FinishedWithFont(UnixFtFont *fontPtr);
 
 /*
  * Package initialization:
@@ -56,15 +56,15 @@ static void		FinishedWithFont(UnixFtFont *fontPtr);
 #define TCL_CFGVAL_ENCODING "ascii"
 #endif
 
-static Tcl_Config cfg[] = {
-    { "fontsystem", 	"xft" },
-    { 0,0 }
-};
-
 void
 TkpFontPkgInit(
     TkMainInfo *mainPtr)	/* The application being created. */
 {
+    static Tcl_Config cfg[] = {
+	{ "fontsystem", "xft" },
+	{ 0,0 }
+    };
+
     Tcl_RegisterConfig(mainPtr->interp, "tk", cfg, TCL_CFGVAL_ENCODING);
 }
 
