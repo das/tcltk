@@ -145,6 +145,13 @@ extern int		strcasecmp _ANSI_ARGS_((CONST char *s1,
 extern int		strncasecmp _ANSI_ARGS_((CONST char *s1,
 			    CONST char *s2, size_t n));
 #endif
+
+/*
+ * The following define causes Tk to use its internal keysym hash table
+ */
+
+#define REDO_KEYSYM_LOOKUP
+
 /*
  * Defines for X functions that are used by Tk but are treated as
  * no-op functions on the Macintosh.

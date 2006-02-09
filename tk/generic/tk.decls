@@ -1338,7 +1338,7 @@ declare 5 aqua {
 }
 
 declare 6 aqua {
-    void TkMacOSXInvalClipRgns (TkWindow *winPtr)
+    void TkMacOSXInvalClipRgns (Tk_Window tkwin)
 }
 
 declare 7 aqua {
