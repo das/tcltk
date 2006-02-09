@@ -4406,7 +4406,7 @@ TkMacOSXGrowToplevel(
 		    LoWord(growResult), HiWord(growResult), true);
 	    SetPort( GetWindowPort(whichWindow));
 	    InvalWindowRect(whichWindow,&portRect); /* TODO: may not be needed */
-	    TkMacOSXInvalClipRgns(winPtr);
+	    TkMacOSXInvalClipRgns((Tk_Window) winPtr);
 	    TkGenWMConfigureEvent((Tk_Window) winPtr, -1, -1, 
 		    (int) LoWord(growResult), (int) HiWord(growResult),
 		    TK_SIZE_CHANGED);
@@ -4595,7 +4595,7 @@ TkMacOSXZoomToplevel(
     
     ZoomWindow(whichWindow, zoomPart, false);
     InvalWindowRect(whichWindow,&portRect);
-    TkMacOSXInvalClipRgns((TkWindow *) tkwin);
+    TkMacOSXInvalClipRgns(tkwin);
 
     LocalToGlobal(&location);
     TkMacOSXWindowOffset(whichWindow, &xOffset, &yOffset);

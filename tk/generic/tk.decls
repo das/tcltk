@@ -731,7 +731,7 @@ declare 147 generic {
 }
 
 declare 148 generic {
-    void Tk_PhotoExpand_Panic (Tk_PhotoHandle handle, int width, int height )
+    void Tk_PhotoExpand (Tk_PhotoHandle handle, int width, int height )
 }
 
 declare 149 generic {
@@ -739,7 +739,7 @@ declare 149 generic {
 }
 
 declare 150 generic {
-    void Tk_PhotoSetSize_Panic (Tk_PhotoHandle handle, int width, int height)
+    void Tk_PhotoSetSize (Tk_PhotoHandle handle, int width, int height)
 }
 
 declare 151 generic {
@@ -1166,12 +1166,12 @@ declare 245 generic {
 }
 
 declare 246 generic {
-    void Tk_PhotoPutBlock_Panic (Tk_PhotoHandle handle,
+    void Tk_PhotoPutBlock (Tk_PhotoHandle handle,
 	    Tk_PhotoImageBlock *blockPtr, int x, int y,
 	    int width, int height, int compRule)
 }
 declare 247 generic {
-    void Tk_PhotoPutZoomedBlock_Panic (Tk_PhotoHandle handle,
+    void Tk_PhotoPutZoomedBlock (Tk_PhotoHandle handle,
 	    Tk_PhotoImageBlock *blockPtr, int x, int y,
 	    int width, int height, int zoomX, int zoomY,
 	    int subsampleX, int subsampleY, int compRule)
@@ -1243,25 +1243,6 @@ declare 264 generic {
 	    int width, int height, int state)
 }
 
-# TIP#116
-declare 265 generic {
-    int Tk_PhotoExpand(Tcl_Interp *interp, Tk_PhotoHandle handle,
-	    int width, int height)
-}
-declare 266 generic {
-    int Tk_PhotoPutBlock(Tcl_Interp *interp, Tk_PhotoHandle handle,
-	    Tk_PhotoImageBlock *blockPtr, int x, int y, int width, int height,
-	    int compRule)
-}
-declare 267 generic {
-    int Tk_PhotoPutZoomedBlock(Tcl_Interp *interp, Tk_PhotoHandle handle,
-	    Tk_PhotoImageBlock *blockPtr, int x, int y, int width, int height,
-	    int zoomX, int zoomY, int subsampleX, int subsampleY, int compRule)
-}
-declare 268 generic {
-    int Tk_PhotoSetSize(Tcl_Interp *interp, Tk_PhotoHandle handle,
-	    int width, int height)
-}
 
 # Define the platform specific public Tk interface.  These functions are
 # only available on the designated platform.
@@ -1383,7 +1364,7 @@ declare 5 aqua {
 }
 
 declare 6 aqua {
-    void TkMacOSXInvalClipRgns (TkWindow *winPtr)
+    void TkMacOSXInvalClipRgns (Tk_Window tkwin)
 }
 
 declare 7 aqua {

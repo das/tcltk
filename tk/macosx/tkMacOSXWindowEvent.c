@@ -623,7 +623,7 @@ TkGenWMConfigureEvent(
     winPtr->changes.y = y;
     winPtr->changes.width = width;
     winPtr->changes.height = height;
-    TkMacOSXInvalClipRgns(winPtr);
+    TkMacOSXInvalClipRgns(tkwin);
 }
 
 /*

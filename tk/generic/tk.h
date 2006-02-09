@@ -53,17 +53,6 @@ extern "C" {
 #define TK_VERSION	"8.4"
 #define TK_PATCH_LEVEL	"8.4.12"
 
-/*
- * The following definitions set up the proper options for Macintosh
- * compilers.  We use this method because there is no autoconf equivalent.
- */
-
-#if defined(MAC_TCL) || defined(MAC_OSX_TK)
-#   ifndef REDO_KEYSYM_LOOKUP
-#	define REDO_KEYSYM_LOOKUP
-#   endif
-#endif
-
 #ifndef _TCL
 #   include <tcl.h>
 #   if (TCL_MAJOR_VERSION != 8) || (TCL_MINOR_VERSION != 4)
