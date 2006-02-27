@@ -818,8 +818,12 @@ Tk_GetBitmapFromData(interp, tkwin, source, width, height)
     char string[16 + TCL_INTEGER_SPACE];
     char *name;
     TkDisplay *dispPtr = ((TkWindow *) tkwin)->dispPtr;
+    ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
+	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
-    BitmapInit(dispPtr);
+    if (!tsdPtr->initialized) {
+	BitmapInit(dispPtr);
+    }
 
     nameKey.source = source;
     nameKey.width = width;
