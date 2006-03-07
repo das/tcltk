@@ -1097,6 +1097,8 @@ If the \fB\-outline\fR option hasn't been specified then this option
 has no effect.
 If \fIbitmap\fR is an empty string (the default), then the outline is drawn
 in a solid fashion.
+\fINote that stipples are not well supported on platforms that do not
+use X11 as their drawing API.\fR
 .TP
 \fB\-stipple \fIbitmap\fR
 .TP
@@ -1112,6 +1114,8 @@ has no effect.
 If \fIbitmap\fR is an empty string (the default), then filling is done
 in a solid fashion.
 For the text item, it affects the actual text.
+\fINote that stipples are not well supported on platforms that do not
+use X11 as their drawing API.\fR
 .TP
 \fB\-state \fIstate\fR
 This allows an item to override the canvas widget's global \fIstate\fR
