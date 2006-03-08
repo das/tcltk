@@ -5846,7 +5846,7 @@ Documentation improvements [1087842,1081527,1115907,etc.]
 
 2005-10-04 (bug fix)[1216775] [tk_dialog] failing [grab] (fontana,hobbs)
 
-2005-10-04 (bug fix)[1216775] [tk_chooseDirectory -mustexist] (lemburg,hobbs)
+2005-10-04 (bug fix)[1309218] [tk_chooseDirectory -mustexist] (lemburg,hobbs)
 
 2005-10-10 (bug fix)[1319720] Tk_DeleteOptionTable() mem leak (melbardis)
 
