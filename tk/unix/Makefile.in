@@ -1446,7 +1446,8 @@ dist:   $(UNIX_DIR)/configure
 	mkdir $(DISTDIR)/tests
 	cp -p $(TOP_DIR)/license.terms $(TOP_DIR)/tests/*.test \
 		$(TOP_DIR)/tests/*.tcl $(TOP_DIR)/tests/README \
-		$(TOP_DIR)/tests/*.gif \
+		$(TOP_DIR)/tests/*.gif $(TOP_DIR)/tests/*.ppm \
+		$(TOP_DIR)/tests/*.xbm \
 		$(TOP_DIR)/tests/option.file* $(DISTDIR)/tests
 
 #
