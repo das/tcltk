@@ -16,7 +16,6 @@
 
 #include "tkPort.h"
 #include "tkInt.h"
-#include <errno.h>
 
 #if defined(WIN32)
 #include "tkWinInt.h"
