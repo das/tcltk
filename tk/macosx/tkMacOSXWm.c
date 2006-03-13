@@ -19,7 +19,6 @@
 #include "tkPort.h"
 #include "tkInt.h"
 #include "tkMacOSXInt.h"
-#include <errno.h>
 #include "tkScrollbar.h"
 #include "tkMacOSXWm.h"
 #include "tkMacOSXEvent.h"

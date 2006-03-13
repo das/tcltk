@@ -37,7 +37,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <fcntl.h>
-#ifdef HAVE_LIMITS_H
+#ifndef NO_LIMITS_H
 #   include <limits.h>
 #else
 #   include "../compat/limits.h"
@@ -69,7 +69,7 @@
 #       include <time.h>
 #   endif
 #endif
-#ifdef HAVE_UNISTD_H
+#ifndef NO_UNISTD_H
 #   include <unistd.h>
 #else
 #   include "../compat/unistd.h"
@@ -118,13 +118,6 @@
 #   define NFDBITS NBBY*sizeof(fd_mask)
 #endif
 #define MASK_SIZE howmany(FD_SETSIZE, NFDBITS)
-
-/*
- * Not all systems declare the errno variable in errno.h. so this
- * file does it explicitly.
- */
-
-extern int errno;
 
 /*
  * Define "NBBY" (number of bits per byte) if it's not already defined.
