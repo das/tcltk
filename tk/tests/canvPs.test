@@ -94,7 +94,7 @@ test canvPs-2.4 {test writing to channel and file, same output} {pcOnly} {
     set status
 } ok
 
-test canvPs-3.1 {test ps generation with an embedded window} {} {
+test canvPs-3.1 {test ps generation with an embedded window} {notAqua} {
     removeFile bar.ps
     destroy .c
     pack [canvas .c -width 200 -height 200 -background white]
