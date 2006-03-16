@@ -18,7 +18,6 @@
 
 #ifndef USE_OLD_IMAGE
 MODULE_SCOPE void Tk_CreateOldImageType(Tk_ImageType *typePtr);
-MODULE_SCOPE void Tk_CreateOldPhotoImageFormat(Tk_PhotoImageFormat *formatPtr);
 #endif
 
 /*

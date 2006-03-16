@@ -174,13 +174,6 @@ static RegisteredInterp *interpListPtr = NULL;
       */
 
      /*
-      * The following variable is the serial number that was used in the
-      * last "send" command.  It is exported only for testing purposes.
-      */
-
-int tkSendSerial = 0;
-
-     /*
       * Maximum size property that can be read at one time by
       * this module:
       */
