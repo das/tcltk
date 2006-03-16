@@ -1085,8 +1085,6 @@ MODULE_SCOPE int	Tk_WinfoObjCmd(ClientData clientData,
 MODULE_SCOPE int	Tk_WmObjCmd(ClientData clientData, Tcl_Interp *interp,
 			    int objc, Tcl_Obj *CONST objv[]);
 
-MODULE_SCOPE void	TkConsolePrint(Tcl_Interp *interp,
-			    int devId, CONST char *buffer, long size);
 MODULE_SCOPE void	TkEventInit(void);
 MODULE_SCOPE void	TkRegisterObjTypes(void);
 MODULE_SCOPE int	TkCreateMenuCmd(Tcl_Interp *interp);
