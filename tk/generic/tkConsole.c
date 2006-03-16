@@ -300,7 +300,7 @@ Tk_InitConsoleChannels(
 	data->info = info;
 	data->info->refCount++;
 	data->type = TCL_STDERR;
-	consoleChannel = Tcl_CreateChannel(&consoleChannelType, "console1",
+	consoleChannel = Tcl_CreateChannel(&consoleChannelType, "console2",
 		(ClientData) data, TCL_WRITABLE);
 	if (consoleChannel != NULL) {
 	    Tcl_SetChannelOption(NULL, consoleChannel,
