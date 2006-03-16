@@ -4712,6 +4712,7 @@ Tk_PhotoPutZoomedBlock(
     }
 
     sourceIsSimplePhoto = compRule & SOURCE_IS_SIMPLE_ALPHA_PHOTO;
+    compRule &= ~SOURCE_IS_SIMPLE_ALPHA_PHOTO;
     masterPtr = (PhotoMaster *) handle;
 
     if (zoomX <= 0 || zoomY <= 0) {
