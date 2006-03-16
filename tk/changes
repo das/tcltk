@@ -6141,4 +6141,8 @@ Max OSX universal binaries support (steffen)
 
 Documentation improvements [1224983,1247835,1151523,1357575,1083838]
 
---- Released 8.5a4, March 17, 2006 --- See ChangeLog for details ---
+2006-03-15 (bug fix)[1409140] speed up photo image updates (fellows)
+
+2006-03-16 (enhancement)[1405069] added Portuguese l10n. (ricardoj,silasj)
+
+---- Released 8.5a4, March 17, 2006 --- See ChangeLog for details ---
