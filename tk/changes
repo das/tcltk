@@ -5887,4 +5887,8 @@ handled (max)
 
 2006-03-02 (Aqua bug fix) image endian issue on OS X/x86 (hobbs)
 
+2006-03-15 (bug fix)[1409140] speed up photo image updates (fellows)
+
+2006-03-16 (enhancement)[1405069] added Portuguese l10n. (ricardoj,silasj)
+
 --- Released 8.4.13, March 17, 2006 --- See ChangeLog for details ---
