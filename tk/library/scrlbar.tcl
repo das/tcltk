@@ -22,7 +22,7 @@ if {[tk windowingsystem] eq "x11"} {
 bind Scrollbar <Enter> {
     if {$tk_strictMotif} {
 	set tk::Priv(activeBg) [%W cget -activebackground]
-	%W config -activebackground [%W cget -background]
+	%W configure -activebackground [%W cget -background]
     }
     %W activate [%W identify %x %y]
 }
@@ -37,7 +37,7 @@ bind Scrollbar <Motion> {
 
 bind Scrollbar <Leave> {
     if {$tk_strictMotif && [info exists tk::Priv(activeBg)]} {
-	%W config -activebackground $tk::Priv(activeBg)
+	%W configure -activebackground $tk::Priv(activeBg)
     }
     %W activate {}
 }

@@ -173,7 +173,7 @@ proc ::tk::RecolorTree {w colors} {
 	set option -[string tolower $dbOption]
 	set class [string replace $dbOption 0 0 [string toupper \
 		[string index $dbOption 0]]]
-	if {![catch {$w config $option} value]} {
+	if {![catch {$w configure $option} value]} {
 	    # if the option database has a preference for this
 	    # dbOption, then use it, otherwise use the defaults
 	    # for the widget.
