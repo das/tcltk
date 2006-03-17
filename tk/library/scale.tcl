@@ -21,7 +21,7 @@
 bind Scale <Enter> {
     if {$tk_strictMotif} {
 	set tk::Priv(activeBg) [%W cget -activebackground]
-	%W config -activebackground [%W cget -background]
+	%W configure -activebackground [%W cget -background]
     }
     tk::ScaleActivate %W %x %y
 }
@@ -30,7 +30,7 @@ bind Scale <Motion> {
 }
 bind Scale <Leave> {
     if {$tk_strictMotif} {
-	%W config -activebackground $tk::Priv(activeBg)
+	%W configure -activebackground $tk::Priv(activeBg)
     }
     if {[%W cget -state] eq "active"} {
 	%W configure -state normal
