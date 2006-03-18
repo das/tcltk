@@ -2548,24 +2548,28 @@ InsertChars(sharedTextPtr, textPtr, indexPtr, stringPtr, viewUpdate)
     TkBTreeInsertChars(sharedTextPtr->tree, indexPtr, string);
 
     /*
-     * Push the insertion on the undo stack
+     * Push the insertion on the undo stack, and update
+     * the modified status of the widget
      */
 
-    if (sharedTextPtr->undo) {
-	TkTextIndex toIndex;
-
-	if (sharedTextPtr->autoSeparators &&
-	    sharedTextPtr->lastEditMode != TK_TEXT_EDIT_INSERT) {
-	    TkUndoInsertUndoSeparator(sharedTextPtr->undoStack);
+    if (length > 0) {
+	if (sharedTextPtr->undo) {
+	    TkTextIndex toIndex;
+	    
+	    if (sharedTextPtr->autoSeparators &&
+		sharedTextPtr->lastEditMode != TK_TEXT_EDIT_INSERT) {
+		TkUndoInsertUndoSeparator(sharedTextPtr->undoStack);
+	    }
+	    
+	    sharedTextPtr->lastEditMode = TK_TEXT_EDIT_INSERT;
+	    
+	    TkTextIndexForwBytes(textPtr, indexPtr, length, &toIndex);
+	    TextPushUndoAction(textPtr, stringPtr, 1, indexPtr, &toIndex);
 	}
 
-	sharedTextPtr->lastEditMode = TK_TEXT_EDIT_INSERT;
-
-	TkTextIndexForwBytes(textPtr, indexPtr, length, &toIndex);
-	TextPushUndoAction(textPtr, stringPtr, 1, indexPtr, &toIndex);
+	UpdateDirtyFlag(sharedTextPtr);
     }
-
-    UpdateDirtyFlag(sharedTextPtr);
+    
 
     resetViewCount = 0;
     for (tPtr = sharedTextPtr->peers; tPtr != NULL ; tPtr = tPtr->next) {
