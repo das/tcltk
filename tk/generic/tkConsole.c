@@ -57,6 +57,7 @@ static int	ConsoleObjCmd(ClientData clientData, Tcl_Interp *interp,
 static int	ConsoleOutput(ClientData instanceData,
 		    CONST char *buf, int toWrite, int *errorCode);
 static void	ConsoleWatch(ClientData instanceData, int mask);
+static void	DeleteConsoleInterp(ClientData clientData);
 static void	InterpDeleteProc(ClientData clientData, Tcl_Interp *interp);
 static int	InterpreterObjCmd(ClientData clientData, Tcl_Interp *interp,
 		    int objc, Tcl_Obj *CONST objv[]);
@@ -200,8 +201,8 @@ ShouldUseConsoleChannel(
  * Tk_InitConsoleChannels --
  *
  * 	Create the console channels and install them as the standard channels.
- * 	All I/O will be discarded until TkConsoleInit is called to attach the
- * 	console to a text widget.
+ * 	All I/O will be discarded until Tk_CreateConsoleWindow is called to
+ * 	attach the console to a text widget.
  *
  * Results:
  *	None.
@@ -387,10 +388,10 @@ Tk_CreateConsoleWindow(
     info->consoleInterp = consoleInterp;
     info->interp = interp;
 
-    /* TODO: establish exit handler for cleanup */
-
     Tcl_CallWhenDeleted(consoleInterp, InterpDeleteProc, (ClientData) info);
     info->refCount++;
+    Tcl_CreateThreadExitHandler(DeleteConsoleInterp,
+	    (ClientData) consoleInterp);
 
     /*
      * Add console commands to the interp
@@ -781,6 +782,25 @@ InterpreterObjCmd(
 /*
  *----------------------------------------------------------------------
  *
+ * DeleteConsoleInterp --
+ *
+ *	Thread exit handler to destroy a console interp when the
+ *	thread it lives in gets torn down.
+ *
+ *----------------------------------------------------------------------
+ */
+
+static void
+DeleteConsoleInterp(
+    ClientData clientData)
+{
+    Tcl_Interp *interp = (Tcl_Interp *)clientData;
+    Tcl_DeleteInterp(interp);
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
  * InterpDeleteProc --
  *
  *	React when the interp in which the console is displayed is deleted
@@ -803,6 +823,8 @@ InterpDeleteProc(
     ConsoleInfo *info = (ConsoleInfo *) clientData;
 
     if (info->consoleInterp == interp) {
+	Tcl_DeleteThreadExitHandler(DeleteConsoleInterp,
+		(ClientData) info->consoleInterp);
 	info->consoleInterp = NULL;
     }
     if (--info->refCount <= 0) {
