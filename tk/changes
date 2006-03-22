@@ -5891,4 +5891,8 @@ handled (max)
 
 2006-03-16 (enhancement)[1405069] added Portuguese l10n. (ricardoj,silasj)
 
+2006-03-17 (bug fix)[1451587] no abbreviations in script library (thoyts)
+
+2006-03-20 (bug fix)[1380427] crash in undo stack (lz_ufo,callewaert,fellows)
+
 --- Released 8.4.13, March 17, 2006 --- See ChangeLog for details ---
