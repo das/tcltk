@@ -15,6 +15,7 @@
 
 #include "tkButton.h"
 #include "tkMacOSXInt.h"
+#include "tkMacOSXFont.h"
 #include "tkMacOSXDebug.h"
 
 #define DEFAULT_USE_TK_TEXT 0
@@ -108,9 +109,6 @@ static void TkMacOSXDrawControl _ANSI_ARGS_((MacButton *butPtr,
 static void SetupBevelButton _ANSI_ARGS_((MacButton *butPtr,
         ControlRef controlHandle, 
         GWorldPtr destPort, GC gc, Pixmap pixmap));
-
-MODULE_SCOPE int TkFontGetFirstTextLayout(Tk_TextLayout layout, Tk_Font * font, char * dst); 
-MODULE_SCOPE void TkMacOSXInitControlFontStyle(Tk_Font tkfont,ControlFontStylePtr fsPtr);
 
 /*
  * The class procedure table for the button widgets.

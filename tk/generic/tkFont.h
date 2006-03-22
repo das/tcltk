@@ -203,6 +203,8 @@ MODULE_SCOPE int	TkFontGetPixels(Tk_Window tkwin, int size);
 MODULE_SCOPE int	TkFontGetPoints(Tk_Window tkwin, int size);
 MODULE_SCOPE char **	TkFontGetGlobalClass(void);
 MODULE_SCOPE char **	TkFontGetSymbolClass(void);
+MODULE_SCOPE int	TkFontGetFirstTextLayout(Tk_TextLayout layout,
+			    Tk_Font *font, char *dst);
 
 /*
  * Low-level API exported by platform-specific code to generic code.
