@@ -567,6 +567,16 @@ Tk_MeasureChars(
     return curByte;
 }
 
+int
+TkpMeasureCharsInContext(Tk_Font tkfont, CONST char * source, int numBytes,
+			 int rangeStart, int rangeLength, int maxLength,
+			 int flags, int * lengthPtr)
+{
+    (void) numBytes; /*unused*/
+    return Tk_MeasureChars(tkfont, source + rangeStart, rangeLength,
+	    maxLength, flags, lengthPtr);
+}
+
 #define NUM_SPEC    1024
 
 void
