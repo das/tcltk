@@ -35,12 +35,7 @@
  * RCS: @(#) $Id$
  */
 
-#include <Carbon/Carbon.h>
-/*
-#include <Gestalt.h>
-*/
-#include "tkPort.h"
-#include "tkInt.h"
+#include "tkMacOSXInt.h"
 
 MODULE_SCOPE int	Tk_SendObjCmd _ANSI_ARGS_((ClientData clientData,
 			    Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]));

@@ -58,7 +58,6 @@
  */
 
 #include "tkMacOSXInt.h"
-#include "tkPort.h"
 #include "tkMacOSXWm.h"
 #include "tkMacOSXEvent.h"
 #include "tkMacOSXDebug.h"

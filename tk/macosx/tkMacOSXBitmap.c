@@ -12,17 +12,7 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkPort.h"
-#include "tk.h"
 #include "tkMacOSXInt.h"
-
-#include <Carbon/Carbon.h>
-/*
-#include <Icons.h>
-#include <Dialogs.h>
-#include <Resources.h>
-#include <Strings.h>
-*/
 
 /*
  * Depending on the resource type there are different ways to

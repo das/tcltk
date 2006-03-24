@@ -54,7 +54,6 @@
  */
 
 #include "tkMacOSXInt.h"
-#include "tkPort.h"
 #include "tkMacOSXEvent.h"
 
 typedef struct {

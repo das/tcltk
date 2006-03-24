@@ -15,10 +15,11 @@
 #ifndef _TKMAC
 #define _TKMAC
 
-#include <Carbon/Carbon.h>
 #ifndef _TK
 #include "tk.h"
 #endif
+
+#include <Carbon/Carbon.h>
 
 /*
  * Structures and function types for handling Netscape-type in process

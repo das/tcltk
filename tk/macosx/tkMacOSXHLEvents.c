@@ -13,10 +13,7 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkMacOSXPort.h"
 #include "tkMacOSXInt.h"
-
-#include <Carbon/Carbon.h>
 
 /*
  * This is a Tcl_Event structure that the Quit AppleEvent handler

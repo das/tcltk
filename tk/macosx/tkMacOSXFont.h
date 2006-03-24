@@ -17,6 +17,8 @@
 
 #include "tkFont.h"
 
+#include <Carbon/Carbon.h>
+
 /*
  * Switches
  */

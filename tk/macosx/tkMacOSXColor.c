@@ -15,9 +15,8 @@
  * RCS: @(#) $Id$
  */
 
-#include <tkColor.h>
 #include "tkMacOSXInt.h"
-#include <Carbon/Carbon.h>
+#include "tkColor.h"
 
 /*
  * Default Auxillary Control Record for all controls.  This is cached once
@@ -99,6 +98,35 @@ TkSetMacColor(
             macColor->red = (unsigned short) (((pixel >> 16) & 0xFF) << 8);
             return true;
     }
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkMacOSXCompareColors --
+ *
+ *        On Mac, color codes may specify symbolic values like "highlight
+ *        foreground", but we really need the actual values to compare.
+ *        Maybe see also: "TIP #154: Add Named Colors to Tk".
+ *
+ * Results:
+ *        Returns true if both colors are the same, false otherwise.
+ *
+ * Side effects:
+ *        None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+int
+TkMacOSXCompareColors(
+    unsigned long c1,
+    unsigned long c2)
+{
+    RGBColor col1, col2;
+    return  TkSetMacColor(c1,&col1) && 
+	    TkSetMacColor(c1,&col2) &&
+	    !memcmp(&col1,&col2,sizeof(col1));
 }
 
 /*

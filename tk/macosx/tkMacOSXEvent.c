@@ -12,8 +12,6 @@
  * RCS: @(#) $Id$
  */
 
-#include <stdio.h>
-
 #include "tkMacOSXInt.h"
 #include "tkMacOSXEvent.h"
 #include "tkMacOSXDebug.h"

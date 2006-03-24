@@ -12,16 +12,7 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkInt.h"
 #include "tkMacOSXInt.h"
-#include "X11/X.h"
-#include "X11/Xlib.h"
-
-#include <Carbon/Carbon.h>
-/*
-#include <Windows.h>
-#include <QDOffscreen.h>
-*/
 
 /*
  * Temporary region that can be reused.

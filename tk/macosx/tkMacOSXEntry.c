@@ -53,8 +53,6 @@
  * RCS: @(#) $Id$
  */
 
-#include "tk.h"
-#include "tkInt.h"
 #include "tkMacOSXInt.h"
 #include "tkMacOSXDefault.h"
 #include "tkEntry.h"

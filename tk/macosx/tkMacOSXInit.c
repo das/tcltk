@@ -13,9 +13,10 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkInt.h"
 #include "tkMacOSXInt.h"
+
 #include "tclInt.h" /* for Tcl_GetStartupScript() & Tcl_SetStartupScript() */
+
 #include <sys/stat.h>
 #include <mach-o/dyld.h>
 #include <mach-o/getsect.h>

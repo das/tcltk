@@ -23,6 +23,10 @@
 #include "tkWinInt.h"
 #endif
 
+#ifdef MAC_OSX_TK
+#include "tkMacOSXInt.h"
+#endif
+
 /*
  * "Calculations of line pixel heights and the size of the vertical
  * scrollbar."
@@ -109,21 +113,6 @@
  *     the LayoutProc instead of using a global variable like now.  Not
  *     pressing until the previous point gets implemented.
  */
-
-#ifdef MAC_OSX_TK
-#define TK_LAYOUT_WITH_BASE_CHUNKS 1
-#define TK_DRAW_IN_CONTEXT 1
-#endif
-
-#if TK_LAYOUT_WITH_BASE_CHUNKS && !TK_DRAW_IN_CONTEXT
-
-#ifdef MAC_OSX_TK
-#define TextStyle MacTextStyle
-#include "tkMacOSXInt.h"     /* TkSetMacColor() */
-#undef TextStyle
-#endif
-
-#endif /* TK_LAYOUT_WITH_BASE_CHUNKS */
 
 /*
  * The following structure describes how to display a range of characters.
@@ -8402,32 +8391,18 @@ IsSameFGStyle(
     }
 
 #if !TK_DRAW_IN_CONTEXT
+
+    if (
 #ifdef MAC_OSX_TK
-
-    /*
-     * On Mac, color codes may specify symbolic values like "highlight
-     * foreground", but we really need the actual values here to compare.
-     * Maybe see also: "TIP #154: Add Named Colors to Tk".
-     *
-     * FIXME: We should have and use a generic function for this.
-     */
-
-    {
-	RGBColor col1, col2;
-	TkSetMacColor(style1->fgGC->foreground,&col1);
-	TkSetMacColor(style2->fgGC->foreground,&col2);
-	if (memcmp(&col1,&col2,sizeof(col1)) != 0) {
-	    return 0;
-	}
-    }
-
+	    !TkMacOSXCompareColors(style1->fgGC->foreground,
+				   style2->fgGC->foreground)
 #else
-
-    if (style1->fgGC->foreground != style2->fgGC->foreground) {
+	    style1->fgGC->foreground != style2->fgGC->foreground
+#endif
+	    ) {
 	return 0;
     }
 
-#endif
 #endif
 
     sv1 = style1->sValuePtr;

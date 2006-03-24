@@ -13,10 +13,8 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkScale.h"
-#include "tkInt.h"
-#include <Carbon/Carbon.h>
 #include "tkMacOSXInt.h"
+#include "tkScale.h"
 
 /*
  * Defines used in this file.

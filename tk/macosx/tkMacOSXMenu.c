@@ -11,19 +11,14 @@
  *
  * RCS: @(#) $Id$
  */
+
 #include "tkMacOSXInt.h"
 #include "tkMenubutton.h"
 #include "tkMenu.h"
 #include "tkColor.h"
-#include "tkMacOSXInt.h"
-#undef Status
 
 #define USE_TK_MDEF
 //#define USE_ATSU
-
-#include <Carbon/Carbon.h>
-#include "tkMacOSXDebug.h"
-#include <CoreFoundation/CFString.h>
 
 /*
 #ifdef	TK_MAC_DEBUG

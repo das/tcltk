@@ -57,12 +57,8 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkInt.h"
-#include <X11/X.h>
-#include <X11/Xlib.h>
-#include "tkMacOSXEvent.h"
 #include "tkMacOSXInt.h"
-#include "tkPort.h"
+#include "tkMacOSXEvent.h"
 #include "tkMacOSXDebug.h"
 
 #if !defined(MAC_OS_X_VERSION_10_3) || \

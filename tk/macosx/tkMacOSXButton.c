@@ -13,8 +13,8 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkButton.h"
 #include "tkMacOSXInt.h"
+#include "tkButton.h"
 #include "tkMacOSXFont.h"
 #include "tkMacOSXDebug.h"
 
@@ -27,8 +27,6 @@
 #define DEF_INSET_RIGHT 2
 #define DEF_INSET_TOP 2
 #define DEF_INSET_BOTTOM 4
-
-#include <Carbon/Carbon.h>
 
 /*
  * Some defines used to control what type of control is drawn.

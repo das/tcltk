@@ -56,11 +56,7 @@
 #ifndef _TKMACWM
 #define _TKMACWM
 
-#include <Carbon/Carbon.h>
-#include "tkPort.h"
-#include "tkInt.h"
 #include "tkMacOSXInt.h"
-#include "tkScrollbar.h"
 
 /*
  * A data structure of the following type holds information for

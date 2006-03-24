@@ -12,10 +12,6 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkInt.h"
-#include "X11/Xlib.h"
-#include "X11/keysym.h"
-#include <Carbon/Carbon.h>
 #include "tkMacOSXInt.h"
 #include "tkMacOSXEvent.h"      /* TkMacOSXKeycodeToUnicode() FIXME: That
                                  * function should probably move here. */

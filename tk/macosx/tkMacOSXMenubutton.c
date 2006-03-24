@@ -13,10 +13,9 @@
  * RCS: @(#) $Id$
  */
 
-#include <Carbon/Carbon.h>
+#include "tkMacOSXInt.h"
 #include "tkMenu.h"
 #include "tkMenubutton.h"
-#include "tkMacOSXInt.h"
 #include "tkMacOSXFont.h"
 #include "tkMacOSXDebug.h"
 
