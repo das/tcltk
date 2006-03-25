@@ -1745,7 +1745,7 @@ TkMacOSXSetUpCGContext(
 
     err = QDBeginCGContext(destPort, contextPtr);
     outContext = *contextPtr;
- 
+
     /*
      * Now clip the CG Context to the port.  Note, we have already
      * set up the port with our clip region, so we can just get
@@ -1755,7 +1755,7 @@ TkMacOSXSetUpCGContext(
      * We also have to intersect our clip region with the port
      * visible region so we don't overwrite the window decoration.
      */
-     
+
     if (!clipRgn) {
 	clipRgn = NewRgn();
     }
