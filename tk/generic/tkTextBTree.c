@@ -108,6 +108,8 @@ typedef struct BTree {
     int clients;		/* Number of clients of this B-tree. */
     int pixelReferences;	/* Number of clients of this B-tree which care
 				 * about pixel heights. */
+    int stateEpoch;             /* Updated each time any aspect of the B-tree
+                                 * changes. */
     TkSharedText *sharedTextPtr;/* Used to find tagTable in consistency
 				 * checking code, and to access list of all
 				 * B-tree clients. */
@@ -323,6 +325,7 @@ TkBTreeCreate(sharedTextPtr)
     treePtr->sharedTextPtr = sharedTextPtr;
     treePtr->rootPtr = rootPtr;
     treePtr->clients = 0;
+    treePtr->stateEpoch = 0;
     treePtr->pixelReferences = 0;
     treePtr->startEndCount = 0;
     treePtr->startEnd = NULL;
@@ -486,6 +489,31 @@ TkBTreeDestroy(tree)
 	ckfree((char *) treePtr->startEndRef);
     }
     ckfree((char *) treePtr);
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkBTreeEpoch --
+ *
+ *	Return the epoch for the B-tree.  This number is incremented
+ *	any time anything changes in the tree.
+ *
+ * Results:
+ *	The epoch number.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+int
+TkBTreeEpoch(tree)
+    TkTextBTree tree;		/* Tree to get epoch for */
+{
+    BTree *treePtr = (BTree *) tree;
+    return treePtr->stateEpoch;
 }
 
 /*
@@ -1012,6 +1040,7 @@ TkBTreeInsertChars(tree, indexPtr, string)
     int pixels[PIXEL_CLIENTS];
 
     BTree *treePtr = (BTree*)tree;
+    treePtr->stateEpoch++;
     prevPtr = SplitSeg(indexPtr);
     linePtr = indexPtr->linePtr;
     curPtr = prevPtr;
@@ -1306,6 +1335,7 @@ TkBTreeDeleteIndexRange(tree, index1Ptr, index2Ptr)
     int changeToLineCount = 0;
     int ref;
     BTree *treePtr = (BTree*)tree;
+    treePtr->stateEpoch++;
 
     /*
      * Tricky point: split at index2Ptr first; otherwise the split at
@@ -2006,6 +2036,7 @@ TkBTreeLinkSegment(segPtr, indexPtr)
     if (tkBTreeDebug) {
 	TkBTreeCheck(indexPtr->tree);
     }
+    ((BTree*)indexPtr->tree)->stateEpoch++;
 }
 
 /*
@@ -2201,6 +2232,7 @@ TkBTreeTag(index1Ptr, index2Ptr, tagPtr, add)
 	if (cleanupLinePtr != index2Ptr->linePtr) {
 	    CleanupLine(index2Ptr->linePtr);
 	}
+	((BTree*)index1Ptr->tree)->stateEpoch++;
     }
 
     if (tkBTreeDebug) {
