@@ -6147,6 +6147,12 @@ Max OSX universal binaries support (steffen)
 
 2006-03-21 (enhancement)[638966] Aqua: ATSUI text render (reifenstahl,steffen)
 
+2006-03-23 (platform support) new tk.spec file (max)
+
+2006-03-26 (bug fix)[1414171] crash in [$text dump -command] (macdonald,darley)
+
+2006-03-27 (bug fix)[1458234] crash in animated GIFs (bron,fellows)
+
 Documentation improvements [1224983,1247835,1151523,1357575,1083838]
 
 ---- Released 8.5a4, March 17, 2006 --- See ChangeLog for details ---
