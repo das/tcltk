@@ -8061,9 +8061,10 @@ MeasureChars(
 
     ch = 0;			/* lint. */
     curX = startX;
-    special = source + rangeStart;
-    end = source + rangeLength;
-    for (start = source; start < end; ) {
+    start = source + rangeStart;
+    end = start + rangeLength;
+    special = start;
+    while (start < end) {
 	if (start >= special) {
 	    /*
 	     * Find the next special character in the string.
