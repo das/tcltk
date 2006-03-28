@@ -480,7 +480,8 @@ test: setup $(TKTEST) $(TKLIB) $(CAT32)
 !if "$(OS)" == "Windows_NT"  || "$(MSVCDIR)" == "IDE"
 	$(TKTEST) "$(ROOT)/tests/all.tcl" $(TESTFLAGS) | $(CAT32)
 !else
-	$(TKTEST) "$(ROOT)/tests/all.tcl" $(TESTFLAGS) | $(CAT32)
+	$(TKTEST) "$(ROOT)/tests/all.tcl" $(TESTFLAGS) > tests.log
+	type tests.log | more
 !endif
 
 runtest: setup $(TKTEST) $(TKLIB) $(CAT32)
