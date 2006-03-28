@@ -16,6 +16,7 @@
 #include "tkMenubutton.h"
 #include "tkMenu.h"
 #include "tkColor.h"
+#include "tkMacOSXDebug.h"
 
 #define USE_TK_MDEF
 //#define USE_ATSU

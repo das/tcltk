@@ -60,8 +60,6 @@
 #include "tk.h"
 #endif
 
-#include <Carbon/Carbon.h>
-
 typedef struct {
     int stopProcessing;
     int err;

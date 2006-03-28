@@ -425,7 +425,7 @@ TkPutImage(
         if ((image->bytes_per_line % 2) == 1) {
             char *newPtr, *oldPtr;
             newData = (char *) ckalloc(image->height *
-                    (image->bytes_per_line + 1));
+		    (image->bytes_per_line + 1));
             newPtr = newData;
             oldPtr = image->data;
             for (i = 0; i < image->height; i++) {
@@ -439,8 +439,9 @@ TkPutImage(
             bitmap.baseAddr = newData;
             bitmap.rowBytes = image->bytes_per_line + 1;
         } else {
-            newData = (char *) ckalloc(image->height * image->bytes_per_line);
-            for (i = 0; i < image->height * image->bytes_per_line; i++) {
+	    size_t size = image->height * image->bytes_per_line;
+            newData = (char *) ckalloc((int) size);
+            for (i = 0; i < size; i++) {
                 newData[i] = InvertByte((unsigned char) image->data[i]);
             }
             bitmap.baseAddr = newData;

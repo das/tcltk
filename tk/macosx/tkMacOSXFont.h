@@ -102,7 +102,7 @@ MODULE_SCOPE void	TkMacOSXLayoutSetString(const TkMacOSXFont * fontPtr,
 			    const UniChar * uchars, int ulen);
 MODULE_SCOPE void	TkMacOSXInitControlFontStyle(Tk_Font tkfont,
 			    ControlFontStylePtr fsPtr);
-			     
+
 #if TK_MAC_USE_QUARZ
 MODULE_SCOPE void	TkMacOSXQuarzStartDraw(
 			    TkMacOSXFontDrawingContext * contextPtr);
@@ -112,4 +112,3 @@ MODULE_SCOPE void	TkMacOSXQuarzEndDraw(
 
 
 #endif	/*TKMACOSXFONT_H*/
-
