@@ -13,10 +13,10 @@
  * RCS: @(#) $Id$
  */
 
-#include <Carbon/Carbon.h>
+#include "tkMacOSXInt.h"
 #include "tkMenu.h"
 #include "tkMenubutton.h"
-#include "tkMacOSXInt.h"
+#include "tkMacOSXFont.h"
 #include "tkMacOSXDebug.h"
 
 #if !defined(MAC_OS_X_VERSION_10_3) || \
@@ -89,9 +89,6 @@ static void CompareControlTitleParams(
     int * titleChanged,
     int * styleChanged
 );
-
-extern int TkFontGetFirstTextLayout(Tk_TextLayout layout, Tk_Font * font, char * dst); 
-extern void TkMacOSXInitControlFontStyle(Tk_Font tkfont,ControlFontStylePtr fsPtr);
 
 /*
  * The structure below defines menubutton class behavior by means of

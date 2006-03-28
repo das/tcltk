@@ -56,8 +56,9 @@
 #ifndef _TKMACEVENT
 #define _TKMACEVENT
 
-#include <Carbon/Carbon.h>
-#include <tcl.h>
+#ifndef _TK
+#include "tk.h"
+#endif
 
 typedef struct {
     int stopProcessing;

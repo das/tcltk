@@ -13,16 +13,7 @@
  * RCS: @(#) $Id$
  */
 
-#include "tk.h"
-#include "tkInt.h"
 #include "tkMacOSXInt.h"
-
-/*
- * The define Status defined by Xlib.h conflicts with the function Status
- * defined by Devices.h.  We undefine it here to compile.
- */
-#undef Status
-#include <Carbon/Carbon.h>
 
 #if !defined(MAC_OS_X_VERSION_10_3) || \
         (MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_3)

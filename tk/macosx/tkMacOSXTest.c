@@ -19,9 +19,9 @@
  * Forward declarations of procedures defined later in this file:
  */
 
-int			TkplatformtestInit _ANSI_ARGS_((Tcl_Interp *interp));
-static int		DebuggerCmd _ANSI_ARGS_((ClientData dummy,
-			    Tcl_Interp *interp, int argc, CONST char **argv));
+static int		DebuggerCmd (ClientData dummy, Tcl_Interp *interp,
+			    int argc, CONST char **argv);
+int			TkplatformtestInit (Tcl_Interp *interp);
 
 /*
  *----------------------------------------------------------------------

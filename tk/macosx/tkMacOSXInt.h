@@ -19,6 +19,10 @@
 #include "tkInt.h"
 #endif
 
+#define TextStyle MacTextStyle
+#include <Carbon/Carbon.h>
+#undef TextStyle
+
 /*
  * Include platform specific public interfaces.
  */
@@ -26,12 +30,6 @@
 #ifndef _TKMAC
 #include "tkMacOSX.h"
 #endif
-
-#ifndef _TKPORT
-#include "tkPort.h"
-#endif
-
-#include <Carbon/Carbon.h>
 
 struct TkWindowPrivate {
     TkWindow *winPtr;     	/* Ptr to tk window or NULL if Pixmap */

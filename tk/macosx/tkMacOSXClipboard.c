@@ -12,14 +12,10 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkInt.h"
-#include "tkPort.h"
 #include "tkMacOSXInt.h"
 #include "tkSelect.h"
 
-#include <Carbon/Carbon.h>
 
-
 /*
  *----------------------------------------------------------------------
  *

@@ -15,9 +15,8 @@
  * RCS: @(#) $Id$
  */
 
-#include <tkColor.h>
 #include "tkMacOSXInt.h"
-#include <Carbon/Carbon.h>
+#include "tkColor.h"
 
 /*
  * Default Auxillary Control Record for all controls.  This is cached once

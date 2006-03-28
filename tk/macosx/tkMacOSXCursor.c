@@ -12,11 +12,7 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkPort.h"
-#include "tkInt.h"
 #include "tkMacOSXInt.h"
-
-#include <Carbon/Carbon.h>
 
 /*
  * There are three different ways to set the cursor on the Mac.

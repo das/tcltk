@@ -14,13 +14,12 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkScrollbar.h"
 #include "tkMacOSXInt.h"
+#include "tkScrollbar.h"
+#include "tkMacOSXDebug.h"
+
 #include "tclInt.h" /* for TclServiceIdle() */
 
-#include <Carbon/Carbon.h>
-
-#include "tkMacOSXDebug.h"
 /*
  * The following definitions should really be in MacOS
  * header files.  They are included here as this is the only

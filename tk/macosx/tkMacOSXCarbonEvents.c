@@ -63,7 +63,6 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkInt.h"
 #include "tkMacOSXInt.h"
 #include "tkMacOSXEvent.h"
 #include "tkMacOSXDebug.h"
