@@ -205,6 +205,8 @@ EXTERN int		TkFontGetPoints _ANSI_ARGS_((Tk_Window tkwin,
 			    int size));
 EXTERN char **		TkFontGetGlobalClass _ANSI_ARGS_((void));
 EXTERN char **		TkFontGetSymbolClass _ANSI_ARGS_((void));
+EXTERN int		TkFontGetFirstTextLayout _ANSI_ARGS_((
+			    Tk_TextLayout layout, Tk_Font *font, char *dst));
 
 /*
  * Low-level API exported by platform-specific code to generic code. 
