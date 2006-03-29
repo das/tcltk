@@ -26,8 +26,8 @@
  * DISABLED -		Foreground color when widget is disabled.
  */
 
-#define BLACK		"Black"
-#define WHITE		"White"
+#define BLACK		"#000000"
+#define WHITE		"#ffffff"
 
 #define NORMAL_BG	"#d9d9d9"
 #define ACTIVE_BG	"#ececec"
