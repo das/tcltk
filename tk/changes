@@ -6153,6 +6153,9 @@ Max OSX universal binaries support (steffen)
 
 2006-03-27 (bug fix)[1458234] crash in animated GIFs (bron,fellows)
 
+2006-03-29 (platform support)[917322] tolerate X servers that do not
+accept the color names "Black" and "White" (porter)
+
 Documentation improvements [1224983,1247835,1151523,1357575,1083838]
 
----- Released 8.5a4, March 17, 2006 --- See ChangeLog for details ---
+---- Released 8.5a4, March 30, 2006 --- See ChangeLog for details ---
