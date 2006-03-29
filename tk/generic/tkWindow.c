@@ -344,23 +344,24 @@ CreateTopLevelWindow(interp, parent, name, screenName, flags)
 	/*
 	 * Create built-in image types.
 	 */
-    
+
 	Tk_CreateImageType(&tkBitmapImageType);
 	Tk_CreateImageType(&tkPhotoImageType);
-    
+
 	/*
 	 * Create built-in photo image formats.
 	 */
-    
+
 	Tk_CreatePhotoImageFormat(&tkImgFmtGIF);
 	Tk_CreatePhotoImageFormat(&tkImgFmtPPM);
 
 	/*
 	 * Create exit handler to delete all windows when the application
-	 * exits.
+	 * exits.  This must be a thread exit handler.
 	 */
 
-	TkCreateExitHandler(DeleteWindowsExitProc, (ClientData) tsdPtr);
+	Tcl_CreateThreadExitHandler(DeleteWindowsExitProc,
+		(ClientData) tsdPtr);
     }
 
     if ((parent != NULL) && (screenName != NULL) && (screenName[0] == '\0')) {
