@@ -748,9 +748,13 @@ TkOptionDeadWindow(
 
     /*
      * If this window is in the option stacks, then clear the stacks.
+     *
+     * XXX: OptionThreadExitProc will be invoked before DeleteWindowsExitProc
+     * XXX: if it is thread-specific (which it should be), invalidating the
+     * XXX: tsd.  Tk shutdown needs to be verified to handle this correctly.
      */
 
-    if (winPtr->optionLevel != -1) {
+    if (tsdPtr->initialized && (winPtr->optionLevel != -1)) {
 	int i;
 
 	for (i = 1; i <= tsdPtr->curLevel; i++) {
