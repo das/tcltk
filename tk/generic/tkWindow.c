@@ -357,7 +357,9 @@ CreateTopLevelWindow(interp, parent, name, screenName, flags)
 
 	/*
 	 * Create exit handler to delete all windows when the application
-	 * exits.  This must be a thread exit handler.
+	 * exits.  This must be a thread exit handler, but there may be
+	 * ordering issues with other exit handlers
+	 * (i.e. OptionThreadExitProc).
 	 */
 
 	Tcl_CreateThreadExitHandler(DeleteWindowsExitProc,
