@@ -7809,6 +7809,22 @@ WmProc(
 	goto done;
     }
 
+    case WM_QUERYENDSESSION: {
+	XEvent event;
+
+	/*
+	 * Synthesize WM_SAVE_YOURSELF wm protocol message on Windows logout
+	 * or restart.
+	 */
+	winPtr = GetTopLevel(hwnd);
+	event.xclient.message_type =
+	    Tk_InternAtom((Tk_Window) winPtr, "WM_PROTOCOLS");
+	event.xclient.data.l[0] =
+	    Tk_InternAtom((Tk_Window) winPtr, "WM_SAVE_YOURSELF");
+	TkWmProtocolEventProc(winPtr, &event);
+	break;
+    }
+
     default:
 	break;
     }
