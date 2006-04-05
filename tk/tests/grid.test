@@ -690,6 +690,29 @@ test grid-10.20 {column/row configure} {
 } {foo}
 grid_reset 10.20
 
+test grid-10.30 {column/row configure - no indices} {
+    # Bug 1422430
+    set t [toplevel .test]
+    set res [list [catch {grid columnconfigure $t "" -weight 1} msg] $msg]
+    destroy $t
+    set res
+} {1 {no column indices specified}}
+
+test grid-10.31 {column/row configure - no indices} {
+    set t [toplevel .test]
+    set res [list [catch {grid rowconfigure $t "" -weight 1} msg] $msg]
+    destroy $t
+    set res
+} {1 {no row indices specified}}
+
+test grid-10.32 {column/row configure - invalid indices} {
+    list [catch {grid columnconfigure . {0 1 2} -weight} msg] $msg
+} {1 {grid columnconfigure: must specify a single element on retrieval}}
+
+test grid-10.33 {column/row configure - invalid indices} {
+    list [catch {grid rowconfigure . {0 1 2} -weight} msg] $msg
+} {1 {grid rowconfigure: must specify a single element on retrieval}}
+
 # auto-placement tests
 
 test grid-11.1 {default widget placement} {
