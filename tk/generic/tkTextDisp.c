@@ -4176,6 +4176,15 @@ TkTextPixelIndex(textPtr, x, y, indexPtr)
     }
     if (dlPtr->chunkPtr == NULL) dlPtr = validdlPtr;
 
+    *indexPtr = dlPtr->index;
+
+    /*
+     * If it is still empty, we have nothing to access. [Bug 1442102]
+     */
+
+    if (dlPtr->chunkPtr == NULL) {
+	return;
+    }
 
     /*
      * Scan through the line's chunks to find the one that contains
@@ -4184,7 +4193,6 @@ TkTextPixelIndex(textPtr, x, y, indexPtr)
      * coordinate system of the line (to take account of x-scrolling).
      */
 
-    *indexPtr = dlPtr->index;
     x = x - dInfoPtr->x + dInfoPtr->curPixelOffset;
     for (chunkPtr = dlPtr->chunkPtr; x >= (chunkPtr->x + chunkPtr->width);
 	    indexPtr->byteIndex += chunkPtr->numBytes,
