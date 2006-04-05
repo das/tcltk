@@ -4803,7 +4803,8 @@ DumpSegment(textPtr, interp, key, value, command, index, what)
 	list = Tcl_Merge(3, argv);
 	Tcl_VarEval(interp, Tcl_GetString(command), " ", list, NULL);
 	ckfree(list);
-	if (TkBTreeEpoch(textPtr->sharedTextPtr->tree) != oldStateEpoch) {
+	if ((textPtr->flags & DESTROYED) 
+	  || (TkBTreeEpoch(textPtr->sharedTextPtr->tree) != oldStateEpoch)) {
 	    return 1;
 	} else {
 	    return 0;
