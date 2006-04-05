@@ -3135,11 +3135,10 @@ Initialize(interp)
 
     /*
      * Create exit handlers to delete all windows when the application or
-     * thread exits. These handler need to be invoked before other platform
+     * thread exits. The handler need to be invoked before other platform
      * specific cleanups take place to avoid panics in finalization.
      */
 
-    TkCreateExitHandler(DeleteWindowsExitProc, (ClientData) NULL);
     TkCreateThreadExitHandler(DeleteWindowsExitProc, (ClientData) tsdPtr);
 
   done:
