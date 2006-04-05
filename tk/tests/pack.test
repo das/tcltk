@@ -799,8 +799,8 @@ test pack-12.25 {command options and errors} {
 } {1 {extra option "-padx" (option with no value?)}}
 test pack-12.26 {command options and errors} {
     pack forget .pack.a .pack.b .pack.c .pack.d
-    list [catch {pack .pack.a {} 22} msg] $msg
-} {1 {bad option "": must be -after, -anchor, -before, -expand, -fill, -in, -ipadx, -ipady, -padx, -pady, or -side}}
+    list [catch {pack .pack.a ? 22} msg] $msg
+} {1 {bad option "?": must be -after, -anchor, -before, -expand, -fill, -in, -ipadx, -ipady, -padx, -pady, or -side}}
 test pack-12.27 {command options and errors} {
     pack forget .pack.a .pack.b .pack.c .pack.d
     list [catch {pack .pack.a -in .} msg] $msg
