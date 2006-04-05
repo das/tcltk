@@ -1573,6 +1573,18 @@ test text-25.13 {-maxundo configuration option} {
     .t get 1.0 end
 } "line 1\n\n"
 
+test text-25.14 {undo with space-based path} {
+    set t {.t e x t}
+    destroy $t
+    text $t -undo 1
+    $t insert end "line 1\n"
+    $t delete 1.4 1.6
+    $t insert end "line 2\n"
+    $t edit undo
+    $t edit undo
+    $t get 1.0 end
+} "line 1\n\n"
+
 test text-26.1 {bug fix - 624372, ControlUtfProc long lines} {
     destroy .t
     pack [text .t -wrap none]
