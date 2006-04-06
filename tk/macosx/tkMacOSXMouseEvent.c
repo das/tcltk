@@ -177,7 +177,7 @@ TkMacOSXProcessMouseEvent(TkMacOSXEvent *eventPtr, MacEventStatus * statusPtr)
 		medPtr->windowPart = inDrag;
 	    } else {
 		if (status == noErr) {
-		    printf("drag successful");
+		    /* drag successful */
 		}
 		return status;
 	    }
