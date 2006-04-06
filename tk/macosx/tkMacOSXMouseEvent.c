@@ -165,6 +165,24 @@ TkMacOSXProcessMouseEvent(TkMacOSXEvent *eventPtr, MacEventStatus * statusPtr)
     if (medPtr->whichWin != NULL && medPtr->window == None) {
 	return 0;
     }
+    if (eventPtr->eKind == kEventMouseDown) {
+	if (IsWindowPathSelectEvent(medPtr->whichWin, eventPtr->eventRef)) {
+	    SInt32 result;
+	    return WindowPathSelect(medPtr->whichWin, NULL, &result);
+	}
+	if (medPtr->windowPart == inProxyIcon) {
+	    OSStatus status = TrackWindowProxyDrag(medPtr->whichWin, where);
+	
+	    if (status == errUserWantsToDragWindow) {
+		medPtr->windowPart = inDrag;
+	    } else {
+		if (status == noErr) {
+		    printf("drag successful");
+		}
+		return status;
+	    }
+	}
+    }
     medPtr->state = ButtonModifiers2State(GetCurrentEventButtonState(),
             GetCurrentEventKeyModifiers());
     medPtr->global = where;
