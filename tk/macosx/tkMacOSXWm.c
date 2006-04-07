@@ -4396,6 +4396,7 @@ TkMacOSXGrowToplevel(
     TkDisplay *dispPtr;
     Rect       portRect;
 
+    SetPort(GetWindowPort(whichWindow));
     GlobalToLocal(&where);
     GetPortBounds(GetWindowPort(whichWindow), &portRect );
     if (where.h > (portRect.right - 16) &&
@@ -4434,7 +4435,6 @@ TkMacOSXGrowToplevel(
 	if (growResult != 0) {
 	    SizeWindow(whichWindow,
 		    LoWord(growResult), HiWord(growResult), true);
-	    SetPort( GetWindowPort(whichWindow));
 	    InvalWindowRect(whichWindow,&portRect); /* TODO: may not be needed */
 	    TkMacOSXInvalClipRgns((Tk_Window) winPtr);
 	    TkGenWMConfigureEvent((Tk_Window) winPtr, -1, -1, 
@@ -4585,7 +4585,7 @@ TkMacOSXZoomToplevel(
     TkDisplay *dispPtr;
     Rect       portRect;
 
-    SetPort( GetWindowPort(whichWindow));
+    SetPort(GetWindowPort(whichWindow));
 
     /*
      * We should now zoom the window (as long as it's one of ours).  We 
