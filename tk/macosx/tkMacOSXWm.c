@@ -4486,19 +4486,12 @@ TkSetWMName(
         return;
     }
     
-    if (strlen(titleUid) > 0) {
-        title = CFStringCreateWithBytes(NULL, (unsigned char*) titleUid, strlen(titleUid), 
-                kCFStringEncodingUTF8, false); 
-    } else {
-    	title = NULL;
-    }
-    
-    macWin = GetWindowFromPort(TkMacOSXGetDrawablePort(winPtr->window));
-
-    SetWindowTitleWithCFString(macWin, title);
-    
-    if (title != NULL) {
-        CFRelease(title);
+    title = CFStringCreateWithBytes(NULL, (unsigned char*) titleUid,
+	    strlen(titleUid), kCFStringEncodingUTF8, false); 
+    if (title) {
+	macWin = GetWindowFromPort(TkMacOSXGetDrawablePort(winPtr->window));
+	SetWindowTitleWithCFString(macWin, title);
+	CFRelease(title);
     }
 }
 
@@ -5028,7 +5021,7 @@ TkMacOSXMakeRealWindowExist(
 	}
 
     } else {
-	newWindow = NewCWindow(NULL, &geometry, "\ptemp", false,
+	newWindow = NewCWindow(NULL, &geometry, "\p", false,
 		(short) wmPtr->style, (WindowRef) -1, true, 0);
     }
 
