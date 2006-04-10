@@ -737,18 +737,22 @@ proc ::tk::IconList_Goto {w text} {
 	return
     }
 
-    set text [string tolower $text]
+    if {[llength [IconList_CurSelection $w]]} {
+	set start [IconList_Index $w anchor]
+    } else {
+	set start 0
+    }
+
     set theIndex -1
     set less 0
     set len [string length $text]
     set len0 [expr {$len-1}]
     set i $start
 
-    # Search forward until we find a filename whose prefix is an exact match
-    # with $text
+    # Search forward until we find a filename whose prefix is a
+    # case-insensitive match with $text
     while {1} {
-	set sub [string range $textList($i) 0 $len0]
-	if {$text eq $sub} {
+	if {[string equal -nocase -length $len0 $textList($i) $text]} {
 	    set theIndex $i
 	    break
 	}
