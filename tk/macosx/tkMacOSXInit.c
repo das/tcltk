@@ -135,7 +135,7 @@ TkpInit(interp)
         TkMacOSXInitAppleEvents(interp);
         TkMacOSXInitCarbonEvents(interp);
         TkMacOSXInitMenus(interp);
-        TkMacOSXUseAntialiasedText(interp, TRUE);
+        TkMacOSXUseAntialiasedText(interp, -1);
         TkMacOSXInitCGDrawing(interp, TRUE, 3);
 	
 	encoding = CFStringGetSystemEncoding();
