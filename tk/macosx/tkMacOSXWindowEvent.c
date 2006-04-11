@@ -238,7 +238,8 @@ TkMacOSXProcessWindowEvent(
             dispPtr = TkGetDisplayList();
             winPtr = (TkWindow *)Tk_IdToWindow(dispPtr->display, window);
             if (winPtr) {
-                TkpWmSetState(winPtr, NormalState);
+		TkpWmSetState(winPtr, TkMacOSXIsWindowZoomed(winPtr) ?
+			ZoomState : NormalState);
             }
             break;
         }
