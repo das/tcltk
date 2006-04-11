@@ -166,9 +166,10 @@ MODULE_SCOPE int TkMacOSXInitCGDrawing(Tcl_Interp *interp, int enable, int antiA
 MODULE_SCOPE void TkMacOSXDefaultStartupScript(void);
 MODULE_SCOPE int TkMacOSXGenerateFocusEvent( Window window, int activeFlag);
 MODULE_SCOPE WindowClass TkMacOSXWindowClass(TkWindow *winPtr);
-MODULE_SCOPE void* TkMacOSXGetNamedSymbol(const char* module, const char* symbol);
+MODULE_SCOPE int TkMacOSXIsWindowZoomed(TkWindow *winPtr);
 MODULE_SCOPE int TkMacOSXCompareColors(unsigned long c1, unsigned long c2);
 
+MODULE_SCOPE void* TkMacOSXGetNamedSymbol(const char* module, const char* symbol);
 /* Macro to abstract common use of TkMacOSXGetNamedSymbol to initialize named symbols */
 #define TkMacOSXInitNamedSymbol(module, ret, symbol, ...) \
     static ret (* symbol)(__VA_ARGS__) = (void*)(-1L); \
