@@ -5582,10 +5582,13 @@ UpdateGeometryInfo(clientData)
      */
 
     if (winPtr->flags & TK_BOTH_HALVES) {
+	TkWindow *childPtr = TkpGetOtherWindow(winPtr);
+
 	wmPtr->x = wmPtr->y = 0;
 	wmPtr->flags &= ~(WM_NEGATIVE_X|WM_NEGATIVE_Y);
-	Tk_GeometryRequest((Tk_Window) TkpGetOtherWindow(winPtr),
-		width, height);
+	if (childPtr != NULL) {
+	    Tk_GeometryRequest((Tk_Window) childPtr, width, height);
+	}
 	return;
     }
 
