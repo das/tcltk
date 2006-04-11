@@ -43,7 +43,7 @@
 
 /*
 #ifdef	TK_MAC_DEBUG
-#define TK_MAC_DEBUG_FONTS 1
+#define TK_MAC_DEBUG_FONTS
 #endif
 */
 
@@ -2237,7 +2237,7 @@ InitFontFamilies(void)
      */
 
     if (familyListNextFree > 0) {
-        return;
+	return;
     }
 
     err = ATSFontFamilyApplyFunction(FontFamilyEnumCallback,NULL);

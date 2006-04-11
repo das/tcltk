@@ -415,7 +415,7 @@ HandleWindowTitlebarMouseDown(MouseEventData * medPtr, Tk_Window tkwin)
         case inCollapseBox:
             if (TrackBox(medPtr->whichWin, medPtr->global, medPtr->windowPart)) {
                 if (tkwin) {
-                    TkpWmSetState((TkWindow *)tkwin, IconicState);;
+                    TkpWmSetState((TkWindow *)tkwin, IconicState);
                     result = 1;
                 }
             }
