@@ -6156,6 +6156,21 @@ Max OSX universal binaries support (steffen)
 2006-03-29 (platform support)[917322] tolerate X servers that do not
 accept the color names "Black" and "White" (porter)
 
+2006-04-06 (bug fix)[1455241] Aqua: [wm attributes -titlepath] fix (steffen)
+
+2006-04-07 (bug fix)[934524]  Aqua: background window dragging/growing (steffen)
+
+2006-04-09 (bug fix)[1467004] Aqua: [wm resizable] fix (steffen)
+
+2006-04-09 (bug fix)[1450800] Aqua: allow empty toplevel names (steffen)
+
+2006-04-11 (bug fix)[1073456] Aqua: implement toplevel zoom (steffen)
+
+2006-04-11 (bug fix)[700316]  Aqua: enable 'Preferences' app menu item (steffen)
+
+2006-04-11 (enhancement)[1105284] Aqua: call ::tk::mac::* procs for all
+registered applevents (steffen)
+
 Documentation improvements [1224983,1247835,1151523,1357575,1083838]
 
 ---- Released 8.5a4, March 30, 2006 --- See ChangeLog for details ---
