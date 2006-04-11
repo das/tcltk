@@ -5927,4 +5927,6 @@ accept the color names "Black" and "White" (porter)
 2006-04-11 (enhancement)[1105284] Aqua: call ::tk::mac::* procs for all
 registered applevents (steffen)
 
+2006-04-11 (bug fix)[1212056] fix panic on safe window exit on Windows (hobbs)
+
 --- Released 8.4.13, April 14, 2006 --- See ChangeLog for details ---
