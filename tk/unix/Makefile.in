@@ -1424,6 +1424,7 @@ dist:   $(UNIX_DIR)/configure
 	done;)
 	mkdir $(DISTDIR)/library/demos
 	cp -pr $(TOP_DIR)/library/demos/*.tcl \
+		$(TOP_DIR)/library/demos/*.msg \
 		$(TOP_DIR)/library/demos/tclIndex \
 		$(TOP_DIR)/library/demos/browse \
 		$(TOP_DIR)/library/demos/hello $(TOP_DIR)/library/demos/ixset \
