@@ -5922,6 +5922,8 @@ accept the color names "Black" and "White" (porter)
 
 2006-04-11 (bug fix)[700316]  Aqua: enable 'Preferences' app menu item (steffen)
 
+2006-04-11 (bug fix)[1193614] Aqua: tk_messageBox escape key binding (steffen)
+
 2006-04-11 (enhancement)[1105284] Aqua: call ::tk::mac::* procs for all
 registered applevents (steffen)
 
