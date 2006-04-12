@@ -5929,4 +5929,6 @@ registered applevents (steffen)
 
 2006-04-11 (bug fix)[1212056] fix panic on safe window exit on Windows (hobbs)
 
+2006-04-12 (bug fix)[1432666] grid row/col out of bounds crash (spjuth)
+
 --- Released 8.4.13, April 19, 2006 --- See ChangeLog for details ---
