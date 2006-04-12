@@ -2835,7 +2835,6 @@ ConfigureSlaves(interp, tkwin, objc, objv)
 			    "\": must be a positive integer", (char *)NULL);
 		    return TCL_ERROR;
 		}
-		slavePtr->numRows = tmp;
 		if (SetSlaveRow(interp, slavePtr, -1, tmp) != TCL_OK) {
 		    return TCL_ERROR;
 		}
@@ -2929,12 +2928,8 @@ ConfigureSlaves(interp, tkwin, objc, objv)
 	}
 	if (slavePtr->row == -1) {
 	    if (masterPtr->masterDataPtr == NULL) {
-		if (SetSlaveRow(interp, slavePtr, 0, -1) != TCL_OK) {
-		    return TCL_ERROR;
-		}
 	    	slavePtr->row = 0;
 	    } else {
-	    	slavePtr->row = masterPtr->masterDataPtr->rowEnd;
 		if (SetSlaveRow(interp, slavePtr, 
 			masterPtr->masterDataPtr->rowEnd, -1) != TCL_OK) {
 		    return TCL_ERROR;
