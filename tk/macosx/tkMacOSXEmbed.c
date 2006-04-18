@@ -229,6 +229,7 @@ TkpUseWindow(
                                  * for tkwin;  must be an integer value. */
 {
     TkWindow *winPtr = (TkWindow *) tkwin;
+    TkWindow *usePtr;
     MacDrawable *parent, *macWin;
     Container *containerPtr;
     XEvent event;
@@ -254,6 +255,20 @@ TkpUseWindow(
     }
 
     parent = (MacDrawable *) result;
+
+    usePtr = (TkWindow *) Tk_IdToWindow(winPtr->display, parent);
+    if (usePtr != NULL) {
+	if (!(usePtr->flags & TK_CONTAINER)) {
+	    Tcl_AppendResult(interp, "window \"", usePtr->pathName,
+		    "\" doesn't have -container option set", NULL);
+	    return TCL_ERROR;
+	}
+    }
+    
+    /* 
+     * The code below can probably be simplified given we have already
+     * discovered 'usePtr' above.
+     */
 
     /*
      * Save information about the container and the embedded window
