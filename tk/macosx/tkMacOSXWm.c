@@ -2933,7 +2933,7 @@ WmTransientCmd(tkwin, winPtr, interp, objc, objv)
             return TCL_ERROR;
         }
 
-	if (master == winPtr) {
+	if ((TkWindow *) master == winPtr) {
 	    Tcl_AppendResult(interp, "can't make \"", Tk_PathName(winPtr),
 		    "\" its own master", NULL);
 	    return TCL_ERROR;
