@@ -6173,6 +6173,10 @@ accept the color names "Black" and "White" (porter)
 2006-04-11 (enhancement)[1105284] Aqua: call ::tk::mac::* procs for all
 registered applevents (steffen)
 
+2006-04-12 (bug fix)[1432666] grid row/col out of bounds crash (spjuth)
+
+2006-04-25 (bug fix)[1475865] crash on invalid font name (fellows)
+
 Documentation improvements [1224983,1247835,1151523,1357575,1083838]
 
----- Released 8.5a4, March 30, 2006 --- See ChangeLog for details ---
+---- Released 8.5a4, April 27, 2006 --- See ChangeLog for details ---
