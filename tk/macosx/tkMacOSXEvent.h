@@ -56,8 +56,8 @@
 #ifndef _TKMACEVENT
 #define _TKMACEVENT
 
-#ifndef _TK
-#include "tk.h"
+#ifndef _TKMACINT
+#include "tkMacOSXInt.h"
 #endif
 
 typedef struct {

@@ -395,12 +395,10 @@ MacScaleEventProc(clientData, eventPtr)
     MacScale *macScalePtr = (MacScale *) clientData;
     Point where;
     Rect bounds;
-    int part, x, y, dummy;
-    unsigned int state;
+    int part;
     CGrafPtr saveWorld;
     GDHandle saveDevice;
     GWorldPtr destPort;
-    Window dummyWin;
 
 #ifdef TK_MAC_DEBUG
     fprintf(stderr,"MacScaleEventProc\n" );
@@ -438,9 +436,7 @@ MacScaleEventProc(clientData, eventPtr)
      * The TrackControl call will "eat" the ButtonUp event.  We now
      * generate a ButtonUp event so Tk will unset implicit grabs etc.
      */
-    XQueryPointer(NULL, None, &dummyWin, &dummyWin, &x,
-	&y, &dummy, &dummy, &state);
-    TkGenerateButtonEvent(x, y, Tk_WindowId(macScalePtr->info.tkwin), state);
+    TkGenerateButtonEventForXPointer(Tk_WindowId(macScalePtr->info.tkwin));
 
     SetGWorld(saveWorld, saveDevice);
 }

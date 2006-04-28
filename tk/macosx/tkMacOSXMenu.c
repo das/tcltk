@@ -1409,9 +1409,6 @@ TkpPostMenu(
 		(char *) NULL);
     	result = TCL_ERROR;
     } else {
-    	Window dummyWin;
-    	unsigned int state;
-    	int dummy, mouseX, mouseY;
     	short menuID;
 	Window window;
 	int oldWidth = menuPtr->totalWidth;
@@ -1480,10 +1477,8 @@ TkpPostMenu(
 	 * Simulate the mouse up.
 	 */
 	 
-	XQueryPointer(NULL, None, &dummyWin, &dummyWin, &mouseX,
-	    &mouseY, &dummy, &dummy, &state);
 	window = Tk_WindowId(menuPtr->tkwin);
-	TkGenerateButtonEvent(mouseX, mouseY, window, state);
+	TkGenerateButtonEventForXPointer(window);
 	
 	/*
 	 * Dispatch the command.

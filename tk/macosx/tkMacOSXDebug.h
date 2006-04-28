@@ -56,11 +56,9 @@
 #ifndef _TKMACDEBUG
 #define _TKMACDEBUG
 
-#ifndef _TKINT
-#include "tkInt.h"
+#ifndef _TKMACINT
+#include "tkMacOSXInt.h"
 #endif
-
-#include <Carbon/Carbon.h>
 
 /* The following define enables printing of debug messages to stderr: */
 /* #define TK_MAC_DEBUG 1 */

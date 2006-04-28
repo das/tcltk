@@ -17,7 +17,9 @@
 
 #include "tkFont.h"
 
-#include <Carbon/Carbon.h>
+#ifndef _TKMACINT
+#include "tkMacOSXInt.h"
+#endif
 
 /*
  * Switches
@@ -92,7 +94,6 @@ typedef struct {} DrawingContext;
 
 #endif /* ? TK_MAC_USE_QUARZ */
 
-
 /*
  * Function prototypes
  */
@@ -109,6 +110,5 @@ MODULE_SCOPE void	TkMacOSXQuarzStartDraw(
 MODULE_SCOPE void	TkMacOSXQuarzEndDraw(
 			    TkMacOSXFontDrawingContext * contextPtr);
 #endif /* TK_MAC_USE_QUARZ */
-
 
 #endif	/*TKMACOSXFONT_H*/

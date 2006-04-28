@@ -167,6 +167,7 @@ MODULE_SCOPE void TkMacOSXDefaultStartupScript(void);
 MODULE_SCOPE int TkMacOSXGenerateFocusEvent( Window window, int activeFlag);
 MODULE_SCOPE WindowClass TkMacOSXWindowClass(TkWindow *winPtr);
 MODULE_SCOPE int TkMacOSXIsWindowZoomed(TkWindow *winPtr);
+MODULE_SCOPE int TkGenerateButtonEventForXPointer(Window window);
 MODULE_SCOPE int TkMacOSXCompareColors(unsigned long c1, unsigned long c2);
 
 MODULE_SCOPE void* TkMacOSXGetNamedSymbol(const char* module, const char* symbol);
