@@ -99,7 +99,7 @@ static int GenerateActivateEvents( Window window, int activeFlag);
  *----------------------------------------------------------------------
  */
  
-int
+MODULE_SCOPE int
 TkMacOSXProcessApplicationEvent(
         TkMacOSXEvent *eventPtr, 
         MacEventStatus *statusPtr)
@@ -178,7 +178,7 @@ TkMacOSXProcessApplicationEvent(
  *----------------------------------------------------------------------
  */
 
-int
+MODULE_SCOPE int
 TkMacOSXProcessWindowEvent(
         TkMacOSXEvent * eventPtr, 
         MacEventStatus * statusPtr)
@@ -450,7 +450,7 @@ GenerateActivateEvents(
  *----------------------------------------------------------------------
  */     
 
-int
+MODULE_SCOPE int
 TkMacOSXGenerateFocusEvent(
     Window window,              /* Root X window for event. */
     int    activeFlag )

@@ -56,8 +56,8 @@
 #ifndef _TKMACEVENT
 #define _TKMACEVENT
 
-#ifndef _TK
-#include "tk.h"
+#ifndef _TKMACINT
+#include "tkMacOSXInt.h"
 #endif
 
 typedef struct {
@@ -76,29 +76,29 @@ typedef struct {
     Tcl_Interp *interp; /* Interp to handle events in */
 } TkMacOSXEvent;
 
-OSStatus TkMacOSXReceiveAndProcessEvent();
-void TkMacOSXFlushWindows(); 
-int TkMacOSXProcessEvent(TkMacOSXEvent *eventPtr, 
+MODULE_SCOPE OSStatus TkMacOSXReceiveAndProcessEvent();
+MODULE_SCOPE void TkMacOSXFlushWindows(); 
+MODULE_SCOPE int TkMacOSXProcessEvent(TkMacOSXEvent *eventPtr, 
         MacEventStatus *statusPtr);
-int TkMacOSXProcessMouseEvent(TkMacOSXEvent *e,
+MODULE_SCOPE int TkMacOSXProcessMouseEvent(TkMacOSXEvent *e,
         MacEventStatus *statusPtr);
-int TkMacOSXProcessWindowEvent(TkMacOSXEvent *e,
+MODULE_SCOPE int TkMacOSXProcessWindowEvent(TkMacOSXEvent *e,
         MacEventStatus *statusPtr);
-int TkMacOSXProcessKeyboardEvent(TkMacOSXEvent *e,
+MODULE_SCOPE int TkMacOSXProcessKeyboardEvent(TkMacOSXEvent *e,
         MacEventStatus *statusPtr);
-int TkMacOSXProcessApplicationEvent(TkMacOSXEvent *e,
+MODULE_SCOPE int TkMacOSXProcessApplicationEvent(TkMacOSXEvent *e,
         MacEventStatus *statusPtr);
-int TkMacOSXProcessMenuEvent(TkMacOSXEvent *e,
+MODULE_SCOPE int TkMacOSXProcessMenuEvent(TkMacOSXEvent *e,
         MacEventStatus *statusPtr);
-int TkMacOSXProcessCommandEvent(TkMacOSXEvent *e,
+MODULE_SCOPE int TkMacOSXProcessCommandEvent(TkMacOSXEvent *e,
         MacEventStatus *statusPtr);
-int TkMacOSXKeycodeToUnicode(
+MODULE_SCOPE int TkMacOSXKeycodeToUnicode(
         UniChar * uniChars, int maxChars,
         EventKind eKind,
         UInt32 keycode, UInt32 modifiers,
         UInt32 * deadKeyStatePtr);
-OSStatus TkMacOSXStartTclEventLoopCarbonTimer();
-OSStatus TkMacOSXStopTclEventLoopCarbonTimer();
+MODULE_SCOPE OSStatus TkMacOSXStartTclEventLoopCarbonTimer();
+MODULE_SCOPE OSStatus TkMacOSXStopTclEventLoopCarbonTimer();
 
 #if !defined(MAC_OS_X_VERSION_10_3) || \
         (MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_3)

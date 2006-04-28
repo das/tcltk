@@ -37,7 +37,7 @@
 
 #include "tkMacOSXInt.h"
 
-EXTERN int		Tk_SendObjCmd _ANSI_ARGS_((ClientData clientData,
+MODULE_SCOPE int	Tk_SendObjCmd _ANSI_ARGS_((ClientData clientData,
 			    Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]));
 
      /* 

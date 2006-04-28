@@ -165,7 +165,7 @@ CarbonEventHandlerProc (
  *----------------------------------------------------------------------
  */
 
-void
+MODULE_SCOPE void
 TkMacOSXInitCarbonEvents (
 	Tcl_Interp *interp)
 {
@@ -407,7 +407,7 @@ CarbonTimerProc (
  *----------------------------------------------------------------------
  */
 
-OSStatus
+MODULE_SCOPE OSStatus
 TkMacOSXStartTclEventLoopCarbonTimer()
 {
     OSStatus err;
@@ -451,7 +451,7 @@ TkMacOSXStartTclEventLoopCarbonTimer()
  *----------------------------------------------------------------------
  */
 
-OSStatus
+MODULE_SCOPE OSStatus
 TkMacOSXStopTclEventLoopCarbonTimer()
 {
     OSStatus err = noErr;

@@ -52,7 +52,7 @@ static void TkMacOSXReleaseCGContext(MacDrawable *macWin, CGrafPtr destPort,
 	CGContextRef *context);
 static inline double radians(double degrees) { return degrees * PI / 180.0f; }
 
-int 
+MODULE_SCOPE int 
 TkMacOSXInitCGDrawing(interp, enable, limit)
         Tcl_Interp *interp;
         int enable;

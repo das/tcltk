@@ -32,8 +32,8 @@
 
 #define TK_POPUP_OFFSET 32      /* size of popup marker */
 
-int TkMacOSXGetNewMenuID _ANSI_ARGS_((Tcl_Interp *interp, TkMenu *menuInstPtr, int cascade, short *menuIDPtr));
-void TkMacOSXFreeMenuID _ANSI_ARGS_((short menuID));
+MODULE_SCOPE int TkMacOSXGetNewMenuID _ANSI_ARGS_((Tcl_Interp *interp, TkMenu *menuInstPtr, int cascade, short *menuIDPtr));
+MODULE_SCOPE void TkMacOSXFreeMenuID _ANSI_ARGS_((short menuID));
 
 typedef struct {
     SInt16 initialValue;

@@ -19,13 +19,15 @@
 
 #include "tkFont.h"
 
-#include <Carbon/Carbon.h>
+#ifndef _TKMACINT
+#include "tkMacOSXInt.h"
+#endif
 
 /*
  * Function prototypes
  */
 
-extern void	TkMacOSXInitControlFontStyle(Tk_Font tkfont,
+MODULE_SCOPE void	TkMacOSXInitControlFontStyle(Tk_Font tkfont,
 			    ControlFontStylePtr fsPtr);
 
 #endif	/*TKMACOSXFONT_H*/

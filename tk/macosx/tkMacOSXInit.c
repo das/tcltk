@@ -405,7 +405,7 @@ TkpDisplayWarning(msg, title)
  *----------------------------------------------------------------------
  */
 
-void
+MODULE_SCOPE void
 TkMacOSXDefaultStartupScript(void)
 {
     CFBundleRef bundleRef;

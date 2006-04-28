@@ -219,7 +219,7 @@ GenerateEditEvent(
     int flag)
 {
     XVirtualEvent event;
-    Point where;
+    int x, y;
     Tk_Window tkwin;
     Window window;
     TkDisplay *dispPtr;
@@ -242,12 +242,8 @@ GenerateEditEvent(
     event.time = TkpGetMS();
     
     XQueryPointer(NULL, None, NULL, NULL,
-            &event.x_root, &event.y_root, NULL, NULL, &event.state);
-    where.h = event.x_root;
-    where.v = event.y_root;
-    GlobalToLocal(&where);
-    tkwin = Tk_TopCoordsToWindow(tkwin, where.h, where.v, 
-            &event.x, &event.y);
+            &event.x_root, &event.y_root, &x, &y, &event.state);
+    tkwin = Tk_TopCoordsToWindow(tkwin, x, y, &event.x, &event.y);
     event.same_screen = true;
 
     switch (flag) {

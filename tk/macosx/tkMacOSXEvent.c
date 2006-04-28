@@ -33,7 +33,7 @@
  *----------------------------------------------------------------------
  */
 
-void
+MODULE_SCOPE void
 TkMacOSXFlushWindows ()
 {
     WindowRef wRef = GetWindowList();
@@ -70,7 +70,7 @@ TkMacOSXFlushWindows ()
  *----------------------------------------------------------------------
  */
 
-int  
+MODULE_SCOPE int  
 TkMacOSXProcessEvent(TkMacOSXEvent * eventPtr, MacEventStatus * statusPtr)
 {
     switch (eventPtr->eClass) {
@@ -123,7 +123,7 @@ TkMacOSXProcessEvent(TkMacOSXEvent * eventPtr, MacEventStatus * statusPtr)
  *----------------------------------------------------------------------
  */
 
-int
+MODULE_SCOPE int
 TkMacOSXProcessMenuEvent(TkMacOSXEvent *eventPtr, MacEventStatus * statusPtr)
 {
     int		    menuContext;
@@ -177,7 +177,7 @@ TkMacOSXProcessMenuEvent(TkMacOSXEvent *eventPtr, MacEventStatus * statusPtr)
  *----------------------------------------------------------------------
  */
 
-int
+MODULE_SCOPE int
 TkMacOSXProcessCommandEvent(TkMacOSXEvent *eventPtr, MacEventStatus * statusPtr)
 {
     HICommand	    command;
@@ -253,7 +253,7 @@ TkMacOSXProcessCommandEvent(TkMacOSXEvent *eventPtr, MacEventStatus * statusPtr)
  *----------------------------------------------------------------------
  */
 
-OSStatus
+MODULE_SCOPE OSStatus
 TkMacOSXReceiveAndProcessEvent()
 {
     static EventTargetRef targetRef = NULL;

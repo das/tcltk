@@ -790,8 +790,7 @@ ScrollbarBindProc(
     if (eventPtr->type == ButtonPress) {
 	Point where;
 	Rect bounds;
-	int part, x, y, dummy;
-	unsigned int state;
+	int part;
         CGrafPtr saveWorld;
         GDHandle saveDevice;
         GWorldPtr destPort;
@@ -876,10 +875,8 @@ ScrollbarBindProc(
          * The TrackControl call will "eat" the ButtonUp event.  We now
          * generate a ButtonUp event so Tk will unset implicit grabs etc.
          */
-        XQueryPointer(NULL, None, &window, &window, &x,
-            &y, &dummy, &dummy, &state);
         window = Tk_WindowId(scrollPtr->tkwin);
-        TkGenerateButtonEvent(x, y, window, state);
+        TkGenerateButtonEventForXPointer(window);
 
         SetGWorld(saveWorld, saveDevice);
     }
