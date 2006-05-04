@@ -50,10 +50,10 @@ extern "C" {
 #define TK_MAJOR_VERSION   8
 #define TK_MINOR_VERSION   5
 #define TK_RELEASE_LEVEL   TCL_ALPHA_RELEASE
-#define TK_RELEASE_SERIAL  4
+#define TK_RELEASE_SERIAL  5
 
 #define TK_VERSION	"8.5"
-#define TK_PATCH_LEVEL	"8.5a4"
+#define TK_PATCH_LEVEL	"8.5a5"
 
 #ifndef _TCL
 #   include <tcl.h>
