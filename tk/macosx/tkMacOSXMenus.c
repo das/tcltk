@@ -6,6 +6,7 @@
  *
  * Copyright (c) 1995-1996 Sun Microsystems, Inc.
  * Copyright 2001, Apple Computer, Inc.
+ * Copyright (c) 2005-2006 Daniel A. Steffen <das@users.sourceforge.net>
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -192,7 +193,16 @@ TkMacOSXInitMenus(
     if (TkMacOSXUseMenuID(kHMHelpMenuID) != TCL_OK) {
 	Tcl_Panic("Help menu ID %s is already in use!", kHMHelpMenuID);
     }
-    
+
+    /*
+     * Workarund a Carbon bug with kHICommandPreferences: the first call to
+     * IsMenuKeyEvent returns false for the preferences menu item key shorcut
+     * event (even if the corresponding menu item is dynamically enabled by a
+     * kEventCommandUpdateStatus handler), unless the kHICommandPreferences
+     * menu item has previously been enabled manually. [Bug 1481503]
+     */
+    EnableMenuCommand(NULL, kHICommandPreferences);
+
     DrawMenuBar();
     return;
 }
@@ -303,3 +313,8 @@ SourceDialog()
         Tcl_BackgroundError(gInterp);
     }           
 }
+/*
+ * Local Variables:
+ * coding: macintosh;
+ * End:
+ */
