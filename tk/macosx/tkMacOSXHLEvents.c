@@ -6,6 +6,7 @@
  *
  * Copyright (c) 1995-1997 Sun Microsystems, Inc.
  * Copyright 2001, Apple Computer, Inc.
+ * Copyright (c) 2006 Daniel A. Steffen <das@users.sourceforge.net>
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -112,7 +113,6 @@ TkMacOSXInitAppleEvents(
 	    err = AEInstallEventHandler(kAEMiscStandards, kAEDoScript,
 		ScriptHandlerUPP, (long) interp, false);
 	}
-
     }
 }
 

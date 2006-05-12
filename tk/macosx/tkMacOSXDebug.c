@@ -4,7 +4,11 @@
  *	Implementation of Macintosh specific functions for debugging MacOS events,
  *      regions, etc...
  *
- *      Copyright 2001, Apple Computer, Inc.
+ * Copyright 2001, Apple Computer, Inc.
+ * Copyright (c) 2006 Daniel A. Steffen <das@users.sourceforge.net>
+ *
+ * See the file "license.terms" for information on usage and redistribution of
+ * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
  *      The following terms apply to all files originating from Apple
  *      Computer, Inc. ("Apple") and associated with the software
