@@ -18,6 +18,8 @@
 #include "tkMacOSXInt.h"
 #include "tkMacOSXDebug.h"
 
+#include "tclInt.h" /* for Tcl_CreateNamespace() */
+
 /*
 #ifdef	TK_MAC_DEBUG
 #define TK_MAC_DEBUG_DRAWING
