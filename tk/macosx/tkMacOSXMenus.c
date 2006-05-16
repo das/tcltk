@@ -195,7 +195,7 @@ TkMacOSXInitMenus(
     }
 
     /*
-     * Workarund a Carbon bug with kHICommandPreferences: the first call to
+     * Workaround a Carbon bug with kHICommandPreferences: the first call to
      * IsMenuKeyEvent returns false for the preferences menu item key shorcut
      * event (even if the corresponding menu item is dynamically enabled by a
      * kEventCommandUpdateStatus handler), unless the kHICommandPreferences
