@@ -466,6 +466,15 @@ TkMacOSXGenerateFocusEvent(
     }
 
     /*
+     * Don't send focus events to windows of class help or to
+     * overrideredirect windows.
+     */
+    if (((TkWindow *)tkwin)->wmInfoPtr->macClass == kHelpWindowClass ||
+	    Tk_Attributes(tkwin)->override_redirect) {
+	return false;
+    }
+
+    /*
      * Generate FocusIn and FocusOut events.  This event
      * is only sent to the toplevel window.
      */
