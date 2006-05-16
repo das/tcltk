@@ -21,6 +21,19 @@
 #include "tkMacOSXWm.h"
 #include "tkMacOSXEvent.h"
 
+/* Define constants only available on Mac OS X 10.3 or later */
+#if !defined(MAC_OS_X_VERSION_10_3) || \
+	(MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_3)
+    #define kSimpleWindowClass 18
+    #define kWindowDoesNotCycleAttribute (1L << 15)
+#endif
+/* Define constants only available on Mac OS X 10.4 or later */
+#if !defined(MAC_OS_X_VERSION_10_4) || \
+	(MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_4)
+    #define kWindowNoTitleBarAttribute (1L << 9)
+    #define kWindowMetalNoContentSeparatorAttribute (1L << 11)
+#endif
+
 /*
  * This is a list of all of the toplevels that have been mapped so far. It is
  * used by the menu code to inval windows that were damaged by menus, and will
@@ -875,7 +888,7 @@ Tcl_Obj *CONST objv[];	/* Argument objects. */
 			err = FSNewAlias(NULL, &ref, &alias);
 			if (err == noErr) {
 			    err = SetWindowProxyAlias(macWindow, alias);
-			    DisposeHandle(alias);
+			    DisposeHandle((Handle) alias);
 			}
 #endif
 		    }
@@ -1709,7 +1722,7 @@ Tcl_Obj *CONST objv[];	/* Argument objects. */
 	    err = FSNewAlias(NULL, &ref, &alias);
 	    if (err == noErr) {
 		err = SetWindowProxyAlias(macWindow, alias);
-		DisposeHandle(alias);
+		DisposeHandle((Handle) alias);
 	    }
 #endif
 	} else {
@@ -4937,16 +4950,6 @@ TkMacOSXWinStyle(
 	char *strValue;
 	int  intValue;
     };
-#if !defined(MAC_OS_X_VERSION_10_3) || \
-	(MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_3)
-    #define kSimpleWindowClass 18
-    #define kWindowDoesNotCycleAttribute (1L << 15)
-#endif
-#if !defined(MAC_OS_X_VERSION_10_4) || \
-	(MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_4)
-    #define kWindowNoTitleBarAttribute (1L << 9)
-    #define kWindowMetalNoContentSeparatorAttribute (1L << 11)
-#endif
     static CONST struct StrIntMap styleMap[] = {
 	{ "documentProc",	    documentProc	  },
 	{ "noGrowDocProc",	    documentProc	  },
