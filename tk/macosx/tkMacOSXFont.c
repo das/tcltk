@@ -47,6 +47,14 @@
 #endif
 */
 
+/* Define macros only available on Mac OS X 10.3 or later */
+#ifndef FixedToInt
+#define FixedToInt(a)       ((short)(((Fixed)(a) + fixed1/2) >> 16))
+#endif
+#ifndef IntToFixed
+#define IntToFixed(a)       ((Fixed)(a) << 16)
+#endif
+
 /*
  * Problem: The sum of two parts is not the same as the whole.  In particular
  * the width of two separately measured strings will usually be larger than
