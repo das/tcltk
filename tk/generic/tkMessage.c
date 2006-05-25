@@ -330,15 +330,16 @@ MessageWidgetObjCmd(
     case MESSAGE_CGET:
 	if (objc != 3) {
 	    Tcl_WrongNumArgs(interp, 2, objv, "option");
-	    return TCL_ERROR;
-	}
-	objPtr = Tk_GetOptionValue(interp, (char *) msgPtr,
-		msgPtr->optionTable, objv[2], msgPtr->tkwin);
-	if (objPtr == NULL) {
 	    result = TCL_ERROR;
 	} else {
-	    Tcl_SetObjResult(interp, objPtr);
-	    result = TCL_OK;
+	    objPtr = Tk_GetOptionValue(interp, (char *) msgPtr,
+		    msgPtr->optionTable, objv[2], msgPtr->tkwin);
+	    if (objPtr == NULL) {
+		result = TCL_ERROR;
+	    } else {
+		Tcl_SetObjResult(interp, objPtr);
+		result = TCL_OK;
+	    }
 	}
 	break;
     case MESSAGE_CONFIGURE:
