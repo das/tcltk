@@ -1935,8 +1935,6 @@ TkWinMenuKeyObjCmd(clientData, interp, objc, objv)
 	return TCL_ERROR;
     }
 
-    eventPtr = TkpGetBindingXEvent(interp);
-
     tkwin = Tk_NameToWindow(interp, Tcl_GetString(objv[1]),
 	    Tk_MainWindow(interp));
 
@@ -1947,6 +1945,8 @@ TkWinMenuKeyObjCmd(clientData, interp, objc, objv)
 	 */
 	return TCL_OK;
     }
+
+    eventPtr = TkpGetBindingXEvent(interp);
 
     winPtr = (TkWindow *)tkwin;
 
