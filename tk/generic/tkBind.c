@@ -1768,8 +1768,9 @@ Tk_BindEvent(
 		ckfree((char *) psPtr);
 	    }
 	} else {
-	    code = Tcl_GlobalEval(interp, p);
-	    p += strlen(p);
+	    int len = (int) strlen(p);
+	    code = Tcl_EvalEx(interp, p, len, TCL_EVAL_GLOBAL);
+	    p += len;
 	}
 	p++;
 
@@ -4655,7 +4656,8 @@ TkCopyAndGlobalEval(
 
     Tcl_DStringInit(&buffer);
     Tcl_DStringAppend(&buffer, script, -1);
-    code = Tcl_GlobalEval(interp, Tcl_DStringValue(&buffer));
+    code = Tcl_EvalEx(interp, Tcl_DStringValue(&buffer),
+	    Tcl_DStringLength(&buffer), TCL_EVAL_GLOBAL);
     Tcl_DStringFree(&buffer);
     return code;
 }
