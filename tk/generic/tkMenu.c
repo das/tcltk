@@ -3489,7 +3489,7 @@ DeleteMenuCloneEntries(menuPtr, first, last)
 {
 
     TkMenu *menuListPtr;
-    int numDeleted, i;
+    int numDeleted, i, j;
 
     numDeleted = last + 1 - first;
     for (menuListPtr = menuPtr->masterMenuPtr; menuListPtr != NULL;
@@ -3499,9 +3499,10 @@ DeleteMenuCloneEntries(menuPtr, first, last)
 		    DestroyMenuEntry);
 	}
 	for (i = last + 1; i < menuListPtr->numEntries; i++) {
-	    menuListPtr->entries[i - numDeleted] = menuListPtr->entries[i];
-	    menuListPtr->entries[i - numDeleted]->index = i - numDeleted;
-	}
+	    j = i - numDeleted;
+	    menuListPtr->entries[j] = menuListPtr->entries[i];
+	    menuListPtr->entries[j]->index = j;
+	  }
 	menuListPtr->numEntries -= numDeleted;
 	if (menuListPtr->numEntries == 0) {
 	    ckfree((char *) menuListPtr->entries);
