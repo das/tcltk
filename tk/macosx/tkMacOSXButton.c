@@ -1019,33 +1019,39 @@ TkMacOSXDrawControl(
     } else {
      SetControlValue(mbPtr->control, 0);
     }
-    
+
     if (!Tk_MacOSXIsAppInFront() || butPtr->state == STATE_DISABLED) {
-        HiliteControl(mbPtr->control, kControlInactivePart);
-    } else if (butPtr->state == STATE_ACTIVE) {
-        if (mbPtr->params.isBevel) {
-           HiliteControl(mbPtr->control, kControlButtonPart);
-        } else {
-            switch (butPtr->type) {
-                case TYPE_BUTTON:
-                    HiliteControl(mbPtr->control,  kControlButtonPart);
-                    break;
-                case TYPE_RADIO_BUTTON:
-                    HiliteControl(mbPtr->control, kControlRadioButtonPart);
-                    break;
-                case TYPE_CHECK_BUTTON:
-                    HiliteControl(mbPtr->control, kControlCheckBoxPart);
-                    break;
-            }
-        }
+	HiliteControl(mbPtr->control, kControlInactivePart);
     } else {
-        HiliteControl(mbPtr->control, kControlNoPart);
+	/*
+	 * Use NoPart for normal and to ensure correct direct transition from
+	 * disabled to active -state. [Bug 706446]
+	 */
+	HiliteControl(mbPtr->control, kControlNoPart);
+
+	if (butPtr->state == STATE_ACTIVE) {
+	    if (mbPtr->params.isBevel) {
+		HiliteControl(mbPtr->control, kControlButtonPart);
+	    } else {
+		switch (butPtr->type) {
+		    case TYPE_BUTTON:
+			HiliteControl(mbPtr->control,  kControlButtonPart);
+			break;
+		    case TYPE_RADIO_BUTTON:
+			HiliteControl(mbPtr->control, kControlRadioButtonPart);
+			break;
+		    case TYPE_CHECK_BUTTON:
+			HiliteControl(mbPtr->control, kControlCheckBoxPart);
+			break;
+		}
+	    }
+	}
     }
     UpdateControlColors(mbPtr);
-        
+
     if ((butPtr->type == TYPE_BUTTON) ) {
         Boolean isDefault;
-        
+
         if (butPtr->defaultState == STATE_ACTIVE) {
             isDefault = true;
         } else {
