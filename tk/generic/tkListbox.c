@@ -2284,25 +2284,24 @@ ListboxInsertSubCmd(listPtr, index, objc, objv)
 	return result;
     }
 
+    /*
+     * Replace the current object and set attached listvar, if any.
+     * This may error if listvar points to a var in a deleted namespace, but
+     * we ignore those errors.  If the namespace is recreated, it will
+     * auto-sync with the current value. [Bug 1424513]
+     */
+
     Tcl_IncrRefCount(newListObj);
-    /* Clean up the old reference */
     Tcl_DecrRefCount(listPtr->listObj);
-
-    /* Set the internal pointer to the new obj */
     listPtr->listObj = newListObj;
-
-    /* If there is a listvar, make sure it points at the new object */
     if (listPtr->listVarName != NULL) {
-	if (Tcl_SetVar2Ex(listPtr->interp, listPtr->listVarName,
-		(char *)NULL, newListObj, TCL_GLOBAL_ONLY) == NULL) {
-	    Tcl_DecrRefCount(newListObj);
-	    return TCL_ERROR;
-	}
+	Tcl_SetVar2Ex(listPtr->interp, listPtr->listVarName,
+		(char *) NULL, listPtr->listObj, TCL_GLOBAL_ONLY);
     }
 
     /* Get the new list length */
     Tcl_ListObjLength(listPtr->interp, listPtr->listObj, &listPtr->nElements);
-    
+
     /*
      * Update the "special" indices (anchor, topIndex, active) to account
      * for the renumbering that just occurred.  Then arrange for the new
@@ -2433,24 +2432,23 @@ ListboxDeleteSubCmd(listPtr, first, last)
 	return result;
     }
 
-    Tcl_IncrRefCount(newListObj);
-    /* Clean up the old reference */
-    Tcl_DecrRefCount(listPtr->listObj);
+    /*
+     * Replace the current object and set attached listvar, if any.
+     * This may error if listvar points to a var in a deleted namespace, but
+     * we ignore those errors.  If the namespace is recreated, it will
+     * auto-sync with the current value. [Bug 1424513]
+     */
 
-    /* Set the internal pointer to the new obj */
+    Tcl_IncrRefCount(newListObj);
+    Tcl_DecrRefCount(listPtr->listObj);
     listPtr->listObj = newListObj;
+    if (listPtr->listVarName != NULL) {
+	Tcl_SetVar2Ex(listPtr->interp, listPtr->listVarName,
+		(char *) NULL, listPtr->listObj, TCL_GLOBAL_ONLY);
+    }
 
     /* Get the new list length */
     Tcl_ListObjLength(listPtr->interp, listPtr->listObj, &listPtr->nElements);
-    
-    /* If there is a listvar, make sure it points at the new object */
-    if (listPtr->listVarName != NULL) {
-	if (Tcl_SetVar2Ex(listPtr->interp, listPtr->listVarName,
-		(char *)NULL, newListObj, TCL_GLOBAL_ONLY) == NULL) {
-	    Tcl_DecrRefCount(newListObj);
-	    return TCL_ERROR;
-	}
-    }
 
     /*
      * Update the selection and viewing information to reflect the change
