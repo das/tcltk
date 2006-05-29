@@ -717,7 +717,6 @@ TkpGetOtherWindow(
 	    return containerPtr->embeddedPtr;
 	}
     }
-    Tcl_Panic("TkpGetOtherWindow couldn't find window");
     return NULL;
 }
 

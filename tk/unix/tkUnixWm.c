@@ -4457,6 +4457,8 @@ UpdateGeometryInfo(
 
     if ((winPtr->flags & (TK_EMBEDDED|TK_BOTH_HALVES))
 	    == (TK_EMBEDDED|TK_BOTH_HALVES)) {
+	TkWindow *childPtr = TkpGetOtherWindow(winPtr);
+
 	/*
 	 * This window is embedded and the container is also in this process,
 	 * so we don't need to do anything special about the geometry, except
@@ -4468,8 +4470,9 @@ UpdateGeometryInfo(
 	wmPtr->x = wmPtr->y = 0;
 	wmPtr->flags &= ~(WM_NEGATIVE_X|WM_NEGATIVE_Y);
 	height += wmPtr->menuHeight;
-	Tk_GeometryRequest((Tk_Window) TkpGetOtherWindow(winPtr),
-		width, height);
+	if (childPtr != NULL) {
+	    Tk_GeometryRequest((Tk_Window) childPtr, width, height);
+	}
 	return;
     }
     serial = NextRequest(winPtr->display);
@@ -5576,6 +5579,9 @@ Tk_CoordsToWindow(
 	     */
 
 	    winPtr = TkpGetOtherWindow(winPtr);
+	    if (winPtr == NULL) {
+		return NULL;
+	    }
 	    wmPtr = winPtr->wmInfoPtr;
 	    childX = x;
 	    childY = y;
