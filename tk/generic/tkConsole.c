@@ -68,7 +68,7 @@ static int	InterpreterObjCmd(ClientData clientData, Tcl_Interp *interp,
 
 static Tcl_ChannelType consoleChannelType = {
     "console",			/* Type name. */
-    NULL,			/* Always non-blocking.*/
+    TCL_CHANNEL_VERSION_4,	/* v4 channel */
     ConsoleClose,		/* Close proc. */
     ConsoleInput,		/* Input proc. */
     ConsoleOutput,		/* Output proc. */
@@ -77,6 +77,12 @@ static Tcl_ChannelType consoleChannelType = {
     NULL,			/* Get option proc. */
     ConsoleWatch,		/* Watch for events on console. */
     ConsoleHandle,		/* Get a handle from the device. */
+    NULL,			/* close2proc. */
+    NULL,			/* Always non-blocking.*/
+    NULL,			/* flush proc. */
+    NULL,			/* handler proc. */
+    NULL,			/* wide seek proc */
+    NULL,			/* thread action proc */
 };
 
 #ifdef __WIN32__
@@ -276,6 +282,7 @@ Tk_InitConsoleChannels(
 		    "-encoding", "utf-8");
 	}
 	Tcl_SetStdChannel(consoleChannel, TCL_STDIN);
+	Tcl_RegisterChannel(NULL, consoleChannel);
     }
 
     if (doOut) {
@@ -294,6 +301,7 @@ Tk_InitConsoleChannels(
 		    "-encoding", "utf-8");
 	}
 	Tcl_SetStdChannel(consoleChannel, TCL_STDOUT);
+	Tcl_RegisterChannel(NULL, consoleChannel);
     }
 
     if (doErr) {
@@ -312,6 +320,7 @@ Tk_InitConsoleChannels(
 		    "-encoding", "utf-8");
 	}
 	Tcl_SetStdChannel(consoleChannel, TCL_STDERR);
+	Tcl_RegisterChannel(NULL, consoleChannel);
     }
 }
 
