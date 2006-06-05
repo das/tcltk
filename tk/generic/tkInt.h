@@ -1128,9 +1128,6 @@ EXTERN int		Tk_WmObjCmd _ANSI_ARGS_((ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *CONST objv[]));
 
-EXTERN void		TkConsolePrint _ANSI_ARGS_((Tcl_Interp *interp,
-			    int devId, CONST char *buffer, long size));
-
 EXTERN void		TkEventInit _ANSI_ARGS_((void));
 
 EXTERN void		TkRegisterObjTypes _ANSI_ARGS_((void));
