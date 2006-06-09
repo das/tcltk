@@ -121,6 +121,7 @@ Tk_MainEx(
 
     Tcl_FindExecutable(argv[0]);
     tsdPtr->interp = interp;
+    Tcl_Preserve((ClientData) interp);
 
 #if defined(__WIN32__)
     Tk_InitConsoleChannels(interp);
@@ -307,6 +308,7 @@ Tk_MainEx(
 
     Tk_MainLoop();
     Tcl_DeleteInterp(interp);
+    Tcl_Release((ClientData) interp);
     Tcl_SetStartupScript(NULL, NULL);
     Tcl_Exit(0);
 }
