@@ -126,6 +126,7 @@ Tk_MainEx(argc, argv, appInitProc, interp)
     
     Tcl_FindExecutable(argv[0]);
     tsdPtr->interp = interp;
+    Tcl_Preserve((ClientData) interp);
 
 #if (defined(__WIN32__) || defined(MAC_TCL))
     Tk_InitConsoleChannels(interp);
@@ -296,6 +297,7 @@ Tk_MainEx(argc, argv, appInitProc, interp)
 
     Tk_MainLoop();
     Tcl_DeleteInterp(interp);
+    Tcl_Release((ClientData) interp);
     Tcl_Exit(0);
 }
 
