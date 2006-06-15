@@ -5932,3 +5932,23 @@ registered applevents (steffen)
 2006-04-12 (bug fix)[1432666] grid row/col out of bounds crash (spjuth)
 
 --- Released 8.4.13, April 19, 2006 --- See ChangeLog for details ---
+
+2006-04-25 (bug fix)[1475865] crash on invalid font name from XServer (fellows)
+
+2006-05-12 (performance)[1409140] restore perf lost in 2006-03-15 change (hobbs)
+
+2006-05-29 (bug fix)[1472624] Aqua: balloon help don't steal focus (steffen)
+
+2006-05-29 (bug fix)[706446] Aqua: active [button] highlight (hobbs)
+
+2006-05-29 (bug fix)[1424513] [listbox] crash with namespace var (hobbs)
+
+2006-06-01 (bug fix)[1188340] [console] std chan refcount (mistachkin,hobbs)
+
+2006-06-05 (bug fix)[1188340] [console] thread safety (porter)
+
+2006-06-14 (bug fix)[891141] excess variable writes by [scale] (porter)
+
+2006-06-15 (platform support)[1424909] MS VS2005 support (thoyts)
+
+--- Released 8.4.14, June XX, 2006 --- See ChangeLog for details ---
