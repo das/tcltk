@@ -153,7 +153,6 @@ proc ::tk::dialog::error::bgerror err {
 
     set W [frame $w.top.info]
     text $W.text				\
-	    -bd 2				\
 	    -yscrollcommand [list $W.scroll set]\
 	    -setgrid true			\
 	    -width 40				\
@@ -163,7 +162,7 @@ proc ::tk::dialog::error::bgerror err {
 	    -highlightthickness $textHilight	\
 	    -wrap char
 
-    scrollbar $W.scroll -relief sunken -command [list $W.text yview]
+    scrollbar $W.scroll -command [list $W.text yview]
     pack $W.scroll -side right -fill y
     pack $W.text -side left -expand yes -fill both
     $W.text insert 0.0 "$err\n$info"
