@@ -220,8 +220,8 @@ proc ::tk::IconList_Create {w} {
     upvar ::tk::$w data
 
     frame $w
-    set data(sbar)   [scrollbar $w.sbar -orient horizontal \
-	    -highlightthickness 0 -takefocus 0]
+    set data(sbar)   [scrollbar $w.sbar -orient horizontal -takefocus 0]
+    catch {$data(sbar) configure -highlightthickness 0}
     set data(canvas) [canvas $w.canvas -bd 2 -relief sunken \
 	    -width 400 -height 120 -takefocus 1]
     pack $data(sbar) -side bottom -fill x -padx 2
