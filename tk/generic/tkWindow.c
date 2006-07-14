@@ -3128,8 +3128,14 @@ Initialize(interp)
 
     /*
      * Invoke platform-specific initialization.
+     * Unlock mutex before entering TkpInit, as that may run through the
+     * Tk_Init routine again for the console window interpreter.
      */
 
+    Tcl_MutexUnlock(&windowMutex);
+    if (argv != NULL) {
+	ckfree((char *) argv);
+    }
     code = TkpInit(interp);
     if (code == TCL_OK) {
 	/*
@@ -3140,6 +3146,7 @@ Initialize(interp)
 
 	TkCreateThreadExitHandler(DeleteWindowsExitProc, (ClientData) tsdPtr);
     }
+    return code;
 
   done:
     Tcl_MutexUnlock(&windowMutex);
