@@ -3159,9 +3159,15 @@ Initialize(interp)
 
     /*
      * Invoke platform-specific initialization.
+     * Unlock mutex before entering TkpInit, as that may run through the
+     * Tk_Init routine again for the console window interpreter.
      */
 
-    code = TkpInit(interp);
+    Tcl_MutexUnlock(&windowMutex);
+    if (argv != NULL) {
+	ckfree((char *) argv);
+    }
+    return TkpInit(interp);
 
     done:
     Tcl_MutexUnlock(&windowMutex);
