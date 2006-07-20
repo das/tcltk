@@ -19,8 +19,7 @@
 #include "tkMacOSXFont.h"
 #include "tkMacOSXDebug.h"
 
-#if !defined(MAC_OS_X_VERSION_10_3) || \
-        (MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_3)
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 1030
     /* Define constants only available on Mac OS X 10.3 or later */
     #define kMenuAttrDoNotUseUserCommandKeys (1 << 7)
 #endif
