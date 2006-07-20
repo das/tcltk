@@ -1926,7 +1926,7 @@ TkpTestsendCmd(
 		    &bytesAfter, (unsigned char **) &property);
 	    if ((result == Success) && (actualType != None)
 		    && (actualFormat == 8) && (actualType == XA_STRING)) {
-		for (p = property; (p-property) < length; p++) {
+		for (p = property; (unsigned long)(p-property) < length; p++) {
 		    if (*p == 0) {
 			*p = '\n';
 		    }

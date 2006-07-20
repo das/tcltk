@@ -209,7 +209,11 @@ Tk_GetUserInactiveTime(
      * on some buggy versions of XFree86.
      */
 
-    if (XScreenSaverQueryExtension(dpy, &eventBase, &errorBase) &&
+    if (
+#ifdef __APPLE__
+ 	XScreenSaverQueryInfo != NULL && /* Support for weak-linked libXss. */
+#endif
+	XScreenSaverQueryExtension(dpy, &eventBase, &errorBase) &&
 	XScreenSaverQueryVersion(dpy, &major, &minor)) {
 
 	XScreenSaverInfo *info = XScreenSaverAllocInfo();

@@ -117,6 +117,7 @@ export CPPROG		:= cp -p
 ifeq (${TK_X11},)
 override CONFIGURE_ARGS := ${CONFIGURE_ARGS} --enable-aqua
 else
+override CONFIGURE_ARGS := ${CONFIGURE_ARGS} --enable-xft
 VERSION			:= ${VERSION}-X11
 wish			:= ${wish}-X11
 endif

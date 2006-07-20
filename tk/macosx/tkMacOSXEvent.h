@@ -100,10 +100,9 @@ MODULE_SCOPE int TkMacOSXKeycodeToUnicode(
 MODULE_SCOPE OSStatus TkMacOSXStartTclEventLoopCarbonTimer();
 MODULE_SCOPE OSStatus TkMacOSXStopTclEventLoopCarbonTimer();
 
-#if !defined(MAC_OS_X_VERSION_10_3) || \
-        (MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_3)
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 1030
 /* Define constants only available on Mac OS X 10.3 or later */
-enum { kEventAppAvailableWindowBoundsChanged = 110 };
+#define kEventAppAvailableWindowBoundsChanged 110
 #endif
 
 #endif
