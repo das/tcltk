@@ -37,7 +37,7 @@ typedef struct {
     int type;                        /* Type of Mac cursor: for theme cursors
                                       * this is the theme cursor constant,
                                       * otherwise one of crsr or CURS */
-    unsigned int count;              /* For animating cursors, the count for the
+    int count;                       /* For animating cursors, the count for the
                                         cursor. */
 } TkMacOSXCursor;
 

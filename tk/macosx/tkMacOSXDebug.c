@@ -565,7 +565,7 @@ TkMacOSXGetNamedDebugSymbol(const char* module, const char* symbol)
 			strx = sym->n_un.n_strx;
 			if ((sym->n_type & N_TYPE) == N_SECT &&
 				sym->n_sect == txtsectx &&
-				strx > 0 && strx < strsize &&
+				strx > 0 && (uint32_t) strx < strsize &&
 				strcmp(strings + strx, symbol) == 0) {
 			    addr = (void*) sym->n_value + slide;
 			    break;
