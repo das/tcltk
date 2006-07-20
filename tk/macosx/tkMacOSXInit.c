@@ -45,7 +45,7 @@
  */
 
 typedef struct Map {
-    int numKey;
+    CFStringEncoding numKey;
     char *strKey;
 } Map;
 

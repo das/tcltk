@@ -64,7 +64,7 @@ XCreateGC(display, d, mask, values)
     }
 
     gp->function = 	(mask & GCFunction) 	?values->function	:GXcopy;
-    gp->plane_mask = 	(mask & GCPlaneMask) 	?values->plane_mask 	:~0;
+    gp->plane_mask = 	(mask & GCPlaneMask) 	?values->plane_mask 	:(unsigned long )(~0);
     gp->foreground = 	(mask & GCForeground) 	?values->foreground 	:0;
     gp->background = 	(mask & GCBackground) 	?values->background 	:0xffffff;
     gp->line_width = 	(mask & GCLineWidth)	?values->line_width	:1;	
