@@ -37,8 +37,8 @@ struct TkWindowPrivate {
     ControlRef rootControl;
     int xOff;	       		/* X offset from toplevel window */
     int yOff;		       	/* Y offset from toplevel window */
-    RgnHandle clipRgn;		/* Visable region of window */
-    RgnHandle aboveClipRgn;	/* Visable region of window & it's children */
+    RgnHandle clipRgn;		/* Visible region of window */
+    RgnHandle aboveClipRgn;	/* Visible region of window & it's children */
     int referenceCount;		/* Don't delete toplevel until children are
 				 * gone. */
     struct TkWindowPrivate *toplevel;	/* Pointer to the toplevel

@@ -620,7 +620,7 @@ TkGenWMConfigureEvent(
      * ConfigureNotify to set these values.  On the Mac we know imediatly that
      * this is what we want - so we just set them.  However, we need to
      * make sure the windows clipping region is marked invalid so the
-     * change is visable to the subwindow.
+     * change is visible to the subwindow.
      */
     winPtr->changes.x = x;
     winPtr->changes.y = y;

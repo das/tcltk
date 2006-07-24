@@ -992,7 +992,7 @@ TkMacOSXUpdateClipRgn(
  * TkMacOSXVisableClipRgn --
  *
  *	This function returnd the Macintosh cliping region for the 
- *	given window.  A NULL Rgn means the window is not visable.
+ *	given window.  A NULL Rgn means the window is not visible.
  *
  * Results:
  *	The region.
