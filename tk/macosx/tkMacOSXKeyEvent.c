@@ -194,6 +194,7 @@ TkMacOSXProcessKeyboardEvent(
 	    case kHICommandHideOthers:
 	    case kHICommandShowAll:
 	    case kHICommandPreferences:
+	    case kHICommandQuit:
 		statusPtr->stopProcessing = 0;
 		return 0; /* TODO: may not be on event on queue. */
 		break;
