@@ -1048,7 +1048,7 @@ WmAttrGetAlpha(WindowRef macWindow)
 static Tcl_Obj *
 WmAttrGetNotifyStatus()
 {
-    reutrn Tcl_NewBooleanObj((tkMacOSXWmAttrNotifyVal != 0));
+    return Tcl_NewBooleanObj((tkMacOSXWmAttrNotifyVal != 0));
 }
 
 /*
