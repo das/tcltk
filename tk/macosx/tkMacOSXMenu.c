@@ -3695,6 +3695,7 @@ MenuSelectEvent(
 {
     XVirtualEvent event;
    
+    bzero(&event, sizeof(XVirtualEvent));
     event.type = VirtualEvent;
     event.serial = menuPtr->display->request;
     event.send_event = false;
@@ -3709,7 +3710,6 @@ MenuSelectEvent(
             &event.x_root, &event.y_root, NULL, NULL, &event.state);
     event.same_screen = true;
     event.name = Tk_GetUid("MenuSelect");
-    event.user_data = NULL;
     Tk_QueueWindowEvent((XEvent *) &event, TCL_QUEUE_TAIL);
 }
 

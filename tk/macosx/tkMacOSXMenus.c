@@ -241,6 +241,7 @@ GenerateEditEvent(
         return;
     }
 
+    bzero(&event, sizeof(XVirtualEvent));
     event.type = VirtualEvent;
     event.serial = Tk_Display(tkwin)->request;
     event.send_event = false;
@@ -254,7 +255,6 @@ GenerateEditEvent(
             &event.x_root, &event.y_root, &x, &y, &event.state);
     tkwin = Tk_TopCoordsToWindow(tkwin, x, y, &event.x, &event.y);
     event.same_screen = true;
-    event.user_data = NULL;
 
     switch (flag) {
         case EDIT_CUT:
