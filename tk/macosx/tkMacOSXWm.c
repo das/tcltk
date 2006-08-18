@@ -963,14 +963,21 @@ static Tcl_Obj *
 WmAttrGetTitlePath(WindowRef macWindow)
 {
     FSRef ref;
-    AliasHandle alias;
     Boolean wasChanged;
     UInt8 path[2048];
-    OSStatus err;
+    OSStatus err = fnfErr;
 
-    err = GetWindowProxyAlias(macWindow, &alias);
-    if (err == noErr) {
-	err = FSResolveAlias(NULL, alias, &ref, &wasChanged);
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1040
+    if (HIWindowGetProxyFSRef != NULL) {
+	err = HIWindowGetProxyFSRef(macWindow, &ref);
+    }
+#endif
+    if (err != noErr) {
+	AliasHandle alias;
+	err = GetWindowProxyAlias(macWindow, &alias);
+	if (err == noErr) {
+	    err = FSResolveAlias(NULL, alias, &ref, &wasChanged);
+	}
     }
     if (err == noErr) {
 	err = FSRefMakePath(&ref, path, 2048);

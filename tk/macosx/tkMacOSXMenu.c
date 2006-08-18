@@ -3695,6 +3695,7 @@ MenuSelectEvent(
 {
     XVirtualEvent event;
    
+    bzero(&event, sizeof(XVirtualEvent));
     event.type = VirtualEvent;
     event.serial = menuPtr->display->request;
     event.send_event = false;

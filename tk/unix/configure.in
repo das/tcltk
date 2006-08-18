@@ -253,11 +253,10 @@ if test "`uname -s`" = "Darwin" ; then
 	fi
     fi
     AC_MSG_RESULT([$tk_aqua])
-    if test $do64bit_ok = no ; then
-	# remove -arch ppc64 from CFLAGS for fat builds as neither Aqua nor X11
-	# can be built for 64bit at present (no 64bit GUI libraries).
-	CFLAGS="`echo "$CFLAGS" | sed -e 's/-arch ppc64/-arch ppc/g'`"
-    fi
+    # remove 64-bit arch flags from CFLAGS for combined 32-bit and 64-bit fat
+    # builds, as neither TkAqua nor TkX11 can be built for 64-bit at present.
+    test "$fat_32_64" = yes && \
+	CFLAGS="`echo "$CFLAGS " | sed -e 's/-arch ppc64 / /g' -e 's/-arch x86_64 / /g'`"
 else
     tk_aqua=no
 fi

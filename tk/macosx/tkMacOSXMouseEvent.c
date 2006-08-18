@@ -1009,8 +1009,9 @@ GenerateToolbarButtonEvent(MouseEventData * medPtr)
     if (!tkwin) {
        return true;
     }
-
     winPtr = (TkWindow *)tkwin;
+
+    bzero(&event, sizeof(XVirtualEvent));
     event.type = VirtualEvent;
     event.serial = LastKnownRequestProcessed(winPtr->display);
     event.send_event = false;
@@ -1019,13 +1020,12 @@ GenerateToolbarButtonEvent(MouseEventData * medPtr)
     event.root = XRootWindow(winPtr->display, 0);
     event.subwindow = None;
     event.time = TkpGetMS();
-
     event.x_root = medPtr->global.h;
     event.y_root = medPtr->global.v;
     event.state = medPtr->state;
     event.same_screen = true;
     event.name = Tk_GetUid("ToolbarButton");
-    Tk_QueueWindowEvent((XEvent *) &event, TCL_QUEUE_TAIL);
 
+    Tk_QueueWindowEvent((XEvent *) &event, TCL_QUEUE_TAIL);
     return true;
 }

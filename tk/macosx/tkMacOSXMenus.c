@@ -241,6 +241,7 @@ GenerateEditEvent(
         return;
     }
 
+    bzero(&event, sizeof(XVirtualEvent));
     event.type = VirtualEvent;
     event.serial = Tk_Display(tkwin)->request;
     event.send_event = false;
