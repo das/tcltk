@@ -1049,7 +1049,7 @@ TkMacOSXDrawControl(
     }
     UpdateControlColors(mbPtr);
 
-    if ((butPtr->type == TYPE_BUTTON) ) {
+    if (butPtr->type == TYPE_BUTTON) {
         Boolean isDefault;
 
         if (butPtr->defaultState == STATE_ACTIVE) {
@@ -1059,7 +1059,7 @@ TkMacOSXDrawControl(
         }
         if ((err=SetControlData(mbPtr->control, kControlNoPart, 
                 kControlPushButtonDefaultTag,
-                sizeof(isDefault), (Ptr) &isDefault)) != noErr ) {
+                sizeof(isDefault), (Ptr) &isDefault)) != noErr) {
         }
     }
 
@@ -1071,10 +1071,10 @@ TkMacOSXDrawControl(
         SetControlVisibility(mbPtr->control, true, true);
         Draw1Control(mbPtr->userPane);
     }
- 
+
     if (mbPtr->params.isBevel) {
         KillPicture(mbPtr->bevelButtonContent.u.picture);
-    }         
+    }
 }
 
 /*
