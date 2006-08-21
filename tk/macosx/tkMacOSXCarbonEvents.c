@@ -379,11 +379,15 @@ CarbonTimerProc (
 	EventLoopTimerRef timer,
 	void *userData)
 {
-    while(carbonTimerEnabled && Tcl_DoOneEvent(
-	    TCL_FILE_EVENTS|TCL_TIMER_EVENTS|TCL_DONT_WAIT)) {
+    if(carbonTimerEnabled) {
+	/* Avoid starving main event loop: process at most 4 events. */
+	int i = 4;
+	while(--i && Tcl_DoOneEvent(
+		TCL_FILE_EVENTS|TCL_TIMER_EVENTS|TCL_DONT_WAIT)) {
 #if defined(TK_MAC_DEBUG) && defined(TK_MAC_DEBUG_CARBON_EVENTS)
-	fprintf(stderr, "Processed tcl event from carbon timer\n");
+	    fprintf(stderr, "Processed tcl event from carbon timer\n");
 #endif /* TK_MAC_DEBUG_CARBON_EVENTS */
+	}
     }
 }
 
