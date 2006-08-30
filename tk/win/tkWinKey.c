@@ -112,6 +112,13 @@ TkpGetString(winPtr, eventPtr, dsPtr)
         len = Tcl_UniCharToUtf((Tcl_UniChar) unichar, buf);
 
         Tcl_DStringAppend(dsPtr, buf, len);
+    } else if (eventPtr->xkey.send_event == -3) {
+	/*
+	 * Special case for WM_UNICHAR.
+	 * xkey.trans_chars[] already contains a UTF-8 char.
+	 */
+	Tcl_DStringAppend(dsPtr, eventPtr->xkey.trans_chars,
+		eventPtr->xkey.nbytes);
     } else  {
 	/*
 	 * This is an event generated from generic code.  It has no
