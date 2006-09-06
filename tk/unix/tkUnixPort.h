@@ -202,13 +202,6 @@
 	sprintf((buf), "%#08lx", (unsigned long) (w))
 
 /*
- * This macro indicates that entry and text widgets should display
- * the selection highlight regardless of which window has the focus.
- */
-
-#define ALWAYS_SHOW_SELECTION
-
-/*
  * The following declaration is used to get access to a private Tcl interface
  * that is needed for portability reasons.
  *
