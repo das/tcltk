@@ -1585,6 +1585,25 @@ DeleteChars(textPtr, index1String, index2String, indexPtr1, indexPtr2)
 	}
     }
 
+    if (line1 < line2) {
+	/*
+	 * We are deleting more than one line. For speed, we remove all tags
+	 * from the range first. If we don't do this, the code below can (when
+	 * there are many tags) grow non-linearly in execution time.
+	 * [Bug 1456342]
+	 */
+
+	Tcl_HashSearch search;
+	Tcl_HashEntry *hPtr;
+
+	for (hPtr=Tcl_FirstHashEntry(&textPtr->tagTable, &search);
+	     hPtr != NULL; hPtr = Tcl_NextHashEntry(&search)) {
+	    TkTextTag *tagPtr = (TkTextTag *) Tcl_GetHashValue(hPtr);
+
+	    TkBTreeTag(&index1, &index2, tagPtr, 0);
+	}
+    }
+
     /*
      * Tell the display what's about to happen so it can discard
      * obsolete display information, then do the deletion.  Also,
