@@ -676,6 +676,8 @@ typedef struct TkMainInfo {
 				 * structures.  Managed by tkImage.c. */
     int strictMotif;		/* This is linked to the tk_strictMotif
 				 * global variable. */
+    int alwaysShowSelection;	/* This is linked to the
+				 * ::tk::AlwaysShowSelection variable. */
     struct TkMainInfo *nextPtr;	/* Next in list of all main windows managed by
 				 * this process. */
 } TkMainInfo;
@@ -1212,6 +1214,7 @@ EXTERN void		TkPrintPadAmount _ANSI_ARGS_((Tcl_Interp *interp,
 EXTERN int		TkParsePadAmount _ANSI_ARGS_((Tcl_Interp *interp,
 			    Tk_Window tkwin, Tcl_Obj *objPtr,
 			    int *pad1Ptr, int *pad2Ptr));
+EXTERN int		TkpAlwaysShowSelection _ANSI_ARGS_((Tk_Window tkwin));
 
 /*
  * Unsupported commands.

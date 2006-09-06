@@ -546,15 +546,15 @@ GetStyle(textPtr, indexPtr)
 	tagPtr = tagPtrs[i];
 
 	/*
-	 * On Windows and Mac, we need to skip the selection tag if
-	 * we don't have focus.
+	 * Skip the selection tag if we don't have focus,
+	 * unless we always want to show the selection.
 	 */
 
-#ifndef ALWAYS_SHOW_SELECTION
-	if ((tagPtr == textPtr->selTagPtr) && !(textPtr->flags & GOT_FOCUS)) {
+	if (!TkpAlwaysShowSelection(textPtr->tkwin)
+		&& (tagPtr == textPtr->selTagPtr)
+		&& !(textPtr->flags & GOT_FOCUS)) {
 	    continue;
 	}
-#endif
 
 	if ((tagPtr->border != NULL) && (tagPtr->priority > borderPrio)) {
 	    styleValues.border = tagPtr->border;

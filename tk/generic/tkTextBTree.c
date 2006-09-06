@@ -2550,13 +2550,12 @@ TkTextIsElided(textPtr, indexPtr)
 
     for (i = numTags-1; i >=0; i--) {
 	if (tagCnts[i] & 1) {
-#ifndef ALWAYS_SHOW_SELECTION
 	    /* who would make the selection elided? */
-	    if ((tagPtr == textPtr->selTagPtr)
+	    if (!TkpAlwaysShowSelection(textPtr->tkwin)
+		    && (tagPtr == textPtr->selTagPtr)
 		    && !(textPtr->flags & GOT_FOCUS)) {
 		continue;
 	    }
-#endif
 	    elide = tagPtrs[i]->elide;
 	    break;
 	}
