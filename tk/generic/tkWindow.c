@@ -22,6 +22,8 @@
 #include "tkUnixInt.h"
 #endif
 
+#include "tclInt.h" /* for Tcl_CreateNamespace() */
+
 /* 
  * Type used to keep track of Window objects that were
  * only partically deallocated by Tk_DestroyWindow.
