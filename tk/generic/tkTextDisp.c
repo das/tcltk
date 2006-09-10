@@ -550,7 +550,13 @@ GetStyle(textPtr, indexPtr)
 	 * unless we always want to show the selection.
 	 */
 
-	if (!TkpAlwaysShowSelection(textPtr->tkwin)
+	if (
+#ifndef MAC_OSX_TK
+		!TkpAlwaysShowSelection(textPtr->tkwin)
+#else
+		/* Don't show inactive selection in disabled widgets. */
+		textPtr->state == TK_STATE_DISABLED
+#endif
 		&& (tagPtr == textPtr->selTagPtr)
 		&& !(textPtr->flags & GOT_FOCUS)) {
 	    continue;

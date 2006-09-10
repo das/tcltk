@@ -467,10 +467,11 @@ TkMacOSXGenerateFocusEvent(
 
     /*
      * Don't send focus events to windows of class help or to
-     * overrideredirect windows.
+     * windows with the kWindowNoActivatesAttribute.
      */
     if (((TkWindow *)tkwin)->wmInfoPtr->macClass == kHelpWindowClass ||
-	    Tk_Attributes(tkwin)->override_redirect) {
+	    ((TkWindow *)tkwin)->wmInfoPtr->attributes &
+		    kWindowNoActivatesAttribute) {
 	return false;
     }
 

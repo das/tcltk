@@ -3561,6 +3561,7 @@ DrawMenuEntryLabel(
 		    Tcl_DStringLength(&itemTextDString),
 		    leftEdge, baseline); */
 		    
+	    Tcl_DStringFree(&convertedTextDString);
 	    Tcl_DStringFree(&itemTextDString);
     	}
     }
