@@ -3597,7 +3597,12 @@ TkTextIsElided(textPtr, indexPtr, elideInfo)
 
 	    if ((tagPtr == textPtr->selTagPtr)
 		    && !(textPtr->flags & GOT_FOCUS)
-		    && (textPtr->inactiveSelBorder == NULL)) {
+		    && (textPtr->inactiveSelBorder == NULL
+#ifdef MAC_OSX_TK
+		    /* Don't show inactive selection in disabled widgets. */
+		    || textPtr->state == TK_TEXT_STATE_DISABLED
+#endif
+	    )) {
 		continue;
 	    }
 	    infoPtr->elide = infoPtr->tagPtrs[i]->elide;

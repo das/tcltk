@@ -1647,7 +1647,13 @@ DisplayEntry(
 		    baseY - fm.ascent - entryPtr->selBorderWidth,
 		    (selEndX - selStartX) + 2*entryPtr->selBorderWidth,
 		    (fm.ascent + fm.descent) + 2*entryPtr->selBorderWidth,
-		    entryPtr->selBorderWidth, TK_RELIEF_RAISED);
+		    entryPtr->selBorderWidth, 
+#ifndef MAC_OSX_TK
+		    TK_RELIEF_RAISED
+#else
+		    MAC_OSX_ENTRY_SELECT_RELIEF
+#endif
+		    );
 	}
     }
 

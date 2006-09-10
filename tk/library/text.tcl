@@ -386,16 +386,7 @@ bind Text <Meta-Delete> {
 
 # Macintosh only bindings:
 
-# if text black & highlight black -> text white, other text the same
 if {[tk windowingsystem] eq "aqua"} {
-bind Text <FocusIn> {
-    %W tag configure sel -borderwidth 0
-    %W configure -selectbackground systemHighlight -selectforeground systemHighlightText
-}
-bind Text <FocusOut> {
-    %W tag configure sel -borderwidth 1
-    %W configure -selectbackground white -selectforeground black
-}
 bind Text <Option-Left> {
     tk::TextSetCursor %W [tk::TextPrevPos %W insert tcl_startOfPreviousWord]
 }

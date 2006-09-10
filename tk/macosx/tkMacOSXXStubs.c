@@ -656,6 +656,19 @@ XQueryColor(
     Colormap colormap,
     XColor* def_in_out)
 {
+    unsigned long p;
+    unsigned char r, g, b;
+    XColor *d = def_in_out;
+
+    p       	= d->pixel;
+    r       	= (p & 0x00FF0000) >> 16;
+    g       	= (p & 0x0000FF00) >> 8;
+    b       	= (p & 0x000000FF);
+    d->red  	= (r << 8) | r;
+    d->green	= (g << 8) | g;
+    d->blue 	= (b << 8) | b;
+    d->flags	= DoRed|DoGreen|DoBlue;
+    d->pad  	= 0;
 }
 
 void
@@ -665,6 +678,22 @@ XQueryColors(
     XColor* defs_in_out,
     int ncolors)
 {
+    int i;
+    unsigned long p;
+    unsigned char r, g, b;
+    XColor *d = defs_in_out;
+
+    for (i = 0; i < ncolors; i++, d++) {
+	p       	= d->pixel;
+	r       	= (p & 0x00FF0000) >> 16;
+	g       	= (p & 0x0000FF00) >> 8;
+	b       	= (p & 0x000000FF);
+	d->red  	= (r << 8) | r;
+	d->green	= (g << 8) | g;
+	d->blue 	= (b << 8) | b;
+	d->flags	= DoRed|DoGreen|DoBlue;
+	d->pad  	= 0;
+    }
 }
 
 int   

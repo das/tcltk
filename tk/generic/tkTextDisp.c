@@ -815,12 +815,17 @@ GetStyle(
 
 	/*
 	 * If this is the selection tag, and inactiveSelBorder is NULL (the
-	 * default on Windows and Mac), then we need to skip it if we don't
+	 * default on Windows), then we need to skip it if we don't
 	 * have focus.
 	 */
 
 	if ((tagPtr == textPtr->selTagPtr) && !(textPtr->flags & GOT_FOCUS)) {
-	    if (textPtr->inactiveSelBorder == NULL) {
+	    if (textPtr->inactiveSelBorder == NULL
+#ifdef MAC_OSX_TK
+		    /* Don't show inactive selection in disabled widgets. */
+		    || textPtr->state == TK_TEXT_STATE_DISABLED
+#endif
+	    ) {
 		continue;
 	    }
 	    border = textPtr->inactiveSelBorder;

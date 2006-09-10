@@ -614,7 +614,7 @@ CreateWidget(sharedPtr, tkwin, interp, parent, objc, objv)
     textPtr->selTagPtr->reliefString = (char *)
 	    ckalloc(sizeof(DEF_TEXT_SELECT_RELIEF));
     strcpy(textPtr->selTagPtr->reliefString, DEF_TEXT_SELECT_RELIEF);
-    textPtr->selTagPtr->relief = TK_RELIEF_RAISED;
+    Tk_GetRelief(interp, DEF_TEXT_SELECT_RELIEF, &(textPtr->selTagPtr->relief));
     textPtr->currentMarkPtr = TkTextSetMark(textPtr, "current", &startIndex);
     textPtr->insertMarkPtr = TkTextSetMark(textPtr, "insert", &startIndex);
 

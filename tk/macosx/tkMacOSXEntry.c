@@ -161,7 +161,7 @@ TkpDrawEntryBorderAndFocus(Entry *entryPtr, Drawable d, int isSpinbox)
      
     if (entryPtr->borderWidth != MAC_OSX_ENTRY_BORDER 
             || entryPtr->highlightWidth != MAC_OSX_FOCUS_WIDTH
-            ||entryPtr->relief != MAC_OSX_ENTRY_RELEIF) {
+            || entryPtr->relief != MAC_OSX_ENTRY_RELIEF) {
         return 0;
     }
     

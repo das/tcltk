@@ -58,6 +58,7 @@
  */
 
 #include "tkMacOSXInt.h"
+#include "tkMacOSXWm.h"
 #include "tkMacOSXEvent.h"
 #include "tkMacOSXDebug.h"
 
@@ -315,7 +316,13 @@ TkMacOSXProcessMouseEvent(TkMacOSXEvent *eventPtr, MacEventStatus * statusPtr)
 	     */
             if ((result = HandleWindowTitlebarMouseDown(medPtr, tkwin)) != -1) {
                 return result;
-            } else {
+            } else
+		    /*
+		     * Only windows with the kWindowNoActivatesAttribute can
+		     * receive mouse events in the background.
+		     */
+		    if (!(((TkWindow *)tkwin)->wmInfoPtr->attributes &
+			    kWindowNoActivatesAttribute)) {
 		/*
 		 * Allow background window dragging & growing with Command down
 		 */
