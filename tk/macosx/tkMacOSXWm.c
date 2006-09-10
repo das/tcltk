@@ -2192,7 +2192,7 @@ Tcl_Obj *CONST objv[];	/* Argument objects. */
      * FIX: We need an UpdateWrapper equivalent to make this 100% correct
      */
     if (boolean) {
-	if (wmPtr->macClass == kDocumentWindowClass || (wmPtr->master != None && 
+	if (wmPtr->macClass == kDocumentWindowClass || (wmPtr->master != None &&
 		wmPtr->macClass == kFloatingWindowClass)) {
 	    wmPtr->macClass = kSimpleWindowClass;
 	    wmPtr->attributes = kWindowNoAttributes;
