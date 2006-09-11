@@ -18,6 +18,11 @@
 #include "tkMacOSXInt.h"
 #include "tkColor.h"
 
+/* Define constants only available on Mac OS X 10.3 or later */
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 1030
+    #define kThemeBrushAlternatePrimaryHighlightColor -5
+#endif
+
 /*
  * Default Auxillary Control Record for all controls.  This is cached once
  * and is updated by the system.  We use this to get the default system

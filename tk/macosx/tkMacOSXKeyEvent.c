@@ -184,7 +184,7 @@ TkMacOSXProcessKeyboardEvent(
 
     if ((eventPtr->eKind == kEventRawKeyDown 
 	    || eventPtr->eKind == kEventRawKeyRepeat)
-	    && IsMenuKeyEvent(tkAppleMenu, eventPtr->eventRef, 
+	    && IsMenuKeyEvent(tkCurrentAppleMenu, eventPtr->eventRef, 
 		    kMenuEventQueryOnly, &menuRef, &menuItemIndex)) {
 	MenuCommand menuCmd;
 

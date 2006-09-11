@@ -132,7 +132,8 @@ MODULE_SCOPE TkMacOSXEmbedHandler *gMacEmbedHandler;
  * Globals shared among Macintosh Tk
  */
 
-MODULE_SCOPE MenuHandle tkAppleMenu;	/* Handle to the Apple Menu */
+MODULE_SCOPE MenuHandle tkCurrentAppleMenu; /* Handle to current Apple Menu */
+MODULE_SCOPE MenuHandle tkAppleMenu;	/* Handle to default Apple Menu */
 MODULE_SCOPE MenuHandle tkFileMenu;	/* Handles to menus */
 MODULE_SCOPE MenuHandle tkEditMenu;	/* Handles to menus */
 MODULE_SCOPE RgnHandle tkMenuCascadeRgn;/* A region to clip with. */
