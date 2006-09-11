@@ -221,7 +221,9 @@ static TopLevelMenubarList *windowListPtr;
 static MenuItemDrawingUPP tkThemeMenuItemDrawingUPP; 
 				/* Points to the UPP for theme Item drawing. */
 static Tcl_Obj *useMDEFVar;
-				
+
+MenuRef tkCurrentAppleMenu = NULL;
+
 /*
  * Forward declarations for procedures defined later in this file:
  */
@@ -1733,6 +1735,7 @@ DrawMenuBarWhenIdle(
 	    if (appleIndex == -1) {
 	    	InsertMenu(tkAppleMenu, 0);
 	    	currentAppleMenuID = 0;
+		tkCurrentAppleMenu = tkAppleMenu;
 	    } else {
     		short appleID;
     	    	appleMenuPtr = menuBarPtr->entries[appleIndex]
@@ -1757,6 +1760,7 @@ DrawMenuBarWhenIdle(
     	    	InsertMenu(macMenuHdl, 0);
     	    	RecursivelyInsertMenu(appleMenuPtr);
     	    	currentAppleMenuID = appleID;
+		tkCurrentAppleMenu = macMenuHdl;
 	    }
 	    if (helpIndex == -1) {
 	    	currentHelpMenuID = 0;
