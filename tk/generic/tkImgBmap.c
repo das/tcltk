@@ -1232,11 +1232,11 @@ ImgBmapPostscript(
 
     if (x!=0 || y!=0) {
 	sprintf(buffer, "%d %d moveto\n", x, y);
-	Tcl_AppendResult(interp, buffer, 0);
+	Tcl_AppendResult(interp, buffer, NULL);
     }
     if (width!=1 || height!=1) {
 	sprintf(buffer, "%d %d scale\n", width, height);
- 	Tcl_AppendResult(interp, buffer, 0);
+ 	Tcl_AppendResult(interp, buffer, NULL);
     }
 
     /*
