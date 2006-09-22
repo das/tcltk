@@ -972,7 +972,7 @@ TkCreateMainWindow(interp, screenName, baseName)
      */
 
     Tcl_SetVar(interp, "tk_patchLevel", TK_PATCH_LEVEL, TCL_GLOBAL_ONLY);
-    Tcl_SetVar(interp, "tk_version", TK_VERSION, TCL_GLOBAL_ONLY);
+    Tcl_SetVar(interp, "tk_version",    TK_VERSION,     TCL_GLOBAL_ONLY);
 
     tsdPtr->numMainWindows++;
     return tkwin;
@@ -2945,7 +2945,7 @@ Initialize(interp)
      * really only an issue when Tk is loaded dynamically.
      */
 
-    if (Tcl_InitStubs(interp, TCL_VERSION, 1) == NULL) {
+    if (Tcl_InitStubs(interp, TCL_PATCH_LEVEL, 1) == NULL) {
         return TCL_ERROR;
     }
 
@@ -3167,7 +3167,7 @@ Initialize(interp)
         geometry = NULL;
     }
 
-    if (Tcl_PkgRequire(interp, "Tcl", TCL_VERSION, 1) == NULL) {
+    if (Tcl_PkgRequire(interp, "Tcl", TCL_PATCH_LEVEL, 1) == NULL) {
 	code = TCL_ERROR;
 	goto done;
     }
@@ -3176,7 +3176,7 @@ Initialize(interp)
      * Provide Tk and its stub table.
      */
 
-    code = Tcl_PkgProvideEx(interp, "Tk", TK_VERSION, (ClientData) &tkStubs);
+    code = Tcl_PkgProvideEx(interp, "Tk", TK_PATCH_LEVEL, (ClientData) &tkStubs);
     if (code != TCL_OK) {
 	goto done;
     } else {

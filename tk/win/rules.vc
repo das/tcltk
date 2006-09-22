@@ -408,6 +408,7 @@ Failed to find tcl.h.  The TCLDIR macro does not appear correct.
 #!endif
 
 TCL_DOTVERSION	= 8.4
+TCL_PATCHLEVEL  = .14
 TCL_VERSION	= $(TCL_DOTVERSION:.=)
 
 !if $(TCLINSTALL)
