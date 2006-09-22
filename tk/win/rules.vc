@@ -404,6 +404,7 @@ Can't get version string from $(TCLH)
 !error $(MSG)
 !endif
 
+TCL_PATCHLEVEL  = a5
 TCL_VERSION	= $(TCL_DOTVERSION:.=)
 
 !if $(TCL_VERSION) < 81
