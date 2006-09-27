@@ -436,6 +436,7 @@ install-binaries: binaries
 	@echo "Creating package index $(PKG_INDEX)"; 
 	@$(RM) $(PKG_INDEX);
 	@(\
+	echo "if {![package vsatisfies [package provide Tcl] $(TCLVERSION)]} { return }";\
 	echo "if {[package vcompare [package provide Tcl]\
 		$(TCLVERSION)$(TCLPATCHL)] != 0} { return }";\
 	echo "package ifneeded Tk $(VERSION)$(TCLPATCHL)\
