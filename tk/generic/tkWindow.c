@@ -2382,6 +2382,31 @@ Tk_DisplayName(tkwin)
 /*
  *----------------------------------------------------------------------
  *
+ * Tk_Interp --
+ *
+ *	Get the Tcl interpreter from a Tk window.
+ *
+ * Results:
+ *	A pointer to the interpreter or NULL.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+Tcl_Interp *
+Tk_Interp(Tk_Window tkwin)
+{
+    if (tkwin != NULL && ((TkWindow *)tkwin)->mainPtr != NULL) {
+	return ((TkWindow *)tkwin)->mainPtr->interp;
+    }
+    return NULL;
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
  * UnlinkWindow --
  *
  *	This function removes a window from the childList of its parent.

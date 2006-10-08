@@ -1270,6 +1270,11 @@ declare 270 generic {
     void Tk_ResetUserInactiveTime(Display *dpy)
 }
 
+# TIP #264
+declare 271 generic {
+    Tcl_Interp * Tk_Interp (Tk_Window tkwin)
+}
+
 # Define the platform specific public Tk interface.  These functions are
 # only available on the designated platform.
 

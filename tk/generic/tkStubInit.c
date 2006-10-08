@@ -938,6 +938,7 @@ TkStubs tkStubs = {
     Tk_PhotoSetSize, /* 268 */
     Tk_GetUserInactiveTime, /* 269 */
     Tk_ResetUserInactiveTime, /* 270 */
+    Tk_Interp, /* 271 */
 };
 
 /* !END!: Do not edit above this line. */

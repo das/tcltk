@@ -1745,6 +1745,11 @@ EXTERN long		Tk_GetUserInactiveTime _ANSI_ARGS_((Display * dpy));
 /* 270 */
 EXTERN void		Tk_ResetUserInactiveTime _ANSI_ARGS_((Display * dpy));
 #endif
+#ifndef Tk_Interp_TCL_DECLARED
+#define Tk_Interp_TCL_DECLARED
+/* 271 */
+EXTERN Tcl_Interp *	Tk_Interp _ANSI_ARGS_((Tk_Window tkwin));
+#endif
 
 typedef struct TkStubHooks {
     struct TkPlatStubs *tkPlatStubs;
@@ -2028,6 +2033,7 @@ typedef struct TkStubs {
     int (*tk_PhotoSetSize) _ANSI_ARGS_((Tcl_Interp * interp, Tk_PhotoHandle handle, int width, int height)); /* 268 */
     long (*tk_GetUserInactiveTime) _ANSI_ARGS_((Display * dpy)); /* 269 */
     void (*tk_ResetUserInactiveTime) _ANSI_ARGS_((Display * dpy)); /* 270 */
+    Tcl_Interp * (*tk_Interp) _ANSI_ARGS_((Tk_Window tkwin)); /* 271 */
 } TkStubs;
 
 #ifdef __cplusplus
@@ -3121,6 +3127,10 @@ extern TkStubs *tkStubsPtr;
 #ifndef Tk_ResetUserInactiveTime
 #define Tk_ResetUserInactiveTime \
 	(tkStubsPtr->tk_ResetUserInactiveTime) /* 270 */
+#endif
+#ifndef Tk_Interp
+#define Tk_Interp \
+	(tkStubsPtr->tk_Interp) /* 271 */
 #endif
 
 #endif /* defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS) */
