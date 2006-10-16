@@ -16,7 +16,7 @@
 
 #include "tkMacOSXInt.h"
 
-#include "tclInt.h" /* for TclGetStartupScript() & TclSetStartupScript() */
+#include "tclInt.h" /* for Tcl{G,S}etStartupScriptFileName() */
 
 #include <sys/stat.h>
 #include <mach-o/dyld.h>
@@ -137,7 +137,7 @@ TkpInit(interp)
 	TkMacOSXInitCarbonEvents(interp);
 	TkMacOSXInitMenus(interp);
 	TkMacOSXUseAntialiasedText(interp, TRUE);
-	TkMacOSXInitCGDrawing(interp, TRUE, 3);
+	TkMacOSXInitCGDrawing(interp, TRUE, 0);
 	TkMacOSXInitKeyboard(interp);
 
 	encoding = CFStringGetSystemEncoding();

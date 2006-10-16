@@ -535,7 +535,15 @@ ConfigureLine(interp, canvas, itemPtr, objc, objv, flags)
 	gcValues.join_style = linePtr->joinStyle;
 	mask |= GCJoinStyle;
 	newGC = Tk_GetGC(tkwin, mask, &gcValues);
+#ifdef MAC_OSX_TK
+	/*
+	 * Mac OS X CG drawing needs access to linewidth even for 
+	 * arrow fills (as linewidth controls antialiasing).
+	 */
+	mask |= GCLineWidth;
+#else
 	gcValues.line_width = 0;
+#endif
 	arrowGC = Tk_GetGC(tkwin, mask, &gcValues);
     } else {
 	newGC = arrowGC = None;
