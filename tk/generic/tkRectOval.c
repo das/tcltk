@@ -521,6 +521,15 @@ ConfigureRectOval(
 	} else {
 	    mask = GCForeground;
 	}
+#ifdef MAC_OSX_TK
+	/*
+	 * Mac OS X CG drawing needs access to the outline linewidth
+	 * even for fills (as linewidth controls antialiasing).
+	 */
+	gcValues.line_width = rectOvalPtr->outline.gc != None ?
+		rectOvalPtr->outline.gc->line_width : 0;
+	mask |= GCLineWidth;
+#endif
 	newGC = Tk_GetGC(tkwin, mask, &gcValues);
     }
     if (rectOvalPtr->fillGC != None) {

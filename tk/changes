@@ -6221,7 +6221,15 @@ Documentation improvements [1224983,1247835,1151523,1357575,1083838]
 
 2006-08-21 (bug fix) Aqua: recursively called event loop (steffen)
 
+2006-08-24 (bug fix) Aqua: window grow icon obscuring scrollbar (steffen)
+
 2006-08-30 (new feature)[1518677] WM_UNICHAR window message (hobbs,petasis)
+
+2006-09-10 (bug fix) Aqua: active/inactive text selection color&relief (steffen)
+
+2006-09-10 (bug fix)[1472624] Aqua: mouse events in overrideredir wins (steffen)
+
+2006-09-11 (bug fix) Aqua: app menu shortcuts with custom .apple menu (steffen)
 
 2006-09-22 (bug fix)[1562528] NULL terminates variadic calls (fellows,ryazanov)
 
@@ -6231,5 +6239,7 @@ Documentation improvements [1224983,1247835,1151523,1357575,1083838]
 (hobbs,staplin)
 
 2006-10-08 (new feature)[TIP 264] New public routine Tk_Interp() (thoyts)
+
+2006-10-16 (bug fix)[1558051] Aqua: CG drawing matches X11 (steffen)
 
 ---- Released 8.5a5, October XX, 2006 --- See ChangeLog for details ---
