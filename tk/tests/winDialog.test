@@ -171,18 +171,17 @@ test winDialog-5.15 {GetFileName: initial file: Tcl_TranslateFileName()} {nt} {
 #		if (Tcl_TranslateFileName(interp, string, &ds) == NULL) 
     list [catch {tk_getOpenFile -initialfile ~12x/455} msg] $msg
 } {1 {user "12x" doesn't exist}}
-set a aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-append a $a
-append a $a
-append a $a
-append a $a
 test winDialog-5.16 {GetFileName: initial file: long name} {nt testwinevent} {
-    start {set x [tk_getSaveFile -initialfile $a -title Long]}
+    start {
+        set dialogresult [catch {
+            tk_getSaveFile -initialfile [string repeat a 1024] -title Long
+        } x]
+    }
     then {
 	Click 1
     }
-    string totitle $x
-} [string totitle [string range [file join [pwd] $a] 0 257]]
+    list $dialogresult [string match "invalid filename *" $x]
+} {1 1}
 test winDialog-5.17 {GetFileName: parent} {nt} {
 #	    case FILE_PARENT: 
 
