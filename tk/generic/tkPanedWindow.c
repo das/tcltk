@@ -164,7 +164,7 @@ static void	PanedWindowEventProc _ANSI_ARGS_((ClientData clientData,
 static void	ProxyWindowEventProc _ANSI_ARGS_((ClientData clientData,
 			XEvent *eventPtr));
 static void	DisplayProxyWindow _ANSI_ARGS_((ClientData clientData));
-void		PanedWindowWorldChanged _ANSI_ARGS_((ClientData instanceData));
+static void	PanedWindowWorldChanged _ANSI_ARGS_((ClientData instanceData));
 static int	PanedWindowWidgetObjCmd _ANSI_ARGS_((ClientData clientData,
 			Tcl_Interp *, int objc, Tcl_Obj * CONST objv[]));
 static void	PanedWindowLostSlaveProc _ANSI_ARGS_((ClientData clientData,
@@ -1225,7 +1225,7 @@ ConfigurePanedWindow(interp, pwPtr, objc, objv)
  *----------------------------------------------------------------------
  */
 
-void
+static void
 PanedWindowWorldChanged(instanceData)
     ClientData instanceData;	/* Information about the paned window. */
 {

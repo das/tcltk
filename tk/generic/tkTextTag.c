@@ -64,7 +64,7 @@ static Tk_ConfigSpec tagConfigSpecs[] = {
 	TK_CONFIG_NULL_OK},
     {TK_CONFIG_CUSTOM, "-wrap", (char *) NULL, (char *) NULL,
 	(char *) NULL, Tk_Offset(TkTextTag, wrapMode),
-	TK_CONFIG_NULL_OK, &textWrapModeOption},
+	TK_CONFIG_NULL_OK, &TkTextWrapModeOption},
     {TK_CONFIG_END, (char *) NULL, (char *) NULL, (char *) NULL,
 	(char *) NULL, 0, 0}
 };

@@ -282,7 +282,7 @@ typedef enum {	TEXT_WRAPMODE_NULL, TEXT_WRAPMODE_NONE,
 		TEXT_WRAPMODE_CHAR, TEXT_WRAPMODE_WORD
 } TkWrapMode;
 
-EXTERN Tk_CustomOption textWrapModeOption;
+EXTERN Tk_CustomOption TkTextWrapModeOption;
 
 typedef struct TkTextTag {
     char *name;			/* Name of this tag.  This field is actually
