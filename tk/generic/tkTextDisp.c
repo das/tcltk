@@ -7925,7 +7925,7 @@ SizeOfTab(
 	 *
 	 * With 'tabular' style tabs, we always use the index'th tab stop.
 	 */
-    } while (tabX < x && (tabStyle == TK_TEXT_TABSTYLE_WORDPROCESSOR));
+    } while (tabX <= x && (tabStyle == TK_TEXT_TABSTYLE_WORDPROCESSOR));
 
     /*
      * Inform our caller of how many tab stops we've used up.
