@@ -14,7 +14,7 @@ package require Tk
 set w .pendulum
 catch {destroy $w}
 toplevel $w
-wm title . "Pendulum Animation Demonstration"
+wm title $w "Pendulum Animation Demonstration"
 wm iconname $w "pendulum"
 positionWindow $w
 
