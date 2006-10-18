@@ -129,7 +129,7 @@ If no \fB\-tabs\fR option is specified, or if it is specified as
 an empty list, then Tk uses default tabs spaced every eight
 (average size) characters.  To achieve a different standard spacing,
 for example every 4 characters, simply configure the widget with 
-\fB\-tabs "[expr {4 * [font measure $font 0]}] left"\fR.
+\fB\-tabs "[expr {4 * [font measure $font 0]}] left" -tabstyle wordprocessor\fR.
 .OP \-tabstyle tabStyle TabStyle
 Specifies how to interpret the relationship between tab stops on a line
 and tabs in the text of that line.  The value must be \fBtabular\fR (the
