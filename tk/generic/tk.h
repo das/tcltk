@@ -1494,7 +1494,7 @@ typedef struct Tk_ElementSpec {
     Tk_MainEx(argc, argv, proc, Tcl_CreateInterp())
 
 CONST char *		Tk_InitStubs _ANSI_ARGS_((Tcl_Interp *interp,
-			    char *version, int exact));
+			    CONST char *version, int exact));
 
 #ifndef USE_TK_STUBS
 

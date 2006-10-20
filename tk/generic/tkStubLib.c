@@ -94,7 +94,7 @@ TkIntXlibStubs *tkIntXlibStubsPtr;
 MODULE_SCOPE CONST char *
 Tk_InitStubs(interp, version, exact)
     Tcl_Interp *interp;
-    char *version;
+    CONST char *version;
     int exact;
 {
     CONST char *actualVersion;
