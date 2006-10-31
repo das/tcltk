@@ -99,7 +99,7 @@ TkMacOSXProcessEvent(TkMacOSXEvent * eventPtr, MacEventStatus * statusPtr)
                 char buf [256];
                 fprintf(stderr,
                     "Unrecognised event : %s\n",
-                    CarbonEventToAscii(eventPtr->eventRef, buf));
+                    TkMacOSXCarbonEventToAscii(eventPtr->eventRef, buf));
             }
 #endif
             break;
@@ -282,7 +282,7 @@ TkMacOSXReceiveAndProcessEvent()
             char buf [256];
             fprintf(stderr,
                     "RCNE SendEventToEventTarget (%s) failed, %d\n",
-                    CarbonEventToAscii(eventRef, buf), (int)err);
+                    TkMacOSXCarbonEventToAscii(eventRef, buf), (int)err);
         }
 #endif
         ReleaseEvent(eventRef);

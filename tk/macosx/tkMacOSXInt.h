@@ -81,7 +81,7 @@ typedef struct TkMacOSXWindowList {
  * embedding where Tk does not control the top-level.  It contains
  * various functions that are needed by Mac specific routines, like
  * TkMacOSXGetDrawablePort.  The definitions of the function types
- * are in tclMac.h.
+ * are in tkMacOSX.h.
  */
 
 typedef struct {
@@ -92,7 +92,7 @@ typedef struct {
 	Tk_MacOSXEmbedGetOffsetInParentProc *getOffsetProc;
 } TkMacOSXEmbedHandler;
 
-MODULE_SCOPE TkMacOSXEmbedHandler *gMacEmbedHandler;
+MODULE_SCOPE TkMacOSXEmbedHandler *tkMacOSXEmbedHandler;
 
 /*
  * Defines used for TkMacOSXInvalidateWindow
