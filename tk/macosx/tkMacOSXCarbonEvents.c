@@ -122,7 +122,7 @@ CarbonEventHandlerProc (
     char buf [256];
     if (macEvent.eKind != kEventMouseMoved &&
 	    macEvent.eKind != kEventMouseDragged) {
-	CarbonEventToAscii(event, buf);
+	TkMacOSXCarbonEventToAscii(event, buf);
 	fprintf(stderr, "CarbonEventHandlerProc started handling %s\n", buf);
 	TkMacOSXInitNamedDebugSymbol(HIToolbox, void, _DebugPrintEvent,
 		EventRef inEvent);
