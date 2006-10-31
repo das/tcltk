@@ -223,7 +223,7 @@ static MenuItemDrawingUPP tkThemeMenuItemDrawingUPP;
 static Tcl_Obj *useMDEFVar;
 
 MenuRef tkCurrentAppleMenu = NULL;
-			
+
 /*
  * Forward declarations for procedures defined later in this file:
  */
