@@ -28,8 +28,7 @@
  *	we don't need to account for this.
  */
 
-#include <Carbon/Carbon.h>
-#include <tkMacOSXInt.h>
+#include "tkMacOSXInt.h"
 #include "ttk/ttkTheme.h"
 
 /*----------------------------------------------------------------------

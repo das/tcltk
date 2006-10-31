@@ -19,7 +19,9 @@ static const int WIN32_XDRAWLINE_HACK = 1;
 static const int WIN32_XDRAWLINE_HACK = 0;
 #endif
 
+#ifndef MIN
 #define MIN(a,b) (a < b ? a : b)
+#endif
 
 #define BORDERWIDTH     2
 #define SCROLLBAR_WIDTH 14
@@ -738,7 +740,7 @@ static void MenubuttonArrowElementDraw(
     int size = MENUBUTTON_ARROW_SIZE;
     int postDirection = POST_BELOW;
     ArrowDirection arrowDirection = ARROW_DOWN;
-    int width, height;
+    int width = 0, height = 0;
 
     Tk_GetPixelsFromObj(NULL, tkwin, arrow->sizeObj, &size);
     Tcl_GetIndexFromObj(NULL, arrow->directionObj, directionStrings,
