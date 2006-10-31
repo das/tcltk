@@ -947,6 +947,12 @@ MODULE_SCOPE Tcl_HashTable	tkPredefBitmapTable;
 #endif
 
 /*
+ * Themed widget set init function:
+ */
+
+MODULE_SCOPE int	Ttk_Init(Tcl_Interp *interp);
+
+/*
  * Internal functions shared among Tk modules but not exported to the outside
  * world:
  */
