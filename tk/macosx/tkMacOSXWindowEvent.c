@@ -246,7 +246,7 @@ TkMacOSXProcessWindowEvent(
  * GenerateUpdateEvent --
  *
  *      Given a Macintosh window update event this function generates
- *      all the the Expose XEvents needed by Tk.
+ *      all the Expose XEvents needed by Tk.
  *
  * Results:     
  *      True if event(s) are generated - false otherwise.
