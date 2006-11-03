@@ -8,7 +8,7 @@
 #include <windows.h>
 #include <tcl.h>
 #include <tk.h>
-#include <tkPlatDecls.h>
+#include <tkWinInt.h>
 #include "ttk/ttkTheme.h"
 
 #if !defined(WM_THEMECHANGED)
