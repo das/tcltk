@@ -1,5 +1,5 @@
 /*
- * layout.c --
+ * ttkLayout.c --
  *
  * Generic layout processing.
  *

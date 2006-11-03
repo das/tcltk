@@ -4,13 +4,13 @@
  * Copyright 2004, Joe English.
  *
  * Usage:
- * 	BlinkCursor(corePtr), usually called in a widget's Init hook,
+ * 	TtkBlinkCursor(corePtr), usually called in a widget's Init hook,
  * 	arranges to periodically toggle the corePtr->flags CURSOR_ON bit
  * 	on and off (and schedule a redisplay) whenever the widget has focus.
  *
  * 	Note: Widgets may have additional logic to decide whether
  * 	to display the cursor or not (e.g., readonly or disabled states);
- * 	BlinkCursor() does not account for this.
+ * 	TtkBlinkCursor() does not account for this.
  *
  * TODO:
  * 	Add script-level access to configure application-wide blink rate.
@@ -155,11 +155,11 @@ CursorEventProc(ClientData clientData, XEvent *eventPtr)
 }
 
 /*
- * BlinkCursor (main routine) --
+ * TtkBlinkCursor (main routine) --
  * 	Arrange to blink the cursor on and off whenever the
  * 	widget has focus.
  */
-void BlinkCursor(WidgetCore *corePtr)
+void TtkBlinkCursor(WidgetCore *corePtr)
 {
     Tk_CreateEventHandler(
 	corePtr->tkwin, CursorEventMask, CursorEventProc, corePtr);

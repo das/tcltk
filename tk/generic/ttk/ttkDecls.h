@@ -4,6 +4,8 @@
  * This file is (mostly) automatically generated from ttk.decls.
  */
 
+#ifndef _TTKDECLS
+#define _TTKDECLS
 
 #if defined(USE_TTK_STUBS)
 
@@ -334,3 +336,5 @@ extern const TtkStubs *ttkStubsPtr;
 #endif /* defined(USE_TTK_STUBS) */
 
 /* !END!: Do not edit above this line. */
+
+#endif /* _TTKDECLS */

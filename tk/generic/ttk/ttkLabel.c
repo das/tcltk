@@ -209,7 +209,8 @@ static void TextElementDraw(
     }
 }
 
-/*public*/ Ttk_ElementSpec TextElementSpec =
+MODULE_SCOPE Ttk_ElementSpec ttkTextElementSpec;
+/*public*/ Ttk_ElementSpec ttkTextElementSpec =
 {
     TK_STYLE_VERSION_2,
     sizeof(TextElement),
@@ -239,7 +240,8 @@ static void ImageTextElementDraw(
     TextCleanup(text);
 }
 
-/*public*/ Ttk_ElementSpec ImageTextElementSpec =
+MODULE_SCOPE Ttk_ElementSpec ttkImageTextElementSpec;
+/*public*/ Ttk_ElementSpec ttkImageTextElementSpec =
 {
     TK_STYLE_VERSION_2,
     sizeof(TextElement),
@@ -432,7 +434,8 @@ static void ImageElementDraw(
     }
 }
 
-/*public*/ Ttk_ElementSpec ImageElementSpec =
+MODULE_SCOPE Ttk_ElementSpec ttkImageElementSpec;
+/*public*/ Ttk_ElementSpec ttkImageElementSpec =
 {
     TK_STYLE_VERSION_2,
     sizeof(ImageElement),
@@ -729,7 +732,8 @@ static void LabelElementDraw(
     LabelCleanup(l);
 }
 
-/*public*/ Ttk_ElementSpec LabelElementSpec =
+MODULE_SCOPE Ttk_ElementSpec ttkLabelElementSpec;
+/*public*/ Ttk_ElementSpec ttkLabelElementSpec =
 {
     TK_STYLE_VERSION_2,
     sizeof(LabelElement),

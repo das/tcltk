@@ -155,7 +155,7 @@ static Ttk_ElementSpec FrameControlElementSpec =
 {
     TK_STYLE_VERSION_2,
     sizeof(NullElement),
-    NullElementOptions,
+    TtkNullElementOptions,
     FrameControlElementGeometry,
     FrameControlElementDraw
 };
@@ -392,7 +392,7 @@ static Ttk_ElementSpec FocusElementSpec =
 {
     TK_STYLE_VERSION_2,
     sizeof(NullElement),
-    NullElementOptions,
+    TtkNullElementOptions,
     FocusElementGeometry,
     FocusElementDraw
 };
@@ -519,8 +519,8 @@ static Ttk_ElementSpec TroughElementSpec =
 {
     TK_STYLE_VERSION_2,
     sizeof(NullElement),
-    NullElementOptions,
-    NullElementGeometry,
+    TtkNullElementOptions,
+    TtkNullElementGeometry,
     TroughElementDraw
 };
 
@@ -665,7 +665,7 @@ static Ttk_ElementSpec ClientElementSpec =
 {
     TK_STYLE_VERSION_2,
     sizeof(NullElement),
-    NullElementOptions,
+    TtkNullElementOptions,
     ClientElementGeometry,
     ClientElementDraw
 };
@@ -691,7 +691,7 @@ TTK_END_LAYOUT
 
 /* ---------------------------------------------------------------------- */
 
-int WinTheme_Init(Tcl_Interp *interp, HWND hwnd)
+MODULE_SCOPE int TtkWinTheme_Init(Tcl_Interp *interp, HWND hwnd)
 {
     Ttk_Theme themePtr, parentPtr;
     FrameControlElementData *fce = FrameControlElements;

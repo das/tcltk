@@ -146,10 +146,10 @@ WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
  * Windows-specific platform initialization:
  */
 
-extern int WinTheme_Init(Tcl_Interp *, HWND hwnd);
-extern int XPTheme_Init(Tcl_Interp *, HWND hwnd);
+extern int TtkWinTheme_Init(Tcl_Interp *, HWND hwnd);
+extern int TtkXPTheme_Init(Tcl_Interp *, HWND hwnd);
 
-int Ttk_WinPlatformInit(Tcl_Interp *interp)
+MODULE_SCOPE int Ttk_WinPlatformInit(Tcl_Interp *interp)
 {
     HWND hwnd;
     

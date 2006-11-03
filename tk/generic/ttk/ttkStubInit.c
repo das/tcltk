@@ -8,6 +8,8 @@
 #include "tk.h"
 #include "ttkTheme.h"
 
+MODULE_SCOPE TtkStubs ttkStubs;
+
 /* !BEGIN!: Do not edit below this line. */
 
 TtkStubs ttkStubs = {

@@ -1,5 +1,5 @@
 /*
- * tkTheme.c --
+ * ttkTheme.c --
  *
  *	This file implements the widget styles and themes support.
  *
@@ -1607,7 +1607,7 @@ struct Ensemble {
     struct Ensemble *ensemble;	/* subcommand ensemble */
 };
 
-struct Ensemble StyleThemeEnsemble[] = {
+static struct Ensemble StyleThemeEnsemble[] = {
     { "create", StyleThemeCreateCmd, 0 },
     { "names", StyleThemeNamesCmd, 0 },
     { "settings", StyleThemeSettingsCmd, 0 },
@@ -1615,14 +1615,14 @@ struct Ensemble StyleThemeEnsemble[] = {
     { NULL, 0, 0 }
 };
 
-struct Ensemble StyleElementEnsemble[] = {
+static struct Ensemble StyleElementEnsemble[] = {
     { "create", StyleElementCreateCmd, 0 },
     { "names", StyleElementNamesCmd, 0 },
     { "options", StyleElementOptionsCmd, 0 },
     { NULL, 0, 0 }
 };
 
-struct Ensemble StyleEnsemble[] = {
+static struct Ensemble StyleEnsemble[] = {
     { "configure", StyleConfigureCmd, 0 },
     { "map", StyleMapCmd, 0 },
     { "lookup", StyleLookupCmd, 0 },
@@ -1701,7 +1701,7 @@ void Ttk_StylePkgInit(Tcl_Interp *interp)
     /*
      * Register null element, used as a last-resort fallback:
      */
-    Ttk_RegisterElement(interp, pkgPtr->defaultTheme, "", &NullElementSpec, 0);
+    Ttk_RegisterElement(interp, pkgPtr->defaultTheme, "", &ttkNullElementSpec, 0);
 
     /*
      * Register commands:

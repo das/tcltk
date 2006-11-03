@@ -8,6 +8,7 @@
 #define USE_TTK_STUBS 1
 #include "ttkTheme.h"
 
+MODULE_SCOPE const TtkStubs *ttkStubsPtr;
 const TtkStubs *ttkStubsPtr;
 
 /*
@@ -25,7 +26,8 @@ const TtkStubs *ttkStubsPtr;
  *	Sets the stub table pointer.
  *
  */
-const char *TtkInitializeStubs(
+MODULE_SCOPE const char *
+TtkInitializeStubs(
     Tcl_Interp *interp, const char *version, int epoch, int revision)
 {
     int exact = 0;

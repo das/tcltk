@@ -1,12 +1,12 @@
 /* $Id$
  * Copyright (c) 2004, Joe English
  *
- * TrackElementState() -- helper routine for widgets
+ * TtkTrackElementState() -- helper routine for widgets
  * like scrollbars in which individual elements may
  * be active or pressed instead of the widget as a whole.
  *
  * Usage:
- * 	TrackElementState(&recordPtr->core);
+ * 	TtkTrackElementState(&recordPtr->core);
  *
  * Registers an event handler on the widget that tracks pointer
  * events and updates the state of the element under the
@@ -158,12 +158,12 @@ ElementStateEventProc(ClientData clientData, XEvent *ev)
 }
 
 /*
- * TrackElementState --
+ * TtkTrackElementState --
  * 	Register an event handler to manage the 'pressed'
  * 	and 'active' states of individual widget elements.
  */
 
-void TrackElementState(WidgetCore *corePtr)
+void TtkTrackElementState(WidgetCore *corePtr)
 {
     ElementStateTracker *es = (ElementStateTracker*)ckalloc(sizeof(*es));
     es->corePtr = corePtr;

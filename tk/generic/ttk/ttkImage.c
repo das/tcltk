@@ -202,7 +202,7 @@ static Ttk_ElementSpec ImageElementSpec =
 {
     TK_STYLE_VERSION_2,
     sizeof(NullElement),
-    NullElementOptions,
+    TtkNullElementOptions,
     ImageElementGeometry,
     ImageElementDraw
 };
@@ -283,9 +283,10 @@ error:
     return TCL_ERROR;
 }
 
-void Ttk_ImageInit(Tcl_Interp *interp)
+MODULE_SCOPE int Ttk_ImageInit(Tcl_Interp *);
+int Ttk_ImageInit(Tcl_Interp *interp)
 {
-    Ttk_RegisterElementFactory(interp, "image", Ttk_CreateImageElement, NULL);
+    return Ttk_RegisterElementFactory(interp, "image", Ttk_CreateImageElement, NULL);
 }
 
 /*EOF*/
