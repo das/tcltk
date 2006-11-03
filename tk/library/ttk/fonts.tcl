@@ -83,11 +83,20 @@ catch {font create TkTooltipFont}
 
 switch -- [tk windowingsystem] {
     win32 {
-	if {$tcl_platform(osVersion) >= 5.0} {
-	    variable family "Tahoma"
-	} else {
-	    variable family "MS Sans Serif"
-	}
+        # In safe interps there is no osVersion element.
+	if {[info exists tcl_platform(osVersion)]} {
+            if {$tcl_platform(osVersion) >= 5.0} {
+                variable family "Tahoma"
+            } else {
+                variable family "MS Sans Serif"
+            }
+        } else {
+            if {[lsearch -exact [font families] Tahoma] != -1} {
+                variable family "Tahoma"
+            } else {
+                variable family "MS Sans Serif"
+            }
+        }
 	variable size 8
 
 	font configure TkDefaultFont -family $family -size $size
