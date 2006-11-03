@@ -129,6 +129,7 @@ TkSetMacColor(
     }
 }
 
+#if !TK_DRAW_IN_CONTEXT
 /*
  *----------------------------------------------------------------------
  *
@@ -157,6 +158,7 @@ TkMacOSXCompareColors(
 	    TkSetMacColor(c1,&col2) &&
 	    !memcmp(&col1,&col2,sizeof(col1));
 }
+#endif /* !TK_DRAW_IN_CONTEXT */
 
 /*
  *----------------------------------------------------------------------
