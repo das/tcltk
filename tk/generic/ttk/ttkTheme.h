@@ -21,6 +21,14 @@ extern "C" {
 #	define TTKAPI DLLIMPORT
 #endif
 
+#ifndef MODULE_SCOPE
+#   ifdef __cplusplus
+#	define MODULE_SCOPE extern "C"
+#   else
+#	define MODULE_SCOPE extern
+#   endif
+#endif
+
 /* Ttk syncs to the Tk version & patchlevel */
 #define TTK_VERSION    TK_VERSION
 #define TTK_PATCH_LEVEL TK_PATCH_LEVEL

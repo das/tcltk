@@ -10,6 +10,8 @@
 #ifndef _TTKMANAGER
 #define _TTKMANAGER
 
+#include "ttkTheme.h"
+
 typedef struct TtkManager_ Ttk_Manager; /* forward */
 typedef struct TtkSlave_ Ttk_Slave; /* forward */
 
