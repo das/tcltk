@@ -2967,8 +2967,6 @@ MODULE_SCOPE int TtkTreeview_Init(Tcl_Interp *interp)
     Ttk_RegisterLayout(theme, "Heading", HeadingLayout);
     Ttk_RegisterLayout(theme, "Row", RowLayout);
 
-    Tcl_PkgProvide(interp, "ttk::treeview", TTK_VERSION);
-
     return TCL_OK;
 }
 

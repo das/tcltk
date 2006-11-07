@@ -58,6 +58,24 @@ proc ttk::takesFocus {w} {
     return 0
 }
 
+# ttk::focusFirst $w --
+#	Return the first descendant of $w, in preorder traversal order,
+#	that can take keyboard focus, "" if none do.
+#
+# See also: tk_focusNext
+#
+proc ttk::focusFirst {w} {
+    if {[ttk::takesFocus $w]} {
+	return $w
+    }
+    foreach child [winfo children $w] {
+	if {[set c [ttk::focusFirst $child]] ne ""} {
+	    return $c
+	}
+    }
+    return ""
+}
+
 ### Grabs.
 #
 # Rules:
@@ -211,24 +229,6 @@ proc ttk::CopyBindings {from to} {
     foreach event [bind $from] {
 	bind $to $event [bind $from $event]
     }
-}
-
-## ttk::LoadImages $imgdir ?$patternList? --
-#	Utility routine for pixmap themes
-#
-#	Loads all image files in $imgdir matching $patternList.
-#	Returns: a paired list of filename/imagename pairs.
-#
-proc ttk::LoadImages {imgdir {patterns {*.gif}}} {
-    foreach pattern $patterns {
-	foreach file [glob -directory $imgdir $pattern] {
-	    set img [file tail [file rootname $file]]
-	    if {![info exists images($img)]} {
-		set images($img) [image create photo -file $file]
-	    }
-	}
-    }
-    return [array get images]
 }
 
 #*EOF*

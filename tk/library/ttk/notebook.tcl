@@ -39,24 +39,6 @@ proc ttk::notebook::ActivateTab {w tab} {
     }
 }
 
-# ttk::focusFirst $w --
-#	Return the first descendant of $w, in preorder traversal order,
-#	that can take keyboard focus, "" if none do.
-#
-# See also: tk_focusNext
-#
-proc ttk::focusFirst {w} {
-    if {[ttk::takesFocus $w]} {
-	return $w
-    }
-    foreach child [winfo children $w] {
-	if {[set c [ttk::focusFirst $child]] ne ""} {
-	    return $c
-	}
-    }
-    return ""
-}
-
 # Press $nb $x $y --
 #	ButtonPress-1 binding for notebook widgets.
 #	Activate the tab under the mouse cursor, if any.

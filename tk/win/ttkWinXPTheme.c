@@ -622,7 +622,7 @@ static Ttk_ElementSpec PbarElementSpec =
  *	not if it's simply the rightmost tab.  This information
  * 	is not available.
  *
- *	The TIS_* and TTKS_* definitions are identical, so 
+ *	The TIS_* and TILES_* definitions are identical, so 
  * 	we can use the same statemap no matter what the partId.
  */
 static void TabElementDraw(
