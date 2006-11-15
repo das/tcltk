@@ -89,16 +89,16 @@ and will have no effect under older WMs.
 .\" See http://www.freedesktop.org/Standards/wm-spec
 .RS
 .TP
-\fB-topmost\fP
+\fB-topmost\fR
 Requests that this window should be kept above
-all other windows that do not also have the \fB-topmost\fP
+all other windows that do not also have the \fB-topmost\fR
 attribute set.
 .TP
-\fB-zoomed\fP
+\fB-zoomed\fR
 Requests that the window should be maximized.
-This is the same as \fB[wm state zoomed]\fP on Windows and Mac OS X.
+This is the same as \fB[wm state zoomed]\fR on Windows and Mac OS X.
 .TP
-\fB-fullscreen\fP
+\fB-fullscreen\fR
 Requests that the window should fill the entire screen 
 and have no window decorations.
 .RE
