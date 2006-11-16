@@ -64,7 +64,7 @@ and the central area (which may be tiled in both directions).
 .CS
 set button(normal) [image create photo -file button.png]
 set button(pressed) [image create photo -file button-pressed.png]
-ttk::style element create Button.button image $button(normal) \e
+ttk::style element create Button.button \fBimage\fR $button(normal) \e
    -border {2 4} -map [list pressed $button(pressed)] -sticky nswe
 .CE
 .SH "SEE ALSO"
