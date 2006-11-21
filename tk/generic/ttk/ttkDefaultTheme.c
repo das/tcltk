@@ -19,10 +19,6 @@ static const int WIN32_XDRAWLINE_HACK = 1;
 static const int WIN32_XDRAWLINE_HACK = 0;
 #endif
 
-#ifndef MIN
-#define MIN(a,b) (a < b ? a : b)
-#endif
-
 #define BORDERWIDTH     2
 #define SCROLLBAR_WIDTH 14
 #define MIN_THUMB_SIZE  8
