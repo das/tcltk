@@ -884,26 +884,32 @@ DrawMenuUnderline(menuPtr, mePtr, d, gc, tkfont, fmPtr, x, y, width, height)
     int width;
     int height;
 {
-    int indicatorSpace = mePtr->indicatorSpace;
+    if ((mePtr->underline >= 0) && (mePtr->labelPtr != NULL)) {
+	int len;
 
-    if (mePtr->underline >= 0) {
-	int activeBorderWidth;
-	int leftEdge;
-	char *label = Tcl_GetStringFromObj(mePtr->labelPtr, NULL);
-	CONST char *start = Tcl_UtfAtIndex(label, mePtr->underline);
-	CONST char *end = Tcl_UtfNext(start);
+	/* do the unicode call just to prevent overruns */
+	Tcl_GetUnicodeFromObj(mePtr->labelPtr, &len);
+	if (mePtr->underline < len) {
+	    int activeBorderWidth;
+	    int leftEdge;
+	    CONST char *label, *start, *end;
 
-	Tk_GetPixelsFromObj(NULL, menuPtr->tkwin,
-		menuPtr->activeBorderWidthPtr, &activeBorderWidth);
-	leftEdge = x + indicatorSpace + activeBorderWidth;
-	if (menuPtr->menuType == MENUBAR) {
-	    leftEdge += 5;
+	    label = Tcl_GetStringFromObj(mePtr->labelPtr, NULL);
+	    start = Tcl_UtfAtIndex(label, mePtr->underline);
+	    end = Tcl_UtfNext(start);
+
+	    Tk_GetPixelsFromObj(NULL, menuPtr->tkwin,
+		    menuPtr->activeBorderWidthPtr, &activeBorderWidth);
+	    leftEdge = x + mePtr->indicatorSpace + activeBorderWidth;
+	    if (menuPtr->menuType == MENUBAR) {
+		leftEdge += 5;
+	    }
+
+	    Tk_UnderlineChars(menuPtr->display, d, gc, tkfont, label, leftEdge,
+		    y + (height + fmPtr->ascent - fmPtr->descent) / 2,
+		    start - label, end - label);
 	}
-
-	Tk_UnderlineChars(menuPtr->display, d, gc, tkfont, label,
-    		leftEdge, y + (height + fmPtr->ascent - fmPtr->descent) / 2,
-		start - label, end - label);
-    }		
+    }
 }
 
 /*
