@@ -49,7 +49,8 @@ namespace eval ttk::theme::alt {
 	style map TRadiobutton -indicatorcolor \
 	    [list  disabled $colors(-frame)  pressed $colors(-frame)]
 
-	style configure TMenubutton -width -11 -padding "3 3" -relief raised
+	style configure TMenubutton \
+	    -width -11 -padding "3 3" -relief raised -anchor w
 
 	style configure TEntry -padding 1
 	style map TEntry -fieldbackground \

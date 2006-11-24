@@ -447,29 +447,35 @@ static Ttk_Layout PanedGetLayout(
 {
     Paned *pw = recordPtr;
     Ttk_Layout panedLayout = TtkWidgetGetLayout(interp, themePtr, recordPtr);
-    int horizontal = pw->paned.orient == TTK_ORIENT_HORIZONTAL;
-    const char *layoutName = horizontal ? ".Vertical.Sash" : ".Horizontal.Sash";
-    Ttk_Layout sashLayout = Ttk_CreateSublayout(interp, themePtr, panedLayout,
-	    layoutName, pw->core.optionTable);
 
-    if (sashLayout) {
-	int sashWidth, sashHeight;
+    if (panedLayout) {
+	int horizontal = pw->paned.orient == TTK_ORIENT_HORIZONTAL;
+	const char *layoutName = 
+	    horizontal ? ".Vertical.Sash" : ".Horizontal.Sash";
+	Ttk_Layout sashLayout = Ttk_CreateSublayout(
+	    interp, themePtr, panedLayout, layoutName, pw->core.optionTable);
 
-	if (pw->paned.sashLayout)
-	    Ttk_FreeLayout(pw->paned.sashLayout);
-	pw->paned.sashLayout = sashLayout;
+	if (sashLayout) {
+	    int sashWidth, sashHeight;
 
-	Ttk_LayoutSize(sashLayout, 0, &sashWidth, &sashHeight);
+	    Ttk_LayoutSize(sashLayout, 0, &sashWidth, &sashHeight);
+	    pw->paned.sashThickness = horizontal ? sashWidth : sashHeight;
 
-	pw->paned.sashThickness = horizontal ? sashWidth : sashHeight;
-
-	/* Sanity-check:
-	 */
-	if (pw->paned.sashThickness < MIN_SASH_THICKNESS)
-	    pw->paned.sashThickness = MIN_SASH_THICKNESS;
-
-	Ttk_ManagerSizeChanged(pw->paned.mgr);
+	    if (pw->paned.sashLayout)
+		Ttk_FreeLayout(pw->paned.sashLayout);
+	    pw->paned.sashLayout = sashLayout;
+	} else {
+	    Ttk_FreeLayout(panedLayout);
+	    return 0;
+	}
     }
+
+    /* Sanity-check:
+     */
+    if (pw->paned.sashThickness < MIN_SASH_THICKNESS)
+	pw->paned.sashThickness = MIN_SASH_THICKNESS;
+
+    Ttk_ManagerSizeChanged(pw->paned.mgr);
 
     return panedLayout;
 }

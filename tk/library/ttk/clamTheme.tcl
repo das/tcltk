@@ -82,7 +82,8 @@ namespace eval ttk::theme::clam {
 	style map TRadiobutton -indicatorbackground \
 	    [list  disabled $colors(-frame)  pressed $colors(-frame)]
 
-	style configure TMenubutton -width -11 -padding 5 -relief raised
+	style configure TMenubutton \
+	    -width -11 -padding 5 -relief raised -anchor w
 
 	style configure TEntry -padding 1 -insertwidth 1
 	style map TEntry \

@@ -2,7 +2,7 @@
  * $Id$
  * Copyright (c) 2004, Joe English
  *
- * Ttk widget set: treeview widget.
+ * ttk::treeview widget implementation.
  */
 
 #include <string.h>
@@ -1279,7 +1279,8 @@ static Ttk_Layout TreeviewGetLayout(
     Ttk_Layout treeLayout = TtkWidgetGetLayout(interp, themePtr, recordPtr);
 
     if (!(
-	GetSublayout(interp, themePtr, treeLayout, ".Item",
+	treeLayout 
+     && GetSublayout(interp, themePtr, treeLayout, ".Item",
 	    tv->tree.itemOptionTable, &tv->tree.itemLayout)
      && GetSublayout(interp, themePtr, treeLayout, ".Cell",
 	    tv->tree.tagOptionTable, &tv->tree.cellLayout)	/*@@@HERE*/

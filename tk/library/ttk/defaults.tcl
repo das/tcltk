@@ -53,7 +53,8 @@ namespace eval ttk {
 	style map TRadiobutton -indicatorcolor \
 	    [list pressed $colors(-activebg)  selected $colors(-indicator)]
 
-	style configure TMenubutton -relief raised -padding "10 3"
+	style configure TMenubutton \
+	    -relief raised -padding "10 3" -anchor w
 
 	style configure TEntry -relief sunken -fieldbackground white -padding 1
 	style map TEntry -fieldbackground \
