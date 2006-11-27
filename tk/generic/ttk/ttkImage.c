@@ -109,18 +109,10 @@ static void FreeImageData(void *clientData)
 {
     ImageData *imageData = clientData;
     Tcl_DecrRefCount(imageData->baseImage);
-    if (imageData->imageMap) {
-	Tcl_DecrRefCount(imageData->imageMap);
-    }
-    if (imageData->stickyObj) {
-	Tcl_DecrRefCount(imageData->stickyObj);
-    }
-    if (imageData->borderObj) {
-	Tcl_DecrRefCount(imageData->borderObj);
-    }
-    if (imageData->paddingObj) {
-	Tcl_DecrRefCount(imageData->paddingObj);
-    }
+    if (imageData->imageMap)	{ Tcl_DecrRefCount(imageData->imageMap); }
+    if (imageData->stickyObj)	{ Tcl_DecrRefCount(imageData->stickyObj); }
+    if (imageData->borderObj)	{ Tcl_DecrRefCount(imageData->borderObj); }
+    if (imageData->paddingObj)	{ Tcl_DecrRefCount(imageData->paddingObj); }
     ckfree(clientData);
 }
 

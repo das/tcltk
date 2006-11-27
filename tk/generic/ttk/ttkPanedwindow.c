@@ -475,8 +475,6 @@ static Ttk_Layout PanedGetLayout(
     if (pw->paned.sashThickness < MIN_SASH_THICKNESS)
 	pw->paned.sashThickness = MIN_SASH_THICKNESS;
 
-    Ttk_ManagerSizeChanged(pw->paned.mgr);
-
     return panedLayout;
 }
 

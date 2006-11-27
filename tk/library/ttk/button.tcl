@@ -36,8 +36,8 @@ bind TButton <Button1-Enter> \
 
 # Checkbuttons and Radiobuttons have the same bindings as Buttons:
 #
-ttk::CopyBindings TButton TCheckbutton
-ttk::CopyBindings TButton TRadiobutton
+ttk::copyBindings TButton TCheckbutton
+ttk::copyBindings TButton TRadiobutton
 
 # ...plus a few more:
 

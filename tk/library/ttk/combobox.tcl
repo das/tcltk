@@ -21,7 +21,7 @@ namespace eval ttk::combobox {
 # Duplicate the Entry bindings, override if needed:
 #
 
-ttk::CopyBindings TEntry TCombobox
+ttk::copyBindings TEntry TCombobox
 
 bind TCombobox <KeyPress-Down> 		{ ttk::combobox::Post %W }
 bind TCombobox <KeyPress-Escape> 	{ ttk::combobox::Unpost %W }
