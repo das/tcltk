@@ -848,9 +848,10 @@ Tcl_Obj *CONST objv[];	/* Argument objects. */
 		break;
 	    case WmAttrAlphaIdx:
 		objPtr = WmAttrGetAlpha(macWindow);
+		break;
 	    case WmAttrNotifyIdx:
 		objPtr = WmAttrGetNotifyStatus();
-	      break;
+		break;
 	}
 	Tcl_SetObjResult(interp, objPtr);
 	return TCL_OK;
@@ -941,8 +942,8 @@ Tcl_Obj *CONST objv[];	/* Argument objects. */
 		    return TCL_ERROR;
 		}
 		objPtr = Tcl_NewBooleanObj(boolean);
-	        WmAttrSetNotifyStatus(boolean);
-                break;
+		WmAttrSetNotifyStatus(boolean);
+		break;
 	}
     }
     Tcl_SetObjResult(interp, objPtr);
