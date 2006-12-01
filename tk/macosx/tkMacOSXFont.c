@@ -465,6 +465,38 @@ TkpGetSubFonts(
 }
 
 /*
+ *----------------------------------------------------------------------
+ *
+ * TkpGetFontAttrsForChar --
+ *
+ *	Retrieve the font attributes of the actual font used to render
+ *	a given character.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	The font attributes are stored in *faPtr.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TkpGetFontAttrsForChar(
+    Tk_Window tkwin,		/* Window on the font's display */
+    Tk_Font tkfont,		/* Font to query */
+    Tcl_UniChar c,		/* Character of interest */
+    TkFontAttributes* faPtr)	/* Output: Font attributes */
+{
+    /* 
+     * Once again, we don't know what ATSU is doing for us. Simply
+     * return the attributes of the base font.
+     */
+    TkMacOSXFont* fontPtr = (TkMacOSXFont*) tkfont;
+    *faPtr = fontPtr->font.fa;
+}
+
+/*
  *---------------------------------------------------------------------------
  *
  *  Tk_MeasureChars --

@@ -71,6 +71,7 @@
  */
 
 typedef struct TkColormap TkColormap;
+typedef struct TkFontAttributes TkFontAttributes;
 typedef struct TkGrabEvent TkGrabEvent;
 typedef struct TkpCursor_ *TkpCursor;
 typedef struct TkRegion_ *TkRegion;
@@ -1180,6 +1181,9 @@ MODULE_SCOPE void	TkUnderlineCharsInContext(Display *display,
 			    Drawable drawable, GC gc, Tk_Font tkfont,
 			    const char *string, int numBytes, int x, int y,
 			    int firstByte, int lastByte);
+MODULE_SCOPE void	TkpGetFontAttrsForChar(Tk_Window tkwin, Tk_Font tkfont,
+					       Tcl_UniChar c, 
+					       struct TkFontAttributes *faPtr);
 
 /*
  * Unsupported commands.

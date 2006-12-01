@@ -930,6 +930,44 @@ TkpGetSubFonts(
 }
 
 /*
+ *----------------------------------------------------------------------
+ *
+ * TkpGetFontAttrsForChar --
+ *
+ *	Retrieve the font attributes of the actual font used to render
+ *	a given character.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	The font attributes are stored in *faPtr.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TkpGetFontAttrsForChar(
+    Tk_Window tkwin,		/* Window on the font's display */
+    Tk_Font tkfont,		/* Font to query */
+    Tcl_UniChar c,		/* Character of interest */
+    TkFontAttributes* faPtr)	/* Output: Font attributes */
+{
+    FontAttributes atts;
+    UnixFont *fontPtr = (UnixFont *) tkfont;
+				/* Structure describing the logical font */
+    SubFont *lastSubFontPtr = &fontPtr->subFontArray[0];
+				/* Pointer to subfont array in case
+				 * FindSubFontForChar needs to fix up the
+				 * memory allocation */
+    SubFont *thisSubFontPtr = FindSubFontForChar(fontPtr, c, &lastSubFontPtr);
+				/* Pointer to the subfont to use for the
+				 * given character */
+    GetFontAttributes(Tk_Display(tkwin), thisSubFontPtr->fontStructPtr, &atts);
+    *faPtr = atts.fa;
+}
+
+/*
  *---------------------------------------------------------------------------
  *
  * Tk_MeasureChars --
