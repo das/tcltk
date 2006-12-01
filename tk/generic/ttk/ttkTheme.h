@@ -341,7 +341,6 @@ MODULE_SCOPE Ttk_Box Ttk_LayoutNodeInternalParcel(Ttk_Layout,Ttk_LayoutNode *);
 MODULE_SCOPE Ttk_Padding Ttk_LayoutNodeInternalPadding(Ttk_Layout,Ttk_LayoutNode *);
 MODULE_SCOPE void Ttk_LayoutNodeReqSize(Ttk_Layout, Ttk_LayoutNode *, int *w, int *h);
 
-MODULE_SCOPE void Ttk_LayoutNodeSetParcel(Ttk_LayoutNode *node, Ttk_Box parcel);
 MODULE_SCOPE void Ttk_PlaceLayoutNode(Ttk_Layout,Ttk_LayoutNode *, Ttk_Box);
 MODULE_SCOPE void Ttk_ChangeElementState(Ttk_LayoutNode *,unsigned set,unsigned clr);
 

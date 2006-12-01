@@ -1178,11 +1178,6 @@ Ttk_Box Ttk_LayoutNodeParcel(Ttk_LayoutNode *node)
     return node->parcel;
 }
 
-void Ttk_LayoutNodeSetParcel(Ttk_LayoutNode *node, Ttk_Box parcel)
-{
-    node->parcel = parcel;
-}
-
 void Ttk_PlaceLayoutNode(Ttk_Layout layout, Ttk_LayoutNode *node, Ttk_Box b)
 {
     node->parcel = b;
