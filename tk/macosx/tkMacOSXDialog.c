@@ -1537,6 +1537,9 @@ Tk_MessageBoxObjCmd(
 	    goto end;
 	}
 	paramCFStringRec.defaultButton = defaultNativeButtonIndex;
+	if (paramCFStringRec.cancelButton == defaultNativeButtonIndex) {
+	    paramCFStringRec.cancelButton = 0;
+	}
     }
     SetThemeCursor(kThemeArrowCursor);
 
