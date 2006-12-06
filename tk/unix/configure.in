@@ -472,6 +472,8 @@ if test $tk_aqua = no; then
 		AC_MSG_WARN([Can't find xft configuration, or xft is unusable])
 	    fi
 	    enable_xft=no
+	    XFT_CFLAGS=""
+	    XFT_LIBS=""
 	else
             enable_xft=yes
 	fi
