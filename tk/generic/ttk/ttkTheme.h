@@ -364,6 +364,15 @@ MODULE_SCOPE Tk_Image Ttk_UseImage(Ttk_ResourceCache, Tk_Window, Tcl_Obj *);
 MODULE_SCOPE void Ttk_RegisterNamedColor(Ttk_ResourceCache, const char *, XColor *);
 
 /*------------------------------------------------------------------------
+ * +++ Image specifications.
+ */
+
+typedef struct TtkImageSpec Ttk_ImageSpec;
+extern Ttk_ImageSpec *TtkGetImageSpec(Tcl_Interp *, Tk_Window, Tcl_Obj *);
+extern void TtkFreeImageSpec(Ttk_ImageSpec *);
+extern Tk_Image TtkSelectImage(Ttk_ImageSpec *, Ttk_State);
+
+/*------------------------------------------------------------------------
  * +++ Miscellaneous enumerations.
  * 	Other stuff that element implementations need to know about.
  */

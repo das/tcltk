@@ -638,7 +638,7 @@ static int TabConfigured(
     Tk_Window tkwin = mgr->masterWindow;
 
     /* Check options:
-     * @@@ TODO: validate -image option with TtkGetImageList()
+     * @@@ TODO: validate -image option.
      */
     if (Ttk_GetStickyFromObj(interp, tab->stickyObj, &sticky) != TCL_OK) {
 	return TCL_ERROR;

@@ -949,14 +949,14 @@ static int ConfigureItem(
     }
 
     /* Validate -image option.
-     * @@@ TODO: keep images array around
      */
     if (item->imageObj) {
-	Tk_Image *images = NULL;
-	if (TtkGetImageList(interp, &tv->core, item->imageObj, &images) != TCL_OK)
+	Ttk_ImageSpec *imageSpec = 
+	    TtkGetImageSpec(interp, tv->core.tkwin, item->imageObj);
+	if (!imageSpec) {
 	    goto error;
-	if (images)
-	    TtkFreeImageList(images);
+	}
+	TtkFreeImageSpec(imageSpec);	/* @@@TODO: Keep this around */
     }
 
     /* Keep TTK_STATE_OPEN flag in sync with item->openObj.

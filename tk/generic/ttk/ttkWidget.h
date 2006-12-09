@@ -170,13 +170,6 @@ MODULE_SCOPE void Ttk_UntraceVariable(Ttk_TraceHandle *);
 MODULE_SCOPE int Ttk_FireTrace(Ttk_TraceHandle *);
 
 /*
- * Utility routines for managing -image option:
- */
-MODULE_SCOPE int TtkGetImageList(
-    Tcl_Interp *, WidgetCore *, Tcl_Obj *imageOption, Tk_Image **imageListPtr);
-MODULE_SCOPE void TtkFreeImageList(Tk_Image *);
-
-/*
  * Virtual events:
  */
 MODULE_SCOPE void TtkSendVirtualEvent(Tk_Window tgtWin, const char *eventName);
