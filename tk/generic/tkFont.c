@@ -509,7 +509,7 @@ Tk_FontObjCmd(
 	Tcl_Obj *optPtr;
 	Tcl_Obj *charPtr;
 	Tcl_Obj *resultPtr;
-	Tcl_UniChar uniChar;
+	Tcl_UniChar uniChar = 0;
 	CONST TkFontAttributes *faPtr;
 	TkFontAttributes fa;
 
