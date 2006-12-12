@@ -134,7 +134,10 @@ InitBoxes(void)
 	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
     hrsrc = FindResource(module, "buttons", RT_BITMAP);
-    if (hrsrc) {
+    if (hrsrc == NULL) {
+	Tcl_Panic("FindResource() failed for buttons bitmap resource, "
+            "resources in tk_base.rc must be linked into Tk dll or static executable");
+    } else {
 	hblk = LoadResource(module, hrsrc);
 	tsdPtr->boxesPtr = (LPBITMAPINFOHEADER)LockResource(hblk);
     }
