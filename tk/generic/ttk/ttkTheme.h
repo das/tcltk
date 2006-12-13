@@ -33,14 +33,6 @@ extern "C" {
 #define TTK_VERSION    TK_VERSION
 #define TTK_PATCH_LEVEL TK_PATCH_LEVEL
 
-/*
- * Statically branched from tile 0.7.8.
- */
-#ifdef TTK_DEFINE_TILE
-#define TILE_VERSION		"0.7.8"
-#define TILE_PATCH_LEVEL	TILE_VERSION
-#endif
-
 /*------------------------------------------------------------------------
  * +++ Defaults for element option specifications.
  */
