@@ -965,5 +965,7 @@ TtkClamTheme_Init(Tcl_Interp *interp)
     Ttk_RegisterLayout(theme, "Horizontal.Sash", HorizontalSashLayout);
     Ttk_RegisterLayout(theme, "Vertical.Sash", VerticalSashLayout);
 
+    Tcl_PkgProvide(interp, "ttk::theme::clam", TTK_VERSION);
+
     return TCL_OK;
 }

@@ -1443,6 +1443,11 @@ void TtkRegisterElements(Tcl_Interp *interp)
     Ttk_RegisterLayout(theme, "Horizontal.TScale", HorizontalScaleLayout);
     Ttk_RegisterLayout(theme, "TSeparator", SeparatorLayout);
     Ttk_RegisterLayout(theme, "TSizegrip", SizegripLayout);
+
+    /*
+     * Register "default" as a user-loadable theme (for now):
+     */
+    Tcl_PkgProvide(interp, "ttk::theme::default", TTK_VERSION);
 }
 
 /*EOF*/
