@@ -10,8 +10,6 @@
 #include "ttkTheme.h"
 #include "ttkWidget.h"
 
-#ifdef TTK_TREEVIEW_WIDGET
-
 #define DEF_TREE_ROWS		"10"
 #define DEF_TREE_PADDING	"4"
 #define DEF_COLWIDTH		"200"
@@ -2970,7 +2968,5 @@ MODULE_SCOPE int TtkTreeview_Init(Tcl_Interp *interp)
 
     return TCL_OK;
 }
-
-#endif /* TTK_TREEVIEW_WIDGET */
 
 /*EOF*/
