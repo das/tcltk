@@ -834,6 +834,7 @@ install-doc:
 
 	@echo "Installing and cross-linking command (.n) docs";
 	@for i in $(TOP_DIR)/doc/*.n; do \
+	    if [ "ttk_dialog.n" = `basename $$i` ] ; then continue ; fi ; \
 	    $(UNIX_DIR)/installManPage $(MAN_FLAGS) $$i $(MANN_INSTALL_DIR); \
 	done
 

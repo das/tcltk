@@ -267,6 +267,7 @@ panedwindow.  \fISize\fR may be any value accepted by \fBTk_GetPixels\fR.
 .TP
 \fIpathName \fBpanes\fR
 Returns an ordered list of the widgets managed by \fIpathName\fR.
+
 .SH "RESIZING PANES"
 A pane is resized by grabbing the sash (or sash handle if present) and
 dragging with the mouse.  This is accomplished via mouse motion
@@ -277,6 +278,9 @@ adjusted.
 When a pane is resized from outside (e.g. it is packed to expand and
 fill, and the containing toplevel is resized), space is added to the final
 (rightmost or bottommost) pane in the window.
+
+.SH "SEE ALSO"
+ttk_panedwindow(n)
 
 .SH KEYWORDS
 panedwindow, widget, geometry management

@@ -125,7 +125,7 @@ pack .mid \-expand 1    \-fill both
 .CE
 
 .SH "SEE ALSO"
-labelframe(n), button(n)
+labelframe(n), button(n), ttk_label(n)
 
 .SH KEYWORDS
 label, widget

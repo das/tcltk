@@ -744,7 +744,9 @@ individual widgets or by redefining the class bindings.
 At present it isn't possible to use the
 option database to specify values for the options to individual
 entries.
+
+.SH "SEE ALSO"
+bind(n), menubutton(n), ttk_menubutton(n), toplevel(n)
+
 .SH KEYWORDS
 menu, widget
-.SH "SEE ALSO"
-bind(n), menubutton(n), toplevel(n)

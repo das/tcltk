@@ -4,7 +4,6 @@
 '\"
 '\" See the file "license.terms" for information on usage and redistribution
 '\" of this file, and for a DISCLAIMER OF ALL WARRANTIES.
-'\" 
 '\"
 '\" RCS: @(#) $Id$
 '\" 
@@ -178,7 +177,9 @@ set bun    white
 set cheese none
 set pickle none
 .CE
+
 .SH "SEE ALSO"
-frame(n), label(n)
+frame(n), label(n), ttk_labelframe(n)
+
 .SH KEYWORDS
 labelframe, widget
