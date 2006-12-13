@@ -446,6 +446,9 @@ runtest: binaries $(TKTEST)
 shell: binaries
 	$(SHELL_ENV) ./$(WISH) $(SCRIPT)
 
+demo:
+	$(SHELL_ENV) ./$(WISH) $(ROOT_DIR)/library/demos/widget
+
 # This target can be used to run wish inside either gdb or insight
 gdb: binaries
 	@echo "set env TCL_LIBRARY=$(TCL_SRC_DIR_NATIVE)/library" > gdb.run

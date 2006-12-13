@@ -655,6 +655,9 @@ runtest: tktest
 shell: wish
 	$(SHELL_ENV) ./wish $(SCRIPT)
 
+demo:
+	$(SHELL_ENV) ./wish $(TOP_DIR)/library/demos/widget
+
 # This target can be used to run wish inside either gdb or insight
 gdb: wish
 	@echo "set env @LD_LIBRARY_PATH_VAR@=`pwd`:${TCL_BIN_DIR}:$${@LD_LIBRARY_PATH_VAR@}" > gdb.run
