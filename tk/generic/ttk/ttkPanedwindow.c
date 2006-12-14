@@ -799,7 +799,8 @@ TTK_END_LAYOUT
 /*------------------------------------------------------------------------
  * +++ Registration routine.
  */
-MODULE_SCOPE int TtkPanedwindow_Init(Tcl_Interp *interp)
+MODULE_SCOPE 
+void TtkPanedwindow_Init(Tcl_Interp *interp)
 {
     Ttk_Theme themePtr = Ttk_GetDefaultTheme(interp);
     RegisterWidget(interp, "ttk::panedwindow", &PanedWidgetSpec);
@@ -810,7 +811,5 @@ MODULE_SCOPE int TtkPanedwindow_Init(Tcl_Interp *interp)
     Ttk_RegisterLayout(themePtr, "TPanedwindow", PanedLayout);
     Ttk_RegisterLayout(themePtr, "Horizontal.Sash", HorizontalSashLayout);
     Ttk_RegisterLayout(themePtr, "Vertical.Sash", VerticalSashLayout);
-    
-    return TCL_OK;
 }
 

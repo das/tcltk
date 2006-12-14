@@ -408,11 +408,10 @@ error:
     return TCL_ERROR;
 }
 
-MODULE_SCOPE int Ttk_ImageInit(Tcl_Interp *);
-int Ttk_ImageInit(Tcl_Interp *interp)
+MODULE_SCOPE
+void TtkImage_Init(Tcl_Interp *interp)
 {
-    return Ttk_RegisterElementFactory(interp, "image",
-	    Ttk_CreateImageElement, NULL);
+    Ttk_RegisterElementFactory(interp, "image", Ttk_CreateImageElement, NULL);
 }
 
 /*EOF*/

@@ -2949,14 +2949,16 @@ static Ttk_ElementSpec RowElementSpec =
 /*------------------------------------------------------------------------
  * +++ Initialisation.
  */
-MODULE_SCOPE int TtkTreeview_Init(Tcl_Interp *interp)
+
+MODULE_SCOPE 
+void TtkTreeview_Init(Tcl_Interp *interp)
 {
     Ttk_Theme theme = Ttk_GetDefaultTheme(interp);
 
     RegisterWidget(interp, "ttk::treeview", &TreeviewWidgetSpec);
 
-    Ttk_RegisterElement(interp, theme,
-	    "Treeitem.indicator", &TreeitemIndicatorElementSpec, 0);
+    Ttk_RegisterElement(interp, theme, "Treeitem.indicator",
+	    &TreeitemIndicatorElementSpec, 0);
     Ttk_RegisterElement(interp, theme, "Treeitem.row", &RowElementSpec, 0);
     Ttk_RegisterElement(interp, theme, "Treeheading.cell", &RowElementSpec, 0);
 
@@ -2965,8 +2967,6 @@ MODULE_SCOPE int TtkTreeview_Init(Tcl_Interp *interp)
     Ttk_RegisterLayout(theme, "Cell", CellLayout);
     Ttk_RegisterLayout(theme, "Heading", HeadingLayout);
     Ttk_RegisterLayout(theme, "Row", RowLayout);
-
-    return TCL_OK;
 }
 
 /*EOF*/

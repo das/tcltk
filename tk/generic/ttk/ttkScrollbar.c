@@ -1,9 +1,9 @@
 /* $Id$
  * Copyright (c) 2003, Joe English
- * Ttk widget set: scrollbar widget implementation.
+ *
+ * ttk::scrollbar widget.
  */
 
-#include <string.h>
 #include <tk.h>
 
 #include "ttkTheme.h"
@@ -297,8 +297,7 @@ static WidgetCommandSpec ScrollbarCommands[] =
 /*------------------------------------------------------------------------
  * +++ Widget specification.
  */
-MODULE_SCOPE WidgetSpec ttkScrollbarWidgetSpec;
-WidgetSpec ttkScrollbarWidgetSpec =
+static WidgetSpec ScrollbarWidgetSpec =
 {
     "TScrollbar",		/* className */
     sizeof(Scrollbar),		/* recordSize */
@@ -307,11 +306,21 @@ WidgetSpec ttkScrollbarWidgetSpec =
     ScrollbarInitialize,	/* initializeProc */
     TtkNullCleanup,		/* cleanupProc */
     TtkCoreConfigure,		/* configureProc */
-    TtkNullPostConfigure,		/* postConfigureProc */
+    TtkNullPostConfigure,	/* postConfigureProc */
     ScrollbarGetLayout,		/* getLayoutProc */
     TtkWidgetSize, 		/* sizeProc */
     ScrollbarDoLayout,		/* layoutProc */
     TtkWidgetDisplay		/* displayProc */
 };
+
+/*------------------------------------------------------------------------
+ * +++ Initialization.
+ */
+
+MODULE_SCOPE
+void TtkScrollbar_Init(Tcl_Interp *interp)
+{
+    RegisterWidget(interp, "ttk::scrollbar", &ScrollbarWidgetSpec);
+} 
 
 /*EOF*/

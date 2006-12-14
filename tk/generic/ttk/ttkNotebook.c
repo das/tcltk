@@ -1249,7 +1249,12 @@ TTK_BEGIN_LAYOUT(TabLayout)
 		TTK_NODE("Notebook.label", TTK_PACK_TOP))))
 TTK_END_LAYOUT
 
-MODULE_SCOPE int TtkNotebook_Init(Tcl_Interp *interp)
+/*------------------------------------------------------------------------
+ * +++ Initialization.
+ */
+
+MODULE_SCOPE 
+void TtkNotebook_Init(Tcl_Interp *interp)
 {
     Ttk_Theme themePtr = Ttk_GetDefaultTheme(interp);
 
@@ -1257,8 +1262,6 @@ MODULE_SCOPE int TtkNotebook_Init(Tcl_Interp *interp)
     Ttk_RegisterLayout(themePtr, "TNotebook", NotebookLayout);
 
     RegisterWidget(interp, "ttk::notebook", &NotebookWidgetSpec);
-
-    return TCL_OK;
 }
 
 /*EOF*/
