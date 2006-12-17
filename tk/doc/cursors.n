@@ -62,6 +62,7 @@ lr_angle
 man
 middlebutton
 mouse
+none
 pencil
 pirate
 plus
@@ -96,6 +97,8 @@ umbrella
 ur_angle
 watch
 xterm
+
+The \fBnone\fR cursor can be specified to eliminate the cursor.
 .CE
 
 .SH "PORTABILITY ISSUES"
@@ -111,6 +114,7 @@ crosshair
 fleur
 ibeam
 icon
+none
 sb_h_double_arrow
 sb_v_double_arrow
 watch
@@ -128,7 +132,6 @@ size_we
 uparrow
 wait
 .CE
-The \fBno\fR cursor can be specified to eliminate the cursor.
 .RE
 
 .TP
@@ -140,6 +143,7 @@ arrow
 cross
 crosshair
 ibeam
+none
 plus
 watch
 xterm
