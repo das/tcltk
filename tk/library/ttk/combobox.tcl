@@ -275,8 +275,11 @@ proc ttk::combobox::Post {cb} {
     $popdown.l see $current
     # Should allow user to control listbox height
     set height [llength $values]
-    if {$height > 10} {
-	set height 10
+    if {$height > [$cb cget -height]} {
+	set height [$cb cget -height]
+    	grid $popdown.sb
+    } else {
+	grid remove $popdown.sb
     }
     $popdown.l configure -height $height
     update idletasks

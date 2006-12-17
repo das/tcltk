@@ -32,6 +32,8 @@ If set, the widget selection is linked to the X selection.
 .OP \-justify justify Justify
 Specifies how the text is aligned within the widget.
 One of \fBleft\fR, \fBcenter\fR, or \fBright\fR.
+.OP \-height height Height
+Specifies the height of the pop-down listbox, in rows.
 .OP \-postcommand postCommand PostCommand
 A Tcl script to evaluate immediately before displaying the listbox.
 The \fB-postcommand\fR script may specify the \fB-values\fR to display.
