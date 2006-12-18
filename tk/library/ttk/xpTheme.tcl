@@ -30,6 +30,20 @@ namespace eval ttk {
 	style map TNotebook.Tab \
 	    -expand [list selected {2 2 2 2}]
 
+	# Treeview:
+	style configure Heading -font TkHeadingFont
+	style configure Row -background SystemWindow
+	style configure Cell -background SystemWindow
+	style map Row \
+	    -background [list selected SystemHighlight] \
+	    -foreground [list selected SystemHighlightText] ;
+	style map Cell \
+	    -background [list selected SystemHighlight] \
+	    -foreground [list selected SystemHighlightText] ;
+	style map Item \
+	    -background [list selected SystemHighlight] \
+	    -foreground [list selected SystemHighlightText] ;
+
 	style configure TLabelframe -foreground "#0046d5"
 
 	# OR: -padding {3 3 3 6}, which some apps seem to use.

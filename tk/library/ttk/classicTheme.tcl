@@ -10,6 +10,7 @@ namespace eval ttk::theme::classic {
 
     variable colors; array set colors {
 	-frame		"#d9d9d9"
+	-window		"#ffffff"
 	-activebg	"#ececec"
 	-troughbg	"#c3c3c3"
 	-selectbg	"#c3c3c3"
@@ -83,6 +84,17 @@ namespace eval ttk::theme::classic {
 	    -padding {3m 1m} \
 	    -background $colors(-troughbg)
 	style map TNotebook.Tab -background [list selected $colors(-frame)]
+
+	# Treeview:
+	ttk::style configure Heading -font TkHeadingFont -relief raised
+	ttk::style configure Row -background $colors(-window)
+	ttk::style configure Cell -background $colors(-window)
+	ttk::style map Row \
+	    -background [list selected $colors(-selectbg)] \
+	    -foreground [list selected $colors(-selectfg)] ;
+	ttk::style map Cell \
+	    -background [list selected $colors(-selectbg)] \
+	    -foreground [list selected $colors(-selectfg)] ;
 
 	#
 	# Toolbar buttons:

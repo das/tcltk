@@ -144,6 +144,12 @@ void TtkScrolled(ScrollHandle h, int first, int last, int total)
 	total = 1;
     }
 
+    if (last > total) {
+	first -= (last - total);
+	if (first < 0) first = 0;
+	last = total;
+    }
+
     if (s->first != first || s->last != last || s->total != total
 	    || (h->flags & SCROLL_UPDATE_REQUIRED))
     {

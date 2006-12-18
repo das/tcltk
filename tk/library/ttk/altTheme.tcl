@@ -9,6 +9,7 @@ namespace eval ttk::theme::alt {
     variable colors
     array set colors {
 	-frame 		"#d9d9d9"
+	-window		"#ffffff"
 	-darker 	"#c3c3c3"
 	-activebg 	"#ececec"
 	-disabledfg	"#a3a3a3"
@@ -76,6 +77,20 @@ namespace eval ttk::theme::alt {
 	    -background [list selected $colors(-frame)] \
 	    -expand [list selected {2 2 1 0}] \
 	    ;
+
+	# Treeview:
+	style configure Heading -font TkHeadingFont -relief raised
+	style configure Row -background $colors(-window)
+	style configure Cell -background $colors(-window)
+	style map Row \
+	    -background [list selected $colors(-selectbg)] \
+	    -foreground [list selected $colors(-selectfg)] ;
+	style map Cell \
+	    -background [list selected $colors(-selectbg)] \
+	    -foreground [list selected $colors(-selectfg)] ;
+	style map Item \
+	    -background [list selected $colors(-selectbg)] \
+	    -foreground [list selected $colors(-selectfg)] ;
 
 	style configure TScale \
 	    -groovewidth 4 -troughrelief sunken \
