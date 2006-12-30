@@ -31,6 +31,11 @@
 #include "tkMacOSXInt.h"
 #include "ttk/ttkTheme.h"
 
+/* Define a constant that was renamed for Mac OS X 10.4 */
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 1040
+#define kThemeDisclosureTriangle kThemeDisclosureButton 
+#endif
+
 /*----------------------------------------------------------------------
  * +++ Utilities.
  */
