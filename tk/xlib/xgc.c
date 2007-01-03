@@ -66,7 +66,7 @@ XCreateGC(
 #define InitField(name,maskbit,default) \
 	(gp->name = (mask & (maskbit)) ? values->name : (default))
 
-    InitField(function,		  GCFunction,		GXCopy);
+    InitField(function,		  GCFunction,		GXcopy);
     InitField(plane_mask,	  GCPlaneMask,		(unsigned long)(~0));
     InitField(foreground,	  GCForeground,		0);
     InitField(background,	  GCBackground,		0xffffff);
