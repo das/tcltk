@@ -27,14 +27,14 @@ static Tcl_ThreadDataKey dataKey;
  * tkButton.h.
  */
 
-static char *classNames[] = {"Label", "Button", "Checkbutton", "Radiobutton"};
+static const char *classNames[] = {"Label", "Button", "Checkbutton", "Radiobutton"};
 
 /*
  * The following table defines the legal values for the -default option. It is
  * used together with the "enum defaultValue" declaration in tkButton.h.
  */
 
-static char *defaultStrings[] = {
+static const char *defaultStrings[] = {
     "active", "disabled", "normal", NULL
 };
 
@@ -43,7 +43,7 @@ static char *defaultStrings[] = {
  * It is used together with the "enum state" declaration in tkButton.h.
  */
 
-static char *stateStrings[] = {
+static const char *stateStrings[] = {
     "active", "disabled", "normal", NULL
 };
 
@@ -52,7 +52,7 @@ static char *stateStrings[] = {
  * It is used with the "enum compound" declaration in tkButton.h
  */
 
-static char *compoundStrings[] = {
+static const char *compoundStrings[] = {
     "bottom", "center", "left", "none", "right", "top", NULL
 };
 
@@ -61,7 +61,7 @@ static char *compoundStrings[] = {
  * separate table for each of the four widget classes.
  */
 
-static Tk_OptionSpec labelOptionSpecs[] = {
+static const Tk_OptionSpec labelOptionSpecs[] = {
     {TK_OPTION_BORDER, "-activebackground", "activeBackground", "Foreground",
 	DEF_BUTTON_ACTIVE_BG_COLOR, -1, Tk_Offset(TkButton, activeBorder),
 	0, (ClientData) DEF_BUTTON_ACTIVE_BG_MONO, 0},
@@ -146,7 +146,7 @@ static Tk_OptionSpec labelOptionSpecs[] = {
     {TK_OPTION_END, NULL, NULL, NULL, NULL, 0, 0, 0, 0}
 };
 
-static Tk_OptionSpec buttonOptionSpecs[] = {
+static const Tk_OptionSpec buttonOptionSpecs[] = {
     {TK_OPTION_BORDER, "-activebackground", "activeBackground", "Foreground",
 	DEF_BUTTON_ACTIVE_BG_COLOR, -1, Tk_Offset(TkButton, activeBorder),
 	0, (ClientData) DEF_BUTTON_ACTIVE_BG_MONO, 0},
@@ -247,7 +247,7 @@ static Tk_OptionSpec buttonOptionSpecs[] = {
     {TK_OPTION_END, NULL, NULL, NULL, NULL, 0, -1, 0, 0, 0}
 };
 
-static Tk_OptionSpec checkbuttonOptionSpecs[] = {
+static const Tk_OptionSpec checkbuttonOptionSpecs[] = {
     {TK_OPTION_BORDER, "-activebackground", "activeBackground", "Foreground",
 	DEF_BUTTON_ACTIVE_BG_COLOR, -1, Tk_Offset(TkButton, activeBorder),
 	0, (ClientData) DEF_BUTTON_ACTIVE_BG_MONO, 0},
@@ -360,7 +360,7 @@ static Tk_OptionSpec checkbuttonOptionSpecs[] = {
     {TK_OPTION_END, NULL, NULL, NULL, NULL, 0, -1, 0, 0, 0}
 };
 
-static Tk_OptionSpec radiobuttonOptionSpecs[] = {
+static const Tk_OptionSpec radiobuttonOptionSpecs[] = {
     {TK_OPTION_BORDER, "-activebackground", "activeBackground", "Foreground",
 	DEF_BUTTON_ACTIVE_BG_COLOR, -1, Tk_Offset(TkButton, activeBorder),
 	0, (ClientData) DEF_BUTTON_ACTIVE_BG_MONO, 0},
@@ -477,7 +477,7 @@ static Tk_OptionSpec radiobuttonOptionSpecs[] = {
  * such as TYPE_LABEL, to the option template for that class of widgets.
  */
 
-static Tk_OptionSpec *optionSpecs[] = {
+static const Tk_OptionSpec * const optionSpecs[] = {
     labelOptionSpecs,
     buttonOptionSpecs,
     checkbuttonOptionSpecs,

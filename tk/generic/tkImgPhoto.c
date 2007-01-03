@@ -2463,7 +2463,7 @@ ImgPhotoGet(
 	    nBlue = 32;
 	    mono = 0;
 	} else if (visInfoPtr->depth >= 3) {
-	    int *ip = paletteChoice[visInfoPtr->depth - 3];
+	    const int *ip = paletteChoice[visInfoPtr->depth - 3];
 
 	    nRed = ip[0];
 	    nGreen = ip[1];

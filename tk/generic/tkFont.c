@@ -1295,7 +1295,7 @@ SetFontFromAny(
     Tcl_Interp *interp,		/* Used for error reporting if not NULL. */
     Tcl_Obj *objPtr)		/* The object to convert. */
 {
-    Tcl_ObjType *typePtr;
+    const Tcl_ObjType *typePtr;
 
     /*
      * Free the old internalRep before setting the new one.
