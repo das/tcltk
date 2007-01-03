@@ -50,7 +50,7 @@ typedef struct
  * defined for all widgets.
  */
 
-static Tk_OptionSpec SquareOptionSpecs[] =
+static const Tk_OptionSpec SquareOptionSpecs[] =
 {
     WIDGET_TAKES_FOCUS,
 

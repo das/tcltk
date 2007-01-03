@@ -158,7 +158,7 @@ typedef struct
 #define DEF_ENTRY_FONT	"TkTextFont"
 #define DEF_LIST_HEIGHT	"10"
 
-static Tk_OptionSpec EntryOptionSpecs[] =
+static const Tk_OptionSpec EntryOptionSpecs[] =
 {
     WIDGET_TAKES_FOCUS,
 
@@ -1690,7 +1690,7 @@ typedef struct {
     ComboboxPart combobox;
 } Combobox;
 
-static Tk_OptionSpec ComboboxOptionSpecs[] =
+static const Tk_OptionSpec ComboboxOptionSpecs[] =
 {
     {TK_OPTION_STRING, "-height", "height", "Height",
         DEF_LIST_HEIGHT, Tk_Offset(Combobox, combobox.heightObj), -1,

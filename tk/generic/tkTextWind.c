@@ -102,7 +102,7 @@ typedef enum {
  * Information used for parsing window configuration options:
  */
 
-static Tk_OptionSpec optionSpecs[] = {
+static const Tk_OptionSpec optionSpecs[] = {
     {TK_OPTION_STRING_TABLE, "-align", NULL, NULL,
 	"center", -1, Tk_Offset(TkTextEmbWindow, align),
 	0, (ClientData) alignStrings, 0},

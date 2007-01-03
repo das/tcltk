@@ -43,7 +43,7 @@ typedef struct
     ScalePart  scale;
 } Scale;
 
-static Tk_OptionSpec ScaleOptionSpecs[] =
+static const Tk_OptionSpec ScaleOptionSpecs[] =
 {
     WIDGET_TAKES_FOCUS,
 

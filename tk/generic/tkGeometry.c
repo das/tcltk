@@ -87,7 +87,7 @@ void
 Tk_ManageGeometry(tkwin, mgrPtr, clientData)
     Tk_Window tkwin;		/* Window whose geometry is to be managed by
 				 * proc. */
-    Tk_GeomMgr *mgrPtr;		/* Static structure describing the geometry
+    CONST Tk_GeomMgr *mgrPtr;	/* Static structure describing the geometry
 				 * manager. This structure must never go
 				 * away. */
     ClientData clientData;	/* Arbitrary one-word argument to pass to

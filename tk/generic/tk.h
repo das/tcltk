@@ -601,7 +601,7 @@ typedef void (Tk_GeomLostSlaveProc) _ANSI_ARGS_((ClientData clientData,
 	Tk_Window tkwin));
 
 typedef struct Tk_GeomMgr {
-    char *name;			/* Name of the geometry manager (command used
+    const char *name;		/* Name of the geometry manager (command used
 				 * to invoke it, or name of widget class that
 				 * allows embedded widgets). */
     Tk_GeomRequestProc *requestProc;

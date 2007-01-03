@@ -790,7 +790,7 @@ typedef struct TkWindow {
      * Information used by tkGeometry.c for geometry management.
      */
 
-    Tk_GeomMgr *geomMgrPtr;	/* Information about geometry manager for this
+    const Tk_GeomMgr *geomMgrPtr; /* Information about geometry manager for this
 				 * window. */
     ClientData geomData;	/* Argument for geometry manager functions. */
     int reqWidth, reqHeight;	/* Arguments from last call to

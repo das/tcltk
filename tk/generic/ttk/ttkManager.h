@@ -31,7 +31,7 @@ typedef struct TtkSlave_ Ttk_Slave; /* forward */
  */
 typedef struct {			/* Manager hooks */
     Tk_GeomMgr tkGeomMgr;		/* "real" Tk Geometry Manager */
-    Tk_OptionSpec *slaveOptionSpecs;	/* slave record options */
+    const Tk_OptionSpec *slaveOptionSpecs;	/* slave record options */
     size_t slaveSize;			/* size of slave record */
 
     int  (*RequestedSize)(void *managerData, int *widthPtr, int *heightPtr);
@@ -59,7 +59,7 @@ struct TtkSlave_
 
 struct TtkManager_
 {
-    Ttk_ManagerSpec	*managerSpec;
+    const Ttk_ManagerSpec	*managerSpec;
     void 		*managerData;
     Tk_Window   	masterWindow;
     Tk_OptionTable 	slaveOptionTable;

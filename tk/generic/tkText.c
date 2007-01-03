@@ -111,7 +111,7 @@ static Tk_ObjCustomOption lineOption = {
  * Information used to parse text configuration options:
  */
 
-static Tk_OptionSpec optionSpecs[] = {
+static const Tk_OptionSpec optionSpecs[] = {
     {TK_OPTION_BOOLEAN, "-autoseparators", "autoSeparators",
 	"AutoSeparators", DEF_TEXT_AUTO_SEPARATORS, -1,
 	Tk_Offset(TkText, autoSeparators), 0, 0, 0},

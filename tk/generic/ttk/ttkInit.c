@@ -13,7 +13,7 @@
  * Legal values for the button -default option.
  * See also: enum Ttk_ButtonDefaultState.
  */
-CONST char *ttkDefaultStrings[] = {
+const char *ttkDefaultStrings[] = {
     "normal", "active", "disabled", NULL
 };
 
@@ -131,7 +131,7 @@ void TtkSendVirtualEvent(Tk_Window tgtWin, const char *eventName)
  *	Common factors for data accessor commands.
  */
 int TtkEnumerateOptions(
-    Tcl_Interp *interp, void *recordPtr, Tk_OptionSpec *specPtr,
+    Tcl_Interp *interp, void *recordPtr, const Tk_OptionSpec *specPtr,
     Tk_OptionTable optionTable, Tk_Window tkwin)
 {
     Tcl_Obj *result = Tcl_NewListObj(0,0);

@@ -41,7 +41,7 @@ static char *tabStyleStrings[] = {
     "tabular", "wordprocessor", "", NULL
 };
 
-static Tk_OptionSpec tagOptionSpecs[] = {
+static const Tk_OptionSpec tagOptionSpecs[] = {
     {TK_OPTION_BORDER, "-background", NULL, NULL,
 	NULL, -1, Tk_Offset(TkTextTag, border), TK_OPTION_NULL_OK, 0, 0},
     {TK_OPTION_BITMAP, "-bgstipple", NULL, NULL,

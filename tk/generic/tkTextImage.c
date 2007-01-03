@@ -84,7 +84,7 @@ typedef enum {
  * Information used for parsing image configuration options:
  */
 
-static Tk_OptionSpec optionSpecs[] = {
+static const Tk_OptionSpec optionSpecs[] = {
     {TK_OPTION_STRING_TABLE, "-align", NULL, NULL,
 	"center", -1, Tk_Offset(TkTextEmbImage, align),
 	0, (ClientData) alignStrings, 0},

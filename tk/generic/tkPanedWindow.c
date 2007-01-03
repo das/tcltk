@@ -270,7 +270,7 @@ static Tk_ObjCustomOption stickyOption = {
     0
 };
 
-static Tk_OptionSpec optionSpecs[] = {
+static const Tk_OptionSpec optionSpecs[] = {
     {TK_OPTION_BORDER, "-background", "background", "Background",
 	 DEF_PANEDWINDOW_BG_COLOR, -1, Tk_Offset(PanedWindow, background), 0,
 	 (ClientData) DEF_PANEDWINDOW_BG_MONO},
@@ -322,7 +322,7 @@ static Tk_OptionSpec optionSpecs[] = {
     {TK_OPTION_END}
 };
 
-static Tk_OptionSpec slaveOptionSpecs[] = {
+static const Tk_OptionSpec slaveOptionSpecs[] = {
     {TK_OPTION_WINDOW, "-after", NULL, NULL,
 	 DEF_PANEDWINDOW_PANE_AFTER, -1, Tk_Offset(Slave, after),
 	 TK_OPTION_NULL_OK, 0, 0},
