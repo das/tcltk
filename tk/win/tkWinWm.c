@@ -358,7 +358,7 @@ typedef struct TkWmInfo {
 
 static void		TopLevelReqProc(ClientData dummy, Tk_Window tkwin);
 
-static Tk_GeomMgr wmMgrType = {
+static const Tk_GeomMgr wmMgrType = {
     "wm",			/* name */
     TopLevelReqProc,		/* requestProc */
     NULL,			/* lostSlaveProc */

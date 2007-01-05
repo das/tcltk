@@ -244,7 +244,7 @@ static int		PanedWindowIdentifyCoords(PanedWindow *pwPtr,
 #define ValidSashIndex(pwPtr, sash) \
 	(((sash) >= 0) && ((sash) < ((pwPtr)->numSlaves-1)))
 
-static Tk_GeomMgr panedWindowMgrType = {
+static const Tk_GeomMgr panedWindowMgrType = {
     "panedwindow",		/* name */
     PanedWindowReqProc,		/* requestProc */
     PanedWindowLostSlaveProc,	/* lostSlaveProc */

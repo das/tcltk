@@ -153,7 +153,7 @@ static void		PlaceRequestProc(ClientData clientData,
 static void		PlaceLostSlaveProc(ClientData clientData,
 			    Tk_Window tkwin);
 
-static Tk_GeomMgr placerType = {
+static const Tk_GeomMgr placerType = {
     "place",				/* name */
     PlaceRequestProc,			/* requestProc */
     PlaceLostSlaveProc,			/* lostSlaveProc */

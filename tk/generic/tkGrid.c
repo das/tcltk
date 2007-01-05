@@ -303,7 +303,7 @@ static void		StickyToString(int flags, char *result);
 static int		StringToSticky(char *string);
 static void		Unlink(Gridder *gridPtr);
 
-static Tk_GeomMgr gridMgrType = {
+static const Tk_GeomMgr gridMgrType = {
     "grid",			/* name */
     GridReqProc,		/* requestProc */
     GridLostSlaveProc,		/* lostSlaveProc */

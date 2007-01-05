@@ -57,7 +57,7 @@ static int wmTracing = 0;
 static void		TopLevelReqProc _ANSI_ARGS_((ClientData dummy,
 	Tk_Window tkwin));
 
-static Tk_GeomMgr wmMgrType = {
+static const Tk_GeomMgr wmMgrType = {
     "wm",				/* name */
     TopLevelReqProc,			/* requestProc */
     (Tk_GeomLostSlaveProc *) NULL,	/* lostSlaveProc */

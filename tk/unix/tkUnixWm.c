@@ -294,12 +294,12 @@ typedef struct TkWmInfo {
 static void		TopLevelReqProc(ClientData dummy, Tk_Window tkwin);
 static void		MenubarReqProc(ClientData clientData, Tk_Window tkwin);
 
-static Tk_GeomMgr wmMgrType = {
+static const Tk_GeomMgr wmMgrType = {
     "wm",				/* name */
     TopLevelReqProc,			/* requestProc */
     NULL,				/* lostSlaveProc */
 };
-static Tk_GeomMgr menubarMgrType = {
+static const Tk_GeomMgr menubarMgrType = {
     "menubar",				/* name */
     MenubarReqProc,			/* requestProc */
     NULL,				/* lostSlaveProc */

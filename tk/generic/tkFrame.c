@@ -340,7 +340,7 @@ static Tk_ClassProcs frameClass = {
  * geometry manager:
  */
 
-static Tk_GeomMgr frameGeomType = {
+static const Tk_GeomMgr frameGeomType = {
     "labelframe",		/* name */
     FrameRequestProc,		/* requestProc */
     FrameLostSlaveProc		/* lostSlaveProc */

@@ -28,7 +28,7 @@ static void		EmbWinRequestProc(ClientData clientData,
 static void		EmbWinLostSlaveProc(ClientData clientData,
 			    Tk_Window tkwin);
 
-static Tk_GeomMgr textGeomType = {
+static const Tk_GeomMgr textGeomType = {
     "text",			/* name */
     EmbWinRequestProc,		/* requestProc */
     EmbWinLostSlaveProc,	/* lostSlaveProc */
