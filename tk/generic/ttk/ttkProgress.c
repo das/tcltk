@@ -45,7 +45,7 @@ typedef struct {
     ProgressbarPart	progress;
 } Progressbar;
 
-static const Tk_OptionSpec ProgressbarOptionSpecs[] =
+static Tk_OptionSpec ProgressbarOptionSpecs[] =
 {
     {TK_OPTION_STRING_TABLE, "-orient", "orient", "Orient",
 	"horizontal", Tk_Offset(Progressbar,progress.orientObj), -1,

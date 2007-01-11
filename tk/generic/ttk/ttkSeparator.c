@@ -24,7 +24,7 @@ typedef struct
     SeparatorPart separator;
 } Separator;
 
-static const Tk_OptionSpec SeparatorOptionSpecs[] =
+static Tk_OptionSpec SeparatorOptionSpecs[] =
 {
     {TK_OPTION_STRING_TABLE, "-orient", "orient", "Orient", "horizontal",
 	Tk_Offset(Separator,separator.orientObj),

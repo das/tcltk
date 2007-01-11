@@ -32,7 +32,7 @@ typedef struct
     ScrollbarPart scrollbar;
 } Scrollbar;
 
-static const Tk_OptionSpec ScrollbarOptionSpecs[] =
+static Tk_OptionSpec ScrollbarOptionSpecs[] =
 {
     {TK_OPTION_STRING, "-command", "command", "Command", "",
 	Tk_Offset(Scrollbar,scrollbar.commandObj), -1, 0,0,0},

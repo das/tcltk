@@ -29,7 +29,7 @@ typedef struct
     FramePart	frame;
 } Frame;
 
-static const Tk_OptionSpec FrameOptionSpecs[] =
+static Tk_OptionSpec FrameOptionSpecs[] =
 {
     {TK_OPTION_PIXELS, "-borderwidth", "borderWidth", "BorderWidth", NULL,
 	Tk_Offset(Frame,frame.borderWidthObj), -1,
@@ -250,7 +250,7 @@ typedef struct
 
 #define LABELWIDGET_CHANGED 0x100
 
-static const Tk_OptionSpec LabelframeOptionSpecs[] =
+static Tk_OptionSpec LabelframeOptionSpecs[] =
 {
     {TK_OPTION_STRING, "-labelanchor", "labelAnchor", "LabelAnchor",
 	"nw", Tk_Offset(Labelframe, label.labelAnchorObj),-1,
@@ -480,7 +480,7 @@ static void LabelframeLostSlave(ClientData clientData, Tk_Window slaveWindow)
     Ttk_LostSlaveProc(clientData, slaveWindow);
 }
 
-static const Tk_OptionSpec LabelOptionSpecs[] = {
+static Tk_OptionSpec LabelOptionSpecs[] = {
     {TK_OPTION_END, 0,0,0, NULL, -1,-1, 0, 0,0}
 };
 
