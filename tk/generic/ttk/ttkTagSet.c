@@ -31,8 +31,8 @@ struct TtkTagTable {
 static Ttk_Tag NewTag(Ttk_TagTable tagTable)
 {
     Ttk_Tag tag = (Ttk_Tag)ckalloc(sizeof(*tag));
-    tag->tagRecord = (Tcl_Obj **)ckalloc(tagTable->tagRecordSize);
-    memset(tag->tagRecord, 0, tagTable->tagRecordSize);
+    tag->tagRecord = (Tcl_Obj **)ckalloc((unsigned) tagTable->tagRecordSize);
+    memset(tag->tagRecord, 0, (unsigned) tagTable->tagRecordSize);
     return tag;
 }
 

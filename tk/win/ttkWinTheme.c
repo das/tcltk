@@ -146,8 +146,8 @@ static void FrameControlElementDraw(
     HDC hdc = TkWinGetDrawableDC(Tk_Display(tkwin), d, &dcState);
 
     DrawFrameControl(hdc, &rc,
-	elementData->classId,
-	elementData->partId|Ttk_StateTableLookup(elementData->stateMap, state));
+	    (DWORD) elementData->classId, (DWORD) elementData->partId
+	    | Ttk_StateTableLookup(elementData->stateMap, state));
     TkWinReleaseDrawableDC(d, hdc, &dcState);
 }
 
@@ -292,7 +292,7 @@ static void ButtonBorderElementGeometry(
     ButtonBorderElement *bd = elementRecord;
     int relief = TK_RELIEF_RAISED;
     int defaultState = TTK_BUTTON_DEFAULT_DISABLED;
-    short int cx, cy;
+    int cx, cy;
 
     Tk_GetReliefFromObj(NULL, bd->reliefObj, &relief);
     Ttk_GetButtonDefaultStateFromObj(NULL, bd->defaultStateObj, &defaultState);
@@ -329,9 +329,10 @@ static void ButtonBorderElementDraw(
 
     if (defaultState == TTK_BUTTON_DEFAULT_ACTIVE) {
 	XColor *highlightColor =
-	    Tk_GetColorFromObj(tkwin, bd->highlightColorObj);
+		Tk_GetColorFromObj(tkwin, bd->highlightColorObj);
 	GC gc = Tk_GCForColor(highlightColor, d);
-	XDrawRectangle(Tk_Display(tkwin), d, gc, b.x,b.y,b.width-1,b.height-1);
+	XDrawRectangle(Tk_Display(tkwin), d, gc, b.x, b.y,
+		(unsigned)b.width-1, (unsigned)b.height-1);
     }
     if (defaultState != TTK_BUTTON_DEFAULT_DISABLED) {
 	++b.x; ++b.y; b.width -= 2; b.height -= 2;
@@ -341,13 +342,13 @@ static void ButtonBorderElementDraw(
 
     rc = BoxToRect(b);
     DrawFrameControl(hdc, &rc,
-	DFC_BUTTON,	/* classId */
-	DFCS_BUTTONPUSH | Ttk_StateTableLookup(pushbutton_statemap, state));
+	    (DWORD) DFC_BUTTON,	/* classId */ (DWORD) DFCS_BUTTONPUSH
+	    | Ttk_StateTableLookup(pushbutton_statemap, state));
 
     /* Draw focus ring:
      */
     if (state & TTK_STATE_FOCUS) {
-	short int borderWidth = 3;	/* @@@ Use GetSystemMetrics?*/
+	int borderWidth = 3;		/* @@@ Use GetSystemMetrics?*/
 	rc = BoxToRect(Ttk_PadBox(b, Ttk_UniformPadding(borderWidth)));
     	DrawFocusRect(hdc, &rc);
     }
@@ -424,7 +425,8 @@ static void FillFocusElementDraw(
 	GC gc = Tk_GCForColor(fillColor, d);
 	HDC hdc;
 
-	XFillRectangle(Tk_Display(tkwin),d,gc, b.x,b.y,b.width,b.height);
+	XFillRectangle(Tk_Display(tkwin),d,gc,
+		b.x,b.y,(unsigned)b.width,(unsigned)b.height);
 	hdc = TkWinGetDrawableDC(Tk_Display(tkwin), d, &dcState);
     	DrawFocusRect(hdc, &rc);
 	TkWinReleaseDrawableDC(d, hdc, &dcState);

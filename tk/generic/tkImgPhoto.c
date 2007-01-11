@@ -4907,9 +4907,10 @@ Tk_PhotoPutZoomedBlock(
 	    TkDestroyRegion(workRgn);
 	}
 
-	TkpBuildRegionFromAlphaData(masterPtr->validRegion, x,y, width,height,
+	TkpBuildRegionFromAlphaData(masterPtr->validRegion,
+		(unsigned)x, (unsigned)y, (unsigned)width, (unsigned)height,
 		&masterPtr->pix32[(y * masterPtr->width + x) * 4 + 3], 4,
-		masterPtr->width * 4);
+		(unsigned) masterPtr->width * 4);
     } else {
 	rect.x = x;
 	rect.y = y;

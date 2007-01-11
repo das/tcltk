@@ -1015,7 +1015,7 @@ int InitializeElementRecord(
 	    *dest = styleDefault ? styleDefault : elementDefault;
 	}
 
-	if (!AllocateResource(cache, tkwin, dest, elementOption->type)) {
+	if (!AllocateResource(cache, tkwin, dest, (int) elementOption->type)) {
 	    return 0;
 	}
     }

@@ -565,7 +565,7 @@ ThumbElementDraw(
 	return;
 
     elementData->procs->DrawThemeBackground(elementData->hTheme,
-	elementData->hDC, elementData->info->partId, stateId,
+	elementData->hDC, elementData->info->partId, (int) stateId,
 	&rc, NULL);
 
     FreeElementData(elementData);

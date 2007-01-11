@@ -1012,7 +1012,7 @@ static int TreeviewInitialize(Tcl_Interp *interp, void *recordPtr)
     tv->tree.nColumns = tv->tree.nDisplayColumns = 0;
     tv->tree.columns = NULL;
     tv->tree.displayColumns = NULL;
-    tv->tree.showFlags = ~0;
+    tv->tree.showFlags = ~(unsigned)0;
 
     InitColumn(&tv->tree.column0);
     Tk_InitOptions(
@@ -3180,7 +3180,7 @@ static void RowElementDraw(
     XColor *color = Tk_GetColorFromObj(tkwin, row->backgroundObj);
     GC gc = Tk_GCForColor(color, d);
     XFillRectangle(Tk_Display(tkwin), d, gc,
-	    b.x, b.y, b.width, b.height);
+	    b.x, b.y, (unsigned)b.width, (unsigned)b.height);
 }
 
 static Ttk_ElementSpec RowElementSpec =

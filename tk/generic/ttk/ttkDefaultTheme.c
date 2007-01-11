@@ -297,8 +297,8 @@ BorderElementDraw(
 
     if (defaultState == TTK_BUTTON_DEFAULT_ACTIVE) {
 	GC gc = Tk_GCForColor(borderColor, d);
-	XDrawRectangle(Tk_Display(tkwin), d, gc, 
-		b.x, b.y, b.width-1, b.height-1);
+	XDrawRectangle(Tk_Display(tkwin), d, gc,
+		b.x, b.y, (unsigned)b.width-1, (unsigned)b.height-1);
     }
     if (defaultState != TTK_BUTTON_DEFAULT_DISABLED) {
 	/* Space for default ring: */
@@ -578,11 +578,12 @@ static void IndicatorElementDraw(
     /*
      * Copy onto our target drawable surface.
      */
+
     memset(&gcValues, 0, sizeof(gcValues));
     copyGC = Tk_GetGC(tkwin, 0, &gcValues);
 
     TkPutImage(NULL, 0, display, d, copyGC, img, 0, 0, b.x, b.y,
-               spec->width, spec->height);
+               (unsigned)spec->width, (unsigned)spec->height);
 
     /*
      * Tidy up.
@@ -1084,7 +1085,7 @@ static void TreeitemIndicatorDraw(
     b = Ttk_PadBox(b, padding);
 
     XDrawRectangle(Tk_Display(tkwin), d, gc,
-	    b.x, b.y, b.width - 1, b.height - 1);
+	    b.x, b.y, (unsigned)b.width - 1, (unsigned)b.height - 1);
 
     cx = b.x + (b.width - 1) / 2;
     cy = b.y + (b.height - 1) / 2;
