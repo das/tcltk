@@ -672,15 +672,18 @@ static Ttk_ManagerSpec NotebookManagerSpec =
 /* NotebookEventHandler --
  * 	Tracks the active tab.
  */
-static const unsigned NotebookEventMask =
-    StructureNotifyMask | PointerMotionMask | LeaveWindowMask;
+static const int NotebookEventMask
+    = StructureNotifyMask
+    | PointerMotionMask
+    | LeaveWindowMask
+    ;
 static void NotebookEventHandler(ClientData clientData, XEvent *eventPtr)
 {
     Notebook *nb = clientData;
 
     if (eventPtr->type == DestroyNotify) { /* Remove self */
-	Tk_DeleteEventHandler(nb->core.tkwin, NotebookEventMask,
-		NotebookEventHandler, clientData);
+	Tk_DeleteEventHandler(nb->core.tkwin,
+	    NotebookEventMask, NotebookEventHandler, clientData);
     } else if (eventPtr->type == MotionNotify) {
 	int index = IdentifyTab(nb, eventPtr->xmotion.x, eventPtr->xmotion.y);
 	ActivateTab(nb, index);

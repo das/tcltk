@@ -1073,7 +1073,7 @@ static void Ttk_DrawNodeList(
     for (; node; node = node->next)
     {
 	int border = node->flags & TTK_BORDER;
-	Ttk_State substate = state;
+	int substate = state;
 
 	if (node->flags & TTK_UNIT)
 	    substate |= node->state;

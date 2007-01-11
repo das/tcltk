@@ -80,7 +80,7 @@ CreateThemeMonitorWindow(HINSTANCE hinst, Tcl_Interp *interp)
     HWND       hwnd = NULL;
     CHAR       title[32] = "TtkMonitorWindow";
     CHAR       name[32] = "TtkMonitorClass";
-
+    
     wc.cbSize        = sizeof(WNDCLASSEX);
     wc.style         = CS_HREDRAW | CS_VREDRAW;
     wc.lpfnWndProc   = (WNDPROC)WndProc;
@@ -93,11 +93,11 @@ CreateThemeMonitorWindow(HINSTANCE hinst, Tcl_Interp *interp)
     wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
     wc.lpszMenuName  = name;
     wc.lpszClassName = name;
-
+    
     if (RegisterClassEx(&wc)) {
-	hwnd = CreateWindow(name, title, WS_OVERLAPPEDWINDOW,
-		(int) CW_USEDEFAULT, (int) CW_USEDEFAULT, (int) CW_USEDEFAULT,
-		(int) CW_USEDEFAULT, NULL, NULL, hinst, NULL);
+	hwnd = CreateWindow( name, title, WS_OVERLAPPEDWINDOW,
+	    CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+	    NULL, NULL, hinst, NULL );
 	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG)interp);
 	ShowWindow(hwnd, SW_HIDE);
 	UpdateWindow(hwnd);
