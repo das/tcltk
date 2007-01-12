@@ -2600,6 +2600,8 @@ TkpWmSetState(
 	cmd = SW_SHOWNOACTIVATE;
     } else if (state == ZoomState) {
 	cmd = SW_SHOWMAXIMIZED;
+    } else {
+	return;
     }
 
     ShowWindow(wmPtr->wrapper, cmd);
@@ -3146,7 +3148,7 @@ WmAttributesCmd(
     Tcl_Obj *CONST objv[])	/* Argument objects. */
 {
     register WmInfo *wmPtr = winPtr->wmInfoPtr;
-    LONG style, exStyle, styleBit, *stylePtr;
+    LONG style, exStyle, styleBit, *stylePtr = NULL;
     char *string;
     int i, boolean, length;
     int config_fullscreen = 0;
@@ -5209,8 +5211,9 @@ WmStateCmd(
 	}
 
 	if (winPtr->flags & TK_EMBEDDED) {
-	    int state;
-	    switch(index) {
+	    int state = 0;
+
+	    switch (index) {
 	    case OPT_NORMAL:
 		state = NormalState;
 		break;
@@ -5223,9 +5226,11 @@ WmStateCmd(
 	    case OPT_ZOOMED:
 		state = ZoomState;
 		break;
+	    default:
+		Tcl_Panic("unexpected index");
 	    }
 
-	    if(state+1 != SendMessage(wmPtr->wrapper, TK_STATE, state, 0)) {
+	    if (state+1 != SendMessage(wmPtr->wrapper, TK_STATE, state, 0)) {
 		Tcl_AppendResult(interp, "can't change state of ",
 			winPtr->pathName,
 			": the container does not support the request", NULL);
@@ -7020,6 +7025,7 @@ ConfigureTopLevel(
 	    state = IconicState;
 	    break;
 	case SW_SHOWNORMAL:
+	default:
 	    state = NormalState;
 	    break;
 	}

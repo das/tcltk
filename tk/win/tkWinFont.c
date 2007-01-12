@@ -672,7 +672,7 @@ Tk_MeasureChars(
     Tcl_DString runString;
     SubFont *thisSubFontPtr;
     SubFont *lastSubFontPtr;
-    CONST char *p, *end, *next, *start;
+    CONST char *p, *end, *next = NULL, *start;
 
     if (numBytes == 0) {
 	*lengthPtr = 0;
