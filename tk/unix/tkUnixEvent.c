@@ -537,7 +537,7 @@ TkUnixDoOneXEvent(
 	}
     }
 
-    numFound = select(numFdBits, (SELECT_MASK *) &readMask[0], NULL, NULL,
+    numFound = select(numFdBits, (SELECT_MASK *) readMask, NULL, NULL,
 	    timeoutPtr);
     if (numFound <= 0) {
 	/*
