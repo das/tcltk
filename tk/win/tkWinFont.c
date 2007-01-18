@@ -157,7 +157,7 @@ typedef struct CanUse {
  * represent the system fonts and the numbers used by Windows.
  */
 
-static TkStateMap systemMap[] = {
+static const TkStateMap systemMap[] = {
     {ANSI_FIXED_FONT,	    "ansifixed"},
     {ANSI_VAR_FONT,	    "ansi"},
     {DEVICE_DEFAULT_FONT,   "device"},

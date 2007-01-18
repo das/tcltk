@@ -845,7 +845,7 @@ typedef struct TkWindow {
 
 typedef struct TkStateMap {
     int numKey;			/* Integer representation of a value. */
-    char *strKey;		/* String representation of a value. */
+    const char *strKey;		/* String representation of a value. */
 } TkStateMap;
 
 /*
