@@ -232,6 +232,7 @@ Tk_SetInternalBorderEx(tkwin, left, right, top, bottom)
 	Tk_ResizeWindow(tkwin, Tk_Width(tkwin), Tk_Height(tkwin));
     }
 }
+
 /*
  *----------------------------------------------------------------------
  *

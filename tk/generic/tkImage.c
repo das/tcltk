@@ -739,7 +739,7 @@ Tk_PostscriptImage(image, interp, tkwin, psinfo, x, y, width, height, prepass)
     XDestroyImage(ximage);
     return result;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1035,7 +1035,7 @@ Tk_GetImageMasterData(interp, name, typePtrPtr)
     *typePtrPtr = masterPtr->typePtr;
     return masterPtr->masterData;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
