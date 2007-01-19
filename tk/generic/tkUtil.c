@@ -850,7 +850,7 @@ TkFindStateString(
 {
     for ( ; mapPtr->strKey != NULL; mapPtr++) {
 	if (numKey == mapPtr->numKey) {
-	    return mapPtr->strKey;
+	    return (char*)(mapPtr->strKey);
 	}
     }
     return NULL;
