@@ -85,7 +85,7 @@ Tk_MacOSXSetupTkNotifier()
 	}
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -149,7 +149,7 @@ CarbonEventsSetupProc(clientData, flags)
         Tcl_SetMaxBlockTime(&blockTime);
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
