@@ -589,5 +589,7 @@ AC_SUBST(APP_RSRC_FILE)
 AC_SUBST(REZ)
 AC_SUBST(REZ_FLAGS)
 
+SC_OUTPUT_COMMANDS_PRE
+
 tk_config_files="${tk_config_files} [Makefile tkConfig.sh]"
 AC_OUTPUT([${tk_config_files}])
