@@ -21,7 +21,7 @@
 /* Stub for platforms that lack the XP theme API headers: */
 #include <windows.h>
 #include <tcl.h>
-int XPTheme_Init(Tcl_Interp *interp, HWND hwnd) { return TCL_OK; }
+int TtkXPTheme_Init(Tcl_Interp *interp, HWND hwnd) { return TCL_OK; }
 #else
 
 #define WINVER 0x0501	/* Requires Windows XP APIs */
