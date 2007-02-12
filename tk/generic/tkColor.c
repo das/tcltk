@@ -28,7 +28,6 @@ typedef struct {
     Display *display;		/* Display for colormap. */
 } ValueKey;
 
-
 /*
  * The structure below is used to allocate thread-local data.
  */
@@ -737,8 +736,8 @@ InitColorObj(
  */
 
 static void
-ColorInit(dispPtr)
-    TkDisplay *dispPtr;
+ColorInit(
+    TkDisplay *dispPtr)
 {
     if (!dispPtr->colorInit) {
 	dispPtr->colorInit = 1;
