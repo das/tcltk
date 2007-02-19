@@ -709,12 +709,12 @@ proc ::tk::IconList_KeyPress {w key} {
 proc ::tk::IconList_Goto {w text} {
     upvar ::tk::$w data
     upvar ::tk::$w:textList textList
-    
+
     if {![info exists data(list)]} {
 	return
     }
 
-    if {$text eq ""} {
+    if {$text eq "" || $data(numItems) == 0} {
 	return
     }
 
