@@ -250,7 +250,8 @@ TkpScanWindowId(
  */
 
 Window
-TkpMakeWindow(    TkWindow *winPtr,
+TkpMakeWindow(
+    TkWindow *winPtr,
     Window parent)
 {
     HWND parentWin;

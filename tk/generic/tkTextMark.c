@@ -47,10 +47,9 @@ static int		MarkFindPrev(Tcl_Interp *interp,
 
 
 /*
- * The following structures declare the "mark" segment types.
- * There are actually two types for marks, one with left gravity
- * and one with right gravity.  They are identical except for
- * their gravity property.
+ * The following structures declare the "mark" segment types. There are
+ * actually two types for marks, one with left gravity and one with right
+ * gravity. They are identical except for their gravity property.
  */
 
 const Tk_SegType tkTextRightMarkType = {
@@ -107,16 +106,13 @@ TkTextMarkCmd(
     Tcl_HashSearch search;
     TkTextIndex index;
     const Tk_SegType *newTypePtr;
-
     int optionIndex;
-
     static const char *markOptionStrings[] = {
-	"gravity", "names", "next", "previous", "set",
-	"unset", NULL
+	"gravity", "names", "next", "previous", "set", "unset", NULL
     };
     enum markOptions {
-	MARK_GRAVITY, MARK_NAMES, MARK_NEXT, MARK_PREVIOUS,
-	MARK_SET, MARK_UNSET
+	MARK_GRAVITY, MARK_NAMES, MARK_NEXT, MARK_PREVIOUS, MARK_SET,
+	MARK_UNSET
     };
 
     if (objc < 3) {
@@ -128,7 +124,7 @@ TkTextMarkCmd(
 	return TCL_ERROR;
     }
 
-    switch ((enum markOptions)optionIndex) {
+    switch ((enum markOptions) optionIndex) {
     case MARK_GRAVITY: {
 	char c;
 	int length;
@@ -267,8 +263,7 @@ TkTextSetMark(
     Tcl_HashEntry *hPtr = NULL;
     TkTextSegment *markPtr;
     TkTextIndex insertIndex;
-    int isNew;
-    int widgetSpecific;
+    int isNew, widgetSpecific;
 
     if (!strcmp(name, "insert")) {
 	widgetSpecific = 1;
@@ -506,7 +501,6 @@ MarkCleanupProc(
  *--------------------------------------------------------------
  */
 
-	/*ARGSUSED*/
 static int
 MarkLayoutProc(
     TkText *textPtr,		/* Text widget being layed out. */

@@ -8161,8 +8161,8 @@ TkWinSetForegroundWindow(
  */
 
 void
-TkpWinToplevelWithDraw(winPtr)
-    TkWindow *winPtr;
+TkpWinToplevelWithDraw(
+    TkWindow *winPtr)
 {
     register WmInfo *wmPtr = winPtr->wmInfoPtr;
     wmPtr->flags |= WM_WITHDRAWN;
