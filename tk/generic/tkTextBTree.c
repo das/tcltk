@@ -1812,7 +1812,7 @@ TkBTreeNextLine(
 
 TkTextLine *
 TkBTreePreviousLine(
-    TkText *textPtr		/* Relative to this client of the B-tree. */
+    TkText *textPtr,		/* Relative to this client of the B-tree. */
     register TkTextLine *linePtr)
 				/* Pointer to existing line in B-tree. */
 {
