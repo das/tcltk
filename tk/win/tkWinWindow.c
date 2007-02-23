@@ -208,7 +208,7 @@ TkpScanWindowId(
     Window *idPtr)		/* Place to store converted result. */
 {
     Tk_Window tkwin;
-    Window number;
+    Window number, *numberPtr = &number;
 
     /*
      * We want sscanf for the 64-bit check, but if that doesn't work, then
@@ -219,7 +219,7 @@ TkpScanWindowId(
 #ifdef _WIN64
 	    (sscanf(string, "0x%p", &number) != 1) &&
 #endif
-	    Tcl_GetInt(interp, string, (int *) &number) != TCL_OK) {
+	    Tcl_GetInt(interp, string, (int *) numberPtr) != TCL_OK) {
 	return TCL_ERROR;
     }
 
