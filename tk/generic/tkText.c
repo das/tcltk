@@ -686,7 +686,7 @@ TextWidgetObjCmd(
     int index;
 
     static CONST char *optionStrings[] = {
-	"bbox", "cget", "compare", "configure", "count", "debug", "delete"
+	"bbox", "cget", "compare", "configure", "count", "debug", "delete",
 	"dlineinfo", "dump", "edit", "get", "image", "index", "insert",
 	"mark", "peer", "replace", "scan", "search", "see", "tag", "window",
 	"xview", "yview", NULL
