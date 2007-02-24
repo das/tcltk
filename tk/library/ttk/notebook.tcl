@@ -108,10 +108,10 @@ proc ttk::notebook::enableTraversal {nb} {
 	bind $top <Control-Key-ISO_Left_Tab> {+ttk::notebook::TLCycleTab %W -1}
 	}
 	if {[tk windowingsystem] eq "aqua"} {
-	    bind $top <Alt-KeyPress> \
+	    bind $top <Option-KeyPress> \
 		+[list ttk::notebook::MnemonicActivation $top %K]
 	} else {
-	    bind $top <Option-KeyPress> \
+	    bind $top <Alt-KeyPress> \
 		+[list ttk::notebook::MnemonicActivation $top %K]
 	}
 	bind $top <Destroy> {+ttk::notebook::TLCleanup %W}
