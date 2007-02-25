@@ -796,7 +796,9 @@ TkComputeAnchor(
     case TK_ANCHOR_N:
     case TK_ANCHOR_CENTER:
     case TK_ANCHOR_S:
-	*xPtr = (Tk_Width(tkwin) - innerWidth) / 2;
+	*xPtr = (Tk_Width(tkwin) - innerWidth - Tk_InternalBorderLeft(tkwin) -
+		Tk_InternalBorderRight(tkwin)) / 2 +
+		Tk_InternalBorderLeft(tkwin);
 	break;
 
     default:
@@ -815,7 +817,9 @@ TkComputeAnchor(
     case TK_ANCHOR_W:
     case TK_ANCHOR_CENTER:
     case TK_ANCHOR_E:
-	*yPtr = (Tk_Height(tkwin) - innerHeight) / 2;
+	*yPtr = (Tk_Height(tkwin) - innerHeight- Tk_InternalBorderTop(tkwin) -
+		Tk_InternalBorderBottom(tkwin)) / 2 +
+		Tk_InternalBorderTop(tkwin);
 	break;
 
     default:
