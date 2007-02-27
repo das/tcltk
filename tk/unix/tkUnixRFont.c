@@ -248,11 +248,10 @@ FinishedWithFont(
     UnixFtFont *fontPtr)
 {
     Display *display = fontPtr->display;
-    Tk_ErrorHandler handler;
     int i;
-
-    handler = Tk_CreateErrorHandler(display, -1, -1, -1, NULL,
+    Tk_ErrorHandler handler = Tk_CreateErrorHandler(display, -1, -1, -1, NULL,
 	    (ClientData) NULL);
+
     for (i = 0; i < fontPtr->nfaces; i++) {
 	if (fontPtr->faces[i].ftFont) {
 	    XftFontClose(fontPtr->display, fontPtr->faces[i].ftFont);
@@ -526,7 +525,6 @@ TkpGetFontAttrsForChar(
     faPtr->slant = (slant > XFT_SLANT_ROMAN) ? TK_FS_ITALIC : TK_FS_ROMAN;
     faPtr->underline = fontPtr->font.fa.underline;
     faPtr->overstrike = fontPtr->font.fa.overstrike;
-
 }
 
 int
@@ -555,11 +553,9 @@ Tk_MeasureChars(
     UnixFtFont *fontPtr = (UnixFtFont *) tkfont;
     XftFont *ftFont;
     FcChar32 c;
-    int clen;
     XGlyphInfo extents;
-    int curX, newX;
+    int clen, curX, newX, curByte, newByte, sawNonSpace;
     int termByte = 0, termX = 0;
-    int curByte, newByte, sawNonSpace;
 #if DEBUG_FONTSEL
     char string[256];
     int len = 0;
@@ -668,9 +664,8 @@ Tk_DrawChars(
     UnixFtFont *fontPtr = (UnixFtFont *) tkfont;
     XGCValues values;
     XColor xcolor;
-    int clen;
+    int clen, nspec;
     XftGlyphFontSpec specs[NUM_SPEC];
-    int nspec;
     XGlyphInfo metrics;
 
     if (fontPtr->ftDraw == 0) {
@@ -682,10 +677,9 @@ Tk_DrawChars(
 		DefaultColormap(display, fontPtr->screen));
 	fontPtr->drawable = drawable;
     } else {
-	Tk_ErrorHandler handler;
+	Tk_ErrorHandler handler = Tk_CreateErrorHandler(display, -1, -1, -1,
+		NULL, (ClientData) NULL);
 
-	handler = Tk_CreateErrorHandler(display, -1, -1, -1, NULL,
-		(ClientData) NULL);
 	XftDrawChange(fontPtr->ftDraw, drawable);
 	fontPtr->drawable = drawable;
 	Tk_DeleteErrorHandler(handler);
