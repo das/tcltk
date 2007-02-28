@@ -273,7 +273,7 @@ static int		UtfToUcs2beProc(ClientData clientData, CONST char*src,
  *
  * Side effects:
  *	Releases thread-specific resources used by font pkg.
-x *
+ *
  *-------------------------------------------------------------------------
  */
 
