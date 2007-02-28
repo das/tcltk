@@ -773,6 +773,8 @@ FrameWidgetObjCmd(
 			&& (strncmp(arg, "-use", (unsigned)length) == 0))
 		    || ((c == 'v')
 			&& (strncmp(arg, "-visual", (unsigned)length) == 0))) {
+
+		    #ifdef SUPPORT_CONFIG_EMBEDDED
 		    if (c == 'u') {
 			CONST char *string = Tcl_GetString(objv[i+1]);
 			if (TkpUseWindow(interp, framePtr->tkwin,
@@ -786,6 +788,12 @@ FrameWidgetObjCmd(
 			result = TCL_ERROR;
 			goto done;
 		    }
+		    #else
+			Tcl_AppendResult(interp, "can't modify ", arg,
+				" option after widget is created", NULL);
+			result = TCL_ERROR;
+			goto done;
+		    #endif
 		}
 	    }
 	    result = ConfigureFrame(interp, framePtr, objc-2, objv+2);
