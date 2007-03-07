@@ -3080,10 +3080,12 @@ TTK_END_LAYOUT
  * +++ Tree indicator element.
  */
 
+#ifdef UNUSED
 #if defined(WIN32)
 static const int WIN32_XDRAWLINE_HACK = 1;
 #else
 static const int WIN32_XDRAWLINE_HACK = 0;
+#endif
 #endif
 
 typedef struct
