@@ -1935,7 +1935,6 @@ test grid-21.7 {anchor} {
     	frame .$i -bg gray  -width 75 -height 50 -bd 2 -relief ridge
     	grid .$i -in .f -row $i -column $i -sticky nswe
     }
-    pack propagate . 0
     grid propagate .f 0
     . configure -width 300 -height 250
 
