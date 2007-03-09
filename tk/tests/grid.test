@@ -1935,6 +1935,7 @@ test grid-21.7 {anchor} {
     	frame .$i -bg gray  -width 75 -height 50 -bd 2 -relief ridge
     	grid .$i -in .f -row $i -column $i -sticky nswe
     }
+    pack propagate . 0
     grid propagate .f 0
     . configure -width 300 -height 250
 
@@ -1944,6 +1945,7 @@ test grid-21.7 {anchor} {
         update
         lappend res [grid bbox .f]
     }
+    pack propagate . 1 ; wm geometry . {}
     set res
 } [list {37 20 225 150} {75 20 225 150} {75 60 225 150} {75 100 225 150} \
            {37 100 225 150} {0 100 225 150} {0 60 225 150} {0 20 225 150} \
