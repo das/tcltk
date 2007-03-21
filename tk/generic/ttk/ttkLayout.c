@@ -735,9 +735,19 @@ Ttk_LayoutTemplate Ttk_BuildLayoutTemplate(Ttk_LayoutSpec spec)
 	}
 
 	if (spec->opcode & TTK_CHILDREN) {
+	    int depth = 1;
 	    last->child = Ttk_BuildLayoutTemplate(spec+1);
-	    while (!(spec->opcode & TTK_LAYOUT_END)) {
+
+	    /* Skip to end of group:
+	     */
+	    while (depth) {
 		++spec;
+		if (spec->opcode & TTK_CHILDREN) {
+		    ++depth;
+		}
+		if (spec->opcode & TTK_LAYOUT_END) {
+		    --depth;
+		}
 	    }
 	}
     } /* for */
