@@ -234,11 +234,8 @@ TkMacOSXProcessMouseEvent(TkMacOSXEvent *eventPtr, MacEventStatus * statusPtr)
 	status = GetEventParameter(eventPtr->eventRef,
 		kEventParamMouseWheelDelta, typeLongInteger, NULL,
 		sizeof(long), NULL, &medPtr->delta);
-	if (status != noErr ) {
-#ifdef TK_MAC_DEBUG
-	    fprintf (stderr,
-		"Failed to retrieve mouse wheel delta, %d\n", (int) status);
-#endif
+	if (status != noErr) {
+	    ERR_MSG("Failed to retrieve mouse wheel delta, %d", (int) status);
 	    statusPtr->err = 1;
 	    return false;
 	} else {
@@ -533,21 +530,22 @@ GeneratePollingEvents(MouseEventData * medPtr)
  */
 
 static void
-BringWindowForward(WindowRef wRef, Boolean isFrontProcess)
+BringWindowForward(
+    WindowRef wRef,
+    Boolean isFrontProcess)
 {
     if (!isFrontProcess) {
 	ProcessSerialNumber ourPsn = {0, kCurrentProcess};
 	OSStatus status = SetFrontProcess(&ourPsn);
 	if (status != noErr) {
-#ifdef TK_MAC_DEBUG
-	    fprintf(stderr,"SetFrontProcess failed, %d\n", (int) status);
-#endif
+	    ERR_MSG("SetFrontProcess failed, %d", (int) status);
 	}
     }
-    
+
     if (!TkpIsWindowFloating(wRef)) {
-	if (IsValidWindowPtr(wRef))
+	if (IsValidWindowPtr(wRef)) {
 	    SelectWindow(wRef);
+	}
     }
 }
 

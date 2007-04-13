@@ -358,7 +358,7 @@ TkMacOSXInstallCursor(
     CCrsrHandle ccursor;
     CursHandle cursor;
     static unsigned int cursorStep = 0;
-    
+
     gResizeOverride = resizeOverride;
 
     if (resizeOverride) {
@@ -366,9 +366,7 @@ TkMacOSXInstallCursor(
         if (cursor) {
             SetCursor(*cursor);
         } else {
-#ifdef TK_MAC_DEBUG
-            fprintf(stderr,"Resize cursor failed, %d\n", ResError());
-#endif
+	    LOG_MSG("Resize cursor failed, %d", ResError());
         }
     } else if (macCursorPtr == NULL) {
         SetThemeCursor(kThemeArrowCursor);
