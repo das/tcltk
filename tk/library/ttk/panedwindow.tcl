@@ -34,7 +34,7 @@ proc ttk::panedwindow::Press {w x y} {
     variable State
 
     lassign [$w identify $x $y] sash element
-    if {![info exists sash]} {
+    if {![info exists sash] || $sash eq ""} {
     	set State(pressed) 0
 	return
     }
