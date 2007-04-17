@@ -161,11 +161,11 @@ typedef struct Tk_OptionSpec {
     Tk_OptionType type;		/* Type of option, such as TK_OPTION_COLOR;
 				 * see definitions above. Last option in table
 				 * must have type TK_OPTION_END. */
-    const char *optionName; /* Name used to specify option in Tcl
+    const char *optionName;	/* Name used to specify option in Tcl
 				 * commands. */
     const char *dbName;		/* Name for option in option database. */
-    const char *dbClass;		/* Class for option in database. */
-    const char *defValue;		/* Default value for option if not specified
+    const char *dbClass;	/* Class for option in database. */
+    const char *defValue;	/* Default value for option if not specified
 				 * in command line, the option database, or
 				 * the system. */
     int objOffset;		/* Where in record to store a Tcl_Obj * that
