@@ -509,7 +509,7 @@ Tk_EntryObjCmd(
      */
 
     entryPtr			= (Entry *) ckalloc(sizeof(Entry));
-    memset((VOID *) entryPtr, 0, sizeof(Entry));
+    memset(entryPtr, 0, sizeof(Entry));
 
     entryPtr->tkwin		= tkwin;
     entryPtr->display		= Tk_Display(tkwin);
@@ -3523,7 +3523,7 @@ Tk_SpinboxObjCmd(
 
     sbPtr			= (Spinbox *) ckalloc(sizeof(Spinbox));
     entryPtr			= (Entry *) sbPtr;
-    memset((VOID *) sbPtr, 0, sizeof(Spinbox));
+    memset(sbPtr, 0, sizeof(Spinbox));
 
     entryPtr->tkwin		= tkwin;
     entryPtr->display		= Tk_Display(tkwin);
