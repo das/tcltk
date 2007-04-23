@@ -36,7 +36,7 @@
  */
 
 MODULE_SCOPE void
-TkMacOSXFlushWindows (void)
+TkMacOSXFlushWindows(void)
 {
     WindowRef wRef = GetWindowList();
 
