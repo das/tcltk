@@ -465,7 +465,9 @@ ConfigureText(
 	    gcValues.fill_style = FillStippled;
 	    mask |= GCStipple|GCFillStyle;
 	}
-	gcValues.foreground = textInfoPtr->selFgColorPtr->pixel;
+	if (textInfoPtr->selFgColorPtr != NULL) {
+	    gcValues.foreground = textInfoPtr->selFgColorPtr->pixel;
+	}
 	newSelGC = Tk_GetGC(tkwin, mask|GCForeground, &gcValues);
     }
     if (textPtr->gc != None) {

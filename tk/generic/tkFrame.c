@@ -1427,6 +1427,7 @@ DisplayFrame(
 	    goto noLabel;
 	}
 
+#ifndef TK_NO_DOUBLE_BUFFERING
 	/*
 	 * In order to avoid screen flashes, this function redraws the frame
 	 * into off-screen memory, then copies it back on-screen in a single
@@ -1436,6 +1437,9 @@ DisplayFrame(
 
 	pixmap = Tk_GetPixmap(framePtr->display, Tk_WindowId(tkwin),
 		Tk_Width(tkwin), Tk_Height(tkwin), Tk_Depth(tkwin));
+#else
+	pixmap = Tk_WindowId(tkwin);
+#endif /* TK_NO_DOUBLE_BUFFERING */
 
 	/*
 	 * Clear the pixmap.
@@ -1549,6 +1553,7 @@ DisplayFrame(
 	}
 
 
+#ifndef TK_NO_DOUBLE_BUFFERING
 	/*
 	 * Everything's been redisplayed; now copy the pixmap onto the screen
 	 * and free up the pixmap.
@@ -1560,6 +1565,7 @@ DisplayFrame(
 		(unsigned) (Tk_Height(tkwin) - 2 * hlWidth),
 		hlWidth, hlWidth);
 	Tk_FreePixmap(framePtr->display, pixmap);
+#endif /* TK_NO_DOUBLE_BUFFERING */
     }
 
 }
