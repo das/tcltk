@@ -6289,7 +6289,7 @@ as system colors.
 
 2007-04-23 (platform support) Aqua: use OS theme for tk_dialog and bgerror.
 
-2007-04-23 (platform support) Aqua: add 'none' cursor.
+2007-04-23 (platform support) Aqua: add 'none' cursor & missing theme cursors.
 
 2007-04-23 (platform support) Aqua: [tk_getOpenFile -parent] uses sheet dialog.
 
