@@ -1062,7 +1062,7 @@ EmbedFocusProc(
 static void
 EmbedGeometryRequest(
     Container *containerPtr,	/* Information about the embedding. */
-    int width, height)		/* Size that the child has requested. */
+    int width, int height)	/* Size that the child has requested. */
 {
     TkWindow *winPtr = containerPtr->parentPtr;
 
