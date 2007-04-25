@@ -1006,7 +1006,7 @@ TkMacOSXDrawControl(
     }
     UpdateControlColors(mbPtr);
 
-    if (butPtr->type == TYPE_BUTTON) {
+    if (butPtr->type == TYPE_BUTTON && !mbPtr->params.isBevel) {
 	Boolean isDefault;
 
 	if (butPtr->defaultState == STATE_ACTIVE) {
