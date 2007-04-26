@@ -1620,7 +1620,7 @@ dist:   $(UNIX_DIR)/configure $(UNIX_DIR)/tkConfig.h.in
 		$(TEST_DIR)/README $(TEST_DIR)/*.{gif,ppm,xbm} \
 		$(TEST_DIR)/option.file* $(DISTDIR)/tests
 	mkdir $(DISTDIR)/tests/ttk
-	cp -p $(TEST_DIR)/*.{test,tcl} $(DISTDIR)/tests/ttk
+	cp -p $(TEST_DIR)/ttk/*.{test,tcl} $(DISTDIR)/tests/ttk
 
 #
 # The following target can only be used for non-patch releases.  Use
