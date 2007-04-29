@@ -278,7 +278,7 @@ if test $tk_aqua = yes; then
     LIBS="$LIBS -framework Carbon -framework IOKit"
     CFLAGS="$CFLAGS -fpascal-strings"
     TK_WINDOWINGSYSTEM=AQUA
-    if test "${enable_symbols}" != no; then
+    if test -n "${enable_symbols}" -a "${enable_symbols}" != no; then
         AC_DEFINE(TK_MAC_DEBUG, 1, [Are TkAqua debug messages enabled?])
     fi
 else
