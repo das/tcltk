@@ -123,9 +123,9 @@ proc ::tk::PlaceWindow {w {place ""} {anchor ""}} {
 	} elseif {$y > ([winfo screenheight $w]-[winfo reqheight $w])} {
 	    set y [expr {[winfo screenheight $w]-[winfo reqheight $w]}]
 	}
-	if {$windowingsystem eq "macintosh" || $windowingsystem eq "aqua"} {
+	if {$windowingsystem eq "classic" || $windowingsystem eq "aqua"} {
 	    # Avoid the native menu bar which sits on top of everything.
-	    if {$y < 20} { set y 20 }
+	    if {$y < 22} { set y 22 }
 	}
     }
     wm geometry $w +$x+$y
