@@ -1569,7 +1569,7 @@ GetDefaultOptions(
     TkWindow *winPtr)		/* Fetch option defaults for main window
 				 * associated with this. */
 {
-    char *regProp;
+    char *regProp, **regPropPtr = &regProp;
     int result, actualFormat;
     unsigned long numItems, bytesAfter;
     Atom actualType;
@@ -1580,10 +1580,9 @@ GetDefaultOptions(
 
     regProp = NULL;
     result = XGetWindowProperty(winPtr->display,
-	    RootWindow(winPtr->display, 0),
-	    XA_RESOURCE_MANAGER, 0, 100000,
-	    False, XA_STRING, &actualType, &actualFormat,
-	    &numItems, &bytesAfter, (unsigned char **) &regProp);
+	    RootWindow(winPtr->display, 0), XA_RESOURCE_MANAGER, 0, 100000,
+	    False, XA_STRING, &actualType, &actualFormat, &numItems,
+	    &bytesAfter, (unsigned char **) regPropPtr);
 
     if ((result == Success) && (actualType == XA_STRING)
 	    && (actualFormat == 8)) {

@@ -119,7 +119,7 @@ InitFont(
 {
     TkFontAttributes *faPtr;
     TkFontMetrics *fmPtr;
-    char *family;
+    char *family, **familyPtr = &family;
     int weight, slant, spacing, i;
     double size;
     FcFontSet *set;
@@ -183,7 +183,7 @@ InitFont(
      */
 
     if (XftPatternGetString(ftFont->pattern, XFT_FAMILY, 0,
-	    &family) != XftResultMatch) {
+	    familyPtr) != XftResultMatch) {
 	family = "Unknown";
     }
 
@@ -399,7 +399,7 @@ TkpGetFontFamilies(
     Tcl_Obj *resultPtr, *strPtr;
     XftFontSet *list;
     int i;
-    char *family;
+    char *family, **familyPtr = &family;
 
     resultPtr = Tcl_NewListObj(0, NULL);
 
@@ -407,7 +407,7 @@ TkpGetFontFamilies(
 	    XFT_FAMILY, 0);
     for (i = 0; i < list->nfont; i++) {
 	if (XftPatternGetString(list->fonts[i], XFT_FAMILY, 0,
-		&family) == XftResultMatch) {
+		familyPtr) == XftResultMatch) {
 	    strPtr = Tcl_NewStringObj(Tk_GetUid(family), -1);
 	    Tcl_ListObjAppendElement(NULL, resultPtr, strPtr);
 	}
@@ -438,7 +438,9 @@ TkpGetSubFonts(
     Tcl_Obj *objv[3], *listPtr, *resultPtr;
     UnixFtFont *fontPtr = (UnixFtFont *) tkfont;
     FcPattern *pattern;
-    char *family, *foundry, *encoding;
+    char *family, **familyPtr = &family;
+    char *foundry, **foundryPtr = &foundry;
+    char *encoding, **encodingPtr = &encoding;
     int i;
 
     resultPtr = Tcl_NewListObj(0, NULL);
@@ -448,15 +450,15 @@ TkpGetSubFonts(
 		fontPtr->faces[i].source);
 
 	if (XftPatternGetString(pattern, XFT_FAMILY, 0,
-		&family) != XftResultMatch) {
+		familyPtr) != XftResultMatch) {
 	    family = "Unknown";
 	}
 	if (XftPatternGetString(pattern, XFT_FOUNDRY, 0,
-		&foundry) != XftResultMatch) {
+		foundryPtr) != XftResultMatch) {
 	    foundry = "Unknown";
 	}
 	if (XftPatternGetString(pattern, XFT_ENCODING, 0,
-		&encoding) != XftResultMatch) {
+		encodingPtr) != XftResultMatch) {
 	    encoding = "Unknown";
 	}
 	objv[0] = Tcl_NewStringObj(family, -1);
@@ -473,8 +475,8 @@ TkpGetSubFonts(
  *
  * TkpGetFontAttrsForChar --
  *
- *	Retrieve the font attributes of the actual font used to render
- *	a given character.
+ *	Retrieve the font attributes of the actual font used to render a given
+ *	character.
  *
  * Results:
  *	None.
@@ -499,12 +501,13 @@ TkpGetFontAttrsForChar(
     XftFont *xftFontPtr = GetFont(fontPtr, ucs4);
 				/* Actual font used to render the character */
     const char *family;		/* Font family name */
+    const char **familyPtr = &family;
     double size;		/* Font size */
     int weight;			/* Font weight */
     int slant;			/* Font slant */
 
     if (XftPatternGetString(xftFontPtr->pattern, XFT_FAMILY, 0,
-	    &family) != XftResultMatch) {
+	    familyPtr) != XftResultMatch) {
 	family = "Unknown";
     }
     if (XftPatternGetDouble(xftFontPtr->pattern, XFT_SIZE, 0,
