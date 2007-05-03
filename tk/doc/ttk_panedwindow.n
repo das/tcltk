@@ -40,7 +40,7 @@ The following options may be specified for each pane:
 .OP \-weight weight Weight
 An integer specifying the relative stretchability of the pane.
 When the paned window is resized, the extra space is added
-or subracted to each pane proportionally to its \fB-weight\fR.
+or subtracted to each pane proportionally to its \fB-weight\fR.
 
 .SH "WIDGET COMMAND"
 Supports the standard \fBconfigure\fR, \fBcget\fR, \fBstate\fR, 

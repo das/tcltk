@@ -33,7 +33,7 @@ Specifies a string to use as the window manager title.
 .OP \-message undefined undefined
 Specifies the message to display in this dialog.
 .OP \-detail undefined undefined
-Specifies a longer auxilliary message.
+Specifies a longer auxiliary message.
 .OP \-command undefined undefined
 Specifies a command prefix to be invoked when the user presses
 one of the command buttons.  
@@ -51,7 +51,7 @@ See \fBPREDEFINED DIALOG TYPES\fR, below.
 Specifies one of the stock dialog icons,
 \fBinfo\fR, \fBquestion\fR, \fBwarning\fR, \fBerror\fR,
 \fBauth\fR, or \fBbusy\fR.
-If set to the empty string (the defalt), no icon is displayed.
+If set to the empty string (the default), no icon is displayed.
 .OP \-buttons undefined undefined
 A list of symbolic button names.
 .OP \-labels undefined undefined

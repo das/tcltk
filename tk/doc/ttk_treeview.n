@@ -365,7 +365,7 @@ the remaining values are assumed empty.
 If there are more values than columns,
 the extra values are ignored.
 .OP \-open open Open
-A boolean value indicating whether the items's children
+A boolean value indicating whether the item's children
 should be displayed (\fB-open true\fR) or hidden (\fB-open false\fR).
 .OP \-tags tags Tags
 A list of tags associated with this item.  
