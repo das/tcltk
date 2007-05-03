@@ -265,6 +265,7 @@ RegOpen(
     int result, actualFormat;
     unsigned long bytesAfter;
     Atom actualType;
+    char **propertyPtr;
 
     if (dispPtr->commTkwin == NULL) {
 	SendInit(interp, dispPtr);
@@ -275,6 +276,7 @@ RegOpen(
     regPtr->locked = 0;
     regPtr->modified = 0;
     regPtr->allocedByX = 1;
+    propertyPtr = &regPtr->property;
 
     if (lock && !localData.sendDebug) {
 	XGrabServer(dispPtr->display);
@@ -290,7 +292,7 @@ RegOpen(
 	    dispPtr->registryProperty, 0, MAX_PROP_WORDS,
 	    False, XA_STRING, &actualType, &actualFormat,
 	    &regPtr->propLength, &bytesAfter,
-	    (unsigned char **) &regPtr->property);
+	    (unsigned char **) propertyPtr);
 
     if (actualType == None) {
 	regPtr->propLength = 0;

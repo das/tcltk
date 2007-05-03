@@ -480,7 +480,7 @@ TkUnixDoOneXEvent(
     struct timeval blockTime, *timeoutPtr;
     Tcl_Time now;
     int fd, index, numFound, numFdBits = 0;
-    fd_mask bit;
+    fd_mask bit, *readMaskPtr = readMask;
 
     /*
      * Look for queued events first.
@@ -537,7 +537,7 @@ TkUnixDoOneXEvent(
 	}
     }
 
-    numFound = select(numFdBits, (SELECT_MASK *) readMask, NULL, NULL,
+    numFound = select(numFdBits, (SELECT_MASK *) readMaskPtr, NULL, NULL,
 	    timeoutPtr);
     if (numFound <= 0) {
 	/*
