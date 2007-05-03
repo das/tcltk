@@ -96,9 +96,10 @@ Tk_InitStubs(
     int exact)
 {
     CONST char *actualVersion;
+    TkStubs **stubsPtrPtr = &tkStubsPtr;	/* squelch warning */
 
     actualVersion = Tcl_PkgRequireEx(interp, "Tk", version, exact,
-	    (ClientData *) &tkStubsPtr);
+	    (ClientData *) stubsPtrPtr);
     if (!actualVersion) {
 	return NULL;
     }
