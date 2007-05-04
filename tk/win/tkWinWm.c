@@ -7820,6 +7820,15 @@ WmProc(
 	result = InstallColormaps(hwnd, WM_QUERYNEWPALETTE, TRUE);
 	goto done;
 
+    case WM_SETTINGCHANGE:
+	if (wParam == SPI_SETNONCLIENTMETRICS) {
+	    winPtr = GetTopLevel(hwnd);
+	    TkWinSetupSystemFonts(winPtr->mainPtr);
+	    result = 0;
+	    goto done;
+	}
+	break;
+
     case WM_WINDOWPOSCHANGED:
 	ConfigureTopLevel((WINDOWPOS *) lParam);
 	result = 0;
