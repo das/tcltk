@@ -1121,9 +1121,10 @@ TkWinHandleMenuEvent(
 		    Tcl_GetUnicodeFromObj(labelPtr, &len);
 		    if (underline < len) {
 			char *label = Tcl_GetString(labelPtr);
+			char underlined = *Tcl_UtfAtIndex(label, underline);
 
-			if (CharUpper((LPTSTR) menuChar) == CharUpper((LPTSTR)
-				*Tcl_UtfAtIndex(label, underline))) {
+			if (CharUpper((LPTSTR) menuChar) ==
+				CharUpper((LPTSTR) underlined)) {
 			    *plResult = (2 << 16) | i;
 			    returnResult = 1;
 			    break;
