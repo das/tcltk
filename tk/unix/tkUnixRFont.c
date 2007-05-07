@@ -403,8 +403,9 @@ TkpGetFontFamilies(
 
     resultPtr = Tcl_NewListObj(0, NULL);
 
-    list = XftListFonts(Tk_Display(tkwin), Tk_ScreenNumber(tkwin), 0,
-	    XFT_FAMILY, 0);
+    list = XftListFonts(Tk_Display(tkwin), Tk_ScreenNumber(tkwin),
+		(char*)0,		/* pattern elements */
+		XFT_FAMILY, (char*)0);	/* fields */
     for (i = 0; i < list->nfont; i++) {
 	if (XftPatternGetString(list->fonts[i], XFT_FAMILY, 0,
 		familyPtr) == XftResultMatch) {
