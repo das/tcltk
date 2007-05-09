@@ -846,7 +846,9 @@ ScrollbarBindProc(
 	     * Workaround for Carbon bug where the scrollbar down arrow
 	     * sometimes gets "stuck" after the mousebutton has been released.
 	     */
-	    TkMacOSXSetUpClippingRgn(Tk_WindowId(scrollPtr->tkwin));
+	    if (scrollPtr->tkwin) {
+		TkMacOSXSetUpClippingRgn(Tk_WindowId(scrollPtr->tkwin));
+	    }
 	    Draw1Control(macScrollPtr->sbHandle);
 	}
 	TkMacOSXTrackingLoop(0);
@@ -855,8 +857,11 @@ ScrollbarBindProc(
 	 * The HandleControlClick call will "eat" the ButtonUp event. We now
 	 * generate a ButtonUp event so Tk will unset implicit grabs etc.
 	 */
-	window = Tk_WindowId(scrollPtr->tkwin);
-	TkGenerateButtonEventForXPointer(window);
+
+	if (scrollPtr->tkwin) {
+	    window = Tk_WindowId(scrollPtr->tkwin);
+	    TkGenerateButtonEventForXPointer(window);
+	}
 
 	if (portChanged) {
 	    QDSwapPort(savePort, NULL);

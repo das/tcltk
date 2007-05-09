@@ -825,7 +825,7 @@ TkMacOSXInitControl(
 	    mbPtr->params.procID, controlReference);
 
     if (!mbPtr->control) {
-	TkMacOSXDbgMsg("failed to create control of type %d\n", procID);
+	TkMacOSXDbgMsg("Failed to create control of type %d\n", procID);
 	return 1;
     }
     if (ChkErr(EmbedControl, mbPtr->control,mbPtr->userPane) != noErr ) {
