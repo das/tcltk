@@ -315,6 +315,7 @@ MODULE_SCOPE void TkMacOSXInstallWindowCarbonEventHandler(Tcl_Interp *interp,
 MODULE_SCOPE int TkMacOSXMakeFullscreen(TkWindow *winPtr, WindowRef window,
 	int fullscreen, Tcl_Interp *interp);
 MODULE_SCOPE void TkMacOSXEnterExitFullscreen(TkWindow *winPtr, int active);
+MODULE_SCOPE void TkMacOSXBringWindowForward(WindowRef wRef);
 
 MODULE_SCOPE void* TkMacOSXGetNamedSymbol(const char* module,
 	const char* symbol);
