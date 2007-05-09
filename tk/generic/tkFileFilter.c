@@ -313,12 +313,15 @@ static int AddClause(interp, filterPtr, patternsStr, ostypesStr, isWindows)
     if (ostypeCount > 0 && ostypeList != NULL) {
 	for (i=0; i<ostypeCount; i++) {
 	    MacFileType * mfPtr = (MacFileType*)ckalloc(sizeof(MacFileType));
+	    char *string = ostypeList[i];
 
-	    memcpy(&mfPtr->type, ostypeList[i], sizeof(OSType));
+	    mfPtr->type = (OSType) string[0] << 24 | (OSType) string[1] << 16 |
+		    (OSType) string[2] <<  8 | (OSType) string[3];
 
 	    /*
 	     * Add the Mac type pattern into the list of Mac types
 	     */
+
 	    if (clausePtr->macTypes == NULL) {
 		clausePtr->macTypes = clausePtr->macTypesTail = mfPtr;
 	    } else {
