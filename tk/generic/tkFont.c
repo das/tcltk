@@ -682,7 +682,7 @@ Tk_FontObjCmd(
 	break;
     }
     case FONT_DELETE: {
-	int i;
+	int i, result = TCL_OK;
 	char *string;
 
 	/*
@@ -694,11 +694,11 @@ Tk_FontObjCmd(
 	    Tcl_WrongNumArgs(interp, 2, objv, "fontname ?fontname ...?");
 	    return TCL_ERROR;
 	}
-	for (i = 2; i < objc; i++) {
+	for (i = 2; i < objc && result == TCL_OK; i++) {
 	    string = Tcl_GetString(objv[i]);
-	    TkDeleteNamedFont(interp, tkwin, string);
+	    result = TkDeleteNamedFont(interp, tkwin, string);
 	}
-	break;
+	return result;
     }
     case FONT_FAMILIES: {
 	int skip;
