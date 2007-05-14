@@ -235,6 +235,7 @@ TKTESTOBJS = \
 	$(TMP_DIR)\testMain.obj \
 	$(TMP_DIR)\tkSquare.obj \
 	$(TMP_DIR)\tkTest.obj \
+	$(TMP_DIR)\tkOldTest.obj \
 	$(TMP_DIR)\tkWinTest.obj
 
 XLIBOBJS = \
@@ -389,8 +390,7 @@ TTK_OBJS = \
         $(TMP_DIR)\ttkStubLib.obj
 
 TKSTUBOBJS = \
-	$(TMP_DIR)\tkStubLib.obj \
-	$(TMP_DIR)\tkStubImg.obj
+	$(TMP_DIR)\tkStubLib.obj
 
 
 WINDIR          = $(ROOT)\win
@@ -762,6 +762,9 @@ $(TMP_DIR)\testMain.obj: $(WINDIR)\winMain.c
 $(TMP_DIR)\tkTest.obj: $(GENERICDIR)\tkTest.c
 	$(cc32) $(WISH_CFLAGS) -Fo$@ $?
 
+$(TMP_DIR)\tkOldTest.obj: $(GENERICDIR)\tkOldTest.c
+	$(cc32) $(WISH_CFLAGS) -Fo$@ $?
+
 $(TMP_DIR)\tkWinTest.obj: $(WINDIR)\tkWinTest.c
 	$(cc32) $(WISH_CFLAGS) -Fo$@ $?
 
@@ -778,9 +781,6 @@ $(TMP_DIR)\winMain.obj: $(WINDIR)\winMain.c
 # and no reference made to a C runtime.
 
 $(TMP_DIR)\tkStubLib.obj : $(GENERICDIR)\tkStubLib.c
-	$(cc32) $(STUB_CFLAGS) $(TK_INCLUDES) -Zl -DSTATIC_BUILD -Fo$@ $?
-
-$(TMP_DIR)\tkStubImg.obj : $(GENERICDIR)\tkStubImg.c
 	$(cc32) $(STUB_CFLAGS) $(TK_INCLUDES) -Zl -DSTATIC_BUILD -Fo$@ $?
 
 

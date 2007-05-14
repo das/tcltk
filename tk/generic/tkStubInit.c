@@ -939,6 +939,8 @@ TkStubs tkStubs = {
     Tk_GetUserInactiveTime, /* 269 */
     Tk_ResetUserInactiveTime, /* 270 */
     Tk_Interp, /* 271 */
+    Tk_CreateOldImageType, /* 272 */
+    Tk_CreateOldPhotoImageFormat, /* 273 */
 };
 
 /* !END!: Do not edit above this line. */

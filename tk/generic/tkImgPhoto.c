@@ -34,10 +34,6 @@
 
 extern int _XInitImageFuncPtrs(XImage *image);
 
-#ifndef USE_OLD_IMAGE
-MODULE_SCOPE void Tk_CreateOldPhotoImageFormat(Tk_PhotoImageFormat *formatPtr);
-#endif
-
 /*
  * A signed 8-bit integral type. If chars are unsigned and the compiler isn't
  * an ANSI one, then we have to use short instead (which wastes space) to get
