@@ -248,9 +248,6 @@ FinishedWithFont(
 	if (fontPtr->faces[i].ftFont) {
 	    XftFontClose(fontPtr->display, fontPtr->faces[i].ftFont);
 	}
-	if (fontPtr->faces[i].source) {
-	    FcPatternDestroy(fontPtr->faces[i].source);
-	}
 	if (fontPtr->faces[i].charset) {
 	    FcCharSetDestroy(fontPtr->faces[i].charset);
 	}
