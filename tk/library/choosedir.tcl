@@ -212,7 +212,7 @@ proc ::tk::dialog::file::chooseDir::OkCmd {w} {
 	if {$text eq ""} {
 	    return
 	}
-	set text [file join {expand}[file split [string trim $text]]]
+	set text [file join {*}[file split [string trim $text]]]
 	if {![file exists $text] || ![file isdirectory $text]} {
 	    # Entry contains an invalid directory.  If it's the same as the
 	    # last time they came through here, reset the saved value and end
