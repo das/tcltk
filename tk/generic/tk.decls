@@ -1378,3 +1378,21 @@ declare 9 aqua {
 declare 10 aqua {
     int Tk_MacOSXIsAppInFront (void)
 }
+
+##############################################################################
+
+# Public functions that are not accessible via the stubs table:
+# (listed here _as comments_ so that the 'checkstubs' make target does not 
+# complain about them) 
+
+# const char *Tk_InitStubs(Tcl_Interp *interp, const char *version, int exact)
+
+# Global variables that need to be exported from the tcl shared library:
+# (listed here _as comments_ so that the 'checkstubs' make target does not 
+# complain about them, c.f. tk bug bug 1716117)
+
+# TkStubs *tkStubsPtr                   (fool checkstubs)
+# TkPlatStubs *tkPlatStubsPtr           (fool checkstubs)
+# TkIntStubs *tkIntStubsPtr             (fool checkstubs)
+# TkIntPlatStubs *tkIntPlatStubsPtr     (fool checkstubs)
+# TkIntXlibStubs *tkIntXlibStubsPtr     (fool checkstubs)
