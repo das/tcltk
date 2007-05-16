@@ -47,20 +47,6 @@
 #include "tkIntPlatDecls.h"
 #include "tkIntXlibDecls.h"
 
-/*
- * Ensure that Tk_InitStubs is built as an exported symbol. The other stub
- * symbols should be built as non-exported symbols.
- */
-
-#undef TCL_STORAGE_CLASS
-#define TCL_STORAGE_CLASS DLLEXPORT
-
-MODULE_SCOPE TkStubs *tkStubsPtr;
-MODULE_SCOPE TkPlatStubs *tkPlatStubsPtr;
-MODULE_SCOPE TkIntStubs *tkIntStubsPtr;
-MODULE_SCOPE TkIntPlatStubs *tkIntPlatStubsPtr;
-MODULE_SCOPE TkIntXlibStubs *tkIntXlibStubsPtr;
-
 TkStubs *tkStubsPtr;
 TkPlatStubs *tkPlatStubsPtr;
 TkIntStubs *tkIntStubsPtr;
@@ -89,7 +75,7 @@ TkIntXlibStubs *tkIntXlibStubsPtr;
 #undef Tk_InitStubs
 #endif
 
-MODULE_SCOPE CONST char *
+CONST char *
 Tk_InitStubs(
     Tcl_Interp *interp,
     CONST char *version,
