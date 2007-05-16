@@ -15,6 +15,7 @@ namespace import -force tcltest::testsDirectory
 configure -testdir [file join [pwd] [file dirname [info script]]]
 configure -loadfile [file join [testsDirectory] constraints.tcl]
 tcltest::loadTestedCommands
+tk useinputmethods 0
 
 catch {destroy .b}
 toplevel .b -width 100 -height 50
@@ -232,6 +233,7 @@ test bind-6.2 {Tk_DeleteBindTable procedure: pending bindings deleted later} tes
     interp create foo
     foo eval {
 	load {} Tk
+	tk useinputmethods 0
 	load {} Tktest
 	wm geometry . +0+0
 	frame .t -width 50 -height 50
