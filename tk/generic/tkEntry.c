@@ -539,7 +539,7 @@ Tk_EntryObjCmd(
     entryPtr->validate		= VALIDATE_NONE;
 
     /*
-     * Keep a hold of the associated tkwin until we destroy the listbox,
+     * Keep a hold of the associated tkwin until we destroy the entry,
      * otherwise Tk might free it while we still need it.
      */
 
@@ -3573,7 +3573,7 @@ Tk_SpinboxObjCmd(
     sbPtr->buRelief		= TK_RELIEF_FLAT;
 
     /*
-     * Keep a hold of the associated tkwin until we destroy the listbox,
+     * Keep a hold of the associated tkwin until we destroy the spinbox,
      * otherwise Tk might free it while we still need it.
      */
 
