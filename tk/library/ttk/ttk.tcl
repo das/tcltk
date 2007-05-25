@@ -14,10 +14,8 @@ namespace eval ::ttk {
     }
 }
 
-source [file join $::ttk::library keynav.tcl]
 source [file join $::ttk::library fonts.tcl]
 source [file join $::ttk::library cursors.tcl]
-source [file join $::ttk::library icons.tcl]
 source [file join $::ttk::library utils.tcl]
 
 ## ttk::deprecated $old $new --
@@ -109,7 +107,6 @@ source [file join $::ttk::library entry.tcl]
 source [file join $::ttk::library combobox.tcl]	;# dependency: entry.tcl
 source [file join $::ttk::library treeview.tcl]
 source [file join $::ttk::library sizegrip.tcl]
-source [file join $::ttk::library dialog.tcl]
 
 ## Label and Labelframe bindings:
 #  (not enough to justify their own file...)
