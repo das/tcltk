@@ -1392,7 +1392,7 @@ Specifies the ways in which joints are to be drawn at the vertices
 of the line.
 \fIStyle\fR may have any of the forms accepted by \fBTk_GetCapStyle\fR
 (\fBbevel\fR, \fBmiter\fR, or \fBround\fR).
-If this option isn't specified then it defaults to \fBmiter\fR.
+If this option isn't specified then it defaults to \fBround\fR.
 If the line only contains two points then this option is
 irrelevant.
 .TP
@@ -1526,7 +1526,7 @@ Specifies the ways in which joints are to be drawn at the vertices
 of the outline.
 \fIStyle\fR may have any of the forms accepted by \fBTk_GetCapStyle\fR
 (\fBbevel\fR, \fBmiter\fR, or \fBround\fR).
-If this option isn't specified then it defaults to \fBmiter\fR.
+If this option isn't specified then it defaults to \fBround\fR.
 .TP
 \fB\-smooth \fIboolean\fR
 \fIBoolean\fR must have one of the forms accepted by \fBTcl_GetBoolean\fR
