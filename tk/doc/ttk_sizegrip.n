@@ -50,7 +50,7 @@ grid [ttk::sizegrip $top.statusbar.grip] \
 
 .SH "BUGS"
 If the containing toplevel's position was specified
-relative to the right or bottom of the sceen 
+relative to the right or bottom of the screen
 (e.g., \fB[wm geometry ... \fIw\fBx\fIh\fB-\fIx\fB-\fIy\fB]\fR
 instead of \fB[wm geometry ... \fIw\fBx\fIh\fB+\fIx\fB+\fIy\fB]\fR),
 the sizegrip widget will not resize the window.

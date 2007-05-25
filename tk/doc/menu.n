@@ -529,7 +529,7 @@ command.
 \fIpathName\fR \fBclone\fR \fInewPathname ?cloneType?\fR
 Makes a clone of the current menu named \fInewPathName\fR. This clone
 is a menu in its own right, but any changes to the clone are
-propogated to the original menu and vice versa. \fIcloneType\fR can be
+propagated to the original menu and vice versa. \fIcloneType\fR can be
 \fBnormal\fR, \fBmenubar\fR, or \fBtearoff\fR. Should not normally be
 called outside of the Tk library. See the \fBCLONES\fR section for
 more information.
