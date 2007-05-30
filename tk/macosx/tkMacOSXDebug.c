@@ -453,6 +453,22 @@ TkMacOSXMouseTrackingResultToAscii(MouseTrackingResult r, char * buf)
 }
 #endif /* TK_MACOSXDEBUG_UNUSED */
 
+MODULE_SCOPE void
+TkMacOSXDebugFlashRegion(
+    CGrafPtr port,
+    RgnHandle rgn)
+{
+    TkMacOSXInitNamedDebugSymbol(HIToolbox, int, QDDebugFlashRegion,
+	    CGrafPtr port, RgnHandle region);
+    if (port && rgn && QDDebugFlashRegion) {
+	/*
+	 * Carbon-internal region flashing SPI (c.f. Technote 2124)
+	 */
+
+	QDDebugFlashRegion(port, rgn);
+    }
+}
+
 /*
  *----------------------------------------------------------------------
  *
@@ -482,7 +498,9 @@ TkMacOSXMouseTrackingResultToAscii(MouseTrackingResult r, char * buf)
  */
 
 MODULE_SCOPE void *
-TkMacOSXGetNamedDebugSymbol(const char* module, const char* symbol)
+TkMacOSXGetNamedDebugSymbol(
+    const char* module,
+    const char* symbol)
 {
     void* addr = TkMacOSXGetNamedSymbol(module, symbol);
 #ifndef __LP64__

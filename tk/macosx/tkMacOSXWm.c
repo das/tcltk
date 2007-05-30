@@ -5211,7 +5211,7 @@ TkMacOSXMakeRealWindowExist(
     if (wmPtr->attributes & kWindowResizableAttribute) {
 	HIViewRef growBoxView;
 
-	err = ChkErr(HIViewFindByID, HIViewGetRoot(newWindow),
+	err = HIViewFindByID(HIViewGetRoot(newWindow),
 		kHIViewWindowGrowBoxID, &growBoxView);
 	if (err == noErr && !HIGrowBoxViewIsTransparent(growBoxView)) {
 	    ChkErr(HIGrowBoxViewSetTransparent, growBoxView, true);
@@ -5855,14 +5855,15 @@ ApplyWindowClassAttributeChanges(
 		    oldAttributes & (newAttributes ^ oldAttributes));
 	}
 	ChkErr(GetWindowAttributes, macWindow, &(wmPtr->attributes));
-	if (wmPtr->attributes & kWindowResizableAttribute) {
-	    OSStatus err;
-	    HIViewRef growBoxView;
+	if ((wmPtr->attributes ^ oldAttributes) & kWindowResizableAttribute) {
+	    if (wmPtr->attributes & kWindowResizableAttribute) {
+		HIViewRef growBoxView;
+		OSStatus err = HIViewFindByID(HIViewGetRoot(macWindow),
+			kHIViewWindowGrowBoxID, &growBoxView);
 
-	    err = ChkErr(HIViewFindByID, HIViewGetRoot(macWindow),
-		    kHIViewWindowGrowBoxID, &growBoxView);
-	    if (err == noErr && !HIGrowBoxViewIsTransparent(growBoxView)) {
-		ChkErr(HIGrowBoxViewSetTransparent, growBoxView, true);
+		if (err == noErr && !HIGrowBoxViewIsTransparent(growBoxView)) {
+		    ChkErr(HIGrowBoxViewSetTransparent, growBoxView, true);
+		}
 	    }
 	}
 
