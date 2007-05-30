@@ -225,7 +225,7 @@ proc ::tk::dialog::error::bgerror err {
 	# We boost the size of some Mac buttons for l&f
 	if {$windowingsystem eq "aqua"} {
 	    if {($name eq "ok") || ($name eq "dismiss")} {
-		grid columnconfigure .bgerrorDialog.bot $i -minsize 79
+		grid columnconfigure .bgerrorDialog.bot $i -minsize 90
 	    }
 	    grid configure .bgerrorDialog.$name -pady 7
 	}
