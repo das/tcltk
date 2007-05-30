@@ -29,7 +29,14 @@ proc colorrefresh {w col} {
     $w configure -bg $col
     $w.buttons configure -bg $col
     if {[tk windowingsystem] eq "aqua"} {
-	$w.buttons configure -highlightbackground $col
+	# set highlightbackground of all buttons in $w
+	set l [list $w]
+	while {[llength $l]} {
+	    set l [concat [lassign $l b] [winfo children $b]]
+	    if {[winfo class $b] eq "Button"} {
+		$b configure -highlightbackground $col
+	    }
+	}
     }
 }
 
