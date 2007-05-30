@@ -24,7 +24,7 @@
  * TkMacOSXFlushWindows --
  *
  *	This routine flushes all the Carbon windows of the application. It
- *	is called by the setup procedure for the Tcl/Carbon event source.
+ *	is called by XSync().
  *
  * Results:
  *	None.

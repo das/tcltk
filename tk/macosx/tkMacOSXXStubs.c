@@ -778,7 +778,7 @@ XForceScreenSaver(
 }
 
 void
-Tk_FreeXId (
+Tk_FreeXId(
     Display *display,
     XID xid)
 {
@@ -786,12 +786,48 @@ Tk_FreeXId (
 }
 
 int
-XSync (Display *display, Bool flag)
+XSync(
+    Display *display,
+    Bool flag)
 {
     TkMacOSXFlushWindows();
     display->request++;
     return 0;
 }
+
+#if 0
+int
+XSetClipRectangles(
+    Display *d,
+    GC gc,
+    int clip_x_origin,
+    int clip_y_origin,
+    XRectangle* rectangles,
+    int n,
+    int ordering)
+{
+    TkRegion clipRgn;
+
+    if (gc->clip_mask && ((TkpClipMask*)gc->clip_mask)->type
+	    == TKP_CLIP_REGION) {
+	clipRgn = ((TkpClipMask*)gc->clip_mask)->value.region;
+	SetEmptyRgn((RgnHandle) clipRgn);
+    } else {
+	clipRgn = TkCreateRegion(); /* LEAK! */
+    }
+
+    while (n--) {
+	XRectangle rect = *rectangles;
+	
+	rect.x += clip_x_origin;
+	rect.y += clip_y_origin;
+	TkUnionRectWithRegion(&rect, clipRgn, clipRgn);
+	rectangles++;
+    }
+    TkSetRegion(d, gc, clipRgn);
+    return 1;
+}
+#endif
 
 /*
  *----------------------------------------------------------------------
