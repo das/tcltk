@@ -229,7 +229,7 @@ proc ::tk::dialog::error::bgerror err {
 	if {($tcl_platform(platform) eq "macintosh")
 	    || ($windowingsystem eq "aqua")} {
 	    if {($name eq "ok") || ($name eq "dismiss")} {
-		grid columnconfigure .bgerrorDialog.bot $i -minsize 79
+		grid columnconfigure .bgerrorDialog.bot $i -minsize 90
 	    }
 	    grid configure .bgerrorDialog.$name -pady 7
 	}
