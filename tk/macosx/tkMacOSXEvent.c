@@ -41,9 +41,21 @@ TkMacOSXFlushWindows(void)
     WindowRef wRef = GetWindowList();
 
     while (wRef) {
-	CGrafPtr portPtr = GetWindowPort(wRef);
-	if (QDIsPortBuffered(portPtr)) {
-	    QDFlushPortBuffer(portPtr, NULL);
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1030
+	if (1
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 1030
+		&& HIWindowFlush != NULL
+#endif
+	) {
+	    ChkErr(HIWindowFlush, wRef);
+	} else
+#endif
+	{
+	    CGrafPtr portPtr = GetWindowPort(wRef);
+
+	    if (QDIsPortBuffered(portPtr)) {
+		QDFlushPortBuffer(portPtr, NULL);
+	    }
 	}
 	wRef = GetNextWindow(wRef);
     }

@@ -462,12 +462,13 @@ TkMacOSXSetColorInContext(unsigned long pixel, CGContextRef context)
 #if MAC_OS_X_VERSION_MAX_ALLOWED >= 1040
 			(1
 #if MAC_OS_X_VERSION_MIN_REQUIRED < 1040
-		    && &kHIToolboxVersionNumber != NULL
-		    && kHIToolboxVersionNumber >= kHIToolboxVersionNumber10_4
+			&& &kHIToolboxVersionNumber != NULL
+			&& kHIToolboxVersionNumber >=
+				kHIToolboxVersionNumber10_4
 #endif
-		    ) ? kCGBitmapByteOrder32Host :
+			) ? kCGBitmapByteOrder32Host :
 #endif
-		    0;
+			0;
 	    }
 	    portChanged = QDSwapPort(patGWorld, &savePort);
 	    TkMacOSXSetColorInPort(pixel, 1, pixpat);
