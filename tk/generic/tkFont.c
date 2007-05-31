@@ -425,8 +425,10 @@ TkFontPkgFree(
 	    searchPtr != NULL;
 	    searchPtr = Tcl_NextHashEntry(&search)) {
 	fontsLeft++;
+#ifdef DEBUG_FONTS
 	fprintf(stderr, "Font %s still in cache.\n",
 		Tcl_GetHashKey(&fiPtr->fontCache, searchPtr));
+#endif
     }
 
 #ifdef PURIFY
