@@ -406,9 +406,9 @@ TkPutImage(
     display->request++;
     destPort = TkMacOSXGetDrawablePort(d);
     portChanged = QDSwapPort(destPort, &savePort);
-    destBits = GetPortBitMapForCopyBits(destPort);
     TkMacOSXSetUpClippingRgn(d);
 
+    destBits = GetPortBitMapForCopyBits(destPort);
     srcPtr = &srcRect;
     SetRect(srcPtr, src_x, src_y, src_x + width, src_y + height);
     if (tkPictureIsOpen) {
@@ -1600,7 +1600,6 @@ TkMacOSXSetupDrawingContext(
     if (port) {
 	GetPortBounds(port, &portBounds);
     }
-
     dc->saveState = NULL;
     if (port && !context) {
 	dc->portChanged = QDSwapPort(port, &(dc->savePort));
