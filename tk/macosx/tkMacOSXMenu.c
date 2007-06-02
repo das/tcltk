@@ -1556,6 +1556,7 @@ TkpPostMenu(
 	    Tcl_CancelIdleCall(DrawMenuBarWhenIdle, NULL);
 	    DrawMenuBarWhenIdle(NULL);
 	}
+	RecursivelyInsertMenu(menuPtr);
 
 	TkMacOSXTrackingLoop(1);
 	popUpResult = PopUpMenuSelect(macMenuHdl, y, x, menuPtr->active);
