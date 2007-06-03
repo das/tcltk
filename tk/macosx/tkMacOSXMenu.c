@@ -1288,8 +1288,8 @@ ReconfigureIndividualMenu(
 			    ->menuPtr->platformData)->menuHdl;
 
 		    if (childMenuHdl != NULL) {
-			SetMenuItemHierarchicalID(macMenuHdl, base + index,
-				GetMenuID(childMenuHdl));
+			ChkErr(SetMenuItemHierarchicalID, macMenuHdl,
+				base + index, GetMenuID(childMenuHdl));
 		    }
 		    /*
 		     * If we changed the highligthing of this menu, its
@@ -4204,7 +4204,7 @@ HandleMenuHiliteMsg(
 	    hidPtr->newItem);
 #endif
     GetPort(&macMDEFDrawable.grafPtr);
-    macMDEFDrawable.context = (CGContextRef)hidPtr->context;
+    macMDEFDrawable.context = (CGContextRef) hidPtr->context;
 
     err = ChkErr(GetMenuTrackingData, menu, mtdPtr);
     if (err != noErr) {
@@ -4258,7 +4258,7 @@ HandleMenuDrawMsg(
 
     GetPort(&macMDEFDrawable.grafPtr);
     GetPortBounds(macMDEFDrawable.grafPtr, &bounds);
-    macMDEFDrawable.context = (CGContextRef)ddPtr->context;
+    macMDEFDrawable.context = (CGContextRef) ddPtr->context;
 #ifdef TK_MAC_DEBUG_MENUS
     TkMacOSXDbgMsg("MDEF: DrawMsg %d - %d; %d - %d", menuRectPtr->top,
 	    menuRectPtr->bottom, bounds.top, bounds.bottom);
@@ -4402,7 +4402,7 @@ HandleMenuFindItemMsg(
 
     GetPort(&macMDEFDrawable.grafPtr);
     GetPortBounds(macMDEFDrawable.grafPtr, &bounds);
-    macMDEFDrawable.context = (CGContextRef)fiPtr->context;
+    macMDEFDrawable.context = (CGContextRef) fiPtr->context;
 
     /*
      * Now we need to take care of scrolling the menu.

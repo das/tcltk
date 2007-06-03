@@ -601,7 +601,11 @@ XDrawLines(
     int i, lw = gc->line_width;
 
     if (npoints < 2) {
-	return; /* TODO: generate BadValue error. */
+	/*
+	 * TODO: generate BadValue error.
+	 */
+
+	return;
     }
 
     display->request++;
@@ -1560,9 +1564,8 @@ TkMacOSXSetUpGraphicsPort(
 	}
 	if (gc->line_style != LineSolid) {
 	    /*
-	     * FIXME:
-	     * Here the dash pattern should be set in the drawing environment.
-	     * This is not possible with QuickDraw line drawing.
+	     * FIXME: Here the dash pattern should be set in the drawing
+	     * environment. This is not possible with QuickDraw line drawing.
 	     */
 	}
     }

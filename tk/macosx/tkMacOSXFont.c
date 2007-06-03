@@ -1057,7 +1057,10 @@ TkpDrawCharsInContext(
     TkMacOSXSetupDrawingContext(drawable, gc, 1, &drawingContext);
 
 #if 0
-    /* TODO: implement stippled text drawing */
+    /*
+     * TODO: implement stippled text drawing
+     */
+
     if ((gc->fill_style == FillStippled
 	    || gc->fill_style == FillOpaqueStippled)
 	    && gc->stipple != None) {
