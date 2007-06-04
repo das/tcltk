@@ -509,7 +509,7 @@ TkMacOSXGetHostToplevel(
 	contWinPtr = TkpGetOtherWindow(topWinPtr);
 
 	/*
-	 * NOTE: Here we should handle out of process embedding.
+	 * TODO: Here we should handle out of process embedding.
 	 */
 
 	if (contWinPtr != NULL) {

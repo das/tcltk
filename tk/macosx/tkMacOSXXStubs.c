@@ -603,7 +603,10 @@ GContext
 XGContextFromGC(
     GC gc)
 {
-    /* TODO - currently a no-op */
+    /*
+     * TODO: currently a no-op
+     */
+
     return 0;
 }
 

@@ -91,7 +91,10 @@ TkMacOSXHandleMenuSelect(
 	case kFileMenu:
 	    switch (theItem) {
 		case kSourceItem:
-		    /* TODO: source script */
+		    /*
+		     * TODO: source script
+		     */
+
 		    SourceDialog();
 		    break;
 		case kCloseItem:

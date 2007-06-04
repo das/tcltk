@@ -257,7 +257,10 @@ TkpDrawSpinboxButtons(Spinbox *sbPtr, Drawable d)
     GC bgGC;
     MacDrawable *macDraw = (MacDrawable *) d;
 
-    /* FIXME RAISED really makes more sense */
+    /*
+     * FIXME: RAISED really makes more sense
+     */
+
     if (sbPtr->buRelief != TK_RELIEF_FLAT) {
 	return 0;
     }
