@@ -307,7 +307,7 @@ TkpInit(
 	}
 
 	/*
-	 * REMOVE ME: Close stdin & stdout for remote debugging otherwise we
+	 * FIXME: Close stdin & stdout for remote debugging otherwise we
 	 * will fight with gdb for stdin & stdout
 	 */
 
