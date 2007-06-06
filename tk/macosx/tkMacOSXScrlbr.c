@@ -274,7 +274,6 @@ TkpDisplayScrollbar(
 
     if (macScrollPtr->sbHandle == NULL) {
 	Rect r = {0, 0, 1, 1};
-	WindowRef frontNonFloating;
 
 	windowRef = GetWindowFromPort(destPort);
 	CreateScrollBarControl(windowRef, &r, MIN_SCROLLBAR_VALUE +
@@ -283,13 +282,7 @@ TkpDisplayScrollbar(
 		MIN_SCROLLBAR_VALUE, true, NULL, &(macScrollPtr->sbHandle));
 	SetControlReference(macScrollPtr->sbHandle, (SInt32) scrollPtr);
 
-	/*
-	 * If we are foremost then make us active.
-	 */
-
-	frontNonFloating = ActiveNonFloatingWindow();
-
-	if ((windowRef == FrontWindow()) || TkpIsWindowFloating(windowRef)) {
+	if (IsWindowActive(windowRef)) {
 	    macScrollPtr->macFlags |= ACTIVE;
 	}
     }
