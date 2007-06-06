@@ -20,6 +20,8 @@
 #include "tkInt.h"
 #endif
 
+#define kComponentSignatureString "TkMacOSX"
+#define COMPONENT_SIGNATURE 'Tk  '
 #define TextStyle MacTextStyle
 #include <Carbon/Carbon.h>
 #undef TextStyle
@@ -269,13 +271,26 @@ typedef struct TkMacOSXDrawingContext {
 	    __LINE__, __func__, ##__VA_ARGS__); \
 	} while (0)
 /*
+ * Macro to do debug API failure message output.
+ */
+#if !defined(DEBUGLEVEL) || !DEBUGLEVEL
+#define TkMacOSXDbgOSErr(f, err) do { \
+	    TkMacOSXDbgMsg("%s failed: %ld", #f, err); \
+	} while (0)
+#else
+#define TkMacOSXDbgOSErr(f, err) do { \
+	    DEBUG_ASSERT_MESSAGE(kComponentSignatureString, #f " failed:", \
+	    __func__, 0, strrchr(__FILE__, '/')+1, __LINE__, err); \
+	} while (0)
+#endif
+/*
  * Macro to do very common check for noErr return from given API and output
  * debug message in case of failure.
  */
 #define ChkErr(f, ...) ({ \
 	OSStatus err = f(__VA_ARGS__); \
 	if (err != noErr) { \
-	    TkMacOSXDbgMsg("%s failed: %ld", #f, err); \
+	    TkMacOSXDbgOSErr(f, err); \
 	} \
 	err;})
 /*
@@ -288,6 +303,7 @@ typedef struct TkMacOSXDrawingContext {
 	} while(0)
 #else /* TK_MAC_DEBUG */
 #define TkMacOSXDbgMsg(m, ...)
+#define TkMacOSXDbgOSErr(f, err)
 #define ChkErr(f, ...) ({f(__VA_ARGS__);})
 #define TkMacOSXCheckTmpRgnEmpty(r)
 #endif /* TK_MAC_DEBUG */
