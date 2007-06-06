@@ -255,16 +255,10 @@ TkpInit(
 	    OSStatus err = procNotFound;
 	    ProcessSerialNumber psn = { 0, kCurrentProcess };
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1030
-	    if (1
-#if MAC_OS_X_VERSION_MIN_REQUIRED < 1030
-		    && TransformProcessType != NULL
-#endif
-	    ) {
+	    TK_IF_MAC_OS_X_API (3, TransformProcessType,
 		err = ChkErr(TransformProcessType, &psn,
 			kProcessTransformToForegroundApplication);
-	    }
-#endif
+	    ) TK_ENDIF_MAC_OS_X
 #if MAC_OSX_TK_USE_CPS_SPI
 	    if (err != noErr) {
 		/*

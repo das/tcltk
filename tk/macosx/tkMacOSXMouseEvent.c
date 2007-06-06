@@ -600,19 +600,14 @@ GenerateMouseWheelEvent(MouseEventData * medPtr)
     TkWindow  *winPtr;
     XEvent xEvent;
 
-    if ((!TkpIsWindowFloating(medPtr->whichWin)
-	    && (medPtr->activeNonFloating != medPtr->whichWin))) {
+    dispPtr = TkGetDisplayList();
+    rootwin = Tk_IdToWindow(dispPtr->display, medPtr->window);
+    if (rootwin == NULL) {
 	tkwin = NULL;
     } else {
-	dispPtr = TkGetDisplayList();
-	rootwin = Tk_IdToWindow(dispPtr->display, medPtr->window);
-	if (rootwin == NULL) {
-	    tkwin = NULL;
-	} else {
-	    tkwin = Tk_TopCoordsToWindow(rootwin,
-		    medPtr->local.h, medPtr->local.v,
-		    &xEvent.xbutton.x, &xEvent.xbutton.y);
-	}
+	tkwin = Tk_TopCoordsToWindow(rootwin,
+		medPtr->local.h, medPtr->local.v,
+		&xEvent.xbutton.x, &xEvent.xbutton.y);
     }
 
     /*

@@ -267,11 +267,7 @@ TkpDisplayScale(
 		&(macScalePtr->scaleHandle));
 	SetControlReference(macScalePtr->scaleHandle, (UInt32) scalePtr);
 
-	/*
-	 * If we are foremost than make us active.
-	 */
-
-	if (windowRef == FrontWindow()) {
+	if (IsWindowActive(windowRef)) {
 	    macScalePtr->flags |= ACTIVE;
 	}
     } else {
