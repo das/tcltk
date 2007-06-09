@@ -82,9 +82,8 @@ If \fInewpos\fR is specified, sets the sash position
 Returns the position of sash number \fIindex\fR.
 .TP
 \fIpathname\fR \fBidentify\fR \fIx y\fR
-Returns a list consisting of the sash index at point \fIx,y\fR
-and the name of the sash subelement at that point.
-Returns the empty list if \fIx,y\fR is not over a sash.
+Returns the index of the sash at point \fIx,y\fR,
+or the empty string if \fIx,y\fR is not over a sash.
 
 .SH "SEE ALSO"
 ttk_widget(n), ttk_notebook(n), panedwindow(n)
