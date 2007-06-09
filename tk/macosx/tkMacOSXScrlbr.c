@@ -954,7 +954,8 @@ UpdateControlValues(
     if (portRect.bottom == contrlRect.bottom &&
 	    portRect.right == contrlRect.right) {
 	TkMacOSXSetScrollbarGrow((TkWindow *) tkwin, true);
-	if (TkMacOSXResizable(macDraw->toplevel->winPtr)) {
+	if (macDraw->toplevel &&
+		TkMacOSXResizable(macDraw->toplevel->winPtr)) {
 	    int growSize;
 
 	    switch (TkMacOSXWindowClass(macDraw->toplevel->winPtr)) {

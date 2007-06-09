@@ -1143,7 +1143,6 @@ Tk_GetUserInactiveTime(Display *dpy)
     timeObj = CFDictionaryGetValue(props, CFSTR("HIDIdleTime"));
 
     if (timeObj) {
-	CFRetain(timeObj);
 	CFTypeID type = CFGetTypeID(timeObj);
 
 	if (type == CFDataGetTypeID()) { /* Jaguar */
@@ -1161,8 +1160,6 @@ Tk_GetUserInactiveTime(Display *dpy)
 	} else {
 	    ret = -1l;
 	}
-
-	CFRelease(timeObj);
     }
     /* Cleanup */
     CFRelease(props);

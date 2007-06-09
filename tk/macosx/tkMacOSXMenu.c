@@ -1672,7 +1672,7 @@ DrawMenuBarWhenIdle(
     ClientData clientData)	/* ignored here */
 {
     TkMenuReferences *menuRefPtr;
-    TkMenu *appleMenuPtr, *helpMenuPtr, *menuBarPtr;
+    TkMenu *appleMenuPtr, *helpMenuPtr, *menuBarPtr = NULL;
     MenuHandle macMenuHdl;
     Tcl_HashEntry *hashEntryPtr;
 

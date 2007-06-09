@@ -456,7 +456,7 @@ GenerateUpdateEvent(Window window)
     TkMacOSXCheckTmpRgnEmpty(1);
     destPort = TkMacOSXGetDrawablePort(window);
     macWindow = GetWindowFromPort(destPort);
-    GetWindowRegion(macWindow, kWindowUpdateRgn, tkMacOSXtmpRgn1);
+    ChkErr(GetWindowRegion, macWindow, kWindowUpdateRgn, tkMacOSXtmpRgn1);
     QDGlobalToLocalRegion(destPort, tkMacOSXtmpRgn1);
     SectRegionWithPortVisibleRegion(destPort, tkMacOSXtmpRgn1);
     GetRegionBounds(tkMacOSXtmpRgn1, &updateBounds);

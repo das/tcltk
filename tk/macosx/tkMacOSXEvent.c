@@ -49,7 +49,7 @@ TkMacOSXFlushWindows(void)
 	    if (QDIsPortBuffered(portPtr)) {
 		QDFlushPortBuffer(portPtr, NULL);
 	    }
-	) TK_ENDIF_MAC_OS_X
+	) TK_ENDIF
 	wRef = GetNextWindow(wRef);
     }
 }
