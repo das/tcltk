@@ -68,7 +68,7 @@ TkDestroyRegion(
  *
  * TkIntersectRegion --
  *
- *	Implements the equivilent of the X window function
+ *	Implements the equivalent of the X window function
  *	XIntersectRegion. See X window documentation for more details.
  *
  * Results:
@@ -94,7 +94,7 @@ TkIntersectRegion(
  *
  * TkSubtractRegion --
  *
- *	Implements the equivilent of the X window function
+ *	Implements the equivalent of the X window function
  *	XSubtractRegion. See X window documentation for more details.
  *
  * Results:
