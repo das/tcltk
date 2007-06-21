@@ -45,7 +45,7 @@ proc ttk::deprecated'warning {old new} {
 ### Backward-compatibility.
 #
 
-package ifneeded tile 0.8.0 { package provide tile 0.8.0 }
+package ifneeded tile 0.8.0 { package require Tk ; package provide tile 0.8.0 }
 
 # ttk::panedwindow used to be named ttk::paned.  Keep the alias for now.
 #
