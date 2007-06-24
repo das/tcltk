@@ -26,13 +26,13 @@ typedef struct TagSearchExpr_s TagSearchExpr;
 struct TagSearchExpr_s {
     TagSearchExpr *next;	/* For linked lists of expressions - used in
 				 * bindings. */
-    Tk_Uid uid;                 /* The uid of the whole expression. */
-    Tk_Uid *uids;               /* Expresion compiled to an array of uids. */
-    int allocated;              /* Available space for array of uids. */
-    int length;                 /* Length of expression. */
-    int index;                  /* Current position in expression
+    Tk_Uid uid;			/* The uid of the whole expression. */
+    Tk_Uid *uids;		/* Expresion compiled to an array of uids. */
+    int allocated;		/* Available space for array of uids. */
+    int length;			/* Length of expression. */
+    int index;			/* Current position in expression
 				 * evaluation. */
-    int match;                  /* This expression matches event's item's
+    int match;			/* This expression matches event's item's
 				 * tags. */
 };
 #endif /* not USE_OLD_TAG_SEARCH */
