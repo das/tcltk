@@ -1084,9 +1084,11 @@ TkReadBitmapFile(
     Display *display,
     Drawable d,
     const char *filename,
-    unsigned int *width_return, *height_return,
+    unsigned int *width_return,
+    unsigned int *height_return,
     Pixmap *bitmap_return,
-    int *x_hot_return, *y_hot_return)
+    int *x_hot_return,
+    int *y_hot_return)
 {
     char *data;
 

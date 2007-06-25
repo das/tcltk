@@ -1854,8 +1854,6 @@ Tk_UnderlineChars(
     int lastByte)		/* Index of first byte after the last
 				 * character. */
 {
-    TkFont *fontPtr = (TkFont *) tkfont;
-
     TkUnderlineCharsInContext(display, drawable, gc, tkfont, string,
 	    lastByte, x, y, firstByte, lastByte);
 }

@@ -5037,7 +5037,7 @@ DitherInstance(
     int nLines, bigEndian, i, c, x, y, xEnd, doDithering = 1;
     int bitsPerPixel, bytesPerLine, lineLength;
     unsigned char *srcLinePtr;
-    schar *errLinePtr, *errPtr;
+    schar *errLinePtr;
     pixel firstBit, word, mask;
 
     /*
