@@ -56,7 +56,7 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkMacOSXInt.h"
+#include "tkMacOSXPrivate.h"
 #include "tkMacOSXDefault.h"
 #include "tkEntry.h"
 

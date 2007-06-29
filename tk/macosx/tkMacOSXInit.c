@@ -14,7 +14,7 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkMacOSXInt.h"
+#include "tkMacOSXPrivate.h"
 
 #include "tclInt.h" /* for Tcl_GetStartupScript() & Tcl_SetStartupScript() */
 

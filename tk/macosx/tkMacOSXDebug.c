@@ -57,7 +57,7 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkMacOSXInt.h"
+#include "tkMacOSXPrivate.h"
 #include "tkMacOSXDebug.h"
 
 #ifdef TK_MAC_DEBUG
@@ -455,17 +455,21 @@ TkMacOSXMouseTrackingResultToAscii(MouseTrackingResult r, char * buf)
 
 MODULE_SCOPE void
 TkMacOSXDebugFlashRegion(
-    CGrafPtr port,
+    Drawable d,
     RgnHandle rgn)
 {
     TkMacOSXInitNamedDebugSymbol(HIToolbox, int, QDDebugFlashRegion,
 	    CGrafPtr port, RgnHandle region);
-    if (port && rgn && QDDebugFlashRegion) {
-	/*
-	 * Carbon-internal region flashing SPI (c.f. Technote 2124)
-	 */
+    if (d && rgn && QDDebugFlashRegion && !EmptyRgn(rgn)) {
+	CGrafPtr port = TkMacOSXGetDrawablePort(d);
 
-	QDDebugFlashRegion(port, rgn);
+	if (port) {
+	    /*
+	     * Carbon-internal region flashing SPI (c.f. Technote 2124)
+	     */
+
+	    QDDebugFlashRegion(port, rgn);
+	}
     }
 }
 

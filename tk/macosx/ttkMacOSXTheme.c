@@ -30,7 +30,7 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkMacOSXInt.h"
+#include "tkMacOSXPrivate.h"
 #include "ttk/ttkTheme.h"
 
 #define BEGIN_DRAWING(d) { \

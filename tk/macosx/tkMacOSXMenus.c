@@ -14,7 +14,7 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkMacOSXInt.h"
+#include "tkMacOSXPrivate.h"
 
 #define kAppleMenu		256
 #define kAppleAboutItem		1

@@ -38,7 +38,7 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkMacOSXInt.h"
+#include "tkMacOSXPrivate.h"
 #include "tkMacOSXFont.h"
 
 /*
@@ -316,7 +316,7 @@ GetThemeFontAndFamily(
 TkFont *
 TkpGetNativeFont(
     Tk_Window tkwin,		/* For display where font will be used. */
-    const char * name)		/* Platform-specific font name. */
+    const char *name)		/* Platform-specific font name. */
 {
     ThemeFontID themeFontId;
     FMFontFamily fontFamily;
@@ -1054,7 +1054,8 @@ TkpDrawCharsInContext(
     Tcl_DString runString;
 #endif
 
-    TkMacOSXSetupDrawingContext(drawable, gc, 1, &drawingContext);
+    TkMacOSXSetupDrawingContext(drawable, gc, tkMacOSXUseCGDrawing,
+	    &drawingContext);
 
 #if 0
     /*
