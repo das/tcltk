@@ -400,7 +400,7 @@ if test $tk_aqua = no; then
 		if test "$tcl_cv_ld_weak_l" = yes; then
 		    # On Darwin, weak link libXss if possible,
 		    # as it is only available on Tiger or later.
-		    XLIBSW="$XLIBSW -weak-lXss -lXext"
+		    XLIBSW="$XLIBSW -Wl,-weak-lXss -lXext"
 		else
 		    XLIBSW="$XLIBSW -lXss -lXext"
 		fi
