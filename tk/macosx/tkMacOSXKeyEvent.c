@@ -57,7 +57,7 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkMacOSXInt.h"
+#include "tkMacOSXPrivate.h"
 #include "tkMacOSXEvent.h"
 
 /*
@@ -1123,8 +1123,8 @@ TkpSetCapture(
 	    m = kWindowModalityNone;
 	}
 	if (w && w->window != None && TkMacOSXHostToplevelExists(w)) {
-	    ChkErr(SetWindowModality, GetWindowFromPort(
-		    TkMacOSXGetDrawablePort(w->window)), m, NULL);
+	    ChkErr(SetWindowModality, TkMacOSXDrawableWindow(w->window), m,
+		    NULL);
 	}
     }
 #endif

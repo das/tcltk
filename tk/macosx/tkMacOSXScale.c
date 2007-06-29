@@ -14,7 +14,7 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkMacOSXInt.h"
+#include "tkMacOSXPrivate.h"
 #include "tkScale.h"
 
 /*
@@ -209,7 +209,7 @@ TkpDisplayScale(
 
     macDraw = (MacDrawable *) Tk_WindowId(tkwin);
     destPort = TkMacOSXGetDrawablePort(Tk_WindowId(tkwin));
-    windowRef = GetWindowFromPort(destPort);
+    windowRef = TkMacOSXDrawableWindow(Tk_WindowId(tkwin));
     portChanged = QDSwapPort(destPort, &savePort);
     TkMacOSXSetUpClippingRgn(Tk_WindowId(tkwin));
 

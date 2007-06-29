@@ -82,7 +82,7 @@ MODULE_SCOPE char* TkMacOSXMenuMessageToAscii(int msg, char * s);
 MODULE_SCOPE char* TkMacOSXMouseTrackingResultToAscii(MouseTrackingResult r, char * buf );
 #endif
 
-MODULE_SCOPE void TkMacOSXDebugFlashRegion(CGrafPtr port, RgnHandle rgn);
+MODULE_SCOPE void TkMacOSXDebugFlashRegion(Drawable d, RgnHandle rgn);
 
 MODULE_SCOPE void* TkMacOSXGetNamedDebugSymbol(const char* module, const char* symbol);
 
