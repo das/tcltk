@@ -1630,7 +1630,7 @@ TkMacOSXRestoreDrawingContext(TkMacOSXDrawingContext *dc)
 	if (dc->port) {
 	    ChkErr(QDEndCGContext, dc->port, &(dc->context));
 	}
-    } else {
+    } else if (dc->port) {
 	if (!tkPictureIsOpen) {
 	    HidePen();
 	}
