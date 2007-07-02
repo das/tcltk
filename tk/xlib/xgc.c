@@ -74,7 +74,7 @@ XCreateGC(display, d, mask, values)
     gp->foreground = 	(mask & GCForeground) 	?values->foreground 	:
 	    BlackPixelOfScreen(DefaultScreenOfDisplay(display));
     gp->background = 	(mask & GCBackground) 	?values->background 	:
-	    WhitePixelOfScreen(DefaultScreenOfDisplay(display)));
+	    WhitePixelOfScreen(DefaultScreenOfDisplay(display));
     gp->line_width = 	(mask & GCLineWidth)	?values->line_width	:1;	
     gp->line_style = 	(mask & GCLineStyle)	?values->line_style	:LineSolid;
     gp->cap_style =  	(mask & GCCapStyle)	?values->cap_style	:0;
