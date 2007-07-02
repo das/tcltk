@@ -68,8 +68,10 @@ XCreateGC(
 
     InitField(function,		  GCFunction,		GXcopy);
     InitField(plane_mask,	  GCPlaneMask,		(unsigned long)(~0));
-    InitField(foreground,	  GCForeground,		0);
-    InitField(background,	  GCBackground,		0xffffff);
+    InitField(foreground,	  GCForeground,		
+	    BlackPixelOfScreen(DefaultScreenOfDisplay(display)));
+    InitField(background,	  GCBackground,		
+	    WhitePixelOfScreen(DefaultScreenOfDisplay(display)));
     InitField(line_width,	  GCLineWidth,		1);
     InitField(line_style,	  GCLineStyle,		LineSolid);
     InitField(cap_style,	  GCCapStyle,		0);
