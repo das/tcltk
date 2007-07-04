@@ -940,8 +940,7 @@ DestroyImage(
     if (image) {
 	if (image->obdata) {
 	    Tk_FreePixmap((Display*) gMacDisplay, (Pixmap) image->obdata);
-	}
-	if (image->data) {
+	} else if (image->data) {
 	    ckfree(image->data);
 	}
 	ckfree((char*) image);
