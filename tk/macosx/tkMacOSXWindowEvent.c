@@ -69,14 +69,6 @@
 */
 
 /*
- * Declarations of global variables defined in this file.
- */
-
-static int tkMacOSXAppInFront = true;	/* Boolean variable for determining if
-					 * we are the frontmost app. Only set
-					 * in TkMacOSXProcessApplicationEvent
-					 */
-/*
  * Declaration of functions used only in this file
  */
 
@@ -99,7 +91,7 @@ static void ClearPort(CGrafPtr port, RgnHandle updateRgn);
  *	0.
  *
  * Side effects:
- *	Hide or reveal floating windows, and set tkMacOSXAppInFront.
+ *	Hide or reveal floating windows.
  *
  *----------------------------------------------------------------------
  */
@@ -121,12 +113,10 @@ TkMacOSXProcessApplicationEvent(
 
     switch (eventPtr->eKind) {
 	case kEventAppActivated:
-	    tkMacOSXAppInFront = true;
 	    ShowFloatingWindows();
 	    break;
 	case kEventAppDeactivated:
 	    TkSuspendClipboard();
-	    tkMacOSXAppInFront = false;
 	    HideFloatingWindows();
 	    break;
 	case kEventAppQuit:
@@ -335,10 +325,10 @@ TkMacOSXProcessWindowEvent(
 	    }
 	    break;
 	case kEventWindowDragStarted:
-	    TkMacOSXTrackingLoop(1);
 	    if (!(TkMacOSXModifierState() & cmdKey)) { 
 		TkMacOSXBringWindowForward(whichWindow);
 	    }
+	    TkMacOSXTrackingLoop(1);
 	    break;
 	case kEventWindowDragCompleted: {
 	    Rect maxBounds, bounds, strWidths;
@@ -925,7 +915,16 @@ TkWmProtocolEventProc(
 int
 Tk_MacOSXIsAppInFront(void)
 {
-    return tkMacOSXAppInFront;
+    OSStatus err;
+    ProcessSerialNumber frontPsn, ourPsn = {0, kCurrentProcess};
+    Boolean isFrontProcess = true;
+
+    err = ChkErr(GetFrontProcess, &frontPsn);
+    if (err == noErr) {
+	ChkErr(SameProcess, &frontPsn, &ourPsn, &isFrontProcess);
+    }
+    
+    return (isFrontProcess == true);
 }
 
 /*
