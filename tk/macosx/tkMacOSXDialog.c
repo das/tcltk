@@ -944,6 +944,7 @@ NavServicesGetFile(
 	Tcl_SetObjResult(interp, theResult);
 	result = TCL_OK;
     } else if (err == userCanceledErr) {
+	Tcl_ResetResult(interp);
 	result = TCL_OK;
     }
 
