@@ -20,8 +20,6 @@
 #include "tkInt.h"
 #endif
 
-#define kComponentSignatureString "TkMacOSX"
-#define COMPONENT_SIGNATURE 'Tk  '
 #define TextStyle MacTextStyle
 #include <Carbon/Carbon.h>
 #undef TextStyle
