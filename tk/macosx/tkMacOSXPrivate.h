@@ -172,6 +172,15 @@ MODULE_SCOPE float tkMacOSXToolboxVersionNumber;
 #endif /* MAC_OS_X_VERSION_MAX_ALLOWED */
 
 /*
+ * Macros for DEBUG_ASSERT_MESSAGE et al from Debugging.h.
+ */
+
+#undef kComponentSignatureString
+#undef COMPONENT_SIGNATURE
+#define kComponentSignatureString "TkMacOSX"
+#define COMPONENT_SIGNATURE 'Tk  '
+
+/*
  * Macros abstracting checks only active in a debug build.
  */
 
