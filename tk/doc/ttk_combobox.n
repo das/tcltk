@@ -108,3 +108,5 @@ This event is generated after the listbox is unposted.
 
 .SH "SEE ALSO"
 ttk_widget(n), ttk_entry(n)
+.SH KEYWORDS
+choice, entry, list box, text box, widget

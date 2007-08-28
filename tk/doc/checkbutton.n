@@ -262,8 +262,19 @@ actions occur:  the checkbutton is completely non-responsive.
 The behavior of checkbuttons can be changed by defining new bindings for
 individual widgets or by redefining the class bindings.
 
+.SH EXAMPLE
+This example shows a group of uncoupled checkbuttons.
+.PP
+.CS
+    labelframe .lbl -text "Steps:"
+    \fBcheckbutton\fR .c1 -text Lights  -variable lights
+    \fBcheckbutton\fR .c2 -text Cameras -variable cameras
+    \fBcheckbutton\fR .c3 -text Action! -variable action
+    pack .c1 .c2 .c3 -in .lbl
+    pack .lbl
+.CE
+
 .SH "SEE ALSO"
 button(n), options(n), radiobutton(n), ttk_checkbutton(n)
-
 .SH KEYWORDS
 checkbutton, widget

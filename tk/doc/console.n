@@ -132,9 +132,7 @@ often has the following code fragment in it so output produced by
 .CS
 catch {\fBconsole show\fR}
 .CE
-
-.SH KEYWORDS
-console, interpreter, window, interactive, output channels
-
 .SH "SEE ALSO"
 destroy(n), fconfigure(n), history(n), interp(n), puts(n), text(n), wm(n)
+.SH KEYWORDS
+console, interpreter, window, interactive, output channels
