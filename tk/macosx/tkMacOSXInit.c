@@ -24,12 +24,6 @@
 #include <mach-o/getsect.h>
 
 /*
- * The Init script (common to Windows and Unix platforms) is
- * defined in tkInitScript.h
- */
-#include "tkInitScript.h"
-
-/*
  * Define the following to 0 to not attempt to use an undocumented SPI
  * to notify the window server that an unbundled executable is a full
  * GUI application after loading Tk.
@@ -387,7 +381,7 @@ TkpInit(
 		TCL_GLOBAL_ONLY|TCL_LIST_ELEMENT|TCL_APPEND_VALUE);
     }
 
-    return Tcl_EvalEx(interp, initScript, -1, TCL_EVAL_GLOBAL);
+    return TCL_OK;
 }
 
 /*

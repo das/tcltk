@@ -14,13 +14,6 @@
 #include "tkInt.h"
 #include "tkUnixInt.h"
 
-/*
- * The Init script (common to Windows and Unix platforms) is defined in
- * tkInitScript.h
- */
-
-#include "tkInitScript.h"
-
 #ifdef HAVE_COREFOUNDATION
 static int		GetLibraryPath(Tcl_Interp *interp);
 #else
@@ -51,7 +44,7 @@ TkpInit(
 {
     TkCreateXEventSource();
     GetLibraryPath(interp);
-    return Tcl_Eval(interp, initScript);
+    return TCL_OK;
 }
 
 /*
