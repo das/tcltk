@@ -15,7 +15,9 @@
  * RCS: @(#) $Id$
  */
 
+#if 0
 #define __NO_OLD_CONFIG
+#endif
 #include "tkInt.h"
 
 /*
