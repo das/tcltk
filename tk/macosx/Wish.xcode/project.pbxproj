@@ -528,7 +528,6 @@
 		F966BADA08F27A39005CB29B /* tkImgPhoto.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tkImgPhoto.c; sourceTree = "<group>"; };
 		F966BADB08F27A39005CB29B /* tkImgPPM.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tkImgPPM.c; sourceTree = "<group>"; };
 		F966BADC08F27A39005CB29B /* tkImgUtil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tkImgUtil.c; sourceTree = "<group>"; };
-		F966BADD08F27A39005CB29B /* tkInitScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tkInitScript.h; sourceTree = "<group>"; };
 		F966BADE08F27A39005CB29B /* tkInt.decls */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = tkInt.decls; sourceTree = "<group>"; };
 		F966BADF08F27A39005CB29B /* tkInt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tkInt.h; sourceTree = "<group>"; };
 		F966BAE108F27A39005CB29B /* tkIntDecls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tkIntDecls.h; sourceTree = "<group>"; };
@@ -2046,7 +2045,6 @@
 				F966BADA08F27A39005CB29B /* tkImgPhoto.c */,
 				F966BADB08F27A39005CB29B /* tkImgPPM.c */,
 				F966BADC08F27A39005CB29B /* tkImgUtil.c */,
-				F966BADD08F27A39005CB29B /* tkInitScript.h */,
 				F966BADE08F27A39005CB29B /* tkInt.decls */,
 				F966BADF08F27A39005CB29B /* tkInt.h */,
 				F966BAE108F27A39005CB29B /* tkIntDecls.h */,
