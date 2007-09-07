@@ -16,7 +16,6 @@
 
 #include "tkInt.h"
 #include "tkCanvas.h"
-#include "tkPort.h"
 
 /*
  * See tkCanvas.h for key data structures used to implement canvases.

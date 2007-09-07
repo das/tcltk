@@ -62,7 +62,6 @@ typedef struct mFile {
 } MFile;
 
 #include "tkInt.h"
-#include "tkPort.h"
 
 /*
  * Non-ASCII encoding support:

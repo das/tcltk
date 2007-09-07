@@ -14,7 +14,7 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkPort.h"
+#include "tkInt.h"
 #include "tkScrollbar.h"
 #include "default.h"
 

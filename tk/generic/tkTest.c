@@ -17,7 +17,6 @@
  */
 
 #include "tkInt.h"
-#include "tkPort.h"
 #include "tkText.h"
 
 #ifdef __WIN32__

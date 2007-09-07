@@ -25,9 +25,7 @@
 #define __NO_OLD_CONFIG
 #endif
 
-#include "tk.h"
 #include "tkInt.h"
-#include "tkPort.h"
 #include "tkFont.h"
 
 /*

@@ -19,9 +19,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
-#include <tcl.h>
-#include <tclInt.h>
-#include <tk.h>
+#include "tclInt.h"
 #include "tkInt.h"
 #ifdef NO_STDLIB_H
 #   include "../compat/stdlib.h"

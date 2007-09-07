@@ -14,7 +14,6 @@
  */
 
 #include "tkInt.h"
-#include "tkPort.h"
 
 /*
  * The structure below defines the implementation of the "statekey" Tcl

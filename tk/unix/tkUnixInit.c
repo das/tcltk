@@ -11,7 +11,6 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkInt.h"
 #include "tkUnixInt.h"
 
 #ifdef HAVE_COREFOUNDATION

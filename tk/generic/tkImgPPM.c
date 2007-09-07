@@ -17,7 +17,6 @@
  */
 
 #include "tkInt.h"
-#include "tkPort.h"
 
 /*
  * The maximum amount of memory to allocate for data read from the file. If we

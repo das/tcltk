@@ -74,7 +74,7 @@
 #define __NO_OLD_CONFIG
 #endif
 
-#include "tkPort.h"
+#include "tkInt.h"
 #include "tkMenu.h"
 
 #define MENU_HASH_KEY "tkMenus"

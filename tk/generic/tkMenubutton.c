@@ -13,8 +13,8 @@
  * RCS: @(#) $Id$
  */
 
+#include "tkInt.h"
 #include "tkMenubutton.h"
-#include "tkPort.h"
 #include "default.h"
 
 /*

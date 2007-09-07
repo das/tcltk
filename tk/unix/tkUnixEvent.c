@@ -12,7 +12,6 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkInt.h"
 #include "tkUnixInt.h"
 #include <signal.h>
 

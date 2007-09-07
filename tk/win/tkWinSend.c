@@ -13,6 +13,7 @@
  * RCS: @(#) $Id$
  */
 
+#include "tkInt.h"
 #include "tkWinSendCom.h"
 
 /*

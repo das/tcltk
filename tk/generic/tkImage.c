@@ -14,7 +14,6 @@
  */
 
 #include "tkInt.h"
-#include "tkPort.h"
 
 /*
  * Each call to Tk_GetImage returns a pointer to one of the following

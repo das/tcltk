@@ -15,8 +15,6 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkPort.h"
-#include "tkInt.h"
 #include "tkUnixInt.h"
 
 /*

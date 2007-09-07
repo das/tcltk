@@ -6,8 +6,6 @@
 #endif
 
 #include <windows.h>
-#include <tcl.h>
-#include <tk.h>
 #include <tkWinInt.h>
 #include "ttk/ttkTheme.h"
 

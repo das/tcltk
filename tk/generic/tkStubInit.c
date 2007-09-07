@@ -12,11 +12,11 @@
  */
 
 #include "tkInt.h"
-#include "tkPort.h"
 
 #if !(defined(__WIN32__) || defined(MAC_OSX_TK))
 /* UNIX */
 #define UNIX_TK
+#include "tkUnixInt.h"
 #endif
 
 #ifdef __WIN32__
@@ -28,10 +28,8 @@
 #include "tkMacOSXInt.h"
 #endif
 
-#include "tkDecls.h"
+/* TODO: These ought to come in some other way */
 #include "tkPlatDecls.h"
-#include "tkIntDecls.h"
-#include "tkIntPlatDecls.h"
 #include "tkIntXlibDecls.h"
 
 /*
