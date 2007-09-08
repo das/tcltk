@@ -2011,7 +2011,6 @@ Tk_MessageBoxObjCmd(
     int defaultBtn, icon, type;
     int i, oldMode, winCode;
     UINT flags;
-    Tcl_Encoding unicodeEncoding = TkWinGetUnicodeEncoding();
     static CONST char *optionStrings[] = {
 	"-default",	"-detail",	"-icon",	"-message",
 	"-parent",	"-title",	"-type",	NULL
@@ -2023,6 +2022,7 @@ Tk_MessageBoxObjCmd(
     ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
 	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
+    (void) TkWinGetUnicodeEncoding();
     tkwin = (Tk_Window) clientData;
 
     defaultBtn = -1;
@@ -2101,9 +2101,8 @@ Tk_MessageBoxObjCmd(
 
     flags = 0;
     if (defaultBtn >= 0) {
-	int defaultBtnIdx;
+	int defaultBtnIdx = -1;
 
-	defaultBtnIdx = -1;
 	for (i = 0; i < NUM_TYPES; i++) {
 	    if (type == allowedTypes[i].type) {
 		int j;
@@ -2128,7 +2127,8 @@ Tk_MessageBoxObjCmd(
 
     flags |= icon | type | MB_SYSTEMMODAL;
 
-    tmpObj = messageObj ? Tcl_DuplicateObj(messageObj) : Tcl_NewUnicodeObj(NULL, 0);
+    tmpObj = messageObj ? Tcl_DuplicateObj(messageObj)
+	    : Tcl_NewUnicodeObj(NULL, 0);
     Tcl_IncrRefCount(tmpObj);
     if (detailObj) {
 	Tcl_AppendUnicodeToObj(tmpObj, L"\n\n", 2);
