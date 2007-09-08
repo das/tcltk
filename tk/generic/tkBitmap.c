@@ -25,7 +25,7 @@
  * that warning message.
  */
 
-#if defined(__WIN32__) || defined(_WIN32)
+#if (defined(__WIN32__) || defined(_WIN32)) && !defined(__GNUC__)
 #pragma warning (disable : 4305)
 #endif
 
@@ -40,7 +40,7 @@
 #include "question.xbm"
 #include "warning.xbm"
 
-#if defined(__WIN32__) || defined(_WIN32)
+#if (defined(__WIN32__) || defined(_WIN32)) && !defined(__GNUC__)
 #pragma warning (default : 4305)
 #endif
 
