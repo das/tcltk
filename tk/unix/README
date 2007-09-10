@@ -100,7 +100,7 @@ How To Compile And Install Tk:
     
 (g) Type "make install" to install Tk's binaries and script files in
     standard places.  You'll need write permission on the installation
-    directoryies to do this.  The installation directories are
+    directories to do this.  The installation directories are
     determined by the "configure" script and may be specified with
     the --prefix and --exec-prefix options to "configure".  See the
     Makefile for information on what directories were chosen; you
@@ -135,7 +135,7 @@ processed.  If any errors occur, you'll see a much more substantial
 printout for each error.  In order to avoid false error reports, be sure
 to run the tests with an empty resource database (e.g., remove your
 .Xdefaults file or delete any entries starting with *).  Also, don't
-try to do anything else with your display or keyboard whlie the tests
+try to do anything else with your display or keyboard while the tests
 are running, or you may get false violations.  See the README file in
 the "tests" directory for more information on the test suite.
 
