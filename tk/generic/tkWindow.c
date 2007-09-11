@@ -2948,7 +2948,7 @@ Initialize(
      * only an issue when Tk is loaded dynamically.
      */
 
-    if (Tcl_InitStubs(interp, TCL_VERSION, 1) == NULL) {
+    if (Tcl_InitStubs(interp, TCL_PATCH_LEVEL, 0) == NULL) {
 	return TCL_ERROR;
     }
 
