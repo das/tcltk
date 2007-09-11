@@ -995,7 +995,7 @@ ReadImage(interp, imagePtr, chan, len, rows, cmap,
 	 */
 	if (interlace) {
 	    ypos += interlaceStep[pass];
-	    while (ypos >= height) {
+	    while (ypos >= rows) {
 		pass++;
 		if (pass > 3) {
 		    return TCL_OK;

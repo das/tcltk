@@ -669,6 +669,18 @@ test imgPhoto-14.2 {GIF -index handler buffer sizing} -setup {
     image delete $i
 } -returnCodes error -result {no image data for this index}
 
+test imgPhoto-14.3 {GIF -index interleaving and small frames} -setup {
+    set i [image create photo]
+} -body {
+    # Interleaved GIFs used to crash us when a smaller subsequent frame
+    # was accessed.
+    $i configure -format {GIF -index 1} -data {
+	R0lGODdhAQAFAPAAAP8AAAAAACwAAAAAAQAFAEACAoRdACwAAAAAAQAEAEACAoRRADs=
+    }
+} -cleanup {
+    image delete $i
+}
+
 test imgPhoto-15.1 {photo images can fail to allocate memory gracefully} \
 	{nonPortable} {
     # This is not portable to very large machines with more around
