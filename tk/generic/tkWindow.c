@@ -3181,7 +3181,7 @@ Initialize(
 	geometry = NULL;
     }
 
-    if (Tcl_PkgRequire(interp, "Tcl", TCL_PATCH_LEVEL, 1) == NULL) {
+    if (Tcl_PkgRequire(interp, "Tcl", TCL_PATCH_LEVEL, 0) == NULL) {
 	code = TCL_ERROR;
 	goto done;
     }
