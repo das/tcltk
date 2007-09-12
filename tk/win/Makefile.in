@@ -481,7 +481,7 @@ install-binaries: binaries
 	@$(RM) $(PKG_INDEX);
 	@(\
 	echo "if {[catch {package present Tcl\
-		$(TCLVERSION)$(TCLPATCHL)]} { return }";\
+		$(TCLVERSION)$(TCLPATCHL)}]} { return }";\
 	echo "package ifneeded Tk $(VERSION)$(PATCH_LEVEL)\
 		[list load [file join \$$dir .. .. bin $(TK_DLL_FILE)] Tk]";\
 	) > $(PKG_INDEX);
