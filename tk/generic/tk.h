@@ -1486,11 +1486,13 @@ typedef struct Tk_ElementSpec {
 
 const char *		Tk_InitStubs _ANSI_ARGS_((Tcl_Interp *interp,
 			    const char *version, int exact));
+const char *		Tk_PkgInitStubsCheck _ANSI_ARGS_((Tcl_Interp *interp,
+			    const char *version, int exact));
 
 #ifndef USE_TK_STUBS
 
 #define Tk_InitStubs(interp, version, exact) \
-    Tcl_PkgRequire(interp, "Tk", version, exact)
+    Tk_PkgInitStubsCheck(interp, version, exact)
 
 #endif
 

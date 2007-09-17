@@ -85,10 +85,28 @@ Tk_InitStubs(
     CONST char *actualVersion;
     TkStubs **stubsPtrPtr = &tkStubsPtr;	/* squelch warning */
 
-    actualVersion = Tcl_PkgRequireEx(interp, "Tk", version, exact,
+    actualVersion = Tcl_PkgRequireEx(interp, "Tk", version, 0,
 	    (ClientData *) stubsPtrPtr);
     if (!actualVersion) {
 	return NULL;
+    }
+    if (exact) {
+        CONST char *p = version;
+        int count = 0;
+
+        while (*p) {
+            count += !isdigit(*p++);
+        }
+        if (count == 1) {
+            if (0 != strncmp(version, actualVersion, strlen(version))) {
+                return NULL;
+            }
+        } else {
+            actualVersion = Tcl_PkgRequireEx(interp, "Tk", version, 1, NULL);
+            if (actualVersion == NULL) {
+                return NULL;
+            }
+        }
     }
 
     if (!tkStubsPtr) {
