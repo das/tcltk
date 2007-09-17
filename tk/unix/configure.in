@@ -316,13 +316,6 @@ if test "${TCL_LD_SEARCH_FLAGS}" = '-L${LIB_RUNTIME_DIR}'; then
     LIB_RUNTIME_DIR=`echo ${LIB_RUNTIME_DIR} |sed -e 's/:/ -L/g'`
 fi
 
-# The statement below is very tricky!  It actually *evaluates* the
-# string in TCL_CC_SEARCH_FLAGS and TCL_LD_SEARCH_FLAGS which
-# causes a substitution of the variable LIB_RUNTIME_DIR.
-
-eval "CC_SEARCH_FLAGS=\"$TCL_CC_SEARCH_FLAGS\""
-eval "LD_SEARCH_FLAGS=\"$TCL_LD_SEARCH_FLAGS\""
-
 #--------------------------------------------------------------------
 #	Check for the existence of various libraries.  The order here
 #	is important, so that then end up in the right order in the
