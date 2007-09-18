@@ -470,7 +470,7 @@ BASE_CFLAGS	= $(cdebug) $(cflags) $(crt) $(TK_INCLUDES)
 TK_CFLAGS	= $(BASE_CFLAGS) $(TK_DEFINES) -DUSE_TCL_STUBS
 CON_CFLAGS	= $(cdebug) $(cflags) $(crt) -DCONSOLE
 WISH_CFLAGS	= $(BASE_CFLAGS) $(TK_DEFINES)
-STUB_CFLAGS     = $(cflags) $(cdebug) $(crt) $(TK_DEFINES)
+STUB_CFLAGS     = $(cflags) $(cdebug) $(TK_DEFINES)
 
 
 #---------------------------------------------------------------------
