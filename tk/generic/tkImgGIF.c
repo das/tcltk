@@ -664,8 +664,8 @@ StringReadGIF(
      * padding of the BASE64 data).
      */
 
-    if (strncmp(GIF87a, (unsigned char *) data, 6)
-	    && strncmp(GIF89a, (unsigned char *) data, 6)) {
+    if (strncmp(GIF87a, (char *) data, 6)
+	    && strncmp(GIF89a, (char *) data, 6)) {
 	xferFormat = INLINE_DATA_BASE64;
     } else {
 	xferFormat = INLINE_DATA_BINARY;
