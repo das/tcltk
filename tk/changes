@@ -6326,6 +6326,14 @@ to Wish.app's Info.plist.
 
 --- Released 8.5a6, April 25, 2007 --- See ChangeLog for details ---
 
+2007-05-04 (new feature)[TIP 145] Enhanced font handling (thoyts)
+
+2007-05-14 (bug fix)[1712081] restored USE_OLD_IMAGE support (porter)
+
+2007-05-15 (bug fix)[1717830,800149] memory leaks (jenglish)
+
+2007-05-15 (bug fix)[1677608] [grid *configure] crash (porter)
+
 2007-05-31 (platform support) Aqua: improve interaction of Expose events and
 idle-time redraws.
 
@@ -6335,6 +6343,10 @@ idle-time redraws.
 
 2007-06-06 (platform support) Aqua: enable MouseWheel events in background
 windows.
+
+2007-06-09 (bug fix)[1724223] Unicode menu entry crash (hobbs)
+
+2007-06-09 (bug fix)[1467997] Blue/red reversal in icons (hobbs,janssen)
 
 2007-06-23 (bug fix) Aqua: nav dialog sheet crash.
 
@@ -6350,11 +6362,19 @@ in presence of grabs or modal windows.
 
 2007-07-25 (bug fix)[1743786] Aqua: tk_getOpenFile result.
 
+2007-08-01 (bug fix)[1692927] [tk_messageBox -detail] buffer (davies,thoyts)
+
 2007-08-27 (bug fix)[1782105] Aqua: tk_chooseColor result.
 
 2007-09-06 (platform support) Aqua: drop support for Xcode 1.5 project, add
 project for Xcode 3.0.
 
+2007-09-11 (bug fix) Animated GIF buffer overrun (max)
+
 2007-09-15 (platform support) SunOS-5.1x link with cc, not ld.
 
---- Released 8.5b1, September ??, 2007 --- See ChangeLog for details ---
+2007-09-17 (enhancement)[1780286] Aqua: combobox appearance (english)
+
+2007-09-17 (platform support)[1748251] Fix NetBSD link failures (english)
+
+--- Released 8.5b1, September 26, 2007 --- See ChangeLog for details ---
