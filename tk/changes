@@ -6377,4 +6377,6 @@ project for Xcode 3.0 (steffen)
 
 2007-09-17 (platform support)[1748251] Fix NetBSD link failures (english)
 
+2007-09-20 (bug fix)[1791052] [text] DLine layout crash (khomoutov,fellows)
+
 --- Released 8.5b1, September 26, 2007 --- See ChangeLog for details ---
