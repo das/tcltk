@@ -11,9 +11,9 @@ AC_PREREQ(2.13)
 TK_VERSION=8.4
 TK_MAJOR_VERSION=8
 TK_MINOR_VERSION=4
-TK_PATCH_LEVEL=".16"
+TK_PATCH_LEVEL=".17"
 VERSION=${TK_VERSION}
-LOCALES="cs de el en en_gb eo es es_ES fr it nl pl pt ru"
+LOCALES="cs de el en en_gb eo es fr it nl pl pt ru"
 
 #--------------------------------------------------------------------
 # Find and load the tclConfig.sh file
