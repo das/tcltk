@@ -98,20 +98,35 @@ proc ::tk::ConsoleInit {} {
 
     . configure -menu .menubar
 
-    set con [text .console -yscrollcommand [list .sb set] -setgrid true]
-    scrollbar .sb -command [list $con yview]
-    pack .sb -side right -fill both
-    pack $con -fill both -expand 1 -side left
-    switch -exact $tcl_platform(platform) {
-	"windows" {
-	    $con configure -font systemfixed
-	}
-	"unix" {
-	    if {[tk windowingsystem] eq "aqua"} {
-		$con configure -font {Monaco 9 normal} -highlightthickness 0
-	    }
-	}
+    # See if we can find a better font than the TkFixedFont
+    font create TkConsoleFont {*}[font configure TkFixedFont]
+    set families [font families]
+    switch -exact -- [tk windowingsystem] {
+        aqua { set preferred {Monaco 9} }
+        win32 { set preferred {ProFontWindows 8 Consolas 8} }
+        default { set preferred {} }
     }
+    foreach {family size} $preferred {
+        if {[lsearch -exact $families $family] != -1} {
+            font configure TkConsoleFont -family $family -size $size
+            break
+        }
+    }
+
+    # Provide the right border for the text widget (platform dependent).
+    ::ttk::style layout ConsoleFrame {
+        Entry.field -sticky news -border 1 -children {
+            ConsoleFrame.padding -sticky news
+        }
+    }
+    ::ttk::frame .consoleframe -style ConsoleFrame
+
+    set con [text .console -yscrollcommand [list .sb set] -setgrid true \
+                 -borderwidth 0 -highlightthickness 0 -font TkConsoleFont]
+    ::ttk::scrollbar .sb -command [list $con yview]
+    pack .sb  -in .consoleframe -fill both -side right -padx 1 -pady 1
+    pack $con -in .consoleframe -fill both -expand 1 -side left -padx 1 -pady 1
+    pack .consoleframe -fill both -expand 1 -side left
 
     ConsoleBind $con
 
