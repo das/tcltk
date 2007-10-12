@@ -5864,6 +5864,7 @@ ApplyWindowClassAttributeChanges(
 		    ChkErr(HIGrowBoxViewSetTransparent, growBoxView, true);
 		}
 	    }
+	    TkMacOSXInvalClipRgns((Tk_Window) winPtr);
 	    TkMacOSXInvalidateWindow((MacDrawable *)(winPtr->window),
 		    TK_PARENT_WINDOW);
 	}

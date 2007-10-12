@@ -1054,8 +1054,10 @@ TkpDrawCharsInContext(
     Tcl_DString runString;
 #endif
 
-    TkMacOSXSetupDrawingContext(drawable, gc, tkMacOSXUseCGDrawing,
-	    &drawingContext);
+    if (!TkMacOSXSetupDrawingContext(drawable, gc, tkMacOSXUseCGDrawing,
+	    &drawingContext)) {
+	return;
+    }
 
 #if 0
     /*

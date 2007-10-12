@@ -148,12 +148,11 @@ TkpMakeWindow(
 	}
 	macWin->winPtr = winPtr;
 	winPtr->privatePtr = macWin;
-	macWin->clipRgn = NewRgn();
-	macWin->aboveClipRgn = NewRgn();
-	macWin->drawRgn = NewRgn();
+	macWin->visRgn = NULL;
+	macWin->aboveVisRgn = NULL;
+	macWin->drawRect = CGRectNull;
 	macWin->referenceCount = 0;
 	macWin->flags = TK_CLIP_INVALID;
-
 	macWin->grafPtr = NULL;
 	macWin->context = NULL;
 	if (Tk_IsTopLevel(macWin->winPtr)) {
@@ -299,10 +298,9 @@ TkpUseWindow(
 
     macWin->grafPtr = NULL;
     macWin->context = NULL;
-
-    macWin->clipRgn = NewRgn();
-    macWin->aboveClipRgn = NewRgn();
-    macWin->drawRgn = NewRgn();
+    macWin->visRgn = NULL;
+    macWin->aboveVisRgn = NULL;
+    macWin->drawRect = CGRectNull;
     macWin->referenceCount = 0;
     macWin->flags = TK_CLIP_INVALID;
     macWin->toplevel = macWin;
