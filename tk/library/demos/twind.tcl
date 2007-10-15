@@ -66,7 +66,7 @@ $t insert end "Or, here is another example.  If you "
 $t window create end -create {
     button %W.click -text "Click Here" -command "textWindPlot %W" \
 	    -cursor top_left_arrow}
-      
+
 $t insert end " a canvas displaying an x-y plot will appear right here."
 $t mark set plot insert
 $t mark gravity plot left
@@ -96,6 +96,10 @@ $t window create end \
   -create {button %W.split -text "Split Windows" -command "textSplitWindow %W" \
   -cursor top_left_arrow} -padx 3
 $t insert end " \n\n"
+
+$t insert end "Users of previous versions of Tk will also be interested "
+$t insert end "to note that now cursor movement is now by visual line by "
+$t insert end "default, and that all scrolling of this widget is by pixel.\n\n"
 
 $t insert end "You may also find it useful to put embedded windows in "
 $t insert end "a text without any actual text.  In this case the "
