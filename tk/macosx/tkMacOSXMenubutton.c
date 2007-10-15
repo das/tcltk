@@ -193,8 +193,12 @@ TkpDisplayMenuButton(
     if (mbPtr->userPane) {
 	MenuButtonControlParams params;
 	bzero(&params, sizeof(params));
-	ComputeMenuButtonControlParams(butPtr, &params );
-	if (bcmp(&params,&mbPtr->params,sizeof(params))) {
+	ComputeMenuButtonControlParams(butPtr, &params);
+	if (
+#ifdef TK_REBUILD_TOPLEVEL
+	    (winPtr->flags & TK_REBUILD_TOPLEVEL) ||
+#endif
+	    bcmp(&params,&mbPtr->params,sizeof(params))) {
 	    if (mbPtr->userPane) {
 		DisposeControl(mbPtr->userPane);
 		mbPtr->userPane = NULL;
