@@ -406,9 +406,8 @@ to ``own'' those events.
 Note: not all window managers support the notion of an icon window.
 .TP
 \fBwm manage \fIwidget\fR
-
-The \fIwidget\fR specified will become a stand alone top-level window.  The window will be decorated with the window managers title bar, etc.
-
+The \fIwidget\fR specified will become a stand alone top-level window.  The
+window will be decorated with the window managers title bar, etc.
 .TP
 \fBwm maxsize \fIwindow\fR ?\fIwidth height\fR?
 If \fIwidth\fR and \fIheight\fR are specified, they give
