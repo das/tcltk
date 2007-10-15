@@ -13,7 +13,7 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkPort.h"
+#include "tkInt.h"
 
 /*
  * Default table of argument descriptors. These are normally available in
@@ -172,7 +172,7 @@ Tk_ParseArgv(
 	infoPtr = matchPtr;
 	switch (infoPtr->type) {
 	case TK_ARGV_CONSTANT:
-	    *((int *) infoPtr->dst) = (int) infoPtr->src;
+	    *((int *) infoPtr->dst) = PTR2INT(infoPtr->src);
 	    break;
 	case TK_ARGV_INT:
 	    if (argc == 0) {
