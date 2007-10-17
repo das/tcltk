@@ -19,7 +19,6 @@ wm title $w "Constrained Entry Demonstration"
 wm iconname $w "entry3"
 positionWindow $w
 
-
 label $w.msg -font $font -wraplength 5i -justify left -text "Four different\
 	entries are displayed below.  You can add characters by pointing,\
 	clicking and typing, though each is constrained in what it will\
@@ -183,5 +182,4 @@ grid $w.l1 $w.l2 -in $w.mid -padx 3m -pady 1m -sticky ew
 grid $w.l3 $w.l4 -in $w.mid -padx 3m -pady 1m -sticky ew
 grid columnconfigure $w.mid {0 1} -uniform 1
 pack $w.msg -side top
-pack $w.buttons -side bottom -fill x -pady 2m
 pack $w.mid -fill both -expand 1
