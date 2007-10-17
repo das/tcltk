@@ -21,7 +21,7 @@ wm iconname $w "ttkbut"
 positionWindow $w
 
 ttk::label $w.msg -font $font -wraplength 4i -justify left -text "Ttk is the new Tk themed widget set. This is a Ttk themed label, and below are three groups of Ttk widgets in Ttk labelframes. The first group are all buttons that set the current application theme when pressed. The second group contains checkbuttons, with a separator widget between the first pair and the second. The third group has a collection of linked radiobuttons."
-pack $w.msg -side top
+pack $w.msg -side top -fill x
 
 ## See Code / Dismiss
 pack [addSeeDismiss $w.seeDismiss $w {cheese tomato basil oregano happyness}]\
