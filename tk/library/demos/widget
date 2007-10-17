@@ -346,6 +346,8 @@ addFormattedText {
     @@demo image1	Two labels displaying images
     @@demo image2	A simple user interface for viewing images
     @@demo labelframe	Labelled frames
+    @@new
+    @@demo ttkbut	The simple Themed Tk widgets
 
     @@subtitle	Listboxes
     @@demo states	The 50 states
