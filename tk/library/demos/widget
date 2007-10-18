@@ -344,10 +344,14 @@ addFormattedText {
     @@subtitle	Paned Windows
     @@demo paned1	Horizontal paned window
     @@demo paned2	Vertical paned window
+    @@new
+    @@demo ttkpane	Themed nested panes
 
     @@subtitle	Menus
     @@demo menu		Menus and cascades (sub-menus)
     @@demo menubu	Menu-buttons
+    @@new
+    @@demo ttkmenu	Themed menu buttons
 
     @@subtitle	Common Dialogs
     @@demo msgbox	Message boxes
