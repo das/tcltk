@@ -944,7 +944,7 @@ RecomputeWidgets(
 
 int
 TkCreateNamedFont(
-    Tcl_Interp *interp,		/* Interp for error return. */
+    Tcl_Interp *interp,		/* Interp for error return (can be NULL). */
     Tk_Window tkwin,		/* A window associated with interp. */
     const char *name,		/* Name for the new named font. */
     TkFontAttributes *faPtr)	/* Attributes for the new named font. */
@@ -961,9 +961,10 @@ TkCreateNamedFont(
     if (!isNew) {
 	nfPtr = (NamedFont *) Tcl_GetHashValue(namedHashPtr);
 	if (nfPtr->deletePending == 0) {
-	    Tcl_ResetResult(interp);
-	    Tcl_AppendResult(interp, "named font \"", name,
-		    "\" already exists", NULL);
+	    if (interp) {
+		Tcl_AppendResult(interp, "named font \"", name,
+			"\" already exists", NULL);
+	    }
 	    return TCL_ERROR;
 	}
 
@@ -1001,7 +1002,7 @@ TkCreateNamedFont(
 
 int
 TkDeleteNamedFont(
-    Tcl_Interp *interp,		/* Interp for error return. */
+    Tcl_Interp *interp,		/* Interp for error return (can be NULL). */
     Tk_Window tkwin,		/* A window associated with interp. */
     CONST char *name)		/* Name for the new named font. */
 {
@@ -1013,8 +1014,10 @@ TkDeleteNamedFont(
 
     namedHashPtr = Tcl_FindHashEntry(&fiPtr->namedTable, name);
     if (namedHashPtr == NULL) {
-	Tcl_AppendResult(interp, "named font \"", name,
-		"\" doesn't exist", NULL);
+	if (interp) {
+	    Tcl_AppendResult(interp, "named font \"", name,
+		    "\" doesn't exist", NULL);
+	}
 	return TCL_ERROR;
     }
     nfPtr = (NamedFont *) Tcl_GetHashValue(namedHashPtr);
