@@ -45,6 +45,9 @@ if {"defaultFont" ni [font names]} {
         font create titleFont  {*}[font configure TkDefaultFont] -weight bold
         font create statusFont {*}[font configure TkDefaultFont]
         font create varsFont   {*}[font configure TkDefaultFont]
+	if {[tk windowingsystem] eq "aqua"} {
+	    font configure titleFont -size 17
+	}
     } else {
         font create mainFont   -family Helvetica -size 12
         font create fixedFont  -family Courier   -size 10

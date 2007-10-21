@@ -47,6 +47,7 @@ foreach theme [ttk::themes] {
 }
 
 pack [ttk::frame $w.f] -fill x
+pack [ttk::frame $w.f1] -fill both -expand yes
 lower $w.f
 
 grid anchor $w.f center
