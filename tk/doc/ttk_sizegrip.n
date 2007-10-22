@@ -42,8 +42,8 @@ pack [ttk::frame $top.statusbar] -side bottom -fill x
 pack [ttk::sizegrip $top.statusbar.grip] -side right -anchor se
 
 # Using grid:
-grid [ttk::sizegrip $top.statusbar.grip] \
-    -row $lastRow -column $lastColumn -sticky se
+grid [ttk::sizegrip $top.statusbar.grip] \e
+        -row $lastRow -column $lastColumn -sticky se
 # ... optional: add vertical scrollbar in $lastColumn,
 # ... optional: add horizontal scrollbar in $lastRow
 .CE

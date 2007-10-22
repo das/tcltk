@@ -62,7 +62,7 @@ grab.  This prevents the user from interacting with the application
 in any way except to invoke the dialog box.
 .SH EXAMPLE
 .CS
-set reply [\fBtk_dialog\fR .foo "The Title" "Do you want to say yes?" \\
+set reply [\fBtk_dialog\fR .foo "The Title" "Do you want to say yes?" \e
         questhead 0 Yes No "I'm not sure"]
 .CE
 

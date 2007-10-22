@@ -291,7 +291,7 @@ set count 0
 set tabwidth 0
 foreach family [lsort -dictionary [\fBfont families\fR]] {
     .t tag configure f[incr count] -font [list $family 10]
-    .t insert end ${family}:\\t {} \\
+    .t insert end ${family}:\\t {} \e
             "This is a simple sampler\\n" f$count
     set w [\fBfont measure\fR [.t cget -font] ${family}:]
     if {$w+5 > $tabwidth} {

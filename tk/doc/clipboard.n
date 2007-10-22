@@ -125,7 +125,7 @@ pack $c
 $c create text 150 30 -text "cut and paste me"
 bind $c <<Cut>> {
    \fBclipboard clear\fR
-   \fBclipboard append -type\fR TkCanvasItem \\
+   \fBclipboard append -type\fR TkCanvasItem \e
          [getItemConfig %W current]
    # Delete because this is cut, not copy.
    %W delete current
