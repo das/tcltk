@@ -310,22 +310,21 @@ modify that.
 The following system fonts are supported:
 .RS
 .TP
-X Windows:
+\fBX Windows\fR
 All valid X font names, including those listed by xlsfonts(1), are available.
 .TP
-MS Windows:
+\fBMS Windows\fR
 .DS
 .ta 3c 6c
 \fBsystem	ansi	device
 systemfixed	ansifixed	oemfixed\fR
 .DE
 .TP
-Mac OS X:
+\fBMac OS X\fR
 .DS
 .ta 3c 6c
 \fBsystem	application	menu\fR
 .DE
-.RS
 Additionally, the following named fonts provide access to the Aqua theme fonts:
 .DS
 \fBsystemSystemFont
@@ -348,7 +347,6 @@ systemMiniSystemFont
 systemDetailSystemFont
 systemDetailEmphasizedSystemFont\fR
 .DE
-.RE
 .RE
 .SH EXAMPLE
 Fill a text widget with lots of font demonstrators, one for every font
