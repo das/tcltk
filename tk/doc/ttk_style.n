@@ -15,11 +15,13 @@ ttk_style \- Control overall look and feel of widgets
 \fBttk::style\fR \fIoption\fR ?\fIargs\fR?
 .BE
 
+.BS
 .SH NOTES
 .PP
 This manpage has not been written yet.
 Please see the Tcl'2004 conference presentation,
 available at http://tktable.sourceforge.net/tile/tile-tcl2004.pdf
+.BE
 
 .SH DEFINITIONS
 .PP
@@ -89,7 +91,6 @@ Returns a list of the available themes.
 .TP
 \fBttk::style theme use\fR \fIthemeName\fR
 Sets the current theme to \fIthemeName\fR, and refreshes all widgets.
-
 .SH LAYOUTS
 A \fIlayout\fR specifies a list of elements, each followed
 by one or more options specifying how to arrange the element.
@@ -109,10 +110,9 @@ Specifies where the element is placed inside its allocated parcel.
 \fB-children \fI{ sublayout... }\fR
 Specifies a list of elements to place inside the element.
 .\" Also: -border, -unit, -expand: may go away.
-.PP
-For example:
+.SH EXAMPLE
 .CS
-ttk::style layout Horizontal.TScrollbar {
+\fBttk::style\fR layout Horizontal.TScrollbar {
     Scrollbar.trough -children {
         Scrollbar.leftarrow -side left
         Scrollbar.rightarrow -side right
@@ -120,9 +120,7 @@ ttk::style layout Horizontal.TScrollbar {
     }
 }
 .CE
-
 .SH "SEE ALSO"
 ttk_intro(n), ttk_widget(n), photo(n)
-
 .SH KEYWORDS
 style, theme, appearance
