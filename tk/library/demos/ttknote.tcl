@@ -22,6 +22,10 @@ positionWindow $w
 ## See Code / Dismiss
 pack [addSeeDismiss $w.seeDismiss $w] -side bottom -fill x
 
+ttk::frame $w.f
+pack $w.f -fill both -expand 1
+set w $w.f
+
 ## Make the notebook and set up Ctrl+Tab traversal
 ttk::notebook $w.note
 pack $w.note -fill both -expand 1 -padx 2 -pady 3
@@ -37,8 +41,8 @@ ttk::button $w.note.msg.b -text "Neat!" -underline 0 -command {
 bind $w <Alt-n> "focus $w.note.msg.b; $w.note.msg.b invoke"
 ttk::label $w.note.msg.l -textvariable neat
 $w.note add $w.note.msg -text "Description" -underline 0 -padding 2
-grid $w.note.msg.m - -sticky new
-grid $w.note.msg.b $w.note.msg.l
+grid $w.note.msg.m - -sticky new -pady 2
+grid $w.note.msg.b $w.note.msg.l -pady {2 4}
 grid rowconfigure $w.note.msg 1 -weight 1
 grid columnconfigure $w.note.msg {0 1} -weight 1 -uniform 1
 

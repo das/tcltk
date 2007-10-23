@@ -376,7 +376,7 @@ addFormattedText {
     @@new
     @@demo ttkmenu	Themed menu buttons
     @@new
-    @@demo toolbar	Detachable toolbar
+    @@demo toolbar	Themed toolbar
 
     @@subtitle	Common Dialogs
     @@demo msgbox	Message boxes
