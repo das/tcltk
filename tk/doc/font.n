@@ -261,7 +261,43 @@ font should be underlined.  The default value for underline is \fBfalse\fR.
 The value is a boolean flag that specifies whether a horizontal line should
 be drawn through the middle of characters in this font.  The default value
 for overstrike is \fBfalse\fR.
-.SH "PLATFORM-SPECIFIC ISSUES"
+.SH "STANDARD FONTS"
+.LP
+The following named fonts are supported on all systems, and default to values
+that match appropriate system defaults.
+.TP
+\fBTkDefaultFont\fR
+.
+This font is the default for all GUI items not otherwise specified.
+.TP
+\fBTkFixedFont\fR
+.
+This font is the standard fixed-width font.
+.TP
+\fBTkMenuFont\fR
+.
+This font is used for menu items.
+.TP
+\fBTkCaptionFont\fR
+.
+This font should be used for window and dialog caption bars.
+.TP
+\fBTkSmallCaptionFont\fR
+.
+This font should be used for captions on contained windows or tool dialogs.
+.TP
+\fBTkIconFont\fR
+.
+This font should be used for icon captions.
+.TP
+\fBTkTooltipFont\fR
+.
+This font should be used for tooltip windows (transient information windows).
+.LP
+It is \fInot\fR advised to change these fonts, as they may be modified by Tk
+itself in response to system changes. Instead, make a copy of the font and
+modify that.
+.SS "PLATFORM-SPECIFIC FONTS"
 .LP
 The following named system fonts are supported:
 .RS
