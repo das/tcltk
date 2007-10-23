@@ -368,19 +368,13 @@ CreateNamedSystemFont(
     CONST char* name,
     HFONT hFont)
 {
-    TkFontAttributes *faPtr;
-    WinFont *fontPtr;
+    WinFont winfont;
     int r;
     
-    TkDeleteNamedFont(interp, tkwin, name);
-    
-    fontPtr = (WinFont *) ckalloc(sizeof(WinFont));
-    InitFont(tkwin, hFont, 0, fontPtr);
-    faPtr = (TkFontAttributes*)ckalloc(sizeof(TkFontAttributes));
-    memcpy(faPtr, &fontPtr->font.fa, sizeof(TkFontAttributes));
-    r = TkCreateNamedFont(interp, tkwin, name, faPtr);
-    TkpDeleteFont((TkFont *)fontPtr);
-    ckfree((char *) fontPtr);
+    TkDeleteNamedFont(NULL, tkwin, name);
+    InitFont(tkwin, hFont, 0, &winfont);
+    r = TkCreateNamedFont(interp, tkwin, name, &winfont.font.fa);
+    TkpDeleteFont((TkFont *)&winfont);
     return r;
 }
 
