@@ -21,8 +21,10 @@ destroy \- Destroy one or more windows
 .PP
 This command deletes the windows given by the
 \fIwindow\fR arguments, plus all of their descendants.
-If a \fIwindow\fR ``.'' is deleted then the entire application
-will be destroyed.
+If the \fIwindow\fR
+.QW .
+is deleted then the entire interpreter's windows
+will be destroyed (which may cause the whole application to exit).
 The \fIwindow\fRs are destroyed in order, and if an error occurs
 in destroying a window the command aborts without destroying the
 remaining windows.

@@ -57,8 +57,11 @@ the linked \fB\-variable\fR is set to the widget's \fB\-value\fR,
 and clears it otherwise.
 The widget sets the \fBalternate\fR state whenever the 
 linked \fB\-variable\fR is unset.  
-(The \fBalternate\fR state may be used to indicate a ``tri-state'' 
-or ``indeterminate'' selection.)
+(The \fBalternate\fR state may be used to indicate a
+.QW tri-state
+or
+.QW indeterminate
+selection.)
 .SH "SEE ALSO"
 ttk_widget(n), ttk_checkbutton(n), radiobutton(n)
 .SH "KEYWORDS"

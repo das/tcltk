@@ -33,7 +33,9 @@ When the pointer is outside \fIwindow\fR's tree, button presses and
 releases and
 mouse motion events are reported to \fIwindow\fR, and window entry
 and window exit events are ignored.
-The grab subtree ``owns'' the pointer:
+The grab subtree
+.QW owns
+the pointer:
 windows outside the grab subtree will be visible on the screen
 but they will be insensitive until the grab is released.
 The tree of windows underneath the grab window can include top-level

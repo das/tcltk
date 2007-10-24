@@ -103,9 +103,8 @@ default error handler, which prints an error message and aborts the
 program.  If you wish to have a default handler that deals with errors
 that no other handler can deal with, then declare it first.
 .PP
-The X documentation states that ``the error handler should not call
-any functions (directly or indirectly) on the display that will
-generate protocol requests or that will look for input events.''
+The X documentation states that
+.QW "the error handler should not call any functions (directly or indirectly) on the display that will generate protocol requests or that will look for input events."
 This restriction applies to handlers declared by \fBTk_CreateErrorHandler\fR;
 disobey it at your own risk.
 .PP

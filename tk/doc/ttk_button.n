@@ -72,7 +72,9 @@ See \fIttk_widget(n)\fR
 .OP \-state state State
 May be set to \fBnormal\fR or \fBdisabled\fR
 to control the \fBdisabled\fR state bit.
-This is a ``write-only'' option: setting it changes the
+This is a
+.QW write-only
+option: setting it changes the
 widget state, but the \fBstate\fR widget command does
 not affect the state option.
 .SH "SEE ALSO"

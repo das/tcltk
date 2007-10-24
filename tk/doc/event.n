@@ -80,8 +80,9 @@ not defined then an empty string is returned.
 .SH "EVENT FIELDS"
 .PP
 The following options are supported for the \fBevent generate\fR
-command.  These correspond to the ``%'' expansions
-allowed in binding scripts for the \fBbind\fR command.
+command.  These correspond to the
+.QW %
+expansions allowed in binding scripts for the \fBbind\fR command.
 .TP
 \fB\-above\fI window\fR
 \fIWindow\fR specifies the \fIabove\fR field for the event,
