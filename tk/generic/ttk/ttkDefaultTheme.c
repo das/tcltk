@@ -276,8 +276,7 @@ static void BorderElementSize(
     *paddingPtr = Ttk_UniformPadding((short)borderWidth);
 }
 
-static void
-BorderElementDraw(
+static void BorderElementDraw(
     void *clientData, void *elementRecord,
     Tk_Window tkwin, Drawable d, Ttk_Box b, unsigned int state)
 {

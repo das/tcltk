@@ -3178,7 +3178,7 @@ static Ttk_ElementSpec RowElementSpec =
     TK_STYLE_VERSION_2,
     sizeof(RowElement),
     RowElementOptions,
-    TtkNullElementGeometry,
+    TtkNullElementSize,
     RowElementDraw
 };
 
