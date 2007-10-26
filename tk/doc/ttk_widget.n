@@ -93,7 +93,7 @@ Display text only.
 Display image only.
 .IP \fBcenter\fR
 Display text centered on top of image.
-.IP \fBtop\fR, \fBbottom\fR, \fBleft\fR, \fBright\fR
+.IP "\fBtop\fR, \fBbottom\fR, \fBleft\fR, \fBright\fR"
 Display image above, below, left of, or right of the text, respectively.
 .IP \fBnone\fR
 The default; display the image if present, otherwise the text.

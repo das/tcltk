@@ -168,7 +168,7 @@ couple non-standard X event types that were added to better support
 the Macintosh and Windows platforms.  Below is a list of all the valid
 types; where two names appear together, they are synonyms.
 .DS
-.ta \w'ButtonPress, Button\0\0\0'u +\w'KeyPress, Key\0\0\0'u
+.ta 2.5i +2i
 \fBActivate	Destroy	Map
 ButtonPress, Button	Enter	MapRequest
 ButtonRelease	Expose	Motion
@@ -712,9 +712,7 @@ pack [label .l -textvariable keysym -padx 2m -pady 1m]
     set keysym "You pressed %K"
 }
 .CE
-
 .SH "SEE ALSO"
 bgerror(n), bindtags(n), event(n), focus(n), grab(n), keysyms(n)
-
 .SH KEYWORDS
 binding, event

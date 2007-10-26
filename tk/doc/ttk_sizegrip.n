@@ -40,7 +40,7 @@ pack [\fBttk::sizegrip\fR $top.statusbar.grip] -side right -anchor se
 .PP
 Using \fBgrid\fR:
 .CS
-grid [\Bttk::sizegrip\fR $top.statusbar.grip] \e
+grid [\fBttk::sizegrip\fR $top.statusbar.grip] \e
         -row $lastRow -column $lastColumn -sticky se
 # ... optional: add vertical scrollbar in $lastColumn,
 # ... optional: add horizontal scrollbar in $lastRow
