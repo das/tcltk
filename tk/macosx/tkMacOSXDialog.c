@@ -38,14 +38,13 @@
  * The following structures are used in the GetFileName() function. They store
  * information about the file dialog and the file filters.
  */
-
-typedef struct OpenFileData {
-    FileFilterList fl;		/* List of file filters. */
-    SInt16 curType;		/* The filetype currently being listed. */
-    short popupItem;		/* Item number of the popup in the dialog. */
-    int usePopup;		/* True if we show the popup menu (this is
-				 * an open operation and the -filetypes
-				 * option is set). */
+typedef struct _OpenFileData {
+    FileFilterList fl;          /* List of file filters.                   */
+    SInt16 curType;             /* The filetype currently being listed.    */
+    short popupItem;            /* Item number of the popup in the dialog. */
+    short usePopup;             /* True if we show the popup menu (this    */
+                                /* is an open operation and the            */
+                                /* -filetypes option is set).              */
 } OpenFileData;
 
 typedef struct NavHandlerUserData {
@@ -85,7 +84,8 @@ static int		NavServicesGetFile(Tcl_Interp *interp,
 			    OpenFileData *ofd, AEDesc *initialDescPtr,
 			    char *initialFile, AEDescList *selectDescPtr,
 			    CFStringRef title, CFStringRef message,
-			    int multiple, int isOpen, Tk_Window parent);
+			    int multiple, int isOpen,
+			    Tk_Window parent);
 static int		HandleInitialDirectory(Tcl_Interp *interp,
 			    char *initialFile, char *initialDir, FSRef *dirRef,
 			    AEDescList *selectDescPtr, AEDesc *dirDescPtr);
@@ -988,10 +988,11 @@ OpenEventProc(
     NavCallBackUserData callBackUD)
 {
     NavHandlerUserData *data = (NavHandlerUserData*) callBackUD;
+    OpenFileData *ofd = data->ofdPtr;
 
     switch (callBackSelector) {
 	case kNavCBPopupMenuSelect:
-	    data->ofdPtr->curType = ((NavMenuItemSpec *)
+	    ofd->curType = ((NavMenuItemSpec *)
 		    callBackParams->eventData.eventDataParms.param)->menuType;
 	    break;
 	case kNavCBAccept:
@@ -1077,7 +1078,7 @@ OpenFileFilterProc(
 			fileName[len] = '\0';
 			fileNamePtr = (unsigned char*) fileName;
 
-		    } else if ((theItem->descriptorType = typeFSRef)) {
+		    } else if ((theItem->descriptorType == typeFSRef)) {
 			OSStatus err;
 			FSRef *theRef = (FSRef *) *theItem->dataHandle;
 			HFSUniStr255 uniFileName;
