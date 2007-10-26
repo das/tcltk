@@ -85,7 +85,7 @@ static int		NavServicesGetFile(Tcl_Interp *interp,
 			    OpenFileData *ofd, AEDesc *initialDescPtr,
 			    char *initialFile, AEDescList *selectDescPtr,
 			    CFStringRef title, CFStringRef message,
-			    const char *initialType, int multiple, int isOpen, 
+			    const char *initialType, int multiple, int isOpen,
 			    Tk_Window parent);
 static int		HandleInitialDirectory(Tcl_Interp *interp,
 			    char *initialFile, char *initialDir, FSRef *dirRef,
@@ -277,10 +277,10 @@ Tk_GetOpenFileObjCmd(
 	InitFileDialogs();
     }
     TkInitFileFilters(&ofd.fl);
-    ofd.curType          = 0;
-    ofd.initialType      = -1;
-    ofd.popupItem        = OPEN_POPUP_ITEM;
-    ofd.usePopup         = 1;
+    ofd.curType = 0;
+    ofd.initialType = -1;
+    ofd.popupItem = OPEN_POPUP_ITEM;
+    ofd.usePopup = 1;
 
     for (i = 1; i < objc; i += 2) {
 	char *choice;
@@ -360,7 +360,7 @@ Tk_GetOpenFileObjCmd(
     if (typeVariablePtr) {
 	initialtype = Tcl_GetVar(interp, Tcl_GetString(typeVariablePtr), 0);
     }
-    result = NavServicesGetFile(interp, &ofd, initialPtr, NULL, &selectDesc, 
+    result = NavServicesGetFile(interp, &ofd, initialPtr, NULL, &selectDesc,
 	    title, message, initialtype, multiple, OPEN_FILE, parent);
 
     if (typeVariablePtr) {
