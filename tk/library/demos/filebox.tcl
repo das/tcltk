@@ -61,10 +61,13 @@ proc fileDialog {w ent operation} {
 	{"All files"		*}
     }
     if {$operation == "open"} {
-	set file [tk_getOpenFile -filetypes $types -parent $w]
+	set type "Tcl Scripts"
+	set file [tk_getOpenFile -filetypes $types -parent $w \
+		-typevariable type]
+	puts "You selected filetype \"$type\""
     } else {
 	set file [tk_getSaveFile -filetypes $types -parent $w \
-	    -initialfile Untitled -defaultextension .txt]
+		-initialfile Untitled -defaultextension .txt]
     }
     if {[string compare $file ""]} {
 	$ent delete 0 end
