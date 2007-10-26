@@ -20,18 +20,22 @@ ttk_separator \- Separator bar
 A \fBttk::separator\fR widget displays a horizontal or vertical separator
 bar.
 .SO
-\-class	\-cursor	\-state
-\-style	\-takefocus
+\-class	\-cursor	\-state	\-style	
+\-takefocus
 .SE
+
 .SH "WIDGET-SPECIFIC OPTIONS"
 .OP \-orient orient Orient
 One of \fBhorizontal\fR or \fBvertical\fR.
 Specifies the orientation of the separator.
+
 .SH "WIDGET COMMAND"
 Separator widgets support the standard 
 \fBcget\fR, \fBconfigure\fR, \fBinstate\fR, and \fBstate\fR 
 methods.  No other widget methods are used.
+
 .SH "SEE ALSO"
 ttk_widget(n)
+
 .SH "KEYWORDS"
 widget, separator

@@ -29,12 +29,9 @@ const char *
 .AP Tcl_Interp *interp in
 Interpreter to use for error reporting, or NULL.
 .AP Tcl_Obj *objPtr in/out
-String value contains name of justification style; one of: 
-.QW \fBleft\fR ,
-.QW \fBright\fR ,
-or
-.QW \fBcenter\fR ).
-The internal rep will be modified to cache corresponding justify value.
+String value contains name of justification style (\fBleft\fR, \fBright\fR, or
+\fBcenter\fR).  The
+internal rep will be modified to cache corresponding justify value.
 .AP "const char" *string in
 Same as \fIobjPtr\fR except description of justification style is passed as
 a string.
@@ -83,8 +80,7 @@ return value, so \fBTk_GetJustify\fR is less efficient than
 Given a justify value it returns a statically-allocated string
 corresponding to \fIjustify\fR.
 If \fIjustify\fR isn't a legal justify value, then
-.QW "unknown justification style"
-is returned.
+``unknown justification style'' is returned.
 
 .SH KEYWORDS
 center, fill, justification, string

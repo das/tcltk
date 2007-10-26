@@ -25,8 +25,7 @@ scale \- Create and manipulate scale widgets
 .SH "WIDGET-SPECIFIC OPTIONS"
 .OP \-bigincrement bigIncrement BigIncrement
 Some interactions with the scale cause its value to change by
-.QW large
-increments;  this option specifies the size of the
+``large'' increments;  this option specifies the size of the
 large increments.  If specified as 0, the large increments default
 to 1/10 the range of the scale.
 .OP \-command command Command

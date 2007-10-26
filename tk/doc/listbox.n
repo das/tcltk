@@ -56,9 +56,8 @@ cannot be modified and is not shown (though selection information is retained).
 .OP \-width width Width
 Specifies the desired width for the window in characters.
 If the font doesn't have a uniform width then the width of the
-character
-.QW 0
-is used in translating from character units to screen units.
+character ``0'' is used in translating from character units to
+screen units.
 If zero or less, then the desired width for the window is made just
 large enough to hold all the elements in the listbox.
 .BE

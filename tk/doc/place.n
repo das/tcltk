@@ -209,14 +209,11 @@ This feature is useful in at least two situations.
 First, for complex window layouts it means you can create a
 hierarchy of subwindows whose only purpose
 is to assist in the layout of the parent.
-The
-.QW "real children"
-of the parent (i.e. the windows that
+The ``real children'' of the parent (i.e. the windows that
 are significant for the application's user interface) can be
 children of the parent yet be placed inside the windows
 of the geometry-management hierarchy.
-This means that the path names of the
-.QW "real children"
+This means that the path names of the ``real children''
 don't reflect the geometry-management hierarchy and users
 can specify options for the real children
 without being aware of the structure of the geometry-management

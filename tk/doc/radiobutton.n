@@ -95,7 +95,7 @@ specified.
 .OP \-tristatevalue tristateValue Value
 .VS 8.5
 Specifies the value that causes the radiobutton to display the multi-value 
-selection, also known as the tri-state mode.  Defaults to the empty string.
+selection, also known as the tri-state mode.  Defaults to ``""''
 .VE 8.5
 .OP \-value value Value
 Specifies value to store in the button's associated variable whenever

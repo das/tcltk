@@ -45,7 +45,7 @@ this parameter is true, then the user may only select directories that
 already exist.  The default value is \fIfalse\fR.
 .SH EXAMPLE
 .CS
-set dir [\fBtk_chooseDirectory\fR \e
+set dir [\fBtk_chooseDirectory\fR \\
         \-initialdir ~ \-title "Choose a directory"]
 if {$dir eq ""} {
    label .l -text "No directory selected"
