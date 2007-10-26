@@ -5367,7 +5367,7 @@ TkMacOSXMakeRealWindowExist(
     macWin->grafPtr = GetWindowPort(newWindow);
     macWin->rootControl = rootControl;
 
-    if (wmPtr->master != None && winPtr->atts.override_redirect) {
+    if (wmPtr->master != None || winPtr->atts.override_redirect) {
 	ApplyMasterOverrideChanges(winPtr, newWindow);
     }
     SetWindowModified(newWindow, false);
@@ -6039,27 +6039,29 @@ ApplyMasterOverrideChanges(
     WmInfo *wmPtr = winPtr->wmInfoPtr;
     WindowClass oldClass = wmPtr->macClass;
     WindowAttributes oldAttributes = wmPtr->attributes;
-    int frontmost = 0;
+    const int wasOverrideredirect = (oldClass == kSimpleWindowClass &&
+	    oldAttributes == kWindowNoActivatesAttribute);
+    const int wasTransient = (oldClass == kPlainWindowClass &&
+	    oldAttributes == kWindowNoAttributes);
+    const int wasDefault = (oldClass == kDocumentWindowClass);
 
     /*
      * FIX: We need an UpdateWrapper equivalent to make this 100% correct
      */
     if (winPtr->atts.override_redirect) {
-	if (wmPtr->macClass == kDocumentWindowClass || (wmPtr->master != None
-		&& wmPtr->macClass == kFloatingWindowClass)) {
+	if (wasDefault || (wmPtr->master != None && wasTransient)) {
 	    wmPtr->macClass = kSimpleWindowClass;
 	    wmPtr->attributes = kWindowNoAttributes;
 	}
-	if (wmPtr->master != None) {
-	    frontmost = 1;
-	}
 	wmPtr->attributes |= kWindowNoActivatesAttribute;
     } else {
-	if (wmPtr->macClass == kSimpleWindowClass) {
-	    if (wmPtr->master != None) {
-		wmPtr->macClass = kFloatingWindowClass;
-		wmPtr->attributes = kWindowStandardFloatingAttributes;
-	    } else {
+	if (wmPtr->master != None) {
+	    if (wasDefault || wasOverrideredirect) {
+		wmPtr->macClass = kPlainWindowClass;
+		wmPtr->attributes = kWindowNoAttributes;
+	    }
+	} else {
+	    if (wasTransient || wasOverrideredirect) {
 		wmPtr->macClass = kDocumentWindowClass;
 		wmPtr->attributes = kWindowStandardDocumentAttributes
 			| kWindowLiveResizeAttribute;
@@ -6081,7 +6083,8 @@ ApplyMasterOverrideChanges(
 
 	ApplyWindowClassAttributeChanges(winPtr, macWindow, oldClass,
 	    oldAttributes, 0);
-	val = Tcl_NewBooleanObj(frontmost);
+	val = Tcl_NewBooleanObj(winPtr->atts.override_redirect &&
+		wmPtr->master != None);
 	WmSetAttribute(winPtr, macWindow, NULL, WMATT_TOPMOST, val);
 	Tcl_DecrRefCount(val);
     }
