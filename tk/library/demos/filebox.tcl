@@ -61,10 +61,13 @@ proc fileDialog {w ent operation} {
 	{"All files"		*}
     }
     if {$operation == "open"} {
-	set type "Tcl Scripts"
+	global selected_type
+	if {![info exists selected_type]} {
+	    set selected_type "Tcl Scripts"
+	}
 	set file [tk_getOpenFile -filetypes $types -parent $w \
-		-typevariable type]
-	puts "You selected filetype \"$type\""
+		-typevariable selected_type]
+	puts "You selected filetype \"$selected_type\""
     } else {
 	set file [tk_getSaveFile -filetypes $types -parent $w \
 		-initialfile Untitled -defaultextension .txt]
