@@ -102,7 +102,7 @@ The following options are supported:
 Insert the slave so that it occupies the \fIn\fRth column in the grid.
 Column numbers start with 0.  If this option is not supplied, then the
 slave is arranged just to the right of previous slave specified on this
-call to \fIgrid\fR, or column
+call to \fBgrid\fR, or column
 .QW 0
 if it is the first slave.  For each
 \fBx\fR that immediately precedes the \fIslave\fR, the column position
