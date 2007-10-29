@@ -58,7 +58,7 @@ widget command.
 Specifies the desired height for the window in any of the forms
 acceptable to \fBTk_GetPixels\fR.  If this option is less than or equal
 to zero then the window will not request any size at all.  Note that this
-sets the total height of the frame, any \fB-borderwidth\fR or similar is
+sets the total height of the frame, any \fB\-borderwidth\fR or similar is
 not added.  Normally \fB\-height\fR should not be used if a propagating
 geometry manager, such as \fBgrid\fR or \fBpack\fR, is used within the
 frame since the geometry manager will override the height of the frame.
@@ -73,7 +73,7 @@ widget command.
 Specifies the desired width for the window in any of the forms
 acceptable to \fBTk_GetPixels\fR.  If this option is less than or equal
 to zero then the window will not request any size at all.  Note that this
-sets the total width of the frame, any \fB-borderwidth\fR or similar is
+sets the total width of the frame, any \fB\-borderwidth\fR or similar is
 not added.  Normally \fB\-width\fR should not be used if a propagating
 geometry manager, such as \fBgrid\fR or \fBpack\fR, is used within the
 frame since the geometry manager will override the width of the frame.

@@ -36,12 +36,12 @@ One of \fBleft\fR, \fBcenter\fR, or \fBright\fR.
 Specifies the height of the pop-down listbox, in rows.
 .OP \-postcommand postCommand PostCommand
 A Tcl script to evaluate immediately before displaying the listbox.
-The \fB-postcommand\fR script may specify the \fB-values\fR to display.
+The \fB\-postcommand\fR script may specify the \fB\-values\fR to display.
 .OP \-state state State
 One of \fBnormal\fR, \fBreadonly\fR, or \fBdisabled\fR.
 In the \fBreadonly\fR state,
 the value may not be edited directly, and 
-the user can only select one of the \fB-values\fR from the
+the user can only select one of the \fB\-values\fR from the
 dropdown list.
 In the \fBnormal\fR state, 
 the text field is directly editable.
@@ -70,9 +70,9 @@ See \fIttk_widget(n)\fR.
 .TP
 \fIpathName \fBcurrent\fR ?\fInewIndex\fR?
 If \fInewIndex\fR is supplied, sets the combobox value 
-to the element at position \fInewIndex\fR in the list of \fB-values\fR.
-Otherwise, returns the index of the current value in the list of \fB-values\fR
-or \fB-1\fR if the current value does not appear in the list.
+to the element at position \fInewIndex\fR in the list of \fB\-values\fR.
+Otherwise, returns the index of the current value in the list of
+\fB\-values\fR or \fB\-1\fR if the current value does not appear in the list.
 .TP
 \fIpathName \fBget\fR
 Returns the current value of the combobox.

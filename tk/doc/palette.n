@@ -42,7 +42,7 @@ background	highlightColor	selectForeground
 disabledForeground	insertBackground	troughColor\fR
 .DE
 \fBtk_setPalette\fR tries to compute reasonable defaults for any
-options that you don't specify.  You can specify options other
+options that you do not specify.  You can specify options other
 than the above ones and Tk will change those options on widgets as
 well.  This feature may be useful if you are using custom widgets with
 additional color options.
@@ -66,7 +66,8 @@ from the .Xdefaults file or options specified on the command-line
 that creates a widget.
 .PP
 The procedure \fBtk_bisque\fR is provided for backward compatibility:
-it restores the application's colors to the light brown (``bisque'')
+it restores the application's colors to the light brown
+.PQ bisque
 color scheme used in Tk 3.6 and earlier versions.
 
 .SH KEYWORDS

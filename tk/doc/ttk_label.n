@@ -32,7 +32,7 @@ Specifies how the information in the widget is positioned
 relative to the inner margins.  Legal values are
 \fBn\fR, \fBne\fR, \fBe\fR, \fBse\fR,
 \fBs\fR, \fBsw\fR, \fBw\fR, \fBnw\fR, and \fBcenter\fR.
-See also \fB-justify\fR.
+See also \fB\-justify\fR.
 .OP \-background frameColor FrameColor
 The widget's background color.  
 If unspecified, the theme default is used.
@@ -45,7 +45,7 @@ If unspecified, the theme default is used.
 If there are multiple lines of text, specifies how
 the lines are laid out relative to one another.
 One of \fBleft\fR, \fBcenter\fR, or \fBright\fR.
-See also \fB-anchor\fR.
+See also \fB\-anchor\fR.
 .OP \-padding padding Padding
 Specifies the amount of extra space to allocate for the widget.
 The padding is a list of up to four length specifications 
@@ -62,7 +62,7 @@ Valid values are
 and \fBsunken\fR.
 .OP \-text text Text
 Specifies a text string to be displayed inside the widget
-(unless overridden by \fB-textvariable\fR).
+(unless overridden by \fB\-textvariable\fR).
 .OP \-wraplength wrapLength WrapLength
 Specifies the maximum line length (in pixels).
 If this option is less than or equal to zero,
