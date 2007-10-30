@@ -60,6 +60,15 @@ proc ::tk::dialog::file::chooseDir:: {args} {
 	grid remove $data(hiddenBtn)
     }
 
+    # When using -mustexist, manage the OK button state for validity
+    $data(okBtn) configure -state normal
+    if {$data(-mustexist)} {
+	$data(ent) configure -validate key \
+	    -validatecommand [list ::tk::dialog::file::chooseDir::IsOK? $w %P]
+    } else {
+	$data(ent) configure -validate none
+    }
+
     # Dialog boxes should be transient with respect to their parent,
     # so that they will always stay on top of their parent window.  However,
     # some window managers will create the window as withdrawn if the parent
@@ -238,6 +247,18 @@ proc ::tk::dialog::file::chooseDir::OkCmd {w} {
     return
 }
 
+# Change state of OK button to match -mustexist correctness of entry
+#
+proc ::tk::dialog::file::chooseDir::IsOK? {w text} {
+    upvar ::tk::dialog::file::[winfo name $w] data
+
+    set ok [file isdirectory $text]
+    $data(okBtn) configure -state [expr {$ok ? "normal" : "disabled"}]
+
+    # always return 1
+    return 1
+}
+
 proc ::tk::dialog::file::chooseDir::DblClick {w} {
     upvar ::tk::dialog::file::[winfo name $w] data
     set selection [tk::IconList_CurSelection $data(icons)]
@@ -250,7 +271,7 @@ proc ::tk::dialog::file::chooseDir::DblClick {w} {
 	    return
 	}
     }
-}    
+}
 
 # Gets called when user browses the IconList widget (dragging mouse, arrow
 # keys, etc)
@@ -282,10 +303,8 @@ proc ::tk::dialog::file::chooseDir::Done {w {selectFilePath ""}} {
     if {$selectFilePath eq ""} {
 	set selectFilePath $data(selectPath)
     }
-    if {$data(-mustexist)} {
-	if {![file exists $selectFilePath] || ![file isdir $selectFilePath]} {
-	    return
-	}
+    if {$data(-mustexist) && ![file isdirectory $selectFilePath]} {
+	return
     }
     set Priv(selectFilePath) $selectFilePath
 }
