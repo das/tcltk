@@ -42,7 +42,7 @@ In addition to the standard
 commands, checkbuttons support the following additional
 widget commands:
 .TP
-\fIpathname\fR invoke
+\fIpathname\fB invoke\fR
 Toggles between the selected and deselected states
 and evaluates the associated \fB\-command\fR.
 If the widget is currently selected, sets the \fB\-variable\fR

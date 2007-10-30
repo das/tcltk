@@ -37,11 +37,13 @@ to change the view in the widget associated with the scrollbar.
 Additional arguments are appended to the value of this option,
 as described in \fBSCROLLING COMMANDS\fR below,
 whenever the user requests a view change by manipulating the scrollbar.
-.br
+.RS
+.PP
 This option typically consists of a two-element list,
 containing the name of a scrollable widget followed by
 either \fBxview\fR (for horizontal scrollbars)
 or \fByview\fR (for vertical scrollbars).
+.RE
 .OP \-orient orient Orient
 One of \fBhorizontal\fR or \fBvertical\fR.
 Specifies the orientation of the scrollbar.

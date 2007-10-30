@@ -13,10 +13,12 @@
 .SH NAME
 ttk_notebook \- Multi-paned container widget
 .SH SYNOPSIS
+.nf
 \fBttk::notebook\fR \fIpathName \fR?\fIoptions\fR?
 .br
 \fIpathName \fBadd\fR \fIpathName\fR.\fIsubwindow\fR ?\fIoptions...\fR?
 \fIpathName \fBinsert\fR \fIindex\fR \fIpathName\fR.\fIsubwindow\fR ?\fIoptions...\fR?
+.fi
 .BE
 .SH DESCRIPTION
 A \fBttk::notebook\fR widget manages a collection of subpanes 

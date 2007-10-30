@@ -41,7 +41,7 @@ In addition to the standard
 commands, radiobuttons support the following additional
 widget commands:
 .TP
-\fIpathname\fR invoke
+\fIpathname\fB invoke\fR
 Sets the \fB\-variable\fR to the \fB\-value\fR, selects the widget,
 and evaluates the associated \fB\-command\fR.  
 Returns the result of the \fB\-command\fR, or the empty

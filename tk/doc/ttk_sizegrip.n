@@ -30,16 +30,16 @@ methods.  No other widget methods are used.
 .SH "PLATFORM-SPECIFIC NOTES"
 On Mac OSX, toplevel windows automatically include a built-in
 size grip by default.
-Adding an \fBttk::sizegrip\fR there is harmless, since
+Adding a \fBttk::sizegrip\fR there is harmless, since
 the built-in grip will just mask the widget.
 .SH EXAMPLES
 .CS
 # Using pack:
 pack [ttk::frame $top.statusbar] \-side bottom \-fill x
-pack [ttk::sizegrip $top.statusbar.grip] \-side right \-anchor se
+pack [\fBttk::sizegrip\fR $top.statusbar.grip] \-side right \-anchor se
 
 # Using grid:
-grid [ttk::sizegrip $top.statusbar.grip] \e
+grid [\fBttk::sizegrip\fR $top.statusbar.grip] \e
     \-row $lastRow \-column $lastColumn \-sticky se
 # ... optional: add vertical scrollbar in $lastColumn,
 # ... optional: add horizontal scrollbar in $lastRow
@@ -47,11 +47,13 @@ grid [ttk::sizegrip $top.statusbar.grip] \e
 .SH "BUGS"
 If the containing toplevel's position was specified
 relative to the right or bottom of the screen
-(e.g., \fB[wm geometry ... \fIw\fBx\fIh\fB\-\fIx\fB\-\fIy\fB]\fR
-instead of \fB[wm geometry ... \fIw\fBx\fIh\fB+\fIx\fB+\fIy\fB]\fR),
+(e.g.,
+.QW "\fBwm geometry ... \fIw\fBx\fIh\fB\-\fIx\fB\-\fIy\fR"
+instead of
+.QW "\fBwm geometry ... \fIw\fBx\fIh\fB+\fIx\fB+\fIy\fR" ),
 the sizegrip widget will not resize the window.
 .PP
-ttk::sizegrip widgets only support
+\fBttk::sizegrip\fR widgets only support
 .QW southeast
 resizing.
 .SH "SEE ALSO"
