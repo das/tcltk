@@ -111,7 +111,7 @@ switch -- [tk windowingsystem] {
 	set F(viewsize) 12
 	set F(smallsize) 11
 	set F(labelsize) 10
-	set F(fixedsize) 9
+	set F(fixedsize) 11
 
 	font configure TkDefaultFont -family $F(family) -size $F(size)
 	font configure TkTextFont    -family $F(family) -size $F(size)

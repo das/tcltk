@@ -348,12 +348,11 @@ InitSystemFonts(
 	systemFont++;
     }
     fa.family = Tk_GetUid("monaco");
-    fa.size = 9;
+    fa.size = 11;
     fa.weight = TK_FW_NORMAL;
     fa.slant = TK_FS_ROMAN;
     fa.underline = 0;
     CreateNamedSystemFont(interp, tkwin, "TkFixedFont", &fa);
-    
 }
 
 /*
