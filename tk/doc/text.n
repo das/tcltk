@@ -53,7 +53,7 @@ at the very last line in the textual data store.
 Specifies the desired height for the window, in units of characters
 in the font given by the \fB\-font\fR option.
 Must be at least one.
-.OP \-inactiveselectionbackground inactiveSelectionBackground Foreground
+.OP \-inactiveselectbackground inactiveSelectBackground Foreground
 .VS 8.5
 Specifies the colour to use for the selection (the \fBsel\fR tag) when
 the window does not have the input focus.  If empty, \fB{}\fR, then no
@@ -914,11 +914,11 @@ tag:  changes in either will automatically be reflected in the
 other.
 .VS 8.5
 Also the
-\fB\-inactiveselectionbackground\fR option for the text widget is used
+\fB\-inactiveselectbackground\fR option for the text widget is used
 instead of \fB\-selectbackground\fR when the text widget does not have
 the focus.  This allows programmatic control over the visualization of
 the \fBsel\fR tag for foreground and background windows, or to have
-\fBsel\fR not shown at all (when \fB\-inactiveselectionbackground\fR is
+\fBsel\fR not shown at all (when \fB\-inactiveselectbackground\fR is
 empty) for background windows.  Each peer text widget has its own
 \fBsel\fR tag which can be separately configured and set.
 .VE 8.5
