@@ -122,7 +122,7 @@ switch -- [tk windowingsystem] {
 	font configure TkFixedFont   -family $F(fixed)  -size $F(fixedsize)
 	font configure TkIconFont    -family $F(family) -size $F(size)
 	font configure TkMenuFont    -family $F(family) -size $F(menusize)
-	font configure TkSmallCaptionFont -family $F(family) -size $F(labelsize)		
+	font configure TkSmallCaptionFont -family $F(family) -size $F(labelsize)
     }
     default -
     x11 {

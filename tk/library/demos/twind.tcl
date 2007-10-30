@@ -22,7 +22,7 @@ positionWindow $w
 set btns [addSeeDismiss $w.buttons $w]
 pack $btns -side bottom -fill x
 
-frame $w.f -highlightthickness 2 -borderwidth 2 -relief sunken
+frame $w.f -highlightthickness 1 -borderwidth 1 -relief sunken
 set t $w.f.text
 text $t -yscrollcommand "$w.scroll set" -setgrid true -font $font -width 70 \
 	-height 35 -wrap word -highlightthickness 0 -borderwidth 0
@@ -301,8 +301,9 @@ proc textMakePeer {parent} {
     while {[winfo exists .peer$n]} { incr n }
     set w [toplevel .peer$n]
     wm title $w "Text Peer #$n"
-    frame $w.f -highlightthickness 2 -borderwidth 2 -relief sunken
-    set t [$parent peer create $w.f.text -yscrollcommand "$w.scroll set"]
+    frame $w.f -highlightthickness 1 -borderwidth 1 -relief sunken
+    set t [$parent peer create $w.f.text -yscrollcommand "$w.scroll set" \
+	       -borderwidth 0 -highlightthickness 0]
     pack $t -expand  yes -fill both
     scrollbar $w.scroll -command "$t yview"
     pack $w.scroll -side right -fill y
