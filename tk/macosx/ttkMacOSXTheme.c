@@ -742,7 +742,7 @@ static Ttk_ElementSpec SizegripElementSpec = {
 };
 
 /*----------------------------------------------------------------------
- * +++ Background element -- an experiment.
+ * +++ Background element.
  *
  *	This isn't quite right: In Aqua, the correct background for
  *	a control depends on what kind of container it belongs to,
@@ -751,36 +751,24 @@ static Ttk_ElementSpec SizegripElementSpec = {
  *	Also: patterned backgrounds should be aligned with the coordinate
  *	system of the top-level window.  If we're drawing into an
  *	off-screen graphics port this leads to alignment glitches.
- *
- *	Available kTheme constants:
- *	kThemeBackgroundTabPane,
- *	kThemeBackgroundPlacard,
- *	kThemeBackgroundWindowHeader,
- *	kThemeBackgroundListViewWindowHeader,
- *	kThemeBackgroundSecondaryGroupBox,
- *
- *	SetThemeBackground() offers more kThemeBrush* choices.
- *
  */
 
 static void BackgroundElementDraw(
     void *clientData, void *elementRecord, Tk_Window tkwin,
     Drawable d, Ttk_Box b, Ttk_State state)
 {
-    ThemeBackgroundKind kind = kThemeBackgroundWindowHeader;
+    ThemeBrush brush 
+    	= (state & TTK_STATE_BACKGROUND)
+	? kThemeBrushModelessDialogBackgroundInactive
+	: kThemeBrushModelessDialogBackgroundActive
+	;
+
     Rect bounds = BoxToRect(d, Ttk_WinBox(tkwin));
-    SInt32 depth = 32;	/* ??? */
+    SInt32 depth = 32; /* ??? */
     Boolean inColor = true;
 
-    /* Avoid kThemeStatePressed, which seems to give bad results
-     * for ApplyThemeBackground:
-     */
-    state &= ~TTK_STATE_PRESSED;
-
     BEGIN_DRAWING(d)
-    ApplyThemeBackground(kind, &bounds,
-	Ttk_StateTableLookup(ThemeStateTable, state),
-	depth, inColor);
+    SetThemeBackground(brush, depth, inColor);
     QDSetPatternOrigin(PatternOrigin(tkwin, d));
     EraseRect(&bounds);
     END_DRAWING
