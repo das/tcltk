@@ -244,9 +244,7 @@ proc ::tk::ListboxBeginSelect {w el {focus 1}} {
     }
     event generate $w <<ListboxSelect>>
     # check existence as ListboxSelect may destroy us
-    if {$focus && [winfo exists $w]
-	&& [string is true -strict [$w cget -takefocus]]
-	&& [$w cget -state] eq "normal"} {
+    if {$focus && [winfo exists $w] && [$w cget -state] eq "normal"} {
 	focus $w
     }
 }
