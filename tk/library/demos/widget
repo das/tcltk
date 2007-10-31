@@ -714,7 +714,7 @@ proc PrintTextWin32 {filename} {
 #
 proc aboutBox {} {
     tk_messageBox -icon info -type ok -title [mc "About Widget Demo"] \
-	    -message "[mc {Tk widget demonstration application}]" -detail \
+	    -message [mc "Tk widget demonstration application"] -detail \
 "[mc {Copyright (c) %s} {1996-1997 Sun Microsystems, Inc.}]
 [mc {Copyright (c) %s} {1997-2000 Ajuba Solutions, Inc.}]
 [mc {Copyright (c) %s} {2001-2007 Donal K. Fellows}]
