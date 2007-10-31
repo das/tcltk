@@ -396,7 +396,9 @@ proc ttk::combobox::Post {cb} {
 #	Unpost the listbox.
 #
 proc ttk::combobox::Unpost {cb} {
-    wm withdraw $cb.popdown
+    if {[winfo exists $cb.popdown]} {
+	wm withdraw $cb.popdown
+    }
     grab release $cb.popdown ;# in case of stuck or unexpected grab [#1239190]
 }
 
