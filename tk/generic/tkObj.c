@@ -154,7 +154,7 @@ Tk_GetPixelsFromObj(
     double d;
     PixelRep *pixelPtr;
     static double bias[] = {
-	1.0,	10.0,	25.4,	25.4 / 72.0
+	1.0,	10.0,	25.4,	0.35278 /*25.4 / 72.0*/
     };
 
     if (objPtr->typePtr != &pixelObjType) {
@@ -390,7 +390,7 @@ Tk_GetMMFromObj(
     double d;
     MMRep *mmPtr;
     static double bias[] = {
-	10.0,	25.4,	1.0,	25.4 / 72.0
+	10.0,	25.4,	1.0,	0.35278 /*25.4 / 72.0*/
     };
 
     if (objPtr->typePtr != &mmObjType) {
@@ -513,7 +513,7 @@ UpdateStringOfMM(
     }
 
     Tcl_PrintDouble(NULL, mmPtr->value, buffer);
-    len = strlen(buffer);
+    len = (int)strlen(buffer);
 
     objPtr->bytes = (char *) ckalloc((unsigned) len + 1);
     strcpy(objPtr->bytes, buffer);
