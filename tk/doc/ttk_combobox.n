@@ -92,9 +92,9 @@ The combobox widget also supports the following \fIttk::entry\fR
 widget commands (see \fIttk::entry(n)\fR for details):
 .DS
 .ta 5.5c 11c
-bbox	delete	icursor
-index	insert	selection
-xview
+\fBbbox\fR	\fBdelete\fR	\fBicursor\fR
+\fBindex\fR	\fBinsert\fR	\fBselection\fR
+\fBxview\fR
 .DE
 .SH "VIRTUAL EVENTS"
 The combobox widget generates a \fB<<ComboboxSelected>>\fR virtual event

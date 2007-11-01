@@ -130,10 +130,10 @@ and must be one of the following:
 .RS
 .DS
 .ta 6c
-\fBNotifyAncestor	NotifyNonlinearVirtual
-NotifyDetailNone	NotifyPointer
-NotifyInferior	NotifyPointerRoot
-NotifyNonlinear	NotifyVirtual\fR
+\fBNotifyAncestor\fR	\fBNotifyNonlinearVirtual\fR
+\fBNotifyDetailNone\fR	\fBNotifyPointer\fR
+\fBNotifyInferior\fR	\fBNotifyPointerRoot\fR
+\fBNotifyNonlinear\fR	\fBNotifyVirtual\fR
 .DE
 Valid for \fBEnter\fR, \fBLeave\fR, \fBFocusIn\fR and
 \fBFocusOut\fR events.
