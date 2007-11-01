@@ -1860,8 +1860,8 @@ at \fIindex1\fR and ending just before
 \fIindex2\fR (the character at \fIindex2\fR is not affected).
 A single command may contain any number of \fIindex1\fR\-\fIindex2\fR
 pairs.
-If the last \fIindex2\fR is omitted then the single character at
-\fIindex1\fR is tagged.
+If the last \fIindex2\fR is omitted then the tag is removed from the
+single character at \fIindex1\fR.
 If there are no characters in the specified range (e.g. \fIindex1\fR
 is past the end of the file or \fIindex2\fR is less than or equal
 to \fIindex1\fR) then the command has no effect.
