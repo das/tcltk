@@ -7,11 +7,10 @@
 '\" RCS: @(#) $Id$
 '\" 
 .so man.macros
-.TH ttk_menubutton n 8.5 Tk "Tk Themed Widget"
+.TH ttk::menubutton n 8.5 Tk "Tk Themed Widget"
 .BS
-.\" Use _ instead of :: as the name becomes a filename on install
 .SH NAME
-ttk_menubutton \- Widget that pops down a menu when pressed
+ttk::menubutton \- Widget that pops down a menu when pressed
 .SH SYNOPSIS
 \fBttk::menubutton\fR \fIpathName \fR?\fIoptions\fR?
 .BE
@@ -42,6 +41,6 @@ Menubutton widgets support the standard
 \fBcget\fR, \fBconfigure\fR, \fBinstate\fR, and \fBstate\fR 
 methods.  No other widget methods are used.
 .SH "SEE ALSO"
-ttk_widget(n), menu(n), menubutton(n)
+ttk::widget(n), menu(n), menubutton(n)
 .SH "KEYWORDS"
 widget, button, menu

@@ -7,11 +7,10 @@
 '\" RCS: @(#) $Id$
 '\" 
 .so man.macros
-.TH ttk_frame n 8.5 Tk "Tk Themed Widget"
+.TH ttk::frame n 8.5 Tk "Tk Themed Widget"
 .BS
-.\" Use _ instead of :: as the name becomes a filename on install
 .SH NAME
-ttk_frame \- Simple container widget
+ttk::frame \- Simple container widget
 .SH SYNOPSIS
 \fBttk::frame\fR \fIpathName \fR?\fIoptions\fR?
 .BE
@@ -38,7 +37,7 @@ If specified, the widget's requested height in pixels.
 .SH "WIDGET COMMAND"
 Supports the standard widget commands
 \fBconfigure\fR, \fBcget\fR, \fBinstate\fR, and \fBstate\fR;
-see \fIttk_widget(n)\fR.
+see \fIttk::widget(n)\fR.
 .SH "NOTES"
 Note that if the \fBpack\fR, \fBgrid\fR, or other geometry managers
 are used to manage the children of the \fBframe\fR,
@@ -47,6 +46,6 @@ over the \fBframe\fR widget's \fB\-width\fR and \fB\-height\fR options.
 \fBpack propagate\fR and \fBgrid propagate\fR can be used
 to change this.
 .SH "SEE ALSO"
-ttk_widget(n), ttk_labelframe(n), frame(n)
+ttk::widget(n), ttk::labelframe(n), frame(n)
 .SH "KEYWORDS"
 widget, frame, container

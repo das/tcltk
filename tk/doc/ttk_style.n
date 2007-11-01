@@ -7,10 +7,10 @@
 '\" RCS: @(#) $Id$
 '\" 
 .so man.macros
-.TH ttk_style n 8.5 Tk "Tk Themed Widget"
+.TH ttk::style n 8.5 Tk "Tk Themed Widget"
 .BS
 .SH NAME
-ttk_style \- Control overall look and feel of widgets
+ttk::style \- Control overall look and feel of widgets
 .SH SYNOPSIS
 \fBttk::style\fR \fIoption\fR ?\fIargs\fR?
 .BE
@@ -120,6 +120,6 @@ ttk::style layout Horizontal.TScrollbar {
 }
 .CE
 .SH "SEE ALSO"
-ttk_intro(n), ttk_widget(n), photo(n)
+ttk::intro(n), ttk::widget(n), photo(n)
 .SH KEYWORDS
 style, theme, appearance

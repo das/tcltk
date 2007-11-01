@@ -85,7 +85,6 @@ acceptable to \fBTk_GetPixels\fR.
 If this option is less than or equal to zero then the window will
 not request any size at all.
 .BE
-
 .SH DESCRIPTION
 .PP
 The \fBlabelframe\fR command creates a new window (given by the
@@ -177,9 +176,7 @@ set bun    white
 set cheese none
 set pickle none
 .CE
-
 .SH "SEE ALSO"
-frame(n), label(n), ttk_labelframe(n)
-
+frame(n), label(n), ttk::labelframe(n)
 .SH KEYWORDS
 labelframe, widget

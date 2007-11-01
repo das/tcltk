@@ -22,7 +22,6 @@ menu, tk_menuSetFocus \- Create and manipulate menu widgets
 \-activeborderwidth	\-cursor		\-relief
 \-activeforeground	\-disabledforeground	\-takefocus
 \-background	\-font
-
 .SE
 .SH "WIDGET-SPECIFIC OPTIONS"
 .OP \-postcommand postCommand Command
@@ -68,7 +67,6 @@ changed, this does not affect the menu widget's behavior. This is used
 by the cloning mechanism and is not normally set outside of the Tk
 library.
 .BE
-
 .SH INTRODUCTION
 .PP
 The \fBmenu\fR command creates a new top-level window (given
@@ -751,9 +749,7 @@ individual widgets or by redefining the class bindings.
 At present it is not possible to use the
 option database to specify values for the options to individual
 entries.
-
 .SH "SEE ALSO"
-bind(n), menubutton(n), ttk_menubutton(n), toplevel(n)
-
+bind(n), menubutton(n), ttk::menubutton(n), toplevel(n)
 .SH KEYWORDS
 menu, widget

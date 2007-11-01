@@ -197,6 +197,6 @@ This example demonstrates how to handle button accelerators:
     pack .b1 .b2
 .CE
 .SH "SEE ALSO"
-ttk_button(n)
+ttk::button(n)
 .SH KEYWORDS
 button, widget

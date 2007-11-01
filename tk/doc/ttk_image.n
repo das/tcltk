@@ -7,10 +7,10 @@
 '\" RCS: @(#) $Id$
 '\" 
 .so man.macros
-.TH ttk_image n 8.5 Tk "Tk Themed Widget"
+.TH ttk::image n 8.5 Tk "Tk Themed Widget"
 .BS
 .SH NAME
-ttk_image \- Define an element based on an image
+ttk::image \- Define an element based on an image
 .SH SYNOPSIS
 \fBttk::style element create \fIname\fR \fBimage\fR \fIimageSpec\fR ?\fIoptions\fR?
 .BE

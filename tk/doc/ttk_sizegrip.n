@@ -7,11 +7,10 @@
 '\" RCS: @(#) $Id$
 '\"
 .so man.macros
-.TH ttk_sizegrip n 8.5 Tk "Tk Themed Widget"
+.TH ttk::sizegrip n 8.5 Tk "Tk Themed Widget"
 .BS
-.\" Use _ instead of :: as the name becomes a filename on install
 .SH NAME
-ttk_sizegrip \- Bottom-right corner resize widget
+ttk::sizegrip \- Bottom-right corner resize widget
 .SH SYNOPSIS
 \fBttk::sizegrip\fR \fIpathName \fR?\fIoptions\fR?
 .BE
@@ -33,12 +32,15 @@ size grip by default.
 Adding a \fBttk::sizegrip\fR there is harmless, since
 the built-in grip will just mask the widget.
 .SH EXAMPLES
+.PP
+Using pack:
 .CS
-# Using pack:
 pack [ttk::frame $top.statusbar] \-side bottom \-fill x
 pack [\fBttk::sizegrip\fR $top.statusbar.grip] \-side right \-anchor se
-
-# Using grid:
+.CE
+.PP
+Using grid:
+.CS
 grid [\fBttk::sizegrip\fR $top.statusbar.grip] \e
     \-row $lastRow \-column $lastColumn \-sticky se
 # ... optional: add vertical scrollbar in $lastColumn,
@@ -57,6 +59,6 @@ the sizegrip widget will not resize the window.
 .QW southeast
 resizing.
 .SH "SEE ALSO"
-ttk_widget(n)
+ttk::widget(n)
 .SH "KEYWORDS"
 widget, sizegrip, grow box

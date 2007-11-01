@@ -291,6 +291,6 @@ This example shows a group of uncoupled checkbuttons.
     pack .lbl
 .CE
 .SH "SEE ALSO"
-button(n), options(n), radiobutton(n), ttk_checkbutton(n)
+button(n), options(n), radiobutton(n), ttk::checkbutton(n)
 .SH KEYWORDS
 checkbutton, widget

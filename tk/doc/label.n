@@ -49,7 +49,6 @@ for text it is in characters.
 If this option is not specified, the label's desired width is computed
 from the size of the image or bitmap or text being displayed in it.
 .BE
-
 .SH DESCRIPTION
 .PP
 The \fBlabel\fR command creates a new window (given by the
@@ -123,9 +122,7 @@ pack .l   \-side left   \-fill y
 pack .r   \-side right  \-fill y
 pack .mid \-expand 1    \-fill both
 .CE
-
 .SH "SEE ALSO"
-labelframe(n), button(n), ttk_label(n)
-
+labelframe(n), button(n), ttk::label(n)
 .SH KEYWORDS
 label, widget

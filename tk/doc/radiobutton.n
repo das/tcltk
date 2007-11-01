@@ -118,7 +118,6 @@ for text it is in characters.
 If this option is not specified, the button's desired width is computed
 from the size of the image or bitmap or text being displayed in it.
 .BE
-
 .SH DESCRIPTION
 .PP
 The \fBradiobutton\fR command creates a new window (given by the
@@ -260,9 +259,7 @@ actions occur:  the radiobutton is completely non-responsive.
 .PP
 The behavior of radiobuttons can be changed by defining new bindings for
 individual widgets or by redefining the class bindings.
-
 .SH "SEE ALSO"
-checkbutton(n), labelframe(n), listbox(n), options(n), scale(n), ttk_radiobutton(n)
-
+checkbutton(n), labelframe(n), listbox(n), options(n), scale(n), ttk::radiobutton(n)
 .SH KEYWORDS
 radiobutton, widget
