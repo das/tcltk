@@ -329,6 +329,8 @@ addFormattedText {
     @@demo colors	Colors: change the color scheme for the application
     @@demo sayings	A collection of famous and infamous sayings
     @@new
+    @@demo mclist	A multi-column list of countries
+    @@new
     @@demo tree		A directory browser tree
 
     @@subtitle	Entries, Spin-boxes and Combo-boxes
