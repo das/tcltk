@@ -1156,7 +1156,7 @@ static char updir_bits[] = {
 
     # grid the widgets in f2
     #
-    grid $f2.lab $f2.ent $data(okBtn) -padx 4 -sticky ew
+    grid $f2.lab $f2.ent $data(okBtn) -padx 4 -pady 3 -sticky ew
     grid configure $f2.ent -padx 2
     if {$class eq "TkFDialog"} {
 	grid $data(typeMenuLab) $data(typeMenuBtn) $data(cancelBtn) \
@@ -1171,7 +1171,7 @@ static char updir_bits[] = {
     # Pack all the frames together. We are done with widget construction.
     #
     pack $f1 -side top -fill x -pady 4
-    pack $f2 -side bottom -fill x
+    pack $f2 -side bottom -pady 4 -fill x
     pack $data(icons) -expand yes -fill both -padx 4 -pady 1
 
     # Set up the event handlers that are common to Directory and File Dialogs
