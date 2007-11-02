@@ -1110,7 +1110,7 @@ static char updir_bits[] = {
 
     # The font to use for the icons. The default Canvas font on Unix
     # is just deviant.
-    set ::tk::$w.icons(font) [$data(ent) cget -font]
+    set ::tk::$w.contents.icons(font) [$data(ent) cget -font]
 
     # Make the file types bits only if this is a File Dialog
     if {$class eq "TkFDialog"} {
