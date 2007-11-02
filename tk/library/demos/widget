@@ -145,8 +145,12 @@ if {[tk windowingsystem] ne "aqua"} {
 pack .statusBar -side bottom -fill x -pady 2
 
 set textheight 30
-catch {set textheight [expr {([winfo screenheight .] - 100) / 
-	[font metrics mainFont -displayof . -linespace]}]}
+catch {
+    set textheight [expr {
+	([winfo screenheight .] - 200) /
+	[font metrics mainFont -displayof . -linespace]
+    }]
+}
 
 ttk::frame .textFrame
 scrollbar .s -orient vertical -command {.t yview} -takefocus 1
