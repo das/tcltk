@@ -1048,7 +1048,7 @@ static Ttk_ElementOptionSpec TreeitemIndicatorOptions[] =
     { "-diameter", TK_OPTION_PIXELS,
 	Tk_Offset(TreeitemIndicator,diameterObj), "9" },
     { "-indicatormargins", TK_OPTION_STRING,
-	Tk_Offset(TreeitemIndicator,marginObj), "0 2 4 2" },
+	Tk_Offset(TreeitemIndicator,marginObj), "2 2 4 2" },
     {NULL}
 };
 
