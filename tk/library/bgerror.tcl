@@ -22,6 +22,7 @@ namespace eval ::tk::dialog::error {
     if {[tk windowingsystem] eq "aqua"} {
 	option add *ErrorDialog*background systemAlertBackgroundActive \
 		widgetDefault
+	option add *ErrorDialog*info.text.background white widgetDefault
 	option add *ErrorDialog*Button.highlightBackground \
 		systemAlertBackgroundActive widgetDefault
     }
