@@ -78,7 +78,7 @@ factor is set when the application starts, based on properties of the
 installed monitor, but it can be changed at any time.  Measurements made
 after the scaling factor is changed will use the new scaling factor, but it
 is undefined whether existing widgets will resize themselves dynamically to
-accomodate the new scaling factor.
+accommodate the new scaling factor.
 .RE
 .VS 8.3
 .TP

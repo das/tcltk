@@ -27,7 +27,7 @@ first argument.  The following forms are currently supported:
 .
 Returns information about the actual attributes that are obtained when
 \fIfont\fR is used on \fIwindow\fR's display; the actual attributes obtained
-may differ from the attributes requested due to platform-dependant
+may differ from the attributes requested due to platform-dependent
 limitations, such as the availability of font families and pointsizes.
 \fIfont\fR is a font description; see FONT DESCRIPTIONS below.  If the
 \fIwindow\fR argument is omitted, it defaults to the main window.  If
@@ -161,7 +161,7 @@ Cases [1] and [2] must match the name of an existing named font or of a
 system font.  Cases [3], [4], and [5] are accepted on all
 platforms and the closest available font will be used.  In some situations
 it may not be possible to find any close font (e.g., the font family was
-a garbage value); in that case, some system-dependant default font is
+a garbage value); in that case, some system-dependent default font is
 chosen.  If the font description does not match any of the above patterns,
 an error is generated.  
 .SH "FONT METRICS"
