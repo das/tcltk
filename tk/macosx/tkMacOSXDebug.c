@@ -62,9 +62,6 @@
 
 #ifdef TK_MAC_DEBUG
 
-#include <mach-o/dyld.h>
-#include <mach-o/nlist.h>
-
 typedef struct {
     EventKind kind;
     const char * name;
@@ -482,6 +479,9 @@ TkMacOSXDebugFlashRegion(
     }
 }
 #endif /* TK_MAC_DEBUG */
+
+#include <mach-o/dyld.h>
+#include <mach-o/nlist.h>
 
 /*
  *----------------------------------------------------------------------
