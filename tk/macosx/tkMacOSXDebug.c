@@ -481,6 +481,7 @@ TkMacOSXDebugFlashRegion(
 	}
     }
 }
+#endif /* TK_MAC_DEBUG */
 
 /*
  *----------------------------------------------------------------------
@@ -615,5 +616,3 @@ TkMacOSXGetNamedDebugSymbol(
 #endif /* __LP64__ */
     return addr;
 }
-
-#endif /* TK_MAC_DEBUG */
