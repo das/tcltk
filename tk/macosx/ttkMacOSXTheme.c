@@ -205,6 +205,8 @@ static void ButtonElementSize(
      */
 
     *paddingPtr = Ttk_AddPadding(*paddingPtr, ButtonMargins);
+    *widthPtr += Ttk_PaddingWidth(ButtonMargins);
+    *heightPtr += Ttk_PaddingHeight(ButtonMargins);
 }
 
 static void ButtonElementDraw(

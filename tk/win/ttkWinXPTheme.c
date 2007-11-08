@@ -493,6 +493,10 @@ static void GenericElementSize(
     /* See NOTE-GetThemeMargins 
      */
     *paddingPtr = elementData->info->padding;
+    if (elementData->info->flags & PAD_MARGINS) {
+	*widthPtr += Ttk_PaddingWidth(elementData->info->padding);
+	*heightPtr += Ttk_PaddingHeight(elementData->info->padding);
+    }
 }
 
 static void GenericElementDraw(

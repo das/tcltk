@@ -1095,8 +1095,6 @@ Ttk_ElementSize(
     element->specPtr->size(
 	element->clientData, element->elementRecord,
 	tkwin, widthPtr, heightPtr, paddingPtr);
-    *widthPtr += paddingPtr->left + paddingPtr->right;
-    *heightPtr += paddingPtr->top + paddingPtr->bottom;
 }
 
 /*
