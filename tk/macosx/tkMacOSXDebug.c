@@ -521,7 +521,7 @@ TkMacOSXGetNamedDebugSymbol(
     if (!addr) {
 	const struct mach_header *mh = NULL;
 	uint32_t i, n = _dyld_image_count();
-	size_t module_len;
+	size_t module_len = 0;
 
 	if (module && *module) {
 	    module_len = strlen(module);

@@ -1110,7 +1110,7 @@ OpenFileFilterProc(
 
 		if (!theInfo->isFolder) {
 		    OSType fileType;
-		    StringPtr fileNamePtr;
+		    StringPtr fileNamePtr = NULL;
 		    Tcl_DString fileNameDString;
 		    int i;
 		    FileFilter *filterPtr;
@@ -1126,7 +1126,6 @@ OpenFileFilterProc(
 			strncpy(fileName, (char*) fileNamePtr + 1, len);
 			fileName[len] = '\0';
 			fileNamePtr = (unsigned char*) fileName;
-
 		    } else if ((theItem->descriptorType == typeFSRef)) {
 			OSStatus err;
 			FSRef *theRef = (FSRef *) *theItem->dataHandle;
@@ -1140,8 +1139,6 @@ OpenFileFilterProc(
 				    uniFileName.length, &fileNameDString);
 			    fileNamePtr = (unsigned char*)
 				    Tcl_DStringValue(&fileNameDString);
-			} else {
-			    fileNamePtr = NULL;
 			}
 		    }
 		    if (ofdPtr->usePopup) {
