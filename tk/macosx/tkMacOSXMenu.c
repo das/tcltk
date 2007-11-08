@@ -3993,6 +3993,7 @@ TkpMenuInit(void)
     macMDEFDrawable.flags = 0;
     macMDEFDrawable.grafPtr = NULL;
     macMDEFDrawable.context = NULL;
+    macMDEFDrawable.size = CGSizeZero;
 #endif
 
     ChkErr(GetThemeMetric, kThemeMetricMenuMarkColumnWidth,

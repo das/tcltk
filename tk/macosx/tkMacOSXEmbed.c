@@ -155,6 +155,7 @@ TkpMakeWindow(
 	macWin->flags = TK_CLIP_INVALID;
 	macWin->grafPtr = NULL;
 	macWin->context = NULL;
+	macWin->size = CGSizeZero;
 	if (Tk_IsTopLevel(macWin->winPtr)) {
 	    /*
 	     *This will be set when we are mapped.
@@ -298,6 +299,7 @@ TkpUseWindow(
 
     macWin->grafPtr = NULL;
     macWin->context = NULL;
+    macWin->size = CGSizeZero;
     macWin->visRgn = NULL;
     macWin->aboveVisRgn = NULL;
     macWin->drawRect = CGRectNull;
