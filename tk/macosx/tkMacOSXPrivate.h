@@ -76,7 +76,7 @@
     #define kHIToolboxVersionNumber10_4 (219)
 #endif
 #ifndef kHIToolboxVersionNumber10_5
-    #define kHIToolboxVersionNumber10_5 (316)
+    #define kHIToolboxVersionNumber10_5 (343)
 #endif
 /* Macros for HIToolbox runtime version checking */
 MODULE_SCOPE float tkMacOSXToolboxVersionNumber;
