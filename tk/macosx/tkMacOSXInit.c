@@ -332,6 +332,18 @@ TkpInit(
 	    TkMacOSXCarbonEncoding = Tcl_GetEncoding(NULL, NULL);
 	}
 
+#if 0
+	/*
+	 * FIXME: Close stdin & stdout for remote debugging otherwise we
+	 * will fight with gdb for stdin & stdout
+	 */
+
+	if (getenv("XCNOSTDIN") != NULL) {
+	    close(0);
+	    close(1);
+	}
+#endif
+
 	/*
 	 * If we don't have a TTY and stdin is a special character file of
 	 * length 0, (e.g. /dev/null, which is what Finder sets when double
