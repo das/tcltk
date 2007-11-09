@@ -574,8 +574,9 @@ wrongNumArgs:
 	!= TCL_OK) {
 	return TCL_ERROR;
     }
-    if (!Tk_IsTopLevel(winPtr) &&
-	    (index != WMOPT_MANAGE) && (index != WMOPT_FORGET)) {
+    if (!Tk_IsTopLevel(winPtr)
+	    && (index != WMOPT_MANAGE) && (index != WMOPT_FORGET)
+	    ) {
 	Tcl_AppendResult(interp, "window \"", winPtr->pathName,
 		"\" isn't a top-level window", NULL);
 	return TCL_ERROR;

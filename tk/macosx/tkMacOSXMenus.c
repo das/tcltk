@@ -42,7 +42,6 @@ static Tcl_Obj* GetWidgetDemoPath(Tcl_Interp *interp);
 static OSStatus MenuEventHandlerProc(EventHandlerCallRef callRef,
 	EventRef event, void *userData);
 
-
 
 /*
  *----------------------------------------------------------------------
