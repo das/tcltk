@@ -678,7 +678,10 @@ TkpGetFontAttrsForChar(
      * But the name of the actual font may still differ, so we activate the
      * string as an ATSU layout and ask ATSU about the fallback.
      */
-    TkMacOSXSetupDrawingContext(Tk_WindowId(tkwin), NULL, 1, &drawingContext);
+    if (!TkMacOSXSetupDrawingContext(Tk_WindowId(tkwin), NULL, 1,
+	    &drawingContext)) {
+	Tcl_Panic("TkpGetFontAttrsForChar: drawingContext not setup");
+    }
 
     LayoutSetString(fontPtr, &drawingContext, &uchar, 1);
 
