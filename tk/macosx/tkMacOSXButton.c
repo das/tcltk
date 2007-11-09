@@ -900,7 +900,7 @@ TkMacOSXDrawControl(
      * The control has been previously initialised.
      * It may need to be re-initialised
      */
-#ifdef TK_REBUILD_TOPLEVEL
+#if 0
     rebuild = (winPtr->flags & TK_REBUILD_TOPLEVEL);
     winPtr->flags &= ~TK_REBUILD_TOPLEVEL;
 #else
