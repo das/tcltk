@@ -113,7 +113,7 @@ proc ::tk::ConsoleInit {} {
 	}
 	"unix" {
 	    if {[tk windowingsystem] eq "aqua"} {
-		$con configure -font {Monaco 9 normal} -highlightthickness 0
+		$con configure -font {Monaco 10 normal} -highlightthickness 0
 	    }
 	}
     }
