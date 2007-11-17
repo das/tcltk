@@ -744,7 +744,7 @@ NameWindow(
     char *pathName;
     int isNew;
     Tcl_HashEntry *hPtr;
-    int length1, length2;
+    size_t length1, length2;
 
     /*
      * Setup all the stuff except name right away, then do the name stuff
