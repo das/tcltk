@@ -1393,11 +1393,14 @@ InitFont(
     Tcl_ExternalToUtfDString(systemEncoding, buf, -1, &faceString);
 
     fontPtr->font.fid	= (Font) fontPtr;
+    fontPtr->hwnd	= hwnd;
+    fontPtr->pixelSize	= tm.tmHeight - tm.tmInternalLeading;
 
     faPtr		= &fontPtr->font.fa;
     faPtr->family	= Tk_GetUid(Tcl_DStringValue(&faceString));
+
     faPtr->size =
-	    TkFontGetPoints(tkwin, -(tm.tmHeight - tm.tmInternalLeading));
+	    TkFontGetPoints(tkwin, -(fontPtr->pixelSize));
     faPtr->weight =
 	    (tm.tmWeight > FW_MEDIUM) ? TK_FW_BOLD : TK_FW_NORMAL;
     faPtr->slant	= (tm.tmItalic != 0) ? TK_FS_ITALIC : TK_FS_ROMAN;
@@ -1409,9 +1412,6 @@ InitFont(
     fmPtr->descent	= tm.tmDescent;
     fmPtr->maxWidth	= tm.tmMaxCharWidth;
     fmPtr->fixed	= !(tm.tmPitchAndFamily & TMPF_FIXED_PITCH);
-
-    fontPtr->hwnd	= hwnd;
-    fontPtr->pixelSize	= tm.tmHeight - tm.tmInternalLeading;
 
     fontPtr->numSubFonts 	= 1;
     fontPtr->subFontArray	= fontPtr->staticSubFonts;
