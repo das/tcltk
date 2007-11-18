@@ -280,6 +280,7 @@ static void TTKInitPadding(int padc, int pixels[4], Ttk_Padding *pad)
 {
     switch (padc)
     {
+	case 0: pixels[0] = 0; /*FALLTHRU*/
 	case 1:	pixels[1] = pixels[0]; /*FALLTHRU*/
 	case 2:	pixels[2] = pixels[0]; /*FALLTHRU*/
 	case 3:	pixels[3] = pixels[1]; /*FALLTHRU*/
