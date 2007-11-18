@@ -45,7 +45,8 @@ namespace eval ttk::theme::classic {
 
 	style map "." -highlightcolor [list focus black]
 
-	style configure TButton -padding "3m 1m" -relief raised -shiftrelief 1
+	style configure TButton \
+	    -anchor center -padding "3m 1m" -relief raised -shiftrelief 1
 	style map TButton -relief [list {!disabled pressed} sunken]
 
 	style configure TCheckbutton -indicatorrelief raised

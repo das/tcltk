@@ -35,7 +35,8 @@ namespace eval ttk::theme::alt {
         style map "." -embossed [list disabled 1] ;
 
 	style configure TButton \
-	    -width -11 -padding "1 1" -relief raised -shiftrelief 1 \
+	    -anchor center -width -11 -padding "1 1" \
+	    -relief raised -shiftrelief 1 \
 	    -highlightthickness 1 -highlightcolor $colors(-frame)
 
 	style map TButton -relief {
@@ -51,7 +52,7 @@ namespace eval ttk::theme::alt {
 	    [list  disabled $colors(-frame)  pressed $colors(-frame)]
 
 	style configure TMenubutton \
-	    -width -11 -padding "3 3" -relief raised -anchor w
+	    -width -11 -padding "3 3" -relief raised
 
 	style configure TEntry -padding 1
 	style map TEntry -fieldbackground \
