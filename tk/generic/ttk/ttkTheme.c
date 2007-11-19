@@ -1460,7 +1460,7 @@ static int StyleElementCreateCmd(
     FactoryRec *recPtr;
 
     if (objc < 5) {
-	Tcl_WrongNumArgs(interp, 5, objv, "name type ?options...?");
+	Tcl_WrongNumArgs(interp, 3, objv, "name type ?options...?");
 	return TCL_ERROR;
     }
 
