@@ -50,12 +50,6 @@ namespace eval ttk::theme::aqua {
 	# Enable animation for ttk::progressbar widget:
 	ttk::style configure TProgressbar -period 100 -maxphase 255
 
-	# Modify the the default Labelframe layout to use generic text element
-	# instead of Labelframe.text; the latter erases the window background
-	# (@@@ this still isn't right... want to fill with background pattern)
-	#
-	ttk::style layout TLabelframe.Label { text }
-
 	# For Aqua, labelframe labels should appear outside the border,
 	# with a 14 pixel inset and 4 pixels spacing between border and label
 	# (ref: Apple Human Interface Guidelines / Controls / Grouping Controls)
