@@ -247,7 +247,7 @@ proc ::tk::MessageBox {args} {
     }
 
     # There is only one background colour for the whole dialog
-    set bg [ttk::style lookup $::ttk::currentTheme -background]
+    set bg [ttk::style lookup . -background]
 
     # 3. Create the top-level window and divide it into top
     # and bottom parts.
