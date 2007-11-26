@@ -1682,13 +1682,14 @@ proc ::tk::dialog::file::VerifyFileName {w filename} {
 	    $data(ent) icursor end
 	}
 	CHDIR {
-	    tk_messageBox -type ok -parent $w -message -icon warning \
-		    [mc "Cannot change to the directory \"%1\$s\".\nPermission denied." $path]
+	    tk_messageBox -type ok -parent $w -icon warning -message  \
+		[mc "Cannot change to the directory\
+                     \"%1\$s\".\nPermission denied." $path]
 	    $data(ent) selection range 0 end
 	    $data(ent) icursor end
 	}
 	ERROR {
-	    tk_messageBox -type ok -parent $w -message -icon warning \
+	    tk_messageBox -type ok -parent $w -icon warning -message \
 		    [mc "Invalid file name \"%1\$s\"." $path]
 	    $data(ent) selection range 0 end
 	    $data(ent) icursor end
