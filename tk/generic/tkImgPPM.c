@@ -540,7 +540,7 @@ StringReadPPM(interp, dataObj, format, imageHandle, destX, destY,
 	 * We have all the data in memory, so write everything in one
 	 * go.
 	 */
-	if (block.pitch*height < dataSize) {
+	if (block.pitch*height > dataSize) {
 	    Tcl_AppendResult(interp, "truncated PPM data", NULL);
 	    return TCL_ERROR;
 	}
