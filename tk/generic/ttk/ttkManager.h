@@ -81,9 +81,6 @@ MODULE_SCOPE int Ttk_GetSlaveIndexFromObj(
 MODULE_SCOPE int Ttk_NumberSlaves(Ttk_Manager *);
     /* Returns: number of managed slaves */
 
-MODULE_SCOPE void *Ttk_ManagerData(Ttk_Manager *);
-    /* Returns: client data associated with master */
-
 MODULE_SCOPE void *Ttk_SlaveData(Ttk_Manager *, int slaveIndex);
     /* Returns: client data associated with slave */
 
