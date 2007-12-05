@@ -142,7 +142,7 @@ pack .statusBar -side bottom -fill x -pady 2
 set textheight 30
 catch {
     set textheight [expr {
-	([winfo screenheight .] - 200) /
+	([winfo screenheight .] * 0.7) /
 	[font metrics mainFont -displayof . -linespace]
     }]
 }
