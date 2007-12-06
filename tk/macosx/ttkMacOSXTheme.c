@@ -965,7 +965,7 @@ TTK_LAYOUT("TMenubutton",
 TTK_LAYOUT("TCombobox",
     TTK_GROUP("Combobox.button", TTK_PACK_TOP|TTK_FILL_X,
 	TTK_GROUP("Combobox.padding", TTK_FILL_BOTH,
-	    TTK_NODE("Combobox.textarea", TTK_PACK_LEFT|TTK_FILL_X))))
+	    TTK_NODE("Combobox.textarea", TTK_FILL_X))))
 
 /* Notebook tabs -- no focus ring */
 TTK_LAYOUT("Tab",
