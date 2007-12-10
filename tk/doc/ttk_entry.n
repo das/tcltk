@@ -87,7 +87,6 @@ Specifies an integer value indicating the desired width of the entry window,
 in average-size characters of the widget's font.
 .\" Not in ttk: If the value is less than or equal to zero, the widget picks a
 .\" Not in ttk: size just large enough to hold its current text.
-.BE
 .SH NOTES
 A portion of the entry may be selected as described below.
 If an entry is exporting its selection (see the \fBexportSelection\fR

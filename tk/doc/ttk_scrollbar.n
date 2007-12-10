@@ -46,7 +46,6 @@ or \fByview\fR (for vertical scrollbars).
 .OP \-orient orient Orient
 One of \fBhorizontal\fR or \fBvertical\fR.
 Specifies the orientation of the scrollbar.
-.BE
 .SH "WIDGET COMMAND"
 .TP
 \fIpathName \fBcget\fR \fIoption\fR
