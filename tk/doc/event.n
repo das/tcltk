@@ -76,6 +76,11 @@ If \fB<<\fIvirtual\fB>>\fR is specified then the return value is
 a list whose elements are the physical event sequences currently
 defined for the given virtual event;  if the virtual event is
 not defined then an empty string is returned.
+.RS
+.PP
+Note that virtual events that that are not bound to physical event
+sequences are \fInot\fR returned by \fBevent info\fR.
+.RE
 .SH "EVENT FIELDS"
 .PP
 The following options are supported for the \fBevent generate\fR
