@@ -7,8 +7,6 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 
-#include <windows.h>
-
 #include <tkWinInt.h>
 
 #ifndef DFCS_HOT	/* Windows 98/Me, Windows 200/XP only */

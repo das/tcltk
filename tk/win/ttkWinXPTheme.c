@@ -19,8 +19,7 @@
 
 #ifndef HAVE_UXTHEME_H
 /* Stub for platforms that lack the XP theme API headers: */
-#include <windows.h>
-#include <tcl.h>
+#include <tkWinInt.h>
 int TtkXPTheme_Init(Tcl_Interp *interp, HWND hwnd) { return TCL_OK; }
 #else
 
