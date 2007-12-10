@@ -10,7 +10,6 @@
 '\" Note:  do not modify the .SH NAME line immediately below!
 .SH NAME
 tk_chooseDirectory \- pops up a dialog box for the user to select a directory.
-.PP
 .SH SYNOPSIS
 \fBtk_chooseDirectory \fR?\fIoption value ...\fR?
 .BE
