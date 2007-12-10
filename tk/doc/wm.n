@@ -105,6 +105,9 @@ Specifies the modification state of the window (determines whether the
 window close widget contains the modification indicator and whether the
 proxy icon is draggable).
 .TP
+\fB\-notify\fR
+Specifies process notification state (bouncing of the application dock icon).
+.TP
 \fB\-titlepath\fR
 Specifies the path of the file referenced as the window proxy icon (which
 can be dragged and dropped in lieu of the file's finder icon).
