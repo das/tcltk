@@ -15,8 +15,8 @@ ttk::panedwindow \- Multi-pane container window
 .nf
 \fBttk::panedwindow\fR \fIpathName \fR?\fIoptions\fR?
 .br
-\fIpathName \fBadd\fR \fIpathName.subwindow\fR ?\fIoptions...\fR?
-\fIpathName \fBinsert\fR \fIindex\fR \fIpathName.subwindow\fR ?\fIoptions...\fR?
+\fIpathName \fBadd\fR \fIwindow\fR ?\fIoptions...\fR?
+\fIpathName \fBinsert\fR \fIindex\fR \fIwindow\fR ?\fIoptions...\fR?
 .fi
 .BE
 .SH DESCRIPTION
