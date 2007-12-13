@@ -620,32 +620,28 @@ ConfigureMenuButton(interp, mbPtr, objc, objv)
       Tk_FreeSavedOptions(&savedOptions);
     }
 
-    if ((mbPtr->image == NULL) && (mbPtr->bitmap == None)
-	    && (mbPtr->textVarName != NULL)) {
+    if (mbPtr->textVarName != NULL) {
+	/*
+	 * If no image or -compound is used, display the value of a variable.
+	 * Set up a trace to watch for any changes in it, create the variable
+	 * if it doesn't exist, and fetch its current value.
+	 */
+	CONST char *value;
 
-      /*
-       * The menubutton displays the value of a variable.  
-       * Set up a trace to watch for any changes in it, create
-       * the variable if it doesn't exist, and fetch its
-       * current value.
-       */
-
-      CONST char *value;
-
-      value = Tcl_GetVar(interp, mbPtr->textVarName, TCL_GLOBAL_ONLY);
-      if (value == NULL) {
-	  Tcl_SetVar(interp, mbPtr->textVarName, mbPtr->text,
-		     TCL_GLOBAL_ONLY);
-      } else {
-	  if (mbPtr->text != NULL) {
-	      ckfree(mbPtr->text);
-	  }
-	  mbPtr->text = (char *) ckalloc((unsigned) (strlen(value) + 1));
-	  strcpy(mbPtr->text, value);
-      }
-      Tcl_TraceVar(interp, mbPtr->textVarName,
-		   TCL_GLOBAL_ONLY|TCL_TRACE_WRITES|TCL_TRACE_UNSETS,
-		   MenuButtonTextVarProc, (ClientData) mbPtr);
+	value = Tcl_GetVar(interp, mbPtr->textVarName, TCL_GLOBAL_ONLY);
+	if (value == NULL) {
+	    Tcl_SetVar(interp, mbPtr->textVarName, mbPtr->text,
+		    TCL_GLOBAL_ONLY);
+	} else {
+	    if (mbPtr->text != NULL) {
+		ckfree(mbPtr->text);
+	    }
+	    mbPtr->text = (char *) ckalloc((unsigned) (strlen(value) + 1));
+	    strcpy(mbPtr->text, value);
+	}
+	Tcl_TraceVar(interp, mbPtr->textVarName,
+		TCL_GLOBAL_ONLY|TCL_TRACE_WRITES|TCL_TRACE_UNSETS,
+		MenuButtonTextVarProc, (ClientData) mbPtr);
     }
 
     TkMenuButtonWorldChanged((ClientData) mbPtr);
