@@ -9,7 +9,7 @@
 # Copyright (c) 1998-2000 by Ajuba Solutions.
 # Copyright (c) 2007 by ActiveState Software Inc.
 # Copyright (c) 2007 Daniel A. Steffen <das@users.sourceforge.net>
-#
+# 
 # RCS: @(#) $Id$
 # $Id$
 
