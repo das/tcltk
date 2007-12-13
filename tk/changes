@@ -6456,6 +6456,9 @@ steffen, kupries)
 
 2007-12-12 (bug fix)[1845899] Aqua: [wm transient] (steffen)
 
+2007-12-13 (bug fix) correctly trace menubutton -textvariable for -compound
+use (hobbs)
+
 Several documentation and release notes improvements
 
 --- Released 8.5.0, December 14, 2007 --- See ChangeLog for details ---
