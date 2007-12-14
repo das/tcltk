@@ -563,30 +563,6 @@ static void		WmUpdateGeom(WmInfo *wmPtr, TkWindow *winPtr);
  */
 
 #define WIDTHBYTES(bits)	((((bits) + 31)>>5)<<2)
-
-/*
- * Hacks to make this file build with older versions of the SDK.
- */
-
-#ifndef GetClassLongPtr
-#   define GetClassLongPtrA	GetClassLongA
-#   define GetClassLongPtrW	GetClassLongW
-#   define SetClassLongPtrA	SetClassLongA
-#   define SetClassLongPtrW	SetClassLongW
-#   ifdef UNICODE
-#	define GetClassLongPtr	GetClassLongPtrW
-#	define SetClassLongPtr	SetClassLongPtrW
-#   else
-#	define GetClassLongPtr	GetClassLongPtrA
-#	define SetClassLongPtr	SetClassLongPtrA
-#   endif /* !UNICODE */
-#endif /* !GetClassLongPtr */
-#ifndef GCLP_HICON
-#   define GCLP_HICON		GCL_HICON
-#endif /* !GCLP_HICON */
-#ifndef GCLP_HICONSM
-#   define GCLP_HICONSM		(-34)
-#endif /* !GCLP_HICONSM */
 
 /*
  *----------------------------------------------------------------------
@@ -2220,7 +2196,7 @@ UpdateWrapper(
 		parentHWND, NULL, Tk_GetHINSTANCE(), NULL);
 	Tcl_DStringFree(&classString);
 	Tcl_DStringFree(&titleString);
-	SetWindowLongPtr(wmPtr->wrapper, GWLP_USERDATA, (LONG_PTR) winPtr);
+	SetWindowLongPtr(wmPtr->wrapper, GWLP_USERDATA, (INT_PTR) winPtr);
 	tsdPtr->createWindow = NULL;
 
 	if ((wmPtr->exStyleConfig & WS_EX_LAYERED)
@@ -2274,7 +2250,7 @@ UpdateWrapper(
 	    WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS);
 
     if (winPtr->flags & TK_EMBEDDED) {
-	SetWindowLongPtr(child, GWLP_WNDPROC, (LONG_PTR) TopLevelProc);
+	SetWindowLongPtr(child, GWLP_WNDPROC, (INT_PTR) TopLevelProc);
     }
 
     SetParent(child, wmPtr->wrapper);
