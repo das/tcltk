@@ -339,7 +339,7 @@ The binding \fIscript\fR undergoes \fB%\fR-substitutions before
 evaluation; see \fBbind(n)\fR for details.
 .RE
 .TP
-\fIpathName \fBtag configure\fR ?\fIoption\fR? ?\fIvalue option value ...\fR?
+\fIpathName \fBtag configure\fR \fItagName\fR ?\fIoption\fR? ?\fIvalue option value...\fR?
 Query or modify the options for the specified \fItagName\fR.
 If one or more \fIoption/value\fR pairs are specified,
 sets the value of those options for the specified tag.
