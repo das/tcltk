@@ -36,6 +36,8 @@
     #define kThemeBackgroundMetal 6
     #define kThemeIncDecButtonSmall 21
     #define kThemeIncDecButtonMini 22
+    #define kThemeComboBox 16
+    #define kThemeMiniSystemFont 109
     #define kAppearancePartUpButton 20
     #define kAppearancePartDownButton 21
     #define kAppearancePartPageUpArea 22
