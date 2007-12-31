@@ -6124,6 +6124,11 @@ in presence of grabs or modal windows (steffen)
 
 2007-10-26 (platform support) Mac OS X: 64-bit X11 support (steffen)
 
+2007-11-09 (platform support) Aqua: replace RgnHandles by HIShapeRefs (steffen)
+	*** POTENTIAL INCOMPATIBILITY for C code acessing MacDrawable Rgns ***
+
+2007-11-09 (enhancement) Aqua: "Run Widget Demo" menu item (steffen)
+
 2007-11-09 (bug fix) Aqua: activate event after window expansion (steffen)
 
 2007-11-09 (bug fix)[1824521] Aqua: menubutton crash with -bitmap (steffen)
