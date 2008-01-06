@@ -234,16 +234,6 @@ WidgetCleanup(char *memPtr)
  *
  *	For Deactivate/Activate pseudo-events, set/clear the background state
  *	flag.
- *
- *	<<NOTE-REALIZED>> On the first ConfigureNotify event
- *	(which indicates that the window has just been created),
- *	update the layout.  This is to work around two problems:
- *	(1) Virtual events aren't delivered to unrealized widgets
- *	(see bug #835997), so any intervening <<ThemeChanged>> events
- *	will not have been processed.
- *
- *	(2) Geometry calculations in the XP theme don't work
- *	until the widget is realized.
  */
 
 static const unsigned CoreEventMask
