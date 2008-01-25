@@ -6465,3 +6465,13 @@ use (hobbs)
 Several documentation and release notes improvements
 
 --- Released 8.5.0, December 18, 2007 --- See ChangeLog for details ---
+
+2007-12-30 (bug fix)[1860802] fixed Dutch message catalog (markus,fellows)
+
+2008-01-06 (bug fix)[1442006,1821939,18862692] MouseWheel for treeview (english)
+
+2008-01-08 (bug fix)[1865898,1679067] button size & state (english)
+
+2008-01-08 (bug fix)[1867122] [labelframe -style] crash (english,rib)
+
+--- Released 8.5.1, February 1, 2008 --- See ChangeLog for details ---
