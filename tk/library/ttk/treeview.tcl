@@ -286,7 +286,7 @@ proc ttk::treeview::select.extend.extended {w item} {
     if {[set anchor [$w focus]] ne ""} {
 	$w selection set [between $w $anchor $item]
     } else {
-    	BrowseTo $item
+    	BrowseTo $w $item
     }
 }
 
