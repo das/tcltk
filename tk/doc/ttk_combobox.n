@@ -99,7 +99,8 @@ widget commands (see \fIttk::entry(n)\fR for details):
 .SH "VIRTUAL EVENTS"
 The combobox widget generates a \fB<<ComboboxSelected>>\fR virtual event
 when the user selects an element from the list of values.
-This event is generated after the listbox is unposted.
+If the selection action unposts the listbox,
+this event is delivered after the listbox is unposted.
 .SH "SEE ALSO"
 ttk::widget(n), ttk::entry(n)
 .SH KEYWORDS
