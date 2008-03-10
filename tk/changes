@@ -6483,3 +6483,9 @@ Several documentation and release notes improvements
 2008-02-01 (bug fix)[CVE-2008-0553] buffer overflow in GIF format (max)
 
 --- Released 8.5.1, February 5, 2008 --- See ChangeLog for details ---
+
+2008-02-27 (bug fix)[1863346] Aqua: memleak in text drawing (steffen)
+
+2008-02-29 (enhancement) Knight's tour demo (thoyts)
+
+--- Released 8.5.2, March 14, 2008 --- See ChangeLog for details ---
