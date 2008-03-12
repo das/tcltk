@@ -738,7 +738,7 @@ install-libraries: libraries
 		"$(SCRIPT_INSTALL_DIR)" "$(SCRIPT_INSTALL_DIR)"/images \
 		"$(SCRIPT_INSTALL_DIR)"/msgs "$(SCRIPT_INSTALL_DIR)"/ttk; \
 	    do \
-	    if [ ! -d "$$i" ] ; then \
+	    if [ -n "$$i" -a ! -d "$$i" ] ; then \
 		echo "Making directory $$i"; \
 		mkdir -p "$$i"; \
 		chmod 755 "$$i"; \
