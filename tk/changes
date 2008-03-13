@@ -6488,4 +6488,6 @@ Several documentation and release notes improvements
 
 2008-02-29 (enhancement) Knight's tour demo (thoyts)
 
+2008-03-12 (bug fix)[1090382] crash when GetFont() fails (jenglish)
+
 --- Released 8.5.2, March 14, 2008 --- See ChangeLog for details ---
