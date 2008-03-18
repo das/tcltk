@@ -393,11 +393,10 @@ TTK_OBJS = \
         $(TMP_DIR)\ttkTrack.obj \
         $(TMP_DIR)\ttkTreeview.obj \
         $(TMP_DIR)\ttkWidget.obj \
-        $(TMP_DIR)\ttkStubInit.obj \
-        $(TMP_DIR)\ttkStubLib.obj
+        $(TMP_DIR)\ttkStubInit.obj
 
 TKSTUBOBJS = \
-	$(TMP_DIR)\tkStubLib.obj
+	$(TMP_DIR)\tkStubLib.obj $(TMP_DIR)\ttkStubLib.obj
 
 
 WINDIR          = $(ROOT)\win
