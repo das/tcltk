@@ -48,11 +48,11 @@
 #include "tkPlatDecls.h"
 #include "tkIntXlibDecls.h"
 
-TkStubs *tkStubsPtr;
-TkPlatStubs *tkPlatStubsPtr;
-TkIntStubs *tkIntStubsPtr;
-TkIntPlatStubs *tkIntPlatStubsPtr;
-TkIntXlibStubs *tkIntXlibStubsPtr;
+TkStubs *tkStubsPtr = NULL;
+TkPlatStubs *tkPlatStubsPtr = NULL;
+TkIntStubs *tkIntStubsPtr = NULL;
+TkIntPlatStubs *tkIntPlatStubsPtr = NULL;
+TkIntXlibStubs *tkIntXlibStubsPtr = NULL;
 
 /*
  * Use our own isdigit to avoid linking to libc on windows
