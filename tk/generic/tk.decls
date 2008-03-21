@@ -1159,11 +1159,7 @@ export {
 }
 export {
     CONST char *Tk_PkgInitStubsCheck(Tcl_Interp *interp, CONST char *version,
-	int exact)
-}
-export {
-    const char *TtkInitializeStubs(Tcl_Interp *, const char *version,
-    int epoch, int revision)
+	int exact);
 }
 
 # Global variables that need to be exported from the tcl shared library.
@@ -1182,7 +1178,4 @@ export {
 }
 export {
     TkIntXlibStubs *tkIntXlibStubsPtr           (fool checkstubs)
-}
-export {
-    TtkStubs *ttkStubsPtr                       (fool checkstubs)
 }
