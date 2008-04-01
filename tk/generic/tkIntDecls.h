@@ -1222,6 +1222,8 @@ typedef struct TkIntStubs {
     int (*tkpTesttextCmd) (ClientData dummy, Tcl_Interp * interp, int argc, CONST char ** argv); /* 157 */
 } TkIntStubs;
 
+#if defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS)
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -1229,6 +1231,8 @@ extern TkIntStubs *tkIntStubsPtr;
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS) */
 
 #if defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS)
 

@@ -2944,11 +2944,11 @@ Initialize(
     ThreadSpecificData *tsdPtr;
 
     /*
-     * Ensure that we are getting the matching version of Tcl. This is really
+     * Ensure that we are getting a compatible version of Tcl. This is really
      * only an issue when Tk is loaded dynamically.
      */
 
-    if (Tcl_InitStubs(interp, TCL_VERSION, 1) == NULL) {
+    if (Tcl_InitStubs(interp, TCL_VERSION, 0) == NULL) {
 	return TCL_ERROR;
     }
 

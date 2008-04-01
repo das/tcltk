@@ -1982,6 +1982,8 @@ typedef struct TkStubs {
     void (*tk_CreateOldPhotoImageFormat) (Tk_PhotoImageFormat * formatPtr); /* 273 */
 } TkStubs;
 
+#if defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS)
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -1989,6 +1991,8 @@ extern TkStubs *tkStubsPtr;
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS) */
 
 #if defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS)
 

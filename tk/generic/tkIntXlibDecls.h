@@ -1419,6 +1419,8 @@ typedef struct TkIntXlibStubs {
 #endif /* AQUA */
 } TkIntXlibStubs;
 
+#if defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS)
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -1426,6 +1428,8 @@ extern TkIntXlibStubs *tkIntXlibStubsPtr;
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS) */
 
 #if defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS)
 

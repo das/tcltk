@@ -13,10 +13,10 @@ AC_PREREQ(2.59)
 # /bin/sh. The bash shell seems to suffer from some strange failures.
 SHELL=/bin/sh
 
-TK_VERSION=8.5
+TK_VERSION=8.6
 TK_MAJOR_VERSION=8
-TK_MINOR_VERSION=5
-TK_PATCH_LEVEL=".2"
+TK_MINOR_VERSION=6
+TK_PATCH_LEVEL="a0"
 VER=$TK_MAJOR_VERSION$TK_MINOR_VERSION
 
 #------------------------------------------------------------------------
