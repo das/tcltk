@@ -666,7 +666,7 @@ TkPlatStubs tkPlatStubs = {
 #endif /* AQUA */
 };
 
-static TkStubHooks tkStubHooks = {
+static const TkStubHooks tkStubHooks = {
     &tkPlatStubs,
     &tkIntStubs,
     &tkIntPlatStubs,

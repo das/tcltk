@@ -43,7 +43,7 @@
 #    ifdef BIG_ENDIAN
 #	 if BYTE_ORDER == BIG_ENDIAN
 #	     undef WORDS_BIGENDIAN
-#	     define WORDS_BIGENDIAN
+#	     define WORDS_BIGENDIAN 1
 #	 endif
 #    endif
 #    ifdef LITTLE_ENDIAN

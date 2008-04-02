@@ -961,7 +961,7 @@ EXTERN int		TkpTesttextCmd (ClientData dummy,
 
 typedef struct TkIntStubs {
     int magic;
-    struct TkIntStubHooks *hooks;
+    CONST struct TkIntStubHooks *hooks;
 
     TkWindow * (*tkAllocWindow) (TkDisplay * dispPtr, int screenNum, TkWindow * parentPtr); /* 0 */
     void (*tkBezierPoints) (double control[], int numSteps, double * coordPtr); /* 1 */
@@ -1223,15 +1223,7 @@ typedef struct TkIntStubs {
 } TkIntStubs;
 
 #if defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS)
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-extern TkIntStubs *tkIntStubsPtr;
-#ifdef __cplusplus
-}
-#endif
-
+EXTERN CONST TkIntStubs *tkIntStubsPtr;
 #endif /* defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS) */
 
 #if defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS)

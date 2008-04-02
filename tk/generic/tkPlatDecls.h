@@ -131,7 +131,7 @@ EXTERN int		Tk_MacOSXIsAppInFront (void);
 
 typedef struct TkPlatStubs {
     int magic;
-    struct TkPlatStubHooks *hooks;
+    CONST struct TkPlatStubHooks *hooks;
 
 #ifdef __WIN32__ /* WIN */
     Window (*tk_AttachHWND) (Tk_Window tkwin, HWND hwnd); /* 0 */
@@ -157,15 +157,7 @@ typedef struct TkPlatStubs {
 } TkPlatStubs;
 
 #if defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS)
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-extern TkPlatStubs *tkPlatStubsPtr;
-#ifdef __cplusplus
-}
-#endif
-
+EXTERN CONST TkPlatStubs *tkPlatStubsPtr;
 #endif /* defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS) */
 
 #if defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS)
