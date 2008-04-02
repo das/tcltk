@@ -20,6 +20,11 @@
  * including the rest of the stub functions.
  */
 
+#ifndef USE_TCL_STUBS
+#define USE_TCL_STUBS
+#endif
+#undef USE_TCL_STUB_PROCS
+
 #ifndef USE_TK_STUBS
 #define USE_TK_STUBS
 #endif
