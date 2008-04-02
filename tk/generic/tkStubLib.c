@@ -20,15 +20,8 @@
  * including the rest of the stub functions.
  */
 
-#ifndef USE_TCL_STUBS
 #define USE_TCL_STUBS
-#endif
-#undef USE_TCL_STUB_PROCS
-
-#ifndef USE_TK_STUBS
 #define USE_TK_STUBS
-#endif
-#undef USE_TK_STUB_PROCS
 
 #include "tkInt.h"
 
@@ -81,10 +74,6 @@ static int isDigit(const int c)
  *----------------------------------------------------------------------
  */
 
-#ifdef Tk_InitStubs
-#undef Tk_InitStubs
-#endif
-
 CONST char *
 Tk_InitStubs(
     Tcl_Interp *interp,
@@ -114,6 +103,8 @@ Tk_InitStubs(
 		p++; q++;
 	    }
             if (*p) {
+		/* Construct error message */
+		Tcl_PkgRequireEx(interp, "Tk", version, 1, NULL);
                 return NULL;
             }
         } else {
