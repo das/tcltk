@@ -114,7 +114,10 @@ Tk_InitStubs(
 		p++; q++;
 	    }
             if (*p) {
+		/* Construct error message */
+		Tcl_PkgRequireEx(interp, "Tk", version, 1, NULL);
                 return NULL;
+
             }
         } else {
             actualVersion = Tcl_PkgRequireEx(interp, "Tk", version, 1, NULL);
