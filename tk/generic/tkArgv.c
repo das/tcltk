@@ -337,7 +337,8 @@ PrintUsage(
 				 * for default options. */
 {
     register Tk_ArgvInfo *infoPtr;
-    size_t width, i, numSpaces;
+    size_t width, i;
+    int numSpaces; /* must be int to allow for negative values */
 #define NUM_SPACES 20
     static char spaces[] = "                    ";
     char tmp[TCL_DOUBLE_SPACE];
