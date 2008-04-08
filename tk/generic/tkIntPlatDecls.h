@@ -671,7 +671,7 @@ typedef struct TkIntPlatStubs {
 } TkIntPlatStubs;
 
 #if defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS)
-EXTERN CONST TkIntPlatStubs *tkIntPlatStubsPtr;
+extern CONST TkIntPlatStubs *tkIntPlatStubsPtr;
 #endif /* defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS) */
 
 #if defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS)

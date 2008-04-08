@@ -1983,12 +1983,7 @@ typedef struct TkStubs {
 } TkStubs;
 
 #if defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS)
-/* 
- * The following declaration has to be 'extern', not EXTERN. The
- * stubs pointer is always static-linked, and never exported from
- * a DLL.
- */
-extern const TkStubs *tkStubsPtr;
+extern CONST TkStubs *tkStubsPtr;
 #endif /* defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS) */
 
 #if defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS)

@@ -1420,7 +1420,7 @@ typedef struct TkIntXlibStubs {
 } TkIntXlibStubs;
 
 #if defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS)
-EXTERN CONST TkIntXlibStubs *tkIntXlibStubsPtr;
+extern CONST TkIntXlibStubs *tkIntXlibStubsPtr;
 #endif /* defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS) */
 
 #if defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS)
