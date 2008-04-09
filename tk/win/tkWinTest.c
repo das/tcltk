@@ -182,7 +182,6 @@ TestclipboardObjCmd(
     int objc,			/* Number of arguments. */
     Tcl_Obj *CONST objv[])	/* Argument values. */
 {
-    TkWindow *winPtr = (TkWindow *) clientData;
     HGLOBAL handle;
     char *data;
     int code = TCL_OK;
@@ -348,7 +347,7 @@ TestwineventCmd(
 	    wParam = MAKEWPARAM(id, 0);
 	    lParam = (LPARAM)child;
 	}
-	sprintf(buf, "%d", SendMessage(hwnd, message, wParam, lParam));
+	sprintf(buf, "%d", (int) SendMessage(hwnd, message, wParam, lParam));
 	Tcl_SetResult(interp, buf, TCL_VOLATILE);
 	break;
     }
@@ -356,7 +355,7 @@ TestwineventCmd(
 	char buf[TCL_INTEGER_SPACE];
 
 	sprintf(buf, "%d",
-		SendDlgItemMessage(hwnd, id, message, wParam, lParam));
+		(int)SendDlgItemMessage(hwnd, id, message, wParam, lParam));
 	Tcl_SetResult(interp, buf, TCL_VOLATILE);
 	break;
     }
@@ -382,7 +381,6 @@ TestfindwindowObjCmd(
     int objc,			/* Number of arguments. */
     Tcl_Obj *CONST objv[])	/* Argument values. */
 {
-    TkWindow *winPtr = (TkWindow *) clientData;
     const char *title = NULL, *class = NULL;
     HWND hwnd = NULL;
     int r = TCL_OK;
