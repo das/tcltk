@@ -6161,4 +6161,4 @@ use (hobbs)
 
 2008-04-07 (bug fix)[1937135] Fix double-free with argv error (hobbs)
 
---- Released 8.4.19, April 11, 2008 --- See ChangeLog for details ---
+--- Released 8.4.19, April 18, 2008 --- See ChangeLog for details ---
