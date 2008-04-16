@@ -2912,7 +2912,7 @@ Tk_SafeInit(
     return Initialize(interp);
 }
 
-extern TkStubs tkStubs;
+MODULE_SCOPE const TkStubs * const tkConstStubsPtr;
 
 /*
  *----------------------------------------------------------------------
@@ -3190,7 +3190,7 @@ Initialize(
      */
 
     code = Tcl_PkgProvideEx(interp, "Tk", TK_PATCH_LEVEL,
-	    (ClientData) &tkStubs);
+	    (ClientData) tkConstStubsPtr);
     if (code != TCL_OK) {
 	goto done;
     }
