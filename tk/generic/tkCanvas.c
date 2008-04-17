@@ -4663,9 +4663,6 @@ PickCurrentItem(canvasPtr, eventPtr)
 
     buttonDown = canvasPtr->state
 	    & (Button1Mask|Button2Mask|Button3Mask|Button4Mask|Button5Mask);
-    if (!buttonDown) {
-	canvasPtr->flags &= ~LEFT_GRABBED_ITEM;
-    }
 
     /*
      * Save information about this event in the canvas.  The event in
@@ -4739,6 +4736,10 @@ PickCurrentItem(canvasPtr, eventPtr)
 	return;
     }
 
+    if (!buttonDown) {
+	canvasPtr->flags &= ~LEFT_GRABBED_ITEM;
+    }
+    
     /*
      * Simulate a LeaveNotify event on the previous current item and
      * an EnterNotify event on the new current item.  Remove the "current"
