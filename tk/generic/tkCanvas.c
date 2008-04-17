@@ -4483,9 +4483,6 @@ PickCurrentItem(
 
     buttonDown = canvasPtr->state
 	    & (Button1Mask|Button2Mask|Button3Mask|Button4Mask|Button5Mask);
-    if (!buttonDown) {
-	canvasPtr->flags &= ~LEFT_GRABBED_ITEM;
-    }
 
     /*
      * Save information about this event in the canvas. The event in the
@@ -4558,6 +4555,10 @@ PickCurrentItem(
 	 */
 
 	return;
+    }
+
+    if (!buttonDown) {
+	canvasPtr->flags &= ~LEFT_GRABBED_ITEM;
     }
 
     /*
