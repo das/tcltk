@@ -572,7 +572,7 @@ the middle of characters.
 in any of the forms accepted by \fBTk_GetRelief\fR.
 This option is used in conjunction with the \fB\-borderwidth\fR
 option to give a 3-D appearance to the background for characters;
-it is ignored unless the \fB\-background\fR option
+it is ignored unless the \fB\-borderwidth\fR option
 has been set for the tag.
 .TP
 \fB\-rmargin \fIpixels\fR
