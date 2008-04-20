@@ -507,7 +507,7 @@ tcllibs    = $(TCLIMPLIB)
 tcllibs    = $(TCLSTUBLIB) $(tcllibs)
 !endif
 
-baselibs   = kernel32.lib user32.lib
+baselibs   = kernel32.lib user32.lib ws2_32.lib
 # Avoid 'unresolved external symbol __security_cookie' errors.
 # c.f. http://support.microsoft.com/?id=894573
 !if "$(MACHINE)" == "IA64" || "$(MACHINE)" == "AMD64"
