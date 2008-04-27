@@ -104,7 +104,7 @@ TkpTestembedCmd(
     ClientData clientData,
     Tcl_Interp *interp,
     int argc,
-    CONST char **argv)
+    const char **argv)
 {
     return TCL_OK;
 }
@@ -232,7 +232,7 @@ TkpUseWindow(
 				 * string is bogus. */
     Tk_Window tkwin,		/* Tk window that does not yet have an
 				 * associated X window. */
-    CONST char *string)		/* String identifying an X window to use for
+    const char *string)		/* String identifying an X window to use for
 				 * tkwin; must be an integer value. */
 {
     TkWindow *winPtr = (TkWindow *) tkwin;

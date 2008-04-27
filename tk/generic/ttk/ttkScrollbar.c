@@ -132,7 +132,7 @@ static void ScrollbarDoLayout(void *recordPtr)
  */
 static int
 ScrollbarSetCommand(
-    Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[], void *recordPtr)
+    Tcl_Interp *interp, int objc, Tcl_Obj *const objv[], void *recordPtr)
 {
     Scrollbar *scrollbar = recordPtr;
     Tcl_Obj *firstObj, *lastObj;
@@ -183,7 +183,7 @@ ScrollbarSetCommand(
  */
 static int
 ScrollbarGetCommand(
-    Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[], void *recordPtr)
+    Tcl_Interp *interp, int objc, Tcl_Obj *const objv[], void *recordPtr)
 {
     Scrollbar *scrollbar = recordPtr;
     Tcl_Obj *result[2];
@@ -206,7 +206,7 @@ ScrollbarGetCommand(
  */
 static int
 ScrollbarDeltaCommand(
-    Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[], void *recordPtr)
+    Tcl_Interp *interp, int objc, Tcl_Obj *const objv[], void *recordPtr)
 {
     Scrollbar *sb = recordPtr;
     double dx, dy;
@@ -246,7 +246,7 @@ ScrollbarDeltaCommand(
  */
 static int
 ScrollbarFractionCommand(
-    Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[], void *recordPtr)
+    Tcl_Interp *interp, int objc, Tcl_Obj *const objv[], void *recordPtr)
 {
     Scrollbar *sb = recordPtr;
     Ttk_Box b = sb->scrollbar.troughBox;

@@ -2915,8 +2915,8 @@ static int TreeviewTagBindCommand(
 	    Tcl_SetObjResult(interp, Tcl_NewStringObj(script,-1));
 	}
     } else if (objc == 6) {	/* $tv tag bind $tag $sequence $script */
-	CONST char *sequence = Tcl_GetString(objv[4]);
-	CONST char *script = Tcl_GetString(objv[5]);
+	const char *sequence = Tcl_GetString(objv[4]);
+	const char *script = Tcl_GetString(objv[5]);
 	unsigned long mask = Tk_CreateBinding(interp,
 		tv->tree.bindingTable, tag, sequence, script, 0);
 

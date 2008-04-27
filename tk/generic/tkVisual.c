@@ -88,7 +88,7 @@ Visual *
 Tk_GetVisual(
     Tcl_Interp *interp,		/* Interpreter to use for error reporting. */
     Tk_Window tkwin,		/* Window in which visual will be used. */
-    CONST char *string,		/* String describing visual. See manual entry
+    const char *string,		/* String describing visual. See manual entry
 				 * for details. */
     int *depthPtr,		/* The depth of the returned visual is stored
 				 * here. */
@@ -103,7 +103,7 @@ Tk_GetVisual(
     Visual *visual;
     ptrdiff_t length;
     int c, numVisuals, prio, bestPrio, i;
-    CONST char *p;
+    const char *p;
     VisualDictionary *dictPtr;
     TkColormap *cmapPtr;
     TkDisplay *dispPtr = ((TkWindow *) tkwin)->dispPtr;
@@ -368,7 +368,7 @@ Colormap
 Tk_GetColormap(
     Tcl_Interp *interp,		/* Interpreter to use for error reporting. */
     Tk_Window tkwin,		/* Window where colormap will be used. */
-    CONST char *string)		/* String that identifies colormap: either
+    const char *string)		/* String that identifies colormap: either
 				 * "new" or the name of another window. */
 {
     Colormap colormap;

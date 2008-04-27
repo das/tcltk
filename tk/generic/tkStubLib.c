@@ -59,7 +59,9 @@ const TkIntXlibStubs *tkIntXlibStubsPtr = NULL;
  * Use our own isdigit to avoid linking to libc on windows
  */
 
-static int isDigit(const int c)
+static int
+isDigit(
+    const int c)
 {
     return (c >= '0' && c <= '9');
 }
@@ -82,13 +84,13 @@ static int isDigit(const int c)
  *----------------------------------------------------------------------
  */
 
-MODULE_SCOPE CONST char *
+MODULE_SCOPE const char *
 Tk_InitStubs(
     Tcl_Interp *interp,
-    CONST char *version,
+    const char *version,
     int exact)
 {
-    CONST char *actualVersion;
+    const char *actualVersion;
     const TkStubs **stubsPtrPtr = &tkStubsPtr;	/* squelch warning */
 
     actualVersion = Tcl_PkgRequireEx(interp, "Tk", version, 0,
@@ -97,14 +99,14 @@ Tk_InitStubs(
 	return NULL;
     }
     if (exact) {
-        CONST char *p = version;
+        const char *p = version;
         int count = 0;
 
         while (*p) {
             count += !isDigit(*p++);
         }
         if (count == 1) {
-	    CONST char *q = actualVersion;
+	    const char *q = actualVersion;
 
 	    p = version;
 	    while (*p && (*p == *q)) {

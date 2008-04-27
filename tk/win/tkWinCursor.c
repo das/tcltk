@@ -98,7 +98,7 @@ TkGetCursorByName(
     struct CursorName *namePtr;
     TkWinCursor *cursorPtr;
     int argc;
-    CONST char **argv = NULL;
+    const char **argv = NULL;
 
     /*
      * All cursor names are valid lists of one element (for
@@ -191,8 +191,8 @@ TkGetCursorByName(
 TkCursor *
 TkCreateCursorFromData(
     Tk_Window tkwin,		/* Window in which cursor will be used. */
-    CONST char *source,		/* Bitmap data for cursor shape. */
-    CONST char *mask,		/* Bitmap data for cursor mask. */
+    const char *source,		/* Bitmap data for cursor shape. */
+    const char *mask,		/* Bitmap data for cursor mask. */
     int width, int height,	/* Dimensions of cursor. */
     int xHot, int yHot,		/* Location of hot-spot in cursor. */
     XColor fgColor,		/* Foreground color for cursor. */

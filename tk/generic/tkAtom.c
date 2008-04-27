@@ -78,7 +78,7 @@ Atom
 Tk_InternAtom(
     Tk_Window tkwin,		/* Window token; map name to atom for this
 				 * window's display. */
-    CONST char *name)		/* Name to turn into atom. */
+    const char *name)		/* Name to turn into atom. */
 {
     register TkDisplay *dispPtr;
     register Tcl_HashEntry *hPtr;
@@ -123,7 +123,7 @@ Tk_InternAtom(
  *--------------------------------------------------------------
  */
 
-CONST char *
+const char *
 Tk_GetAtomName(
     Tk_Window tkwin,		/* Window token; map atom to name relative to
 				 * this window's display. */

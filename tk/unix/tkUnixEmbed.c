@@ -97,7 +97,7 @@ TkpUseWindow(
 				 * string is bogus. */
     Tk_Window tkwin,		/* Tk window that does not yet have an
 				 * associated X window. */
-    CONST char *string)		/* String identifying an X window to use for
+    const char *string)		/* String identifying an X window to use for
 				 * tkwin; must be an integer value. */
 {
     TkWindow *winPtr = (TkWindow *) tkwin;
@@ -867,7 +867,7 @@ TkpTestembedCmd(
     ClientData clientData,	/* Main window for application. */
     Tcl_Interp *interp,		/* Current interpreter. */
     int argc,			/* Number of arguments. */
-    CONST char **argv)		/* Argument strings. */
+    const char **argv)		/* Argument strings. */
 {
     int all;
     Container *containerPtr;

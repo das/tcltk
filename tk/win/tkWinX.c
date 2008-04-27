@@ -70,7 +70,7 @@ static TkWinProcs asciiProcs = {
 	    WPARAM wParam, LPARAM lParam)) CallWindowProcA,
     (LRESULT (WINAPI *)(HWND hWnd, UINT Msg, WPARAM wParam,
 	    LPARAM lParam)) DefWindowProcA,
-    (ATOM (WINAPI *)(CONST WNDCLASS *lpWndClass)) RegisterClassA,
+    (ATOM (WINAPI *)(const WNDCLASS *lpWndClass)) RegisterClassA,
     (BOOL (WINAPI *)(HWND hWnd, LPCTSTR lpString)) SetWindowTextA,
     (HWND (WINAPI *)(DWORD dwExStyle, LPCTSTR lpClassName,
 	    LPCTSTR lpWindowName, DWORD dwStyle, int x, int y,
@@ -88,7 +88,7 @@ static TkWinProcs unicodeProcs = {
 	    WPARAM wParam, LPARAM lParam)) CallWindowProcW,
     (LRESULT (WINAPI *)(HWND hWnd, UINT Msg, WPARAM wParam,
 	    LPARAM lParam)) DefWindowProcW,
-    (ATOM (WINAPI *)(CONST WNDCLASS *lpWndClass)) RegisterClassW,
+    (ATOM (WINAPI *)(const WNDCLASS *lpWndClass)) RegisterClassW,
     (BOOL (WINAPI *)(HWND hWnd, LPCTSTR lpString)) SetWindowTextW,
     (HWND (WINAPI *)(DWORD dwExStyle, LPCTSTR lpClassName,
 	    LPCTSTR lpWindowName, DWORD dwStyle, int x, int y,
@@ -464,10 +464,10 @@ TkWinGetPlatformTheme(void)
  *----------------------------------------------------------------------
  */
 
-CONST char *
+const char *
 TkGetDefaultScreenName(
     Tcl_Interp *interp,		/* Not used. */
-    CONST char *screenName)	/* If NULL, use default string. */
+    const char *screenName)	/* If NULL, use default string. */
 {
     if ((screenName == NULL) || (screenName[0] == '\0')) {
 	screenName = winScreenName;
@@ -589,7 +589,7 @@ TkWinDisplayChanged(
 
 TkDisplay *
 TkpOpenDisplay(
-    CONST char *display_name)
+    const char *display_name)
 {
     Screen *screen;
     TkWinDrawable *twdPtr;

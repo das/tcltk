@@ -252,7 +252,7 @@ static double ScaleFraction(Scale *scalePtr, double value)
  */
 static int
 ScaleGetCommand(
-    Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[], void *recordPtr)
+    Tcl_Interp *interp, int objc, Tcl_Obj *const objv[], void *recordPtr)
 {
     Scale *scalePtr = recordPtr;
     int x, y, r = TCL_OK;
@@ -280,7 +280,7 @@ ScaleGetCommand(
  */
 static int
 ScaleSetCommand(
-    Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[], void *recordPtr)
+    Tcl_Interp *interp, int objc, Tcl_Obj *const objv[], void *recordPtr)
 {
     Scale *scalePtr = recordPtr;
     double from = 0.0, to = 1.0, value;
@@ -348,7 +348,7 @@ ScaleSetCommand(
 
 static int
 ScaleCoordsCommand(
-    Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[], void *recordPtr)
+    Tcl_Interp *interp, int objc, Tcl_Obj *const objv[], void *recordPtr)
 {
     Scale *scalePtr = recordPtr;
     double value;

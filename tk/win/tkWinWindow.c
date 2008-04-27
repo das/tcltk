@@ -203,7 +203,7 @@ TkpPrintWindowId(
 int
 TkpScanWindowId(
     Tcl_Interp *interp,		/* Interpreter to use for error reporting. */
-    CONST char *string,		/* String containing a (possibly signed)
+    const char *string,		/* String containing a (possibly signed)
 				 * integer in a form acceptable to strtol. */
     Window *idPtr)		/* Place to store converted result. */
 {
