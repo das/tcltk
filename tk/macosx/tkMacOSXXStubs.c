@@ -1090,7 +1090,7 @@ AddPixel(
  * XSetWindowBackgroundPixmap, XSetWindowBorder, XSetWindowBorderPixmap,
  * XSetWindowBorderWidth, XSetWindowColormap
  *
- *	These functions are all no-ops. They all have equivilent Tk calls that
+ *	These functions are all no-ops. They all have equivalent Tk calls that
  *	should always be used instead.
  *
  * Results:

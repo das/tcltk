@@ -812,7 +812,7 @@ WmSetAttribute(
 	    err = ChkErr(FSPathMakeRef, (const unsigned char*)path, &ref, &d);
 	    if (err == noErr) {
 		TK_IF_MAC_OS_X_API (4, HIWindowSetProxyFSRef,
-			err = ChkErr(HIWindowSetProxyFSRef, macWindow, &ref);
+		    err = ChkErr(HIWindowSetProxyFSRef, macWindow, &ref);
 		) TK_ELSE_MAC_OS_X (4,
 		    AliasHandle alias;
 
@@ -5945,7 +5945,7 @@ ApplyWindowClassAttributeChanges(
 	if (wmPtr->macClass != oldClass) {
 	    TK_IF_MAC_OS_X_API (4, HIWindowChangeClass,
 		ChkErr(HIWindowChangeClass, macWindow, wmPtr->macClass);
-	    ) TK_ENDIF;
+	    ) TK_ENDIF
 	    ChkErr(GetWindowClass, macWindow, &(wmPtr->macClass));
 	}
 	if (newAttributes != oldAttributes) {
