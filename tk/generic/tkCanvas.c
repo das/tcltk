@@ -4811,12 +4811,12 @@ CanvasDoEvent(
 		(numObjects * sizeof(ClientData)));
     }
 #ifdef USE_OLD_TAG_SEARCH
-    objectPtr[0] = Tk_GetUid("all");
+    objectPtr[0] = (ClientData) Tk_GetUid("all");
 #else /* USE_OLD_TAG_SEARCH */
-    objectPtr[0] = searchUids->allUid;
+    objectPtr[0] = (ClientData) searchUids->allUid;
 #endif /* USE_OLD_TAG_SEARCH */
     for (i = itemPtr->numTags-1; i >= 0; i--) {
-	objectPtr[i+1] = itemPtr->tagPtr[i];
+	objectPtr[i+1] = (ClientData) itemPtr->tagPtr[i];
     }
     objectPtr[itemPtr->numTags+1] = itemPtr;
 
