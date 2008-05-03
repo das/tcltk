@@ -4895,12 +4895,6 @@
 		F98A2A2F0D85F1EC002A40A7 /* ReleaseUniversal llvmgcc42 */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-					x86_64,
-				);
-				CFLAGS = "-arch ppc -arch i386 -arch x86_64 $(CFLAGS)";
 				HEADER_SEARCH_PATHS = (
 					/usr/X11R6/include,
 					/usr/X11R6/include/freetype2,
