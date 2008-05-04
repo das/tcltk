@@ -160,6 +160,8 @@ static Ttk_StateTable ButtonValueTable[] = {
 };
 
 static Ttk_StateTable ButtonAdornmentTable[] = {
+    { kThemeAdornmentDefault| kThemeAdornmentFocus,
+	TTK_STATE_ALTERNATE| TTK_STATE_FOCUS, 0 },
     { kThemeAdornmentDefault, TTK_STATE_ALTERNATE, 0 },
     { kThemeAdornmentFocus, TTK_STATE_FOCUS, 0 },
     { kThemeAdornmentNone, 0, 0 }
