@@ -74,8 +74,8 @@ Otherwise, returns the index of the current value in the list of
 Returns the current value of the combobox.
 .TP
 \fIpathName \fBidentify \fIx y\fR
-Returns the name of the element at position \fIx\fR, \fIy\fR,
-or the empty string if the coordinates are outside the window.
+Returns the name of the element at position \fIx\fR, \fIy\fR.
+See \fIttk::widget(n)\fR.
 .TP
 \fIpathName \fBinstate \fIstateSpec\fR ?\fIscript\fR?
 Test the widget state.
