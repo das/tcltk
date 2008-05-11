@@ -124,6 +124,10 @@ The tab will not be displayed, but the associated window
 remains managed by the notebook and its configuration remembered.
 Hidden tabs may be restored with the \fBadd\fR command.
 .TP
+\fIpathName \fBidentify\fR \fIx y\fR
+Returns the name of the element at position \fIx\fR, \fIy\fR.
+See \fIttk::widget(n)\fR.
+.TP
 \fIpathname \fBindex\fR \fItabid\fR
 Returns the numeric index of the tab specified by \fItabid\fR,
 or the total number of tabs if \fItabid\fR is the string
