@@ -554,11 +554,16 @@ proc ::tk::ConsoleBind {w} {
     }
     bind Console <<Console_FontSizeIncr>> {
         set size [font configure TkConsoleFont -size]
-        font configure TkConsoleFont -size [incr size]
+        if {$size < 0} {set sign -1} else {set sign 1}
+        set size [expr {(abs($size) + 1) * $sign}]
+        font configure TkConsoleFont -size $size
     }
     bind Console <<Console_FontSizeDecr>> {
         set size [font configure TkConsoleFont -size]
-        font configure TkConsoleFont -size [incr size -1]
+        if {abs($size) < 2} { return }
+        if {$size < 0} {set sign -1} else {set sign 1}
+        set size [expr {(abs($size) - 1) * $sign}]
+        font configure TkConsoleFont -size $size
     }
 
     ##
