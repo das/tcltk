@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+#------------------------------------------------------------- -*- makefile -*-
 # makefile.vc --
 #
 #	Microsoft Visual C++ makefile for use with nmake.exe v1.62+ (VC++ 5.0+)
@@ -10,6 +10,7 @@
 # Copyright (c) 1998-2000 Ajuba Solutions.
 # Copyright (c) 2001-2005 ActiveState Corporation.
 # Copyright (c) 2001-2004 David Gravereaux.
+# Copyright (c) 2003-2008 Pat Thoyts.
 #
 #------------------------------------------------------------------------------
 # RCS: @(#) $Id$
@@ -88,7 +89,9 @@ the build instructions.
 #		staticpkg= Affects the static option only to switch wishXX.exe
 #			   to have the dde and reg extension linked inside it.
 #		threads  = Turns on full multithreading support.
-#		thrdalloc= Use the thread allocator (shared global free pool).
+#		thrdalloc = Use the thread allocator (shared global free pool)
+#			   This is the default on threaded builds.
+#		tclalloc  = Use the old non-thread allocator
 #		symbols  = Adds symbols for step debugging.
 #		profile  = Adds profiling hooks.  Map file is assumed.
 #		loimpact = Adds a flag for how NT treats the heap to keep
