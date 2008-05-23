@@ -1137,7 +1137,8 @@ static int ConfigureItem(
     Ttk_TagSet newTagSet = NULL;
 
     if (Tk_SetOptions(interp, (ClientData)item, tv->tree.itemOptionTable,
-		objc, objv, tv->core.tkwin,&savedOptions,&mask) != TCL_OK)
+		objc, objv, tv->core.tkwin, &savedOptions, (int*) &mask)
+		!= TCL_OK)
     {
 	return TCL_ERROR;
     }
