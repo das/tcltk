@@ -11,7 +11,6 @@
 
 #include "ttkTheme.h"
 
-typedef struct Ttk_Style_ *Ttk_Style;
 typedef struct Ttk_TemplateNode_ Ttk_TemplateNode, *Ttk_LayoutTemplate;
 
 MODULE_SCOPE Ttk_ElementImpl Ttk_GetElement(Ttk_Theme theme, const char *name);

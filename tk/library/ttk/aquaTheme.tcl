@@ -38,14 +38,10 @@ namespace eval ttk::theme::aqua {
 	ttk::style configure TCombobox -postoffset {5 -2 -10 0}
 
 	# Treeview:
-	ttk::style configure Treeview -rowheight 18
 	ttk::style configure Heading -font TkHeadingFont
-	ttk::style map Row -background [list \
+	ttk::style configure Treeview -rowheight 18 -background White
+	ttk::style map Treeview -background [list \
 		{selected background} "#c3c3c3" selected SystemHighlight] ;
-	ttk::style map Cell -foreground [list \
-		{selected background} "#000000" selected SystemHighlightText] ;
-	ttk::style map Item -foreground [list \
-		{selected background} "#000000" selected SystemHighlightText] ;
 
 	# Enable animation for ttk::progressbar widget:
 	ttk::style configure TProgressbar -period 100 -maxphase 255

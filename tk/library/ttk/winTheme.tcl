@@ -59,15 +59,8 @@ namespace eval ttk::theme::winnative {
 
 	# Treeview:
 	ttk::style configure Heading -font TkHeadingFont -relief raised
-	ttk::style configure Row -background SystemWindow
-	ttk::style configure Cell -background SystemWindow
-	ttk::style map Row \
-	    -background [list selected SystemHighlight] \
-	    -foreground [list selected SystemHighlightText] ;
-	ttk::style map Cell \
-	    -background [list selected SystemHighlight] \
-	    -foreground [list selected SystemHighlightText] ;
-	ttk::style map Item \
+	ttk::style configure Treeview -background SystemWindow
+	ttk::style map Treeview \
 	    -background [list selected SystemHighlight] \
 	    -foreground [list selected SystemHighlightText] ;
 

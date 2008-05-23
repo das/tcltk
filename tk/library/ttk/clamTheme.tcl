@@ -116,15 +116,8 @@ namespace eval ttk::theme::clam {
 	# Treeview:
 	ttk::style configure Heading \
 	    -font TkHeadingFont -relief raised -padding {3}
-	ttk::style configure Row -background $colors(-window)
-	ttk::style configure Cell -background $colors(-window)
-	ttk::style map Row \
-	    -background [list selected $colors(-selectbg)] \
-	    -foreground [list selected $colors(-selectfg)] ;
-	ttk::style map Cell \
-	    -background [list selected $colors(-selectbg)] \
-	    -foreground [list selected $colors(-selectfg)] ;
-	ttk::style map Item \
+	ttk::style configure Treeview -background $colors(-window)
+	ttk::style map Treeview \
 	    -background [list selected $colors(-selectbg)] \
 	    -foreground [list selected $colors(-selectfg)] ;
 
