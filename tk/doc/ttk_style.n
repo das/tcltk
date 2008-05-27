@@ -86,8 +86,10 @@ though arbitrary Tcl code may appear.
 \fBttk::style theme names\fR
 Returns a list of all known themes.
 .TP
-\fBttk::style theme use\fR \fIthemeName\fR
-Sets the current theme to \fIthemeName\fR, and refreshes all widgets.
+\fBttk::style theme use\fR ?\fIthemeName\fR?
+Without an argument the result is the name of the current theme.
+Otherwise this command sets the current theme to \fIthemeName\fR,
+and refreshes all widgets.
 .SH LAYOUTS
 A \fIlayout\fR specifies a list of elements, each followed
 by one or more options specifying how to arrange the element.
