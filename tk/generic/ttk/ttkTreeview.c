@@ -1132,12 +1132,12 @@ static int ConfigureItem(
     int objc, Tcl_Obj *const objv[])
 {
     Tk_SavedOptions savedOptions;
-    unsigned mask;
+    int mask;
     Ttk_ImageSpec *newImageSpec = NULL;
     Ttk_TagSet newTagSet = NULL;
 
     if (Tk_SetOptions(interp, (ClientData)item, tv->tree.itemOptionTable,
-		objc, objv, tv->core.tkwin, &savedOptions, (int*) &mask)
+		objc, objv, tv->core.tkwin, &savedOptions, &mask)
 		!= TCL_OK)
     {
 	return TCL_ERROR;
