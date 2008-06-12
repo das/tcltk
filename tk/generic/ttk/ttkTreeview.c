@@ -1510,8 +1510,9 @@ static const char *regionStrings[] = {
 
 static TreeRegion IdentifyRegion(Treeview *tv, int x, int y)
 {
-    int x1, colno = IdentifyDisplayColumn(tv, x, &x1);
-
+    int x1 = 0, colno;
+    
+    colno = IdentifyDisplayColumn(tv, x, &x1);
     if (Ttk_BoxContains(tv->tree.headingArea, x, y)) {
 	if (colno < 0) {
 	    return REGION_NOTHING;
