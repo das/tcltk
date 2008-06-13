@@ -437,6 +437,9 @@ cdebug	= $(OPTIMIZATIONS)
 !else
 cdebug	=
 !endif
+!if $(SYMBOLS)
+cdebug	= $(cdebug) -Zi
+!endif
 !else if "$(MACHINE)" == "IA64" || "$(MACHINE)" == "AMD64"
 ### Warnings are too many, can't support warnings into errors.
 cdebug	= -Zi -Od $(DEBUGFLAGS)
@@ -480,6 +483,9 @@ TK_CFLAGS = $(TK_CFLAGS) -DUSE_TCL_STUBS
 ldebug	= -debug:full -debugtype:cv
 !else
 ldebug	= -release -opt:ref -opt:icf,3
+!if $(SYMBOLS)
+ldebug	= $(ldebug) -debug:full -debugtype:cv
+!endif
 !endif
 
 ### Declarations common to all linker options
