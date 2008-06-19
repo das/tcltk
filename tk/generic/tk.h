@@ -53,10 +53,10 @@ extern "C" {
 #define TK_MAJOR_VERSION	8
 #define TK_MINOR_VERSION	6
 #define TK_RELEASE_LEVEL	TCL_ALPHA_RELEASE
-#define TK_RELEASE_SERIAL	0
+#define TK_RELEASE_SERIAL	1
 
 #define TK_VERSION		"8.6"
-#define TK_PATCH_LEVEL		"8.6a0"
+#define TK_PATCH_LEVEL		"8.6a1"
 
 /*
  * A special definition used to allow this header file to be included from
