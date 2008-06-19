@@ -6,7 +6,7 @@
  *
  * Copyright (c) 1995-1997 Sun Microsystems, Inc.
  * Copyright 2001, Apple Computer, Inc.
- * Copyright (c) 2005-2007 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright (c) 2005-2008 Daniel A. Steffen <das@users.sourceforge.net>
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -553,3 +553,52 @@ TkMacOSXGetNamedSymbol(
     }
     return NSAddressOfSymbol(nsSymbol);
 }
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkMacOSXGetStringObjFromCFString --
+ *
+ *	Get a string object from a CFString as efficiently as possible.
+ *
+ * Results:
+ *	New string object or NULL if conversion failed.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+MODULE_SCOPE Tcl_Obj*
+TkMacOSXGetStringObjFromCFString(
+    CFStringRef str)
+{
+    Tcl_Obj *obj = NULL;
+    const char *c = CFStringGetCStringPtr(str, kCFStringEncodingUTF8);
+
+    if (c) {
+	obj = Tcl_NewStringObj(c, -1);
+    } else {
+	CFRange all = CFRangeMake(0, CFStringGetLength(str));
+	CFIndex len;
+
+	if (CFStringGetBytes(str, all, kCFStringEncodingUTF8, 0, false, NULL,
+		0, &len) > 0) {
+	    obj = Tcl_NewObj();
+	    Tcl_SetObjLength(obj, len);
+	    CFStringGetBytes(str, all, kCFStringEncodingUTF8, 0, false,
+		    (UInt8*) obj->bytes, len, NULL);
+	}
+    }
+    return obj;
+}
+
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 4
+ * fill-column: 79
+ * coding: utf-8
+ * End:
+ */
