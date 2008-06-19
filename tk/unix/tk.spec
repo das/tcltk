@@ -12,8 +12,8 @@ Group:         Development/Languages
 Source:        http://prdownloads.sourceforge.net/tcl/tk%{version}-src.tar.gz
 URL:           http://www.tcl.tk/
 Buildroot:     /var/tmp/%{name}%{version}
-Buildrequires: XFree86-devel tcl >= 8.5
-Requires:      tcl >= 8.5
+Buildrequires: XFree86-devel tcl >= %version
+Requires:      tcl >= %version
 
 %description
 The Tcl (Tool Command Language) provides a powerful platform for
