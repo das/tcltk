@@ -6518,4 +6518,8 @@ Several documentation and release notes improvements
 
 2008-06-12 (bug fix)[1991932] global grab segfault (steffen)
 
+2008-06-12 (platform support) Solaris/amd64 gcc 64bit support (steffen)
+
+2008-06-18 (bug fix) Aqua: missing focus on first map (steffen)
+
 --- Released 8.5.3, June ??, 2008 --- See ChangeLog for details ---
