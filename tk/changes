@@ -6508,8 +6508,6 @@ Several documentation and release notes improvements
 
 2008-04-14 (bug fix)[1941740] [tk_chooseColor -title] (thoyts)
 
-2008-04-16 (interface)[1938497] make stubs tables 'static const' (steffen)
-
 2008-04-17 (bug fix)[1327482] canvas item <Enter> events (wangnick)
 
 2008-05-23 (bug fix)[1967576] ttk::label height or width 0 panic (lawlor)
