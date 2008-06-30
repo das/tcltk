@@ -1,3 +1,4 @@
+'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 1990 The Regents of the University of California.
 '\" Copyright (c) 1994-1997 Sun Microsystems, Inc.
@@ -414,10 +415,8 @@ In both modes, clicking button 1 on an element selects
 it and deselects any other selected item.
 In \fBbrowse\fR mode it is also possible to drag the selection
 with button 1.
-.VS 8.5
 On button 1, the listbox will also take focus if it has a \fBnormal\fR
 state and \fB\-takefocus\fR is true.
-.VE 8.5
 .PP
 If the selection mode is \fBmultiple\fR or \fBextended\fR,
 any number of elements may be selected at once, including discontiguous

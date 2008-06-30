@@ -1,3 +1,4 @@
+'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 1990-1994 The Regents of the University of California.
 '\" Copyright (c) 1994-1997 Sun Microsystems, Inc.
@@ -625,10 +626,8 @@ empty string. This subcommand does not work on Windows and the
 Macintosh, as those platforms have their own way of unposting menus.
 .TP
 \fIpathName \fBxposition \fIindex\fR
-.VS 8.5
 Returns a decimal string giving the x-coordinate within the menu
 window of the leftmost pixel in the entry specified by \fIindex\fR.
-.VE 8.5
 .TP
 \fIpathName \fByposition \fIindex\fR
 Returns a decimal string giving the y-coordinate within the menu

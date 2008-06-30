@@ -1,3 +1,4 @@
+'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 2004 Joe English
 '\"
@@ -56,6 +57,7 @@ in the style.
 .\" .OP \-padding padding Padding
 .\" .OP \-relief relief Relief
 .SH "WIDGET COMMAND"
+.PP
 In addition to the standard 
 \fBcget\fR, \fBconfigure\fR, \fBidentify\fR, \fBinstate\fR, and \fBstate\fR 
 commands, checkbuttons support the following additional

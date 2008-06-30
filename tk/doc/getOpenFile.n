@@ -1,3 +1,4 @@
+'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 1996 Sun Microsystems, Inc.
 '\"
@@ -159,6 +160,7 @@ Extensions without a full stop character (e.g.
 .QW ~ )
 are allowed but may not work on all platforms.
 .SH EXAMPLE
+.PP
 .CS
 set types {
     {{Text Files}       {.txt}        }

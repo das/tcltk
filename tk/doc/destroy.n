@@ -1,3 +1,4 @@
+'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 1990 The Regents of the University of California.
 '\" Copyright (c) 1994-1996 Sun Microsystems, Inc.
@@ -29,6 +30,7 @@ in destroying a window the command aborts without destroying the
 remaining windows.
 No error is returned if \fIwindow\fR does not exist.
 .SH EXAMPLE
+.PP
 Destroy all checkbuttons that are direct children of the given widget:
 .CS
 proc killCheckbuttonChildren {parent} {
@@ -39,6 +41,5 @@ proc killCheckbuttonChildren {parent} {
    }
 }
 .CE
-
 .SH KEYWORDS
 application, destroy, window

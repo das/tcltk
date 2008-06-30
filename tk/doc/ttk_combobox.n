@@ -1,3 +1,4 @@
+'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 2004 Joe English
 '\"
@@ -15,6 +16,7 @@ ttk::combobox \- text field with popdown selection list
 \fBttk::combobox\fR \fIpathName \fR?\fIoptions\fR?
 .BE
 .SH DESCRIPTION
+.PP
 A \fBttk::combobox\fR combines a text field with a pop-down list of values;
 the user may select the value of the text field from among the 
 values in the list.
@@ -97,6 +99,7 @@ widget commands (see \fIttk::entry(n)\fR for details):
 \fBxview\fR
 .DE
 .SH "VIRTUAL EVENTS"
+.PP
 The combobox widget generates a \fB<<ComboboxSelected>>\fR virtual event
 when the user selects an element from the list of values.
 If the selection action unposts the listbox,

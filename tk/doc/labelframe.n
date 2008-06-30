@@ -1,3 +1,4 @@
+'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 1990-1994 The Regents of the University of California.
 '\" Copyright (c) 1994-1996 Sun Microsystems, Inc.
@@ -137,6 +138,7 @@ command.
 When a new labelframe is created, it has no default event bindings:
 labelframes are not intended to be interactive.
 .SH EXAMPLE
+.PP
 This shows how to build part of a GUI for a hamburger vendor. The
 \fBlabelframe\fR widgets are used to organize the available choices by
 the kinds of things that the choices are being made over.

@@ -1,3 +1,4 @@
+'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 1990-1994 The Regents of the University of California.
 '\" Copyright (c) 1994-1996 Sun Microsystems, Inc.
@@ -35,6 +36,7 @@ The return value from \fBtk_optionMenu\fR is the name of the menu
 associated with \fIpathName\fR, so that the caller can change its
 configuration options or manipulate it in other ways.
 .SH EXAMPLE
+.PP
 .CS
 tk_optionMenu .foo myVar Foo Bar Boo Spong Wibble
 pack .foo

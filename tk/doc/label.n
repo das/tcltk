@@ -1,3 +1,4 @@
+'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 1990-1994 The Regents of the University of California.
 '\" Copyright (c) 1994-1996 Sun Microsystems, Inc.
@@ -107,6 +108,7 @@ command.
 When a new label is created, it has no default event bindings:
 labels are not intended to be interactive.
 .SH EXAMPLE
+.PP
 .CS
 # Make the widgets
 \fBlabel\fR .t \-text "This widget is at the top"    \-bg red

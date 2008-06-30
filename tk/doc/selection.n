@@ -1,3 +1,4 @@
+'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 1990-1994 The Regents of the University of California.
 '\" Copyright (c) 1994-1996 Sun Microsystems, Inc.
@@ -16,7 +17,6 @@ selection \- Manipulate the X selection
 .SH SYNOPSIS
 \fBselection \fIoption\fR ?\fIarg arg ...\fR?
 .BE
-
 .SH DESCRIPTION
 .PP
 This command provides a Tcl interface to the X selection mechanism and
@@ -139,6 +139,7 @@ If \fIcommand\fR is specified, it is a Tcl script to execute when
 some other window claims ownership of the selection away from
 \fIwindow\fR.  \fISelection\fR defaults to PRIMARY.
 .SH EXAMPLES
+.PP
 On X11 platforms, one of the standard selections available is the
 SECONDARY selection. Hardly anything uses it, but here is how to read
 it using Tk:

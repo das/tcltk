@@ -1,3 +1,4 @@
+'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 2004 Joe English
 '\"
@@ -37,6 +38,7 @@ when the widget is selected.  Defaults to \fB1\fR.
 The name of a global variable whose value is linked to the widget.
 Defaults to the widget pathname if not specified.
 .SH "WIDGET COMMAND"
+.PP
 In addition to the standard 
 \fBcget\fR, \fBconfigure\fR, \fBidentify\fR, \fBinstate\fR, and \fBstate\fR 
 commands, checkbuttons support the following additional
@@ -53,6 +55,7 @@ Returns the result of the \fB\-command\fR.
 .\" Are these useful?  They don't invoke the -command
 .\" Missing: flash.  This is definitely not useful.
 .SH "WIDGET STATES"
+.PP
 The widget does not respond to user input if the \fBdisabled\fR state is set.
 The widget sets the \fBselected\fR state whenever 
 the linked \fB\-variable\fR is set to the widget's \fB\-onvalue\fR,

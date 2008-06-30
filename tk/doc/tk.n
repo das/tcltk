@@ -1,3 +1,4 @@
+'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 1992 The Regents of the University of California.
 '\" Copyright (c) 1994-1996 Sun Microsystems, Inc.
@@ -16,7 +17,6 @@ tk \- Manipulate Tk internal state
 .SH SYNOPSIS
 \fBtk\fR \fIoption \fR?\fIarg arg ...\fR?
 .BE
-
 .SH DESCRIPTION
 .PP
 The \fBtk\fR command provides access to miscellaneous
