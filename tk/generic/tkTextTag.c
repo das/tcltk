@@ -146,7 +146,7 @@ TkTextTagCmd(
     TkTextIndex index1, index2;
 
     if (objc < 3) {
-	Tcl_WrongNumArgs(interp, 2, objv, "option ?arg arg ...?");
+	Tcl_WrongNumArgs(interp, 2, objv, "option ?arg ...?");
 	return TCL_ERROR;
     }
 
@@ -336,7 +336,7 @@ TkTextTagCmd(
 
 	if (objc < 4) {
 	    Tcl_WrongNumArgs(interp, 3, objv,
-		    "tagName ?option? ?value? ?option value ...?");
+		    "tagName ?-option? ?value? ?-option value ...?");
 	    return TCL_ERROR;
 	}
 	tagPtr = TkTextCreateTag(textPtr, Tcl_GetString(objv[3]), &newTag);

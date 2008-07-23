@@ -611,7 +611,7 @@ Tk_FontObjCmd(
 	Tcl_HashEntry *namedHashPtr;
 
 	if (objc < 3) {
-	    Tcl_WrongNumArgs(interp, 2, objv, "fontname ?options?");
+	    Tcl_WrongNumArgs(interp, 2, objv, "fontname ?-option value ...?");
 	    return TCL_ERROR;
 	}
 	string = Tcl_GetString(objv[2]);

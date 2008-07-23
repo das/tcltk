@@ -191,7 +191,7 @@ Tk_ImageObjCmd(
 	Tcl_Obj **args;
 	int oldimage = 0;
 	if (objc < 3) {
-	    Tcl_WrongNumArgs(interp, 2, objv, "type ?name? ?options?");
+	    Tcl_WrongNumArgs(interp, 2, objv, "type ?name? ?-option value ...?");
 	    return TCL_ERROR;
 	}
 

@@ -101,7 +101,7 @@ foreach test {
 destroy .s
 test scrollbar-2.1 {Tk_ScrollbarCmd procedure} -returnCodes error -body {
     scrollbar
-} -result {wrong # args: should be "scrollbar pathName ?options?"}
+} -result {wrong # args: should be "scrollbar pathName ?-option value ...?"}
 test scrollbar-2.2 {Tk_ScrollbarCmd procedure} -body {
     scrollbar gorp
 } -returnCodes error -result {bad window path name "gorp"}
@@ -129,7 +129,7 @@ pack .s -side right -fill y
 update
 test scrollbar-3.1 {ScrollbarWidgetCmd procedure} {
     list [catch {.s} msg] $msg
-} {1 {wrong # args: should be ".s option ?arg arg ...?"}}
+} {1 {wrong # args: should be ".s option ?arg ...?"}}
 test scrollbar-3.2 {ScrollbarWidgetCmd procedure, "cget" option} {
     list [catch {.s cget} msg] $msg
 } {1 {wrong # args: should be ".s cget option"}}

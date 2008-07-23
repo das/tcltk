@@ -470,7 +470,7 @@ Tk_ListboxObjCmd(
     ListboxOptionTables *optionTables;
 
     if (objc < 2) {
-	Tcl_WrongNumArgs(interp, 1, objv, "pathName ?options?");
+	Tcl_WrongNumArgs(interp, 1, objv, "pathName ?-option value ...?");
 	return TCL_ERROR;
     }
 
@@ -602,7 +602,7 @@ ListboxWidgetObjCmd(
     int result = TCL_OK;
 
     if (objc < 2) {
-	Tcl_WrongNumArgs(interp, 1, objv, "option ?arg arg ...?");
+	Tcl_WrongNumArgs(interp, 1, objv, "option ?arg ...?");
 	return TCL_ERROR;
     }
 
@@ -843,7 +843,7 @@ ListboxWidgetObjCmd(
 
     case COMMAND_INSERT:
 	if (objc < 3) {
-	    Tcl_WrongNumArgs(interp, 2, objv, "index ?element element ...?");
+	    Tcl_WrongNumArgs(interp, 2, objv, "index ?element ...?");
 	    result = TCL_ERROR;
 	    break;
 	}
@@ -901,7 +901,7 @@ ListboxWidgetObjCmd(
 
 	if (objc < 3) {
 	    Tcl_WrongNumArgs(interp, 2, objv,
-		    "index ?option? ?value? ?option value ...?");
+		    "index ?-option? ?value? ?-option value ...?");
 	    result = TCL_ERROR;
 	    break;
 	}

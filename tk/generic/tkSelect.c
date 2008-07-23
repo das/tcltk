@@ -687,7 +687,7 @@ Tk_SelectionObjCmd(
     };
 
     if (objc < 2) {
-	Tcl_WrongNumArgs(interp, 1, objv, "option ?arg arg ...?");
+	Tcl_WrongNumArgs(interp, 1, objv, "option ?arg ...?");
 	return TCL_ERROR;
     }
 
@@ -733,7 +733,7 @@ Tk_SelectionObjCmd(
 	if (count == 1) {
 	    path = Tcl_GetString(objs[0]);
 	} else if (count > 1) {
-	    Tcl_WrongNumArgs(interp, 2, objv, "?options?");
+	    Tcl_WrongNumArgs(interp, 2, objv, "?-option value ...?");
 	    return TCL_ERROR;
 	}
 	if (path != NULL) {
@@ -805,7 +805,7 @@ Tk_SelectionObjCmd(
 	    selection = XA_PRIMARY;
 	}
 	if (count > 1) {
-	    Tcl_WrongNumArgs(interp, 2, objv, "?options?");
+	    Tcl_WrongNumArgs(interp, 2, objv, "?-option value ...?");
 	    return TCL_ERROR;
 	} else if (count == 1) {
 	    target = Tk_InternAtom(tkwin, Tcl_GetString(objs[0]));
@@ -871,7 +871,7 @@ Tk_SelectionObjCmd(
 	}
 
 	if ((count < 2) || (count > 4)) {
-	    Tcl_WrongNumArgs(interp, 2, objv, "?options? window command");
+	    Tcl_WrongNumArgs(interp, 2, objv, "?-option value ...? window command");
 	    return TCL_ERROR;
 	}
 	tkwin = Tk_NameToWindow(interp, Tcl_GetString(objs[0]), tkwin);
@@ -957,7 +957,7 @@ Tk_SelectionObjCmd(
 	}
 
 	if (count > 2) {
-	    Tcl_WrongNumArgs(interp, 2, objv, "?options? ?window?");
+	    Tcl_WrongNumArgs(interp, 2, objv, "?-option value ...? ?window?");
 	    return TCL_ERROR;
 	}
 	if (selName != NULL) {

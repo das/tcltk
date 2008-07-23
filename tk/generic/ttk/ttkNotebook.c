@@ -863,7 +863,7 @@ static int NotebookAddCommand(
     Tab *tab;
 
     if (objc <= 2 || objc % 2 != 1) {
-	Tcl_WrongNumArgs(interp, 2, objv, "window ?options...?");
+	Tcl_WrongNumArgs(interp, 2, objv, "window ?-option value ...?");
 	return TCL_ERROR;
     }
 
@@ -890,7 +890,7 @@ static int NotebookAddCommand(
     return TCL_OK;
 }
 
-/* $nb insert $index $tab ?options...?
+/* $nb insert $index $tab ?-option value ...?
  * 	Insert new tab, or move existing one.
  */
 static int NotebookInsertCommand(
@@ -902,7 +902,7 @@ static int NotebookInsertCommand(
     int srcIndex, destIndex;
 
     if (objc < 4) {
-	Tcl_WrongNumArgs(interp, 2,objv, "index slave ?options...?");
+	Tcl_WrongNumArgs(interp, 2,objv, "index slave ?-option value ...?");
 	return TCL_ERROR;
     }
 
@@ -1370,7 +1370,7 @@ TTK_END_LAYOUT
  * +++ Initialization.
  */
 
-MODULE_SCOPE 
+MODULE_SCOPE
 void TtkNotebook_Init(Tcl_Interp *interp)
 {
     Ttk_Theme themePtr = Ttk_GetDefaultTheme(interp);

@@ -491,7 +491,7 @@ foreach type {arc bitmap image line oval polygon rect text window} {
 	canvas .c
     } -body {
 	.c create $type
-    } -returnCodes error -result [format {wrong # args: should be ".c create %s coords ?arg arg ...?"} $type]
+    } -returnCodes error -result [format {wrong # args: should be ".c create %s coords ?arg ...?"} $type]
     incr i
     test canvas-15.$i "basic coords check: $type coords are paired" -setup {
 	destroy .c

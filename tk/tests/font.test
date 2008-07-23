@@ -153,7 +153,7 @@ test font-4.11 {font command: bad option} {
 test font-5.1 {font command: configure} {
     # (objc < 3) 
     list [catch {font configure} msg] $msg
-} {1 {wrong # args: should be "font configure fontname ?options?"}}
+} {1 {wrong # args: should be "font configure fontname ?-option value ...?"}}
 test font-5.2 {font command: configure: non-existent font} {
     # (namedHashPtr == NULL)
     list [catch {font configure xyz} msg] $msg

@@ -1924,14 +1924,14 @@ WmIconphotoCmd(
 
     if (objc < 4) {
 	Tcl_WrongNumArgs(interp, 2, objv,
-		"window ?-default? image1 ?image2 ...?");
+		"window ?-default? image ?image ...?");
 	return TCL_ERROR;
     }
     if (strcmp(Tcl_GetString(objv[3]), "-default") == 0) {
 	isDefault = 1;
 	if (objc == 4) {
 	    Tcl_WrongNumArgs(interp, 2, objv,
-		    "window ?-default? image1 ?image2 ...?");
+		    "window ?-default? image ?image ...?");
 	    return TCL_ERROR;
 	}
     }
@@ -5298,7 +5298,7 @@ TkMacOSXMakeRealWindowExist(
 	/*
 	 * Workaround GetWindowStructureWidths() Carbon bug:
 	 */
-	
+
 	strWidths.top = 16;
     }
     wmPtr->xInParent = strWidths.left;
@@ -6080,7 +6080,7 @@ WmGetWindowGroup(
 	TkDisplay *dispPtr = TkGetDisplayList();
 	TkWindow *masterWinPtr = (TkWindow *)
 		Tk_IdToWindow(dispPtr->display, wmPtr->master);
-	
+
 	if (masterWinPtr && masterWinPtr->window != None &&
 		TkMacOSXHostToplevelExists(masterWinPtr)) {
 	    WindowRef masterMacWin =

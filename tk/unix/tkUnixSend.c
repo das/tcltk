@@ -931,7 +931,7 @@ Tk_SendCmd(
 
     if (argc < (i+2)) {
 	Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
-		" ?options? interpName arg ?arg ...?\"", NULL);
+		" ?-option value ...? interpName arg ?arg ...?\"", NULL);
 	return TCL_ERROR;
     }
     destName = argv[i];

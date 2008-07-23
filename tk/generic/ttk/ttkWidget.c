@@ -356,7 +356,7 @@ int TtkWidgetConstructorObjCmd(
     int i;
 
     if (objc < 2 || objc % 1 == 1) {
-	Tcl_WrongNumArgs(interp, 1, objv, "pathName ?options?");
+	Tcl_WrongNumArgs(interp, 1, objv, "pathName ?-option value ...?");
 	return TCL_ERROR;
     }
 

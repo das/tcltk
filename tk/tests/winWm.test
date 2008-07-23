@@ -359,7 +359,7 @@ test winWm-7.4 {UpdateWrapper must maintain focus} win {
 
 test winWm-8.1 {Tk_WmCmd procedure, "iconphoto" option} win {
     list [catch {wm iconph .} msg] $msg
-} {1 {wrong # args: should be "wm iconphoto window ?-default? image1 ?image2 ...?"}}
+} {1 {wrong # args: should be "wm iconphoto window ?-default? image ?image ...?"}}
 test winWm-8.2 {Tk_WmCmd procedure, "iconphoto" option} win {
     destroy .t
     toplevel .t

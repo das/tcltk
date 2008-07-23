@@ -63,7 +63,7 @@ destroy .m
 
 test message-2.1 {Tk_MessageObjCmd procedure} {
     list [catch {message} msg] $msg
-} {1 {wrong # args: should be "message pathName ?options?"}}
+} {1 {wrong # args: should be "message pathName ?-option value ...?"}}
 test message-2.2 {Tk_MessageObjCmd procedure} {
     list [catch {message foo} msg] $msg [winfo child .]
 } {1 {bad window path name "foo"} {}}
@@ -76,7 +76,7 @@ test message-3.1 {MessageWidgetObjCmd procedure} {
     set result [list [catch {.m} msg] $msg]
     destroy .m
     set result
-} {1 {wrong # args: should be ".m option ?arg arg ...?"}}
+} {1 {wrong # args: should be ".m option ?arg ...?"}}
 test message-3.2 {MessageWidgetObjCmd procedure, "cget"} {
     message .m
     set result [list [catch {.m cget} msg] $msg]

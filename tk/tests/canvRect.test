@@ -53,7 +53,7 @@ test canvRect-1.$i {configuration options} {
 
 test canvRect-2.1 {CreateRectOval procedure} {
     list [catch {.c create rect} msg] $msg
-} {1 {wrong # args: should be ".c create rect coords ?arg arg ...?"}}
+} {1 {wrong # args: should be ".c create rect coords ?arg ...?"}}
 test canvRect-2.2 {CreateRectOval procedure} {
     list [catch {.c create oval x y z} msg] $msg
 } {1 {wrong # coordinates: expected 0 or 4, got 3}}

@@ -1511,7 +1511,7 @@ static const char *regionStrings[] = {
 static TreeRegion IdentifyRegion(Treeview *tv, int x, int y)
 {
     int x1 = 0, colno;
-    
+
     colno = IdentifyDisplayColumn(tv, x, &x1);
     if (Ttk_BoxContains(tv->tree.headingArea, x, y)) {
 	if (colno < 0) {
@@ -2531,7 +2531,7 @@ static int TreeviewSetCommand(
  * +++ Widget commands -- tree modification.
  */
 
-/* + $tv insert $parent $index ?-id id? ?-option value...?
+/* + $tv insert $parent $index ?-id id? ?-option value ...?
  * 	Insert a new item.
  */
 static int TreeviewInsertCommand(
@@ -3306,7 +3306,7 @@ static Ttk_ElementSpec RowElementSpec = {
  * +++ Initialisation.
  */
 
-MODULE_SCOPE 
+MODULE_SCOPE
 void TtkTreeview_Init(Tcl_Interp *interp)
 {
     Ttk_Theme theme = Ttk_GetDefaultTheme(interp);

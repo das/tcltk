@@ -207,7 +207,7 @@ ImageCmd(
 
     if (argc < 2) {
 	Tcl_AppendResult(interp, "wrong # args: should be \"",
-		argv[0], "option ?arg arg ...?", NULL);
+		argv[0], "option ?arg ...?", NULL);
 	return TCL_ERROR;
     }
     if (strcmp(argv[1], "changed") == 0) {

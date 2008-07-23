@@ -2777,7 +2777,7 @@ Tk_EventObjCmd(
 
 	if (objc < 3) {
 	    Tcl_WrongNumArgs(interp, 2, objv,
-		    "virtual ?sequence sequence ...?");
+		    "virtual ?sequence ...?");
 	    return TCL_ERROR;
 	}
 	name = Tcl_GetString(objv[2]);
@@ -2794,7 +2794,7 @@ Tk_EventObjCmd(
     }
     case EVENT_GENERATE:
 	if (objc < 4) {
-	    Tcl_WrongNumArgs(interp, 2, objv, "window event ?options?");
+	    Tcl_WrongNumArgs(interp, 2, objv, "window event ?-option value ...?");
 	    return TCL_ERROR;
 	}
 	return HandleEventGenerate(interp, tkwin, objc - 2, objv + 2);

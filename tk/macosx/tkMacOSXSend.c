@@ -357,7 +357,7 @@ Tk_SendObjCmd(
 
     if (objc < (i + 2)) {
 	Tcl_WrongNumArgs(interp, 1, objv,
-		"?options? interpName arg ?arg ...?");
+		"?-option value ...? interpName arg ?arg ...?");
 	return TCL_ERROR;
     }
 
