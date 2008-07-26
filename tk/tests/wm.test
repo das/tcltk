@@ -2138,6 +2138,33 @@ test wm-manage-1.2 {unmanaging a toplevel} -setup {
     deleteWindows
 } -result {wm .t.t pack .t wm .t.t}
 
+test wm-forget-1.1 "bug #2009788: forget toplevel can cause crash" -body {
+    toplevel .parent
+    toplevel .parent.child
+    wm forget .parent.child
+    winfo exists .parent.child
+} -cleanup {
+    deleteWindows
+}  -result {1}
+test wm-forget-1.2 "bug #2009788: forget toplevel can cause crash" -body {
+    toplevel .parent
+    update
+    toplevel .parent.child
+    wm forget .parent.child
+    winfo exists .parent.child
+} -cleanup {
+    deleteWindows
+}  -result {1}
+test wm-forget-1.3 "bug #2009788: forget toplevel can cause crash" -body {
+    toplevel .parent
+    toplevel .parent.child
+    wm forget .parent.child
+    wm manage .parent.child
+    winfo exists .parent.child
+} -cleanup {
+    deleteWindows
+}  -result {1}
+
 # FIXME:
 
 # Test delivery of virtual events to the WM. We could check to see if the
