@@ -5874,13 +5874,15 @@ TopLevelReqProc(
     WmInfo *wmPtr;
 
     wmPtr = winPtr->wmInfoPtr;
-    if ((winPtr->flags & TK_EMBEDDED) && (wmPtr->wrapper != NULL)) {
-	SendMessage(wmPtr->wrapper, TK_GEOMETRYREQ, Tk_ReqWidth(tkwin),
+    if (wmPtr) {
+	if ((winPtr->flags & TK_EMBEDDED) && (wmPtr->wrapper != NULL)) {
+	    SendMessage(wmPtr->wrapper, TK_GEOMETRYREQ, Tk_ReqWidth(tkwin),
 		Tk_ReqHeight(tkwin));
-    }
-    if (!(wmPtr->flags & (WM_UPDATE_PENDING|WM_NEVER_MAPPED))) {
-	Tcl_DoWhenIdle(UpdateGeometryInfo, winPtr);
-	wmPtr->flags |= WM_UPDATE_PENDING;
+	}
+	if (!(wmPtr->flags & (WM_UPDATE_PENDING|WM_NEVER_MAPPED))) {
+	    Tcl_DoWhenIdle(UpdateGeometryInfo, winPtr);
+	    wmPtr->flags |= WM_UPDATE_PENDING;
+	}
     }
 }
 
