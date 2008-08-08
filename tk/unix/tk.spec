@@ -5,7 +5,7 @@
 
 Name:          tk
 Summary:       Tk graphical toolkit for the Tcl scripting language.
-Version:       8.5.3
+Version:       8.5.4
 Release:       2
 License:       BSD
 Group:         Development/Languages
