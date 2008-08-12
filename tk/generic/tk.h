@@ -35,7 +35,7 @@ extern "C" {
  * When version numbers change here, you must also go into the following files
  * and update the version numbers:
  *
- * library/tk.tcl	(2 LOC patch)
+ * library/tk.tcl	(1 LOC patch)
  * unix/configure.in	(2 LOC Major, 2 LOC minor, 1 LOC patch)
  * win/configure.in	(as above)
  * README		(sections 0 and 1)
@@ -53,10 +53,10 @@ extern "C" {
 #define TK_MAJOR_VERSION	8
 #define TK_MINOR_VERSION	6
 #define TK_RELEASE_LEVEL	TCL_ALPHA_RELEASE
-#define TK_RELEASE_SERIAL	1
+#define TK_RELEASE_SERIAL	2
 
 #define TK_VERSION		"8.6"
-#define TK_PATCH_LEVEL		"8.6a1"
+#define TK_PATCH_LEVEL		"8.6a2"
 
 /*
  * A special definition used to allow this header file to be included from
