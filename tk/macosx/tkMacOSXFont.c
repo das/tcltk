@@ -1669,7 +1669,7 @@ SetFontFeatures(
 		fixed_featureSelectors);
 	if (size <= 10) {
 	    /*
-	     * Disable antialiasing of fixed fonts with sizes <= 10
+	     * Disable antialiasing of fixed-width fonts with sizes <= 10
 	     */
 
 	    const ATSStyleRenderingOptions options = kATSStyleNoAntiAliasing;
