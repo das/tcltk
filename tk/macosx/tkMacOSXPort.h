@@ -140,8 +140,6 @@
  * The following functions are not used on the Mac, so we stub them out.
  */
 
-#define TkFreeWindowId(dispPtr,w)
-#define TkInitXId(dispPtr)
 #define TkpButtonSetDefaults(specPtr) {}
 #define TkpCmapStressed(tkwin,colormap) (0)
 #define TkpFreeColor(tkColPtr)

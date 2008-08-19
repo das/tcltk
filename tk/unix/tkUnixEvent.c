@@ -156,8 +156,6 @@ TkpCloseDisplay(
 {
     TkSendCleanup(dispPtr);
 
-    TkFreeXId(dispPtr);
-
     TkWmCleanup(dispPtr);
 
 #ifdef TK_USE_INPUT_METHODS

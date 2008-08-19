@@ -271,8 +271,7 @@ ErrorProc(
     if (errEventPtr->error_code == BadWindow) {
 	Window w = (Window) errEventPtr->resourceid;
 
-	if (Tk_IdToWindow(display, w) != NULL
-		|| TkpWindowWasRecentlyDeleted(w, dispPtr)) {
+	if (Tk_IdToWindow(display, w) != NULL) {
 	    return 0;
 	}
     }

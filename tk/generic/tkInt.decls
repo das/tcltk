@@ -278,9 +278,6 @@ declare 74 generic {
 declare 75 generic {
     int TkpUseWindow(Tcl_Interp *interp, Tk_Window tkwin, CONST char *string)
 }
-declare 76 generic {
-    int TkpWindowWasRecentlyDeleted(Window win, TkDisplay *dispPtr)
-}
 declare 77 generic {
     void TkQueueEventForAllChildren(TkWindow *winPtr, XEvent *eventPtr)
 }
@@ -531,12 +528,6 @@ interface tkIntPlat
 declare 0 x11 {
     void TkCreateXEventSource(void)
 }
-declare 1 x11 {
-    void TkFreeWindowId(TkDisplay *dispPtr, Window w)
-}
-declare 2 x11 {
-    void TkInitXId(TkDisplay *dispPtr)
-}
 declare 3 x11 {
     int TkpCmapStressed(Tk_Window tkwin, Colormap colormap)
 }
@@ -560,9 +551,6 @@ declare 9 x11 {
 }
 declare 10 x11 {
     void TkSendCleanup(TkDisplay *dispPtr)
-}
-declare 11 x11 {
-    void TkFreeXId(TkDisplay *dispPtr)
 }
 declare 12 x11 {
     int TkpWmSetState(TkWindow *winPtr, int state)

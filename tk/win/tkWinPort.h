@@ -85,8 +85,6 @@
  * under Windows.
  */
 
-#define TkFreeWindowId(dispPtr,w)
-#define TkInitXId(dispPtr)
 #define TkpCmapStressed(tkwin,colormap) (0)
 #define XFlush(display)
 #define XGrabServer(display)

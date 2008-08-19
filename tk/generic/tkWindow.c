@@ -521,8 +521,6 @@ GetScreen(
 	    dispPtr->name = (char *) ckalloc((unsigned) (length+1));
 	    strncpy(dispPtr->name, screenName, length);
 	    dispPtr->name[length] = '\0';
-
-	    TkInitXId(dispPtr);
 	    break;
 	}
 	if ((strncmp(dispPtr->name, screenName, length) == 0)
@@ -1461,7 +1459,6 @@ Tk_DestroyWindow(
 	    XDestroyWindow(winPtr->display, winPtr->window);
 	}
 #endif
-	TkFreeWindowId(dispPtr, winPtr->window);
 	Tcl_DeleteHashEntry(Tcl_FindHashEntry(&dispPtr->winTable,
 		(char *) winPtr->window));
 	winPtr->window = None;

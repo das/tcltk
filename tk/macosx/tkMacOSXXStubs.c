@@ -323,33 +323,6 @@ MacXIdAlloc(
 /*
  *----------------------------------------------------------------------
  *
- * TkpWindowWasRecentlyDeleted --
- *
- *	Tries to determine whether the given window was recently deleted.
- *	Called from the generic code error handler to attempt to deal with
- *	async BadWindow errors under some circumstances.
- *
- * Results:
- *	Always 0, we do not keep this information on the Mac, so we do not
- *	know whether the window was destroyed.
- *
- * Side effects:
- *	None.
- *
- *----------------------------------------------------------------------
- */
-
-int
-TkpWindowWasRecentlyDeleted(
-    Window win,
-    TkDisplay *dispPtr)
-{
-    return 0;
-}
-
-/*
- *----------------------------------------------------------------------
- *
  * DefaultErrorHandler --
  *
  *	This procedure is the default X error handler. Tk uses it's own error
