@@ -1188,16 +1188,12 @@ ExtendArray(
      */
 
     if (arrayPtr->numUsed >= arrayPtr->arraySize) {
-	register ElArray *newPtr;
+	register int newSize = 2*arrayPtr->arraySize;
 
-	newPtr = (ElArray *) ckalloc(EL_ARRAY_SIZE(2*arrayPtr->arraySize));
-	newPtr->arraySize = 2*arrayPtr->arraySize;
-	newPtr->numUsed = arrayPtr->numUsed;
-	newPtr->nextToUse = &newPtr->els[newPtr->numUsed];
-	memcpy(newPtr->els, arrayPtr->els,
-		arrayPtr->arraySize * sizeof(Element));
-	ckfree((char *) arrayPtr);
-	arrayPtr = newPtr;
+	arrayPtr = (ElArray *)
+		ckrealloc((char *) arrayPtr, EL_ARRAY_SIZE(newSize));
+	arrayPtr->arraySize = newSize;
+	arrayPtr->nextToUse = &arrayPtr->els[arrayPtr->numUsed];
     }
 
     *arrayPtr->nextToUse = *elPtr;
