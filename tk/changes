@@ -6549,6 +6549,11 @@ Several documentation and release notes improvements
 2008-08-05 (bug fix)[2010422] Tk header files revised to accommodate
 incompatible changes in recent X.org releases of X11 headers. (jenglish)
 
+2008-08-19 (bug fix) revised number format in -[xy]scrollcommand callbacks
+and [xy]view methods (jenglish)
+
+2008-08-19 (enhancement) removed obsolete XID management code (staplin)
+
 Test suite modernization by Ania Pawelczyk.
 
---- Released 8.6a2, August 15, 2008 --- See ChangeLog for details ---
+--- Released 8.6a2, August 25, 2008 --- See ChangeLog for details ---
