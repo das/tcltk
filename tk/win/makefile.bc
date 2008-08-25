@@ -196,6 +196,7 @@ TKOBJS = \
 	$(TMPDIR)\tkImgGIF.obj \
 	$(TMPDIR)\tkImgPPM.obj \
 	$(TMPDIR)\tkImgPhoto.obj \
+	$(TMPDIR)\tkImgPhInstance.obj \
 	$(TMPDIR)\tkImgUtil.obj \
 	$(TMPDIR)\tkListbox.obj \
 	$(TMPDIR)\tkMacWinMenu.obj \

@@ -315,6 +315,7 @@ TK_OBJS = \
 	tkImgGIF.$(OBJEXT) \
 	tkImgPPM.$(OBJEXT) \
 	tkImgPhoto.$(OBJEXT) \
+	tkImgPhInstance.$(OBJEXT) \
 	tkImgUtil.$(OBJEXT) \
 	tkListbox.$(OBJEXT) \
 	tkMacWinMenu.$(OBJEXT) \
