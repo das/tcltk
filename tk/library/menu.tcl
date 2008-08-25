@@ -261,7 +261,7 @@ proc ::tk::MbPost {w {x {}} {y {}}} {
     if {$cur ne ""} {
 	MenuUnpost {}
     }
-    if {$tk_stricktMotif} {
+    if {$::tk_stricktMotif} {
         set Priv(cursor) [$w cget -cursor]
         $w configure -cursor arrow
     }
@@ -411,7 +411,7 @@ proc ::tk::MenuUnpost menu {
 	    set menu [$mb cget -menu]
 	    $menu unpost
 	    set Priv(postedMb) {}
-	    if {$tk_strictMotif} {
+	    if {$::tk_strictMotif} {
 	        $mb configure -cursor $Priv(cursor)
 	    }
 	    if {[tk windowingsystem] ne "aqua"} {
@@ -461,7 +461,7 @@ proc ::tk::MenuUnpost menu {
 	}
 	RestoreOldGrab
 	if {$Priv(menuBar) ne ""} {
-	    if {$tk_strictMotif} {
+	    if {$::tk_strictMotif} {
 		$Priv(menuBar) configure -cursor $Priv(cursor)
 	    }
 	    set Priv(menuBar) {}
@@ -596,7 +596,7 @@ proc ::tk::MenuButtonDown menu {
 
 	if {$Priv(menuBar) eq {}} {
 	    set Priv(menuBar) $menu
-	    if {$tk_strictMotif} {
+	    if {$::tk_strictMotif} {
 		set Priv(cursor) [$menu cget -cursor]
 		$menu configure -cursor arrow
 	    }
