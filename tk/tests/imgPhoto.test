@@ -696,7 +696,7 @@ test imgPhoto-4.66 {ImgPhotoCmd procedure: transparency get option} -setup {
     photo1 put white -to 0 0 3 3
     photo1 blank
     checkImgTrans photo1
-v -result {0,0 0,1 0,2 1,0 1,1 1,2 2,0 2,1 2,2}
+} -result {0,0 0,1 0,2 1,0 1,1 1,2 2,0 2,1 2,2}
 test imgPhoto-4.67 {ImgPhotoCmd procedure: transparency set option} -setup {
     image create photo photo1
     proc checkImgTransLoopSetReset {img width height} {
