@@ -261,7 +261,7 @@ proc ::tk::MbPost {w {x {}} {y {}}} {
     if {$cur ne ""} {
 	MenuUnpost {}
     }
-    if {$tk_stricktMotif} {
+    if {$tk_strictMotif} {
         set Priv(cursor) [$w cget -cursor]
         $w configure -cursor arrow
     }
