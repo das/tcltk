@@ -204,15 +204,4 @@
 #define TkpPrintWindowId(buf,w) \
 	sprintf((buf), "%#08lx", (unsigned long) (w))
 
-/*
- * The following declaration is used to get access to a private Tcl interface
- * that is needed for portability reasons.
- *
- * Disabled for now to determined whether we really still need this.
-
-#ifndef _TCLINT
-#include <tclInt.h>
-#endif
- */
-
 #endif /* _UNIXPORT */

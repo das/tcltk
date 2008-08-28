@@ -126,13 +126,4 @@ struct timezone {
     int tz_dsttime;
 };
 
-/*
- * Disabled inclusion of Tcl's private header in hope of discovering we
- * no longer need it.
- *
-#ifndef _TCLINT
-#include <tclInt.h>
-#endif
- */
-
 #endif /* _WINPORT */
