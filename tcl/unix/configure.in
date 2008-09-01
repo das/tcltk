@@ -641,6 +641,27 @@ then
     INSTALL_TZDATA=install-tzdata
 fi
 
+#------------------------------------------------------------------------
+#	Check for computed goto and __builtin_expect support.
+#------------------------------------------------------------------------
+
+AC_CACHE_CHECK([for computed goto], tcl_cv_cc_computed_goto, [
+    AC_TRY_COMPILE([#include <stddef.h>], [
+	int a; ptrdiff_t offset = (char*) &&l - (char*) &&t;
+	goto *(void*)(offset + (char*) &&t); t: a = 0; l: a = 1;
+	], tcl_cv_cc_computed_goto=yes, tcl_cv_cc_computed_goto=no)])
+if test $tcl_cv_cc_computed_goto = yes; then
+    AC_DEFINE(HAVE_COMPUTED_GOTO, 1, [Is computed goto available?])
+fi
+
+AC_CACHE_CHECK([for __builtin_expect], tcl_cv_cc_builtin_expect, [
+    AC_TRY_COMPILE(, [
+	int a = 1; if (__builtin_expect(a, 1)) {a = 0;}
+	], tcl_cv_cc_builtin_expect=yes, tcl_cv_cc_builtin_expect=no)])
+if test $tcl_cv_cc_builtin_expect = yes; then
+    AC_DEFINE(HAVE_BUILTIN_EXPECT, 1, [Is __builtin_expect available?])
+fi
+
 #--------------------------------------------------------------------
 #	DTrace support
 #--------------------------------------------------------------------

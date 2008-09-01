@@ -19,8 +19,14 @@
 /* Do we have BSDgettimeofday()? */
 #undef HAVE_BSDGETTIMEOFDAY
 
+/* Is __builtin_expect available? */
+#undef HAVE_BUILTIN_EXPECT
+
 /* Define to 1 if you have the `chflags' function. */
 #undef HAVE_CHFLAGS
+
+/* Is computed goto available? */
+#undef HAVE_COMPUTED_GOTO
 
 /* Define to 1 if you have the `copyfile' function. */
 #undef HAVE_COPYFILE
