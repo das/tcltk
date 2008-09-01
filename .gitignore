@@ -1,0 +1,8 @@
+tcl/macosx/configure
+tcl/unix/tclConfig.h.in~
+tk/macosx/configure
+tk/unix/tkConfig.h.in~
+tk/doc/man.macros
+build/
+*.mode1
+*.mode1v3
