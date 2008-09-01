@@ -81,6 +81,8 @@ static pascal Boolean	OpenFileFilterProc(AEDesc* theItem, void* info,
 static pascal void	OpenEventProc(NavEventCallbackMessage callBackSelector,
 			    NavCBRecPtr callBackParms,
 			    NavCallBackUserData callBackUD);
+static OSStatus		SheetEventHandlerProc(EventHandlerCallRef callRef,
+			    EventRef event, void *userData);
 static void		InitFileDialogs(void);
 static int		NavServicesGetFile(Tcl_Interp *interp,
 			    OpenFileData *ofd, AEDesc *initialDescPtr,
@@ -800,17 +802,17 @@ NavServicesGetFile(
     if (parent && ((TkWindow *) parent)->window != None &&
 	    TkMacOSXHostToplevelExists(parent)) {
 	options.parentWindow = TkMacOSXDrawableWindow(Tk_WindowId(parent));
-	TK_IF_HI_TOOLBOX (5,
+	//TK_IF_HI_TOOLBOX (5,
 	    /*
 	     * Impossible to modify dialog modality with the Cocoa-based
 	     * NavServices implementation.
 	     */
-	) TK_ELSE_HI_TOOLBOX (5,
+	//) TK_ELSE_HI_TOOLBOX (5,
 	    if (options.parentWindow) {
 		options.modality = kWindowModalityWindowModal;
 		data.sheet = 1;
 	    }
-	) TK_ENDIF
+	//) TK_ENDIF
     }
 
     /*
@@ -880,12 +882,25 @@ NavServicesGetFile(
 	err = ChkErr(NavDialogRun, dialogRef);
 	if (err == noErr) {
 	    if (data.sheet) {
+		const EventTypeSpec sheetEventTypes[] = {
+		    {kEventClassWindow,	 kEventWindowHiding},
+		};
+		EventHandlerRef sheetEventHandler;
+
 		data.dialogWindow = NavDialogGetWindow(dialogRef);
+		ChkErr(InstallEventHandler,
+			GetWindowEventTarget(data.dialogWindow),
+			SheetEventHandlerProc,
+			GetEventTypeCount(sheetEventTypes), sheetEventTypes,
+			&data, &sheetEventHandler);
 		ChkErr(GetWindowModality, data.dialogWindow,
 			&data.origModality, &data.origUnavailWindow);
 		ChkErr(SetWindowModality, data.dialogWindow,
 			kWindowModalityAppModal, NULL);
+		CFRetain(data.dialogWindow);
 		ChkErr(RunAppModalLoopForWindow, data.dialogWindow);
+		CFRelease(data.dialogWindow);
+		ChkErr(RemoveEventHandler, sheetEventHandler);
 	    }
 	    err = data.err;
 	}
@@ -1084,11 +1099,11 @@ OpenEventProc(
 	    break;
 	case kNavCBAccept:
 	case kNavCBCancel:
-	    if (data->sheet) {
+	    /*if (data->sheet) {
 		ChkErr(QuitAppModalLoopForWindow, data->dialogWindow);
 		ChkErr(SetWindowModality, data->dialogWindow,
 			data->origModality, data->origUnavailWindow);
-	    }
+	    }*/
 	    break;
 	case kNavCBUserAction:
 	    if (data->reply.validRecord) {
@@ -1113,7 +1128,23 @@ OpenEventProc(
 	    break;
     }
 }
+OSStatus
+SheetEventHandlerProc(
+    EventHandlerCallRef callRef,
+    EventRef event,
+    void *userData)
+{
+    NavHandlerUserData *data = (NavHandlerUserData*) userData;
 
+    if (data->sheet) {
+	ChkErr(QuitAppModalLoopForWindow, data->dialogWindow);
+	ChkErr(SetWindowModality, data->dialogWindow,
+		data->origModality, data->origUnavailWindow);
+    }    
+    return eventNotHandledErr;
+}
+
+
 /*
  *----------------------------------------------------------------------
  *
