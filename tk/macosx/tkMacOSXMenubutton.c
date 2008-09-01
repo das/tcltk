@@ -260,7 +260,10 @@ TkpDisplayMenuButton(
 	}
     }
     if (hasImageOrBitmap) {
-	{
+	if (tkMacOSXUseCGDrawing) {
+	    pixmap = Tk_GetPixmap(butPtr->display, pixmap, width, height,
+		    butPtr->image ? 0 : 1);
+	} else {
 	    destPort = TkMacOSXGetDrawablePort(Tk_WindowId(tkwin));
 	    portChanged = QDSwapPort(destPort, &savePort);
 	    mbPtr->picParams.version = -2;
@@ -300,6 +303,15 @@ TkpDisplayMenuButton(
 	    XCopyPlane(butPtr->display, butPtr->bitmap, pixmap, gc, 0, 0,
 		    width, height, 0, 0, 1);
 	}
+#if MAC_OS_X_VERSION_MAX_ALLOWED > 1020
+	if (tkMacOSXUseCGDrawing) {
+	    mbPtr->bevelButtonContent.contentType = kControlContentCGImageRef;
+	    mbPtr->bevelButtonContent.u.imageRef = 
+		    TkMacOSXCreateCGImageWithDrawable(pixmap);
+	    Tk_FreePixmap(butPtr->display, pixmap);
+	    pixmap = None;
+	} else
+#endif
 	{
 	    ClosePicture();
 	    tkPictureIsOpen = 0;
@@ -382,6 +394,12 @@ TkpDisplayMenuButton(
 	Draw1Control(mbPtr->userPane);
     }
     if (hasImageOrBitmap) {
+#if MAC_OS_X_VERSION_MAX_ALLOWED > 1020
+	if (mbPtr->bevelButtonContent.contentType ==
+		kControlContentCGImageRef) {
+	    CFRelease(mbPtr->bevelButtonContent.u.imageRef);
+	} else
+#endif
 	if (mbPtr->bevelButtonContent.contentType ==
 		kControlContentPictHandle) {
 	    KillPicture(mbPtr->bevelButtonContent.u.picture);

@@ -1039,8 +1039,16 @@ TkMacOSXDrawControl(
     }
 
     if (mbPtr->params.isBevel) {
+#if MAC_OS_X_VERSION_MAX_ALLOWED > 1020
 	if (mbPtr->bevelButtonContent.contentType ==
-		kControlContentPictHandle) {
+		kControlContentCGImageRef &&
+		mbPtr->bevelButtonContent.u.imageRef) {
+	    CFRelease(mbPtr->bevelButtonContent.u.imageRef);
+	} else
+#endif
+	if (mbPtr->bevelButtonContent.contentType ==
+		kControlContentPictHandle &&
+		mbPtr->bevelButtonContent.u.picture) {
 	    KillPicture(mbPtr->bevelButtonContent.u.picture);
 	}
     }
@@ -1092,6 +1100,12 @@ SetupBevelButton(
 	height = butPtr->height;
     }
 
+#if MAC_OS_X_VERSION_MAX_ALLOWED > 1020
+    if (tkMacOSXUseCGDrawing) {
+	pixmap = Tk_GetPixmap(butPtr->display, pixmap, width, height,
+		butPtr->image ? 0 : 1);
+    } else
+#endif
     {
 	portChanged = QDSwapPort(destPort, &savePort);
 	mbPtr->picParams.version = -2;
@@ -1130,6 +1144,15 @@ SetupBevelButton(
 		height, 0, 0, 1);
     }
 
+#if MAC_OS_X_VERSION_MAX_ALLOWED > 1020
+    if (tkMacOSXUseCGDrawing) {
+	mbPtr->bevelButtonContent.contentType = kControlContentCGImageRef;
+	mbPtr->bevelButtonContent.u.imageRef = 
+		TkMacOSXCreateCGImageWithDrawable(pixmap);
+	Tk_FreePixmap(butPtr->display, pixmap);
+	pixmap = None;
+    } else
+#endif
     {
 	ClosePicture();
 	tkPictureIsOpen = 0;
@@ -1441,7 +1464,8 @@ TkMacOSXComputeControlParams(
 	    } else {
 		paramsPtr->initialValue = 0;
 		paramsPtr->minValue = kControlBehaviorOffsetContents |
-			kControlContentPictHandle;
+			(tkMacOSXUseCGDrawing ? kControlContentCGImageRef :
+			kControlContentPictHandle);
 		paramsPtr->maxValue = 1;
 		if (butPtr->borderWidth <= 2) {
 		    paramsPtr->procID = kControlBevelButtonSmallBevelProc;
@@ -1463,7 +1487,8 @@ TkMacOSXComputeControlParams(
 	    } else {
 		paramsPtr->initialValue = 0;
 		paramsPtr->minValue = kControlBehaviorOffsetContents |
-			kControlBehaviorSticky | kControlContentPictHandle;
+			kControlBehaviorSticky | (tkMacOSXUseCGDrawing ?
+			kControlContentCGImageRef : kControlContentPictHandle);
 		paramsPtr->maxValue = MAX_VALUE;
 		if (butPtr->borderWidth <= 2) {
 		    paramsPtr->procID = kControlBevelButtonSmallBevelProc;
@@ -1485,7 +1510,8 @@ TkMacOSXComputeControlParams(
 	    } else {
 		paramsPtr->initialValue = 0;
 		paramsPtr->minValue = kControlBehaviorOffsetContents |
-			kControlBehaviorSticky | kControlContentPictHandle;
+			kControlBehaviorSticky | (tkMacOSXUseCGDrawing ?
+			kControlContentCGImageRef : kControlContentPictHandle);
 		paramsPtr->maxValue = MAX_VALUE;
 		if (butPtr->borderWidth <= 2) {
 		    paramsPtr->procID = kControlBevelButtonSmallBevelProc;

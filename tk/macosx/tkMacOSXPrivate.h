@@ -46,6 +46,7 @@
     #define kUIModeAllSuppressed 4
     #define FixedToInt(a) ((short)(((Fixed)(a) + fixed1/2) >> 16))
     #define IntToFixed(a) ((Fixed)(a) << 16)
+    #define kControlContentCGImageRef 134
 #endif
 /* Define constants only available on Mac OS X 10.4 or later */
 #if MAC_OS_X_VERSION_MAX_ALLOWED < 1040
@@ -59,6 +60,9 @@
     #define kThemeMetricSmallScrollBarMinThumbHeight 134
     #define kThemeScrollBarMedium kThemeMediumScrollBar
     #define kThemeScrollBarSmall kThemeSmallScrollBar
+    typedef void (*CGDataProviderReleaseDataCallback)(void *info, const void *data, size_t size);
+    #define CGBitmapInfo CGImageAlphaInfo
+    #define kCGBitmapByteOrderDefault (0 << 12)
     #ifdef __BIG_ENDIAN__
     #define kCGBitmapByteOrder32Host (4 << 12)
     #else
@@ -335,6 +339,7 @@ MODULE_SCOPE void TkMacOSXBringWindowForward(WindowRef wRef);
 MODULE_SCOPE WindowRef TkMacOSXDrawableWindow(Drawable drawable);
 MODULE_SCOPE void TkMacOSXWinCGBounds(TkWindow *winPtr, CGRect *bounds);
 MODULE_SCOPE HIShapeRef TkMacOSXGetClipRgn(Drawable drawable);
+MODULE_SCOPE CGImageRef TkMacOSXCreateCGImageWithDrawable(Drawable drawable);
 MODULE_SCOPE Tcl_Obj* TkMacOSXGetStringObjFromCFString(CFStringRef str);
 
 #endif /* _TKMACPRIV */

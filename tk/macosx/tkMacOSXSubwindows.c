@@ -1397,7 +1397,7 @@ Tk_GetPixmap(
     macPix->grafPtr = NULL;
     macPix->context = NULL;
     macPix->size = CGSizeMake(width, height);
-    {
+    if (!tkMacOSXUseCGDrawing) {
 	Rect bounds = {0, 0, height, width};
 
 	ChkErr(NewGWorld, &macPix->grafPtr, depth == 1 ? 1 : 0, &bounds, NULL,
@@ -1439,7 +1439,12 @@ Tk_FreePixmap(
 	DisposeGWorld(macPix->grafPtr);
     }
     if (macPix->context) {
-	TkMacOSXDbgMsg("Cannot free CG backed Pixmap");
+	char *data = CGBitmapContextGetData(macPix->context);
+
+	if (data) {
+	    ckfree(data);
+	}
+	CFRelease(macPix->context);
     }
     ckfree((char *) macPix);
 }
