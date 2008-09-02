@@ -38,6 +38,7 @@
  * The following structures are used in the GetFileName() function. They store
  * information about the file dialog and the file filters.
  */
+
 typedef struct _OpenFileData {
     FileFilterList fl;          /* List of file filters.                   */
     SInt16 curType;             /* The filetype currently being listed.    */
