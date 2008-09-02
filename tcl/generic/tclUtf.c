@@ -299,7 +299,7 @@ Tcl_UtfToUniChar(
     register int byte;
 
     /*
-     * Unroll 1 to 3 byte UTF-8 sequences, use loop to handle longer ones.
+     * Unroll 1 to 4 byte UTF-8 sequences, use loop to handle longer ones.
      */
 
     byte = *((unsigned char *) src);
@@ -347,8 +347,34 @@ Tcl_UtfToUniChar(
 
 	*chPtr = (Tcl_UniChar) byte;
 	return 1;
+    } else if (byte < 0xF5) {
+	if (((src[1] & 0xC0) == 0x80) && ((src[2] & 0xC0) == 0x80) &&
+		((src[3] & 0xC0) == 0x80)) {
+	    /*
+	     * Four-byte-character lead byte followed by three trail bytes.
+	     */
+
+	    unsigned long ch = (((byte & 0x07) << 16) | ((src[1] & 0x3F) << 12)
+		    | ((src[2] & 0x3F) << 6) | (src[3] & 0x3F));
+#if TCL_UTF_MAX <= 3
+	    if (ch > 0xffff) {
+		*chPtr = (Tcl_UniChar) byte;
+		return 1;
+	    }
+#endif
+	    *chPtr = (Tcl_UniChar) ch;
+	    return 4;
+	}
+
+	/*
+	 * A four-byte-character lead-byte not followed by three trail-bytes
+	 * represents itself.
+	 */
+
+	*chPtr = (Tcl_UniChar) byte;
+	return 1;
     }
-#if TCL_UTF_MAX > 3
+#if TCL_UTF_MAX > 4
     {
 	int ch, total, trail;
 
