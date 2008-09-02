@@ -131,7 +131,6 @@ else
 override CONFIGURE_ARGS := ${CONFIGURE_ARGS} --enable-xft
 VERSION			:= ${VERSION}-X11
 wish			:= ${wish}-X11
-override EMBEDDED_BUILD :=
 endif
 
 INSTALL_TARGETS		= install-binaries install-libraries
@@ -199,10 +198,8 @@ ifeq (${INSTALL_BUILD},)
 	@cd "${OBJ_DIR}" && mkdir -p $(dir $(subst ${space},\ ,./${LIBDIR})) $(dir $(subst ${space},\ ,./${BINDIR})) "${SYMROOT}" && \
 	rm -rf "./${LIBDIR}" "./${BINDIR}" && ln -fs "${SYMROOT}" "./${LIBDIR}" && \
 	ln -fs "${SYMROOT}" "./${BINDIR}" && ln -fs "${OBJ_DIR}/tktest" "${SYMROOT}"
-ifeq (${TK_X11},)
 	@rm -f "${OBJ_DIR}/${BINDIR}" && \
 	ln -fs Wish.app/Contents/MacOS/Wish "${SYMROOT}/${WISH}"
-endif
 # Create symbolic link to Tcl.framework in ${SYMROOT}if necessary
 	@cd "${SYMROOT}" && if [ ! -e Tcl.framework -o -L Tcl.framework ]; then \
 	rm -f Tcl.framework && ln -s "${TCL_FRAMEWORK_DIR}/Tcl.framework" . ; fi
@@ -216,7 +213,7 @@ ifeq (${EMBEDDED_BUILD},1)
 	@rm -rf "${INSTALL_ROOT}/${LIBDIR}/Tk.framework"
 endif
 	${DO_MAKE}
-ifeq (${EMBEDDED_BUILD}_${TK_X11},1_)
+ifeq (${EMBEDDED_BUILD},1)
 # workaround bug with 'cp -pRH' on Darwin 6 and earlier
 	@if [ "`uname -r | awk -F. '{print $$1}'`" -lt 7 ]; then \
 	mkdir -p "${TOP_DIR}"/{"${TCL_FMWK_DIR}","${TK_FMWK_DIR}"}/PrivateHeaders; fi
@@ -255,7 +252,6 @@ ifeq (${BUILD_STYLE}_${EMBEDDED_BUILD},Development_)
 	@cd "${INSTALL_ROOT}${LIBDIR}/${PRODUCT_NAME}.framework/Versions/${VERSION}" && \
 	ln -f "${PRODUCT_NAME}" "${PRODUCT_NAME}_debug"
 endif
-ifeq (${TK_X11},)
 ifeq (${EMBEDDED_BUILD},)
 # install Wish.app link in APPLICATION_INSTALL_PATH and setup 'Wish Shell' compatibility links
 	@cd "${TOP_DIR}" && if [ -n "${APP_DIR}" ]; then mkdir -p "./${APP_DIR}" && rm -rf "./${APP_DIR}/Wish.app" && \
@@ -289,7 +285,6 @@ else
 	fix_install_name MacOS/Wish Tcl && fix_install_name MacOS/Wish Tk
 ifeq (${INSTALL_BUILD},1)
 	@cd "${TOP_DIR}" && rm -rf "./${FMWK_DIR}"/T{cl,k}.framework && rmdir -p "./${FMWK_DIR}" 2>&- || true
-endif
 endif
 endif
 
