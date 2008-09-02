@@ -329,7 +329,7 @@ OdocHandler(
     }
 
     /*
-     * If we get any errors wil retrieving our parameters we just return with
+     * If we get any errors while retrieving our parameters we just return with
      * no error.
      */
 
@@ -418,7 +418,7 @@ PrintHandler(
     }
 
     /*
-     * If we get any errors wil retrieving our parameters we just return with
+     * If we get any errors while retrieving our parameters we just return with
      * no error.
      */
 
@@ -446,6 +446,10 @@ PrintHandler(
 	    Tcl_DStringFree(&pathName);
 	}
     }
+
+    /*
+     * Now handle the event by evaluating a script.
+     */
 
     if (Tcl_EvalEx(interp, Tcl_DStringValue(&command),
 	    Tcl_DStringLength(&command), TCL_EVAL_GLOBAL) != TCL_OK) {
