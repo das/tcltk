@@ -4781,8 +4781,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE82B0B65C69B00310EA2 /* Wish-Release.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CFLAGS = "-arch i386 -arch ppc $(CFLAGS)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CFLAGS = "-arch i386 -arch x86_64 -arch ppc $(CFLAGS)";
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PREBINDING = NO;
 			};
@@ -4827,8 +4827,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Wish-Debug.xcconfig */;
 			buildSettings = {
+				ARCHS = (
+					"$(NATIVE_ARCH_32_BIT)",
+					"$(NATIVE_ARCH_64_BIT)",
+				);
 				CONFIGURE_ARGS = "$(CONFIGURE_ARGS) --enable-symbols=all";
+				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 			};
 			name = DebugMemCompile;
@@ -4837,9 +4843,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Wish-Debug.xcconfig */;
 			buildSettings = {
+				ARCHS = (
+					"$(NATIVE_ARCH_32_BIT)",
+					"$(NATIVE_ARCH_64_BIT)",
+				);
+				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				GCC_GENERATE_TEST_COVERAGE_FILES = YES;
 				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(OTHER_LDFLAGS)",
 					"-lgcov",
@@ -4952,7 +4964,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Wish-Debug.xcconfig */;
 			buildSettings = {
+				ARCHS = (
+					"$(NATIVE_ARCH_32_BIT)",
+					"$(NATIVE_ARCH_64_BIT)",
+				);
+				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 			};
 			name = Debug;
@@ -4961,6 +4979,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE82B0B65C69B00310EA2 /* Wish-Release.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(NATIVE_ARCH_32_BIT)";
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PREBINDING = NO;
 			};
@@ -4970,7 +4989,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Wish-Debug.xcconfig */;
 			buildSettings = {
+				ARCHS = (
+					"$(NATIVE_ARCH_32_BIT)",
+					"$(NATIVE_ARCH_64_BIT)",
+				);
+				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 			};
 			name = DebugNoFixZL;
@@ -5148,8 +5173,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Wish-Debug.xcconfig */;
 			buildSettings = {
+				ARCHS = (
+					"$(NATIVE_ARCH_32_BIT)",
+					"$(NATIVE_ARCH_64_BIT)",
+				);
 				CONFIGURE_ARGS = "$(CONFIGURE_ARGS) --disable-corefoundation";
+				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 			};
 			name = DebugNoCF;
@@ -5195,8 +5226,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Wish-Debug.xcconfig */;
 			buildSettings = {
+				ARCHS = (
+					"$(NATIVE_ARCH_32_BIT)",
+					"$(NATIVE_ARCH_64_BIT)",
+				);
 				CONFIGURE_ARGS = "$(CONFIGURE_ARGS) --disable-threads --disable-corefoundation";
+				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 			};
 			name = DebugNoCFUnthreaded;
@@ -5242,8 +5279,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Wish-Debug.xcconfig */;
 			buildSettings = {
+				ARCHS = (
+					"$(NATIVE_ARCH_32_BIT)",
+					"$(NATIVE_ARCH_64_BIT)",
+				);
+				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				GCC_VERSION = 4.2;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 			};
 			name = "Debug gcc42";
@@ -5303,9 +5346,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Wish-Debug.xcconfig */;
 			buildSettings = {
+				ARCHS = (
+					"$(NATIVE_ARCH_32_BIT)",
+					"$(NATIVE_ARCH_64_BIT)",
+				);
 				CC = "$(DEVELOPER_DIR)/usr/bin/llvm-gcc-4.2";
+				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 			};
 			name = "Debug llvmgcc42";
@@ -5365,8 +5414,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE82B0B65C69B00310EA2 /* Wish-Release.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CFLAGS = "-arch i386 -arch ppc $(CFLAGS)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CFLAGS = "-arch i386 -arch x86_64 -arch ppc $(CFLAGS)";
 				GCC_VERSION = 4.2;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PREBINDING = NO;
@@ -5414,9 +5463,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE82B0B65C69B00310EA2 /* Wish-Release.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CC = "$(DEVELOPER_DIR)/usr/bin/llvm-gcc-4.2";
-				CFLAGS = "-arch i386 -arch ppc $(CFLAGS)";
+				CFLAGS = "-arch i386 -arch x86_64 -arch ppc $(CFLAGS)";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_OPTIMIZATION_LEVEL = 4;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
@@ -5541,8 +5590,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Wish-Debug.xcconfig */;
 			buildSettings = {
+				ARCHS = (
+					"$(NATIVE_ARCH_32_BIT)",
+					"$(NATIVE_ARCH_64_BIT)",
+				);
 				CONFIGURE_ARGS = "$(CONFIGURE_ARGS) --disable-threads";
+				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 			};
 			name = DebugUnthreaded;
@@ -5551,11 +5606,17 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Wish-Debug.xcconfig */;
 			buildSettings = {
+				ARCHS = (
+					"$(NATIVE_ARCH_32_BIT)",
+					"$(NATIVE_ARCH_64_BIT)",
+				);
+				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					PURIFY,
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 			};
 			name = DebugLeaks;
@@ -5706,8 +5767,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE82B0B65C69B00310EA2 /* Wish-Release.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CFLAGS = "-arch i386 -arch ppc $(CFLAGS)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CFLAGS = "-arch i386 -arch x86_64 -arch ppc $(CFLAGS)";
 				CPPFLAGS = "-isysroot $(SDKROOT) $(CPPFLAGS)";
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PREBINDING = NO;
