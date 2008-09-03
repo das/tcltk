@@ -456,22 +456,10 @@ GenerateUpdateEvent(Window window)
 	return result;
     }
     macWindow = TkMacOSXDrawableWindow(window);
-    TK_IF_MAC_OS_X_API (5, HIWindowCopyShape,
-	ChkErr(HIWindowCopyShape, macWindow, kWindowUpdateRgn,
-		kHICoordSpaceWindow, &rgn);
-	dx = -winPtr->wmInfoPtr->xInParent;
-	dy = -winPtr->wmInfoPtr->yInParent;
-    ) TK_ELSE_MAC_OS_X (5,
-	Rect bounds;
-
-	TkMacOSXCheckTmpQdRgnEmpty();
-	ChkErr(GetWindowRegion, macWindow, kWindowUpdateRgn, tkMacOSXtmpQdRgn);
-	rgn = HIShapeCreateWithQDRgn(tkMacOSXtmpQdRgn);
-	SetEmptyRgn(tkMacOSXtmpQdRgn);
-	ChkErr(GetWindowBounds, macWindow, kWindowContentRgn, &bounds);
-	dx = -bounds.left;
-	dy = -bounds.top;
-    ) TK_ENDIF
+    ChkErr(HIWindowCopyShape, macWindow, kWindowUpdateRgn,
+	    kHICoordSpaceWindow, &rgn);
+    dx = -winPtr->wmInfoPtr->xInParent;
+    dy = -winPtr->wmInfoPtr->yInParent;
     updateRgn = HIShapeCreateMutableCopy(rgn);
     CFRelease(rgn);
     ChkErr(HIShapeOffset, updateRgn, dx, dy);
@@ -531,11 +519,9 @@ GenerateUpdates(
     if (!CGRectIntersectsRect(bounds, *updateBounds)) {
 	return 0;
     }
-    TK_IF_MAC_OS_X_API (4, HIShapeIntersectsRect,
-	if (!HIShapeIntersectsRect(updateRgn, &bounds)) {
-	    return 0;
-	}
-    ) TK_ENDIF
+    if (!HIShapeIntersectsRect(updateRgn, &bounds)) {
+	return 0;
+    }
 
     /*
      * Compute the bounding box of the area that the damage occured in.

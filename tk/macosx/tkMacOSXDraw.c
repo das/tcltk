@@ -993,10 +993,9 @@ XDrawArc(
 		macWin->xOff + x + o,
 		macWin->yOff + y + o,
 		width, height);
-	TK_IF_MAC_OS_X_API_COND (4, CGContextStrokeEllipseInRect,
-		angle1 == 0 && angle2 == 23040,
+	if (angle1 == 0 && angle2 == 23040) {
 	    CGContextStrokeEllipseInRect(dc.context, rect);
-	) TK_ELSE (
+	} else {
 	    CGMutablePathRef p = CGPathCreateMutable();
 	    CGAffineTransform t = CGAffineTransformIdentity;
 	    CGPoint c = CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect));
@@ -1011,7 +1010,7 @@ XDrawArc(
 	    CGContextAddPath(dc.context, p);
 	    CGPathRelease(p);
 	    CGContextStrokePath(dc.context);
-	) TK_ENDIF
+	}
     } else {
 	Rect theRect;
 	short start, extent;
@@ -1084,10 +1083,9 @@ XDrawArcs(
 		    macWin->yOff + arcPtr->y + o,
 		    arcPtr->width, arcPtr->height);
 
-	    TK_IF_MAC_OS_X_API_COND (4, CGContextStrokeEllipseInRect,
-		    arcPtr->angle1 == 0 && arcPtr->angle2 == 23040,
+	    if (arcPtr->angle1 == 0 && arcPtr->angle2 == 23040) {
 		CGContextStrokeEllipseInRect(dc.context, rect);
-	    ) TK_ELSE (
+	    } else {
 		CGMutablePathRef p = CGPathCreateMutable();
 		CGAffineTransform t = CGAffineTransformIdentity;
 		CGPoint c = CGPointMake(CGRectGetMidX(rect),
@@ -1106,7 +1104,7 @@ XDrawArcs(
 		CGContextAddPath(dc.context, p);
 		CGPathRelease(p);
 		CGContextStrokePath(dc.context);
-	    ) TK_ENDIF
+	    }
 	}
     } else {
 	Rect theRect;
@@ -1179,10 +1177,9 @@ XFillArc(
 		macWin->yOff + y + o,
 		width - u, height - u);
 
-	TK_IF_MAC_OS_X_API_COND (4, CGContextFillEllipseInRect,
-		angle1 == 0 && angle2 == 23040,
+	if (angle1 == 0 && angle2 == 23040) {
 	    CGContextFillEllipseInRect(dc.context, rect);
-	) TK_ELSE (
+	} else {
 	    CGMutablePathRef p = CGPathCreateMutable();
 	    CGAffineTransform t = CGAffineTransformIdentity;
 	    CGPoint c = CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect));
@@ -1201,7 +1198,7 @@ XFillArc(
 	    CGContextAddPath(dc.context, p);
 	    CGPathRelease(p);
 	    CGContextFillPath(dc.context);
-	) TK_ENDIF
+	}
     } else {
 	Rect theRect;
 	short start, extent;
@@ -1300,10 +1297,9 @@ XFillArcs(
 		    macWin->xOff + arcPtr->x + o,
 		    macWin->yOff + arcPtr->y + o,
 		    arcPtr->width - u, arcPtr->height - u);
-	    TK_IF_MAC_OS_X_API_COND (4, CGContextFillEllipseInRect,
-		    arcPtr->angle1 == 0 && arcPtr->angle2 == 23040,
+	    if (arcPtr->angle1 == 0 && arcPtr->angle2 == 23040) {
 		CGContextFillEllipseInRect(dc.context, rect);
-	    ) TK_ELSE (
+	    } else {
 		CGMutablePathRef p = CGPathCreateMutable();
 		CGAffineTransform t = CGAffineTransformIdentity;
 		CGPoint c = CGPointMake(CGRectGetMidX(rect),
@@ -1326,7 +1322,7 @@ XFillArcs(
 		CGContextAddPath(dc.context, p);
 		CGPathRelease(p);
 		CGContextFillPath(dc.context);
-	    ) TK_ENDIF
+	    }
 	}
     } else {
 	Rect theRect;
@@ -1596,14 +1592,8 @@ TkMacOSXSetupDrawingContext(
     }
     if (dc.context) {
 	if (!dc.port) {
-	    CGRect r;
+	    CGRect r = CGContextGetClipBoundingBox(dc.context);
 
-	    TK_IF_MAC_OS_X_API (3, CGContextGetClipBoundingBox,
-		r = CGContextGetClipBoundingBox(dc.context);
-	    ) TK_ELSE_MAC_OS_X (3,
-		r.origin = CGPointZero;
-		r.size = macDraw->size;
-	    ) TK_ENDIF
 	    SetRect(&dc.portBounds, r.origin.x + macDraw->xOff,
 		    r.origin.y + macDraw->yOff,
 		    r.origin.x + r.size.width + macDraw->xOff,

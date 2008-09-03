@@ -84,31 +84,21 @@ ComputeIncDecParameters(int height, int *width)
 {
     ThemeButtonKind kind;
 
-    TK_IF_HI_TOOLBOX (3,
-	if (height < 11 || height > 28) {
-	    *width = 0;
-	    kind = (ThemeButtonKind) 0;
-	} else {
-	    if (height >= 21) {
-		*width = 13;
-		kind = kThemeIncDecButton;
-	    } else if (height >= 18) {
-		*width = 12;
-		kind = kThemeIncDecButtonSmall;
-	    } else {
-		*width = 11;
-		kind = kThemeIncDecButtonMini;
-	    }
-	}
-    ) TK_ELSE_HI_TOOLBOX (3,
-	if (height < 21 || height > 28) {
-	    *width = 0;
-	    kind = (ThemeButtonKind) 0;
-	} else {
+    if (height < 11 || height > 28) {
+	*width = 0;
+	kind = (ThemeButtonKind) 0;
+    } else {
+	if (height >= 21) {
 	    *width = 13;
 	    kind = kThemeIncDecButton;
+	} else if (height >= 18) {
+	    *width = 12;
+	    kind = kThemeIncDecButtonSmall;
+	} else {
+	    *width = 11;
+	    kind = kThemeIncDecButtonMini;
 	}
-    ) TK_ENDIF
+    }
 
     return kind;
 }

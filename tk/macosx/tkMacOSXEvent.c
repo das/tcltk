@@ -41,15 +41,7 @@ TkMacOSXFlushWindows(void)
     WindowRef wRef = GetWindowList();
 
     while (wRef) {
-	TK_IF_MAC_OS_X_API (3, HIWindowFlush,
-	    ChkErr(HIWindowFlush, wRef);
-	) TK_ELSE_MAC_OS_X (3,
-	    CGrafPtr portPtr = GetWindowPort(wRef);
-
-	    if (QDIsPortBuffered(portPtr)) {
-		QDFlushPortBuffer(portPtr, NULL);
-	    }
-	) TK_ENDIF
+	ChkErr(HIWindowFlush, wRef);
 	wRef = GetNextWindow(wRef);
     }
 }
