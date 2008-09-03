@@ -226,6 +226,7 @@ MODULE_SCOPE void TkMacOSXBringWindowForward(WindowRef wRef);
 MODULE_SCOPE WindowRef TkMacOSXDrawableWindow(Drawable drawable);
 MODULE_SCOPE void TkMacOSXWinCGBounds(TkWindow *winPtr, CGRect *bounds);
 MODULE_SCOPE HIShapeRef TkMacOSXGetClipRgn(Drawable drawable);
+MODULE_SCOPE CGImageRef TkMacOSXCreateCGImageWithDrawable(Drawable drawable);
 MODULE_SCOPE Tcl_Obj* TkMacOSXGetStringObjFromCFString(CFStringRef str);
 
 #endif /* _TKMACPRIV */

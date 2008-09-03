@@ -952,32 +952,71 @@ ImageGetPixel(
     int x,
     int y)
 {
-    CGrafPtr destPort, savePort;
-    Boolean portChanged;
-    RGBColor cPix;
-    unsigned long r, g, b, c;
+    unsigned char r = 0, g = 0, b = 0;
 
-    destPort = (CGrafPtr) image->data;
-    portChanged = QDSwapPort(destPort, &savePort);
-    GetCPixel(x, y, &cPix);
     if (image->obdata) {
+	CGrafPtr destPort, savePort;
+	Boolean portChanged;
+	RGBColor cPix;
+
+	destPort = (CGrafPtr) image->data;
+	portChanged = QDSwapPort(destPort, &savePort);
+	GetCPixel(x, y, &cPix);
+
 	/*
 	 * Image from XGetImage, 16 bit color values.
 	 */
 
-	r = (cPix . red) >> 8;
-	g = (cPix . green) >> 8;
-	b = (cPix . blue) >> 8;
+	r = ((cPix.red)   >> 8) & 0xff;
+	g = ((cPix.green) >> 8) & 0xff;
+	b = ((cPix.blue)  >> 8) & 0xff;
+	if (portChanged) {
+	    QDSwapPort(savePort, NULL);
+	}
     } else {
-	r = cPix . red;
-	g = cPix . green;
-	b = cPix . blue;
+	unsigned char *srcPtr = (unsigned char*) image->data
+		+ (y * image->bytes_per_line)
+		+ (((image->xoffset + x) * image->bits_per_pixel) / NBBY);
+
+	switch (image->bits_per_pixel) {
+	    case 32:
+		r = (*((unsigned long*) srcPtr) >> 16) & 0xff;
+		g = (*((unsigned long*) srcPtr) >>  8) & 0xff;
+		b = (*((unsigned long*) srcPtr)      ) & 0xff;
+		/*if (image->byte_order == LSBFirst) {
+		    r = srcPtr[2]; g = srcPtr[1]; b = srcPtr[0]);
+		} else {
+		    r = srcPtr[0]; g = srcPtr[1]; b = srcPtr[2]);
+		}*/
+		break;
+/*
+	    case 16:
+		r = (*((unsigned short*) srcPtr) >> 7) & 0xf8;
+		g = (*((unsigned short*) srcPtr) >> 2) & 0xf8;
+		b = (*((unsigned short*) srcPtr) << 3) & 0xf8;
+		break;
+	    case 8:
+		r = (*srcPtr << 2) & 0xc0;
+		g = (*srcPtr << 4) & 0xc0;
+		b = (*srcPtr << 6) & 0xc0;
+		r |= r >> 2 | r >> 4 | r >> 6;
+		g |= g >> 2 | g >> 4 | g >> 6;
+		b |= b >> 2 | b >> 4 | b >> 6;
+		break;
+	    case 4: {
+		unsigned char c = (x % 2) ? (*srcPtr) : ((*srcPtr) >> 4);
+		r = (c & 0x04) ? 0xff : 0;
+		g = (c & 0x02) ? 0xff : 0;
+		b = (c & 0x01) ? 0xff : 0;
+		break;
+		}
+*/
+	    case 1:
+		r = g = b = ((*srcPtr) & (0x80 >> (x % 8))) ? 0xff : 0;
+		break;
+	}
     }
-    c = (r<<16)|(g<<8)|(b);
-    if (portChanged) {
-	QDSwapPort(savePort, NULL);
-    }
-    return c;
+    return (PIXEL_MAGIC << 24) | (r << 16) | (g << 8) | b;
 }
 
 /*
