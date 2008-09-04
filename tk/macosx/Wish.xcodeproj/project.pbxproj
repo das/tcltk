@@ -18,6 +18,7 @@
 		F93599C20DF1F78300E04F67 /* tclOOMethod.c in Sources */ = {isa = PBXBuildFile; fileRef = F93599C10DF1F78300E04F67 /* tclOOMethod.c */; };
 		F93599C40DF1F78800E04F67 /* tclOOStubInit.c in Sources */ = {isa = PBXBuildFile; fileRef = F93599C30DF1F78800E04F67 /* tclOOStubInit.c */; };
 		F93599C60DF1F78D00E04F67 /* tclOOStubLib.c in Sources */ = {isa = PBXBuildFile; fileRef = F93599C50DF1F78D00E04F67 /* tclOOStubLib.c */; };
+		F94523A20E6FC2AC00C1D987 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F94523A10E6FC2AC00C1D987 /* Cocoa.framework */; };
 		F95D77EA0DFD820D00A8BF6F /* tclIORTrans.c in Sources */ = {isa = PBXBuildFile; fileRef = F95D77E90DFD820D00A8BF6F /* tclIORTrans.c */; };
 		F966BDCF08F27A3F005CB29B /* tk3d.c in Sources */ = {isa = PBXBuildFile; fileRef = F966BAAC08F27A39005CB29B /* tk3d.c */; };
 		F966BDD108F27A3F005CB29B /* tkArgv.c in Sources */ = {isa = PBXBuildFile; fileRef = F966BAAE08F27A39005CB29B /* tkArgv.c */; };
@@ -655,6 +656,7 @@
 		F936FCDA0CCD984600716967 /* ttknote.tcl */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = ttknote.tcl; sourceTree = "<group>"; };
 		F936FCDB0CCD984600716967 /* combo.tcl */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = combo.tcl; sourceTree = "<group>"; };
 		F93E5EFD09CF8711008FA367 /* tkMacOSXFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tkMacOSXFont.h; sourceTree = "<group>"; };
+		F94523A10E6FC2AC00C1D987 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		F95D77E90DFD820D00A8BF6F /* tclIORTrans.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tclIORTrans.c; sourceTree = "<group>"; };
 		F95FAFF90B34F1130072E431 /* macOSXLoad.test */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = macOSXLoad.test; sourceTree = "<group>"; };
 		F962F7C60DADC26200648DB8 /* vsapi.test */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = vsapi.test; sourceTree = "<group>"; };
@@ -2117,6 +2119,7 @@
 				F966C07508F2820D005CB29B /* CoreFoundation.framework in Frameworks */,
 				F966C07708F2821B005CB29B /* Carbon.framework in Frameworks */,
 				F966C07908F28233005CB29B /* IOKit.framework in Frameworks */,
+				F94523A20E6FC2AC00C1D987 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2900,6 +2903,7 @@
 			children = (
 				F966C07408F2820D005CB29B /* CoreFoundation.framework */,
 				F966C07608F2821B005CB29B /* Carbon.framework */,
+				F94523A10E6FC2AC00C1D987 /* Cocoa.framework */,
 				F966C07808F28233005CB29B /* IOKit.framework */,
 				F9FD32140CC1AF170073837D /* libX11.dylib */,
 				F9FD32150CC1AF170073837D /* libXext.dylib */,
@@ -5257,6 +5261,7 @@
 				CONFIGURE_ARGS = "tcl_cv_cc_visibility_hidden=no $(CONFIGURE_ARGS)";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"__private_extern__=extern",
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",

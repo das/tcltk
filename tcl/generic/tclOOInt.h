@@ -15,6 +15,8 @@
 #include <tclInt.h>
 #include "tclOO.h"
 
+#define Class TclClass
+
 /*
  * Forward declarations.
  */
