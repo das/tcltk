@@ -63,7 +63,6 @@ typedef struct MacMenuButton {
     MenuButtonControlParams params;
     ControlTitleParams titleParams;
     ControlButtonContentInfo bevelButtonContent;
-    OpenCPicParams picParams;
 } MacMenuButton;
 
 /*
@@ -160,8 +159,6 @@ TkpDisplayMenuButton(
     TkWindow *winPtr;
     Pixmap pixmap;
     MacMenuButton *mbPtr = (MacMenuButton *) butPtr;
-    CGrafPtr destPort, savePort;
-    Boolean portChanged = false;
     int hasImageOrBitmap = 0, width, height;
     OSStatus err;
     ControlButtonGraphicAlignment theAlignment;
@@ -260,34 +257,8 @@ TkpDisplayMenuButton(
 	}
     }
     if (hasImageOrBitmap) {
-	if (tkMacOSXUseCGDrawing) {
-	    pixmap = Tk_GetPixmap(butPtr->display, pixmap, width, height,
-		    butPtr->image ? 0 : 1);
-	} else {
-	    destPort = TkMacOSXGetDrawablePort(Tk_WindowId(tkwin));
-	    portChanged = QDSwapPort(destPort, &savePort);
-	    mbPtr->picParams.version = -2;
-	    mbPtr->picParams.hRes = 0x00480000;
-	    mbPtr->picParams.vRes = 0x00480000;
-	    mbPtr->picParams.srcRect.top = 0;
-	    mbPtr->picParams.srcRect.left = 0;
-	    mbPtr->picParams.srcRect.bottom = height;
-	    mbPtr->picParams.srcRect.right = width;
-	    mbPtr->picParams.reserved1 = 0;
-	    mbPtr->picParams.reserved2 = 0;
-	    mbPtr->bevelButtonContent.contentType = kControlContentPictHandle;
-	    mbPtr->bevelButtonContent.u.picture = OpenCPicture(&mbPtr->picParams);
-	    if (!mbPtr->bevelButtonContent.u.picture) {
-		TkMacOSXDbgMsg("OpenCPicture failed");
-	    }
-	    tkPictureIsOpen = 1;
-
-	    /*
-	     * TO DO - There is one case where XCopyPlane calls CopyDeepMask,
-	     * which does not get recorded in the picture. So the bitmap code
-	     * will fail in that case.
-	     */
-	}
+	pixmap = Tk_GetPixmap(butPtr->display, pixmap, width, height,
+		butPtr->image ? 0 : 1);
 	if (butPtr->image != NULL) {
 	    Tk_RedrawImage(butPtr->image, 0, 0, width, height, pixmap, 0, 0);
 	} else {
@@ -303,22 +274,11 @@ TkpDisplayMenuButton(
 	    XCopyPlane(butPtr->display, butPtr->bitmap, pixmap, gc, 0, 0,
 		    width, height, 0, 0, 1);
 	}
-#if MAC_OS_X_VERSION_MAX_ALLOWED > 1020
-	if (tkMacOSXUseCGDrawing) {
-	    mbPtr->bevelButtonContent.contentType = kControlContentCGImageRef;
-	    mbPtr->bevelButtonContent.u.imageRef = 
-		    TkMacOSXCreateCGImageWithDrawable(pixmap);
-	    Tk_FreePixmap(butPtr->display, pixmap);
-	    pixmap = None;
-	} else
-#endif
-	{
-	    ClosePicture();
-	    tkPictureIsOpen = 0;
-	    if (portChanged) {
-		QDSwapPort(savePort, NULL);
-	    }
-	}
+	mbPtr->bevelButtonContent.contentType = kControlContentCGImageRef;
+	mbPtr->bevelButtonContent.u.imageRef = 
+		TkMacOSXCreateCGImageWithDrawable(pixmap);
+	Tk_FreePixmap(butPtr->display, pixmap);
+	pixmap = None;
 	ChkErr(SetControlData, mbPtr->control, kControlButtonPart,
 		kControlBevelButtonContentTag,
 		sizeof(ControlButtonContentInfo),
@@ -394,15 +354,9 @@ TkpDisplayMenuButton(
 	Draw1Control(mbPtr->userPane);
     }
     if (hasImageOrBitmap) {
-#if MAC_OS_X_VERSION_MAX_ALLOWED > 1020
 	if (mbPtr->bevelButtonContent.contentType ==
 		kControlContentCGImageRef) {
 	    CFRelease(mbPtr->bevelButtonContent.u.imageRef);
-	} else
-#endif
-	if (mbPtr->bevelButtonContent.contentType ==
-		kControlContentPictHandle) {
-	    KillPicture(mbPtr->bevelButtonContent.u.picture);
 	}
     }
 }

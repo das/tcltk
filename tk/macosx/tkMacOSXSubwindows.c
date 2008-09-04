@@ -1397,16 +1397,6 @@ Tk_GetPixmap(
     macPix->grafPtr = NULL;
     macPix->context = NULL;
     macPix->size = CGSizeMake(width, height);
-    if (!tkMacOSXUseCGDrawing) {
-	Rect bounds = {0, 0, height, width};
-
-	ChkErr(NewGWorld, &macPix->grafPtr, depth == 1 ? 1 : 0, &bounds, NULL,
-		NULL, 0
-#ifdef __LITTLE_ENDIAN__
-		| kNativeEndianPixMap
-#endif
-		);
-    }
 
     return (Pixmap) macPix;
 }
@@ -1435,9 +1425,6 @@ Tk_FreePixmap(
     MacDrawable *macPix = (MacDrawable *) pixmap;
 
     display->request++;
-    if (macPix->grafPtr) {
-	DisposeGWorld(macPix->grafPtr);
-    }
     if (macPix->context) {
 	char *data = CGBitmapContextGetData(macPix->context);
 

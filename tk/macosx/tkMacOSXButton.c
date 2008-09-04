@@ -87,7 +87,6 @@ typedef struct {
      * beveled buttons, i.e. buttons with images.
      */
     ControlButtonContentInfo bevelButtonContent;
-    OpenCPicParams picParams;
 } MacButton;
 
 /*
@@ -1039,17 +1038,10 @@ TkMacOSXDrawControl(
     }
 
     if (mbPtr->params.isBevel) {
-#if MAC_OS_X_VERSION_MAX_ALLOWED > 1020
 	if (mbPtr->bevelButtonContent.contentType ==
 		kControlContentCGImageRef &&
 		mbPtr->bevelButtonContent.u.imageRef) {
 	    CFRelease(mbPtr->bevelButtonContent.u.imageRef);
-	} else
-#endif
-	if (mbPtr->bevelButtonContent.contentType ==
-		kControlContentPictHandle &&
-		mbPtr->bevelButtonContent.u.picture) {
-	    KillPicture(mbPtr->bevelButtonContent.u.picture);
 	}
     }
 }
@@ -1084,8 +1076,6 @@ SetupBevelButton(
     TkButton *butPtr = (TkButton *) mbPtr;
     int height, width;
     ControlButtonGraphicAlignment theAlignment;
-    CGrafPtr savePort;
-    Boolean portChanged = false;
 
     if (butPtr->image != None) {
 	Tk_SizeOfImage(butPtr->image, &width, &height);
@@ -1100,36 +1090,8 @@ SetupBevelButton(
 	height = butPtr->height;
     }
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED > 1020
-    if (tkMacOSXUseCGDrawing) {
-	pixmap = Tk_GetPixmap(butPtr->display, pixmap, width, height,
-		butPtr->image ? 0 : 1);
-    } else
-#endif
-    {
-	portChanged = QDSwapPort(destPort, &savePort);
-	mbPtr->picParams.version = -2;
-	mbPtr->picParams.hRes = 0x00480000;
-	mbPtr->picParams.vRes = 0x00480000;
-	mbPtr->picParams.srcRect.top = 0;
-	mbPtr->picParams.srcRect.left = 0;
-	mbPtr->picParams.srcRect.bottom = height;
-	mbPtr->picParams.srcRect.right = width;
-	mbPtr->picParams.reserved1 = 0;
-	mbPtr->picParams.reserved2 = 0;
-	mbPtr->bevelButtonContent.contentType = kControlContentPictHandle;
-	mbPtr->bevelButtonContent.u.picture = OpenCPicture(&mbPtr->picParams);
-	if (!mbPtr->bevelButtonContent.u.picture) {
-	    TkMacOSXDbgMsg("OpenCPicture failed");
-	}
-	tkPictureIsOpen = 1;
-
-	/*
-	 * TO DO - There is one case where XCopyPlane calls CopyDeepMask,
-	 * which does not get recorded in the picture. So the bitmap code
-	 * will fail in that case.
-	 */
-     }
+    pixmap = Tk_GetPixmap(butPtr->display, pixmap, width, height,
+	    butPtr->image ? 0 : 1);
 
     if (butPtr->selectImage != NULL && (butPtr->flags & SELECTED)) {
 	Tk_RedrawImage(butPtr->selectImage, 0, 0, width, height, pixmap, 0, 0);
@@ -1144,22 +1106,11 @@ SetupBevelButton(
 		height, 0, 0, 1);
     }
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED > 1020
-    if (tkMacOSXUseCGDrawing) {
-	mbPtr->bevelButtonContent.contentType = kControlContentCGImageRef;
-	mbPtr->bevelButtonContent.u.imageRef = 
-		TkMacOSXCreateCGImageWithDrawable(pixmap);
-	Tk_FreePixmap(butPtr->display, pixmap);
-	pixmap = None;
-    } else
-#endif
-    {
-	ClosePicture();
-	tkPictureIsOpen = 0;
-	if (portChanged) {
-	    QDSwapPort(savePort, NULL);
-	}
-    }
+    mbPtr->bevelButtonContent.contentType = kControlContentCGImageRef;
+    mbPtr->bevelButtonContent.u.imageRef = 
+	    TkMacOSXCreateCGImageWithDrawable(pixmap);
+    Tk_FreePixmap(butPtr->display, pixmap);
+    pixmap = None;
     ChkErr(SetControlData, controlHandle, kControlButtonPart,
 	    kControlBevelButtonContentTag,
 	    sizeof(ControlButtonContentInfo),
@@ -1464,8 +1415,7 @@ TkMacOSXComputeControlParams(
 	    } else {
 		paramsPtr->initialValue = 0;
 		paramsPtr->minValue = kControlBehaviorOffsetContents |
-			(tkMacOSXUseCGDrawing ? kControlContentCGImageRef :
-			kControlContentPictHandle);
+			kControlContentCGImageRef;
 		paramsPtr->maxValue = 1;
 		if (butPtr->borderWidth <= 2) {
 		    paramsPtr->procID = kControlBevelButtonSmallBevelProc;
@@ -1487,8 +1437,7 @@ TkMacOSXComputeControlParams(
 	    } else {
 		paramsPtr->initialValue = 0;
 		paramsPtr->minValue = kControlBehaviorOffsetContents |
-			kControlBehaviorSticky | (tkMacOSXUseCGDrawing ?
-			kControlContentCGImageRef : kControlContentPictHandle);
+			kControlBehaviorSticky | kControlContentCGImageRef;
 		paramsPtr->maxValue = MAX_VALUE;
 		if (butPtr->borderWidth <= 2) {
 		    paramsPtr->procID = kControlBevelButtonSmallBevelProc;
@@ -1510,8 +1459,7 @@ TkMacOSXComputeControlParams(
 	    } else {
 		paramsPtr->initialValue = 0;
 		paramsPtr->minValue = kControlBehaviorOffsetContents |
-			kControlBehaviorSticky | (tkMacOSXUseCGDrawing ?
-			kControlContentCGImageRef : kControlContentPictHandle);
+			kControlBehaviorSticky | kControlContentCGImageRef;
 		paramsPtr->maxValue = MAX_VALUE;
 		if (butPtr->borderWidth <= 2) {
 		    paramsPtr->procID = kControlBevelButtonSmallBevelProc;

@@ -1191,7 +1191,7 @@ TkpDrawCharsInContext(
     Tcl_DString runString;
 #endif
 
-    if (!TkMacOSXSetupDrawingContext(drawable, gc, tkMacOSXUseCGDrawing,
+    if (!TkMacOSXSetupDrawingContext(drawable, gc, 1,
 	    &drawingContext)) {
 	return;
     }

@@ -39,8 +39,6 @@
 
 RgnHandle tkMacOSXtmpQdRgn = NULL;
 
-int tkMacOSXUseCGDrawing = 1;
-
 int tkPictureIsOpen;
 
 static PixPatHandle penPat = NULL, tmpPixPat = NULL;
@@ -94,11 +92,6 @@ TkMacOSXInitCGDrawing(
 	if (Tcl_CreateNamespace(interp, "::tk::mac", NULL, NULL) == NULL) {
 	    Tcl_ResetResult(interp);
 	}
-	if (Tcl_LinkVar(interp, "::tk::mac::useCGDrawing",
-		(char *) &tkMacOSXUseCGDrawing, TCL_LINK_BOOLEAN) != TCL_OK) {
-	    Tcl_ResetResult(interp);
-	}
-	tkMacOSXUseCGDrawing = enable;
 
 	if (Tcl_LinkVar(interp, "::tk::mac::CGAntialiasLimit",
 		(char *) &cgAntiAliasLimit, TCL_LINK_INT) != TCL_OK) {
@@ -172,7 +165,7 @@ XCopyArea(
 	return;
     }
     if ((srcDraw->flags & TK_IS_PIXMAP) && !srcDraw->grafPtr) {
-	if (!TkMacOSXSetupDrawingContext(dst, gc, tkMacOSXUseCGDrawing, &dc)) {
+	if (!TkMacOSXSetupDrawingContext(dst, gc, 1, &dc)) {
 	    return;
 	}
 	if (dc.context) {
@@ -279,7 +272,7 @@ XCopyPlane(
 	Tcl_Panic("Unexpected plane specified for XCopyPlane");
     }
     if ((srcDraw->flags & TK_IS_PIXMAP) && !srcDraw->grafPtr) {
-	if (!TkMacOSXSetupDrawingContext(dst, gc, tkMacOSXUseCGDrawing, &dc)) {
+	if (!TkMacOSXSetupDrawingContext(dst, gc, 1, &dc)) {
 	    return;
 	}
 	if (dc.context) {
@@ -411,7 +404,7 @@ TkPutImage(
     MacDrawable *dstDraw = (MacDrawable *) d;
 
     display->request++;
-    if (!TkMacOSXSetupDrawingContext(d, gc, tkMacOSXUseCGDrawing, &dc)) {
+    if (!TkMacOSXSetupDrawingContext(d, gc, 1, &dc)) {
 	return;
     }
     if (dc.context) {
@@ -914,7 +907,7 @@ XDrawLines(
     }
 
     display->request++;
-    if (!TkMacOSXSetupDrawingContext(d, gc, tkMacOSXUseCGDrawing, &dc)) {
+    if (!TkMacOSXSetupDrawingContext(d, gc, 1, &dc)) {
 	return;
     }
     if (dc.context) {
@@ -938,22 +931,7 @@ XDrawLines(
 	}
 	CGContextStrokePath(dc.context);
     } else {
-	int o = -lw/2;
-
-	/* This is broken for fat lines, it is not possible to correctly
-	 * imitate X11 drawing of oblique fat lines with QD line drawing,
-	 * we should draw a filled polygon instead. */
-
-	MoveTo((short) (macWin->xOff + points[0].x + o),
-	       (short) (macWin->yOff + points[0].y + o));
-	for (i = 1; i < npoints; i++) {
-	    if (mode == CoordModeOrigin) {
-		LineTo((short) (macWin->xOff + points[i].x + o),
-		       (short) (macWin->yOff + points[i].y + o));
-	    } else {
-		Line((short) points[i].x, (short) points[i].y);
-	    }
-	}
+	TkMacOSXDbgMsg("Ignored QD drawing");
     }
     TkMacOSXRestoreDrawingContext(&dc);
 }
@@ -987,7 +965,7 @@ XDrawSegments(
     int i, lw = gc->line_width;
 
     display->request++;
-    if (!TkMacOSXSetupDrawingContext(d, gc, tkMacOSXUseCGDrawing, &dc)) {
+    if (!TkMacOSXSetupDrawingContext(d, gc, 1, &dc)) {
 	return;
     }
     if (dc.context) {
@@ -1004,18 +982,7 @@ XDrawSegments(
 	    CGContextStrokePath(dc.context);
 	}
     } else {
-	int o = -lw/2;
-
-	/* This is broken for fat lines, it is not possible to correctly
-	 * imitate X11 drawing of oblique fat lines with QD line drawing,
-	 * we should draw a filled polygon instead. */
-
-	for (i = 0; i < nsegments; i++) {
-	    MoveTo((short) (macWin->xOff + segments[i].x1 + o),
-		   (short) (macWin->yOff + segments[i].y1 + o));
-	    LineTo((short) (macWin->xOff + segments[i].x2 + o),
-		   (short) (macWin->yOff + segments[i].y2 + o));
-	}
+	TkMacOSXDbgMsg("Ignored QD drawing");
     }
     TkMacOSXRestoreDrawingContext(&dc);
 }
@@ -1051,7 +1018,7 @@ XFillPolygon(
     int i;
 
     display->request++;
-    if (!TkMacOSXSetupDrawingContext(d, gc, tkMacOSXUseCGDrawing, &dc)) {
+    if (!TkMacOSXSetupDrawingContext(d, gc, 1, &dc)) {
 	return;
     }
     if (dc.context) {
@@ -1075,22 +1042,7 @@ XFillPolygon(
 	}
 	CGContextEOFillPath(dc.context);
     } else {
-	PolyHandle polygon;
-
-	polygon = OpenPoly();
-	MoveTo((short) (macWin->xOff + points[0].x),
-	       (short) (macWin->yOff + points[0].y));
-	for (i = 1; i < npoints; i++) {
-	    if (mode == CoordModeOrigin) {
-		LineTo((short) (macWin->xOff + points[i].x),
-		       (short) (macWin->yOff + points[i].y));
-	    } else {
-		Line((short) points[i].x, (short) points[i].y);
-	    }
-	}
-	ClosePoly();
-	FillCPoly(polygon, dc.penPat);
-	KillPoly(polygon);
+	TkMacOSXDbgMsg("Ignored QD drawing");
     }
     TkMacOSXRestoreDrawingContext(&dc);
 }
@@ -1129,7 +1081,7 @@ XDrawRectangle(
     }
 
     display->request++;
-    if (!TkMacOSXSetupDrawingContext(d, gc, tkMacOSXUseCGDrawing, &dc)) {
+    if (!TkMacOSXSetupDrawingContext(d, gc, 1, &dc)) {
 	return;
     }
     if (dc.context) {
@@ -1142,14 +1094,7 @@ XDrawRectangle(
 		width, height);
 	CGContextStrokeRect(dc.context, rect);
     } else {
-	Rect theRect;
-	int o = -lw/2;
-
-	theRect.left =	 (short) (macWin->xOff + x + o);
-	theRect.top =	 (short) (macWin->yOff + y + o);
-	theRect.right =	 (short) (theRect.left + width	+ lw);
-	theRect.bottom = (short) (theRect.top  + height + lw);
-	FrameRect(&theRect);
+	TkMacOSXDbgMsg("Ignored QD drawing");
     }
     TkMacOSXRestoreDrawingContext(&dc);
 }
@@ -1195,7 +1140,7 @@ XDrawRectangles(
     int i, lw = gc->line_width;
 
     display->request++;
-    if (!TkMacOSXSetupDrawingContext(d, gc, tkMacOSXUseCGDrawing, &dc)) {
+    if (!TkMacOSXSetupDrawingContext(d, gc, 1, &dc)) {
 	return;
     }
     if (dc.context) {
@@ -1213,16 +1158,7 @@ XDrawRectangles(
 	    CGContextStrokeRect(dc.context, rect);
 	}
     } else {
-	Rect theRect;
-	int o = -lw/2;
-
-	for (i = 0, rectPtr = rectArr; i < nRects;i++, rectPtr++) {
-	    theRect.left =   (short) (macWin->xOff + rectPtr->x + o);
-	    theRect.top =    (short) (macWin->yOff + rectPtr->y + o);
-	    theRect.right =  (short) (theRect.left + rectPtr->width  + lw);
-	    theRect.bottom = (short) (theRect.top  + rectPtr->height + lw);
-	    FrameRect(&theRect);
-	}
+	TkMacOSXDbgMsg("Ignored QD drawing");
     }
     TkMacOSXRestoreDrawingContext(&dc);
 }
@@ -1258,7 +1194,7 @@ XFillRectangles(
     int i;
 
     display->request++;
-    if (!TkMacOSXSetupDrawingContext(d, gc, tkMacOSXUseCGDrawing, &dc)) {
+    if (!TkMacOSXSetupDrawingContext(d, gc, 1, &dc)) {
 	return;
     }
     if (dc.context) {
@@ -1275,15 +1211,7 @@ XFillRectangles(
 	    CGContextFillRect(dc.context, rect);
 	}
     } else {
-	Rect theRect;
-
-	for (i = 0, rectPtr = rectangles; i < n_rectangles; i++, rectPtr++) {
-	    theRect.left =   (short) (macWin->xOff + rectPtr->x);
-	    theRect.top =    (short) (macWin->yOff + rectPtr->y);
-	    theRect.right =  (short) (theRect.left + rectPtr->width);
-	    theRect.bottom = (short) (theRect.top  + rectPtr->height);
-	    FillCRect(&theRect, dc.penPat);
-	}
+	TkMacOSXDbgMsg("Ignored QD drawing");
     }
     TkMacOSXRestoreDrawingContext(&dc);
 }
@@ -1324,7 +1252,7 @@ XDrawArc(
     }
 
     display->request++;
-    if (!TkMacOSXSetupDrawingContext(d, gc, tkMacOSXUseCGDrawing, &dc)) {
+    if (!TkMacOSXSetupDrawingContext(d, gc, 1, &dc)) {
 	return;
     }
     if (dc.context) {
@@ -1354,17 +1282,7 @@ XDrawArc(
 	    CGContextStrokePath(dc.context);
 	}
     } else {
-	Rect theRect;
-	short start, extent;
-	int o = -lw/2;
-
-	theRect.left   = (short) (macWin->xOff + x + o);
-	theRect.top    = (short) (macWin->yOff + y + o);
-	theRect.right  = (short) (theRect.left + width + lw);
-	theRect.bottom = (short) (theRect.top + height + lw);
-	start  = (short) (90 - (angle1/64));
-	extent = (short) (-(angle2/64));
-	FrameArc(&theRect, start, extent);
+	TkMacOSXDbgMsg("Ignored QD drawing");
     }
     TkMacOSXRestoreDrawingContext(&dc);
 }
@@ -1408,7 +1326,7 @@ XDrawArcs(
     int i, lw = gc->line_width;
 
     display->request++;
-    if (!TkMacOSXSetupDrawingContext(d, gc, tkMacOSXUseCGDrawing, &dc)) {
+    if (!TkMacOSXSetupDrawingContext(d, gc, 1, &dc)) {
 	return;
     }
     if (dc.context) {
@@ -1449,19 +1367,7 @@ XDrawArcs(
 	    }
 	}
     } else {
-	Rect theRect;
-	short start, extent;
-	int o = -lw/2;
-
-	for (i = 0, arcPtr = arcArr;i < nArcs;i++, arcPtr++) {
-	    theRect.left =   (short) (macWin->xOff + arcPtr->x + o);
-	    theRect.top =    (short) (macWin->yOff + arcPtr->y + o);
-	    theRect.right =  (short) (theRect.left + arcPtr->width + lw);
-	    theRect.bottom = (short) (theRect.top + arcPtr->height + lw);
-	    start =  (short) (90 - (arcPtr->angle1/64));
-	    extent = (short) (-(arcPtr->angle2/64));
-	    FrameArc(&theRect, start, extent);
-	}
+	TkMacOSXDbgMsg("Ignored QD drawing");
     }
     TkMacOSXRestoreDrawingContext(&dc);
 }
@@ -1503,7 +1409,7 @@ XFillArc(
     }
 
     display->request++;
-    if (!TkMacOSXSetupDrawingContext(d, gc, tkMacOSXUseCGDrawing, &dc)) {
+    if (!TkMacOSXSetupDrawingContext(d, gc, 1, &dc)) {
 	return;
     }
     if (dc.context) {
@@ -1542,48 +1448,7 @@ XFillArc(
 	    CGContextFillPath(dc.context);
 	}
     } else {
-	Rect theRect;
-	short start, extent;
-	int o = -lw/2;
-	PolyHandle polygon;
-	double sin1, cos1, sin2, cos2, angle;
-	double boxWidth, boxHeight;
-	double vertex[2], center1[2], center2[2];
-
-	theRect.left =	 (short) (macWin->xOff + x + o);
-	theRect.top =	 (short) (macWin->yOff + y + o);
-	theRect.right =	 (short) (theRect.left + width + lw);
-	theRect.bottom = (short) (theRect.top + height + lw);
-	start = (short) (90 - (angle1/64));
-	extent = (short) (-(angle2/64));
-	if (gc->arc_mode == ArcChord) {
-	    boxWidth = theRect.right - theRect.left;
-	    boxHeight = theRect.bottom - theRect.top;
-	    angle = radians(-angle1/64.0);
-	    sin1 = sin(angle);
-	    cos1 = cos(angle);
-	    angle -= radians(angle2/64.0);
-	    sin2 = sin(angle);
-	    cos2 = cos(angle);
-	    vertex[0] = (theRect.left + theRect.right)/2.0;
-	    vertex[1] = (theRect.top + theRect.bottom)/2.0;
-	    center1[0] = vertex[0] + cos1*boxWidth/2.0;
-	    center1[1] = vertex[1] + sin1*boxHeight/2.0;
-	    center2[0] = vertex[0] + cos2*boxWidth/2.0;
-	    center2[1] = vertex[1] + sin2*boxHeight/2.0;
-
-	    polygon = OpenPoly();
-	    MoveTo((short) ((theRect.left + theRect.right)/2),
-		   (short) ((theRect.top + theRect.bottom)/2));
-	    LineTo((short) (center1[0] + .5), (short) (center1[1] + .5));
-	    LineTo((short) (center2[0] + .5), (short) (center2[1] + .5));
-	    ClosePoly();
-	    FillCArc(&theRect, start, extent, dc.penPat);
-	    FillCPoly(polygon, dc.penPat);
-	    KillPoly(polygon);
-	} else {
-	    FillCArc(&theRect, start, extent, dc.penPat);
-	}
+	TkMacOSXDbgMsg("Ignored QD drawing");
     }
     TkMacOSXRestoreDrawingContext(&dc);
 }
@@ -1619,7 +1484,7 @@ XFillArcs(
     int i, lw = gc->line_width;
 
     display->request++;
-    if (!TkMacOSXSetupDrawingContext(d, gc, tkMacOSXUseCGDrawing, &dc)) {
+    if (!TkMacOSXSetupDrawingContext(d, gc, 1, &dc)) {
 	return;
     }
     if (dc.context) {
@@ -1667,51 +1532,7 @@ XFillArcs(
 	    }
 	}
     } else {
-	Rect theRect;
-	short start, extent;
-	int o = -lw/2;
-	PolyHandle polygon;
-	double sin1, cos1, sin2, cos2, angle;
-	double boxWidth, boxHeight;
-	double vertex[2], center1[2], center2[2];
-
-	for (i = 0, arcPtr = arcArr;i<nArcs;i++, arcPtr++) {
-	    theRect.left =   (short) (macWin->xOff + arcPtr->x + o);
-	    theRect.top =    (short) (macWin->yOff + arcPtr->y + o);
-	    theRect.right =  (short) (theRect.left + arcPtr->width + lw);
-	    theRect.bottom = (short) (theRect.top + arcPtr->height + lw);
-	    start = (short) (90 - (arcPtr->angle1/64));
-	    extent = (short) (- (arcPtr->angle2/64));
-
-	    if (gc->arc_mode == ArcChord) {
-		boxWidth = theRect.right - theRect.left;
-		boxHeight = theRect.bottom - theRect.top;
-		angle = radians(-arcPtr->angle1/64.0);
-		sin1 = sin(angle);
-		cos1 = cos(angle);
-		angle -= radians(arcPtr->angle2/64.0);
-		sin2 = sin(angle);
-		cos2 = cos(angle);
-		vertex[0] = (theRect.left + theRect.right)/2.0;
-		vertex[1] = (theRect.top + theRect.bottom)/2.0;
-		center1[0] = vertex[0] + cos1*boxWidth/2.0;
-		center1[1] = vertex[1] + sin1*boxHeight/2.0;
-		center2[0] = vertex[0] + cos2*boxWidth/2.0;
-		center2[1] = vertex[1] + sin2*boxHeight/2.0;
-
-		polygon = OpenPoly();
-		MoveTo((short) ((theRect.left + theRect.right)/2),
-		       (short) ((theRect.top + theRect.bottom)/2));
-		LineTo((short) (center1[0] + .5), (short) (center1[1] + .5));
-		LineTo((short) (center2[0] + .5), (short) (center2[1] + .5));
-		ClosePoly();
-		FillCArc(&theRect, start, extent, dc.penPat);
-		FillCPoly(polygon, dc.penPat);
-		KillPoly(polygon);
-	    } else {
-		FillCArc(&theRect, start, extent, dc.penPat);
-	    }
-	}
+	TkMacOSXDbgMsg("Ignored QD drawing");
     }
     TkMacOSXRestoreDrawingContext(&dc);
 }

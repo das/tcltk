@@ -156,7 +156,6 @@ typedef struct TkMacOSXDrawingContext {
  */
 
 MODULE_SCOPE RgnHandle tkMacOSXtmpQdRgn;
-MODULE_SCOPE int tkMacOSXUseCGDrawing;
 
 /*
  * Prototypes for TkMacOSXRegion.c.
