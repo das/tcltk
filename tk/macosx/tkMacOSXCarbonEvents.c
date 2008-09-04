@@ -571,12 +571,12 @@ TkMacOSXReceiveAndDispatchEvent(void)
 	TkMacOSXStopTclEventLoopCarbonTimer();
 	if (err != noErr && err != eventLoopTimedOutErr
 		&& err != eventNotHandledErr) {
-	    TkMacOSXDbgMsg("SendEventToEventTarget(%s) failed: %ld",
-		    TkMacOSXCarbonEventToAscii(eventRef), err);
+	    TkMacOSXDbgMsg("SendEventToEventTarget(%s) failed: %d",
+		    TkMacOSXCarbonEventToAscii(eventRef), (int)err);
 	}
 	ReleaseEvent(eventRef);
     } else if (err != eventLoopTimedOutErr) {
-	TkMacOSXDbgMsg("ReceiveNextEvent failed: %ld", err);
+	TkMacOSXDbgMsg("ReceiveNextEvent failed: %d", (int)err);
     }
     return err;
 }

@@ -88,9 +88,9 @@
 /*
  * Macro to do debug API failure message output.
  */
-#if !defined(DEBUGLEVEL) || !DEBUGLEVEL
+#if (!defined(DEBUGLEVEL) || !DEBUGLEVEL) || defined(__LP64__)
 #define TkMacOSXDbgOSErr(f, err) do { \
-	    TkMacOSXDbgMsg("%s failed: %ld", #f, err); \
+	    TkMacOSXDbgMsg("%s failed: %d", #f, (int)(err)); \
 	} while (0)
 #else
 #define TkMacOSXDbgOSErr(f, err) do { \

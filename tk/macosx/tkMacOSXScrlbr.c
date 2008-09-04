@@ -144,7 +144,7 @@ TkMacOSXInitScrollbarMetrics(void)
     metrics[1].minHeight = metrics[1].minThumbHeight +
 	    metrics[1].topArrowHeight + metrics[1].bottomArrowHeight;
 
-    sprintf(defWidth, "%ld", metrics[0].width);
+    sprintf(defWidth, "%d", (int)(metrics[0].width));
     for (specPtr = tkpScrollbarConfigSpecs; specPtr->type != TK_CONFIG_END;
 	    specPtr++) {
 	if (specPtr->offset == Tk_Offset(TkScrollbar, width)) {

@@ -230,7 +230,7 @@ TkMacOSXProcessMouseEvent(TkMacOSXEvent *eventPtr, MacEventStatus * statusPtr)
 		break;
 	    case kEventMouseWheelMoved:
 		err = ChkErr(GetEventParameter, eventPtr->eventRef,
-			kEventParamMouseWheelDelta, typeLongInteger, NULL,
+			kEventParamMouseWheelDelta, typeSInt32, NULL,
 			sizeof(long), NULL, &medPtr->delta);
 		if (err != noErr ) {
 		    statusPtr->err = 1;
