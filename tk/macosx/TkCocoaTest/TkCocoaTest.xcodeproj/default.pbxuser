@@ -1,0 +1,90 @@
+// !$*UTF8*$!
+{
+	29B97313FDCFA39411CA2CEA /* Project object */ = {
+		activeArchitecturePreference = i386;
+		activeBuildConfigurationName = Debug;
+		activeExecutable = F962BBB00E78B34C00920D00 /* TkCocoaTest */;
+		activeTarget = 8D1107260486CEB800E47090 /* TkCocoaTest */;
+		addToTargets = (
+			8D1107260486CEB800E47090 /* TkCocoaTest */,
+		);
+		breakpoints = (
+		);
+		codeSenseManager = F962BBB90E78B37400920D00 /* Code sense */;
+		executables = (
+			F962BBB00E78B34C00920D00 /* TkCocoaTest */,
+		);
+		ignoreBreakpointsInProjectsDict = {
+		};
+		perUserDictionary = {
+		};
+		perUserProjectItems = {
+		};
+		sourceControlManager = F962BBB80E78B37400920D00 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	F962BBB00E78B34C00920D00 /* TkCocoaTest */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+			NO,
+			NO,
+			NO,
+			NO,
+			NO,
+			NO,
+			NO,
+			NO,
+			NO,
+			NO,
+		);
+		argumentStrings = (
+			"-NSDebugViewDrawing 1024",
+			"-NSShowAllDrawing YES",
+			"-NSShowAllDrawingColor CYCLE",
+			"-NSShowAllViews YES",
+			"-NSDrawAllViews YES",
+			"-NSLessCoalescedViewDrawing YES",
+			"-NSCacheVisibleRectValues NO",
+			"-NSLeopardViewDrawing NO",
+			"-NSViewValidateBeforeRecursiveDisplay YES",
+			"-NSTraceEvents YES",
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 0;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = TkCocoaTest;
+		savedGlobals = {
+		};
+		sourceDirectories = (
+		);
+		variableFormatDictionary = {
+		};
+	};
+	F962BBB80E78B37400920D00 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		repositoryNamesForRoots = {
+		};
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+			};
+		};
+	};
+	F962BBB90E78B37400920D00 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+}

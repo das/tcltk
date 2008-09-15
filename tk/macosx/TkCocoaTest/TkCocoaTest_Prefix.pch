@@ -1,0 +1,13 @@
+//
+// Prefix header for all source files of the 'TkCocoaTest' target in the 'TkCocoaTest' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif
+#import <ApplicationServices/ApplicationServices.h>
+#if TKCOCOATEST_DEBUG
+#define TKLog(f, ...) NSLog(f, ##__VA_ARGS__)
+#else
+#define TKLog(f, ...)
+#endif
