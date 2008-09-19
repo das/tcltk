@@ -110,7 +110,7 @@ EXTERN void		TkMacOSXInvalClipRgns (Tk_Window tkwin);
 #ifndef TkMacOSXGetDrawablePort_TCL_DECLARED
 #define TkMacOSXGetDrawablePort_TCL_DECLARED
 /* 7 */
-EXTERN GWorldPtr	TkMacOSXGetDrawablePort (Drawable drawable);
+EXTERN CGrafPtr		TkMacOSXGetDrawablePort (Drawable drawable);
 #endif
 #ifndef TkMacOSXGetRootControl_TCL_DECLARED
 #define TkMacOSXGetRootControl_TCL_DECLARED

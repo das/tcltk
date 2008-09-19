@@ -813,7 +813,7 @@ declare 37 aqua {
     void TkMacOSXWindowOffset(WindowRef wRef, int *xOffset, int *yOffset)
 }
 declare 38 aqua {
-    int TkSetMacColor(unsigned long pixel, RGBColor *macColor)
+    int TkSetMacColor(unsigned long pixel, CGColorRef *macColor)
 }
 declare 39 aqua {
     void TkSetWMName(TkWindow *winPtr, Tk_Uid titleUid)

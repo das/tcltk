@@ -299,6 +299,7 @@ XCopyPlane(
 	}
 	TkMacOSXRestoreDrawingContext(&dc);
     } else {
+#ifdef HAVE_QUICKDRAW
 	CGrafPtr srcPort;
 
 	srcPort = TkMacOSXGetDrawablePort(src);
@@ -365,6 +366,7 @@ end:
 	} else {
 	    TkMacOSXDbgMsg("Invalid source drawable");
 	}
+#endif /* HAVE_QUICKDRAW */
     }
 }
 

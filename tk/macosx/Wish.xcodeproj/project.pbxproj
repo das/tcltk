@@ -304,6 +304,7 @@
 		F96D4AD208F272CA004A47F5 /* tclUnixSock.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D446708F272B9004A47F5 /* tclUnixSock.c */; };
 		F96D4AD408F272CA004A47F5 /* tclUnixThrd.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D446908F272B9004A47F5 /* tclUnixThrd.c */; };
 		F96D4AD608F272CA004A47F5 /* tclUnixTime.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D446B08F272B9004A47F5 /* tclUnixTime.c */; };
+		F9C9CC000E84059800E00935 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9C9CBFF0E84059800E00935 /* ApplicationServices.framework */; };
 		F9E61D28090A481F002B3151 /* bn_mp_cmp_d.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D427108F272B3004A47F5 /* bn_mp_cmp_d.c */; };
 		F9E61D29090A486C002B3151 /* bn_mp_neg.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D42A208F272B3004A47F5 /* bn_mp_neg.c */; };
 		F9E61D2A090A4891002B3151 /* bn_mp_sqrt.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D42C008F272B3004A47F5 /* bn_mp_sqrt.c */; };
@@ -2090,6 +2091,7 @@
 		F9A3084B08F2D4CE00BAE1AB /* Wish.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wish.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9A3084E08F2D4F400BAE1AB /* Tcl.framework */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.framework; path = Tcl.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9A493240CEBF38300B78AE2 /* chanio.test */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = chanio.test; sourceTree = "<group>"; };
+		F9C9CBFF0E84059800E00935 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = /System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<absolute>"; };
 		F9D1360A0CDC252C00DBE0B5 /* mclist.tcl */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = mclist.tcl; sourceTree = "<group>"; };
 		F9ECB1120B26521500A28025 /* pkgIndex.tcl */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = pkgIndex.tcl; sourceTree = "<group>"; };
 		F9ECB1130B26521500A28025 /* platform.tcl */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = platform.tcl; sourceTree = "<group>"; };
@@ -2120,6 +2122,7 @@
 				F966C07708F2821B005CB29B /* Carbon.framework in Frameworks */,
 				F966C07908F28233005CB29B /* IOKit.framework in Frameworks */,
 				F94523A20E6FC2AC00C1D987 /* Cocoa.framework in Frameworks */,
+				F9C9CC000E84059800E00935 /* ApplicationServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2901,6 +2904,7 @@
 		F966C06F08F281DC005CB29B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F9C9CBFF0E84059800E00935 /* ApplicationServices.framework */,
 				F966C07408F2820D005CB29B /* CoreFoundation.framework */,
 				F966C07608F2821B005CB29B /* Carbon.framework */,
 				F94523A10E6FC2AC00C1D987 /* Cocoa.framework */,

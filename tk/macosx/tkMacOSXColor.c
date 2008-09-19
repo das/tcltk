@@ -237,23 +237,36 @@ GetThemeColor(
     ThemeBrush brush,
     ThemeTextColor textColor,
     ThemeBackgroundKind background,
-    RGBColor *c)
+    CGColorRef *c)
 {
     OSStatus err = noErr;
 
     if (brush) {
-	err = ChkErr(GetThemeBrushAsColor,
-		brush == kThemeBrushMenuBackgroundSelected ?
-		kThemeBrushFocusHighlight : brush, 32, true, c);
-    } else if (textColor) {
-	err = ChkErr(GetThemeTextColor, textColor, 32, true, c);
+	err = ChkErr(HIThemeBrushCreateCGColor, brush, c);
+    /*} else if (textColor) {
+	err = ChkErr(GetThemeTextColor, textColor, 32, true, c);*/
     } else {
-	c->red	  = (pixel >> 16) & 0xff;
-	c->green  = (pixel >>  8) & 0xff;
-	c->blue	  = (pixel	) & 0xff;
-	c->red	 |= c->red   << 8;
-	c->green |= c->green << 8;
-	c->blue	 |= c->blue  << 8;
+	unsigned short red, green, blue;
+	CGFloat rgba[4];
+
+	red	  = (pixel >> 16) & 0xff;
+	green	  = (pixel >>  8) & 0xff;
+	blue	  = (pixel	) & 0xff;
+	red	 |= red   << 8;
+	green	 |= green << 8;
+	blue	 |= blue  << 8;
+	rgba[0]	  = red	  / 65535.0;
+	rgba[1]	  = green / 65535.0;
+	rgba[2]	  = blue  / 65535.0;
+	rgba[3]	  = 1.0;
+
+	*c = CGColorCreateGenericRGB(rgba[0], rgba[1], rgba[2], rgba[3]);
+
+	/*static CGColorSpaceRef deviceRGBSpace = NULL;
+	if (!deviceRGBSpace) {
+	    deviceRGBSpace = CGDisplayCopyColorSpace(CGMainDisplayID());
+	}
+	*c = CGColorCreate(deviceRGBSpace, rgba );*/
     }
     return err;
 }
@@ -263,14 +276,14 @@ GetThemeColor(
  *
  * TkSetMacColor --
  *
- *	Populates a Macintosh RGBColor structure from a X style
- *	pixel value.
+ *	Creates a CGColorRef from a X style pixel value.
  *
  * Results:
  *	Returns false if not a real pixel, true otherwise.
  *
  * Side effects:
- *	The variable macColor is updated to the pixels value.
+ *	The variable macColor is set to a new CGColorRef, the caller is
+ *	responsible for releasing it!
  *
  *----------------------------------------------------------------------
  */
@@ -278,7 +291,7 @@ GetThemeColor(
 int
 TkSetMacColor(
     unsigned long pixel,		/* Pixel value to convert. */
-    RGBColor *macColor)			/* Mac color struct to modify. */
+    CGColorRef *macColor)		/* CGColorRef to modify. */
 {
     OSStatus err = -1;
     ThemeBrush brush;
@@ -319,6 +332,7 @@ TkMacOSXSetColorInPort(
     PixPatHandle penPat,
     CGrafPtr port)
 {
+#ifdef HAVE_QUICKDRAW
     OSStatus err;
     RGBColor c;
     ThemeBrush brush;
@@ -371,6 +385,7 @@ TkMacOSXSetColorInPort(
     if (penPat && !setPenPat) {
 	GetPortBackPixPat(port, penPat);
     }
+#endif
 }
 
 /*
@@ -398,7 +413,7 @@ TkMacOSXSetColorInContext(
     CGContextRef context)
 {
     OSStatus err = -1;
-    RGBColor c;
+    CGColorRef c;
     ThemeBrush brush;
     ThemeTextColor textColor;
     ThemeBackgroundKind background;
@@ -428,13 +443,10 @@ TkMacOSXSetColorInContext(
 	}
 	err = ChkErr(GetThemeColor, pixel, brush, textColor, background, &c);
 	if (err == noErr) {
-	    double r = c.red   / 65535.0;
-	    double g = c.green / 65535.0;
-	    double b = c.blue  / 65535.0;
-
-	    CGContextSetRGBFillColor(context, r, g, b, 1.0);
-	    CGContextSetRGBStrokeColor(context, r, g, b, 1.0);
+	    CGContextSetFillColorWithColor(context, c);
+	    CGContextSetStrokeColorWithColor(context, c);
 	}
+	CGColorRelease(c);
     } else if (((pixel >> 24) & 0xff) == TRANSPARENT_PIXEL) {
 	CGContextSetRGBFillColor(context, 0.0, 0.0, 0.0, 0.0);
 	CGContextSetRGBStrokeColor(context, 0.0, 0.0, 0.0, 0.0);
@@ -485,23 +497,27 @@ TkpGetColor(
 	Tcl_DecrRefCount(strPtr);
 	if (result == TCL_OK) {
 	    OSStatus err;
-	    RGBColor c;
+	    CGColorRef c;
 	    unsigned char pixelCode = idx + MIN_PIXELCODE;
 	    ThemeBrush brush = systemColorMap[idx].brush;
 	    ThemeTextColor textColor = systemColorMap[idx].textColor;
 	    ThemeBackgroundKind background = systemColorMap[idx].background;
 
 	    err = ChkErr(GetThemeColor, 0, brush, textColor, background, &c);
-	    if (err == noErr) {
-		color.red   = c.red;
-		color.green = c.green;
-		color.blue  = c.blue;
+	    if (err == noErr && CGColorGetNumberOfComponents(c) == 4) {
+		const CGFloat *rgba = CGColorGetComponents(c);
+
+		color.red   = rgba[0] * 65535.0;
+		color.green = rgba[1] * 65535.0;
+		color.blue  = rgba[2] * 65535.0;
 		color.pixel = ((((((pixelCode << 8)
 		    | ((color.red   >> 8) & 0xff)) << 8)
 		    | ((color.green >> 8) & 0xff)) << 8)
 		    | ((color.blue  >> 8) & 0xff));
+		CGColorRelease(c);
 		goto validXColor;
 	    }
+	    CGColorRelease(c);
 	}
     }
 

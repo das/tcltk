@@ -405,7 +405,7 @@ EXTERN void		TkMacOSXWindowOffset (WindowRef wRef, int * xOffset,
 #define TkSetMacColor_TCL_DECLARED
 /* 38 */
 EXTERN int		TkSetMacColor (unsigned long pixel, 
-				RGBColor * macColor);
+				CGColorRef * macColor);
 #endif
 #ifndef TkSetWMName_TCL_DECLARED
 #define TkSetWMName_TCL_DECLARED
@@ -623,7 +623,7 @@ typedef struct TkIntPlatStubs {
     RgnHandle (*tkMacOSXVisableClipRgn) (TkWindow * winPtr); /* 35 */
     void (*tkMacOSXWinBounds) (TkWindow * winPtr, Rect * geometry); /* 36 */
     void (*tkMacOSXWindowOffset) (WindowRef wRef, int * xOffset, int * yOffset); /* 37 */
-    int (*tkSetMacColor) (unsigned long pixel, RGBColor * macColor); /* 38 */
+    int (*tkSetMacColor) (unsigned long pixel, CGColorRef * macColor); /* 38 */
     void (*tkSetWMName) (TkWindow * winPtr, Tk_Uid titleUid); /* 39 */
     void (*tkSuspendClipboard) (void); /* 40 */
     int (*tkMacOSXZoomToplevel) (WindowPtr whichWindow, short zoomPart); /* 41 */

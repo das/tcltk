@@ -150,72 +150,9 @@ TkpInit(
 
 #ifdef TK_FRAMEWORK
 	if (Tcl_MacOSXOpenVersionedBundleResources(interp,
-		"com.tcltk.tklibrary", TK_FRAMEWORK_VERSION, 1, PATH_MAX,
+		"com.tcltk.tklibrary", TK_FRAMEWORK_VERSION, 0, PATH_MAX,
 		tkLibPath) != TCL_OK)
 #endif
-	{
-	    /* Tk.framework not found, check if resource file is open */
-	    Handle rsrc = Get1NamedResource('CURS', "\phand");
-	    if (rsrc) {
-		ReleaseResource(rsrc);
-	    } else {
-#ifndef __LP64__
-		const struct mach_header *image;
-		char *data = NULL;
-		uint32_t size;
-		int fd = -1;
-		char fileName[L_tmpnam + 15];
-		uint32_t i, n;
-
-		/* Get resource data from __tk_rsrc section of tk dylib file*/
-		n = _dyld_image_count();
-		for (i = 0; i < n; i++) {
-		    image = _dyld_get_image_header(i);
-		    if (image) {
-			data = getsectdatafromheader(image, SEG_TEXT,
-				"__tk_rsrc", (void *) &size);
-			if (data) {
-			    data += _dyld_get_image_vmaddr_slide(i);
-			    break;
-			}
-		    }
-		}
-		while (data) {
-		    FSRef ref;
-		    SInt16 refNum;
-
-		    /*
-		     * Write resource data to temporary file and open it.
-		     */
-
-		    strcpy(fileName, P_tmpdir);
-		    if (fileName[strlen(fileName) - 1] != '/') {
-			strcat(fileName, "/");
-		    }
-		    strcat(fileName, "tkMacOSX_XXXXXX");
-		    fd = mkstemp(fileName);
-		    if (fd == -1) {
-			break;
-		    }
-		    fcntl(fd, F_SETFD, FD_CLOEXEC);
-		    if (write(fd, data, size) == -1) {
-			break;
-		    }
-		    if(ChkErr(FSPathMakeRef, (unsigned char *) fileName, &ref,
-			    NULL) != noErr) {
-			break;
-		    }
-		    ChkErr(FSOpenResourceFile, &ref, 0, NULL, fsRdPerm,
-			    &refNum);
-		    break;
-		}
-		if (fd != -1) {
-		    unlink(fileName);
-		    close(fd);
-		}
-#endif /* __LP64__ */
-	    }
-	}
 
 	/*
 	 * If we are loaded into an executable that is not a bundled
