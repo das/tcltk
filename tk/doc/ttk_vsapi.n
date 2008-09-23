@@ -1,4 +1,4 @@
-'\" -*- nroff -*-
+'\"
 '\" Copyright (c) 2008 Pat Thoyts
 '\"
 '\" See the file "license.terms" for information on usage and redistribution
@@ -99,3 +99,6 @@ pack [ttk::checkbutton .pin -style Explorer.Pin]
 ttk::intro(n), ttk::widget(n), ttk::style(n), ttk_image(n)
 .SH "KEYWORDS"
 style, theme, appearance, windows
+'\" Local Variables:
+'\" mode: nroff
+'\" End:

@@ -1,4 +1,3 @@
-'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 1992 The Regents of the University of California.
 '\" Copyright (c) 1994-1996 Sun Microsystems, Inc.
@@ -253,3 +252,6 @@ label .l \-text "In the\enMiddle!" \-bg black \-fg white
 grid(n), pack(n)
 .SH KEYWORDS
 geometry manager, height, location, master, place, rubber sheet, slave, width
+'\" Local Variables:
+'\" mode: nroff
+'\" End:

@@ -1,4 +1,3 @@
-'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 2004 Joe English
 '\"
@@ -108,3 +107,6 @@ this event is delivered after the listbox is unposted.
 ttk::widget(n), ttk::entry(n)
 .SH KEYWORDS
 choice, entry, list box, text box, widget
+'\" Local Variables:
+'\" mode: nroff
+'\" End:

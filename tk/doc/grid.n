@@ -1,4 +1,3 @@
-'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 1996 Sun Microsystems, Inc.
 '\"
@@ -422,3 +421,6 @@ label .l \-text "This is a fairly long piece of text"
 pack(n), place(n)
 .SH KEYWORDS
 geometry manager, location, grid, cell, propagation, size, pack
+'\" Local Variables:
+'\" mode: nroff
+'\" End:
