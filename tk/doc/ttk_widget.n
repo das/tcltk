@@ -1,4 +1,3 @@
-'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 2004 Joe English
 '\" 
@@ -257,3 +256,6 @@ $b state !disabled
 ttk::intro(n), style(n)
 .SH KEYWORDS
 state, configure, option
+'\" Local Variables:
+'\" mode: nroff
+'\" End:

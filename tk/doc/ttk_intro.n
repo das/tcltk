@@ -1,4 +1,3 @@
-'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 2004 Joe English
 '\"
@@ -168,3 +167,6 @@ ttk::style map TButton \e
 .CE
 .SH "SEE ALSO"
 ttk::widget(n), ttk::style(n)
+'\" Local Variables:
+'\" mode: nroff
+'\" End:

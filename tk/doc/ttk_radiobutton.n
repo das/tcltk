@@ -1,4 +1,3 @@
-'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 2004 Joe English
 '\"
@@ -68,3 +67,6 @@ selection.)
 ttk::widget(n), ttk::checkbutton(n), radiobutton(n)
 .SH "KEYWORDS"
 widget, button, option
+'\" Local Variables:
+'\" mode: nroff
+'\" End:
