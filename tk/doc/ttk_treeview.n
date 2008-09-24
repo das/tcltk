@@ -1,4 +1,3 @@
-'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 2004 Joe English
 '\"
@@ -467,3 +466,6 @@ to determine the affected item or items.
 '\" of the virtual event.
 .SH "SEE ALSO"
 ttk::widget(n), listbox(n), image(n), bind(n)
+'\" Local Variables:
+'\" mode: nroff
+'\" End:

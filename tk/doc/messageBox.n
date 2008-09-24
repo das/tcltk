@@ -1,4 +1,3 @@
-'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 1996 Sun Microsystems, Inc.
 '\"
@@ -99,3 +98,6 @@ switch \-\- $answer {
 .CE
 .SH KEYWORDS
 message box
+'\" Local Variables:
+'\" mode: nroff
+'\" End:

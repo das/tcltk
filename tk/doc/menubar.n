@@ -1,4 +1,3 @@
-'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 1992 The Regents of the University of California.
 '\" Copyright (c) 1994-1996 Sun Microsystems, Inc.
@@ -36,3 +35,6 @@ choice using the \fB\-menu\fR option of that widget.
 menu(n), toplevel(n)
 .SH KEYWORDS
 keyboard traversal, menu, menu bar, post
+'\" Local Variables:
+'\" mode: nroff
+'\" End:

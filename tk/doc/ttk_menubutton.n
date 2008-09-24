@@ -1,4 +1,3 @@
-'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 2004 Joe English
 '\"
@@ -48,3 +47,6 @@ methods.  No other widget methods are used.
 ttk::widget(n), menu(n), menubutton(n)
 .SH "KEYWORDS"
 widget, button, menu
+'\" Local Variables:
+'\" mode: nroff
+'\" End:

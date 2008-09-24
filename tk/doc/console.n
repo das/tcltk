@@ -1,4 +1,3 @@
-'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 2001 Donal K. Fellows
 '\"
@@ -143,3 +142,6 @@ catch {\fBconsole show\fR}
 destroy(n), fconfigure(n), history(n), interp(n), puts(n), text(n), wm(n)
 .SH KEYWORDS
 console, interpreter, window, interactive, output channels
+'\" Local Variables:
+'\" mode: nroff
+'\" End:
