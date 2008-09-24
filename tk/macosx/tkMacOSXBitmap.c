@@ -15,6 +15,7 @@
 
 #include "tkMacOSXInt.h"
 
+#ifdef HAVE_QUICKDRAW
 /*
  * Depending on the resource type there are different ways to
  * draw native icons.
@@ -67,6 +68,7 @@ static BuiltInIcon builtInIcons[] = {
     {"caution",		TYPE2,	kCautionIcon,				32},
     {NULL,		0,	0,					0}
 };
+#endif
 
 /*
  *----------------------------------------------------------------------
@@ -89,6 +91,7 @@ static BuiltInIcon builtInIcons[] = {
 void
 TkpDefineNativeBitmaps(void)
 {
+#ifdef HAVE_QUICKDRAW
     Tcl_HashTable *tablePtr = TkGetBitmapPredefTable();
     BuiltInIcon *builtInPtr;
 
@@ -114,6 +117,7 @@ TkpDefineNativeBitmaps(void)
 	    Tcl_SetHashValue(predefHashPtr, predefPtr);
 	}
     }
+#endif
 }
 
 /*
@@ -140,6 +144,7 @@ TkpCreateNativeBitmap(
     const char *source)		/* Info about the icon to build. */
 {
     Pixmap pix;
+#ifdef HAVE_QUICKDRAW
     Rect destRect;
     CGrafPtr savePort;
     Boolean portChanged;
@@ -171,6 +176,9 @@ TkpCreateNativeBitmap(
     if (portChanged) {
 	QDSwapPort(savePort, NULL);
     }
+#else
+    pix = Tk_GetPixmap(display, None, 32, 32, 0);
+#endif
     return pix;
 }
 
@@ -200,6 +208,7 @@ TkpGetNativeAppBitmap(
     int *height)
 {
     Pixmap pix;
+#ifdef HAVE_QUICKDRAW
     CGrafPtr savePort;
     Boolean portChanged;
     Rect destRect;
@@ -268,5 +277,10 @@ TkpGetNativeAppBitmap(
     if (portChanged) {
 	QDSwapPort(savePort, NULL);
     }
+#else
+    pix = Tk_GetPixmap(display, None, 32, 32, 0);
+    *width = 32;
+    *height = 32;
+#endif
     return pix;
 }

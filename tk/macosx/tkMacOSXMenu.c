@@ -26,7 +26,9 @@
 #endif
 */
 
+#ifdef HAVE_QUICKDRAW
 #define USE_TK_MDEF
+#endif
 
 typedef struct MacMenu {
     MenuRef menuHdl;		/* The Menu Manager data structure. */
@@ -747,6 +749,7 @@ void
 TkpDestroyMenu(
     TkMenu *menuPtr)		/* The common menu structure */
 {
+    if (!menuPtr->platformData) return;
     MenuRef macMenuHdl = ((MacMenu *) menuPtr->platformData)->menuHdl;
 
     if (menuPtr->menuFlags & MENU_RECONFIGURE_PENDING) {
