@@ -185,6 +185,7 @@ XCopyArea(
 	}
 	TkMacOSXRestoreDrawingContext(&dc);
     } else {
+#ifdef HAVE_QUICKDRAW
 	CGrafPtr srcPort;
 
 	srcPort = TkMacOSXGetDrawablePort(src);
@@ -224,6 +225,7 @@ end:
 	} else {
 	    TkMacOSXDbgMsg("Invalid source drawable");
 	}
+#endif
     }
 }
 
@@ -420,6 +422,7 @@ TkPutImage(
 	    CFRelease(img);
 	}
     } else {
+#ifdef HAVE_QUICKDRAW
 	Rect srcRect, dstRect, *srcPtr = &srcRect, *dstPtr = &dstRect;
 	const BitMap *dstBit;
 	RGBColor black = {0, 0, 0}, white = {0xffff, 0xffff, 0xffff};
@@ -585,6 +588,7 @@ TkPutImage(
 		CopyBits((BitMap*) &pixmap, dstBit, srcPtr, dstPtr, srcCopy, NULL);
 	    }
 	}
+#endif
     }
     TkMacOSXRestoreDrawingContext(&dc);
 }

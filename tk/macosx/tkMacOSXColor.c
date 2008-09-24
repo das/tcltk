@@ -504,12 +504,22 @@ TkpGetColor(
 	    ThemeBackgroundKind background = systemColorMap[idx].background;
 
 	    err = ChkErr(GetThemeColor, 0, brush, textColor, background, &c);
-	    if (err == noErr && CGColorGetNumberOfComponents(c) == 4) {
+	    if (err == noErr) {
+		const size_t n = CGColorGetNumberOfComponents(c);
 		const CGFloat *rgba = CGColorGetComponents(c);
 
-		color.red   = rgba[0] * 65535.0;
-		color.green = rgba[1] * 65535.0;
-		color.blue  = rgba[2] * 65535.0;
+		switch (n) {
+		case 4:
+		    color.red   = rgba[0] * 65535.0;
+		    color.green = rgba[1] * 65535.0;
+		    color.blue  = rgba[2] * 65535.0;
+		    break;
+		case 2:
+		    color.red = color.green = color.blue = rgba[0] * 65535.0;
+		    break;
+		default:
+		    Tcl_Panic("CGColor with %d components", n);
+		}
 		color.pixel = ((((((pixelCode << 8)
 		    | ((color.red   >> 8) & 0xff)) << 8)
 		    | ((color.green >> 8) & 0xff)) << 8)
