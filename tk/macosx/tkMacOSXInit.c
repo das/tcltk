@@ -207,6 +207,7 @@ TkpInit(
 		    kProcessTransformToForegroundApplication);
 	}
 
+	NSApplicationLoad();
 	TkMacOSXInitAppleEvents(interp);
 	TkMacOSXInitCarbonEvents(interp);
 	TkMacOSXInitMenus(interp);
