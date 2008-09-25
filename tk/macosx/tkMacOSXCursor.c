@@ -16,16 +16,13 @@
 #include "tkMacOSXPrivate.h"
 
 /*
- * There are three different ways to set the cursor on the Mac. The default
- * theme cursors (listed in cursorNames below), color resource cursors, &
- * normal cursors.
+ * There are three different ways to set the cursor on the Mac.
  */
 
 #define NONE		-1	/* Hidden cursor */
-#define THEME		0	/* Theme cursors */
-#define ANIMATED	1	/* Animated theme cursors */
-#define COLOR		2	/* Cursors of type crsr. */
-#define NORMAL		3	/* Cursors of type CURS. */
+#define SELECTOR	1	/* NSCursor class method */
+#define IMAGENAMED	2	/* Named NSImage */
+#define IMAGEPATH	3	/* Path to NSImage */
 
 /*
  * The following data structure contains the system specific data necessary to
@@ -34,59 +31,143 @@
 
 typedef struct {
     TkCursor info;		/* Generic cursor info used by tkCursor.c */
-    Handle macCursor;		/* Resource containing Macintosh cursor. For
-				 * theme cursors, this is -1. */
-    int type;			/* Type of Mac cursor: for theme cursors this
-				 * is the theme cursor constant, otherwise one
-				 * of crsr or CURS. */
-    int count;			/* For animating cursors, the count for the
-				 * cursor. */
+    NSCursor *macCursor;	/* Macintosh cursor */
+    int type;			/* Type of Mac cursor */
 } TkMacOSXCursor;
 
 /*
  * The table below is used to map from the name of a predefined cursor
- * to its resource identifier.
+ * to a NSCursor.
  */
 
 struct CursorName {
     const char *name;
-    int id;
+    const int kind;
+    NSString *id;
+    NSPoint hotspot;
 };
 
-static struct CursorName noneCursorName = {"none", 0};
-
-static struct CursorName themeCursorNames[] = {
-    {"arrow",			kThemeArrowCursor},
-    {"copyarrow",		kThemeCopyArrowCursor},
-    {"aliasarrow",		kThemeAliasArrowCursor},
-    {"contextualmenuarrow",	kThemeContextualMenuArrowCursor},
-    {"ibeam",			kThemeIBeamCursor},
-    {"text",			kThemeIBeamCursor},
-    {"xterm",			kThemeIBeamCursor},
-    {"cross",			kThemeCrossCursor},
-    {"crosshair",		kThemeCrossCursor},
-    {"cross-hair",		kThemeCrossCursor},
-    {"plus",			kThemePlusCursor},
-    {"closedhand",		kThemeClosedHandCursor},
-    {"openhand",		kThemeOpenHandCursor},
-    {"pointinghand",		kThemePointingHandCursor},
-    {"resizeleft",		kThemeResizeLeftCursor},
-    {"resizeright",		kThemeResizeRightCursor},
-    {"resizeleftright",		kThemeResizeLeftRightCursor},
-    {"resizeup",		kThemeResizeUpCursor},
-    {"resizedown",		kThemeResizeDownCursor},
-    {"resizeupdown",		kThemeResizeUpDownCursor},
-    {"notallowed",		kThemeNotAllowedCursor},
-    {"poof",			kThemePoofCursor},
-    {NULL,			0}
-};
-
-static struct CursorName animatedThemeCursorNames[] = {
-    {"watch",			kThemeWatchCursor},
-    {"countinguphand",		kThemeCountingUpHandCursor},
-    {"countingdownhand",	kThemeCountingDownHandCursor},
-    {"countingupanddownhand",	kThemeCountingUpAndDownHandCursor},
-    {"spinning",		kThemeSpinningCursor},
+static const struct CursorName cursorNames[] = {
+    {"none",			NONE,	    nil},
+    {"arrow",			SELECTOR,   @"arrowCursor"},
+    {"copyarrow",		SELECTOR,   @"dragCopyCursor"},
+    {"aliasarrow",		SELECTOR,   @"dragLinkCursor"},
+    {"contextualmenuarrow",	SELECTOR,   @"contextualMenuCursor"},
+    {"ibeam",			SELECTOR,   @"IBeamCursor"},
+    {"text",			SELECTOR,   @"IBeamCursor"},
+    {"xterm",			SELECTOR,   @"IBeamCursor"},
+    {"cross",			SELECTOR,   @"crosshairCursor"},
+    {"crosshair",		SELECTOR,   @"crosshairCursor"},
+    {"cross-hair",		SELECTOR,   @"crosshairCursor"},
+//    {"plus",			kThemePlusCursor},
+    {"closedhand",		SELECTOR,   @"closedHandCursor"},
+    {"fist",			SELECTOR,   @"closedHandCursor"},
+    {"openhand",		SELECTOR,   @"openHandCursor"},
+    {"hand",			SELECTOR,   @"openHandCursor"},
+    {"pointinghand",		SELECTOR,   @"pointingHandCursor"},
+    {"resizeleft",		SELECTOR,   @"resizeLeftCursor"},
+    {"resizeright",		SELECTOR,   @"resizeRightCursor"},
+    {"resizeleftright",		SELECTOR,   @"resizeLeftRightCursor"},
+    {"resizeup",		SELECTOR,   @"resizeUpCursor"},
+    {"resizedown",		SELECTOR,   @"resizeDownCursor"},
+    {"resizeupdown",		SELECTOR,   @"resizeUpDownCursor"},
+    {"notallowed",		SELECTOR,   @"operationNotAllowedCursor"},
+    {"poof",			SELECTOR,   @"disappearingItemCursor"},
+//    {"watch",			kThemeWatchCursor},
+//    {"countinguphand",	kThemeCountingUpHandCursor},
+//    {"countingdownhand",	kThemeCountingDownHandCursor},
+//    {"countingupanddownhand",	kThemeCountingUpAndDownHandCursor},*/
+    {"spinning",		IMAGENAMED, @"NSWaitCursor", {8, -8}},
+    {"wait",			IMAGENAMED, @"NSWaitCursor", {8, -8}},
+    {"resizebottomleft",	IMAGENAMED, @"NSTruthBottomLeftResizeCursor", {4, -12}},
+    {"resizetopleft",		IMAGENAMED, @"NSTruthTopLeftResizeCursor", {4, -4}},
+    {"resizebottomright",	IMAGENAMED, @"NSTruthBottomRightResizeCursor", {12, -12}},
+    {"resizetopright",		IMAGENAMED, @"NSTruthTopRightResizeCursor", {12, -4}},
+    {"bucket",			IMAGEPATH, @"bucket.cur", {13, 12}},
+    {"cancel",			IMAGEPATH, @"cancel.cur", {8, 5}},
+    {"resize",			IMAGEPATH, @"resize.cur", {8, 8}},
+    {"eyedrop",			IMAGEPATH, @"eyedrop.cur", {15, 0}},
+    {"eyedrop-full",		IMAGEPATH, @"eyedrop-full.cur", {15, 0}},
+    {"zoom-in",			IMAGEPATH, @"zoom-in.cur", {7, 7}},
+    {"zoom-out",		IMAGEPATH, @"zoom-out.cur", {7, 7}},
+    {"X_cursor",		IMAGEPATH, @"cursor00.cur"},
+//    {"arrow",			IMAGEPATH, @"cursor02.cur"},
+    {"based_arrow_down",	IMAGEPATH, @"cursor04.cur"},
+    {"based_arrow_up",		IMAGEPATH, @"cursor06.cur"},
+    {"boat",			IMAGEPATH, @"cursor08.cur"},
+    {"bogosity",		IMAGEPATH, @"cursor0a.cur"},
+    {"bottom_left_corner",	IMAGEPATH, @"cursor0c.cur"},
+    {"bottom_right_corner",	IMAGEPATH, @"cursor0e.cur"},
+    {"bottom_side",		IMAGEPATH, @"cursor10.cur"},
+    {"bottom_tee",		IMAGEPATH, @"cursor12.cur"},
+    {"box_spiral",		IMAGEPATH, @"cursor14.cur"},
+    {"center_ptr",		IMAGEPATH, @"cursor16.cur"},
+    {"circle",			IMAGEPATH, @"cursor18.cur"},
+    {"clock",			IMAGEPATH, @"cursor1a.cur"},
+    {"coffee_mug",		IMAGEPATH, @"cursor1c.cur"},
+    {"cross",			IMAGEPATH, @"cursor1e.cur"},
+    {"cross_reverse",		IMAGEPATH, @"cursor20.cur"},
+    {"crosshair",		IMAGEPATH, @"cursor22.cur"},
+    {"diamond_cross",		IMAGEPATH, @"cursor24.cur"},
+    {"dot",			IMAGEPATH, @"cursor26.cur"},
+    {"dotbox",			IMAGEPATH, @"cursor28.cur"},
+    {"double_arrow",		IMAGEPATH, @"cursor2a.cur"},
+    {"draft_large",		IMAGEPATH, @"cursor2c.cur"},
+    {"draft_small",		IMAGEPATH, @"cursor2e.cur"},
+    {"draped_box",		IMAGEPATH, @"cursor30.cur"},
+    {"exchange",		IMAGEPATH, @"cursor32.cur"},
+    {"fleur",			IMAGEPATH, @"cursor34.cur"},
+    {"gobbler",			IMAGEPATH, @"cursor36.cur"},
+    {"gumby",			IMAGEPATH, @"cursor38.cur"},
+    {"hand1",			IMAGEPATH, @"cursor3a.cur"},
+    {"hand2",			IMAGEPATH, @"cursor3c.cur"},
+    {"heart",			IMAGEPATH, @"cursor3e.cur"},
+    {"icon",			IMAGEPATH, @"cursor40.cur"},
+    {"iron_cross",		IMAGEPATH, @"cursor42.cur"},
+    {"left_ptr",		IMAGEPATH, @"cursor44.cur"},
+    {"left_side",		IMAGEPATH, @"cursor46.cur"},
+    {"left_tee",		IMAGEPATH, @"cursor48.cur"},
+    {"leftbutton",		IMAGEPATH, @"cursor4a.cur"},
+    {"ll_angle",		IMAGEPATH, @"cursor4c.cur"},
+    {"lr_angle",		IMAGEPATH, @"cursor4e.cur"},
+    {"man",			IMAGEPATH, @"cursor50.cur"},
+    {"middlebutton",		IMAGEPATH, @"cursor52.cur"},
+    {"mouse",			IMAGEPATH, @"cursor54.cur"},
+    {"pencil",			IMAGEPATH, @"cursor56.cur"},
+    {"pirate",			IMAGEPATH, @"cursor58.cur"},
+    {"plus",			IMAGEPATH, @"cursor5a.cur"},
+    {"question_arrow",		IMAGEPATH, @"cursor5c.cur"},
+    {"right_ptr",		IMAGEPATH, @"cursor5e.cur"},
+    {"right_side",		IMAGEPATH, @"cursor60.cur"},
+    {"right_tee",		IMAGEPATH, @"cursor62.cur"},
+    {"rightbutton",		IMAGEPATH, @"cursor64.cur"},
+    {"rtl_logo",		IMAGEPATH, @"cursor66.cur"},
+    {"sailboat",		IMAGEPATH, @"cursor68.cur"},
+    {"sb_down_arrow",		IMAGEPATH, @"cursor6a.cur"},
+    {"sb_h_double_arrow",	IMAGEPATH, @"cursor6c.cur"},
+    {"sb_left_arrow",		IMAGEPATH, @"cursor6e.cur"},
+    {"sb_right_arrow",		IMAGEPATH, @"cursor70.cur"},
+    {"sb_up_arrow",		IMAGEPATH, @"cursor72.cur"},
+    {"sb_v_double_arrow",	IMAGEPATH, @"cursor74.cur"},
+    {"shuttle",			IMAGEPATH, @"cursor76.cur"},
+    {"sizing",			IMAGEPATH, @"cursor78.cur"},
+    {"spider",			IMAGEPATH, @"cursor7a.cur"},
+    {"spraycan",		IMAGEPATH, @"cursor7c.cur"},
+    {"star",			IMAGEPATH, @"cursor7e.cur"},
+    {"target",			IMAGEPATH, @"cursor80.cur"},
+    {"tcross",			IMAGEPATH, @"cursor82.cur"},
+    {"top_left_arrow",		IMAGEPATH, @"cursor84.cur"},
+    {"top_left_corner",		IMAGEPATH, @"cursor86.cur"},
+    {"top_right_corner",	IMAGEPATH, @"cursor88.cur"},
+    {"top_side",		IMAGEPATH, @"cursor8a.cur"},
+    {"top_tee",			IMAGEPATH, @"cursor8c.cur"},
+    {"trek",			IMAGEPATH, @"cursor8e.cur"},
+    {"ul_angle",		IMAGEPATH, @"cursor90.cur"},
+    {"umbrella",		IMAGEPATH, @"cursor92.cur"},
+    {"ur_angle",		IMAGEPATH, @"cursor94.cur"},
+    {"watch",			IMAGEPATH, @"cursor96.cur"},
+//    {"xterm",			IMAGEPATH, @"cursor98.cur"},
+//    {"none",			IMAGEPATH, @"cursor9a.cur"},
     {NULL,			0}
 };
 
@@ -118,9 +199,8 @@ static void FindCursorByName(TkMacOSXCursor *macCursorPtr, const char *string);
  * FindCursorByName --
  *
  *	Retrieve a system cursor by name, and fill the macCursorPtr
- *	structure. If the cursor cannot be found, the macCursor field will be
- *	NULL. The function first attempts to load a color cursor. If that
- *	fails it will attempt to load a black & white cursor.
+ *	structure. If the cursor cannot be found, the macCursor field
+ *	will be nil.
  *
  * Results:
  *	Fills the macCursorPtr record.
@@ -134,40 +214,50 @@ static void FindCursorByName(TkMacOSXCursor *macCursorPtr, const char *string);
 void
 FindCursorByName(
     TkMacOSXCursor *macCursorPtr,
-    const char *string)
+    const char *name)
 {
-    Handle resource;
-    Str255 curName;
-    int destWrote, inCurLen;
-    Tcl_Encoding encoding;
+    Tcl_Obj *strPtr = Tcl_NewStringObj(name, -1);
+    int idx, result;
+    NSImage *image = nil;
 
-    inCurLen = strlen(string);
-    if (inCurLen > 255) {
-	return;
-    }
+    macCursorPtr->macCursor = nil;
+    macCursorPtr->type = 0;
 
-    /*
-     * macRoman is the encoding that the resource fork uses.
-     */
-
-    encoding = Tcl_GetEncoding(NULL, "macRoman");
-    Tcl_UtfToExternal(NULL, encoding, string, inCurLen, 0, NULL,
-	    (char *) &curName[1], 255, NULL, &destWrote, NULL);
-    curName[0] = destWrote;
-    Tcl_FreeEncoding(encoding);
-
-    resource = GetNamedResource('crsr', curName);
-    if (resource) {
-	short id;
-	Str255 theName;
-	ResType theType;
-
-	GetResInfo(resource, &id, &theType, theName);
-	macCursorPtr->macCursor = (Handle) GetCCursor(id);
-	macCursorPtr->type = COLOR;
-    } else {
-	macCursorPtr->macCursor = GetNamedResource('CURS', curName);
-	macCursorPtr->type = NORMAL;
+    result = Tcl_GetIndexFromObjStruct(NULL, strPtr, cursorNames,
+		sizeof(struct CursorName), NULL, TCL_EXACT, &idx);
+    Tcl_DecrRefCount(strPtr);
+    if (result == TCL_OK) {
+	macCursorPtr->type = cursorNames[idx].kind;
+	switch (cursorNames[idx].kind) {
+	case SELECTOR:
+	    macCursorPtr->macCursor = [NSCursor
+		    performSelector:NSSelectorFromString(cursorNames[idx].id)];
+	    break;
+	case IMAGENAMED:
+	    image = [NSImage imageNamed:cursorNames[idx].id];
+	    break;
+	case IMAGEPATH: {
+	    NSString *path = [[NSBundle
+		    bundleWithIdentifier:@"com.tcltk.tklibrary"]
+		    pathForImageResource:cursorNames[idx].id];
+	    if (!path) {
+	    	// FIXME: fallback to absolute path specific to my box
+		path = [NSString stringWithFormat:
+			@"/Users/steffen/Development/TclTk/git/HEAD/tk/win/rc/%@",
+			cursorNames[idx].id];
+	    }
+	    image = [[NSImage alloc] initWithContentsOfFile:path];
+	    break;
+	}
+	}
+	if (image) {
+	    // FIXME: read hotspot info from .cur files
+	    macCursorPtr->macCursor = [[NSCursor alloc] initWithImage:image
+		    hotSpot:cursorNames[idx].hotspot];
+	}
+	if (macCursorPtr->macCursor) {
+	    CFRetain(macCursorPtr->macCursor);
+	}
     }
 }
 
@@ -194,78 +284,32 @@ TkGetCursorByName(
     Tk_Uid string)		/* Description of cursor. See manual entry
 				 * for details on legal syntax. */
 {
-    struct CursorName *namePtr;
     TkMacOSXCursor *macCursorPtr;
-    int count = -1;
 
     macCursorPtr = (TkMacOSXCursor *) ckalloc(sizeof(TkMacOSXCursor));
     macCursorPtr->info.cursor = (Tk_Cursor) macCursorPtr;
 
-    /*
-     * To find a cursor we must first determine if it is one of the builtin
-     * cursors or the standard arrow cursor. Otherwise, we attempt to load the
-     * cursor as a named Mac resource.
-     */
+    FindCursorByName(macCursorPtr, string);
 
-    if (strcmp(noneCursorName.name, string) == 0) {
-	namePtr = &noneCursorName;
-	macCursorPtr->type = NONE;
-    } else {
-	for (namePtr = themeCursorNames; namePtr->name != NULL; namePtr++) {
-	    if (strcmp(namePtr->name, string) == 0) {
-		macCursorPtr->type = THEME;
-		break;
+    if (macCursorPtr->macCursor == nil && macCursorPtr->type != NONE) {
+	const char **argv;
+	int argc;
+
+	/*
+	 * The user may be trying to specify an XCursor with fore & back
+	 * colors. We don't want this to be an error, so pick off the
+	 * first word, and try again.
+	 */
+
+	if (Tcl_SplitList(interp, string, &argc, &argv) == TCL_OK ) {
+	    if (argc > 1) {
+		FindCursorByName(macCursorPtr, argv[0]);
 	    }
+	    ckfree((char *) argv);
 	}
     }
 
-    if (namePtr->name == NULL) {
-	for (namePtr = animatedThemeCursorNames;
-		namePtr->name != NULL; namePtr++) {
-	    int namelen = strlen(namePtr->name);
-
-	    if (strncmp(namePtr->name, string, namelen) == 0) {
-		const char *numPtr = string + namelen;
-
-		if (*numPtr) {
-		    int result = Tcl_GetInt(NULL, numPtr, &count);
-
-		    if (result != TCL_OK) {
-			continue;
-		    }
-		}
-		macCursorPtr->type = ANIMATED;
-		break;
-	    }
-	}
-    }
-
-    if (namePtr->name != NULL) {
-	macCursorPtr->macCursor = (Handle) namePtr;
-	macCursorPtr->count = count;
-    } else {
-	FindCursorByName(macCursorPtr, string);
-
-	if (macCursorPtr->macCursor == NULL) {
-	    const char **argv;
-	    int argc;
-
-	    /*
-	     * The user may be trying to specify an XCursor with fore & back
-	     * colors. We don't want this to be an error, so pick off the
-	     * first word, and try again.
-	     */
-
-	    if (Tcl_SplitList(interp, string, &argc, &argv) == TCL_OK ) {
-		if (argc > 1) {
-		    FindCursorByName(macCursorPtr, argv[0]);
-		}
-		ckfree((char *) argv);
-	    }
-	}
-    }
-
-    if (macCursorPtr->macCursor == NULL) {
+    if (macCursorPtr->macCursor == nil && macCursorPtr->type != NONE) {
 	ckfree((char *)macCursorPtr);
 	Tcl_AppendResult(interp, "bad cursor spec \"", string, "\"", NULL);
 	return NULL;
@@ -325,13 +369,8 @@ TkpFreeCursor(
 {
     TkMacOSXCursor *macCursorPtr = (TkMacOSXCursor *) cursorPtr;
 
-    switch (macCursorPtr->type) {
-    case COLOR:
-	DisposeCCursor((CCrsrHandle) macCursorPtr->macCursor);
-	break;
-    case NORMAL:
-	ReleaseResource(macCursorPtr->macCursor);
-	break;
+    if (macCursorPtr->macCursor) {
+	CFRelease(macCursorPtr->macCursor);
     }
 
     if (macCursorPtr == gCurrentCursor) {
@@ -361,59 +400,32 @@ TkMacOSXInstallCursor(
     int resizeOverride)
 {
     TkMacOSXCursor *macCursorPtr = gCurrentCursor;
-    CCrsrHandle ccursor;
-    CursHandle cursor;
-    static unsigned int cursorStep = 0;
     static int cursorHidden = 0;
     int cursorNone = 0;
 
     gResizeOverride = resizeOverride;
 
-    if (resizeOverride) {
-	cursor = (CursHandle) GetNamedResource('CURS', "\presize");
-	if (cursor) {
-	    SetCursor(*cursor);
-	} else {
-	    TkMacOSXDbgMsg("Resize cursor failed: %d", ResError());
-	}
-    } else if (macCursorPtr == NULL) {
-	SetThemeCursor(kThemeArrowCursor);
+    if (resizeOverride || !macCursorPtr) {
+	[[NSCursor arrowCursor] set];
     } else {
-	struct CursorName *namePtr;
-
 	switch (macCursorPtr->type) {
 	case NONE:
 	    if (!cursorHidden) {
 		cursorHidden = 1;
-		HideCursor();
+		[NSCursor hide];
 	    }
 	    cursorNone = 1;
 	    break;
-	case THEME:
-	    namePtr = (struct CursorName *) macCursorPtr->macCursor;
-	    SetThemeCursor(namePtr->id);
-	    break;
-	case ANIMATED:
-	    namePtr = (struct CursorName *) macCursorPtr->macCursor;
-	    if (macCursorPtr->count == -1) {
-		SetAnimatedThemeCursor(namePtr->id, cursorStep++);
-	    } else {
-		SetAnimatedThemeCursor(namePtr->id, macCursorPtr->count);
-	    }
-	    break;
-	case COLOR:
-	    ccursor = (CCrsrHandle) macCursorPtr->macCursor;
-	    SetCCursor(ccursor);
-	    break;
-	case NORMAL:
-	    cursor = (CursHandle) macCursorPtr->macCursor;
-	    SetCursor(*cursor);
+	case SELECTOR:
+	case IMAGENAMED:
+	case IMAGEPATH:
+	    [macCursorPtr->macCursor set];
 	    break;
 	}
     }
     if (cursorHidden && !cursorNone) {
 	cursorHidden = 0;
-	ShowCursor();
+	[NSCursor unhide];
     }
 }
 
