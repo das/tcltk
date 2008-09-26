@@ -569,11 +569,13 @@ TkMacOSXReceiveAndDispatchEvent(void)
 	TkMacOSXStartTclEventLoopCarbonTimer();
 	err = SendEventToEventTarget(eventRef, targetRef);
 	TkMacOSXStopTclEventLoopCarbonTimer();
+#ifdef TK_MAC_DEBUG_CARBON_EVENTS
 	if (err != noErr && err != eventLoopTimedOutErr
 		&& err != eventNotHandledErr) {
 	    TkMacOSXDbgMsg("SendEventToEventTarget(%s) failed: %d",
 		    TkMacOSXCarbonEventToAscii(eventRef), (int)err);
 	}
+#endif /* TK_MAC_DEBUG_CARBON_EVENTS */
 	ReleaseEvent(eventRef);
     } else if (err != eventLoopTimedOutErr) {
 	TkMacOSXDbgMsg("ReceiveNextEvent failed: %d", (int)err);

@@ -586,7 +586,7 @@ ScriptHandler(
 	    AEPutParamPtr(reply, keyDirectObject, typeChar, result, reslen);
 	} else {
 	    AEPutParamPtr(reply, keyErrorString, typeChar, result, reslen);
-	    AEPutParamPtr(reply, keyErrorNumber, typeInteger, (Ptr) &tclErr,
+	    AEPutParamPtr(reply, keyErrorNumber, typeSInt32, (Ptr) &tclErr,
 		    sizeof(int));
 	}
     }
