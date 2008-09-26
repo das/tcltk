@@ -21,7 +21,7 @@
 #include <CoreFoundation/CoreFoundation.h>
 #include <pthread.h>
 
-#define TCL_MAC_DEBUG_NOTIFIER 1
+/* #define TCL_MAC_DEBUG_NOTIFIER 1 */
 
 /*
  * We use the Darwin-native spinlock API rather than pthread mutexes for

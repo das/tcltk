@@ -97,8 +97,10 @@ TkMacOSXProcessEvent(
 	    TkMacOSXProcessCommandEvent(eventPtr, statusPtr);
 	    break;
 	default: {
+#ifdef TK_MAC_DEBUG_CARBON_EVENTS
 	    TkMacOSXDbgMsg("Unrecognised event: %s",
 		    TkMacOSXCarbonEventToAscii(eventPtr->eventRef));
+#endif /* TK_MAC_DEBUG_CARBON_EVENTS */
 	    break;
 	}
     }

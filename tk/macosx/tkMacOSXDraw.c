@@ -41,7 +41,9 @@ RgnHandle tkMacOSXtmpQdRgn = NULL;
 
 int tkPictureIsOpen;
 
+#ifdef HAVE_QUICKDRAW
 static PixPatHandle penPat = NULL, tmpPixPat = NULL;
+#endif
 
 static int cgAntiAliasLimit = 0;
 #define notAA(w) ((w) < cgAntiAliasLimit)
@@ -54,7 +56,9 @@ static int useThemedFrame = 0;
  */
 
 static void ClipToGC(Drawable d, GC gc, HIShapeRef *clipRgnPtr);
+#ifdef HAVE_QUICKDRAW
 static void NoQDClip(CGrafPtr port);
+#endif
 static CGImageRef CreateCGImageWithXImage(XImage *ximage);
 static CGContextRef GetCGContextForDrawable(Drawable d);
 static void DrawCGImage(Drawable d, CGContextRef context, CGImageRef image,
@@ -157,7 +161,7 @@ XCopyArea(
     int dest_y)
 {
     TkMacOSXDrawingContext dc;
-    MacDrawable *srcDraw = (MacDrawable *) src, *dstDraw = (MacDrawable *) dst;
+    MacDrawable *srcDraw = (MacDrawable *) src;
 
     display->request++;
     if (!width || !height) {
@@ -186,6 +190,7 @@ XCopyArea(
 	TkMacOSXRestoreDrawingContext(&dc);
     } else {
 #ifdef HAVE_QUICKDRAW
+	MacDrawable *dstDraw = (MacDrawable *) dst;
 	CGrafPtr srcPort;
 
 	srcPort = TkMacOSXGetDrawablePort(src);
@@ -263,7 +268,7 @@ XCopyPlane(
     unsigned long plane)	/* Which plane to copy. */
 {
     TkMacOSXDrawingContext dc;
-    MacDrawable *srcDraw = (MacDrawable *) src, *dstDraw = (MacDrawable *) dst;
+    MacDrawable *srcDraw = (MacDrawable *) src;
 
     display->request++;
     if (!width || !height) {
@@ -302,6 +307,7 @@ XCopyPlane(
 	TkMacOSXRestoreDrawingContext(&dc);
     } else {
 #ifdef HAVE_QUICKDRAW
+	MacDrawable *dstDraw = (MacDrawable *) dst;
 	CGrafPtr srcPort;
 
 	srcPort = TkMacOSXGetDrawablePort(src);
@@ -405,7 +411,6 @@ TkPutImage(
     unsigned int height)	/* distination and source. */
 {
     TkMacOSXDrawingContext dc;
-    MacDrawable *dstDraw = (MacDrawable *) d;
 
     display->request++;
     if (!TkMacOSXSetupDrawingContext(d, gc, 1, &dc)) {
@@ -423,6 +428,7 @@ TkPutImage(
 	}
     } else {
 #ifdef HAVE_QUICKDRAW
+	MacDrawable *dstDraw = (MacDrawable *) d;
 	Rect srcRect, dstRect, *srcPtr = &srcRect, *dstPtr = &dstRect;
 	const BitMap *dstBit;
 	RGBColor black = {0, 0, 0}, white = {0xffff, 0xffff, 0xffff};
@@ -622,7 +628,7 @@ CreateCGImageWithXImage(
     {
 	size_t bitsPerComponent, bitsPerPixel;
 	size_t len = image->bytes_per_line * image->height;
-	const float *decode = NULL;
+	const CGFloat *decode = NULL;
 	CGBitmapInfo bitmapInfo;
 	CGDataProviderRef provider = NULL;
 	char *data = NULL;
@@ -633,7 +639,7 @@ CreateCGImageWithXImage(
 	     * BW image
 	     */
 
-	    static const float decodeWB[2] = {1, 0};
+	    static const CGFloat decodeWB[2] = {1, 0};
 
 	    bitsPerComponent = 1;
 	    bitsPerPixel = 1;
@@ -862,7 +868,11 @@ DrawCGImage(
 		dstBounds.origin.x, dstBounds.origin.y,
 		dstBounds.size.width, dstBounds.size.height);
 #else /* TK_MAC_DEBUG_DRAWING */
-	ChkErr(HIViewDrawCGImage, context, &dstBounds, image);
+	CGContextSaveGState(context);
+	CGContextTranslateCTM(context, 0, dstBounds.origin.y + CGRectGetMaxY(dstBounds));
+	CGContextScaleCTM(context, 1, -1);
+	CGContextDrawImage(context, dstBounds, image);
+	CGContextRestoreGState(context);
 #endif /* TK_MAC_DEBUG_DRAWING */
 	if (CGImageIsMask(image)) {
 	    CGContextRestoreGState(context);
@@ -1667,6 +1677,7 @@ TkMacOSXSetUpGraphicsPort(
     GC gc,			/* GC to apply to current port. */
     GWorldPtr destPort)
 {
+#ifdef HAVE_QUICKDRAW
     CGrafPtr savePort;
     Boolean portChanged;
 
@@ -1699,6 +1710,7 @@ TkMacOSXSetUpGraphicsPort(
     if (portChanged) {
 	QDSwapPort(savePort, NULL);
     }
+#endif
 }
 
 /*
@@ -1832,8 +1844,8 @@ TkMacOSXSetupDrawingContext(
 	    if (gc->line_style != LineSolid) {
 		int num = 0;
 		char *p = &(gc->dashes);
-		double dashOffset = gc->dash_offset;
-		float lengths[10];
+		CGFloat dashOffset = gc->dash_offset;
+		CGFloat lengths[10];
 
 		while (p[num] != '\0' && num < 10) {
 		    lengths[num] = p[num];
@@ -1851,6 +1863,7 @@ TkMacOSXSetupDrawingContext(
 	    }
 	}
     } else if (dc.port) {
+#ifdef HAVE_QUICKDRAW
 	PixPatHandle savePat = penPat;
 
 	ChkErr(GetThemeDrawingState, &dc.saveState);
@@ -1868,6 +1881,7 @@ TkMacOSXSetupDrawingContext(
 	if (!tkPictureIsOpen) {
 	    ShowPen();
 	}
+#endif
     }
 end:
     *dcPtr = dc;
@@ -1903,6 +1917,7 @@ TkMacOSXRestoreDrawingContext(
 	    ChkErr(QDEndCGContext, dcPtr->port, &(dcPtr->context));
 	}
     } else if (dcPtr->port) {
+#ifdef HAVE_QUICKDRAW
 	if (!tkPictureIsOpen) {
 	    HidePen();
 	}
@@ -1921,6 +1936,7 @@ TkMacOSXRestoreDrawingContext(
 	if (dcPtr->saveState) {
 	    ChkErr(SetThemeDrawingState, dcPtr->saveState, true);
 	}
+#endif
     }
     if (dcPtr->clipRgn) {
 	CFRelease(dcPtr->clipRgn);
@@ -2103,6 +2119,7 @@ ClipToGC(
     }
 }
 
+#ifdef HAVE_QUICKDRAW
 /*
  *----------------------------------------------------------------------
  *
@@ -2131,6 +2148,7 @@ NoQDClip(
     }
     SetPortClipRegion(port, noClipRgn);
 }
+#endif
 
 /*
  *----------------------------------------------------------------------
@@ -2156,8 +2174,9 @@ TkMacOSXMakeStippleMap(
     Drawable drawable,		/* Window to apply stipple. */
     Drawable stipple)		/* The stipple pattern. */
 {
+    BitMapPtr bitmapPtr = NULL;
+#ifdef HAVE_QUICKDRAW
     CGrafPtr stipplePort;
-    BitMapPtr bitmapPtr;
     const BitMap *stippleBitmap;
     Rect portRect;
     int width, height, stippleHeight, stippleWidth, i, j;
@@ -2189,6 +2208,7 @@ TkMacOSXMakeStippleMap(
 		    NULL);
 	}
     }
+#endif
     return bitmapPtr;
 }
 
