@@ -249,6 +249,7 @@ TkWmNewWindow(
     wmPtr->attributes = kWindowStandardDocumentAttributes
 	    | kWindowLiveResizeAttribute;
     wmPtr->scrollWinPtr = NULL;
+    wmPtr->window = nil;
     winPtr->wmInfoPtr = wmPtr;
 
     UpdateVRootGeometry(wmPtr);
@@ -5170,7 +5171,7 @@ TkMacOSXMakeRealWindowExist(
     WindowRef newWindow = NULL;
     ControlRef rootControl = NULL;
     MacDrawable *macWin;
-    Rect initialBounds = {42, 0, 43, 1}, geometry, strWidths;
+    Rect geometry, strWidths;
     short structureW, structureH;
     TkMacOSXWindowList *listPtr;
     OSStatus err;
@@ -5217,11 +5218,21 @@ TkMacOSXMakeRealWindowExist(
     }
     wmPtr->attributes = (wmPtr->attributes | kWindowAsyncDragAttribute) &
 	    GetAvailableWindowAttributes(wmPtr->macClass);
+    /*
     err = ChkErr(CreateNewWindow, wmPtr->macClass, wmPtr->attributes,
 	    &initialBounds, &newWindow);
     if (err != noErr) {
 	newWindow = NULL;
     }
+    */
+
+    NSWindow *window = [[NSWindow alloc] initWithContentRect:NSZeroRect
+	    styleMask:NSTitledWindowMask|NSClosableWindowMask|
+		    NSMiniaturizableWindowMask|NSResizableWindowMask
+	    backing:NSBackingStoreBuffered defer:YES];
+    CFRetain(window);
+    wmPtr->window = window;
+    newWindow = [window windowRef];
 
     if (newWindow == NULL) {
 	Tcl_Panic("couldn't allocate new Mac window");
@@ -5244,8 +5255,9 @@ TkMacOSXMakeRealWindowExist(
     InitialWindowBounds(winPtr, newWindow, &geometry);
     geometry.right +=  structureW;
     geometry.bottom += structureH;
-    ChkErr(SetWindowBounds, newWindow, kWindowStructureRgn, &geometry);
-
+    NSRect frame = NSMakeRect(geometry.left, geometry.top,
+	    geometry.right - geometry.left, geometry.bottom - geometry.top);
+    [window setFrame:frame display:NO];
     TkMacOSXInstallWindowCarbonEventHandler(NULL, newWindow);
     if (ChkErr(CreateRootControl, newWindow, &rootControl) != noErr ) {
 	Tcl_Panic("couldn't create root control for new Mac window");
@@ -5280,6 +5292,7 @@ TkMacOSXMakeRealWindowExist(
     macWin->flags |= TK_HOST_EXISTS;
     ChkErr(GetWindowClass, newWindow, &(wmPtr->macClass));
     ChkErr(GetWindowAttributes, newWindow, &(wmPtr->attributes));
+    [window makeKeyAndOrderFront:NSApp];
 
 #ifdef TK_MAC_DEBUG_WINDOWS
     TkMacOSXInitNamedDebugSymbol(HIToolbox, void, DebugPrintWindow, WindowRef);

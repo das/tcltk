@@ -147,7 +147,11 @@ XDestroyWindow(
 		    ChkErr(ReleaseWindowGroup, group);
 		}
 		TkMacOSXUnregisterMacWindow(winRef);
-		DisposeWindow(winRef);
+		/*DisposeWindow(winRef);*/
+		if (macWin->winPtr && macWin->winPtr->wmInfoPtr &&
+			macWin->winPtr->wmInfoPtr->window) {
+		    CFRelease(macWin->winPtr->wmInfoPtr->window);
+		}
 
 		for (listPtr = tkMacOSXWindowListPtr, prevPtr = NULL;
 			tkMacOSXWindowListPtr != NULL;
@@ -413,15 +417,14 @@ XResizeWindow(
 
     display->request++;
     if (Tk_IsTopLevel(macWin->winPtr) && !Tk_IsEmbedded(macWin->winPtr)) {
-	WindowRef w = TkMacOSXDrawableWindow(window);
+	NSWindow *window = macWin->winPtr->wmInfoPtr->window;
 
-	if (w) {
-	    Rect bounds;
+	if (window) {
+	    NSRect content = [window contentRectForFrameRect:[window frame]];
 
-	    ChkErr(GetWindowBounds, w, kWindowContentRgn, &bounds);
-	    bounds.right = bounds.left + width;
-	    bounds.bottom = bounds.top + height;
-	    ChkErr(SetWindowBounds, w, kWindowContentRgn, &bounds);
+	    content.size.width += width;
+	    content.size.height += height;
+	    [window setContentSize:content.size];
 	}
     } else {
 	MoveResizeWindow(macWin);
@@ -457,16 +460,15 @@ XMoveResizeWindow(
 
     display->request++;
     if (Tk_IsTopLevel(macWin->winPtr) && !Tk_IsEmbedded(macWin->winPtr)) {
-	WindowRef w = TkMacOSXDrawableWindow(window);
+	NSWindow *window = macWin->winPtr->wmInfoPtr->window;
 
-	if (w) {
-	    Rect bounds;
+	if (window) {
+	    NSRect frame = [window frameRectForContentRect:NSMakeRect(
+		    x + macWin->winPtr->wmInfoPtr->xInParent,
+		    y + macWin->winPtr->wmInfoPtr->yInParent,
+		    width, height)];
 
-	    bounds.left = x + macWin->winPtr->wmInfoPtr->xInParent;
-	    bounds.right = bounds.left + width;
-	    bounds.top = y + macWin->winPtr->wmInfoPtr->yInParent;
-	    bounds.bottom = bounds.top + height;
-	    ChkErr(SetWindowBounds, w, kWindowContentRgn, &bounds);
+	    [window setFrame:frame display:YES];
 	}
     } else {
 	MoveResizeWindow(macWin);
@@ -1024,6 +1026,9 @@ TkMacOSXDrawableWindow(
 
     if (!macWin || macWin->flags & TK_IS_PIXMAP) {
 	result = NULL;
+    } else if (macWin->winPtr && macWin->winPtr->wmInfoPtr &&
+	    macWin->winPtr->wmInfoPtr->window) {
+	result = [macWin->winPtr->wmInfoPtr->window windowRef];
     } else {
 	result = GetWindowFromPort(TkMacOSXGetDrawablePort(drawable));
     }
