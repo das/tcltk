@@ -245,7 +245,6 @@ TkWmNewWindow(
     wmPtr->cmdArgv = NULL;
     wmPtr->clientMachine = NULL;
     wmPtr->flags = WM_NEVER_MAPPED;
-    wmPtr->style = -1;
     wmPtr->macClass = kDocumentWindowClass;
     wmPtr->attributes = kWindowStandardDocumentAttributes
 	    | kWindowLiveResizeAttribute;
@@ -4972,25 +4971,6 @@ WmWinStyle(
 	const char *strValue;
 	UInt32 intValue;
     };
-    static const struct StrIntMap styleMap[] = {
-	{ "documentProc",	    documentProc		},
-	{ "noGrowDocProc",	    documentProc		},
-	{ "dBoxProc",		    dBoxProc			},
-	{ "plainDBox",		    plainDBox			},
-	{ "altDBoxProc",	    altDBoxProc			},
-	{ "movableDBoxProc",	    movableDBoxProc		},
-	{ "zoomDocProc",	    zoomDocProc			},
-	{ "zoomNoGrow",		    zoomNoGrow			},
-	{ "floatProc",		    floatGrowProc		},
-	{ "floatGrowProc",	    floatGrowProc		},
-	{ "floatZoomProc",	    floatZoomGrowProc		},
-	{ "floatZoomGrowProc",	    floatZoomGrowProc		},
-	{ "floatSideProc",	    floatSideGrowProc		},
-	{ "floatSideGrowProc",	    floatSideGrowProc		},
-	{ "floatSideZoomProc",	    floatSideZoomGrowProc	},
-	{ "floatSideZoomGrowProc",  floatSideZoomGrowProc	},
-	{ NULL,			    0				}
-    };
     static const struct StrIntMap classMap[] = {
 	{ "alert",	    kAlertWindowClass		},
 	{ "moveableAlert",  kMovableAlertWindowClass	},
@@ -5047,58 +5027,41 @@ WmWinStyle(
     WmInfo *wmPtr = winPtr->wmInfoPtr;
 
     if (objc == 3) {
-	if (wmPtr->style != -1) {
-	    for (i = 0; styleMap[i].strValue != NULL; i++) {
-		if (wmPtr->style == (short) styleMap[i].intValue) {
-		    Tcl_SetObjResult(interp,
-			    Tcl_NewStringObj(styleMap[i].strValue, -1));
-		    return TCL_OK;
-		}
-	    }
-	    Tcl_Panic("invalid style");
-	} else {
-	    Tcl_Obj *attributeList, *newResult = NULL;
-	    WindowAttributes attributes;
+	Tcl_Obj *attributeList, *newResult = NULL;
+	WindowAttributes attributes;
 
-	    for (i = 0; classMap[i].strValue != NULL; i++) {
-		if (wmPtr->macClass == classMap[i].intValue) {
-		    newResult = Tcl_NewStringObj(classMap[i].strValue, -1);
-		    break;
-		}
+	for (i = 0; classMap[i].strValue != NULL; i++) {
+	    if (wmPtr->macClass == classMap[i].intValue) {
+		newResult = Tcl_NewStringObj(classMap[i].strValue, -1);
+		break;
 	    }
-	    if (newResult == NULL) {
-		Tcl_Panic("invalid class");
-	    }
-
-	    attributeList = Tcl_NewListObj(0, NULL);
-	    attributes = wmPtr->attributes;
-
-	    for (i = 0; compositeAttrMap[i].strValue != NULL; i++) {
-		UInt32 intValue = compositeAttrMap[i].intValue;
-
-		if (intValue && (attributes & intValue) == intValue) {
-		    Tcl_ListObjAppendElement(interp, attributeList,
-			    Tcl_NewStringObj(compositeAttrMap[i].strValue,
-			    -1));
-		    attributes &= ~intValue;
-		    break;
-		}
-	    }
-	    for (i = 0; attrMap[i].strValue != NULL; i++) {
-		if (attributes & attrMap[i].intValue) {
-		    Tcl_ListObjAppendElement(interp, attributeList,
-			    Tcl_NewStringObj(attrMap[i].strValue, -1));
-		}
-	    }
-	    Tcl_ListObjAppendElement(interp, newResult, attributeList);
-	    Tcl_SetObjResult(interp, newResult);
 	}
-    } else if (objc == 4) {
-	if (Tcl_GetIndexFromObjStruct(interp, objv[3], styleMap,
-		sizeof(struct StrIntMap), "style", 0, &index) != TCL_OK) {
-	    return TCL_ERROR;
+	if (newResult == NULL) {
+	    Tcl_Panic("invalid class");
 	}
-	wmPtr->style = styleMap[index].intValue;
+
+	attributeList = Tcl_NewListObj(0, NULL);
+	attributes = wmPtr->attributes;
+
+	for (i = 0; compositeAttrMap[i].strValue != NULL; i++) {
+	    UInt32 intValue = compositeAttrMap[i].intValue;
+
+	    if (intValue && (attributes & intValue) == intValue) {
+		Tcl_ListObjAppendElement(interp, attributeList,
+			Tcl_NewStringObj(compositeAttrMap[i].strValue,
+			-1));
+		attributes &= ~intValue;
+		break;
+	    }
+	}
+	for (i = 0; attrMap[i].strValue != NULL; i++) {
+	    if (attributes & attrMap[i].intValue) {
+		Tcl_ListObjAppendElement(interp, attributeList,
+			Tcl_NewStringObj(attrMap[i].strValue, -1));
+	    }
+	}
+	Tcl_ListObjAppendElement(interp, newResult, attributeList);
+	Tcl_SetObjResult(interp, newResult);
     } else if (objc == 5) {
 	int attrObjc;
 	Tcl_Obj **attrObjv = NULL;
@@ -5134,7 +5097,6 @@ WmWinStyle(
 	}
 	ApplyWindowClassAttributeChanges(winPtr, NULL, oldClass, oldAttributes,
 		0);
-	wmPtr->style = -1;
 	return TCL_OK;
 
     badClassAttrs:
@@ -5249,23 +5211,16 @@ TkMacOSXMakeRealWindowExist(
 	 */
     }
 
-    if (wmPtr->style == -1) {
-	if (!IsValidWindowClass(wmPtr->macClass)) {
-	    TkMacOSXDbgMsg("Invalid window class: %ld", wmPtr->macClass);
-	    wmPtr->macClass = kPlainWindowClass;
-	}
-	wmPtr->attributes = (wmPtr->attributes | kWindowAsyncDragAttribute) &
-		GetAvailableWindowAttributes(wmPtr->macClass);
-	err = ChkErr(CreateNewWindow, wmPtr->macClass, wmPtr->attributes,
-		&initialBounds, &newWindow);
-	if (err != noErr) {
-	    newWindow = NULL;
-	}
-    } else {
-	TkMacOSXDbgMsg("Window creation via NewCWindow API is deprecated, "
-	       "use a window class instead of style %d", wmPtr->style);
-	newWindow = NewCWindow(NULL, &initialBounds, "\p", false,
-		wmPtr->style, (WindowRef) -1, true, 0);
+    if (!IsValidWindowClass(wmPtr->macClass)) {
+	TkMacOSXDbgMsg("Invalid window class: %ld", wmPtr->macClass);
+	wmPtr->macClass = kPlainWindowClass;
+    }
+    wmPtr->attributes = (wmPtr->attributes | kWindowAsyncDragAttribute) &
+	    GetAvailableWindowAttributes(wmPtr->macClass);
+    err = ChkErr(CreateNewWindow, wmPtr->macClass, wmPtr->attributes,
+	    &initialBounds, &newWindow);
+    if (err != noErr) {
+	newWindow = NULL;
     }
 
     if (newWindow == NULL) {
