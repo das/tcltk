@@ -80,6 +80,10 @@ Tcl_Encoding TkMacOSXCarbonEncoding = NULL;
 
 static char scriptPath[PATH_MAX + 1] = "";
 
+@implementation TKApplication
+@end
+
+
 /*
  *----------------------------------------------------------------------
  *
@@ -207,7 +211,14 @@ TkpInit(
 		    kProcessTransformToForegroundApplication);
 	}
 
-	NSApplicationLoad();
+	static NSAutoreleasePool *pool = nil;
+	if (!pool) {pool = [NSAutoreleasePool new];}
+	[TKApplication sharedApplication];
+	[NSApp setDelegate:NSApp];
+	[pool drain];
+	[NSApp setupEventLoop];
+	
+	//NSApplicationLoad();
 	TkMacOSXInitAppleEvents(interp);
 	TkMacOSXInitCarbonEvents(interp);
 	TkMacOSXInitMenus(interp);
