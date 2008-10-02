@@ -228,4 +228,17 @@ MODULE_SCOPE HIShapeRef TkMacOSXGetClipRgn(Drawable drawable);
 MODULE_SCOPE CGImageRef TkMacOSXCreateCGImageWithDrawable(Drawable drawable);
 MODULE_SCOPE Tcl_Obj* TkMacOSXGetStringObjFromCFString(CFStringRef str);
 
+
+@interface TKApplication : NSApplication {
+@private
+#ifndef __LP64__
+#endif
+}
+@end
+@interface TKApplication(TKApplicationPrivate)
+- (void)setupEventLoop;
+- (void)afterEvent;
+- (void)eventLoopException:(NSException *)theException;
+@end
+
 #endif /* _TKMACPRIV */
