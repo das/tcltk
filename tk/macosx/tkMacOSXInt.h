@@ -38,6 +38,7 @@
 
 struct TkWindowPrivate {
     TkWindow *winPtr;		/* Ptr to tk window or NULL if Pixmap */
+    NSView *view;
     CGrafPtr grafPtr;
     CGContextRef context;
     ControlRef rootControl;

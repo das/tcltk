@@ -5231,6 +5231,9 @@ TkMacOSXMakeRealWindowExist(
 		    NSMiniaturizableWindowMask|NSResizableWindowMask
 	    backing:NSBackingStoreBuffered defer:YES];
     CFRetain(window);
+    TKContentView *contentView = [[TKContentView alloc]
+	    initWithFrame:NSZeroRect];
+    [window setContentView:contentView];
     wmPtr->window = window;
     newWindow = [window windowRef];
 
@@ -5281,6 +5284,7 @@ TkMacOSXMakeRealWindowExist(
     listPtr->winPtr = winPtr;
     tkMacOSXWindowListPtr = listPtr;
 
+    macWin->view = contentView;
     macWin->grafPtr = GetWindowPort(newWindow);
     macWin->rootControl = rootControl;
 
@@ -5292,7 +5296,7 @@ TkMacOSXMakeRealWindowExist(
     macWin->flags |= TK_HOST_EXISTS;
     ChkErr(GetWindowClass, newWindow, &(wmPtr->macClass));
     ChkErr(GetWindowAttributes, newWindow, &(wmPtr->attributes));
-    [window makeKeyAndOrderFront:NSApp];
+    //[window makeKeyAndOrderFront:NSApp];
 
 #ifdef TK_MAC_DEBUG_WINDOWS
     TkMacOSXInitNamedDebugSymbol(HIToolbox, void, DebugPrintWindow, WindowRef);
