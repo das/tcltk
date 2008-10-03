@@ -1501,7 +1501,7 @@ TextToPostscript(
     }
 
     Tk_GetFontMetrics(textPtr->tkfont, &fm);
-    sprintf(buffer. "] %d ", fm.linespace);
+    sprintf(buffer, "] %d ", fm.linespace);
     Tcl_AppendResult(interp, buffer, NULL);
     Tcl_PrintDouble(NULL, x / -2.0, buffer);
     Tcl_AppendResult(interp, buffer, " ", NULL);

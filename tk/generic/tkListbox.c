@@ -1258,7 +1258,7 @@ ListboxXviewSubCmd(
 	    }
 	    Tcl_PrintDouble(NULL, fraction, buf);
 	    Tcl_SetResult(interp, buf, TCL_VOLATILE);
-	    Tcl_PrintDouble(NULL, fraction1, buf);
+	    Tcl_PrintDouble(NULL, fraction2, buf);
 	    Tcl_AppendResult(interp, " ", buf, NULL);
 	}
     } else if (objc == 3) {
