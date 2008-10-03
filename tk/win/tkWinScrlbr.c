@@ -563,7 +563,7 @@ ScrollbarProc(
 		break;
 	    }
 
-	    sprintf(valueString, "%g", pos);
+	    Tcl_PrintDouble(NULL, pos, valueString);
 	    Tcl_DStringAppendElement(&cmdString, "moveto");
 	    Tcl_DStringAppendElement(&cmdString, valueString);
 	}
