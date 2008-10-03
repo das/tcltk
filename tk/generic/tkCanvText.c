@@ -1501,8 +1501,13 @@ TextToPostscript(
     }
 
     Tk_GetFontMetrics(textPtr->tkfont, &fm);
-    sprintf(buffer, "] %d %g %g %s %s DrawText\n",
-	    fm.linespace, x / -2.0, y / 2.0, justify,
+    sprintf(buffer. "] %d ", fm.linespace);
+    Tcl_AppendResult(interp, buffer, NULL);
+    Tcl_PrintDouble(NULL, x / -2.0, buffer);
+    Tcl_AppendResult(interp, buffer, " ", NULL);
+    Tcl_PrintDouble(NULL, y / 2.0, buffer);
+    Tcl_AppendResult(interp, buffer, NULL);
+    sprintf(buffer, " %s %s DrawText\n", justify,
 	    ((stipple == None) ? "false" : "true"));
     Tcl_AppendResult(interp, buffer, NULL);
 

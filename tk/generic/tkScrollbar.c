@@ -324,7 +324,7 @@ ScrollbarWidgetCmd(
 	} else {
 	    fraction = ((double) pixels / (double) length);
 	}
-	sprintf(buf, "%g", fraction);
+	Tcl_PrintDouble(NULL, fraction, buf);
 	Tcl_SetResult(interp, buf, TCL_VOLATILE);
     } else if ((c == 'f') && (strncmp(argv[1], "fraction", length) == 0)) {
 	int x, y, pos, length;
@@ -359,7 +359,7 @@ ScrollbarWidgetCmd(
 	} else if (fraction > 1.0) {
 	    fraction = 1.0;
 	}
-	sprintf(buf, "%g", fraction);
+	Tcl_PrintDouble(NULL, fraction, buf);
 	Tcl_SetResult(interp, buf, TCL_VOLATILE);
     } else if ((c == 'g') && (strncmp(argv[1], "get", length) == 0)) {
 	if (argc != 2) {
@@ -370,8 +370,8 @@ ScrollbarWidgetCmd(
 	if (scrollPtr->flags & NEW_STYLE_COMMANDS) {
 	    char first[TCL_DOUBLE_SPACE], last[TCL_DOUBLE_SPACE];
 
-	    Tcl_PrintDouble(interp, scrollPtr->firstFraction, first);
-	    Tcl_PrintDouble(interp, scrollPtr->lastFraction, last);
+	    Tcl_PrintDouble(NULL, scrollPtr->firstFraction, first);
+	    Tcl_PrintDouble(NULL, scrollPtr->lastFraction, last);
 	    Tcl_AppendResult(interp, first, " ", last, NULL);
 	} else {
 	    char buf[TCL_INTEGER_SPACE * 4];
