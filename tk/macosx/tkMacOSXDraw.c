@@ -1740,7 +1740,7 @@ TkMacOSXSetupDrawingContext(
 {
     MacDrawable *macDraw = ((MacDrawable*)d);
     int dontDraw = 0;
-    TkMacOSXDrawingContext dc = {NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+    TkMacOSXDrawingContext dc = {NULL, NULL, NULL, nil, NULL, NULL, NULL, NULL,
 	    {SHRT_MIN, SHRT_MIN, SHRT_MAX, SHRT_MAX}, false};
 
     if (tkPictureIsOpen) {
@@ -1756,10 +1756,6 @@ TkMacOSXSetupDrawingContext(
 	dontDraw = dc.clipRgn ? HIShapeIsEmpty(dc.clipRgn) : 0;
     }
     if (dontDraw) {
-	if (dc.clipRgn) {
-	    CFRelease(dc.clipRgn);
-	    dc.clipRgn = NULL;
-	}
 	goto end;
     }
     if (useCG) {
@@ -1784,11 +1780,20 @@ TkMacOSXSetupDrawingContext(
 	dc.saveState = (void*)1;
 	dc.port = NULL;
     } else if (dc.port) {
-	dc.portChanged = QDSwapPort(dc.port, &dc.savePort);
-	if (useCG && ChkErr(QDBeginCGContext, dc.port, &dc.context) == noErr) {
-	    SyncCGContextOriginWithPort(dc.context, dc.port);
+	NSView *view = macDraw->toplevel ? macDraw->toplevel->view : macDraw->view;
+	if (view) {
+	    if ((dontDraw = ![view lockFocusIfCanDraw])) {
+		goto end;
+	    }
+	    dc.view = view;
+	    dc.context = [[NSGraphicsContext currentContext] graphicsPort];
 	} else {
-	    dc.context = NULL;
+	    dc.portChanged = QDSwapPort(dc.port, &dc.savePort);
+	    if (useCG && ChkErr(QDBeginCGContext, dc.port, &dc.context) == noErr) {
+		SyncCGContextOriginWithPort(dc.context, dc.port);
+	    } else {
+		dc.context = NULL;
+	    }
 	}
     } else {
 	Tcl_Panic("TkMacOSXSetupDrawingContext(): "
@@ -1884,6 +1889,10 @@ TkMacOSXSetupDrawingContext(
 #endif
     }
 end:
+    if (dontDraw && dc.clipRgn) {
+	CFRelease(dc.clipRgn);
+	dc.clipRgn = NULL;
+    }
     *dcPtr = dc;
     return !dontDraw;
 }
@@ -1913,7 +1922,9 @@ TkMacOSXRestoreDrawingContext(
 	if (dcPtr->saveState) {
 	    CGContextRestoreGState(dcPtr->context);
 	}
-	if (dcPtr->port) {
+	if (dcPtr->view) {
+	    [dcPtr->view unlockFocus];
+	} else if (dcPtr->port) {
 	    ChkErr(QDEndCGContext, dcPtr->port, &(dcPtr->context));
 	}
     } else if (dcPtr->port) {

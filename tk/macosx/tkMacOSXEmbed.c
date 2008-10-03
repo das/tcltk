@@ -148,6 +148,7 @@ TkpMakeWindow(
 	macWin->drawRect = CGRectNull;
 	macWin->referenceCount = 0;
 	macWin->flags = TK_CLIP_INVALID;
+	macWin->view = nil;
 	macWin->grafPtr = NULL;
 	macWin->context = NULL;
 	macWin->size = CGSizeZero;
@@ -279,6 +280,7 @@ TkpUseWindow(
      * correctly find the container's port.
      */
 
+    macWin->view = nil;
     macWin->grafPtr = NULL;
     macWin->context = NULL;
     macWin->size = CGSizeZero;

@@ -169,6 +169,7 @@ XDestroyWindow(
 	    }
 	}
 
+	macWin->view = nil;
 	macWin->grafPtr = NULL;
 
 	/*
@@ -248,7 +249,8 @@ XMapWindow(
 		ShowSheetWindow(wRef, TkMacOSXDrawableWindow(
 			macWin->winPtr->wmInfoPtr->master));
 	    } else {
-		ShowWindow(wRef);
+		//ShowWindow(wRef);
+		[macWin->winPtr->wmInfoPtr->window orderFront:NSApp];
 	    }
 	}
 	TkMacOSXInvalClipRgns((Tk_Window) macWin->winPtr);
@@ -361,7 +363,8 @@ XUnmapWindow(
 		    && (macWin->winPtr->wmInfoPtr->master != None)) {
 		HideSheetWindow(wref);
 	    } else {
-		HideWindow(wref);
+		//HideWindow(wref);
+		[macWin->winPtr->wmInfoPtr->window orderOut:NSApp];		
 	    }
 	}
 	TkMacOSXInvalClipRgns((Tk_Window) macWin->winPtr);
@@ -1399,6 +1402,7 @@ Tk_GetPixmap(
     macPix->referenceCount = 0;
     macPix->toplevel = NULL;
     macPix->flags = TK_IS_PIXMAP | (depth == 1 ? TK_IS_BW_PIXMAP : 0);
+    macPix->view = nil;
     macPix->grafPtr = NULL;
     macPix->context = NULL;
     macPix->size = CGSizeMake(width, height);

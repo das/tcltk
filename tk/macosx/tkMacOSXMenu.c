@@ -3994,6 +3994,7 @@ TkpMenuInit(void)
     macMDEFDrawable.referenceCount = 0;
     macMDEFDrawable.toplevel = NULL;
     macMDEFDrawable.flags = 0;
+    macMDEFDrawable.view = nil;
     macMDEFDrawable.grafPtr = NULL;
     macMDEFDrawable.context = NULL;
     macMDEFDrawable.size = CGSizeZero;

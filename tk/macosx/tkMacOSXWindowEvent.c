@@ -484,6 +484,40 @@ GenerateUpdateEvent(Window window)
     }
     return result;
  }
+ 
+ int TkMacOSXGenerateExposeEvents(NSWindow *window, HIMutableShapeRef shape) {
+    WindowRef macWindow = [window windowRef];
+    Window xwindow = TkMacOSXGetXWindow(macWindow);
+    TkDisplay *dispPtr;
+    TkWindow  *winPtr;
+    int result = 0;
+    CGRect updateBounds;
+
+    dispPtr = TkGetDisplayList();
+    winPtr = (TkWindow *)Tk_IdToWindow(dispPtr->display, xwindow);
+
+    if (!winPtr) {
+	return result;
+    }
+    HIShapeGetBounds(shape, &updateBounds);
+#ifdef TK_MAC_DEBUG_CLIP_REGIONS
+    TkMacOSXDebugFlashRegion(window, shape);
+#endif /* TK_MAC_DEBUG_CLIP_REGIONS */
+    if (winPtr->wmInfoPtr->flags & WM_TRANSPARENT) {
+	ClearPort(TkMacOSXGetDrawablePort(xwindow), shape);
+    }
+    result = GenerateUpdates(shape, &updateBounds, winPtr);
+    if (result) {
+	/*
+	 * Ensure there are no pending idle-time redraws that could prevent
+	 * the just posted Expose events from generating new redraws.
+	 */
+
+	Tcl_DoOneEvent(TCL_IDLE_EVENTS|TCL_DONT_WAIT);
+    }
+    return result;
+
+ }
 
 /*
  *----------------------------------------------------------------------

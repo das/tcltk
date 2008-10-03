@@ -143,6 +143,7 @@ MODULE_SCOPE void* TkMacOSXGetNamedSymbol(const char* module,
 typedef struct TkMacOSXDrawingContext {
     CGContextRef context;
     CGrafPtr port, savePort;
+    NSView *view;
     ThemeDrawingState saveState;
     RgnHandle saveClip;
     HIShapeRef clipRgn;
@@ -227,7 +228,14 @@ MODULE_SCOPE void TkMacOSXWinCGBounds(TkWindow *winPtr, CGRect *bounds);
 MODULE_SCOPE HIShapeRef TkMacOSXGetClipRgn(Drawable drawable);
 MODULE_SCOPE CGImageRef TkMacOSXCreateCGImageWithDrawable(Drawable drawable);
 MODULE_SCOPE Tcl_Obj* TkMacOSXGetStringObjFromCFString(CFStringRef str);
+MODULE_SCOPE int TkMacOSXGenerateExposeEvents(NSWindow *window, HIMutableShapeRef shape);
 
+
+#ifdef TK_MAC_DEBUG
+#define TKLog(f, ...) NSLog(f, ##__VA_ARGS__)
+#else
+#define TKLog(f, ...)
+#endif
 
 @interface TKApplication : NSApplication {
 @private
@@ -239,6 +247,23 @@ MODULE_SCOPE Tcl_Obj* TkMacOSXGetStringObjFromCFString(CFStringRef str);
 - (void)setupEventLoop;
 - (void)afterEvent;
 - (void)eventLoopException:(NSException *)theException;
+@end
+
+@interface TKContentView : NSView {
+@private
+    NSArray *emtpySubviews, *savedSubviews;
+    NSInteger lockFocusLevel;
+}
+
+- (id)initWithFrame:(NSRect)frame;
+- (BOOL)lockFocusIfCanDraw;
+- (void)unlockFocus;
+- (void)drawRect:(NSRect)rect;
+- (BOOL)isOpaque;
+- (BOOL)isFlipped;
+- (void)viewWillDraw;
+- (void)reenableFlush;
+
 @end
 
 #endif /* _TKMACPRIV */
