@@ -1362,7 +1362,7 @@ Tk_WinfoObjCmd(
 
 	    xyObj[0] = Tcl_NewIntObj(x);
 	    xyObj[1] = Tcl_NewIntObj(y);
-	    Tcl_SetObjResult(interp, Tcl_NewListObj(xyObj, 2));
+	    Tcl_SetObjResult(interp, Tcl_NewListObj(2, xyObj));
 	} else if (useX) {
 	    Tcl_SetObjResult(interp, Tcl_NewIntObj(x));
 	} else {
@@ -1695,7 +1695,7 @@ Tk_WinfoObjCmd(
 	visInfoPtr = XGetVisualInfo(Tk_Display(tkwin), VisualScreenMask,
 		&template, &count);
 	if (visInfoPtr == NULL) {
-	    Tcl_SetObjResult(interp, "can't find any visuals for screen",
+	    Tcl_SetResult(interp, "can't find any visuals for screen",
 		    TCL_STATIC);
 	    return TCL_ERROR;
 	}

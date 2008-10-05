@@ -716,7 +716,6 @@ Tk_FontObjCmd(
 	char *string;
 	Tk_Font tkfont;
 	int length = 0, skip = 0;
-	Tcl_Obj *resultPtr;
 
 	if (objc > 4) {
 	    skip = TkGetDisplayOf(interp, objc - 3, objv + 3, &tkwin);
@@ -808,7 +807,7 @@ Tk_FontObjCmd(
 	    }
 	    namedHashPtr = Tcl_NextHashEntry(&search);
 	}
-	Tcl_SetObjResult(interp, resultObj);
+	Tcl_SetObjResult(interp, resultPtr);
 	break;
     }
     }
