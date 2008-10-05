@@ -380,7 +380,7 @@ PrintUsage(
 		Tcl_AppendResult(interp, "\n\t\tDefault value: ", tmp, NULL);
 		break;
 	    case TK_ARGV_FLOAT:
-		sprintf(tmp, "%g", *((double *) infoPtr->dst));
+		Tcl_PrintDouble(NULL, *((double *) infoPtr->dst), tmp);
 		Tcl_AppendResult(interp, "\n\t\tDefault value: ", tmp, NULL);
 		break;
 	    case TK_ARGV_STRING: {
