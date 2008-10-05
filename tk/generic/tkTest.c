@@ -1314,7 +1314,7 @@ TrivialConfigObjCmd(
 		    headerPtr->optionTable, objc - 2, objv + 2,
 		    tkwin, NULL, &mask);
 	    if (result == TCL_OK) {
-		Tcl_SetIntObj(Tcl_GetObjResult(interp), mask);
+		Tcl_SetObjResult(interp, Tcl_NewIntObj(mask));
 	    }
 	}
 	break;
@@ -1324,7 +1324,7 @@ TrivialConfigObjCmd(
 		tkwin, &saved, &mask);
 	Tk_FreeSavedOptions(&saved);
 	if (result == TCL_OK) {
-	    Tcl_SetIntObj(Tcl_GetObjResult(interp), mask);
+	    Tcl_SetObjResult(interp, Tcl_NewIntObj(mask));
 	}
 	break;
     }
