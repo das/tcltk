@@ -80,7 +80,27 @@ Tcl_Encoding TkMacOSXCarbonEncoding = NULL;
 
 static char scriptPath[PATH_MAX + 1] = "";
 
+@interface TKApplication(Init)
+- (void)setup;
+- (void)postedNotification:(NSNotification *)notification;
+@end
+
 @implementation TKApplication
+@end
+
+@implementation TKApplication(Init)
+- (void)setup {
+    [self setDelegate:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+	    selector:@selector(postedNotification:) name:nil object:nil];
+    [self setupApplicationNotifications];
+    [self setupWindowNotifications];
+    [self setupEventLoop];
+    [self setWindowsNeedUpdate:YES];
+}
+- (void)postedNotification:(NSNotification *)notification {
+    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+}
 @end
 
 
@@ -214,9 +234,8 @@ TkpInit(
 	static NSAutoreleasePool *pool = nil;
 	if (!pool) {pool = [NSAutoreleasePool new];}
 	[TKApplication sharedApplication];
-	[NSApp setDelegate:NSApp];
+	[NSApp setup];
 	[pool drain];
-	[NSApp setupEventLoop];
 	
 	//NSApplicationLoad();
 	TkMacOSXInitAppleEvents(interp);
