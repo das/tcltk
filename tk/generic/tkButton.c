@@ -753,8 +753,7 @@ ButtonCreate(
 	return TCL_ERROR;
     }
 
-    Tcl_SetStringObj(Tcl_GetObjResult(interp), Tk_PathName(butPtr->tkwin),
-	    -1);
+    Tcl_SetObjResult(interp, Tcl_NewStringObj(Tk_PathName(butPtr->tkwin),-1));
     return TCL_OK;
 }
 
