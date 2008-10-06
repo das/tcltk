@@ -78,6 +78,38 @@ static int GenerateUpdates(HIMutableShapeRef updateRgn, CGRect *updateBounds,
 static int GenerateActivateEvents(Window window, int activeFlag);
 static void ClearPort(CGrafPtr port, HIShapeRef updateRgn);
 
+#pragma mark TKApplication(WindowEvent)
+
+@implementation TKApplication(WindowEvent)
+- (void)windowActivation:(NSNotification *)notification {
+    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+    BOOL activate = [[notification name] isEqualToString:NSWindowDidBecomeKeyNotification];
+    WindowRef whichWindow;
+    Window window;
+    TkDisplay *dispPtr;
+    TkWindow *winPtr;
+
+    whichWindow = [[notification object] windowRef];
+    window = TkMacOSXGetXWindow(whichWindow);
+    dispPtr = TkGetDisplayList();
+    winPtr = (TkWindow *)Tk_IdToWindow(dispPtr->display, window);
+    GenerateActivateEvents(window, activate);
+    TkMacOSXGenerateFocusEvent(window, activate);
+    if (winPtr) {
+	TkMacOSXEnterExitFullscreen(winPtr, activate);
+    }
+}
+#define observe(n, s) [nc addObserver:self selector:@selector(s) name:n object:nil]
+- (void)setupWindowNotifications {
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    observe(NSWindowDidBecomeKeyNotification, windowActivation:);
+    observe(NSWindowDidResignKeyNotification, windowActivation:);
+}
+- (void)setupApplicationNotifications {
+}
+#undef observe(n, s)
+@end
+#pragma mark -
 
 /*
  *----------------------------------------------------------------------
