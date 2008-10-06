@@ -3019,7 +3019,7 @@ WmAspectCmd(
 	if (wmPtr->sizeHintsFlags & PAspect) {
 	    Tcl_SetObjResult(interp, Tcl_ObjPrintf("%d %d %d %d",
 		    wmPtr->minAspect.x, wmPtr->minAspect.y,
-		    wmPtr->maxAspect.x, wmPtr->maxAspect.y);
+		    wmPtr->maxAspect.x, wmPtr->maxAspect.y));
 	}
 	return TCL_OK;
     }
@@ -3809,8 +3809,6 @@ WmGeometryCmd(
 	    wmPtr->x = result >> 16;
 	    wmPtr->y = result & 0x0000ffff;
 	}
-	x = wmPtr->x;
-	y = wmPtr->y;
 	Tcl_SetObjResult(interp, Tcl_ObjPrintf("%dx%d%c%d%c%d",
 		width, height, xSign, wmPtr->x, ySign, wmPtr->y));
 	return TCL_OK;
