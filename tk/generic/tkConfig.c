@@ -1223,9 +1223,9 @@ SetOptionFromAny(
     Tcl_Interp *interp,		/* Used for error reporting if not NULL. */
     register Tcl_Obj *objPtr)	/* The object to convert. */
 {
-    Tcl_AppendToObj(Tcl_GetObjResult(interp),
+    Tcl_AppendResult(interp,
 	    "can't convert value to option except via GetOptionFromObj API",
-	    -1);
+	    NULL);
     return TCL_ERROR;
 }
 
@@ -1306,9 +1306,8 @@ Tk_SetOptions(
 
 	if (objc < 2) {
 	    if (interp != NULL) {
-		Tcl_AppendStringsToObj(Tcl_GetObjResult(interp),
-			"value for \"", Tcl_GetStringFromObj(*objv, NULL),
-			"\" missing", NULL);
+		Tcl_AppendResult(interp, "value for \"",
+			Tcl_GetStringFromObj(*objv, NULL), "\" missing",NULL);
 		goto error;
 	    }
 	}

@@ -883,12 +883,13 @@ GetFileNameW(
 	    int listObjc, count;
 	    Tcl_Obj **listObjv = NULL;
 	    Tcl_Obj **typeInfo = NULL;
+
 	    if (Tcl_ListObjGetElements(interp, filterObj,
-			    &listObjc, &listObjv) != TCL_OK) {
+		    &listObjc, &listObjv) != TCL_OK) {
 		result = TCL_ERROR;
 	    } else if (Tcl_ListObjGetElements(interp,
-			    listObjv[ofn.nFilterIndex - 1],
-			    &count, &typeInfo) != TCL_OK) {
+		    listObjv[ofn.nFilterIndex - 1], &count,
+		    &typeInfo) != TCL_OK) {
 		result = TCL_ERROR;
 	    } else {
 		Tcl_ObjSetVar2(interp, typeVariableObj, NULL, typeInfo[0], 0);
@@ -1332,12 +1333,13 @@ GetFileNameA(
 	    int listObjc, count;
 	    Tcl_Obj **listObjv = NULL;
 	    Tcl_Obj **typeInfo = NULL;
-	    if (Tcl_ListObjGetElements(interp, filterObj,
-			    &listObjc, &listObjv) != TCL_OK) {
+
+	    if (Tcl_ListObjGetElements(interp, filterObj, &listObjc,
+		    &listObjv) != TCL_OK) {
 		result = TCL_ERROR;
 	    } else if (Tcl_ListObjGetElements(interp,
-			    listObjv[ofn.nFilterIndex - 1],
-			    &count, &typeInfo) != TCL_OK) {
+		    listObjv[ofn.nFilterIndex - 1], &count,
+		    &typeInfo) != TCL_OK) {
 		result = TCL_ERROR;
 	    } else {
 		Tcl_ObjSetVar2(interp, typeVariableObj, NULL, typeInfo[0], 0);

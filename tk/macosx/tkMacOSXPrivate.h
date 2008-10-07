@@ -237,10 +237,11 @@ MODULE_SCOPE int TkMacOSXGenerateExposeEvents(NSWindow *window, HIMutableShapeRe
 #define TKLog(f, ...)
 #endif
 
+#define VISIBILITY_HIDDEN __attribute__((__visibility__("hidden")))
+
+VISIBILITY_HIDDEN
 @interface TKApplication : NSApplication {
 @private
-#ifndef __LP64__
-#endif
 }
 @end
 @interface TKApplication(TKApplicationPrivate)
@@ -248,7 +249,12 @@ MODULE_SCOPE int TkMacOSXGenerateExposeEvents(NSWindow *window, HIMutableShapeRe
 - (void)afterEvent;
 - (void)eventLoopException:(NSException *)theException;
 @end
+@interface TKApplication(WindowEvent)
+- (void)setupApplicationNotifications;
+- (void)setupWindowNotifications;
+@end
 
+VISIBILITY_HIDDEN
 @interface TKContentView : NSView {
 @private
     NSArray *emtpySubviews, *savedSubviews;
