@@ -92,16 +92,6 @@ static EventHandlerUPP carbonEventHandlerUPP = NULL;
 static Tcl_Interp *carbonEventInterp = NULL;
 static int inTrackingLoop = 0;
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED < 1050
-/*
- * For InstallStandardApplicationEventHandler():
- */
-
-static jmp_buf exitRaelJmpBuf;
-static void ExitRaelEventHandlerProc(EventHandlerCallRef callRef,
-	EventRef event, void *userData) __attribute__ ((__noreturn__));
-#endif
-
 
 /*
  *----------------------------------------------------------------------
@@ -327,117 +317,26 @@ InstallStandardApplicationEventHandler(void)
 {
     OSStatus err = memFullErr;
 
-    TK_IF_HI_TOOLBOX(5,
-       /*
-	* The approach below does not work correctly in Leopard, it leads to
-	* crashes in [NSView unlockFocus] whenever HIToolbox uses Cocoa (Help
-	* menu, Nav Services, Color Picker). While it is now possible to
-	* install the standard app handler with InstallStandardEventHandler(),
-	* to fully replicate RAEL the standard menubar event handler also needs
-	* to be installed. Unfortunately there appears to be no public API to
-	* obtain the menubar event target. As a workaround, for now we resort
-	* to calling the HIToolbox-internal GetMenuBarEventTarget() directly
-	* (symbol acquired via TkMacOSXInitNamedSymbol() from HIToolbox
-	* version 343, may not exist in later versions).
-	*/
-	err = ChkErr(InstallStandardEventHandler, GetApplicationEventTarget());
-	TkMacOSXInitNamedSymbol(HIToolbox, EventTargetRef,
-		GetMenuBarEventTarget, void);
-	if (GetMenuBarEventTarget) {
-	    ChkErr(InstallStandardEventHandler, GetMenuBarEventTarget());
-	} else {
-	    TkMacOSXDbgMsg("Unable to install standard menubar event handler");
-	}
-    ) TK_ELSE_HI_TOOLBOX (5,
-       /*
-	* This is a hack to workaround missing Carbon API to install the
-	* standard application event handler (InstallStandardEventHandler()
-	* does not work on the application target). The only way to install the
-	* standard app handler is to call RunApplicationEventLoop(), but since
-	* we are running our own event loop, we'll immediately need to break
-	* out of RAEL again: we do this via longjmp out of the
-	* ExitRaelEventHandlerProc event handler called first off from RAEL by
-	* posting a high priority dummy event. This workaround is derived from
-	* a similar approach in Technical Q&A 1061.
-	*/
-	enum {
-	    kExitRaelEvent = 'ExiT'
-	};
-	const EventTypeSpec exitRaelEventType = {
-	    kExitRaelEvent, kExitRaelEvent
-	};
-	EventHandlerUPP exitRaelEventHandler;
-	EventHandlerRef exitRaelEventHandlerRef = NULL;
-	EventRef exitRaelEvent = NULL;
-
-	exitRaelEventHandler = NewEventHandlerUPP(
-		(EventHandlerProcPtr) ExitRaelEventHandlerProc);
-	if (exitRaelEventHandler) {
-	    err = ChkErr(InstallEventHandler, GetEventDispatcherTarget(),
-		    exitRaelEventHandler, 1, &exitRaelEventType, NULL,
-		    &exitRaelEventHandlerRef);
-	}
-	if (err == noErr) {
-	    err = ChkErr(CreateEvent, NULL, kExitRaelEvent, kExitRaelEvent,
-		    GetCurrentEventTime(), kEventAttributeNone,
-		    &exitRaelEvent);
-	}
-	if (err == noErr) {
-	    err = ChkErr(PostEventToQueue, GetMainEventQueue(), exitRaelEvent,
-		    kEventPriorityHigh);
-	}
-	if (err == noErr) {
-	    if (!setjmp(exitRaelJmpBuf)) {
-		RunApplicationEventLoop();
-
-		/*
-		 * This point should never be reached!
-		 */
-
-		Tcl_Panic("RunApplicationEventLoop exited !");
-	    }
-	}
-	if (exitRaelEvent) {
-	    ReleaseEvent(exitRaelEvent);
-	}
-	if (exitRaelEventHandlerRef) {
-	    RemoveEventHandler(exitRaelEventHandlerRef);
-	}
-	if (exitRaelEventHandler) {
-	    DisposeEventHandlerUPP(exitRaelEventHandler);
-	}
-    ) TK_ENDIF
+   /*
+    * While it is now possible on Leopard to install the standard app
+    * handler with InstallStandardEventHandler(), to fully replicate RAEL
+    * the standard menubar event handler also needs to be installed.
+    * Unfortunately there appears to be no public API to obtain the menubar
+    * event target. As a workaround, for now we resort to calling the
+    * HIToolbox-internal GetMenuBarEventTarget() directly (symbol acquired
+    * via TkMacOSXInitNamedSymbol() from HIToolbox version 343, may not
+    * exist in later versions).
+    */
+    err = ChkErr(InstallStandardEventHandler, GetApplicationEventTarget());
+    TkMacOSXInitNamedSymbol(HIToolbox, EventTargetRef,
+	    GetMenuBarEventTarget, void);
+    if (GetMenuBarEventTarget) {
+	ChkErr(InstallStandardEventHandler, GetMenuBarEventTarget());
+    } else {
+	TkMacOSXDbgMsg("Unable to install standard menubar event handler");
+    }
     return err;
 }
-
-#if MAC_OS_X_VERSION_MIN_REQUIRED < 1050
-/*
- *----------------------------------------------------------------------
- *
- * ExitRaelEventHandlerProc --
- *
- *	This procedure is the dummy event handler used to break out of
- *	RAEL via longjmp, it is called as the first ever event handler
- *	in RAEL by posting a high priority dummy event.
- *
- * Results:
- *	None. Never returns !
- *
- * Side effects:
- *	longjmp back to InstallStandardApplicationEventHandler().
- *
- *----------------------------------------------------------------------
- */
-
-static void
-ExitRaelEventHandlerProc(
-    EventHandlerCallRef callRef,
-    EventRef event,
-    void *userData)
-{
-    longjmp(exitRaelJmpBuf, 1);
-}
-#endif
 
 /*
  *----------------------------------------------------------------------

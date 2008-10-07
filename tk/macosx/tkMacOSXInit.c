@@ -24,16 +24,6 @@
 #include <mach-o/getsect.h>
 
 /*
- * Define the following to 0 to not attempt to use an undocumented SPI to
- * notify the window server that an unbundled executable is a full GUI
- * application after loading Tk.
- */
-
-#ifndef MAC_OSX_TK_USE_CPS_SPI
-#define MAC_OSX_TK_USE_CPS_SPI 1
-#endif
-
-/*
  * The following structures are used to map the script/language codes of a
  * font to the name that should be passed to Tcl_GetEncoding() to obtain the
  * encoding for that font. The set of numeric constants is fixed and defined
@@ -90,8 +80,6 @@ Tcl_Encoding TkMacOSXCarbonEncoding = NULL;
 
 static char scriptPath[PATH_MAX + 1] = "";
 
-float tkMacOSXToolboxVersionNumber = 0;
-
 /*
  *----------------------------------------------------------------------
  *
@@ -141,7 +129,11 @@ TkpInit(
 	/*
 	 * Initialize/check OS version variable for runtime checks.
 	 */
-	
+
+	#if MAC_OS_X_VERSION_MIN_REQUIRED < 1050
+	#error Mac OS X 10.5 required
+	#endif
+
 	if (!uname(&name)) {
 	    osVersion = strtol(name.release, NULL, 10) - 4;
 	}
@@ -149,21 +141,6 @@ TkpInit(
 	    Tcl_Panic("Mac OS X 10.%d or later required !",
 		    (MAC_OS_X_VERSION_MIN_REQUIRED-1000)/10);
 	}
-	TK_IF_MAC_OS_X_API (3, &kHIToolboxVersionNumber,
-	    tkMacOSXToolboxVersionNumber = kHIToolboxVersionNumber;
-	) TK_ELSE_MAC_OS_X (3,
-	    if (osVersion > 5) {
-		tkMacOSXToolboxVersionNumber = INFINITY;
-	    } else if (osVersion >= 3) {
-		static const float tbVersions[3] = {
-		    kHIToolboxVersionNumber10_3,
-		    kHIToolboxVersionNumber10_4,
-		    kHIToolboxVersionNumber10_5,
-		};
-
-		tkMacOSXToolboxVersionNumber = tbVersions[osVersion-3];
-	    }
-	) TK_ENDIF
 
 	/*
 	 * When Tk is in a framework, force tcl_findLibrary to look in the
@@ -289,26 +266,8 @@ TkpInit(
 	    OSStatus err = procNotFound;
 	    ProcessSerialNumber psn = { 0, kCurrentProcess };
 
-	    TK_IF_MAC_OS_X_API (3, TransformProcessType,
-		err = ChkErr(TransformProcessType, &psn,
-			kProcessTransformToForegroundApplication);
-	    ) TK_ENDIF
-#if MAC_OSX_TK_USE_CPS_SPI
-	    if (err != noErr) {
-		/*
-		 * When building or running on 10.2 or when the above fails,
-		 * attempt to use undocumented CPS SPI to notify the window
-		 * server. Load the SPI symbol dynamically, so that we don't
-		 * break if it ever disappears or changes its name.
-		 */
-
-		TkMacOSXInitNamedSymbol(CoreGraphics, OSStatus,
-			CPSEnableForegroundOperation, ProcessSerialNumberPtr);
-		if (CPSEnableForegroundOperation) {
-		    ChkErr(CPSEnableForegroundOperation, &psn);
-		}
-	    }
-#endif /* MAC_OSX_TK_USE_CPS_SPI */
+	    err = ChkErr(TransformProcessType, &psn,
+		    kProcessTransformToForegroundApplication);
 	}
 
 	TkMacOSXInitAppleEvents(interp);

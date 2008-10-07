@@ -19,11 +19,6 @@
 #include "tkMacOSXPrivate.h"
 #include "tkColor.h"
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED < 1040
-/* Undocumented CG API for creating CGPattern from CGImage */
-extern CGPatternRef CGPatternCreateWithImage(CGImageRef img, int i) WEAK_IMPORT_ATTRIBUTE;
-#endif
-
 struct SystemColorMapEntry {
     const char *name;
     ThemeBrush brush;
@@ -411,109 +406,26 @@ TkMacOSXSetColorInContext(
     if (GetThemeFromPixelCode((pixel >> 24) & 0xff, &brush, &textColor,
 	    &background)) {
 	if (brush) {
-	    TK_IF_MAC_OS_X_API (4, HIThemeSetFill,
-		err = ChkErr(HIThemeSetFill, brush, NULL, context,
+	    err = ChkErr(HIThemeSetFill, brush, NULL, context,
+		    kHIThemeOrientationNormal);
+	    if (err == noErr) {
+		err = ChkErr(HIThemeSetStroke, brush, NULL, context,
 			kHIThemeOrientationNormal);
-		TK_IF_MAC_OS_X_API_COND (4, HIThemeSetFill, err == noErr,
-		    err = ChkErr(HIThemeSetStroke, brush, NULL, context,
-			    kHIThemeOrientationNormal);
-		) TK_ENDIF
-	    ) TK_ENDIF
+	    }
 	} else if (textColor) {
-	    TK_IF_MAC_OS_X_API (4, HIThemeSetTextFill,
-		err = ChkErr(HIThemeSetTextFill, textColor, NULL, context,
-			kHIThemeOrientationNormal);
-	    ) TK_ENDIF
+	    err = ChkErr(HIThemeSetTextFill, textColor, NULL, context,
+		    kHIThemeOrientationNormal);
 	} else if (background) {
-	    TK_IF_MAC_OS_X_API (3, CGContextGetClipBoundingBox,
-		CGRect rect = CGContextGetClipBoundingBox(context);
-		HIThemeBackgroundDrawInfo info = { 0, kThemeStateActive,
-			background };
+	    CGRect rect = CGContextGetClipBoundingBox(context);
+	    HIThemeBackgroundDrawInfo info = { 0, kThemeStateActive,
+		    background };
 
-		TK_IF_MAC_OS_X_API (3, HIThemeApplyBackground,
-		    TK_IF_HI_TOOLBOX (3, /* c.f. QA1377 */
-			err = ChkErr(HIThemeApplyBackground, &rect, &info,
-				context, kHIThemeOrientationNormal);
-		    ) TK_ENDIF
-		) TK_ENDIF
-	    ) TK_ENDIF
+	    err = ChkErr(HIThemeApplyBackground, &rect, &info,
+		    context, kHIThemeOrientationNormal);
 	}
 	if (err == noErr) {
 	    return;
 	}
-#if MAC_OS_X_VERSION_MIN_REQUIRED < 1040
-	/*
-	 * Convert Appearance theme pattern to CGPattern:
-	 */
-	if ((brush || background) && CGPatternCreateWithImage != NULL) {
-	    static PixPatHandle pixpat = NULL;
-	    static GWorldPtr patGWorld = NULL;
-	    static uint32_t bitmapInfo = 0;
-	    const short patDim = 16;
-	    const Rect bounds = {0, 0, patDim, patDim};
-	    CGrafPtr savePort;
-	    Boolean portChanged;
-	    PixMapHandle pixmap;
-	    long rowbytes;
-	    CGImageRef img;
-	    CGColorSpaceRef rgbCspace;
-	    CGDataProviderRef provider;
-
-	    if (!pixpat) {
-		pixpat = NewPixPat();
-		err = ChkErr(NewGWorld, &patGWorld, 32, &bounds, NULL, NULL, 0
-#ifdef __LITTLE_ENDIAN__
-			| kNativeEndianPixMap
-#endif
-			);
-		if (!pixpat || err != noErr || !patGWorld) {
-		    Tcl_Panic("TkMacOSXSetColorInContext(): "
-			"pattern initialization failed !");
-		}
-		TK_IF_HI_TOOLBOX (4,
-		    bitmapInfo = kCGBitmapByteOrder32Host;
-		) TK_ENDIF
-	    }
-	    portChanged = QDSwapPort(patGWorld, &savePort);
-	    TkMacOSXSetColorInPort(pixel, 1, pixpat, patGWorld);
-#ifdef TK_MAC_DEBUG
-	    Rect patBounds;
-	    GetPixBounds((**pixpat).patMap, &patBounds);
-	    if (patBounds.right > patDim || patBounds.bottom > patDim) {
-		Tcl_Panic("TkMacOSXSetColorInContext(): "
-		    "pattern larger than expected !");
-	    }
-#endif /* TK_MAC_DEBUG */
-	    FillCRect(&bounds, pixpat);
-	    if (portChanged) {
-		QDSwapPort(savePort, NULL);
-	    }
-	    pixmap = GetPortPixMap(patGWorld);
-	    rowbytes = GetPixRowBytes(pixmap);
-	    provider = CGDataProviderCreateWithData(&patGWorld,
-		    GetPixBaseAddr(pixmap), rowbytes * patDim, NULL);
-	    rgbCspace = CGColorSpaceCreateDeviceRGB();
-	    img = CGImageCreate(patDim, patDim, 8, 32,
-		    rowbytes, rgbCspace, kCGImageAlphaFirst | bitmapInfo,
-		    provider, NULL, 0, kCGRenderingIntentDefault);
-	    CGColorSpaceRelease(rgbCspace);
-	    CGDataProviderRelease(provider);
-	    if (img) {
-		CGPatternRef pat = CGPatternCreateWithImage(img, 2);
-		CGColorSpaceRef patCSpace = CGColorSpaceCreatePattern(NULL);
-		const float alpha = 1;
-
-		CGContextSetFillColorSpace(context, patCSpace);
-		CGContextSetFillPattern(context, pat, &alpha);
-		CGContextSetStrokeColorSpace(context, patCSpace);
-		CGContextSetStrokePattern(context, pat, &alpha);
-		CGColorSpaceRelease(patCSpace);
-		CGPatternRelease(pat);
-		CGImageRelease(img);
-		return;
-	    }
-	}
-#endif /* MAC_OS_X_VERSION_MIN_REQUIRED < 1040 */
 	err = ChkErr(GetThemeColor, pixel, brush, textColor, background, &c);
 	if (err == noErr) {
 	    double r = c.red   / 65535.0;

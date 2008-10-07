@@ -782,17 +782,6 @@ NavServicesGetFile(
     if (parent && ((TkWindow *) parent)->window != None &&
 	    TkMacOSXHostToplevelExists(parent)) {
 	options.parentWindow = TkMacOSXDrawableWindow(Tk_WindowId(parent));
-	TK_IF_HI_TOOLBOX (5,
-	    /*
-	     * Impossible to modify dialog modality with the Cocoa-based
-	     * NavServices implementation.
-	     */
-	) TK_ELSE_HI_TOOLBOX (5,
-	    if (options.parentWindow) {
-		options.modality = kWindowModalityWindowModal;
-		data.sheet = 1;
-	    }
-	) TK_ENDIF
     }
 
     /*

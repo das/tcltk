@@ -8935,9 +8935,9 @@ echo "$as_me: WARNING: Aqua can only be used when CoreFoundation is available" >
 echo "$as_me: WARNING: Aqua can only be used when Carbon is available" >&2;}
 	    tk_aqua=no
 	fi
-	if test "`uname -r | awk -F. '{print $1}'`" -lt 6; then
-	    { echo "$as_me:$LINENO: WARNING: Aqua requires Mac OS X 10.2 or later" >&5
-echo "$as_me: WARNING: Aqua requires Mac OS X 10.2 or later" >&2;}
+	if test "`uname -r | awk -F. '{print $1}'`" -lt 9; then
+	    { echo "$as_me:$LINENO: WARNING: Aqua requires Mac OS X 10.5 or later" >&5
+echo "$as_me: WARNING: Aqua requires Mac OS X 10.5 or later" >&2;}
 	    tk_aqua=no
 	fi
     fi

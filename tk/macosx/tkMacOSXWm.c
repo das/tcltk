@@ -850,17 +850,7 @@ WmSetAttribute(
 
 	    err = ChkErr(FSPathMakeRef, (const unsigned char*)path, &ref, &d);
 	    if (err == noErr) {
-		TK_IF_MAC_OS_X_API (4, HIWindowSetProxyFSRef,
-		    err = ChkErr(HIWindowSetProxyFSRef, macWindow, &ref);
-		) TK_ELSE_MAC_OS_X (4,
-		    AliasHandle alias;
-
-		    err = ChkErr(FSNewAlias, NULL, &ref, &alias);
-		    if (err == noErr) {
-			err = ChkErr(SetWindowProxyAlias, macWindow, alias);
-			DisposeHandle((Handle) alias);
-		    }
-		) TK_ENDIF
+		err = ChkErr(HIWindowSetProxyFSRef, macWindow, &ref);
 	    }
 	} else {
 	    int len;
@@ -903,17 +893,16 @@ WmSetAttribute(
 	    WindowAttributes oldAttributes = wmPtr->attributes;
 
 	    if (boolean) {
+		UInt32 features;
+
 		wmPtr->flags |= WM_TRANSPARENT;
 		wmPtr->attributes |= kWindowNoShadowAttribute;
-		TK_IF_MAC_OS_X_API (3, HIWindowChangeFeatures,
-		    UInt32 features;
 
-		    ChkErr(GetWindowFeatures, macWindow, &features);
-		    if (features & kWindowIsOpaque) {
-			ChkErr(HIWindowChangeFeatures, macWindow, 0,
-				kWindowIsOpaque);
-		    }
-		) TK_ENDIF
+		ChkErr(GetWindowFeatures, macWindow, &features);
+		if (features & kWindowIsOpaque) {
+		    ChkErr(HIWindowChangeFeatures, macWindow, 0,
+			    kWindowIsOpaque);
+		}
 	    } else {
 		wmPtr->flags &= ~WM_TRANSPARENT;
 		wmPtr->attributes &= ~kWindowNoShadowAttribute;
@@ -974,17 +963,7 @@ WmGetAttribute(
 	UInt8 path[PATH_MAX+1];
 	OSStatus err;
 
-	TK_IF_MAC_OS_X_API (4, HIWindowSetProxyFSRef,
-	    err = ChkErr(HIWindowGetProxyFSRef, macWindow, &ref);
-	) TK_ELSE_MAC_OS_X (4,
-	    Boolean wasChanged;
-	    AliasHandle alias;
-
-	    err = ChkErr(GetWindowProxyAlias, macWindow, &alias);
-	    if (err == noErr) {
-		err = ChkErr(FSResolveAlias, NULL, alias, &ref, &wasChanged);
-	    }
-	) TK_ENDIF
+	err = ChkErr(HIWindowGetProxyFSRef, macWindow, &ref);
 	if (err == noErr) {
 	    err = ChkErr(FSRefMakePath, &ref, path, PATH_MAX);
 	}
@@ -5985,9 +5964,7 @@ ApplyWindowClassAttributeChanges(
 	    macWindow = TkMacOSXDrawableWindow(winPtr->window);
 	}
 	if (wmPtr->macClass != oldClass) {
-	    TK_IF_MAC_OS_X_API (4, HIWindowChangeClass,
-		ChkErr(HIWindowChangeClass, macWindow, wmPtr->macClass);
-	    ) TK_ENDIF
+	    ChkErr(HIWindowChangeClass, macWindow, wmPtr->macClass);
 	    ChkErr(GetWindowClass, macWindow, &(wmPtr->macClass));
 	}
 	if (newAttributes != oldAttributes) {
@@ -6263,12 +6240,7 @@ TkMacOSXEnterExitFullscreen(
 	static SystemUIOptions fullscreenOptions = 0;
 
 	if (!fullscreenMode) {
-	    TK_IF_HI_TOOLBOX (3,
-		fullscreenMode = kUIModeAllSuppressed;
-	    ) TK_ELSE_HI_TOOLBOX (3,
-		fullscreenMode = kUIModeAllHidden;
-		fullscreenOptions = kUIOptionAutoShowMenuBar;
-	    ) TK_ENDIF
+	    fullscreenMode = kUIModeAllSuppressed;
 	}
 	if (mode != fullscreenMode) {
 	    ChkErr(SetSystemUIMode, fullscreenMode, fullscreenOptions);
