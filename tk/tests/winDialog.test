@@ -391,6 +391,7 @@ test winDialog-5.22 {GetFileName: call GetSaveFileName} -constraints {
     }
     return $x
 } -result {&Save}
+if {[info exists ::env(TEMP)]} {
 test winDialog-5.23 {GetFileName: convert \ to /} -constraints {
     nt testwinevent
 } -body {
@@ -401,6 +402,7 @@ test winDialog-5.23 {GetFileName: convert \ to /} -constraints {
     }
     return $x
 } -result [file join [file normalize $::env(TEMP)] "12x 457"]
+}
 test winDialog-5.24 {GetFileName: file types: MakeFilter() succeeds} -constraints {
     nt
 } -body {
