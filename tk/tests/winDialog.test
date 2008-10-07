@@ -255,6 +255,7 @@ test winDialog-5.10 {GetFileName: file types: MakeFilter() fails} -constraints {
 
     tk_getSaveFile -filetypes {{"foo" .foo FOO}}
 } -returnCodes error -result {bad Macintosh file type "FOO"}
+if {[info exists ::env(TEMP)]} {
 test winDialog-5.11 {GetFileName: initial directory} -constraints {
     nt testwinevent
 } -body {
@@ -268,6 +269,7 @@ test winDialog-5.11 {GetFileName: initial directory} -constraints {
     }
     return $x
 } -result [file join [file normalize $::env(TEMP)] "12x 455"]
+}
 test winDialog-5.12 {GetFileName: initial directory: Tcl_TranslateFilename()} -constraints {
     nt
 } -body {
