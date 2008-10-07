@@ -820,8 +820,8 @@ ListboxWidgetObjCmd(
 
 	    Tcl_SetObjResult(interp, elemPtrs[first]);
 	} else {
-	    Tcl_SetListObj(Tcl_GetObjResult(interp), (last - first + 1),
-		    &(elemPtrs[first]));
+	    Tcl_SetObjResult(interp,
+		    Tcl_NewListObj(last-first+1, elemPtrs+first));
 	}
 	result = TCL_OK;
 	break;

@@ -145,9 +145,8 @@ SetTextIndexFromAny(
     Tcl_Interp *interp,		/* Used for error reporting if not NULL. */
     Tcl_Obj *objPtr)		/* The object to convert. */
 {
-    Tcl_AppendToObj(Tcl_GetObjResult(interp),
-	    "can't convert value to textindex except via TkTextGetIndexFromObj API",
-	    -1);
+    Tcl_AppendResult(interp, "can't convert value to textindex except "
+	    "via TkTextGetIndexFromObj API", -1);
     return TCL_ERROR;
 }
 

@@ -365,9 +365,8 @@ Tk_SendObjCmd(
      */
 
     if (displayPtr) {
-	Tcl_SetStringObj(Tcl_GetObjResult(interp),
-		"option not implemented: \"displayof\" is not available "
-		"for this platform.", -1);
+	Tcl_SetResult(interp, "option not implemented: \"displayof\" is "
+		"not available for this platform.", TCL_STATIC);
 	result = TCL_ERROR;
     }
 
@@ -377,6 +376,7 @@ Tk_SendObjCmd(
     /* FIX ME: we need to check for local interp */
     if (result == TCL_OK) {
 	LPDISPATCH pdisp;
+
 	result = FindInterpreterObject(interp, Tcl_GetString(objv[i]), &pdisp);
 	if (result == TCL_OK) {
 	    i++;

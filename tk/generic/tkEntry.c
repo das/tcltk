@@ -691,7 +691,7 @@ EntryWidgetObjCmd(
 	    Tcl_WrongNumArgs(interp, 2, objv, NULL);
 	    goto error;
 	}
-	Tcl_SetStringObj(Tcl_GetObjResult(interp), entryPtr->string, -1);
+	Tcl_SetObjResult(interp, Tcl_NewStringObj(entryPtr->string, -1));
 	break;
 
     case COMMAND_ICURSOR:
@@ -3738,8 +3738,7 @@ SpinboxWidgetObjCmd(
 	    Tcl_WrongNumArgs(interp, 2, objv, NULL);
 	    goto error;
 	}
-	/* FIXME: modification of objresult */
-	Tcl_SetStringObj(Tcl_GetObjResult(interp), entryPtr->string, -1);
+	Tcl_SetObjResult(interp, Tcl_NewStringObj(entryPtr->string, -1));
 	break;
 
     case SB_CMD_ICURSOR:
@@ -3767,9 +3766,8 @@ SpinboxWidgetObjCmd(
 	}
 	elem = GetSpinboxElement(sbPtr, x, y);
 	if (elem != SEL_NONE) {
-	    /* FIXME: modification of objresult */
-	    Tcl_SetStringObj(Tcl_GetObjResult(interp),
-		    selElementNames[elem], -1);
+	    Tcl_SetObjResult(interp,
+		    Tcl_NewStringObj(selElementNames[elem], -1));
 	}
 	break;
     }
@@ -3990,9 +3988,8 @@ SpinboxWidgetObjCmd(
 		goto error;
 	    }
 	    if (objc == 3) {
-		/* FIXME: modification of objresult */
-		Tcl_SetStringObj(Tcl_GetObjResult(interp),
-			selElementNames[sbPtr->selElement], -1);
+		Tcl_SetObjResult(interp, Tcl_NewStringObj(
+			selElementNames[sbPtr->selElement], -1));
 	    } else {
 		int lastElement = sbPtr->selElement;
 
@@ -4018,8 +4015,7 @@ SpinboxWidgetObjCmd(
 	if (objc == 3) {
 	    EntryValueChanged(entryPtr, Tcl_GetString(objv[2]));
 	}
-	/* FIXME: modification of objresult */
-	Tcl_SetStringObj(Tcl_GetObjResult(interp), entryPtr->string, -1);
+	Tcl_SetObjResult(interp, Tcl_NewStringObj(entryPtr->string, -1));
 	break;
 
     case SB_CMD_VALIDATE: {

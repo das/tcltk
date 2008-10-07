@@ -2822,7 +2822,7 @@ WmOverrideredirectCmd(
     }
     curValue = Tk_Attributes((Tk_Window) winPtr)->override_redirect;
     if (objc == 3) {
-	Tcl_SetBooleanObj(Tcl_GetObjResult(interp), curValue);
+	Tcl_SetObjResult(interp, Tcl_NewBooleanObj(curValue));
 	return TCL_OK;
     }
     if (Tcl_GetBooleanFromObj(interp, objv[3], &boolean) != TCL_OK) {
@@ -3254,7 +3254,7 @@ WmStackorderCmd(
 	} else { /* OPT_ISBELOW */
 	    result = index1 < index2;
 	}
-	Tcl_SetIntObj(Tcl_GetObjResult(interp), result);
+	Tcl_SetObjResult(interp, Tcl_NewBooleanObj(result));
 	return TCL_OK;
     }
     return TCL_OK;

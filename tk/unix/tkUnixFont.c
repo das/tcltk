@@ -847,8 +847,6 @@ TkpGetFontFamilies(
     Tcl_HashSearch search;
     Tcl_Obj *resultPtr, *strPtr;
 
-    resultPtr = Tcl_GetObjResult(interp);
-
     Tcl_InitHashTable(&familyTable, TCL_STRING_KEYS);
     nameList = ListFonts(Tk_Display(tkwin), "*", &numNames);
     for (i = 0; i < numNames; i++) {
@@ -876,11 +874,13 @@ TkpGetFontFamilies(
     XFreeFontNames(nameList);
 
     hPtr = Tcl_FirstHashEntry(&familyTable, &search);
+    resultPtr = Tcl_NewObj();
     while (hPtr != NULL) {
 	strPtr = Tcl_NewStringObj(Tcl_GetHashKey(&familyTable, hPtr), -1);
 	Tcl_ListObjAppendElement(NULL, resultPtr, strPtr);
 	hPtr = Tcl_NextHashEntry(&search);
     }
+    Tcl_SetObjResult(interp, resultPtr);
 
     Tcl_DeleteHashTable(&familyTable);
 }
@@ -913,7 +913,7 @@ TkpGetSubFonts(
     UnixFont *fontPtr;
     FontFamily *familyPtr;
 
-    resultPtr = Tcl_GetObjResult(interp);
+    resultPtr = Tcl_NewObj();
     fontPtr = (UnixFont *) tkfont;
     for (i = 0; i < fontPtr->numSubFonts; i++) {
 	familyPtr = fontPtr->subFontArray[i].familyPtr;
@@ -924,6 +924,7 @@ TkpGetSubFonts(
 	listPtr = Tcl_NewListObj(3, objv);
 	Tcl_ListObjAppendElement(NULL, resultPtr, listPtr);
     }
+    Tcl_SetObjResult(interp, resultPtr);
 }
 
 /*

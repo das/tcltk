@@ -1331,7 +1331,6 @@ HandleTclCommand(
     char *command, *string;
     Tcl_Interp *interp = cmdInfoPtr->interp;
     Tcl_DString oldResult;
-    Tcl_Obj *objPtr;
     int extraBytes, charOffset, count, numChars;
     const char *p;
 
@@ -1384,8 +1383,7 @@ HandleTclCommand(
     Tcl_DStringInit(&oldResult);
     Tcl_DStringGetResult(interp, &oldResult);
     if (TkCopyAndGlobalEval(interp, command) == TCL_OK) {
-	objPtr = Tcl_GetObjResult(interp);
-	string = Tcl_GetStringFromObj(objPtr, &length);
+	string = Tcl_GetStringFromObj(Tcl_GetObjResult(interp), &length);
 	count = (length > maxBytes) ? maxBytes : length;
 	memcpy(buffer, string, (size_t) count);
 	buffer[count] = '\0';
