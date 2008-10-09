@@ -4032,8 +4032,8 @@ SpinboxWidgetObjCmd(
 	if (entryPtr->validate != VALIDATE_NONE) {
 	    entryPtr->validate = selIndex;
 	}
-	/* FIXME: modification of objresult */
-	Tcl_SetObjResult(interp, Tcl_NewBooleanObj((code == TCL_OK)));
+
+	Tcl_SetObjResult(interp, Tcl_NewBooleanObj(code == TCL_OK));
 	break;
     }
 
