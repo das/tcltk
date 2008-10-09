@@ -2944,8 +2944,8 @@ EntryUpdateScrollbar(
     EntryVisibleRange(entryPtr, &first, &last);
     Tcl_PrintDouble(NULL, first, firstStr);
     Tcl_PrintDouble(NULL, last, lastStr);
-    code = Tcl_VarEval(interp, entryPtr->scrollCmd, firstStr, " ", lastStr,
-	    NULL);
+    code = Tcl_VarEval(interp, entryPtr->scrollCmd, " ", firstStr, " ",
+	    lastStr, NULL);
     if (code != TCL_OK) {
 	Tcl_AddErrorInfo(interp,
 		"\n    (horizontal scrolling command executed by ");
