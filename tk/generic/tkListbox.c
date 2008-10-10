@@ -1246,7 +1246,7 @@ ListboxXviewSubCmd(
 	    - 2*(listPtr->inset + listPtr->selBorderWidth);
     if (objc == 2) {
 	if (listPtr->maxWidth == 0) {
-	    Tcl_SetResult(interp, "0 1", TCL_STATIC);
+	    Tcl_SetResult(interp, "0.0 1.0", TCL_STATIC);
 	} else {
 	    char buf[TCL_DOUBLE_SPACE];
 
@@ -1320,7 +1320,7 @@ ListboxYviewSubCmd(
 
     if (objc == 2) {
 	if (listPtr->nElements == 0) {
-	    Tcl_SetResult(interp, "0 1", TCL_STATIC);
+	    Tcl_SetResult(interp, "0.0 1.0", TCL_STATIC);
 	} else {
 	    char buf[TCL_DOUBLE_SPACE];
 

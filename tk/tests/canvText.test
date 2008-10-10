@@ -862,7 +862,7 @@ test canvText-17.1 {TextToPostscript procedure} -setup {
 \[(000)\]
 \[(000)\]
 \[(00)\]
-] $ay -0.5 0 0 false DrawText
+] $ay -0.5 0.0 0 false DrawText
 grestore
 restore showpage
 
@@ -877,7 +877,7 @@ end
     .c itemconfig test -anchor n -fill black
     set x [.c postscript]
     set x [string range $x [string first "/Courier-Oblique" $x] end]
-	expr {$x eq $result}
+    expr {$x eq $result}
 } -result 1
 
 test canvText-18.1 {bug fix 2525, find enclosed on text with newlines} -setup {
