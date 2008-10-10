@@ -5098,7 +5098,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CFLAGS = "-arch i386 -arch x86_64 -arch ppc -arch ppc64 $(CFLAGS)";
+				CFLAGS = "-arch i386 -arch x86_64 -arch ppc $(CFLAGS)";
 				HEADER_SEARCH_PATHS = (
 					/usr/X11R6/include,
 					/usr/X11R6/include/freetype2,
@@ -5453,7 +5453,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CFLAGS = "-arch i386 -arch x86_64 -arch ppc -arch ppc64 $(CFLAGS)";
+				CFLAGS = "-arch i386 -arch x86_64 -arch ppc $(CFLAGS)";
 				HEADER_SEARCH_PATHS = (
 					/usr/X11R6/include,
 					/usr/X11R6/include/freetype2,
@@ -5513,7 +5513,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CFLAGS = "-arch i386 -arch x86_64 -arch ppc -arch ppc64 $(CFLAGS)";
+				CFLAGS = "-arch i386 -arch x86_64 -arch ppc $(CFLAGS)";
 				HEADER_SEARCH_PATHS = (
 					/usr/X11R6/include,
 					/usr/X11R6/include/freetype2,
@@ -5661,7 +5661,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CFLAGS = "-arch i386 -arch x86_64 -arch ppc -arch ppc64 $(CFLAGS)";
+				CFLAGS = "-arch i386 -arch x86_64 -arch ppc $(CFLAGS)";
 				HEADER_SEARCH_PATHS = (
 					/usr/X11R6/include,
 					/usr/X11R6/include/freetype2,
