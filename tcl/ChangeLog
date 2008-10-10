@@ -1,3 +1,44 @@
+2008-10-08  Jan Nijtmans  <nijtmans@users.sf.net>
+
+	* unix/tclUnixChan.c:   fix minor compiler warning
+	* unix/tcl.m4:          fix for bug [2073255]
+	* unix/configure:       regenerated
+
+2008-10-08  Miguel Sofer  <msofer@users.sf.net>
+
+	* generic/tclBasic (TclInfoCoroutineCmd):
+	* tests/unsupported.test: arrange for [info coroutine] to return
+	{} when a coroutine is running but the resume command has been
+	deleted [Bug 2153080]
+	
+2008-10-08  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclTrace.c:	Corrected handling of errors returned by
+	variable traces so that the errorInfo value contains the original
+	error message.  [Bug 2151707]
+
+	* generic/tclVar.c:	Revised implementation of TclObjVarErrMsg
+	so that error message construction does not disturb an existing
+	iPtr->errorInfo that may be in progress.
+
+2008-10-07  Donal K. Fellows  <dkf@users.sf.net>
+
+	* doc/binary.n: Added better documentation of the [binary encode] and
+	[binary decode] subcommands.
+
+2008-10-07  Miguel Sofer  <msofer@users.sf.net>
+
+	* generic/tclBasic.c:      Move [tailcall], [coroutine] and 
+	* generic/tclCmdIL.c:      [yield] out of ::tcl::unsupported
+	* tclInt.h:
+	* tests/info.test:         and into global scope: TIPs #327
+	* tests/unsupported.test:  and #328
+
+2008-10-07  Donal K. Fellows  <dkf@users.sf.net>
+
+	* doc/chan.n, doc/transchan.n: Documented the channel transformation
+	API of TIP #230.
+
 2008-10-06  Pat Thoyts  <patthoyts@users.sourceforge.net>
 
 	* tests/winFCmd.test: Fixed some erroneous tests on Vista+.

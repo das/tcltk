@@ -1248,8 +1248,6 @@ MODULE_SCOPE int	TclWordKnownAtCompileTime(Tcl_Token *tokenPtr,
 
 #ifdef USE_DTRACE
 
-#include "tclDTrace.h"
-
 #if defined(__GNUC__) && __GNUC__ > 2
 /* Use gcc branch prediction hint to minimize cost of DTrace ENABLED checks. */
 #define unlikely(x) (__builtin_expect((x), 0))
