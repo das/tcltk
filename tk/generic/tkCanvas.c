@@ -1630,7 +1630,7 @@ CanvasWidgetCmd(
 	    break;
 	case CANV_CLEAR:
 	    if (objc != 3) {
-		Tcl_AppendResult(interp, 3, objv, NULL);
+		Tcl_WrongNumArgs(interp, 3, objv, NULL);
 		result = TCL_ERROR;
 		goto done;
 	    }

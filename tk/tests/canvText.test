@@ -458,6 +458,9 @@ test canvText-14.4 {GetTextIndex procedure: select error} {
 test canvText-14.5 {GetTextIndex procedure: bad int or unknown index} {
     list [catch {.c index test xyz} msg] $msg
 } {1 {bad index "xyz"}}
+test canvText-14.6 {select clear errors} -body {
+    .c select clear test
+} -returnCodes error -result "wrong \# args: should be \".c select clear\""
 
 test canvText-15.1 {SetTextCursor procedure} {
     .c itemconfig -text "abcdefg"
