@@ -979,25 +979,32 @@ TkMacOSXVisableClipRgn(
  *----------------------------------------------------------------------
  */
 
+OSStatus invalViewRect(int msg, HIShapeRef rgn, const CGRect *rect, void *ref) {
+    if (msg == kHIShapeEnumerateRect) {
+	[(NSView*)ref setNeedsDisplayInRect:NSRectFromCGRect(*rect)];
+    }
+    return noErr;
+}
+
 void
 TkMacOSXInvalidateWindow(
     MacDrawable *macWin,	/* Make window that's causing damage. */
     int flag)			/* Should be TK_WINDOW_ONLY or
 				 * TK_PARENT_WINDOW */
 {
-    WindowRef windowRef;
     HIShapeRef rgn;
 
-    windowRef = TkMacOSXDrawableWindow((Drawable)macWin);
     if (macWin->flags & TK_CLIP_INVALID) {
 	TkMacOSXUpdateClipRgn(macWin->winPtr);
     }
     rgn = (flag == TK_WINDOW_ONLY) ? macWin->visRgn : macWin->aboveVisRgn;
     if (!HIShapeIsEmpty(rgn)) {
-	TkMacOSXCheckTmpQdRgnEmpty();
+/*	TkMacOSXCheckTmpQdRgnEmpty();
 	ChkErr(HIShapeGetAsQDRgn, rgn, tkMacOSXtmpQdRgn);
 	InvalWindowRgn(windowRef, tkMacOSXtmpQdRgn);
-	SetEmptyRgn(tkMacOSXtmpQdRgn);
+	SetEmptyRgn(tkMacOSXtmpQdRgn);*/
+	HIShapeEnumerate(rgn, kHIShapeParseFromBottom|kHIShapeParseFromLeft,
+		invalViewRect, macWin->view);
     }
 #ifdef TK_MAC_DEBUG_CLIP_REGIONS
     TkMacOSXDebugFlashRegion((Drawable) macWin, rgn);
