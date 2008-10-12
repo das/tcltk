@@ -66,7 +66,9 @@
  * Declaration of functions used only in this file
  */
 
+#ifdef HAVE_QUICKDRAW
 static int		GenerateUpdateEvent(Window window);
+#endif
 static int		GenerateUpdates(HIMutableShapeRef updateRgn,
 			    CGRect *updateBounds, TkWindow *winPtr);
 static int		GenerateActivateEvents(Window window, int activeFlag);
@@ -333,12 +335,14 @@ TkMacOSXProcessWindowEvent(
 	    statusPtr->stopProcessing = 1;
 	}
 	break;
+#ifdef HAVE_QUICKDRAW
     case kEventWindowUpdate:
 	if (window != None && GenerateUpdateEvent(window)) {
 	    eventFound = true;
 	    statusPtr->stopProcessing = 1;
 	}
 	break;
+#endif
     case kEventWindowExpanding:
 	if (winPtr) {
 	    winPtr->wmInfoPtr->hints.initial_state =
@@ -463,6 +467,7 @@ TkMacOSXProcessWindowEvent(
 	    }
 	}
 	break;
+#ifdef HAVE_QUICKDRAW
     case kEventWindowDrawContent:
 	if (winPtr && (winPtr->wmInfoPtr->flags & WM_TRANSPARENT)) {
 	    CGrafPtr port;
@@ -471,11 +476,13 @@ TkMacOSXProcessWindowEvent(
 	    ClearPort(port, NULL);
 	}
 	break;
+#endif
     }
 
     return eventFound;
 }
 
+#ifdef HAVE_QUICKDRAW
 /*
  *----------------------------------------------------------------------
  *
@@ -541,8 +548,13 @@ GenerateUpdateEvent(
     }
     return result;
  }
- 
- int TkMacOSXGenerateExposeEvents(NSWindow *window, HIMutableShapeRef shape) {
+ #endif
+
+int
+TkMacOSXGenerateExposeEvents(
+	NSWindow *window,
+	HIMutableShapeRef shape)
+{
     WindowRef macWindow = [window windowRef];
     Window xwindow = TkMacOSXGetXWindow(macWindow);
     TkDisplay *dispPtr;
