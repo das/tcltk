@@ -78,19 +78,56 @@ static void		ClearPort(CGrafPtr port, HIShapeRef updateRgn);
 - (void)windowActivation:(NSNotification *)notification {
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
     BOOL activate = [[notification name] isEqualToString:NSWindowDidBecomeKeyNotification];
-    WindowRef whichWindow;
-    Window window;
-    TkDisplay *dispPtr;
-    TkWindow *winPtr;
+    NSWindow *w = [notification object];
+    WindowRef whichWindow = [w windowRef];
+    Window window = TkMacOSXGetXWindow(whichWindow);
+    TkDisplay *dispPtr = TkGetDisplayList();
+    TkWindow *winPtr = (TkWindow *)Tk_IdToWindow(dispPtr->display, window);
 
-    whichWindow = [[notification object] windowRef];
-    window = TkMacOSXGetXWindow(whichWindow);
-    dispPtr = TkGetDisplayList();
-    winPtr = (TkWindow *)Tk_IdToWindow(dispPtr->display, window);
     GenerateActivateEvents(window, activate);
     TkMacOSXGenerateFocusEvent(window, activate);
     if (winPtr) {
 	TkMacOSXEnterExitFullscreen(winPtr, activate);
+    }
+}
+- (void)windowBoundsChanged:(NSNotification *)notification {
+    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+    BOOL movedOnly = [[notification name] isEqualToString:NSWindowDidMoveNotification];
+    NSWindow *w = [notification object];
+    WindowRef whichWindow = [w windowRef];
+    Window window = TkMacOSXGetXWindow(whichWindow);
+    TkDisplay *dispPtr = TkGetDisplayList();
+    TkWindow *winPtr = (TkWindow *)Tk_IdToWindow(dispPtr->display, window);
+
+    if (winPtr) {
+	WmInfo *wmPtr = winPtr->wmInfoPtr;
+	NSRect bounds = [w frame];
+	int x, y, width = -1, height = -1, flags = 0;
+
+	x = bounds.origin.x - wmPtr->xInParent;
+	y = bounds.origin.y - wmPtr->yInParent;
+	if (winPtr->changes.x != x || winPtr->changes.y != y){
+	    flags |= TK_LOCATION_CHANGED;
+	} else {
+	    x = y = -1;
+	}
+	if (!movedOnly && (winPtr->changes.width != bounds.size.width ||
+		winPtr->changes.height !=  bounds.size.height)) {
+	    width = bounds.size.width;
+	    height = bounds.size.height;
+	    flags |= TK_SIZE_CHANGED;
+	}
+	TkMacOSXInvalClipRgns((Tk_Window) winPtr);
+	TkMacOSXInvalidateWindow((MacDrawable*) window, TK_PARENT_WINDOW);
+	TkGenWMConfigureEvent((Tk_Window)winPtr, x, y, width, height,
+		flags);
+	if ([w inLiveResize]) {
+	    TkMacOSXRunTclEventLoop();
+	}
+	if (wmPtr->attributes & kWindowResizableAttribute) {
+	    [w setShowsResizeIndicator:NO];
+	    [w setShowsResizeIndicator:YES];
+	}
     }
 }
 #define observe(n, s) [nc addObserver:self selector:@selector(s) name:n object:nil]
@@ -98,6 +135,8 @@ static void		ClearPort(CGrafPtr port, HIShapeRef updateRgn);
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     observe(NSWindowDidBecomeKeyNotification, windowActivation:);
     observe(NSWindowDidResignKeyNotification, windowActivation:);
+    observe(NSWindowDidMoveNotification, windowBoundsChanged:);
+    observe(NSWindowDidResizeNotification, windowBoundsChanged:);
 }
 - (void)setupApplicationNotifications {
 }

@@ -506,10 +506,10 @@ XMoveWindow(
 
     display->request++;
     if (Tk_IsTopLevel(macWin->winPtr) && !Tk_IsEmbedded(macWin->winPtr)) {
-	WindowRef w = TkMacOSXDrawableWindow(window);
+	NSWindow *window = macWin->winPtr->wmInfoPtr->window;
 
-	if (w) {
-	    ChkErr(MoveWindowStructure, w, x, y);
+	if (window) {
+	    [window setFrameOrigin:NSMakePoint(x, y)];
 	}
     } else {
 	MoveResizeWindow(macWin);
