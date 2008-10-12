@@ -49,7 +49,7 @@
  * restore them before its -unlockFocus.
  */
 - (BOOL)lockFocusIfCanDraw  {
-    TKLog(@"-[%@(%p) %s]", [self class], self, _cmd);
+    //TKLog(@"-[%@(%p) %s]", [self class], self, _cmd);
     BOOL result = [super lockFocusIfCanDraw];
     if (result && !lockFocusLevel++) {
 	[self removeSubviews];
@@ -58,7 +58,7 @@
 }
 
 - (void)unlockFocus {
-    TKLog(@"-[%@(%p) %s]", [self class], self, _cmd);
+    //TKLog(@"-[%@(%p) %s]", [self class], self, _cmd);
     if (!--lockFocusLevel) {
 	[self restoreSubviews];
     }
