@@ -979,25 +979,44 @@ TkMacOSXVisableClipRgn(
  *----------------------------------------------------------------------
  */
 
+static OSStatus
+InvalViewRect(int msg, HIShapeRef rgn, const CGRect *rect, void *ref) {
+    static CGAffineTransform t;
+    NSView *view = ref;
+
+    if (!view) {
+	return paramErr;
+    }
+    switch (msg) {
+    case kHIShapeEnumerateInit:
+	t = CGAffineTransformMake(1.0, 0.0, 0.0, -1.0, 0.0,
+		NSHeight([view bounds]));
+	break;
+    case kHIShapeEnumerateRect:
+	[view setNeedsDisplayInRect:NSRectFromCGRect(
+		CGRectApplyAffineTransform(*rect, t))];
+	break;
+    }
+    return noErr;
+}
+
 void
 TkMacOSXInvalidateWindow(
     MacDrawable *macWin,	/* Make window that's causing damage. */
     int flag)			/* Should be TK_WINDOW_ONLY or
 				 * TK_PARENT_WINDOW */
 {
-    WindowRef windowRef;
     HIShapeRef rgn;
 
-    windowRef = TkMacOSXDrawableWindow((Drawable)macWin);
     if (macWin->flags & TK_CLIP_INVALID) {
 	TkMacOSXUpdateClipRgn(macWin->winPtr);
     }
     rgn = (flag == TK_WINDOW_ONLY) ? macWin->visRgn : macWin->aboveVisRgn;
     if (!HIShapeIsEmpty(rgn)) {
-	TkMacOSXCheckTmpQdRgnEmpty();
-	ChkErr(HIShapeGetAsQDRgn, rgn, tkMacOSXtmpQdRgn);
-	InvalWindowRgn(windowRef, tkMacOSXtmpQdRgn);
-	SetEmptyRgn(tkMacOSXtmpQdRgn);
+	ChkErr(HIShapeEnumerate, rgn,
+		kHIShapeParseFromBottom|kHIShapeParseFromLeft,
+		InvalViewRect, macWin->toplevel ? macWin->toplevel->view :
+		macWin->view);
     }
 #ifdef TK_MAC_DEBUG_CLIP_REGIONS
     TkMacOSXDebugFlashRegion((Drawable) macWin, rgn);
