@@ -67,11 +67,11 @@
 #include "tkMacOSXEvent.h"
 #include "tkMacOSXDebug.h"
 
-/*
+
 #ifdef TK_MAC_DEBUG
 #define TK_MAC_DEBUG_CARBON_EVENTS
 #endif
-*/
+
 
 /*
  * Declarations of functions used only in this file:

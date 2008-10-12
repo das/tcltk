@@ -62,7 +62,6 @@
 
 #ifdef TK_MAC_DEBUG
 
-#ifdef TK_MACOSXDEBUG_UNUSED
 typedef struct {
     EventKind kind;
     const char * name;
@@ -234,6 +233,7 @@ static MyEventNameList eventNameList [] = {
  { 0, NULL}
 };
 
+#ifdef TK_MACOSXDEBUG_UNUSED
 static MyEventName classicEventNames [] = {
  { nullEvent,"nullEvent" },
  { mouseDown,"mouseDown" },
@@ -248,6 +248,7 @@ static MyEventName classicEventNames [] = {
  { kHighLevelEvent,"kHighLevelEvent" },
  { 0, NULL }
 };
+#endif
 
 MODULE_SCOPE char *
 TkMacOSXCarbonEventToAscii(EventRef eventRef)
@@ -324,6 +325,8 @@ TkMacOSXCarbonEventKindToAscii(EventRef eventRef, char * buf )
      }
      return buf;
 }
+
+#ifdef TK_MACOSXDEBUG_UNUSED
 
 MODULE_SCOPE char *
 TkMacOSXClassicEventToAscii(EventRecord * eventPtr, char * buf )
