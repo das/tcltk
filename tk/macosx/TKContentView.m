@@ -86,7 +86,7 @@
 }
 
 - (BOOL)isFlipped {
-    return NO;
+    return YES;
 }
 
 - (BOOL)wantsDefaultClipping {

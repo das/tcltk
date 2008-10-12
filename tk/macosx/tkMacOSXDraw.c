@@ -868,11 +868,11 @@ DrawCGImage(
 		dstBounds.origin.x, dstBounds.origin.y,
 		dstBounds.size.width, dstBounds.size.height);
 #else /* TK_MAC_DEBUG_DRAWING */
-	CGContextSaveGState(context);
+	/*CGContextSaveGState(context);
 	CGContextTranslateCTM(context, 0, dstBounds.origin.y + CGRectGetMaxY(dstBounds));
-	CGContextScaleCTM(context, 1, -1);
+	CGContextScaleCTM(context, 1, -1);*/
 	CGContextDrawImage(context, dstBounds, image);
-	CGContextRestoreGState(context);
+	/*CGContextRestoreGState(context);*/
 #endif /* TK_MAC_DEBUG_DRAWING */
 	if (CGImageIsMask(image)) {
 	    CGContextRestoreGState(context);
@@ -1800,8 +1800,8 @@ TkMacOSXSetupDrawingContext(
 		"no port or context to draw into !");
     }
     if (dc.context) {
-	CGContextConcatCTM(dc.context, CGAffineTransformMake(1.0, 0.0, 0.0,
-		-1.0, 0.0, dc.portBounds.bottom - dc.portBounds.top));
+	/*CGContextConcatCTM(dc.context, CGAffineTransformMake(1.0, 0.0, 0.0,
+		-1.0, 0.0, dc.portBounds.bottom - dc.portBounds.top));*/
 	if (dc.clipRgn) {
 #ifdef TK_MAC_DEBUG_DRAWING
 	    CGContextSaveGState(dc.context);
