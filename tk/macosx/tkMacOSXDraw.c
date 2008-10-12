@@ -1763,11 +1763,10 @@ TkMacOSXSetupDrawingContext(
     }
     if (!dc.context || !(macDraw->flags & TK_IS_PIXMAP)) {
 	dc.port = TkMacOSXGetDrawablePort(d);
-	if (dc.port) {
-	    GetPortBounds(dc.port, &dc.portBounds);
-	}
     }
     if (dc.context) {
+	CGContextSaveGState(dc.context);
+	dc.saveState = (void*)1L;
 	if (!dc.port) {
 	    CGRect r = CGContextGetClipBoundingBox(dc.context);
 
@@ -1776,17 +1775,22 @@ TkMacOSXSetupDrawingContext(
 		    r.origin.x + r.size.width + macDraw->xOff,
 		    r.origin.y + r.size.height + macDraw->yOff);
 	}
-	CGContextSaveGState(dc.context);
-	dc.saveState = (void*)1;
 	dc.port = NULL;
     } else if (dc.port) {
-	NSView *view = macDraw->toplevel ? macDraw->toplevel->view : macDraw->view;
+	NSView *view = macDraw->toplevel ? macDraw->toplevel->view :
+		macDraw->view;
 	if (view) {
+	    NSRect r;
 	    if ((dontDraw = ![view lockFocusIfCanDraw])) {
 		goto end;
 	    }
 	    dc.view = view;
 	    dc.context = [[NSGraphicsContext currentContext] graphicsPort];
+	    r = [view bounds];
+	    SetRect(&dc.portBounds, r.origin.x + macDraw->xOff,
+		    r.origin.y + macDraw->yOff,
+		    r.origin.x + r.size.width + macDraw->xOff,
+		    r.origin.y + r.size.height + macDraw->yOff);
 	} else {
 	    dc.portChanged = QDSwapPort(dc.port, &dc.savePort);
 	    if (useCG && ChkErr(QDBeginCGContext, dc.port, &dc.context) == noErr) {
@@ -1794,6 +1798,7 @@ TkMacOSXSetupDrawingContext(
 	    } else {
 		dc.context = NULL;
 	    }
+	    GetPortBounds(dc.port, &dc.portBounds);
 	}
     } else {
 	Tcl_Panic("TkMacOSXSetupDrawingContext(): "
