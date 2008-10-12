@@ -5303,7 +5303,7 @@ TkMacOSXMakeRealWindowExist(
     NSRect frame = NSMakeRect(geometry.left, geometry.top,
 	    geometry.right - geometry.left, geometry.bottom - geometry.top);
     [window setFrame:frame display:NO];
-    TkMacOSXInstallWindowCarbonEventHandler(NULL, newWindow);
+    //TkMacOSXInstallWindowCarbonEventHandler(NULL, newWindow);
     if (ChkErr(CreateRootControl, newWindow, &rootControl) != noErr ) {
 	Tcl_Panic("couldn't create root control for new Mac window");
     }

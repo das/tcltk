@@ -233,6 +233,7 @@ TkMacOSXInitCarbonEvents(
 #endif /* TK_MAC_DEBUG_CARBON_EVENTS */
 }
 
+#ifdef HAVE_QUICKDRAW
 /*
  *----------------------------------------------------------------------
  *
@@ -294,6 +295,7 @@ TkMacOSXInstallWindowCarbonEventHandler(
     }
 #endif /* TK_MAC_DEBUG_CARBON_EVENTS */
 }
+#endif
 
 /*
  *----------------------------------------------------------------------
