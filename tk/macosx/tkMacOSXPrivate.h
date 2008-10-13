@@ -78,26 +78,21 @@
  */
 
 #ifdef TK_MAC_DEBUG
+#define TKLog(f, ...) NSLog(f, ##__VA_ARGS__)
+
 /*
  * Macro to do debug message output.
  */
 #define TkMacOSXDbgMsg(m, ...) do { \
-	    fprintf(stderr, "%s:%d: %s(): " m "\n", strrchr(__FILE__, '/')+1, \
+	    TKLog(@"%s:%d: %s(): " m, strrchr(__FILE__, '/')+1, \
 	    __LINE__, __func__, ##__VA_ARGS__); \
 	} while (0)
 /*
  * Macro to do debug API failure message output.
  */
-#if (!defined(DEBUGLEVEL) || !DEBUGLEVEL) || defined(__LP64__)
 #define TkMacOSXDbgOSErr(f, err) do { \
 	    TkMacOSXDbgMsg("%s failed: %d", #f, (int)(err)); \
 	} while (0)
-#else
-#define TkMacOSXDbgOSErr(f, err) do { \
-	    DEBUG_ASSERT_MESSAGE(kComponentSignatureString, #f " failed:", \
-	    __func__, 0, strrchr(__FILE__, '/')+1, __LINE__, err); \
-	} while (0)
-#endif
 /*
  * Macro to do very common check for noErr return from given API and output
  * debug message in case of failure.
@@ -117,6 +112,7 @@
 	    } \
 	} while(0)
 #else /* TK_MAC_DEBUG */
+#define TKLog(f, ...)
 #define TkMacOSXDbgMsg(m, ...)
 #define TkMacOSXDbgOSErr(f, err)
 #define ChkErr(f, ...) ({f(__VA_ARGS__);})
@@ -230,13 +226,6 @@ MODULE_SCOPE HIShapeRef TkMacOSXGetClipRgn(Drawable drawable);
 MODULE_SCOPE CGImageRef TkMacOSXCreateCGImageWithDrawable(Drawable drawable);
 MODULE_SCOPE Tcl_Obj* TkMacOSXGetStringObjFromCFString(CFStringRef str);
 MODULE_SCOPE int TkMacOSXGenerateExposeEvents(NSWindow *window, HIMutableShapeRef shape);
-
-
-#ifdef TK_MAC_DEBUG
-#define TKLog(f, ...) NSLog(f, ##__VA_ARGS__)
-#else
-#define TKLog(f, ...)
-#endif
 
 #define VISIBILITY_HIDDEN __attribute__((__visibility__("hidden")))
 
