@@ -213,8 +213,8 @@ MODULE_SCOPE void TkMacOSXSetColorInPort(unsigned long pixel, int fg,
 MODULE_SCOPE void TkMacOSXSetColorInContext(unsigned long pixel,
 	CGContextRef context);
 MODULE_SCOPE int TkMacOSXRunTclEventLoop(void);
-MODULE_SCOPE OSStatus TkMacOSXStartTclEventLoopCarbonTimer(void);
-MODULE_SCOPE OSStatus TkMacOSXStopTclEventLoopCarbonTimer(void);
+MODULE_SCOPE OSStatus TkMacOSXStartTclEventLoopTimer(void);
+MODULE_SCOPE OSStatus TkMacOSXStopTclEventLoopTimer(void);
 MODULE_SCOPE void TkMacOSXTrackingLoop(int tracking);
 MODULE_SCOPE OSStatus TkMacOSXReceiveAndDispatchEvent(void);
 MODULE_SCOPE void TkMacOSXInstallWindowCarbonEventHandler(Tcl_Interp *interp,
