@@ -106,8 +106,8 @@ static void		ClearPort(CGrafPtr port, HIShapeRef updateRgn);
 	NSRect bounds = [w frame];
 	int x, y, width = -1, height = -1, flags = 0;
 
-	x = bounds.origin.x - wmPtr->xInParent;
-	y = bounds.origin.y - wmPtr->yInParent;
+	x = bounds.origin.x;
+	y = tkMacOSXZeroScreenHeight - (bounds.origin.y + bounds.size.height);
 	if (winPtr->changes.x != x || winPtr->changes.y != y){
 	    flags |= TK_LOCATION_CHANGED;
 	} else {

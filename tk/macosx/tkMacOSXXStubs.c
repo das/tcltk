@@ -33,6 +33,8 @@
 
 #define ROOT_ID 10
 
+CGFloat tkMacOSXZeroScreenHeight = 0;
+
 /*
  * Declarations of static variables used in this file.
  */
@@ -117,6 +119,10 @@ TkMacOSXDisplayChanged(
 	    UnionRect(&bounds, maxBounds, maxBounds);
 	}
 	graphicsDevice = GetNextDevice(graphicsDevice);
+    }
+    NSArray *screens = [NSScreen screens];
+    if (screens) {
+	tkMacOSXZeroScreenHeight = NSHeight([[screens objectAtIndex:0] frame]);
     }
 }
 

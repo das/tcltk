@@ -420,14 +420,15 @@ XResizeWindow(
 
     display->request++;
     if (Tk_IsTopLevel(macWin->winPtr) && !Tk_IsEmbedded(macWin->winPtr)) {
-	NSWindow *window = macWin->winPtr->wmInfoPtr->window;
+	NSWindow *w = macWin->winPtr->wmInfoPtr->window;
 
-	if (window) {
-	    NSRect content = [window contentRectForFrameRect:[window frame]];
+	if (w) {
+	    NSRect r = [w contentRectForFrameRect:[w frame]];
 
-	    content.size.width += width;
-	    content.size.height += height;
-	    [window setContentSize:content.size];
+	    r.origin.y += r.size.height - height;
+	    r.size.width = width;
+	    r.size.height = height;
+	    [w setFrame:[w frameRectForContentRect:r] display:YES];
 	}
     } else {
 	MoveResizeWindow(macWin);
@@ -463,15 +464,15 @@ XMoveResizeWindow(
 
     display->request++;
     if (Tk_IsTopLevel(macWin->winPtr) && !Tk_IsEmbedded(macWin->winPtr)) {
-	NSWindow *window = macWin->winPtr->wmInfoPtr->window;
+	NSWindow *w = macWin->winPtr->wmInfoPtr->window;
 
-	if (window) {
-	    NSRect frame = [window frameRectForContentRect:NSMakeRect(
-		    x + macWin->winPtr->wmInfoPtr->xInParent,
-		    y + macWin->winPtr->wmInfoPtr->yInParent + height,
-		    width, height)];
+	if (w) {
+	    NSRect r = NSMakeRect(x + macWin->winPtr->wmInfoPtr->xInParent,
+		    tkMacOSXZeroScreenHeight - (y +
+		    macWin->winPtr->wmInfoPtr->yInParent + height),
+		    width, height);
 
-	    [window setFrame:frame display:YES];
+	    [w setFrame:[w frameRectForContentRect:r] display:YES];
 	}
     } else {
 	MoveResizeWindow(macWin);
@@ -506,10 +507,10 @@ XMoveWindow(
 
     display->request++;
     if (Tk_IsTopLevel(macWin->winPtr) && !Tk_IsEmbedded(macWin->winPtr)) {
-	NSWindow *window = macWin->winPtr->wmInfoPtr->window;
+	NSWindow *w = macWin->winPtr->wmInfoPtr->window;
 
-	if (window) {
-	    [window setFrameTopLeftPoint:NSMakePoint(x, y)];
+	if (w) {
+	    [w setFrameTopLeftPoint:NSMakePoint(x, tkMacOSXZeroScreenHeight - y)];
 	}
     } else {
 	MoveResizeWindow(macWin);

@@ -157,6 +157,7 @@ typedef struct TkMacOSXDrawingContext {
  */
 
 MODULE_SCOPE RgnHandle tkMacOSXtmpQdRgn;
+MODULE_SCOPE CGFloat tkMacOSXZeroScreenHeight;
 
 /*
  * Prototypes for TkMacOSXRegion.c.
