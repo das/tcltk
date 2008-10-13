@@ -115,8 +115,8 @@ static void		ClearPort(CGrafPtr port, HIShapeRef updateRgn);
 	}
 	if (!movedOnly && (winPtr->changes.width != bounds.size.width ||
 		winPtr->changes.height !=  bounds.size.height)) {
-	    width = bounds.size.width;
-	    height = bounds.size.height;
+	    width = bounds.size.width - wmPtr->xInParent;
+	    height = bounds.size.height - wmPtr->yInParent;
 	    flags |= TK_SIZE_CHANGED;
 	}
 	TkMacOSXInvalClipRgns((Tk_Window) winPtr);
@@ -302,14 +302,16 @@ TkMacOSXProcessWindowEvent(
     switch (eventPtr->eKind) {
     case kEventWindowActivated:
     case kEventWindowDeactivated:
-    case kEventWindowUpdate:
     case kEventWindowExpanding:
     case kEventWindowBoundsChanged:
     case kEventWindowDragStarted:
     case kEventWindowDragCompleted:
     case kEventWindowConstrain:
     case kEventWindowGetRegion:
+#ifdef HAVE_QUICKDRAW
+    case kEventWindowUpdate:
     case kEventWindowDrawContent:
+#endif
 	break;
     default:
 	return 0;

@@ -201,10 +201,10 @@ static void ButtonElementSize(
     ChkErr(HIThemeGetButtonContentBounds,
 	&scratchBounds, &info, &contentBounds);
 
-    paddingPtr->left = contentBounds.origin.x;
-    paddingPtr->top = contentBounds.origin.y;
-    paddingPtr->right = scratchBounds.size.width - contentBounds.size.width + 1;
-    paddingPtr->bottom = scratchBounds.size.height - contentBounds.size.height;
+    paddingPtr->left = CGRectGetMinX(contentBounds);
+    paddingPtr->top = CGRectGetMinY(contentBounds);
+    paddingPtr->right = CGRectGetMaxX(scratchBounds) - CGRectGetMaxX(contentBounds) + 1;
+    paddingPtr->bottom = CGRectGetMaxY(scratchBounds) - CGRectGetMaxY(contentBounds);
 
     /*
      * Now add a little extra padding to account for drop shadows.
@@ -361,7 +361,7 @@ static void GroupElementDraw(
     const HIThemeGroupBoxDrawInfo info = {
 	.version = 0,
 	.state = Ttk_StateTableLookup(ThemeStateTable, state),
-	.kind = kHIThemeGroupBoxKindPrimary,
+	.kind = kHIThemeGroupBoxKindPrimaryOpaque,
     };
 
     BEGIN_DRAWING(d)
@@ -736,13 +736,18 @@ static void SizegripElementSize(
     void *clientData, void *elementRecord, Tk_Window tkwin,
     int *widthPtr, int *heightPtr, Ttk_Padding *paddingPtr)
 {
-    Point origin = {0, 0};
-    Rect bounds;
+    HIThemeGrowBoxDrawInfo info = {
+	.version = 0,
+	.state = kThemeStateActive,
+	.kind = kHIThemeGrowBoxKindNormal,
+	.direction = sizegripGrowDirection,
+	.size = kHIThemeGrowBoxSizeNormal,
+    };
+    CGRect bounds = CGRectZero;
 
-    ChkErr(GetThemeStandaloneGrowBoxBounds,
-	origin, sizegripGrowDirection, false, &bounds);
-    *widthPtr = bounds.right - bounds.left;
-    *heightPtr = bounds.bottom - bounds.top;
+    ChkErr(HIThemeGetGrowBoxBounds, &bounds.origin, &info, &bounds);
+    *widthPtr = bounds.size.width;
+    *heightPtr = bounds.size.height;
 }
 
 static void SizegripElementDraw(

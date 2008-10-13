@@ -219,22 +219,24 @@ TkMacOSXEventsCheckProc(clientData, flags)
 	    if (currentEvent) {
 		TKLog(@"   event: %@", currentEvent);
 		objc_clear_stack(0);
+		TkMacOSXStartTclEventLoopTimer();
 		[NSApp sendEvent:currentEvent];
+		TkMacOSXStopTclEventLoopTimer();
 		[NSApp afterEvent];
 	    }  
 	    objc_collect_if_needed(OBJC_GENERATIONAL);
 	} while (currentEvent);
-    }
     
-    numFound = GetNumEventsInQueue((EventQueueRef)clientData);
+	numFound = GetNumEventsInQueue((EventQueueRef)clientData);
 
-    /* Avoid starving other event sources: */
-    if (numFound > 4) {
-	numFound = 4;
-    }
-    while (numFound > 0 && err == noErr) {
-	err = TkMacOSXReceiveAndDispatchEvent();
-	numFound--;
+	/* Avoid starving other event sources: */
+	if (numFound > 4) {
+	    numFound = 4;
+	}
+	while (numFound > 0 && err == noErr) {
+	    err = TkMacOSXReceiveAndDispatchEvent();
+	    numFound--;
+	}
     }
 }
 
@@ -435,6 +437,7 @@ TkMacOSXReceiveAndDispatchEvent(void)
     const EventTypeSpec *eventTypes = NULL;
     EventRef eventRef;
     OSStatus err;
+#ifdef HAVE_QUICKDRAW
     const EventTypeSpec trackingEventTypes[] = {
 	{'dniw',		 kEventWindowUpdate},
 	{kEventClassWindow,	 kEventWindowUpdate},
@@ -444,6 +447,7 @@ TkMacOSXReceiveAndDispatchEvent(void)
 	eventTypes = trackingEventTypes;
 	numEventTypes = GetEventTypeCount(trackingEventTypes);
     }
+#endif
 
     /*
      * This is a poll, since we have already counted the events coming
