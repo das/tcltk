@@ -115,8 +115,8 @@ static void		ClearPort(CGrafPtr port, HIShapeRef updateRgn);
 	}
 	if (!movedOnly && (winPtr->changes.width != bounds.size.width ||
 		winPtr->changes.height !=  bounds.size.height)) {
-	    width = bounds.size.width;
-	    height = bounds.size.height;
+	    width = bounds.size.width - wmPtr->xInParent;
+	    height = bounds.size.height - wmPtr->yInParent;
 	    flags |= TK_SIZE_CHANGED;
 	}
 	TkMacOSXInvalClipRgns((Tk_Window) winPtr);
