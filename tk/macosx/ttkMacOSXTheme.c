@@ -736,13 +736,18 @@ static void SizegripElementSize(
     void *clientData, void *elementRecord, Tk_Window tkwin,
     int *widthPtr, int *heightPtr, Ttk_Padding *paddingPtr)
 {
-    Point origin = {0, 0};
-    Rect bounds;
+    HIThemeGrowBoxDrawInfo info = {
+	.version = 0,
+	.state = kThemeStateActive,
+	.kind = kHIThemeGrowBoxKindNormal,
+	.direction = sizegripGrowDirection,
+	.size = kHIThemeGrowBoxSizeNormal,
+    };
+    CGRect bounds = CGRectZero;
 
-    ChkErr(GetThemeStandaloneGrowBoxBounds,
-	origin, sizegripGrowDirection, false, &bounds);
-    *widthPtr = bounds.right - bounds.left;
-    *heightPtr = bounds.bottom - bounds.top;
+    ChkErr(HIThemeGetGrowBoxBounds, &bounds.origin, &info, &bounds);
+    *widthPtr = bounds.size.width;
+    *heightPtr = bounds.size.height;
 }
 
 static void SizegripElementDraw(
