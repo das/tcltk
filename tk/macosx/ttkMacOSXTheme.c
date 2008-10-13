@@ -361,7 +361,7 @@ static void GroupElementDraw(
     const HIThemeGroupBoxDrawInfo info = {
 	.version = 0,
 	.state = Ttk_StateTableLookup(ThemeStateTable, state),
-	.kind = kHIThemeGroupBoxKindPrimary,
+	.kind = kHIThemeGroupBoxKindPrimaryOpaque,
     };
 
     BEGIN_DRAWING(d)
