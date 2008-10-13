@@ -267,6 +267,9 @@ VISIBILITY_HIDDEN
 - (void)drawRect:(NSRect)rect;
 - (BOOL)isOpaque;
 - (BOOL)isFlipped;
+- (BOOL)wantsDefaultClipping;
+- (BOOL)preservesContentDuringLiveResize;
+- (void)setFrameSize:(NSSize)newSize;
 - (void)viewWillDraw;
 - (void)reenableFlush;
 

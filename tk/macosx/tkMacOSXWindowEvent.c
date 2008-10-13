@@ -123,14 +123,17 @@ static void		ClearPort(CGrafPtr port, HIShapeRef updateRgn);
 	TkMacOSXInvalidateWindow((MacDrawable*) window, TK_PARENT_WINDOW);
 	TkGenWMConfigureEvent((Tk_Window)winPtr, x, y, width, height,
 		flags);
-	if ([w inLiveResize]) {
-	    TkMacOSXRunTclEventLoop();
-	}
 	if (wmPtr->attributes & kWindowResizableAttribute) {
 	    [w setShowsResizeIndicator:NO];
 	    [w setShowsResizeIndicator:YES];
 	}
     }
+}
+- (void)windowLiveResize:(NSNotification *)notification {
+    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+    BOOL start = [[notification name] isEqualToString:NSWindowWillStartLiveResizeNotification];
+
+    TkMacOSXTrackingLoop(start ? 1 : 0);
 }
 #define observe(n, s) [nc addObserver:self selector:@selector(s) name:n object:nil]
 - (void)setupWindowNotifications {
@@ -139,6 +142,8 @@ static void		ClearPort(CGrafPtr port, HIShapeRef updateRgn);
     observe(NSWindowDidResignKeyNotification, windowActivation:);
     observe(NSWindowDidMoveNotification, windowBoundsChanged:);
     observe(NSWindowDidResizeNotification, windowBoundsChanged:);
+    observe(NSWindowWillStartLiveResizeNotification, windowLiveResize:);
+    observe(NSWindowDidEndLiveResizeNotification, windowLiveResize:);
 }
 - (void)setupApplicationNotifications {
 }
