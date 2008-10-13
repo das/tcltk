@@ -201,10 +201,10 @@ static void ButtonElementSize(
     ChkErr(HIThemeGetButtonContentBounds,
 	&scratchBounds, &info, &contentBounds);
 
-    paddingPtr->left = contentBounds.origin.x;
-    paddingPtr->top = contentBounds.origin.y;
-    paddingPtr->right = scratchBounds.size.width - contentBounds.size.width + 1;
-    paddingPtr->bottom = scratchBounds.size.height - contentBounds.size.height;
+    paddingPtr->left = CGRectGetMinX(contentBounds);
+    paddingPtr->top = CGRectGetMinY(contentBounds);
+    paddingPtr->right = CGRectGetMaxX(scratchBounds) - CGRectGetMaxX(contentBounds) + 1;
+    paddingPtr->bottom = CGRectGetMaxY(scratchBounds) - CGRectGetMaxY(contentBounds);
 
     /*
      * Now add a little extra padding to account for drop shadows.
