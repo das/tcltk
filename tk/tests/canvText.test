@@ -819,7 +819,13 @@ test canvText-14.5 {GetTextIndex procedure: bad int or unknown index} -setup {
 } -cleanup {
 	.c delete test
 } -returnCodes {error} -result {bad index "xyz"}
-
+test canvText-14.6 {select clear errors} -setup {
+    .c create text 0 0 -tag test
+} -body {
+    .c select clear test
+} -cleanup {
+    .c delete test
+} -returnCodes error -result "wrong \# args: should be \".c select clear\""
 
 test canvText-15.1 {SetTextCursor procedure} -setup {
 	.c create text 0 0 -tag test

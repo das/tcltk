@@ -49,7 +49,7 @@
  * restore them before its -unlockFocus.
  */
 - (BOOL)lockFocusIfCanDraw  {
-    TKLog(@"-[%@(%p) %s]", [self class], self, _cmd);
+    //TKLog(@"-[%@(%p) %s]", [self class], self, _cmd);
     BOOL result = [super lockFocusIfCanDraw];
     if (result && !lockFocusLevel++) {
 	[self removeSubviews];
@@ -58,7 +58,7 @@
 }
 
 - (void)unlockFocus {
-    TKLog(@"-[%@(%p) %s]", [self class], self, _cmd);
+    //TKLog(@"-[%@(%p) %s]", [self class], self, _cmd);
     if (!--lockFocusLevel) {
 	[self restoreSubviews];
     }
@@ -72,6 +72,9 @@
  */
 - (void)drawRect:(NSRect)rect {
     TKLog(@"-[%@(%p) %s]", [self class], self, _cmd);
+    if ([self inLiveResize]) {
+	TkMacOSXRunTclEventLoop();
+    }
     /*const NSRect *rectsBeingDrawn;
     NSInteger rectsBeingDrawnCount;
 
@@ -93,6 +96,27 @@
     return NO;
 }
 
+- (BOOL)preservesContentDuringLiveResize {
+    return YES;
+}
+
+- (void)setFrameSize:(NSSize)newSize
+{
+    [super setFrameSize:newSize];
+ 
+    if ([self inLiveResize]) {
+        NSRect rectsExposed[4];
+        NSInteger rectsExposedCount;
+
+        [self getRectsExposedDuringLiveResize:rectsExposed
+		count:&rectsExposedCount];
+        while (rectsExposedCount--) {
+            [self setNeedsDisplayInRect:rectsExposed[rectsExposedCount]];
+        }
+    } else {
+        [self setNeedsDisplay:YES];
+    }
+}
 
 /*
  * Compute dirty region from -getRectsBeingDrawn:count: and send Expose events

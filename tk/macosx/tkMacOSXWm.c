@@ -5213,7 +5213,8 @@ TkMacOSXMakeRealWindowExist(
     WindowRef newWindow = NULL;
     ControlRef rootControl = NULL;
     MacDrawable *macWin;
-    Rect geometry, strWidths;
+    Rect geometry;
+    NSRect structureRect;
     short structureW, structureH;
     TkMacOSXWindowList *listPtr;
     OSStatus err;
@@ -5283,6 +5284,7 @@ TkMacOSXMakeRealWindowExist(
 	Tcl_Panic("couldn't allocate new Mac window");
     }
 
+    #if 0
     ChkErr(GetWindowStructureWidths, newWindow, &strWidths);
     if (wmPtr->macClass == kFloatingWindowClass) {
 	/*
@@ -5291,19 +5293,22 @@ TkMacOSXMakeRealWindowExist(
 
 	strWidths.top = 16;
     }
-    wmPtr->xInParent = strWidths.left;
-    wmPtr->yInParent = strWidths.top;
-    structureW = strWidths.left + strWidths.right;
-    structureH = strWidths.top + strWidths.bottom;
+    #endif
+    structureRect = [window frameRectForContentRect:NSZeroRect];
+    wmPtr->xInParent = -structureRect.origin.x;
+    wmPtr->yInParent = structureRect.origin.y + structureRect.size.height;
+    structureW = structureRect.size.width;
+    structureH = structureRect.size.height;
     wmPtr->parentWidth = winPtr->changes.width + structureW;
     wmPtr->parentHeight = winPtr->changes.height + structureH;
     InitialWindowBounds(winPtr, newWindow, &geometry);
     geometry.right +=  structureW;
     geometry.bottom += structureH;
-    NSRect frame = NSMakeRect(geometry.left, geometry.top,
-	    geometry.right - geometry.left, geometry.bottom - geometry.top);
-    [window setFrame:frame display:NO];
-    TkMacOSXInstallWindowCarbonEventHandler(NULL, newWindow);
+    [window setFrame:NSMakeRect(geometry.left,
+	    tkMacOSXZeroScreenHeight - geometry.bottom,
+	    geometry.right - geometry.left, geometry.bottom - geometry.top)
+	    display:NO];
+    //TkMacOSXInstallWindowCarbonEventHandler(NULL, newWindow);
     if (ChkErr(CreateRootControl, newWindow, &rootControl) != noErr ) {
 	Tcl_Panic("couldn't create root control for new Mac window");
     }

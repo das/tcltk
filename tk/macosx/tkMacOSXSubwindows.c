@@ -420,14 +420,15 @@ XResizeWindow(
 
     display->request++;
     if (Tk_IsTopLevel(macWin->winPtr) && !Tk_IsEmbedded(macWin->winPtr)) {
-	NSWindow *window = macWin->winPtr->wmInfoPtr->window;
+	NSWindow *w = macWin->winPtr->wmInfoPtr->window;
 
-	if (window) {
-	    NSRect content = [window contentRectForFrameRect:[window frame]];
+	if (w) {
+	    NSRect r = [w contentRectForFrameRect:[w frame]];
 
-	    content.size.width += width;
-	    content.size.height += height;
-	    [window setContentSize:content.size];
+	    r.origin.y += r.size.height - height;
+	    r.size.width = width;
+	    r.size.height = height;
+	    [w setFrame:[w frameRectForContentRect:r] display:YES];
 	}
     } else {
 	MoveResizeWindow(macWin);
@@ -463,15 +464,15 @@ XMoveResizeWindow(
 
     display->request++;
     if (Tk_IsTopLevel(macWin->winPtr) && !Tk_IsEmbedded(macWin->winPtr)) {
-	NSWindow *window = macWin->winPtr->wmInfoPtr->window;
+	NSWindow *w = macWin->winPtr->wmInfoPtr->window;
 
-	if (window) {
-	    NSRect frame = [window frameRectForContentRect:NSMakeRect(
-		    x + macWin->winPtr->wmInfoPtr->xInParent,
-		    y + macWin->winPtr->wmInfoPtr->yInParent,
-		    width, height)];
+	if (w) {
+	    NSRect r = NSMakeRect(x + macWin->winPtr->wmInfoPtr->xInParent,
+		    tkMacOSXZeroScreenHeight - (y +
+		    macWin->winPtr->wmInfoPtr->yInParent + height),
+		    width, height);
 
-	    [window setFrame:frame display:YES];
+	    [w setFrame:[w frameRectForContentRect:r] display:YES];
 	}
     } else {
 	MoveResizeWindow(macWin);
@@ -506,10 +507,10 @@ XMoveWindow(
 
     display->request++;
     if (Tk_IsTopLevel(macWin->winPtr) && !Tk_IsEmbedded(macWin->winPtr)) {
-	WindowRef w = TkMacOSXDrawableWindow(window);
+	NSWindow *w = macWin->winPtr->wmInfoPtr->window;
 
 	if (w) {
-	    ChkErr(MoveWindowStructure, w, x, y);
+	    [w setFrameTopLeftPoint:NSMakePoint(x, tkMacOSXZeroScreenHeight - y)];
 	}
     } else {
 	MoveResizeWindow(macWin);
@@ -979,25 +980,44 @@ TkMacOSXVisableClipRgn(
  *----------------------------------------------------------------------
  */
 
+static OSStatus
+InvalViewRect(int msg, HIShapeRef rgn, const CGRect *rect, void *ref) {
+    static CGAffineTransform t;
+    NSView *view = ref;
+
+    if (!view) {
+	return paramErr;
+    }
+    switch (msg) {
+    case kHIShapeEnumerateInit:
+	t = CGAffineTransformMake(1.0, 0.0, 0.0, -1.0, 0.0,
+		NSHeight([view bounds]));
+	break;
+    case kHIShapeEnumerateRect:
+	[view setNeedsDisplayInRect:NSRectFromCGRect(
+		CGRectApplyAffineTransform(*rect, t))];
+	break;
+    }
+    return noErr;
+}
+
 void
 TkMacOSXInvalidateWindow(
     MacDrawable *macWin,	/* Make window that's causing damage. */
     int flag)			/* Should be TK_WINDOW_ONLY or
 				 * TK_PARENT_WINDOW */
 {
-    WindowRef windowRef;
     HIShapeRef rgn;
 
-    windowRef = TkMacOSXDrawableWindow((Drawable)macWin);
     if (macWin->flags & TK_CLIP_INVALID) {
 	TkMacOSXUpdateClipRgn(macWin->winPtr);
     }
     rgn = (flag == TK_WINDOW_ONLY) ? macWin->visRgn : macWin->aboveVisRgn;
     if (!HIShapeIsEmpty(rgn)) {
-	TkMacOSXCheckTmpQdRgnEmpty();
-	ChkErr(HIShapeGetAsQDRgn, rgn, tkMacOSXtmpQdRgn);
-	InvalWindowRgn(windowRef, tkMacOSXtmpQdRgn);
-	SetEmptyRgn(tkMacOSXtmpQdRgn);
+	ChkErr(HIShapeEnumerate, rgn,
+		kHIShapeParseFromBottom|kHIShapeParseFromLeft,
+		InvalViewRect, macWin->toplevel ? macWin->toplevel->view :
+		macWin->view);
     }
 #ifdef TK_MAC_DEBUG_CLIP_REGIONS
     TkMacOSXDebugFlashRegion((Drawable) macWin, rgn);

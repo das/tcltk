@@ -355,10 +355,10 @@ static CFStringRef tclEventsOnlyRunLoopMode = NULL;
 #endif
 
 /*
- * CFTimeInterval to wait forever, as per CFRunLoop.c.
+ * CFTimeInterval to wait forever
  */
 
-#define CF_TIMEINTERVAL_FOREVER 1.0e10
+#define CF_TIMEINTERVAL_FOREVER 5.05e8
 
 /*
  * Static routines defined in this file.
