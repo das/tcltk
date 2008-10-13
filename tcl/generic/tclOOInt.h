@@ -18,8 +18,6 @@
 #include <tclInt.h>
 #include "tclOO.h"
 
-#define Class TclClass
-
 /*
  * Hack to make things work with Objective C. Note that ObjC isn't really
  * supported, but we don't want to to be actively hostile to it. [Bug 2163447]
