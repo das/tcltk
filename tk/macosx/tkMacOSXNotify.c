@@ -219,22 +219,24 @@ TkMacOSXEventsCheckProc(clientData, flags)
 	    if (currentEvent) {
 		TKLog(@"   event: %@", currentEvent);
 		objc_clear_stack(0);
+		TkMacOSXStartTclEventLoopTimer();
 		[NSApp sendEvent:currentEvent];
+		TkMacOSXStopTclEventLoopTimer();
 		[NSApp afterEvent];
 	    }  
 	    objc_collect_if_needed(OBJC_GENERATIONAL);
 	} while (currentEvent);
-    }
     
-    numFound = GetNumEventsInQueue((EventQueueRef)clientData);
+	numFound = GetNumEventsInQueue((EventQueueRef)clientData);
 
-    /* Avoid starving other event sources: */
-    if (numFound > 4) {
-	numFound = 4;
-    }
-    while (numFound > 0 && err == noErr) {
-	err = TkMacOSXReceiveAndDispatchEvent();
-	numFound--;
+	/* Avoid starving other event sources: */
+	if (numFound > 4) {
+	    numFound = 4;
+	}
+	while (numFound > 0 && err == noErr) {
+	    err = TkMacOSXReceiveAndDispatchEvent();
+	    numFound--;
+	}
     }
 }
 
