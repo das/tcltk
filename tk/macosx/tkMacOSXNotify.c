@@ -437,6 +437,7 @@ TkMacOSXReceiveAndDispatchEvent(void)
     const EventTypeSpec *eventTypes = NULL;
     EventRef eventRef;
     OSStatus err;
+#ifdef HAVE_QUICKDRAW
     const EventTypeSpec trackingEventTypes[] = {
 	{'dniw',		 kEventWindowUpdate},
 	{kEventClassWindow,	 kEventWindowUpdate},
@@ -446,6 +447,7 @@ TkMacOSXReceiveAndDispatchEvent(void)
 	eventTypes = trackingEventTypes;
 	numEventTypes = GetEventTypeCount(trackingEventTypes);
     }
+#endif
 
     /*
      * This is a poll, since we have already counted the events coming

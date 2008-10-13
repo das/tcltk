@@ -302,14 +302,16 @@ TkMacOSXProcessWindowEvent(
     switch (eventPtr->eKind) {
     case kEventWindowActivated:
     case kEventWindowDeactivated:
-    case kEventWindowUpdate:
     case kEventWindowExpanding:
     case kEventWindowBoundsChanged:
     case kEventWindowDragStarted:
     case kEventWindowDragCompleted:
     case kEventWindowConstrain:
     case kEventWindowGetRegion:
+#ifdef HAVE_QUICKDRAW
+    case kEventWindowUpdate:
     case kEventWindowDrawContent:
+#endif
 	break;
     default:
 	return 0;
