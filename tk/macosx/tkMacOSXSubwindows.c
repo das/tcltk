@@ -468,7 +468,7 @@ XMoveResizeWindow(
 	if (window) {
 	    NSRect frame = [window frameRectForContentRect:NSMakeRect(
 		    x + macWin->winPtr->wmInfoPtr->xInParent,
-		    y + macWin->winPtr->wmInfoPtr->yInParent,
+		    y + macWin->winPtr->wmInfoPtr->yInParent + height,
 		    width, height)];
 
 	    [window setFrame:frame display:YES];
@@ -509,7 +509,7 @@ XMoveWindow(
 	NSWindow *window = macWin->winPtr->wmInfoPtr->window;
 
 	if (window) {
-	    [window setFrameOrigin:NSMakePoint(x, y)];
+	    [window setFrameTopLeftPoint:NSMakePoint(x, y)];
 	}
     } else {
 	MoveResizeWindow(macWin);
