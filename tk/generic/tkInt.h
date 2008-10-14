@@ -1200,6 +1200,7 @@ MODULE_SCOPE void	TkUnderlineCharsInContext(Display *display,
 			    int firstByte, int lastByte);
 MODULE_SCOPE void	TkpGetFontAttrsForChar(Tk_Window tkwin, Tk_Font tkfont,
 			    Tcl_UniChar c, struct TkFontAttributes *faPtr);
+MODULE_SCOPE Tcl_Obj *	TkNewWindowObj(Tk_Window tkwin);
 
 /*
  * Unsupported commands.
