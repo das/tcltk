@@ -87,7 +87,7 @@ static int		SetWindowFromAny(Tcl_Interp *interp, Tcl_Obj *objPtr);
  * initial display-independant settings.
  */
 
-static Tcl_ObjType pixelObjType = {
+static const Tcl_ObjType pixelObjType = {
     "pixel",			/* name */
     FreePixelInternalRep,	/* freeIntRepProc */
     DupPixelInternalRep,	/* dupIntRepProc */
@@ -101,7 +101,7 @@ static Tcl_ObjType pixelObjType = {
  * initial display-independant settings.
  */
 
-static Tcl_ObjType mmObjType = {
+static const Tcl_ObjType mmObjType = {
     "mm",			/* name */
     FreeMMInternalRep,		/* freeIntRepProc */
     DupMMInternalRep,		/* dupIntRepProc */
@@ -114,7 +114,7 @@ static Tcl_ObjType mmObjType = {
  * Tcl object.
  */
 
-static Tcl_ObjType windowObjType = {
+static const Tcl_ObjType windowObjType = {
     "window",			/* name */
     FreeWindowInternalRep,	/* freeIntRepProc */
     DupWindowInternalRep,	/* dupIntRepProc */
