@@ -6550,7 +6550,7 @@ formatted as doubles.  (english)
 format, avoiding sensitivity to locale setting. (fellows)
 	*** POTENTIAL INCOMPATIBILITY ***
 
-2008-10-10 (bug fix)[1890438] [package require] any Tk 8.5.* in any Tcl 8.5.*
+2008-10-10 (bug fix)[1894038] [package require] any Tk 8.5.* in any Tcl 8.5.*
 (porter)
 
 --- Released 8.5.5, October 15, 2008 --- See ChangeLog for details ---
