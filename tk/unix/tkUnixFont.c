@@ -21,7 +21,7 @@
  * The preferred font encodings.
  */
 
-static const char *encodingList[] = {
+static const char *const encodingList[] = {
     "iso8859-1", "jis0208", "jis0212", NULL
 };
 
@@ -628,7 +628,7 @@ UtfToUcs2beProc(
     return result;
 }
 #endif /* WORDS_BIGENDIAN */
-
+
 /*
  *---------------------------------------------------------------------------
  *

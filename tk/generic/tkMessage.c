@@ -307,7 +307,7 @@ MessageWidgetObjCmd(
     Tcl_Obj *const objv[])	/* Argument strings. */
 {
     register Message *msgPtr = clientData;
-    static const char *optionStrings[] = { "cget", "configure", NULL };
+    static const char *const optionStrings[] = { "cget", "configure", NULL };
     enum options { MESSAGE_CGET, MESSAGE_CONFIGURE };
     int index;
     int result = TCL_OK;
