@@ -1762,7 +1762,8 @@ CanvasWidgetCmd(
 	}
 	FIRST_CANVAS_ITEM_MATCHING(objv[2], &searchPtr, goto done);
 	if (itemPtr != NULL) {
-	    Tcl_SetResult(interp, itemPtr->typePtr->name, TCL_STATIC);
+	    Tcl_SetObjResult(interp, 
+		Tcl_NewStringObj(itemPtr->typePtr->name, -1));
 	}
 	break;
     case CANV_XVIEW: {
