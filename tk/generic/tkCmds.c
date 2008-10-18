@@ -611,17 +611,15 @@ Tk_TkObjCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     int index;
-    Tk_Window tkwin;
+    Tk_Window tkwin = clientData;
     static const char *const optionStrings[] = {
-	"appname",	"caret",	"scaling",	"useinputmethods",
-	"windowingsystem",		"inactive",	NULL
+	"appname", "busy", "caret", "inactive", "scaling", "useinputmethods",
+	"windowingsystem", NULL
     };
     enum options {
-	TK_APPNAME,	TK_CARET,	TK_SCALING,	TK_USE_IM,
-	TK_WINDOWINGSYSTEM,		TK_INACTIVE
+	TK_APPNAME, TK_BUSY, TK_CARET, TK_INACTIVE, TK_SCALING, TK_USE_IM,
+	TK_WINDOWINGSYSTEM
     };
-
-    tkwin = (Tk_Window) clientData;
 
     if (objc < 2) {
 	Tcl_WrongNumArgs(interp, 1, objv, "option ?arg?");
@@ -657,6 +655,8 @@ Tk_TkObjCmd(
 	Tcl_AppendResult(interp, winPtr->nameUid, NULL);
 	break;
     }
+    case TK_BUSY:
+	return Tk_BusyObjCmd(clientData, interp, objc, objv);
     case TK_CARET: {
 	Tcl_Obj *objPtr;
 	TkCaret *caretPtr;

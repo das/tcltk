@@ -670,6 +670,7 @@ typedef struct TkMainInfo {
 				 * ::tk::AlwaysShowSelection variable. */
     struct TkMainInfo *nextPtr;	/* Next in list of all main windows managed by
 				 * this process. */
+    Tcl_HashTable busyTable;	/* Information used by [tk busy] command. */
 } TkMainInfo;
 
 /*
@@ -979,6 +980,9 @@ MODULE_SCOPE int	Tk_BindObjCmd(ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *const objv[]);
 MODULE_SCOPE int	Tk_BindtagsObjCmd(ClientData clientData,
+			    Tcl_Interp *interp, int objc,
+			    Tcl_Obj *const objv[]);
+MODULE_SCOPE int	Tk_BusyObjCmd(ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *const objv[]);
 MODULE_SCOPE int	Tk_ButtonObjCmd(ClientData clientData,
