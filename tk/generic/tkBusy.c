@@ -16,6 +16,7 @@
 
 #include "tkInt.h"
 #include "tkBusy.h"
+#include "default.h"
 
 /*
  * Things about the busy system that may be configured. Note that currently on
@@ -135,7 +136,7 @@ BusyCustodyProc(
 
     Tk_DeleteEventHandler(busyPtr->tkBusy, StructureNotifyMask, BusyEventProc,
 	    busyPtr);
-    TkpHideBusyWindow(busyPtr);
+    TkpHideBusyWindow((TkBusy)busyPtr);
     busyPtr->tkBusy = NULL;
     Tcl_EventuallyFree(busyPtr, DestroyBusy);
 }
@@ -295,20 +296,20 @@ RefWinEventProc(
 	    if (busyPtr->tkBusy != NULL) {
 		Tk_MoveResizeWindow(busyPtr->tkBusy, x, y, busyPtr->width,
 			busyPtr->height);
-		TkpShowBusyWindow(busyPtr);
+		TkpShowBusyWindow((TkBusy)busyPtr);
 	    }
 	}
 	break;
 
     case MapNotify:
 	if (busyPtr->tkParent != busyPtr->tkRef) {
-	    TkpShowBusyWindow(busyPtr);
+	    TkpShowBusyWindow((TkBusy)busyPtr);
 	}
 	break;
 
     case UnmapNotify:
 	if (busyPtr->tkParent != busyPtr->tkRef) {
-	    TkpHideBusyWindow(busyPtr);
+	    TkpHideBusyWindow((TkBusy)busyPtr);
 	}
 	break;
     }
@@ -577,7 +578,7 @@ CreateBusy(
     SetWindowInstanceData(tkBusy, busyPtr);
     winPtr = (Tk_FakeWin *) tkRef;
 
-    TkpCreateBusy(winPtr, tkRef, &parent, tkParent, busyPtr);
+    TkpCreateBusy(winPtr, tkRef, &parent, tkParent, (TkBusy)busyPtr);
 
     MakeTransparentWindowExist(tkBusy, parent);
 
@@ -756,9 +757,9 @@ HoldBusy(
      */
 
     if (Tk_IsMapped(busyPtr->tkRef)) {
-	TkpShowBusyWindow(busyPtr);
+	TkpShowBusyWindow((TkBusy)busyPtr);
     } else {
-	TkpHideBusyWindow(busyPtr);
+	TkpHideBusyWindow((TkBusy)busyPtr);
     }
     return result;
 }
@@ -892,7 +893,7 @@ Tk_BusyObjCmd(
 	if (GetBusy(busyTablePtr, interp, objv[3], &busyPtr) != TCL_OK) {
 	    return TCL_ERROR;
 	}
-	TkpHideBusyWindow(busyPtr);
+	TkpHideBusyWindow((TkBusy)busyPtr);
 	Tcl_EventuallyFree(busyPtr, DestroyBusy);
 	return TCL_OK;
 
