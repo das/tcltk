@@ -102,7 +102,7 @@ typedef struct TkpCursor_ *TkpCursor;
 typedef struct TkRegion_ *TkRegion;
 typedef struct TkStressedCmap TkStressedCmap;
 typedef struct TkBindInfo_ *TkBindInfo;
-typedef struct TkBusy_ *TkBusy;
+typedef struct Busy *TkBusy;
 
 /*
  * Function types.
