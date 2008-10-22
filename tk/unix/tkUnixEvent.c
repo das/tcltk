@@ -291,7 +291,7 @@ TransferXEventsToTcl(
 	if (event.type == GenericEvent) {
 	    xGenericEvent *xgePtr = (xGenericEvent *) &event;
 
-	    Tcl_Panic("Wild GenericEvent; panic! (extension=%d,evtype=%d)"
+	    Tcl_Panic("Wild GenericEvent; panic! (extension=%d,evtype=%d)",
 		    xgePtr->extension, xgePtr->evtype);
 	}
 #endif
