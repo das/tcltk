@@ -1403,13 +1403,26 @@ InitFont(
 
     fontPtr->font.fid	= (Font) fontPtr;
     fontPtr->hwnd	= hwnd;
-    fontPtr->pixelSize	= tm.tmHeight - tm.tmInternalLeading;
+    fontPtr->pixelSize	= tm.tmHeight;
+
+    /*
+     * The font pixelSize should be the tmHeight - tmInternalLeading
+     * but this causes fonts to appear too small on for instance
+     * Russian systems where there is internal leading in use.
+     * This hack appears to sort things out.
+     * NB: the logic on this flag is reversed - this means if the
+     *     font is not fixed then subtract the leading value.
+     */
+
+    if (tm.tmPitchAndFamily & TMPF_FIXED_PITCH) {
+	fontPtr->pixelSize -= tm.tmInternalLeading;
+    }
 
     faPtr		= &fontPtr->font.fa;
     faPtr->family	= Tk_GetUid(Tcl_DStringValue(&faceString));
 
     faPtr->size =
-	    TkFontGetPoints(tkwin, -(fontPtr->pixelSize));
+	TkFontGetPoints(tkwin,  -(fontPtr->pixelSize));
     faPtr->weight =
 	    (tm.tmWeight > FW_MEDIUM) ? TK_FW_BOLD : TK_FW_NORMAL;
     faPtr->slant	= (tm.tmItalic != 0) ? TK_FS_ITALIC : TK_FS_ROMAN;

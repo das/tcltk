@@ -122,7 +122,7 @@ static void		InitBitmapObj(Tcl_Obj *objPtr);
  * field of the Tcl_Obj points to a TkBitmap object.
  */
 
-Tcl_ObjType tkBitmapObjType = {
+const Tcl_ObjType tkBitmapObjType = {
     "bitmap",			/* name */
     FreeBitmapObjProc,		/* freeIntRepProc */
     DupBitmapObjProc,		/* dupIntRepProc */

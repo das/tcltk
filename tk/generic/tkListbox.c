@@ -340,7 +340,7 @@ static const Tk_OptionSpec itemAttrOptionSpecs[] = {
  * dispatch the listbox widget command.
  */
 
-static const char *commandNames[] = {
+static const char *const commandNames[] = {
     "activate", "bbox", "cget", "configure", "curselection", "delete", "get",
     "index", "insert", "itemcget", "itemconfigure", "nearest", "scan",
     "see", "selection", "size", "xview", "yview", NULL
@@ -353,21 +353,21 @@ enum command {
     COMMAND_SIZE, COMMAND_XVIEW, COMMAND_YVIEW
 };
 
-static const char *selCommandNames[] = {
+static const char *const selCommandNames[] = {
     "anchor", "clear", "includes", "set", NULL
 };
 enum selcommand {
     SELECTION_ANCHOR, SELECTION_CLEAR, SELECTION_INCLUDES, SELECTION_SET
 };
 
-static const char *scanCommandNames[] = {
+static const char *const scanCommandNames[] = {
     "mark", "dragto", NULL
 };
 enum scancommand {
     SCAN_MARK, SCAN_DRAGTO
 };
 
-static const char *indexNames[] = {
+static const char *const indexNames[] = {
     "active", "anchor", "end", NULL
 };
 enum indices {

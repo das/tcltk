@@ -452,9 +452,9 @@ GetEntryText(
 	strcpy(itemText, "( )");
     } else {
 	int i;
-	char *label = (mePtr->labelPtr == NULL) ? ""
+	const char *label = (mePtr->labelPtr == NULL) ? ""
 		: Tcl_GetString(mePtr->labelPtr);
-	char *accel = (mePtr->accelPtr == NULL) ? ""
+	const char *accel = (mePtr->accelPtr == NULL) ? ""
 		: Tcl_GetString(mePtr->accelPtr);
 	const char *p, *next;
 	Tcl_DString itemString;

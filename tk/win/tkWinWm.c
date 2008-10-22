@@ -2830,7 +2830,7 @@ Tk_WmObjCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     Tk_Window tkwin = clientData;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"aspect", "attributes", "client", "colormapwindows",
 	"command", "deiconify", "focusmodel", "forget", "frame",
 	"geometry", "grid", "group", "iconbitmap",
@@ -3642,7 +3642,7 @@ WmFocusmodelCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     register WmInfo *wmPtr = winPtr->wmInfoPtr;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"active", "passive", NULL
     };
     enum options {
@@ -4796,7 +4796,7 @@ WmPositionfromCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     register WmInfo *wmPtr = winPtr->wmInfoPtr;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"program", "user", NULL
     };
     enum options {
@@ -5013,7 +5013,7 @@ WmSizefromCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     register WmInfo *wmPtr = winPtr->wmInfoPtr;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"program", "user", NULL
     };
     enum options {
@@ -5079,7 +5079,7 @@ WmStackorderCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     TkWindow **windows, **window_ptr;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"isabove", "isbelow", NULL
     };
     enum options {
@@ -5197,7 +5197,7 @@ WmStateCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     register WmInfo *wmPtr = winPtr->wmInfoPtr;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"normal", "iconic", "withdrawn", "zoomed", NULL
     };
     enum options {
@@ -8457,7 +8457,7 @@ TkpWinToplevelDetachWindow(
  *----------------------------------------------------------------------
  */
 
-static void 
+static void
 RemapWindows(
     TkWindow *winPtr,
     HWND parentHWND)

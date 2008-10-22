@@ -264,7 +264,7 @@ FileReadGIF(
     int bitPixel;
     unsigned char colorMap[MAXCOLORMAPSIZE][4];
     int transparent = -1;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"-index", NULL
     };
     GIFImageConfig gifConf, *gifConfPtr = &gifConf;

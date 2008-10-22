@@ -702,7 +702,7 @@ FrameWidgetObjCmd(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
-    static const char *frameOptions[] = {
+    static const char *const frameOptions[] = {
 	"cget", "configure", NULL
     };
     enum options {
