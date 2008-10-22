@@ -1335,7 +1335,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 TCL_VERSION=8.6
 TCL_MAJOR_VERSION=8
 TCL_MINOR_VERSION=6
-TCL_PATCH_LEVEL="a3"
+TCL_PATCH_LEVEL="a4"
 VERSION=${TCL_VERSION}
 
 #------------------------------------------------------------------------
@@ -6727,7 +6727,7 @@ fi
 		DL_LIBS="-ldld"
 		LDFLAGS="$LDFLAGS -Wl,-E"
 		CC_SEARCH_FLAGS='-Wl,+s,+b,${LIB_RUNTIME_DIR}:.'
-		LD_SEARCH_FLAGS='-Wl,+s +b ${LIB_RUNTIME_DIR}:.'
+		LD_SEARCH_FLAGS='-Wl,+s,+b,${LIB_RUNTIME_DIR}:.'
 		LD_LIBRARY_PATH_VAR="SHLIB_PATH"
 
 fi

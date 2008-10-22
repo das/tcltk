@@ -239,7 +239,13 @@ VISIBILITY_HIDDEN
 - (void)afterEvent;
 - (void)eventLoopException:(NSException *)theException;
 @end
-@interface TKApplication(WindowEvent)
+@interface TKApplication(TKEvent)
+- (NSEvent *)tkProcessEvent:(NSEvent *)theEvent;
+@end
+@interface TKApplication(TKMouseEvent)
+- (NSEvent *)tkProcessMouseEvent:(NSEvent *)theEvent;
+@end
+@interface TKApplication(TKWindowEvent)
 - (void)setupApplicationNotifications;
 - (void)setupWindowNotifications;
 @end

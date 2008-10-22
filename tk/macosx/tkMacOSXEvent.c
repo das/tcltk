@@ -17,6 +17,90 @@
 #include "tkMacOSXEvent.h"
 #include "tkMacOSXDebug.h"
 
+
+#pragma mark TKApplication(TKEvent)
+
+enum {
+    NSWindowWillMoveEventType = 20
+};
+
+@implementation TKApplication(TKEvent)
+/* replace by +[addLocalMonitorForEventsMatchingMask ? */
+- (NSEvent *)tkProcessEvent:(NSEvent *)theEvent {
+    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, theEvent);
+    id		    win;
+    NSEventType	    type = [theEvent type];
+    NSInteger	    subtype;
+    NSUInteger	    flags;
+
+    switch ((NSInteger)type) {
+    case NSAppKitDefined:
+        subtype = [theEvent subtype];
+
+	switch (subtype) {
+	case NSApplicationActivatedEventType:
+	    break;
+	case NSApplicationDeactivatedEventType:
+	    break;
+	case NSWindowExposedEventType:
+	case NSScreenChangedEventType:
+	    break;
+	case NSWindowMovedEventType:
+	    break;
+        case NSWindowWillMoveEventType:
+            break;
+
+        default:
+            break;
+	}
+	break;
+    case NSKeyUp:
+	break;
+    case NSKeyDown:
+	flags = [theEvent modifierFlags];
+        break;
+    case NSFlagsChanged:
+	break;
+    case NSLeftMouseDown:
+    case NSLeftMouseUp:
+    case NSRightMouseDown:
+    case NSRightMouseUp:
+    case NSLeftMouseDragged:
+    case NSRightMouseDragged:
+    case NSMouseMoved:
+    case NSMouseEntered:
+    case NSMouseExited:
+    case NSScrollWheel:
+    case NSOtherMouseDown:
+    case NSOtherMouseUp:
+    case NSOtherMouseDragged:
+    case NSTabletPoint:
+    case NSTabletProximity:
+	theEvent = [self tkProcessMouseEvent:theEvent];
+	break;
+    case NSSystemDefined:
+        subtype = [theEvent subtype];
+	break;
+    case NSApplicationDefined:
+	win = [theEvent window];
+	break;
+    case NSCursorUpdate:
+        break;
+    case NSEventTypeGesture:
+    case NSEventTypeMagnify:
+    case NSEventTypeRotate:
+    case NSEventTypeSwipe:
+    case NSEventTypeBeginGesture:
+    case NSEventTypeEndGesture:
+        break;
+
+    default:
+	break;
+    }
+    return theEvent;
+}
+@end
+#pragma mark -
 
 /*
  *----------------------------------------------------------------------

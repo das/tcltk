@@ -191,10 +191,10 @@ Tk_GrabObjCmd(
     char *arg;
     int index;
     int len;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"current", "release", "set", "status", NULL
     };
-    static const char *flagStrings[] = {
+    static const char *const flagStrings[] = {
 	"-global", NULL
     };
     enum options {

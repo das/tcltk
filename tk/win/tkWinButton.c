@@ -258,7 +258,7 @@ CreateProc(
 {
     Window window;
     HWND parent;
-    char *class;
+    const char *class;
     WinButton *butPtr = (WinButton *)instanceData;
 
     parent = Tk_GetHWND(parentWin);

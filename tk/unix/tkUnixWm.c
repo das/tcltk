@@ -55,7 +55,7 @@ typedef enum {
     _WMATT_LAST_ATTRIBUTE
 } WmAttribute;
 
-static const char *WmAttributeNames[] = {
+static const char *const WmAttributeNames[] = {
     "-alpha", "-topmost", "-zoomed", "-fullscreen",
     NULL
 };
@@ -1736,7 +1736,7 @@ WmFocusmodelCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     register WmInfo *wmPtr = winPtr->wmInfoPtr;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"active", "passive", NULL };
     enum options {
 	OPT_ACTIVE, OPT_PASSIVE };
@@ -2872,7 +2872,7 @@ WmPositionfromCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     register WmInfo *wmPtr = winPtr->wmInfoPtr;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"program", "user", NULL };
     enum options {
 	OPT_PROGRAM, OPT_USER };
@@ -3101,7 +3101,7 @@ WmSizefromCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     register WmInfo *wmPtr = winPtr->wmInfoPtr;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"program", "user", NULL };
     enum options {
 	OPT_PROGRAM, OPT_USER };
@@ -3166,7 +3166,7 @@ WmStackorderCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     TkWindow **windows, **window_ptr;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"isabove", "isbelow", NULL };
     enum options {
 	OPT_ISABOVE, OPT_ISBELOW };
@@ -3286,7 +3286,7 @@ WmStateCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     register WmInfo *wmPtr = winPtr->wmInfoPtr;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"normal", "iconic", "withdrawn", NULL };
     enum options {
 	OPT_NORMAL, OPT_ICONIC, OPT_WITHDRAWN };

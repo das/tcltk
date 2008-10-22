@@ -20,7 +20,7 @@
  * object, used for quickly finding a mapping in a TkStateMap.
  */
 
-Tcl_ObjType tkStateKeyObjType = {
+const Tcl_ObjType tkStateKeyObjType = {
     "statekey",			/* name */
     NULL,			/* freeIntRepProc */
     NULL,			/* dupIntRepProc */

@@ -109,7 +109,6 @@ XDestroyWindow(
 	    WindowRef winRef = TkMacOSXDrawableWindow(window);
 
 	    if (winRef) {
-		TkMacOSXWindowList *listPtr, *prevPtr;
 		WindowGroupRef group;
 
 		if (GetWindowProperty(winRef, 'Tk  ', 'TsGp', sizeof(group),
@@ -151,20 +150,6 @@ XDestroyWindow(
 		if (macWin->winPtr && macWin->winPtr->wmInfoPtr &&
 			macWin->winPtr->wmInfoPtr->window) {
 		    CFRelease(macWin->winPtr->wmInfoPtr->window);
-		}
-
-		for (listPtr = tkMacOSXWindowListPtr, prevPtr = NULL;
-			tkMacOSXWindowListPtr != NULL;
-			prevPtr = listPtr, listPtr = listPtr->nextPtr) {
-		    if (listPtr->winPtr == macWin->winPtr) {
-			if (prevPtr == NULL) {
-			    tkMacOSXWindowListPtr = listPtr->nextPtr;
-			} else {
-			    prevPtr->nextPtr = listPtr->nextPtr;
-			}
-			ckfree((char *) listPtr);
-			break;
-		    }
 		}
 	    }
 	}
@@ -250,7 +235,9 @@ XMapWindow(
 			macWin->winPtr->wmInfoPtr->master));
 	    } else {
 		//ShowWindow(wRef);
-		[macWin->winPtr->wmInfoPtr->window orderFront:NSApp];
+		if (![macWin->winPtr->wmInfoPtr->window isVisible]) {
+		    [macWin->winPtr->wmInfoPtr->window orderFront:NSApp];
+		}
 	    }
 	}
 	TkMacOSXInvalClipRgns((Tk_Window) macWin->winPtr);
@@ -364,7 +351,9 @@ XUnmapWindow(
 		HideSheetWindow(wref);
 	    } else {
 		//HideWindow(wref);
-		[macWin->winPtr->wmInfoPtr->window orderOut:NSApp];		
+		if ([macWin->winPtr->wmInfoPtr->window isVisible]) {
+		    [macWin->winPtr->wmInfoPtr->window orderOut:NSApp];
+		}
 	    }
 	}
 	TkMacOSXInvalClipRgns((Tk_Window) macWin->winPtr);

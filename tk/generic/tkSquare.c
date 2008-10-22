@@ -224,7 +224,7 @@ SquareWidgetObjCmd(
 {
     Square *squarePtr = clientData;
     int result = TCL_OK;
-    static const char *squareOptions[] = {"cget", "configure", NULL};
+    static const char *const squareOptions[] = {"cget", "configure", NULL};
     enum {
 	SQUARE_CGET, SQUARE_CONFIGURE
     };

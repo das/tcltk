@@ -120,7 +120,7 @@ Tk_FocusObjCmd(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
-    static const char *focusOptions[] = {
+    static const char *const focusOptions[] = {
 	"-displayof", "-force", "-lastfor", NULL
     };
     Tk_Window tkwin = clientData;
@@ -1113,7 +1113,7 @@ TkFocusSplit(winPtr)
      * See if current focusWin is child of the new toplevel.
      */
 
-    for (subWinPtr = tlFocusPtr->focusWinPtr; 
+    for (subWinPtr = tlFocusPtr->focusWinPtr;
 	    subWinPtr && subWinPtr != winPtr && subWinPtr != topLevelPtr;
 	    subWinPtr = subWinPtr->parentPtr) {
 	/* EMPTY */

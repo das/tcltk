@@ -1006,7 +1006,7 @@ typedef void	Tk_ItemDCharsProc (Tk_Canvas canvas, Tk_Item *itemPtr,
 #ifndef __NO_OLD_CONFIG
 
 typedef struct Tk_ItemType {
-    char *name;			/* The name of this type of item, such as
+    CONST char *name; /* The name of this type of item, such as
 				 * "line". */
     int itemSize;		/* Total amount of space needed for item's
 				 * record. */
@@ -1201,7 +1201,7 @@ typedef int (Tk_ImagePostscriptProc) (ClientData clientData,
  */
 
 struct Tk_ImageType {
-    char *name;			/* Name of image type. */
+    CONST char *name; /* Name of image type. */
     Tk_ImageCreateProc *createProc;
 				/* Procedure to call to create a new image of
 				 * this type. */
