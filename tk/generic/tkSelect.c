@@ -679,7 +679,7 @@ Tk_SelectionObjCmd(
     char *selName = NULL, *string;
     int count, index;
     Tcl_Obj **objs;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"clear", "get", "handle", "own", NULL
     };
     enum options {
@@ -698,7 +698,7 @@ Tk_SelectionObjCmd(
 
     switch ((enum options) index) {
     case SELECTION_CLEAR: {
-	static const char *clearOptionStrings[] = {
+	static const char *const clearOptionStrings[] = {
 	    "-displayof", "-selection", NULL
 	};
 	enum clearOptions { CLEAR_DISPLAYOF, CLEAR_SELECTION };
@@ -757,7 +757,7 @@ Tk_SelectionObjCmd(
 	char *targetName = NULL;
 	Tcl_DString selBytes;
 	int result;
-	static const char *getOptionStrings[] = {
+	static const char *const getOptionStrings[] = {
 	    "-displayof", "-selection", "-type", NULL
 	};
 	enum getOptions { GET_DISPLAYOF, GET_SELECTION, GET_TYPE };
@@ -832,7 +832,7 @@ Tk_SelectionObjCmd(
 	char *formatName = NULL;
 	register CommandInfo *cmdInfoPtr;
 	int cmdLength;
-	static const char *handleOptionStrings[] = {
+	static const char *const handleOptionStrings[] = {
 	    "-format", "-selection", "-type", NULL
 	};
 	enum handleOptions {
@@ -920,7 +920,7 @@ Tk_SelectionObjCmd(
 	register LostCommand *lostPtr;
 	char *script = NULL;
 	int cmdLength;
-	static const char *ownOptionStrings[] = {
+	static const char *const ownOptionStrings[] = {
 	    "-command", "-displayof", "-selection", NULL
 	};
 	enum ownOptions { OWN_COMMAND, OWN_DISPLAYOF, OWN_SELECTION };

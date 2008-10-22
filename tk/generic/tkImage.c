@@ -156,7 +156,7 @@ Tk_ImageObjCmd(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument strings. */
 {
-    static const char *imageOptions[] = {
+    static const char *const imageOptions[] = {
 	"create", "delete", "height", "inuse", "names", "type", "types",
 	"width", NULL
     };

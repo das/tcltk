@@ -114,7 +114,7 @@ ShouldUseConsoleChannel(
     DWORD consoleParams;
     DWORD fileType;
     int mode;
-    char *bufMode;
+    const char *bufMode;
     HANDLE handle;
 
     switch (type) {
@@ -673,7 +673,7 @@ ConsoleObjCmd(
     Tcl_Obj *const objv[])	/* Argument objects */
 {
     int index, result;
-    static const char *options[] = {"eval", "hide", "show", "title", NULL};
+    static const char *const options[] = {"eval", "hide", "show", "title", NULL};
     enum option {CON_EVAL, CON_HIDE, CON_SHOW, CON_TITLE};
     Tcl_Obj *cmd = NULL;
     ConsoleInfo *info = (ConsoleInfo *) clientData;
@@ -760,7 +760,7 @@ InterpreterObjCmd(
     Tcl_Obj *const objv[])	/* Argument objects */
 {
     int index, result = TCL_OK;
-    static const char *options[] = {"eval", "record", NULL};
+    static const char *const options[] = {"eval", "record", NULL};
     enum option {OTHER_EVAL, OTHER_RECORD};
     ConsoleInfo *info = clientData;
     Tcl_Interp *otherInterp = info->interp;
