@@ -241,8 +241,6 @@ typedef struct TkMenuEntry {
  * Menu states
  */
 
-MODULE_SCOPE char *tkMenuStateStrings[];
-
 #define ENTRY_ACTIVE 0
 #define ENTRY_NORMAL 1
 #define ENTRY_DISABLED 2

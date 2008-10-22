@@ -17,7 +17,7 @@
 if {[info commands package] == ""} {
     error "version mismatch: library\nscripts expect Tcl version 7.5b1 or later but the loaded version is\nonly [info patchlevel]"
 }
-package require -exact Tcl 8.6a3
+package require -exact Tcl 8.6a4
 
 # Compute the auto path to use in this interpreter.
 # The values on the path come from several locations:
@@ -262,8 +262,16 @@ proc unknown args {
 	    unset UnknownPending
 	}
 	if {$msg} {
-	    catch {set ::errorCode $savedErrorCode}
-	    catch {set ::errorInfo $savedErrorInfo}
+	    if {[info exists savedErrorCode]} {
+		set ::errorCode $savedErrorCode
+	    } else {
+		unset -nocomplain ::errorCode
+	    }
+	    if {[info exists savedErrorInfo]} {
+		set ::errorInfo $savedErrorInfo
+	    } else {
+		unset -nocomplain ::errorInfo
+	    }
 	    set code [catch {uplevel 1 $args} msg opts]
 	    if {$code ==  1} {
 		#

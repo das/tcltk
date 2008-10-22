@@ -102,6 +102,7 @@ typedef struct TkpCursor_ *TkpCursor;
 typedef struct TkRegion_ *TkRegion;
 typedef struct TkStressedCmap TkStressedCmap;
 typedef struct TkBindInfo_ *TkBindInfo;
+typedef struct Busy *TkBusy;
 
 /*
  * Function types.
@@ -670,6 +671,7 @@ typedef struct TkMainInfo {
 				 * ::tk::AlwaysShowSelection variable. */
     struct TkMainInfo *nextPtr;	/* Next in list of all main windows managed by
 				 * this process. */
+    Tcl_HashTable busyTable;	/* Information used by [tk busy] command. */
 } TkMainInfo;
 
 /*
@@ -931,14 +933,14 @@ extern TkDisplay *tkDisplayList;
  * be properly registered with Tcl:
  */
 
-MODULE_SCOPE Tcl_ObjType tkBorderObjType;
-MODULE_SCOPE Tcl_ObjType tkBitmapObjType;
-MODULE_SCOPE Tcl_ObjType tkColorObjType;
-MODULE_SCOPE Tcl_ObjType tkCursorObjType;
-MODULE_SCOPE Tcl_ObjType tkFontObjType;
-MODULE_SCOPE Tcl_ObjType tkOptionObjType;
-MODULE_SCOPE Tcl_ObjType tkStateKeyObjType;
-MODULE_SCOPE Tcl_ObjType tkTextIndexType;
+MODULE_SCOPE const Tcl_ObjType tkBorderObjType;
+MODULE_SCOPE const Tcl_ObjType tkBitmapObjType;
+MODULE_SCOPE const Tcl_ObjType tkColorObjType;
+MODULE_SCOPE const Tcl_ObjType tkCursorObjType;
+MODULE_SCOPE const Tcl_ObjType tkFontObjType;
+MODULE_SCOPE const Tcl_ObjType tkOptionObjType;
+MODULE_SCOPE const Tcl_ObjType tkStateKeyObjType;
+MODULE_SCOPE const Tcl_ObjType tkTextIndexType;
 
 /*
  * Miscellaneous variables shared among Tk modules but not exported to the
@@ -979,6 +981,9 @@ MODULE_SCOPE int	Tk_BindObjCmd(ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *const objv[]);
 MODULE_SCOPE int	Tk_BindtagsObjCmd(ClientData clientData,
+			    Tcl_Interp *interp, int objc,
+			    Tcl_Obj *const objv[]);
+MODULE_SCOPE int	Tk_BusyObjCmd(ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *const objv[]);
 MODULE_SCOPE int	Tk_ButtonObjCmd(ClientData clientData,
@@ -1200,6 +1205,14 @@ MODULE_SCOPE void	TkUnderlineCharsInContext(Display *display,
 			    int firstByte, int lastByte);
 MODULE_SCOPE void	TkpGetFontAttrsForChar(Tk_Window tkwin, Tk_Font tkfont,
 			    Tcl_UniChar c, struct TkFontAttributes *faPtr);
+MODULE_SCOPE Tcl_Obj *	TkNewWindowObj(Tk_Window tkwin);
+MODULE_SCOPE void	TkpShowBusyWindow(TkBusy busy);
+MODULE_SCOPE void	TkpHideBusyWindow(TkBusy busy);
+MODULE_SCOPE void	TkpMakeTransparentWindowExist(Tk_Window tkwin,
+			    Window parent);
+MODULE_SCOPE void	TkpCreateBusy(Tk_FakeWin *winPtr, Tk_Window tkRef,
+			    Window *parentPtr, Tk_Window tkParent,
+			    TkBusy busy);
 
 /*
  * Unsupported commands.

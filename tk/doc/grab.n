@@ -133,6 +133,8 @@ pack [button .b2 \-text "Click me! #2" \-command {destroy .b2}]
 pack [button .b3 \-text "Click me! #3" \-command {destroy .b3}]
 \fBgrab\fR .b2
 .CE
+.SH "SEE ALSO"
+busy(n)
 .SH KEYWORDS
 grab, keyboard events, pointer events, window
 '\" Local Variables:
