@@ -199,7 +199,7 @@ TkMacOSXEventsCheckProc(clientData, flags)
 	    sizeof(ThreadSpecificData));
     int numFound;
     OSStatus err = noErr;
-    NSEvent *currentEvent = nil;
+    NSEvent *currentEvent = nil, *event;
 
     if (!(flags & TCL_WINDOW_EVENTS)) {
 	return;
@@ -216,11 +216,12 @@ TkMacOSXEventsCheckProc(clientData, flags)
 			untilDate:[NSDate distantPast]
 			inMode:NSDefaultRunLoopMode dequeue:YES];
 	    }
-	    if (currentEvent) {
-		TKLog(@"   event: %@", currentEvent);
+	    event = currentEvent ? [NSApp tkProcessEvent:currentEvent] : nil;
+	    if (event) {
+		TKLog(@"   event: %@", event);
 		objc_clear_stack(0);
 		TkMacOSXStartTclEventLoopTimer();
-		[NSApp sendEvent:currentEvent];
+		[NSApp sendEvent:event];
 		TkMacOSXStopTclEventLoopTimer();
 		[NSApp afterEvent];
 	    }  
