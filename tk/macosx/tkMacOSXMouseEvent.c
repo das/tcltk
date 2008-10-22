@@ -96,6 +96,130 @@ static Tk_Window GetGrabWindowForWindow(Tk_Window tkwin);
 static int TkMacOSXGetEatButtonUp(void);
 static void TkMacOSXSetEatButtonUp(int f);
 
+#pragma mark TKApplication(TKEvent)
+
+enum {
+    NSWindowWillMoveEventType = 20
+};
+
+@implementation TKApplication(TKMouseEvent)
+- (NSEvent *)tkProcessMouseEvent:(NSEvent *)theEvent {
+    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, theEvent);
+    id		    win;
+    NSEventType	    type = [theEvent type];
+    NSTrackingArea  *trackingArea = nil;
+
+    switch (type) {
+    case NSMouseEntered:
+    case NSMouseExited:
+	trackingArea = [theEvent trackingArea];
+	/* fall through */
+    case NSLeftMouseDown:
+    case NSLeftMouseUp:
+    case NSRightMouseDown:
+    case NSRightMouseUp:
+    case NSLeftMouseDragged:
+    case NSRightMouseDragged:
+    case NSMouseMoved:
+    case NSScrollWheel:
+    case NSOtherMouseDown:
+    case NSOtherMouseUp:
+    case NSOtherMouseDragged:
+    case NSTabletPoint:
+    case NSTabletProximity:
+	win = [self windowWithWindowNumber:[theEvent windowNumber]];
+        break;
+
+    default:
+	return theEvent;
+	break;
+    }
+
+    NSPoint global, local = [theEvent locationInWindow];
+    if (win) {
+	global = [win convertBaseToScreen:local];
+	local.y = NSHeight([win frame]) - local.y;
+	global.y = tkMacOSXZeroScreenHeight - global.y;
+    } else {
+	local.y = tkMacOSXZeroScreenHeight - local.y;
+	global = local;
+    }
+
+    Window window = TkMacOSXGetXWindow([win windowRef]);
+    TkDisplay *dispPtr = TkGetDisplayList();
+    Tk_Window tkwin = Tk_IdToWindow(dispPtr->display, window);
+    if (!tkwin) {
+	tkwin = TkMacOSXGetCapture();
+    }
+    if (!tkwin) {
+	return theEvent;
+    }
+
+    /*
+    MacDrawable *macWin = (MacDrawable *) window;
+    NSView *view = macWin->toplevel ? macWin->toplevel->view : macWin->view;
+    local = [view convertPoint:local fromView:nil];
+    local.y = NSHeight([view bounds]) - local.y;
+    */
+    TkWindow  *winPtr = (TkWindow *) tkwin;
+    local.x -= winPtr->wmInfoPtr->xInParent;
+    local.y -= winPtr->wmInfoPtr->yInParent;
+
+    int win_x, win_y;
+    tkwin = Tk_TopCoordsToWindow(tkwin, local.x, local.y,
+		&win_x, &win_y);
+ 
+    unsigned int state = 0;
+    NSInteger button = [theEvent buttonNumber];
+    if (button < 5) {
+	state |= 1 << (button + 8);
+    }
+    NSUInteger modifiers = [theEvent modifierFlags];
+
+    if (modifiers & NSAlphaShiftKeyMask) {
+	state |= LockMask;
+    }
+    if (modifiers & NSShiftKeyMask) {
+	state |= ShiftMask;
+    }
+    if (modifiers & NSControlKeyMask) {
+	state |= ControlMask;
+    }
+    if (modifiers & NSCommandKeyMask) {
+	state |= Mod1Mask;		/* command key */
+    }
+    if (modifiers & NSAlternateKeyMask) {
+	state |= Mod2Mask;		/* option key */
+    }
+    if (modifiers & NSNumericPadKeyMask) {
+	state |= Mod3Mask;
+    }
+    if (modifiers & NSFunctionKeyMask) {
+	state |= Mod4Mask;
+    }
+
+    if (type != NSScrollWheel) {
+	Tk_UpdatePointer(tkwin, global.x, global.y, state);
+    } else {
+	XEvent xEvent;
+	xEvent.type = MouseWheelEvent;
+	xEvent.xkey.keycode = [theEvent deltaX];
+	xEvent.xbutton.x = local.x;
+	xEvent.xbutton.y = local.y;
+	xEvent.xbutton.x_root = global.x;
+	xEvent.xbutton.y_root = global.y;
+	xEvent.xbutton.state = state;
+	xEvent.xany.serial = LastKnownRequestProcessed(winPtr->display);
+	xEvent.xany.send_event = false;
+	xEvent.xany.display = winPtr->display;
+	xEvent.xany.window = Tk_WindowId(winPtr);
+	Tk_QueueWindowEvent(&xEvent, TCL_QUEUE_TAIL);
+    }
+
+    return theEvent;
+}
+@end
+#pragma mark -
 
 /*
  *----------------------------------------------------------------------
