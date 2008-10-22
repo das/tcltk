@@ -235,7 +235,9 @@ XMapWindow(
 			macWin->winPtr->wmInfoPtr->master));
 	    } else {
 		//ShowWindow(wRef);
-		[macWin->winPtr->wmInfoPtr->window orderFront:NSApp];
+		if (![macWin->winPtr->wmInfoPtr->window isVisible]) {
+		    [macWin->winPtr->wmInfoPtr->window orderFront:NSApp];
+		}
 	    }
 	}
 	TkMacOSXInvalClipRgns((Tk_Window) macWin->winPtr);
@@ -349,7 +351,9 @@ XUnmapWindow(
 		HideSheetWindow(wref);
 	    } else {
 		//HideWindow(wref);
-		[macWin->winPtr->wmInfoPtr->window orderOut:NSApp];		
+		if ([macWin->winPtr->wmInfoPtr->window isVisible]) {
+		    [macWin->winPtr->wmInfoPtr->window orderOut:NSApp];
+		}
 	    }
 	}
 	TkMacOSXInvalClipRgns((Tk_Window) macWin->winPtr);
