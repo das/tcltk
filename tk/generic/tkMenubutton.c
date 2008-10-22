@@ -22,7 +22,7 @@
  * is used together with the "enum direction" declaration in tkMenubutton.h.
  */
 
-static char *directionStrings[] = {
+static const char *const directionStrings[] = {
     "above", "below", "flush", "left", "right", NULL
 };
 
@@ -31,7 +31,7 @@ static char *directionStrings[] = {
  * used together with the "enum state" declaration in tkMenubutton.h.
  */
 
-static char *stateStrings[] = {
+static const char *const stateStrings[] = {
     "active", "disabled", "normal", NULL
 };
 
@@ -40,7 +40,7 @@ static char *stateStrings[] = {
  * is used with the "enum compound" declaration in tkMenuButton.h
  */
 
-static char *compoundStrings[] = {
+static const char *const compoundStrings[] = {
     "bottom", "center", "left", "none", "right", "top", NULL
 };
 
@@ -153,7 +153,7 @@ static const Tk_OptionSpec optionSpecs[] = {
  * dispatch the scale widget command.
  */
 
-static const char *commandNames[] = {
+static const char *const commandNames[] = {
     "cget", "configure", NULL
 };
 

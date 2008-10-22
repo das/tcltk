@@ -72,7 +72,7 @@ static void		UpdateStringOfTextIndex(Tcl_Obj *objPtr);
  * text widgets internally.
  */
 
-Tcl_ObjType tkTextIndexType = {
+const Tcl_ObjType tkTextIndexType = {
     "textindex",		/* name */
     FreeTextIndexInternalRep,	/* freeIntRepProc */
     DupTextIndexInternalRep,	/* dupIntRepProc */

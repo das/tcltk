@@ -61,7 +61,7 @@ Tk_BellObjCmd(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
-    static const char *bellOptions[] = {
+    static const char *const bellOptions[] = {
 	"-displayof", "-nice", NULL
     };
     enum options { TK_BELL_DISPLAYOF, TK_BELL_NICE };
@@ -611,17 +611,15 @@ Tk_TkObjCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     int index;
-    Tk_Window tkwin;
-    static const char *optionStrings[] = {
-	"appname",	"caret",	"scaling",	"useinputmethods",
-	"windowingsystem",		"inactive",	NULL
+    Tk_Window tkwin = clientData;
+    static const char *const optionStrings[] = {
+	"appname", "busy", "caret", "inactive", "scaling", "useinputmethods",
+	"windowingsystem", NULL
     };
     enum options {
-	TK_APPNAME,	TK_CARET,	TK_SCALING,	TK_USE_IM,
-	TK_WINDOWINGSYSTEM,		TK_INACTIVE
+	TK_APPNAME, TK_BUSY, TK_CARET, TK_INACTIVE, TK_SCALING, TK_USE_IM,
+	TK_WINDOWINGSYSTEM
     };
-
-    tkwin = (Tk_Window) clientData;
 
     if (objc < 2) {
 	Tcl_WrongNumArgs(interp, 1, objv, "option ?arg?");
@@ -657,11 +655,13 @@ Tk_TkObjCmd(
 	Tcl_AppendResult(interp, winPtr->nameUid, NULL);
 	break;
     }
+    case TK_BUSY:
+	return Tk_BusyObjCmd(clientData, interp, objc, objv);
     case TK_CARET: {
 	Tcl_Obj *objPtr;
 	TkCaret *caretPtr;
 	Tk_Window window;
-	static const char *caretStrings[] = {
+	static const char *const caretStrings[] = {
 	    "-x",	"-y", "-height", NULL
 	};
 	enum caretOptions {
@@ -916,7 +916,7 @@ Tk_TkwaitObjCmd(
     Tk_Window tkwin = (Tk_Window) clientData;
     int done, index;
     int code = TCL_OK;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"variable", "visibility", "window", NULL
     };
     enum options {
@@ -1101,7 +1101,7 @@ Tk_UpdateObjCmd(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
-    static const char *updateOptions[] = {"idletasks", NULL};
+    static const char *const updateOptions[] = {"idletasks", NULL};
     int flags, index;
     TkDisplay *dispPtr;
     int code = TCL_OK;
@@ -1213,7 +1213,7 @@ Tk_WinfoObjCmd(
 	{StaticGray,	"staticgray"},
 	{-1,		NULL}
     };
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"cells",	"children",	"class",	"colormapfull",
 	"depth",	"geometry",	"height",	"id",
 	"ismapped",	"manager",	"name",		"parent",
@@ -1752,7 +1752,7 @@ Tk_WmObjCmd(
     Tk_Window tkwin;
     TkWindow *winPtr;
 
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"aspect",	"client",	"command",	"deiconify",
 	"focusmodel",	"frame",	"geometry",	"grid",
 	"group",	"iconbitmap",	"iconify",	"iconmask",

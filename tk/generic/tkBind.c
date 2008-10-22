@@ -355,7 +355,7 @@ typedef struct BindInfo {
 
 #ifdef REDO_KEYSYM_LOOKUP
 typedef struct {
-    char *name;			/* Name of keysym. */
+    const char *name;			/* Name of keysym. */
     KeySym value;		/* Numeric identifier for keysym. */
 } KeySymInfo;
 static KeySymInfo keyArray[] = {
@@ -384,7 +384,7 @@ TCL_DECLARE_MUTEX(bindMutex)
  */
 
 typedef struct {
-    char *name;			/* Name of modifier. */
+    const char *name; /* Name of modifier. */
     int mask;			/* Button/modifier mask value, such as
 				 * Button1Mask. */
     int flags;			/* Various flags; see below for
@@ -408,7 +408,7 @@ typedef struct {
 #define QUADRUPLE	4
 #define MULT_CLICKS	7
 
-static ModInfo modArray[] = {
+static const ModInfo modArray[] = {
     {"Control",		ControlMask,	0},
     {"Shift",		ShiftMask,	0},
     {"Lock",		LockMask,	0},
@@ -453,7 +453,7 @@ static Tcl_HashTable modTable;
  */
 
 typedef struct {
-    char *name;			/* Name of event. */
+    const char *name;	/* Name of event. */
     int type;			/* Event type for X, such as ButtonPress. */
     int eventMask;		/* Mask bits (for XSelectInput) for this event
 				 * type. */
@@ -738,7 +738,7 @@ TkBindInit(
 	Tcl_MutexLock(&bindMutex);
 	if (!initialized) {
 	    Tcl_HashEntry *hPtr;
-	    ModInfo *modPtr;
+	    const ModInfo *modPtr;
 	    EventInfo *eiPtr;
 	    int newEntry;
 
@@ -2731,7 +2731,7 @@ Tk_EventObjCmd(
     Tk_Window tkwin;
     VirtualEventTable *vetPtr;
     TkBindInfo bindInfo;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"add",		"delete",	"generate",	"info",
 	NULL
     };
@@ -3298,7 +3298,7 @@ HandleEventGenerate(
     TkWindow *mainPtr;
     unsigned long eventMask;
     Tcl_Obj *userDataObj;
-    static const char *fieldStrings[] = {
+    static const char *const fieldStrings[] = {
 	"-when",	"-above",	"-borderwidth",	"-button",
 	"-count",	"-data",	"-delta",	"-detail",
 	"-focus",	"-height",
@@ -4429,7 +4429,7 @@ GetPatternString(
     Pattern *patPtr;
     char c, buffer[TCL_INTEGER_SPACE];
     int patsLeft, needMods;
-    ModInfo *modPtr;
+    const ModInfo *modPtr;
     EventInfo *eiPtr;
 
     /*

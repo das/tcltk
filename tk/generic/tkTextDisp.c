@@ -2726,7 +2726,7 @@ DisplayLineBackground(
 		    rightX2 + xOffset, y, sValuePtr->borderWidth,
 		    sValuePtr->borderWidth, 1, sValuePtr->relief);
 	    Tk_3DHorizontalBevel(textPtr->tkwin, pixmap, sValuePtr->border,
-		    leftX + xOffset, y, rightX2 + sValuePtr->borderWidth - 
+		    leftX + xOffset, y, rightX2 + sValuePtr->borderWidth -
 		    leftX, sValuePtr->borderWidth, leftXIn, 0, 1,
 		    sValuePtr->relief);
 	}
@@ -8167,13 +8167,13 @@ TextGetScrollInfoObj(
     int *intPtr)		/* Filled in with number of pages or lines or
 				 * pixels to scroll, if any. */
 {
-    static const char *subcommands[] = {
+    static const char *const subcommands[] = {
 	"moveto", "scroll", NULL
     };
     enum viewSubcmds {
 	VIEW_MOVETO, VIEW_SCROLL
     };
-    static const char *units[] = {
+    static const char *const units[] = {
 	"units", "pages", "pixels", NULL
     };
     enum viewUnits {

@@ -53,7 +53,7 @@ static void		InitColorObj(Tcl_Obj *objPtr);
  * of the Tcl_Obj points to a TkColor object.
  */
 
-Tcl_ObjType tkColorObjType = {
+const Tcl_ObjType tkColorObjType = {
     "color",			/* name */
     FreeColorObjProc,		/* freeIntRepProc */
     DupColorObjProc,		/* dupIntRepProc */
