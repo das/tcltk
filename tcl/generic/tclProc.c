@@ -63,7 +63,7 @@ static Tcl_NRPostProc Uplevel_Callback;
  * The ProcBodyObjType type
  */
 
-Tcl_ObjType tclProcBodyType = {
+const Tcl_ObjType tclProcBodyType = {
     "procbody",			/* name for this type */
     ProcBodyFree,		/* FreeInternalRep function */
     ProcBodyDup,		/* DupInternalRep function */
@@ -83,7 +83,7 @@ Tcl_ObjType tclProcBodyType = {
  * rep; it's just a cache type.
  */
 
-static Tcl_ObjType levelReferenceType = {
+static const Tcl_ObjType levelReferenceType = {
     "levelReference",
     NULL, NULL, NULL, NULL
 };
@@ -97,7 +97,7 @@ static Tcl_ObjType levelReferenceType = {
  * will execute within.
  */
 
-static Tcl_ObjType lambdaType = {
+static const Tcl_ObjType lambdaType = {
     "lambdaExpr",		/* name */
     FreeLambdaInternalRep,	/* freeIntRepProc */
     DupLambdaInternalRep,	/* dupIntRepProc */
@@ -2239,9 +2239,14 @@ TclUpdateReturnInfo(
     if (iPtr->returnLevel == 0) {
 	/*
 	 * Now we've reached the level to return the requested -code.
+	 * Since iPtr->returnLevel and iPtr->returnCode have completed
+	 * their task, we now reset them to default values so that any
+	 * bare "return TCL_RETURN" that may follow will work [Bug 2152286].
 	 */
 
 	code = iPtr->returnCode;
+	iPtr->returnLevel = 1;
+	iPtr->returnCode = TCL_OK;
 	if (code == TCL_ERROR) {
 	    iPtr->flags |= ERR_LEGACY_COPY;
 	}
@@ -2801,7 +2806,7 @@ Tcl_DisassembleObjCmd(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
-    static const char *types[] = {
+    static const char *const types[] = {
 	"lambda", "method", "objmethod", "proc", "script", NULL
     };
     enum Types {

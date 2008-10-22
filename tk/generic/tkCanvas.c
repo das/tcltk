@@ -542,7 +542,7 @@ CanvasWidgetCmd(
 #endif /* USE_OLD_TAG_SEARCH */
 
     int index;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"addtag",	"bbox",		"bind",		"canvasx",
 	"canvasy",	"cget",		"configure",	"coords",
 	"create",	"dchars",	"delete",	"dtag",
@@ -1601,7 +1601,7 @@ CanvasWidgetCmd(
     }
     case CANV_SCAN: {
 	int x, y, gain = 10;
-	static const char *optionStrings[] = {
+	static const char *const optionStrings[] = {
 	    "mark", "dragto", NULL
 	};
 
@@ -1645,7 +1645,7 @@ CanvasWidgetCmd(
     }
     case CANV_SELECT: {
 	int index, optionindex;
-	static const char *optionStrings[] = {
+	static const char *const optionStrings[] = {
 	    "adjust", "clear", "from", "item", "to", NULL
 	};
 	enum options {
@@ -1762,7 +1762,8 @@ CanvasWidgetCmd(
 	}
 	FIRST_CANVAS_ITEM_MATCHING(objv[2], &searchPtr, goto done);
 	if (itemPtr != NULL) {
-	    Tcl_SetResult(interp, itemPtr->typePtr->name, TCL_STATIC);
+	    Tcl_SetObjResult(interp, 
+		Tcl_NewStringObj(itemPtr->typePtr->name, -1));
 	}
 	break;
     case CANV_XVIEW: {
@@ -3992,7 +3993,7 @@ FindItems(
     Tk_Item *itemPtr;
     Tk_Uid uid;
     int index, result;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"above", "all", "below", "closest",
 	"enclosed", "overlapping", "withtag", NULL
     };

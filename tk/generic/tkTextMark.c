@@ -106,7 +106,7 @@ TkTextMarkCmd(
     TkTextIndex index;
     const Tk_SegType *newTypePtr;
     int optionIndex;
-    static const char *markOptionStrings[] = {
+    static const char *const markOptionStrings[] = {
 	"gravity", "names", "next", "previous", "set", "unset", NULL
     };
     enum markOptions {

@@ -87,7 +87,7 @@ static const Tk_SegType tkTextEmbWindowType = {
  * Definitions for alignment values:
  */
 
-static char *alignStrings[] = {
+static const char *const alignStrings[] = {
     "baseline", "bottom", "center", "top", NULL
 };
 
@@ -143,7 +143,7 @@ TkTextWindowCmd(
 				 * objv[1] is "window". */
 {
     int optionIndex;
-    static const char *windOptionStrings[] = {
+    static const char *const windOptionStrings[] = {
 	"cget", "configure", "create", "names", NULL
     };
     enum windOptions {

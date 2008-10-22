@@ -28,7 +28,7 @@
  * used together with the "enum orient" declaration in tkScale.h.
  */
 
-static char *orientStrings[] = {
+static const char *const orientStrings[] = {
     "horizontal", "vertical", NULL
 };
 
@@ -37,7 +37,7 @@ static char *orientStrings[] = {
  * used together with the "enum state" declaration in tkScale.h.
  */
 
-static char *stateStrings[] = {
+static const char *const stateStrings[] = {
     "active", "disabled", "normal", NULL
 };
 
@@ -142,7 +142,7 @@ static const Tk_OptionSpec optionSpecs[] = {
  * scale widget command.
  */
 
-static const char *commandNames[] = {
+static const char *const commandNames[] = {
     "cget", "configure", "coords", "get", "identify", "set", NULL
 };
 

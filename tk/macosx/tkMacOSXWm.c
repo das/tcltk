@@ -37,7 +37,7 @@ typedef enum {
     _WMATT_LAST_ATTRIBUTE
 } WmAttribute;
 
-static const char *WmAttributeNames[] = {
+static const char *const WmAttributeNames[] = {
     "-alpha", "-fullscreen", "-modified", "-notify",
     "-titlepath", "-topmost", "-transparent",
     NULL
@@ -211,7 +211,7 @@ static void		GetMaxSize(TkWindow *winPtr, int *maxWidthPtr,
 			    int *maxHeightPtr);
 static void		RemapWindows(TkWindow *winPtr,
 			    MacDrawable *parentWin);
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -307,7 +307,7 @@ TkWmNewWindow(
 
     Tk_ManageGeometry((Tk_Window) winPtr, &wmMgrType, (ClientData) 0);
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -406,7 +406,7 @@ TkWmMapWindow(
 
     XMapWindow(winPtr->display, winPtr->window);
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -431,7 +431,7 @@ TkWmUnmapWindow(
 {
     XUnmapWindow(winPtr->display, winPtr->window);
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -499,7 +499,7 @@ TkWmDeadWindow(
     ckfree((char *) wmPtr);
     winPtr->wmInfoPtr = NULL;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -525,7 +525,7 @@ TkWmSetClass(
 {
     return;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -552,7 +552,7 @@ Tk_WmObjCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     Tk_Window tkwin = (Tk_Window) clientData;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"aspect", "attributes", "client", "colormapwindows",
 	"command", "deiconify", "focusmodel", "forget",
 	"frame", "geometry", "grid", "group",
@@ -686,7 +686,7 @@ Tk_WmObjCmd(
     /* This should not happen */
     return TCL_ERROR;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -755,7 +755,7 @@ WmAspectCmd(
     WmUpdateGeom(wmPtr, winPtr);
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -920,7 +920,7 @@ WmSetAttribute(
     }
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -985,7 +985,7 @@ WmGetAttribute(
     }
     return result;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1057,7 +1057,7 @@ WmAttributesCmd(
     }
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1112,7 +1112,7 @@ WmClientCmd(
     strcpy(wmPtr->clientMachine, argv3);
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1200,7 +1200,7 @@ WmColormapwindowsCmd(
 
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1260,7 +1260,7 @@ WmCommandCmd(
     wmPtr->cmdArgv = cmdArgv;
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1306,7 +1306,7 @@ WmDeiconifyCmd(
 	    ZoomState : NormalState);
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1333,7 +1333,7 @@ WmFocusmodelCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     register WmInfo *wmPtr = winPtr->wmInfoPtr;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"active", "passive", NULL };
     enum options {
 	OPT_ACTIVE, OPT_PASSIVE };
@@ -1360,7 +1360,7 @@ WmFocusmodelCmd(
     }
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1422,7 +1422,7 @@ WmForgetCmd(
     return TCL_OK;
 #endif
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1464,7 +1464,7 @@ WmFrameCmd(
     Tcl_SetResult(interp, buf, TCL_VOLATILE);
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1527,7 +1527,7 @@ WmGeometryCmd(
     }
     return ParseGeometry(interp, argv3, winPtr);
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1617,7 +1617,7 @@ WmGridCmd(
     WmUpdateGeom(wmPtr, winPtr);
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1680,7 +1680,7 @@ WmGroupCmd(
     }
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1748,7 +1748,7 @@ WmIconbitmapCmd(
     }
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1802,7 +1802,7 @@ WmIconifyCmd(
     TkpWmSetState(winPtr, IconicState);
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1859,7 +1859,7 @@ WmIconmaskCmd(
     }
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1911,7 +1911,7 @@ WmIconnameCmd(
     }
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1977,7 +1977,7 @@ WmIconphotoCmd(
 
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -2033,7 +2033,7 @@ WmIconpositionCmd(
     }
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -2116,7 +2116,7 @@ WmIconwindowCmd(
     }
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -2178,7 +2178,7 @@ WmManageCmd(
     return TCL_OK;
 #endif
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -2229,7 +2229,7 @@ WmMaxsizeCmd(
     WmUpdateGeom(wmPtr, winPtr);
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -2280,7 +2280,7 @@ WmMinsizeCmd(
     WmUpdateGeom(wmPtr, winPtr);
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -2326,7 +2326,7 @@ WmOverrideredirectCmd(
     ApplyMasterOverrideChanges(winPtr, NULL);
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -2353,7 +2353,7 @@ WmPositionfromCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     register WmInfo *wmPtr = winPtr->wmInfoPtr;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"program", "user", NULL };
     enum options {
 	OPT_PROGRAM, OPT_USER };
@@ -2390,7 +2390,7 @@ WmPositionfromCmd(
     WmUpdateGeom(wmPtr, winPtr);
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -2482,7 +2482,7 @@ WmProtocolCmd(
     }
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -2558,7 +2558,7 @@ WmResizableCmd(
 	    oldAttributes, 1);
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -2585,7 +2585,7 @@ WmSizefromCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     register WmInfo *wmPtr = winPtr->wmInfoPtr;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"program", "user", NULL };
     enum options {
 	OPT_PROGRAM, OPT_USER };
@@ -2623,7 +2623,7 @@ WmSizefromCmd(
     WmUpdateGeom(wmPtr, winPtr);
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -2650,7 +2650,7 @@ WmStackorderCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     TkWindow **windows, **window_ptr;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"isabove", "isbelow", NULL };
     enum options {
 	OPT_ISABOVE, OPT_ISBELOW };
@@ -2741,7 +2741,7 @@ WmStackorderCmd(
     }
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -2768,7 +2768,7 @@ WmStateCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     register WmInfo *wmPtr = winPtr->wmInfoPtr;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"normal", "iconic", "withdrawn", "zoomed", NULL };
     enum options {
 	OPT_NORMAL, OPT_ICONIC, OPT_WITHDRAWN, OPT_ZOOMED };
@@ -2845,7 +2845,7 @@ WmStateCmd(
     }
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -2891,7 +2891,7 @@ WmTitleCmd(
     }
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -2976,7 +2976,7 @@ WmTransientCmd(
     ApplyMasterOverrideChanges(winPtr, NULL);
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -3032,7 +3032,7 @@ WmUpdateGeom(
 	wmPtr->flags |= WM_UPDATE_PENDING;
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -3138,7 +3138,7 @@ Tk_SetGrid(
 	wmPtr->flags |= WM_UPDATE_PENDING;
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -3195,7 +3195,7 @@ Tk_UnsetGrid(
 	wmPtr->flags |= WM_UPDATE_PENDING;
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -3245,7 +3245,7 @@ TopLevelEventProc(
 	Tcl_Panic("recieved unwanted reparent event");
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -3280,7 +3280,7 @@ TopLevelReqProc(
 	wmPtr->flags |= WM_UPDATE_PENDING;
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -3499,7 +3499,7 @@ UpdateGeometryInfo(
 	wmPtr->flags &= ~WM_SYNC_PENDING;
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -3525,7 +3525,7 @@ UpdateSizeHints(
 
     wmPtr->flags &= ~WM_UPDATE_SIZE_HINTS;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -3666,7 +3666,7 @@ ParseGeometry(
     Tcl_AppendResult(interp, "bad geometry specifier \"", string, "\"", NULL);
     return TCL_ERROR;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -3762,7 +3762,7 @@ Tk_GetRootCoords(
     *xPtr = x;
     *yPtr = y;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -3882,7 +3882,7 @@ Tk_CoordsToWindow(
     }
     return (Tk_Window) winPtr;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -3975,7 +3975,7 @@ Tk_TopCoordsToWindow(
     *newY = y;
     return (Tk_Window) winPtr;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -4042,7 +4042,7 @@ UpdateVRootGeometry(
 	goto noVRoot;
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -4099,7 +4099,7 @@ Tk_GetVRootGeometry(
     *widthPtr = wmPtr->vRootWidth;
     *heightPtr = wmPtr->vRootHeight;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -4153,7 +4153,7 @@ Tk_MoveToplevelWindow(
 	UpdateGeometryInfo(winPtr);
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -4267,7 +4267,7 @@ TkWmRestackToplevel(
 	SendBehind(macWindow, otherMacWindow);
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -4358,7 +4358,7 @@ TkWmAddToColormapWindows(
      * we don't support colormaps. If we did they would be installed here.
      */
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -4427,7 +4427,7 @@ TkWmRemoveFromColormapWindows(
 	}
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -4455,7 +4455,7 @@ TkGetPointerCoords(
 {
     XQueryPointer(NULL, None, NULL, NULL, xPtr, yPtr, NULL, NULL, NULL);
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -4514,7 +4514,7 @@ InitialWindowBounds(
     geometry->right = wmPtr->x + winPtr->changes.width;
     geometry->bottom = wmPtr->y + winPtr->changes.height;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -4554,7 +4554,7 @@ TkMacOSXResizable(
 	return true;
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -4676,7 +4676,7 @@ TkMacOSXGrowToplevel(
     }
     return false;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -4714,7 +4714,7 @@ TkSetWMName(
 	CFRelease(title);
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -4741,7 +4741,7 @@ TkGetTransientMaster(
     }
     return None;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -4773,7 +4773,7 @@ TkMacOSXGetXWindow(
     }
     return (Window) Tcl_GetHashValue(hPtr);
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -4832,7 +4832,7 @@ TkMacOSXIsWindowZoomed(
     return IsWindowInStandardState(TkMacOSXDrawableWindow(winPtr->window),
 	    &idealSize, NULL);
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -4916,7 +4916,7 @@ TkMacOSXZoomToplevel(
 	    (zoomPart == inZoomIn ? NormalState : ZoomState);
     return true;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -4943,7 +4943,7 @@ TkUnsupported1ObjCmd(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
-    static const char *subcmds[] = {
+    static const char *const subcmds[] = {
 	"style", NULL
     };
     enum SubCmds {
@@ -4984,7 +4984,7 @@ TkUnsupported1ObjCmd(
     /* won't be reached */
     return TCL_ERROR;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -5186,7 +5186,7 @@ WmWinStyle(
     }
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -5224,7 +5224,7 @@ TkpMakeMenuWindow(
 	winPtr->wmInfoPtr->flags |= WM_HEIGHT_NOT_RESIZABLE;
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -5375,7 +5375,7 @@ TkMacOSXMakeRealWindowExist(
     }
 #endif /* TK_MAC_DEBUG_WINDOWS */
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -5411,7 +5411,7 @@ TkMacOSXRegisterOffScreenWindow(
     }
     Tcl_SetHashValue(valueHashPtr, window);
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -5445,7 +5445,7 @@ TkMacOSXUnregisterMacWindow(
 	Tcl_DeleteHashEntry(entryPtr);
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -5477,7 +5477,7 @@ TkMacOSXSetScrollbarGrow(
 	winPtr->privatePtr->toplevel->winPtr->wmInfoPtr->scrollWinPtr = NULL;
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -5510,7 +5510,7 @@ TkWmFocusToplevel(
     }
     return winPtr;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -5540,7 +5540,7 @@ TkpGetWrapperWindow(
     }
     return winPtr;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -5600,7 +5600,7 @@ TkpWmSetState(
 	TkMacOSXZoomToplevel(macWin, inZoomOut);
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -5630,7 +5630,7 @@ TkpIsWindowFloating(
     GetWindowClass(wRef, &class);
     return (class == kFloatingWindowClass);
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -5653,7 +5653,7 @@ TkMacOSXWindowClass(
 {
     return winPtr->wmInfoPtr->macClass;
 }
-
+
 /*
  *--------------------------------------------------------------
  *
@@ -5688,7 +5688,7 @@ TkMacOSXWindowOffset(
     *xOffset = winPtr->wmInfoPtr->xInParent;
     *yOffset = winPtr->wmInfoPtr->yInParent;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -5714,7 +5714,7 @@ TkpGetMS(void)
     Tcl_GetTime(&now);
     return (long) now.sec * 1000 + now.usec / 1000;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -5742,7 +5742,7 @@ XSetInputFocus(
      * Don't need to do a thing. Tk manages the focus for us.
      */
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -5788,7 +5788,7 @@ TkpChangeFocus(
 
     return NextRequest(winPtr->display);
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -5835,7 +5835,7 @@ WmStackorderToplevelWrapperMap(
 	WmStackorderToplevelWrapperMap(childPtr, display, table);
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -5914,7 +5914,7 @@ TkWmStackorderToplevel(
     Tcl_DeleteHashTable(&table);
     return windows;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -6003,7 +6003,7 @@ ApplyWindowClassAttributeChanges(
 		+ strWidths.bottom;
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -6069,7 +6069,7 @@ ApplyMasterOverrideChanges(
 	}
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -6123,7 +6123,7 @@ WmGetWindowGroup(
     }
     return group;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -6208,7 +6208,7 @@ TkMacOSXMakeFullscreen(
     TkMacOSXEnterExitFullscreen(winPtr, IsWindowActive(window));
     return result;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -6251,7 +6251,7 @@ TkMacOSXEnterExitFullscreen(
 	}
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -6348,7 +6348,7 @@ GetMinSize(
     *minWidthPtr = minWidth;
     *minHeightPtr = minHeight;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -6404,7 +6404,7 @@ GetMaxSize(
 	*maxHeightPtr = maxHeight;
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -6450,7 +6450,7 @@ RemapWindows(
 	RemapWindows(childPtr, (MacDrawable *) winPtr->window);
     }
 }
-
+
 /*
  * Local Variables:
  * fill-column: 78

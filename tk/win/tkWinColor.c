@@ -33,7 +33,7 @@ typedef struct WinColor {
  */
 
 typedef struct {
-    char *name;
+    const char *name;
     int index;
 } SystemColorEntry;
 

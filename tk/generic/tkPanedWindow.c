@@ -524,7 +524,7 @@ PanedWindowWidgetObjCmd(
 {
     PanedWindow *pwPtr = clientData;
     int result = TCL_OK;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"add", "cget", "configure", "forget", "identify", "panecget",
 	"paneconfigure", "panes", "proxy", "sash", NULL
     };
@@ -1068,7 +1068,7 @@ PanedWindowSashCommand(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
-    static const char *sashOptionStrings[] = {
+    static const char *const sashOptionStrings[] = {
 	"coord", "dragto", "mark", "place", NULL
     };
     enum sashOptions {
@@ -2759,7 +2759,7 @@ PanedWindowProxyCommand(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"coord", "forget", "place", NULL
     };
     enum options {

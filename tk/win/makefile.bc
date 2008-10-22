@@ -163,6 +163,7 @@ TKOBJS = \
 	$(TMPDIR)\tkAtom.obj \
 	$(TMPDIR)\tkBind.obj \
 	$(TMPDIR)\tkBitmap.obj \
+	$(TMPDIR)\tkBusy.obj \
 	$(TMPDIR)\tkButton.obj \
 	$(TMPDIR)\tkCanvArc.obj \
 	$(TMPDIR)\tkCanvBmap.obj \

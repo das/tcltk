@@ -745,7 +745,7 @@ ImgBmapCmd(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
-    static const char *bmapOptions[] = {"cget", "configure", NULL};
+    static const char *const bmapOptions[] = {"cget", "configure", NULL};
     BitmapMaster *masterPtr = clientData;
     int index;
 

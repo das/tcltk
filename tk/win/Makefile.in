@@ -282,6 +282,7 @@ TK_OBJS = \
 	tkAtom.$(OBJEXT) \
 	tkBind.$(OBJEXT) \
 	tkBitmap.$(OBJEXT) \
+	tkBusy.$(OBJEXT) \
 	tkButton.$(OBJEXT) \
 	tkCanvArc.$(OBJEXT) \
 	tkCanvBmap.$(OBJEXT) \
