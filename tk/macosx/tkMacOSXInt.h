@@ -159,7 +159,6 @@ MODULE_SCOPE int tkPictureIsOpen;	/* If this is 1, we are drawing to a
 					 * for CopyBits should also have
 					 * top,left values of 0,0
 					 */
-MODULE_SCOPE TkMacOSXWindowList *tkMacOSXWindowListPtr; /* List of toplevels */
 MODULE_SCOPE Tcl_Encoding TkMacOSXCarbonEncoding;
 
 /*
