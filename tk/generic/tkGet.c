@@ -37,10 +37,10 @@ static void		FreeUidThreadExitProc(ClientData clientData);
  * used by Tk_GetAnchorFromObj and Tk_GetJustifyFromObj.
  */
 
-static const char *anchorStrings[] = {
+static const char *const anchorStrings[] = {
     "n", "ne", "e", "se", "s", "sw", "w", "nw", "center", NULL
 };
-static const char *justifyStrings[] = {
+static const char *const justifyStrings[] = {
     "left", "right", "center", NULL
 };
 

@@ -21,7 +21,7 @@
  * by Tk_GetReliefFromObj.
  */
 
-static const char *reliefStrings[] = {
+static const char *const reliefStrings[] = {
     "flat", "groove", "raised", "ridge", "solid", "sunken", NULL
 };
 
@@ -47,7 +47,7 @@ static void		ShiftLine(XPoint *p1Ptr, XPoint *p2Ptr,
  * is set.
  */
 
-Tcl_ObjType tkBorderObjType = {
+const Tcl_ObjType tkBorderObjType = {
     "border",			/* name */
     FreeBorderObjProc,		/* freeIntRepProc */
     DupBorderObjProc,		/* dupIntRepProc */

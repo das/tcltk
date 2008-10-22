@@ -136,7 +136,7 @@ static int		SetOptionFromAny(Tcl_Interp *interp, Tcl_Obj *objPtr);
  * the internalPtr2 field points to the entry that matched.
  */
 
-Tcl_ObjType tkOptionObjType = {
+const Tcl_ObjType tkOptionObjType = {
     "option",			/* name */
     NULL,			/* freeIntRepProc */
     NULL,			/* dupIntRepProc */
