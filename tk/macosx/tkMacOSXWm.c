@@ -5273,16 +5273,15 @@ TkMacOSXMakeRealWindowExist(
 	    styleMask:NSTitledWindowMask|NSClosableWindowMask|
 		    NSMiniaturizableWindowMask|NSResizableWindowMask
 	    backing:NSBackingStoreBuffered defer:YES];
+    if (!window) {
+	Tcl_Panic("couldn't allocate new Mac window");
+    }
     CFRetain(window);
     TKContentView *contentView = [[TKContentView alloc]
 	    initWithFrame:NSZeroRect];
     [window setContentView:contentView];
     wmPtr->window = window;
     newWindow = [window windowRef];
-
-    if (newWindow == NULL) {
-	Tcl_Panic("couldn't allocate new Mac window");
-    }
 
     #if 0
     ChkErr(GetWindowStructureWidths, newWindow, &strWidths);
