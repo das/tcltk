@@ -131,7 +131,7 @@ else
 override CONFIGURE_ARGS := ${CONFIGURE_ARGS} --enable-xft
 VERSION			:= ${VERSION}-X11
 wish			:= ${wish}-X11
-override EMBEDDED_BUILD := 0
+override EMBEDDED_BUILD :=
 endif
 
 INSTALL_TARGETS		= install-binaries install-libraries
