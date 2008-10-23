@@ -199,21 +199,35 @@ enum {
     }
 
     if (type != NSScrollWheel) {
+	TKLog(@"UpdatePointer %p x %f.0 y %f.0 %d", tkwin, global.x, global.y, state);
 	Tk_UpdatePointer(tkwin, global.x, global.y, state);
     } else {
+	CGFloat delta;
 	XEvent xEvent;
+
 	xEvent.type = MouseWheelEvent;
-	xEvent.xkey.keycode = [theEvent deltaX];
 	xEvent.xbutton.x = local.x;
 	xEvent.xbutton.y = local.y;
 	xEvent.xbutton.x_root = global.x;
 	xEvent.xbutton.y_root = global.y;
-	xEvent.xbutton.state = state;
-	xEvent.xany.serial = LastKnownRequestProcessed(winPtr->display);
 	xEvent.xany.send_event = false;
 	xEvent.xany.display = winPtr->display;
 	xEvent.xany.window = Tk_WindowId(winPtr);
-	Tk_QueueWindowEvent(&xEvent, TCL_QUEUE_TAIL);
+
+	delta = [theEvent deltaY];
+	if (delta != 0.0) {
+	    xEvent.xbutton.state = state;
+	    xEvent.xkey.keycode = delta;
+	    xEvent.xany.serial = LastKnownRequestProcessed(winPtr->display);
+	    Tk_QueueWindowEvent(&xEvent, TCL_QUEUE_TAIL);
+	}
+	delta = [theEvent deltaX];
+	if (delta != 0.0) {
+	    xEvent.xbutton.state = state | ShiftMask;
+	    xEvent.xkey.keycode = delta;
+	    xEvent.xany.serial = LastKnownRequestProcessed(winPtr->display);
+	    Tk_QueueWindowEvent(&xEvent, TCL_QUEUE_TAIL);
+	}
     }
 
     return theEvent;
