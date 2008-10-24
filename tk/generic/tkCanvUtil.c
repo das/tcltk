@@ -819,10 +819,10 @@ TkSmoothPrintProc(
 				 * information about how to reclaim storage
 				 * for return string. */
 {
-    register Tk_SmoothMethod **smoothPtr =
-	    (Tk_SmoothMethod **) (widgRec + offset);
+    register const Tk_SmoothMethod *smoothPtr =
+	    * (Tk_SmoothMethod **) (widgRec + offset);
 
-    return (*smoothPtr) ? (*smoothPtr)->name : "0";
+    return smoothPtr ? (char *) smoothPtr->name : "0";
 }
 /*
  *--------------------------------------------------------------
@@ -1803,6 +1803,7 @@ TkCanvTranslatePath(
 		/*
 		 * The current vertex is to the left of xClip
 		 */
+
 		if (!inside) {
 		    /*
 		     * If the current vertex is on the left of xClip and one
