@@ -171,8 +171,26 @@ enum {
  
     unsigned int state = 0;
     NSInteger button = [theEvent buttonNumber];
-    if (button < 5) {
-	state |= 1 << (button + 8);
+    EventRef eventRef = (EventRef)[theEvent eventRef];
+    UInt32 buttons;
+    OSStatus err = ChkErr(GetEventParameter, eventRef, kEventParamMouseChord,
+	    typeUInt32, NULL, sizeof(UInt32), NULL, &buttons);
+    if (err == noErr) {
+	state |= (buttons & ((1<<5) - 1)) << 8;
+    } else {
+	if (button < 5) {
+	    switch (type) {
+	    case NSLeftMouseDown:
+	    case NSRightMouseDown:
+	    case NSLeftMouseDragged:
+	    case NSRightMouseDragged:
+	    case NSOtherMouseDown:
+		state |= 1 << (button + 8);
+		break;
+	    default:
+		break;
+	    }
+	}
     }
     NSUInteger modifiers = [theEvent modifierFlags];
 
