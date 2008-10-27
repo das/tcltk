@@ -7,8 +7,8 @@
  * Copyright 2001, Apple Computer, Inc.
  * Copyright (c) 2006-2007 Daniel A. Steffen <das@users.sourceforge.net>
  *
- * See the file "license.terms" for information on usage and redistribution
- * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+ * See the file "license.terms" for information on usage and redistribution of
+ * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
  * RCS: @(#) $Id$
  */
@@ -21,8 +21,8 @@
  *
  * TkCreateRegion --
  *
- *	Implements the equivelent of the X window function
- *	XCreateRegion. See X window documentation for more details.
+ *	Implements the equivelent of the X window function XCreateRegion. See
+ *	Xwindow documentation for more details.
  *
  * Results:
  *	Returns an allocated region handle.
@@ -44,8 +44,8 @@ TkCreateRegion(void)
  *
  * TkDestroyRegion --
  *
- *	Implements the equivelent of the X window function
- *	XDestroyRegion. See X window documentation for more details.
+ *	Implements the equivelent of the X window function XDestroyRegion. See
+ *	Xwindow documentation for more details.
  *
  * Results:
  *	None.
@@ -70,8 +70,8 @@ TkDestroyRegion(
  *
  * TkIntersectRegion --
  *
- *	Implements the equivalent of the X window function
- *	XIntersectRegion. See X window documentation for more details.
+ *	Implements the equivalent of the X window function XIntersectRegion.
+ *	See Xwindow documentation for more details.
  *
  * Results:
  *	None.
@@ -97,8 +97,8 @@ TkIntersectRegion(
  *
  * TkSubtractRegion --
  *
- *	Implements the equivalent of the X window function
- *	XSubtractRegion. See X window documentation for more details.
+ *	Implements the equivalent of the X window function XSubtractRegion.
+ *	See X window documentation for more details.
  *
  * Results:
  *	None.
@@ -125,8 +125,7 @@ TkSubtractRegion(
  * TkUnionRectWithRegion --
  *
  *	Implements the equivelent of the X window function
- *	XUnionRectWithRegion. See X window documentation for more
- *	details.
+ *	XUnionRectWithRegion. See Xwindow documentation for more details.
  *
  * Results:
  *	None.
@@ -163,8 +162,8 @@ TkUnionRectWithRegion(
  *
  * TkRectInRegion --
  *
- *	Implements the equivelent of the X window function
- *	XRectInRegion. See X window documentation for more details.
+ *	Implements the equivelent of the X window function XRectInRegion. See
+ *	Xwindow documentation for more details.
  *
  * Results:
  *	Returns RectanglePart or RectangleOut. Note that this is not a
@@ -197,8 +196,8 @@ TkRectInRegion(
  *
  * TkClipBox --
  *
- *	Implements the equivelent of the X window function XClipBox.
- *	See X window documentation for more details.
+ *	Implements the equivelent of the X window function XClipBox. See
+ *	Xwindow documentation for more details.
  *
  * Results:
  *	None.
@@ -228,8 +227,8 @@ TkClipBox(
  *
  * TkpBuildRegionFromAlphaData --
  *
- *	Set up a rectangle of the given region based on the supplied
- *	alpha data.
+ *	Set up a rectangle of the given region based on the supplied alpha
+ *	data.
  *
  * Results:
  *	None
@@ -260,13 +259,20 @@ TkpBuildRegionFromAlphaData(
     for (y1 = 0; y1 < height; y1++) {
 	lineDataPtr = dataPtr;
 	for (x1 = 0; x1 < width; x1 = end) {
-	    /* search for first non-transparent pixel */
+	    /*
+	     * Search for first non-transparent pixel.
+	     */
+
 	    while ((x1 < width) && !*lineDataPtr) {
 		x1++;
 		lineDataPtr += pixelStride;
 	    }
 	    end = x1;
-	    /* search for first transparent pixel */
+
+	    /*
+	     * Search for first transparent pixel.
+	     */
+
 	    while ((end < width) && *lineDataPtr) {
 		end++;
 		lineDataPtr += pixelStride;
@@ -544,3 +550,12 @@ TkMacOSHIShapeUnion(
     result = HIShapeUnion(inShape1, inShape2, outResult);
     return result;
 }
+
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 4
+ * fill-column: 78
+ * coding: utf-8
+ * End:
+ */
