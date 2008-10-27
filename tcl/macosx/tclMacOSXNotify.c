@@ -761,7 +761,7 @@ Tcl_SetTimer(
 	    Tcl_Time vTime  = *timePtr;
 
 	    if (vTime.sec != 0 || vTime.usec != 0) {
-		(*tclScaleTimeProcPtr) (&vTime, tclTimeClientData);
+		tclScaleTimeProcPtr(&vTime, tclTimeClientData);
 		waitTime = vTime.sec + 1.0e-6 * vTime.usec;
 	    } else {
 		waitTime = 0;	    
@@ -1080,7 +1080,7 @@ FileHandlerEventProc(
 	mask = filePtr->readyMask & filePtr->mask;
 	filePtr->readyMask = 0;
 	if (mask != 0) {
-	    (*filePtr->proc)(filePtr->clientData, mask);
+	    filePtr->proc(filePtr->clientData, mask);
 	}
 	break;
     }
@@ -1133,7 +1133,7 @@ Tcl_WaitForEvent(
 	     */
 
 	    if (vTime.sec != 0 || vTime.usec != 0) {
-		(*tclScaleTimeProcPtr) (&vTime, tclTimeClientData);
+		tclScaleTimeProcPtr(&vTime, tclTimeClientData);
 		waitTime = vTime.sec + 1.0e-6 * vTime.usec;
 	    } else {
 		/*
@@ -1397,7 +1397,7 @@ Tcl_Sleep(
 
     vdelay.sec  = ms / 1000;
     vdelay.usec = (ms % 1000) * 1000;
-    (*tclScaleTimeProcPtr) (&vdelay, tclTimeClientData);
+    tclScaleTimeProcPtr(&vdelay, tclTimeClientData);
 
 
     if (tsdPtr->runLoop) {

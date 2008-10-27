@@ -224,8 +224,7 @@ TkMacOSXEventsCheckProc(clientData, flags)
 		[NSApp sendEvent:event];
 		TkMacOSXStopTclEventLoopTimer();
 		[NSApp afterEvent];
-	    }  
-	    objc_collect_if_needed(OBJC_GENERATIONAL);
+	    }
 	} while (currentEvent);
     
 	numFound = GetNumEventsInQueue((EventQueueRef)clientData);
