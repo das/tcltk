@@ -644,7 +644,7 @@ FileHandlerEventProc(
 	mask = filePtr->readyMask & filePtr->mask;
 	filePtr->readyMask = 0;
 	if (mask != 0) {
-	    (*filePtr->proc)(filePtr->clientData, mask);
+	    filePtr->proc(filePtr->clientData, mask);
 	}
 	break;
     }
@@ -710,7 +710,7 @@ Tcl_WaitForEvent(
 	    if (timePtr->sec != 0 || timePtr->usec != 0) {
 		vTime = *timePtr;
 		timePtr = &vTime;
-		(*tclScaleTimeProcPtr) (timePtr, tclTimeClientData);
+		tclScaleTimeProcPtr(timePtr, tclTimeClientData);
 	    }
 #ifndef TCL_THREADS
 	    timeout.tv_sec = timePtr->sec;
