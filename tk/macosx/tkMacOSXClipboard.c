@@ -130,8 +130,7 @@ TkSelGetSelection(
 
 	    Tcl_ExternalToUtfDString(TkMacOSXCarbonEncoding, buf, length,
 		    &encodedText);
-	    result = (*proc)(clientData, interp,
-		    Tcl_DStringValue(&encodedText));
+	    result = proc(clientData, interp, Tcl_DStringValue(&encodedText));
 	    Tcl_DStringFree(&encodedText);
 
 	    ckfree(buf);
