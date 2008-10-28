@@ -103,20 +103,15 @@ proc ttk::treeview::Keynav {w dir} {
 #	Sets cursor, active element ...
 #
 proc ttk::treeview::Motion {w x y} {
-    variable ::ttk::Cursors
-    variable State
-
     set cursor {}
     set activeHeading {}
 
     switch -- [$w identify region $x $y] {
-	separator { set cursor $Cursors(hresize) }
+	separator { set cursor hresize }
 	heading { set activeHeading [$w identify column $x $y] }
     }
 
-    if {[$w cget -cursor] ne $cursor} {
-	$w configure -cursor $cursor
-    }
+    ttk::setCursor $w $cursor
     ActivateHeading $w $activeHeading
 }
 
