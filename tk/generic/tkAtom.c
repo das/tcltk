@@ -80,8 +80,8 @@ Tk_InternAtom(
 				 * window's display. */
     const char *name)		/* Name to turn into atom. */
 {
-    register TkDisplay *dispPtr;
-    register Tcl_HashEntry *hPtr;
+    TkDisplay *dispPtr;
+    Tcl_HashEntry *hPtr;
     int isNew;
 
     dispPtr = ((TkWindow *) tkwin)->dispPtr;
@@ -129,8 +129,8 @@ Tk_GetAtomName(
 				 * this window's display. */
     Atom atom)			/* Atom whose name is wanted. */
 {
-    register TkDisplay *dispPtr;
-    register Tcl_HashEntry *hPtr;
+    TkDisplay *dispPtr;
+    Tcl_HashEntry *hPtr;
 
     dispPtr = ((TkWindow *) tkwin)->dispPtr;
     if (!dispPtr->atomInit) {
@@ -139,7 +139,7 @@ Tk_GetAtomName(
 
     hPtr = Tcl_FindHashEntry(&dispPtr->atomTable, (char *) atom);
     if (hPtr == NULL) {
-	const char *name;
+	char *name;
 	Tk_ErrorHandler handler;
 	int isNew, mustFree;
 
@@ -182,7 +182,7 @@ Tk_GetAtomName(
 
 static void
 AtomInit(
-    register TkDisplay *dispPtr)/* Display to initialize. */
+    TkDisplay *dispPtr)/* Display to initialize. */
 {
     Tcl_HashEntry *hPtr;
     Atom atom;
