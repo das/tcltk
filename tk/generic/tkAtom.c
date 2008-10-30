@@ -22,7 +22,7 @@
  * those found in xatom.h
  */
 
-static char * atomNameArray[] = {
+static const char * atomNameArray[] = {
     "PRIMARY",		"SECONDARY",		"ARC",
     "ATOM",		"BITMAP",		"CARDINAL",
     "COLORMAP",		"CURSOR",		"CUT_BUFFER0",
@@ -80,8 +80,8 @@ Tk_InternAtom(
 				 * window's display. */
     const char *name)		/* Name to turn into atom. */
 {
-    register TkDisplay *dispPtr;
-    register Tcl_HashEntry *hPtr;
+    TkDisplay *dispPtr;
+    Tcl_HashEntry *hPtr;
     int isNew;
 
     dispPtr = ((TkWindow *) tkwin)->dispPtr;
@@ -129,8 +129,8 @@ Tk_GetAtomName(
 				 * this window's display. */
     Atom atom)			/* Atom whose name is wanted. */
 {
-    register TkDisplay *dispPtr;
-    register Tcl_HashEntry *hPtr;
+    TkDisplay *dispPtr;
+    Tcl_HashEntry *hPtr;
 
     dispPtr = ((TkWindow *) tkwin)->dispPtr;
     if (!dispPtr->atomInit) {
@@ -182,7 +182,7 @@ Tk_GetAtomName(
 
 static void
 AtomInit(
-    register TkDisplay *dispPtr)/* Display to initialize. */
+    TkDisplay *dispPtr)/* Display to initialize. */
 {
     Tcl_HashEntry *hPtr;
     Atom atom;
@@ -192,7 +192,7 @@ AtomInit(
     Tcl_InitHashTable(&dispPtr->atomTable, TCL_ONE_WORD_KEYS);
 
     for (atom = 1; atom <= XA_LAST_PREDEFINED; atom++) {
-	char *name;
+	const char *name;
 	int isNew;
 
 	hPtr = Tcl_FindHashEntry(&dispPtr->atomTable, (char *) atom);

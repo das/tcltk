@@ -29,7 +29,7 @@ static int		ClipboardWindowHandler(ClientData clientData,
 			    int offset, char *buffer, int maxBytes);
 static void		ClipboardLostSel(ClientData clientData);
 static int		ClipboardGetProc(ClientData clientData,
-			    Tcl_Interp *interp, char *portion);
+			    Tcl_Interp *interp, const char *portion);
 
 /*
  *----------------------------------------------------------------------
@@ -704,7 +704,7 @@ ClipboardGetProc(
 				 * selection. */
     Tcl_Interp *interp,		/* Interpreter used for error reporting (not
 				 * used). */
-    char *portion)		/* New information to be appended. */
+    const char *portion)		/* New information to be appended. */
 {
     Tcl_DStringAppend((Tcl_DString *) clientData, portion, -1);
     return TCL_OK;

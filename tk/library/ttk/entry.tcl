@@ -34,6 +34,10 @@ namespace eval ttk {
     }
 }
 
+### Option database settings.
+#
+option add *TEntry.cursor [ttk::cursor text]
+
 ### Bindings.
 #
 # Removed the following standard Tk bindings:
