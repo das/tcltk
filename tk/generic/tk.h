@@ -312,7 +312,7 @@ typedef struct Tk_SavedOptions {
 
 typedef int (Tk_OptionParseProc) (ClientData clientData, Tcl_Interp *interp,
 	Tk_Window tkwin, CONST84 char *value, char *widgRec, int offset);
-typedef char *(Tk_OptionPrintProc) (ClientData clientData, Tk_Window tkwin,
+typedef CONST86 char *(Tk_OptionPrintProc) (ClientData clientData, Tk_Window tkwin,
 	char *widgRec, int offset, Tcl_FreeProc **freeProcPtr);
 
 typedef struct Tk_CustomOption {
@@ -350,7 +350,7 @@ typedef struct Tk_ConfigSpec {
     int specFlags;		/* Any combination of the values defined
 				 * below; other bits are used internally by
 				 * tkConfig.c. */
-    Tk_CustomOption *customPtr;	/* If type is TK_CONFIG_CUSTOM then this is a
+    CONST86 Tk_CustomOption *customPtr;	/* If type is TK_CONFIG_CUSTOM then this is a
 				 * pointer to info about how to parse and
 				 * print the option. Otherwise it is
 				 * irrelevant. */
