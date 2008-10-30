@@ -77,7 +77,7 @@ struct SubcommandOptions {
  * of the OPT_* constants above.
  */
 
-static char *optionNames[] = {
+static const char *optionNames[] = {
     "-background",
     "-compositingrule",
     "-format",
@@ -229,13 +229,13 @@ PhotoFormatThreadExitProc(
     while (tsdPtr->oldFormatList != NULL) {
 	freePtr = tsdPtr->oldFormatList;
 	tsdPtr->oldFormatList = tsdPtr->oldFormatList->nextPtr;
-	ckfree(freePtr->name);
+	ckfree((char *) freePtr->name);
 	ckfree((char *) freePtr);
     }
     while (tsdPtr->formatList != NULL) {
 	freePtr = tsdPtr->formatList;
 	tsdPtr->formatList = tsdPtr->formatList->nextPtr;
-	ckfree(freePtr->name);
+	ckfree((char *) freePtr->name);
 	ckfree((char *) freePtr);
     }
 }
@@ -278,7 +278,7 @@ Tk_CreateOldPhotoImageFormat(
     copyPtr = (Tk_PhotoImageFormat *) ckalloc(sizeof(Tk_PhotoImageFormat));
     *copyPtr = *formatPtr;
     copyPtr->name = ckalloc((unsigned) (strlen(formatPtr->name) + 1));
-    strcpy(copyPtr->name, formatPtr->name);
+    strcpy((char *) copyPtr->name, formatPtr->name);
     copyPtr->nextPtr = tsdPtr->oldFormatList;
     tsdPtr->oldFormatList = copyPtr;
 }
@@ -302,7 +302,7 @@ Tk_CreatePhotoImageFormat(
     copyPtr = (Tk_PhotoImageFormat *) ckalloc(sizeof(Tk_PhotoImageFormat));
     *copyPtr = *formatPtr;
     copyPtr->name = ckalloc((unsigned) (strlen(formatPtr->name) + 1));
-    strcpy(copyPtr->name, formatPtr->name);
+    strcpy((char *)copyPtr->name, formatPtr->name);
     if (isupper((unsigned char) *formatPtr->name)) {
 	copyPtr->nextPtr = tsdPtr->oldFormatList;
 	tsdPtr->oldFormatList = copyPtr;
@@ -1401,7 +1401,8 @@ ParseSubcommandOptions(
 {
     int index, c, bit, currentBit, length;
     int values[4], numValues, maxValues, argIndex;
-    char *option, **listPtr;
+    char *option;
+    const char **listPtr;
 
     for (index = *optIndexPtr; index < objc; *optIndexPtr = ++index) {
 	/*
