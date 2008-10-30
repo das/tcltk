@@ -563,7 +563,7 @@ declare 142 generic {
 declare 143 generic {
     int Tk_ParseArgv(Tcl_Interp *interp,
 	    Tk_Window tkwin, int *argcPtr, CONST84 char **argv,
-	    Tk_ArgvInfo *argTable, int flags)
+	    const Tk_ArgvInfo *argTable, int flags)
 }
 declare 144 generic {
     void Tk_PhotoPutBlock_NoComposite(Tk_PhotoHandle handle,

@@ -151,7 +151,7 @@ void
 TkPrintPadAmount(
     Tcl_Interp *interp,		/* The interpreter into which the result is
 				 * written. */
-    char *switchName,		/* One of "padx", "pady", "ipadx" or "ipady" */
+    const char *switchName,		/* One of "padx", "pady", "ipadx" or "ipady" */
     int halfSpace,		/* The left or top padding amount */
     int allSpace)		/* The total amount of padding */
 {
