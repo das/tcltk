@@ -85,16 +85,13 @@ typedef struct TextItem {
  */
 
 static Tk_CustomOption stateOption = {
-    (Tk_OptionParseProc *) TkStateParseProc,
-    TkStatePrintProc, (ClientData) 2
+    TkStateParseProc, TkStatePrintProc, (ClientData) 2
 };
 static Tk_CustomOption tagsOption = {
-    (Tk_OptionParseProc *) Tk_CanvasTagsParseProc,
-    Tk_CanvasTagsPrintProc, (ClientData) NULL
+    Tk_CanvasTagsParseProc, Tk_CanvasTagsPrintProc, (ClientData) NULL
 };
 static Tk_CustomOption offsetOption = {
-    (Tk_OptionParseProc *) TkOffsetParseProc,
-    TkOffsetPrintProc, (ClientData) (TK_OFFSET_RELATIVE)
+    TkOffsetParseProc, TkOffsetPrintProc, (ClientData) (TK_OFFSET_RELATIVE)
 };
 
 static Tk_ConfigSpec configSpecs[] = {
@@ -1431,7 +1428,7 @@ TextToPostscript(
     TextItem *textPtr = (TextItem *) itemPtr;
     int x, y;
     Tk_FontMetrics fm;
-    char *justify;
+    const char *justify;
     char buffer[500];
     XColor *color;
     Pixmap stipple;
