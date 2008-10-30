@@ -34,6 +34,7 @@ static int		TestgetwindowinfoObjCmd(ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *const objv[]);
 MODULE_SCOPE int	TkplatformtestInit(Tcl_Interp *interp);
+static Tk_GetSelProc		SetSelectionResult;
 
 
 /*
@@ -176,44 +177,30 @@ AppendSystemError(
  */
 
 static int
+SetSelectionResult(
+    ClientData dummy,
+    Tcl_Interp *interp,
+    const char *selection)
+{
+    Tcl_AppendResult(interp, selection, NULL);
+    return TCL_OK;
+}
+
+static int
 TestclipboardObjCmd(
     ClientData clientData,	/* Main window for application. */
     Tcl_Interp *interp,		/* Current interpreter. */
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument values. */
 {
-    HGLOBAL handle;
-    char *data;
-    int code = TCL_OK;
+    Tk_Window tkwin = (Tk_Window) clientData;
 
     if (objc != 1) {
 	Tcl_WrongNumArgs(interp, 1, objv, NULL);
 	return TCL_ERROR;
     }
-    if (OpenClipboard(NULL)) {
-	/*
-	 * We could consider using CF_UNICODETEXT on NT, but then we would
-	 * have to convert it from External. Instead we'll just take this and
-	 * do "bytestring" at the Tcl level for Unicode inclusive text
-	 */
-
-	handle = GetClipboardData(CF_TEXT);
-	if (handle != NULL) {
-	    data = GlobalLock(handle);
-	    Tcl_AppendResult(interp, data, NULL);
-	    GlobalUnlock(handle);
-	} else {
-	    Tcl_AppendResult(interp, "null clipboard handle", NULL);
-	    code = TCL_ERROR;
-	}
-	CloseClipboard();
-	return code;
-    } else {
-	Tcl_AppendResult(interp, "couldn't open clipboard: ", NULL);
-	AppendSystemError(interp, GetLastError());
-	return TCL_ERROR;
-    }
-    return TCL_OK;
+    return TkSelGetSelection(interp, tkwin, Tk_InternAtom(tkwin, "CLIPBOARD"),
+	    XA_STRING, SetSelectionResult, NULL);
 }
 
 /*
@@ -366,7 +353,7 @@ TestwineventCmd(
 /*
  *  testfindwindow title ?class?
  *	Find a Windows window using the FindWindow API call. This takes the window
- *	title and optionally the window class and if found returns the HWND and 
+ *	title and optionally the window class and if found returns the HWND and
  *	raises an error if the window is not found.
  *	eg: testfindwindow Console TkTopLevel
  *	    Can find the console window if it is visible.
@@ -402,7 +389,7 @@ TestfindwindowObjCmd(
         Tcl_SetObjResult(interp, Tcl_NewLongObj((long)hwnd));
     }
     return r;
-    
+
 }
 
 static BOOL CALLBACK
@@ -433,7 +420,7 @@ TestgetwindowinfoObjCmd(
 
     if (Tcl_GetLongFromObj(interp, objv[1], (long *)&hwnd) != TCL_OK)
 	return TCL_ERROR;
-    
+
     if (tkWinProcs->useWide) {
 	cch = GetClassNameW(hwnd, (LPWSTR)buf, sizeof(buf)/sizeof(WCHAR));
 	classObj = Tcl_NewUnicodeObj((LPWSTR)buf, cch);
@@ -445,14 +432,14 @@ TestgetwindowinfoObjCmd(
     	Tcl_SetResult(interp, "failed to get class name: ", TCL_STATIC);
     	AppendSystemError(interp, GetLastError());
     	return TCL_ERROR;
-    }	
+    }
 
     resObj = Tcl_NewListObj(0, NULL);
     Tcl_ListObjAppendElement(interp, resObj, Tcl_NewStringObj("class", -1));
     Tcl_ListObjAppendElement(interp, resObj, classObj);
 
     Tcl_ListObjAppendElement(interp, resObj, Tcl_NewStringObj("id", -1));
-    Tcl_ListObjAppendElement(interp, resObj, 
+    Tcl_ListObjAppendElement(interp, resObj,
 	Tcl_NewLongObj(GetWindowLong(hwnd, GWL_ID)));
 
     cch = tkWinProcs->getWindowText(hwnd, (LPTSTR)buf, cchBuf);
@@ -465,7 +452,7 @@ TestgetwindowinfoObjCmd(
     Tcl_ListObjAppendElement(interp, resObj, Tcl_NewStringObj("text", -1));
     Tcl_ListObjAppendElement(interp, resObj, textObj);
     Tcl_ListObjAppendElement(interp, resObj, Tcl_NewStringObj("parent", -1));
-    Tcl_ListObjAppendElement(interp, resObj, 
+    Tcl_ListObjAppendElement(interp, resObj,
 	Tcl_NewLongObj((long)GetParent(hwnd)));
 
     childrenObj = Tcl_NewListObj(0, NULL);
@@ -475,7 +462,7 @@ TestgetwindowinfoObjCmd(
 
     Tcl_SetObjResult(interp, resObj);
     return TCL_OK;
-}   
+}
 
 /*
  * Local Variables:

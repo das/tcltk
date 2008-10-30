@@ -1184,7 +1184,7 @@ MODULE_SCOPE void	TkpBuildRegionFromAlphaData(TkRegion region,
 			    unsigned height, unsigned char *dataPtr,
 			    unsigned pixelStride, unsigned lineStride);
 MODULE_SCOPE void	TkPrintPadAmount(Tcl_Interp *interp,
-			    char *buffer, int pad1, int pad2);
+			    const char *buffer, int pad1, int pad2);
 MODULE_SCOPE int	TkParsePadAmount(Tcl_Interp *interp,
 			    Tk_Window tkwin, Tcl_Obj *objPtr,
 			    int *pad1Ptr, int *pad2Ptr);
