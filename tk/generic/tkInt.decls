@@ -72,11 +72,11 @@ declare 12 generic {
 }
 declare 13 generic {
     int TkCreateFrame(ClientData clientData, Tcl_Interp *interp,
-	    int argc, char **argv, int toplevel, char *appName)
+	    int argc, CONST86 char *const *argv, int toplevel, const char *appName)
 }
 declare 14 generic {
     Tk_Window TkCreateMainWindow(Tcl_Interp *interp,
-	    const char *screenName, char *baseName)
+	    const char *screenName, const char *baseName)
 }
 declare 15 generic {
     Time TkCurrentTime(TkDisplay *dispPtr)
@@ -513,6 +513,11 @@ declare 156 generic {
 declare 157 generic {
     int TkpTesttextCmd(ClientData dummy, Tcl_Interp *interp, int argc,
 	    const char **argv)
+}
+declare 158 generic {
+    int	TkSelGetSelection(Tcl_Interp *interp, Tk_Window tkwin,
+	    Atom selection, Atom target, Tk_GetSelProc *proc,
+	    ClientData clientData)
 }
 
 ##############################################################################

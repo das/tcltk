@@ -309,6 +309,7 @@ static const TkIntStubs tkIntStubs = {
     NULL, /* 155 */
     TkpTestembedCmd, /* 156 */
     TkpTesttextCmd, /* 157 */
+    TkSelGetSelection, /* 158 */
 };
 
 static const TkIntPlatStubs tkIntPlatStubs = {

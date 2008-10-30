@@ -1,3 +1,43 @@
+2008-10-29  Joe English  <jenglish@users.sourceforge.net>
+
+	* generic/tkAtom.c(Tk_GetAtomName): Remove incorrect 'const' qualifier.
+	Remove useless 'register' declarations too, while we're at it.
+
+2008-10-28  Jan Nijtmans  <nijtmans@users.sf.net>
+
+	* generic/tk.h:		Add "const" to a few struct member fields.
+	* generic/tkInt.h:	CONSTify TkPrintPadAmount
+	* generic/tkSelect.h:	move TkSelGetSelection to tkInt.decls
+	* generic/tk.decls:	CONSTify Tk_ParseArgv
+	* generic/tkInt.decls:	CONSTify TkCreateFrame and TkCreateMainWindow
+	* generic/tkDecls.h:	(regenerated)
+	* generic/tkIntDecls.h:	(regenerated)
+	* generic/tkArgv.c:
+	* generic/tkAtom.c:
+	* generic/tkEntry.c:
+	* generic/tkFrame.c:
+	* generic/tkImgPhoto.c:
+	* generic/tkPack.c:
+	* generic/tkSelect.c:
+	* generic/tkVisual.c:
+	* generic/tkWindow.c:
+	* win/tkWinTest.c:	fix compilation under mingw32
+
+2008-10-28  Joe English  <jenglish@users.sourceforge.net>
+
+	* library/ttk/cursors.tcl, library/ttk/combobox.tcl,
+	library/ttk/entry.tcl, library/ttk/paned.tcl, library/ttk/sizegrip.tcl,
+	library/treeview.tcl:
+	Add correct platform-specific cursors for OSX [Bug 2054562]
+	Expanded set of symbolic cursors.  Use correct cursor for 
+	ttk::entry and ttk::combobox widgets [Bug 1534835]
+
+2008-10-28  Don Porter  <dgp@users.sourceforge.net>
+
+	* win/tkWinTest.c:		Revise [testclipboard] to form that
+	* tests/winClipboard.test:	handles encodings.  [Bug 2191960]
+	* tests/constraints.tcl: [tcltest::bytestring] no longer used.
+
 2008-10-24  Joe English  <jenglish@users.sourceforge.net>
 
 	* tests/ttk/ttk.test: Disable test ttk-6.3, it's not 

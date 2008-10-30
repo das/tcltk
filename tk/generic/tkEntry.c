@@ -37,7 +37,7 @@
 #define DOUBLES_EQ(d1, d2)	(fabs((d1) - (d2)) < MIN_DBL_VAL)
 
 
-static char *const stateStrings[] = {
+static const char *const stateStrings[] = {
     "disabled", "normal", "readonly", NULL
 };
 
@@ -45,7 +45,7 @@ static char *const stateStrings[] = {
  * Definitions for -validate option values:
  */
 
-static char *const validateStrings[] = {
+static const char *const validateStrings[] = {
     "all", "key", "focus", "focusin", "focusout", "none", NULL
 };
 enum validateType {
@@ -4172,7 +4172,7 @@ SpinboxInvoke(
 				 * "down" button. */
 {
     Entry *entryPtr = (Entry *) sbPtr;
-    char *type;
+    const char *type;
     int code, up;
     Tcl_DString script;
 

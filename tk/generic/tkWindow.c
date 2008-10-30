@@ -96,7 +96,7 @@ static XSetWindowAttributes defAtts= {
  */
 
 typedef struct {
-    char *name;			/* Name of command. */
+    const char *name;		/* Name of command. */
     Tcl_CmdProc *cmdProc;	/* Command's string-based function. */
     Tcl_ObjCmdProc *objProc;	/* Command's object-based function. */
     int isSafe;			/* If !0, this command will be exposed in a
@@ -854,7 +854,7 @@ TkCreateMainWindow(
     const char *screenName,	/* Name of screen on which to create window.
 				 * Empty or NULL string means use DISPLAY
 				 * environment variable. */
-    char *baseName)		/* Base name for application; usually of the
+    const char *baseName)		/* Base name for application; usually of the
 				 * form "prog instance". */
 {
     Tk_Window tkwin;
@@ -2935,7 +2935,7 @@ Initialize(
     char *p;
     int argc, code;
     const char **argv;
-    char *args[20];
+    const char *args[20];
     const char *argString = NULL;
     Tcl_DString class;
     ThreadSpecificData *tsdPtr;
