@@ -45,6 +45,8 @@ namespace eval ttk::theme::winnative {
 	    -focusfill	[list {readonly focus} SystemHighlight] \
 	    ;
 
+        ttk::style configure TSpinbox -padding {2 0 16 0}
+
 	ttk::style configure TLabelframe -borderwidth 2 -relief groove
 
 	ttk::style configure Toolbutton -relief flat -padding {8 4}
