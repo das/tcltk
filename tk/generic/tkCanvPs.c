@@ -383,7 +383,7 @@ TkCanvPostscriptCmd(
 	if (itemPtr->typePtr->postscriptProc == NULL) {
 	    continue;
 	}
-	result = (*itemPtr->typePtr->postscriptProc)(interp,
+	result = itemPtr->typePtr->postscriptProc(interp,
 		(Tk_Canvas) canvasPtr, itemPtr, 1);
 	Tcl_ResetResult(interp);
 	if (result != TCL_OK) {
@@ -393,6 +393,7 @@ TkCanvPostscriptCmd(
 	     * can happen later that don't happen now, so we still have to
 	     * check for errors later anyway).
 	     */
+
 	    break;
 	}
     }
@@ -527,7 +528,7 @@ TkCanvPostscriptCmd(
 	    continue;
 	}
 	Tcl_AppendResult(interp, "gsave\n", NULL);
-	result = (*itemPtr->typePtr->postscriptProc)(interp,
+	result = itemPtr->typePtr->postscriptProc(interp,
 		(Tk_Canvas) canvasPtr, itemPtr, 0);
 	if (result != TCL_OK) {
 	    char msg[64 + TCL_INTEGER_SPACE];
