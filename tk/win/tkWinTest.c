@@ -123,7 +123,7 @@ AppendSystemError(
     }
     if (length == 0) {
 	if (error == ERROR_CALL_NOT_IMPLEMENTED) {
-	    msg = "function not supported under Win32s";
+	    msg = (char *)"function not supported under Win32s";
 	} else {
 	    sprintf(msgBuf, "unknown error: %ld", error);
 	    msg = msgBuf;
