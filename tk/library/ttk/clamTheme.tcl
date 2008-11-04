@@ -106,6 +106,14 @@ namespace eval ttk::theme::clam {
 	    -foreground [list {readonly focus} $colors(-selectfg)] \
 	    ;
 
+	ttk::style configure TSpinbox -arrowsize 10 -padding {2 0 10 0}
+	ttk::style map TSpinbox \
+	    -background [list  readonly $colors(-frame)] \
+	    -bordercolor [list  focus $colors(-selectbg)] \
+	    -lightcolor [list  focus "#6f9dc6"] \
+	    -darkcolor [list  focus "#6f9dc6"] \
+            -arrowcolor [list disabled $colors(-disabledfg)]
+
 	ttk::style configure TNotebook.Tab -padding {6 2 6 2}
 	ttk::style map TNotebook.Tab \
 	    -padding [list selected {6 4 6 2}] \

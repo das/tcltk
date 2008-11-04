@@ -37,7 +37,7 @@
  * The following table defines the legal values for the -orient option.
  */
 
-static char *orientStrings[] = {
+static const char *const orientStrings[] = {
     "horizontal", "vertical", NULL
 };
 
@@ -47,7 +47,7 @@ enum orient { ORIENT_HORIZONTAL, ORIENT_VERTICAL };
  * The following table defines the legal values for the -stretch option.
  */
 
-static char *stretchStrings[] = {
+static const char *const stretchStrings[] = {
     "always", "first", "last", "middle", "never", NULL
 };
 

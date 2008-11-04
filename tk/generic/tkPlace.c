@@ -26,7 +26,7 @@
  *			actual window size.
  */
 
-static char *borderModeStrings[] = {
+static const char *const borderModeStrings[] = {
     "inside", "outside", "ignore", NULL
 };
 
