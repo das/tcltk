@@ -457,7 +457,7 @@ Tk_CanvasTagsParseProc(
  *--------------------------------------------------------------
  */
 
-char *
+const char *
 Tk_CanvasTagsPrintProc(
     ClientData clientData,	/* Ignored. */
     Tk_Window tkwin,		/* Window containing canvas widget. */
@@ -475,7 +475,7 @@ Tk_CanvasTagsPrintProc(
     }
     if (itemPtr->numTags == 1) {
 	*freeProcPtr = NULL;
-	return (char *) itemPtr->tagPtr[0];
+	return (const char *) itemPtr->tagPtr[0];
     }
     *freeProcPtr = TCL_DYNAMIC;
     return Tcl_Merge(itemPtr->numTags, (const char **) itemPtr->tagPtr);
@@ -533,7 +533,7 @@ TkCanvasDashParseProc(
  *--------------------------------------------------------------
  */
 
-char *
+const char *
 TkCanvasDashPrintProc(
     ClientData clientData,	/* Ignored. */
     Tk_Window tkwin,		/* Window containing canvas widget. */
@@ -809,7 +809,7 @@ TkSmoothParseProc(
  *--------------------------------------------------------------
  */
 
-char *
+const char *
 TkSmoothPrintProc(
     ClientData clientData,	/* Ignored. */
     Tk_Window tkwin,		/* Window containing canvas widget. */
@@ -822,7 +822,7 @@ TkSmoothPrintProc(
     register const Tk_SmoothMethod *smoothPtr =
 	    * (Tk_SmoothMethod **) (widgRec + offset);
 
-    return smoothPtr ? (char *) smoothPtr->name : "0";
+    return smoothPtr ? smoothPtr->name : "0";
 }
 /*
  *--------------------------------------------------------------

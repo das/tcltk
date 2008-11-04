@@ -225,7 +225,7 @@ static void		OptionThreadExitProc(ClientData clientData);
 static void		OptionInit(TkMainInfo *mainPtr);
 static int		ParsePriority(Tcl_Interp *interp, char *string);
 static int		ReadOptionFile(Tcl_Interp *interp, Tk_Window tkwin,
-			    char *fileName, int priority);
+			    const char *fileName, int priority);
 static void		SetupStacks(TkWindow *winPtr, int leaf);
 
 /*
@@ -1067,7 +1067,7 @@ ReadOptionFile(
     Tcl_Interp *interp,		/* Interpreter to use for reporting results. */
     Tk_Window tkwin,		/* Token for window: options are entered for
 				 * this window's main window. */
-    char *fileName,		/* Name of file containing options. */
+    const char *fileName,		/* Name of file containing options. */
     int priority)		/* Priority level to use for options in this
 				 * file, such as TK_USER_DEFAULT_PRIO or
 				 * TK_INTERACTIVE_PRIO. Must be between 0 and

@@ -1200,7 +1200,7 @@ Tk_WinfoObjCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     int index, x, y, width, height, useX, useY, class, skip;
-    char *string;
+    const char *string;
     TkWindow *winPtr;
     Tk_Window tkwin;
 

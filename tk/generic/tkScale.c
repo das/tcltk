@@ -1176,7 +1176,7 @@ ScaleVarProc(
     int flags)			/* Information about what happened. */
 {
     register TkScale *scalePtr = clientData;
-    char *resultStr;
+    const char *resultStr;
     double value;
     Tcl_Obj *valuePtr;
     int result;
@@ -1227,7 +1227,7 @@ ScaleVarProc(
     }
     TkEventuallyRedrawScale(scalePtr, REDRAW_SLIDER);
 
-    return resultStr;
+    return (char *) resultStr;
 }
 
 /*
