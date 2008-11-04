@@ -60,6 +60,11 @@ namespace eval ttk::theme::alt {
 	ttk::style map TCombobox -fieldbackground \
 		[list readonly $colors(-frame) disabled $colors(-frame)]
 
+	ttk::style configure TSpinbox -arrowsize 10 -padding {2 0 10 0}
+	ttk::style map TSpinbox -fieldbackground \
+	    [list readonly $colors(-frame) disabled $colors(-frame)] \
+	    -arrowcolor [list disabled $colors(-disabledfg)]
+
 	ttk::style configure Toolbutton -relief flat -padding 2
 	ttk::style map Toolbutton -relief \
 	    {disabled flat selected sunken pressed sunken active raised}
