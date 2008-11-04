@@ -123,7 +123,7 @@ TkStateParseProc(
  *--------------------------------------------------------------
  */
 
-char *
+const char *
 TkStatePrintProc(
     ClientData clientData,	/* Ignored. */
     Tk_Window tkwin,		/* Window containing canvas widget. */
@@ -224,7 +224,7 @@ TkOrientParseProc(
  *--------------------------------------------------------------
  */
 
-char *
+const char *
 TkOrientPrintProc(
     ClientData clientData,	/* Ignored. */
     Tk_Window tkwin,		/* Window containing canvas widget. */
@@ -396,7 +396,7 @@ TkOffsetParseProc(
  *----------------------------------------------------------------------
  */
 
-char *
+const char *
 TkOffsetPrintProc(
     ClientData clientData,	/* not used */
     Tk_Window tkwin,		/* not used */
@@ -495,7 +495,7 @@ TkPixelParseProc(
  *----------------------------------------------------------------------
  */
 
-char *
+const char *
 TkPixelPrintProc(
     ClientData clientData,	/* not used */
     Tk_Window tkwin,		/* not used */
