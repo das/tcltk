@@ -1930,7 +1930,7 @@ FindFontFamilyOrAlias(
     const char *name)		/* Name or alias name of the font to find. */
 {
     const MacFontFamily * familyPtr;
-    char ** aliases;
+    const char *const * aliases;
     int i;
 
     familyPtr = FindFontFamily(name);
@@ -1956,7 +1956,7 @@ FindFontFamilyOrAliasOrFallback(
 {
     const MacFontFamily * familyPtr;
     const char * fallback;
-    char *** fallbacks;
+    const char *const *const * fallbacks;
     int i, j;
 
     familyPtr = FindFontFamilyOrAlias(name);

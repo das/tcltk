@@ -1,3 +1,97 @@
+2008-11-03  Jan Nijtmans  <nijtmans@users.sf.net>
+
+	* generic/ttk/ttkEntry.c: fix warning: unused variable `currentValue'
+	* generic/tkOldTest.c:    fix warning: assignment discards qualifiers
+	* win/tkWinTest.c:        from pointer target type
+
+2008-11-03  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* tests/winClipboard.test: testclipboard no longer returns strings
+	with embedded \r but now returns Tcl strings
+	* tests/winfo.test: fixed embedding test broken during upgrade
+	* tests/busy.test: default wait cursor on windows is 'wait'
+	* win/tkWinFont.c: const fixes for the windows code.
+
+2008-11-02  Jan Nijtmans  <nijtmans@users.sf.net>
+
+	* generic/tkFont.h:      more internal -Wwrite-strings warning fixes
+	* generic/tkFont.c
+	* generic/ttk/ttkTheme.h
+	* generic/ttk/ttkDefaultTheme.c
+	* generic/ttk/ttkState.c
+	* macosx/tkMacOSXFont.c
+	* unix/tkUnixFont.c
+	* win/tkWinFont.c
+
+2008-11-01  Donal K. Fellows  <dkf@users.sf.net>
+
+	TIP #97 IMPLEMENTATION
+
+	* generic/tkCanvas.c (CanvasWidgetCmd): Implementation of the 'imove'
+	and 'rchars' subcommands.
+	* generic/tk.h (TK_MOVABLE_POINTS): New flag to allow items to state
+	whether they support finding and moving individual coordinates.
+	* doc/canvas.n, tests/canvas.test: Docs 'n' tests.
+
+2008-11-01  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* generic/ttk/ttkEntry.c:      Implemented the themed spinbox
+	* library/ttk/altTheme.tcl:    widget.
+	* library/ttk/clamTheme.tcl:
+	* library/ttk/classicTheme.tcl:
+	* library/ttk/defaults.tcl:
+	* library/ttk/entry.tcl:
+	* library/ttk/ttk.tcl:
+	* library/ttk/winTheme.tcl:
+	* library/ttk/xpTheme.tcl:
+	* library/ttk/spinbox.tcl:
+	* win/ttkWinTheme.c:
+	* win/ttkWinXPTheme.c:
+	* doc/ttk_spinbox.n:
+	* tests/ttk/spinbox.test:
+
+2008-10-31  Joe English  <jenglish@users.sourceforge.net>
+
+	* generic/widget.c: Temporary workaround for [Bug 2207435]
+
+2008-10-30  Jan Nijtmans  <nijtmans@users.sf.net>
+
+	* generic/tkAtom.c:      more internal -Wwrite-strings warning fixes
+	* generic/tkBusy.c
+	* generic/tkButton.c
+	* generic/tkCanvPoly.c
+	* generic/tkCanvText.c
+	* generic/tkCmds.c
+	* generic/tkListbox.c
+	* generic/tkMenu.c
+	* generic/tkOldConfig.c
+	* generic/tkOption.c
+	* generic/tkPanedWindow.c
+	* generic/tkPlace.c
+	* generic/tkScale.c
+	* generic/tkTest.c
+	* generic/tkText.c
+	* generic/tkTextImage.c
+
+2008-10-30  Don Porter  <dgp@users.sourceforge.net>
+
+	* tests/unixSelect.test:	Revise the unixSelect-1.* tests so that
+	they test the ability of Tk's selection mechanism to faithfully pass
+	valid Tcl values without corruption, and stop testing details of
+	Tcl's internal encoding scheme.  With this change, the Tk test suite
+	no longer uses the identity encoding or [string bytelength].
+
+2008-10-30  Jan Nijtmans  <nijtmans@users.sf.net>
+
+	* generic/tk.h:               CONSTify return value of
+	* generic/tkInt.h             Tk_OptionPrintProc, and customPtr
+	* generic/tk.decls            field of Tk_ConfigSpec.
+	* generic/tkCanvArc.c         See [Bug 2190619]: Warnings due to
+	* generic/tkCanvLine.c        Tk_SmoothMethod name constness change
+	* generic/tkCanvUtil.c
+	* generic/tkUtil.c
+	* generic/tkDecls.h:          (regenerated)
+
 2008-10-29  Joe English  <jenglish@users.sourceforge.net>
 
 	* generic/tkAtom.c(Tk_GetAtomName): Remove incorrect 'const' qualifier.

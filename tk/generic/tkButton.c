@@ -1594,7 +1594,8 @@ ButtonVarProc(
     int flags)			/* Information about what happened. */
 {
     register TkButton *butPtr = (TkButton *) clientData;
-    char *name, *value;
+    char *name;
+    const char *value;
     Tcl_Obj *valuePtr;
 
     name = Tcl_GetString(butPtr->selVarNamePtr);

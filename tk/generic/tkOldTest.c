@@ -144,7 +144,7 @@ ImageCreate(
 				 * will be returned in later callbacks. */
 {
     TImageMaster *timPtr;
-    char *varName;
+    const char *varName;
     int i;
 
     varName = "log";
