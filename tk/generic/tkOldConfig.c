@@ -607,7 +607,7 @@ Tk_ConfigureInfo(
     register Tk_ConfigSpec *specPtr;
     int needFlags, hateFlags;
     char *list;
-    char *leader = "{";
+    const char *leader = "{";
 
     needFlags = flags & ~(TK_CONFIG_USER_BIT - 1);
     if (Tk_Depth(tkwin) <= 1) {
