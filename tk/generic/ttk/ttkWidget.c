@@ -442,6 +442,7 @@ error_nocleanup:
 	Ttk_FreeLayout(corePtr->layout);
 	corePtr->layout = 0;
     }
+    Tk_UndefineCursor(tkwin);	/* @@@ TEMP: workaround for #2207435 */
     Tk_FreeConfigOptions(recordPtr, optionTable, tkwin);
     Tk_DestroyWindow(tkwin);
     corePtr->tkwin = 0;

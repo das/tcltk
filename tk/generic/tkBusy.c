@@ -520,7 +520,8 @@ CreateBusy(
 {
     Busy *busyPtr;
     int length, x, y;
-    char *fmt, *name;
+    const char *fmt;
+    char *name;
     Tk_Window tkBusy, tkChild, tkParent;
     Window parent;
     Tk_FakeWin *winPtr;

@@ -699,7 +699,7 @@ TestobjconfigObjCmd(
 	    Tcl_Obj *customPtr;
 	} TypesRecord;
 	TypesRecord *recordPtr;
-	static char *stringTable[] = {
+	static const char *const stringTable[] = {
 	    "one", "two", "three", "four", NULL
 	};
 	static const Tk_OptionSpec typesSpecs[] = {
@@ -972,7 +972,7 @@ TestobjconfigObjCmd(
 	    char *custom;
 	} InternalRecord;
 	InternalRecord *recordPtr;
-	static char *internalStringTable[] = {
+	static const char *const internalStringTable[] = {
 	    "one", "two", "three", "four", NULL
 	};
 	static const Tk_OptionSpec internalSpecs[] = {
@@ -1502,7 +1502,7 @@ ImageCreate(
 				 * will be returned in later callbacks. */
 {
     TImageMaster *timPtr;
-    char *varName;
+    const char *varName;
     int i;
 
     varName = "log";

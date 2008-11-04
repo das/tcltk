@@ -111,7 +111,7 @@ typedef struct {
     char *\fIdefValue\fR;
     int \fIoffset\fR;
     int \fIspecFlags\fR;
-    Tk_CustomOption *\fIcustomPtr\fR;
+    const Tk_CustomOption *\fIcustomPtr\fR;
 } \fBTk_ConfigSpec\fR;
 .CE
 The \fItype\fR field indicates what type of configuration option this is
@@ -557,7 +557,7 @@ typedef int \fBTk_OptionParseProc\fR(
         char *\fIwidgRec\fR,
         int \fIoffset\fR);
 
-typedef char *\fBTk_OptionPrintProc\fR(
+typedef const char *\fBTk_OptionPrintProc\fR(
         ClientData \fIclientData\fR,
         Tk_Window \fItkwin\fR,
         char *\fIwidgRec\fR,

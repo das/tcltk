@@ -106,7 +106,7 @@ declare 18 generic {
 	    Tk_Window tkwin, const char *value, char *widgRec, int offset)
 }
 declare 19 generic {
-    char * Tk_CanvasTagsPrintProc(ClientData clientData, Tk_Window tkwin,
+    CONST86 char * Tk_CanvasTagsPrintProc(ClientData clientData, Tk_Window tkwin,
 	    char *widgRec, int offset, Tcl_FreeProc **freeProcPtr)
 }
 declare 20 generic {
