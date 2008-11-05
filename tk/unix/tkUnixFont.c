@@ -1971,7 +1971,7 @@ FindSubFontForChar(
     Tk_Uid faceName;
     const char *fallback;
     const char *const *aliases;
-    const char *const *nameList;
+    char **nameList;
     const char *const *anyFallbacks;
     const char *const *const *fontFallbacks;
     SubFont *subFontPtr;
@@ -2406,8 +2406,8 @@ CanUseFallback(
     Tk_Uid hateFoundry;
     const char *charset, *hateCharset;
     unsigned bestScore[2];
-    const char *const *nameList;
-    const char *const *nameListOrig;
+    char **nameList;
+    char **nameListOrig;
     char src[TCL_UTF_MAX];
     FontAttributes want, got;
     Display *display;
@@ -2913,7 +2913,8 @@ ListFontOrAlias(
     int *numNamesPtr)		/* Filled with length of returned array, or 0
 				 * if no names were found. */
 {
-    char **nameList, **aliases;
+    char **nameList;
+    const char *const *aliases;
     int i;
 
     nameList = ListFonts(display, faceName, numNamesPtr);
@@ -2962,7 +2963,8 @@ IdentifySymbolEncodings(
     FontAttributes *faPtr)
 {
     int i, j;
-    char **aliases, **symbolClass;
+    const char *const *aliases;
+    const char *const *symbolClass;
 
     symbolClass = TkFontGetSymbolClass();
     for (i = 0; symbolClass[i] != NULL; i++) {
