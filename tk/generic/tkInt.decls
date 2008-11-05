@@ -72,7 +72,7 @@ declare 12 generic {
 }
 declare 13 generic {
     int TkCreateFrame(ClientData clientData, Tcl_Interp *interp,
-	    int argc, CONST86 char *const *argv, int toplevel, const char *appName)
+	    int argc, const char *const *argv, int toplevel, const char *appName)
 }
 declare 14 generic {
     Tk_Window TkCreateMainWindow(Tcl_Interp *interp,
@@ -142,7 +142,7 @@ declare 32 generic {
 	    Tk_Window tkwin, Tk_Uid string)
 }
 declare 33 generic {
-    CONST84_RETURN char *TkGetDefaultScreenName(Tcl_Interp *interp,
+    const char *TkGetDefaultScreenName(Tcl_Interp *interp,
 	    const char *screenName)
 }
 declare 34 generic {
