@@ -129,8 +129,9 @@ declare 29 generic {
     void TkpFreeCursor(TkCursor *cursorPtr)
 }
 declare 30 generic {
-    char *TkGetBitmapData(Tcl_Interp *interp, char *string, char *fileName,
-	    int *widthPtr, int *heightPtr, int *hotXPtr, int *hotYPtr)
+    char *TkGetBitmapData(Tcl_Interp *interp, const char *string,
+	    const char *fileName, int *widthPtr, int *heightPtr,
+	    int *hotXPtr, int *hotYPtr)
 }
 declare 31 generic {
     void TkGetButtPoints(double p1[], double p2[],
