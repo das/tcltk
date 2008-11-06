@@ -163,7 +163,7 @@ static const struct CursorName {
 
 static const struct TkCursorName {
     const char *name;
-    char *data;
+    const char *data;
     char *mask;
 } tkCursorNames[] = {
     {"none",	CURSOR_NONE_DATA,	NULL},
@@ -184,7 +184,7 @@ static const struct TkCursorName {
 static Cursor		CreateCursorFromTableOrFile(Tcl_Interp *interp,
 			    Tk_Window tkwin, int argc, const char **argv,
 			    const struct TkCursorName *tkCursorPtr);
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -550,7 +550,7 @@ CreateCursorFromTableOrFile(
     }
     return cursor;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -600,7 +600,7 @@ TkCreateCursorFromData(
     }
     return (TkCursor *) cursorPtr;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -627,7 +627,7 @@ TkpFreeCursor(
     XFreeCursor(unixCursorPtr->display, (Cursor) unixCursorPtr->info.cursor);
     Tk_FreeXId(unixCursorPtr->display, (XID) unixCursorPtr->info.cursor);
 }
-
+
 /*
  * Local Variables:
  * mode: c
