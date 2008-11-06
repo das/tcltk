@@ -121,7 +121,8 @@ GetTkFontAttributes(
     XftFont *ftFont,
     TkFontAttributes *faPtr)
 {
-    char *family = "Unknown", **familyPtr = &family;
+    const char *family = "Unknown";
+    const char *const *familyPtr = &family;
     int weight, slant, size, pxsize;
     double ptsize;
 
@@ -468,9 +469,12 @@ TkpGetSubFonts(
     Tcl_Obj *objv[3], *listPtr, *resultPtr;
     UnixFtFont *fontPtr = (UnixFtFont *) tkfont;
     FcPattern *pattern;
-    char *family = "Unknown", **familyPtr = &family;
-    char *foundry = "Unknown", **foundryPtr = &foundry;
-    char *encoding = "Unknown", **encodingPtr = &encoding;
+    const char *family = "Unknown";
+    const char *const *familyPtr = &family;
+    const char *foundry = "Unknown";
+    const char *const *foundryPtr = &foundry;
+    const char *encoding = "Unknown";
+    const char *const *encodingPtr = &encoding;
     int i;
 
     resultPtr = Tcl_NewListObj(0, NULL);
