@@ -1091,7 +1091,7 @@ TkReadBitmapFile(
 {
     char *data;
 
-    data = TkGetBitmapData(NULL, NULL, (char *) filename,
+    data = TkGetBitmapData(NULL, NULL, filename,
 	    (int *) width_return, (int *) height_return, x_hot_return,
 	    y_hot_return);
     if (data == NULL) {
