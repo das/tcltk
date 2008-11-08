@@ -814,7 +814,7 @@ RenderObject(
 	SetPolyFillMode(dcMem, (gc->fill_rule == EvenOddRule) ? ALTERNATE
 		: WINDING);
 	oldMemBrush = SelectObject(dcMem, CreateSolidBrush(gc->foreground));
-	(*func)(dcMem, winPoints, npoints);
+	func(dcMem, winPoints, npoints);
 	BitBlt(dc, rect.left, rect.top, width, height, dcMem, 0, 0, COPYFG);
 
 	/*
@@ -826,7 +826,7 @@ RenderObject(
 	if (gc->fill_style == FillOpaqueStippled) {
 	    DeleteObject(SelectObject(dcMem,
 		    CreateSolidBrush(gc->background)));
-	    (*func)(dcMem, winPoints, npoints);
+	    func(dcMem, winPoints, npoints);
 	    BitBlt(dc, rect.left, rect.top, width, height, dcMem, 0, 0,
 		    COPYBG);
 	}
@@ -842,9 +842,7 @@ RenderObject(
 
 	SetPolyFillMode(dc, (gc->fill_rule == EvenOddRule) ? ALTERNATE
 		: WINDING);
-
-	(*func)(dc, winPoints, npoints);
-
+	func(dc, winPoints, npoints);
 	SelectObject(dc, oldPen);
     }
     DeleteObject(SelectObject(dc, oldBrush));

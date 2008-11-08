@@ -443,8 +443,8 @@ TkpDestroyMenuButton(
  */
 
 void
-TkpComputeMenuButtonGeometry(mbPtr)
-    register TkMenuButton *mbPtr;	/* Widget record for menu button. */
+TkpComputeMenuButtonGeometry(
+    register TkMenuButton *mbPtr)	/* Widget record for menu button. */
 {
     int width, height, mm, pixels;
     int hasImageOrBitmap = 0;
