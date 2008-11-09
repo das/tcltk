@@ -406,8 +406,7 @@ int TtkWidgetConstructorObjCmd(
     if (Tk_InitOptions(interp, recordPtr, optionTable, tkwin) != TCL_OK)
     	goto error_nocleanup;
 
-    if (widgetSpec->initializeProc(interp, recordPtr) != TCL_OK)
-	goto error_nocleanup;
+    widgetSpec->initializeProc(interp, recordPtr);
 
     if (Tk_SetOptions(interp, recordPtr, optionTable, objc - 2,
 	    objv + 2, tkwin, NULL/*savePtr*/, NULL/*maskPtr*/) != TCL_OK)
@@ -522,9 +521,8 @@ Ttk_Layout TtkWidgetGetOrientedLayout(
 /* TtkNullInitialize --
  * 	Default widget initializeProc (no-op)
  */
-int TtkNullInitialize(Tcl_Interp *interp, void *recordPtr)
+void TtkNullInitialize(Tcl_Interp *interp, void *recordPtr)
 {
-    return TCL_OK;
 }
 
 /* TtkNullPostConfigure --
