@@ -191,7 +191,7 @@ declare 39 generic {
     void Tk_CreateItemType(Tk_ItemType *typePtr)
 }
 declare 40 generic {
-    void Tk_CreatePhotoImageFormat(Tk_PhotoImageFormat *formatPtr)
+    void Tk_CreatePhotoImageFormat(const Tk_PhotoImageFormat *formatPtr)
 }
 declare 41 generic {
     void Tk_CreateSelHandler(Tk_Window tkwin,
@@ -1071,7 +1071,7 @@ declare 272 generic {
     void Tk_CreateOldImageType(Tk_ImageType *typePtr)
 }
 declare 273 generic {
-    void Tk_CreateOldPhotoImageFormat(Tk_PhotoImageFormat *formatPtr)
+    void Tk_CreateOldPhotoImageFormat(const Tk_PhotoImageFormat *formatPtr)
 }
 
 # Define the platform specific public Tk interface.  These functions are

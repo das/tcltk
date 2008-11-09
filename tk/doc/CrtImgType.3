@@ -60,7 +60,7 @@ the name of the image type and pointers to five procedures provided
 by the image manager to deal with images of this type:
 .CS
 typedef struct Tk_ImageType {
-    char *\fIname\fR;
+    const char *\fIname\fR;
     Tk_ImageCreateProc *\fIcreateProc\fR;
     Tk_ImageGetProc *\fIgetProc\fR;
     Tk_ImageDisplayProc *\fIdisplayProc\fR;
@@ -110,7 +110,7 @@ an image of the new type.
 .CS
 typedef int \fBTk_ImageCreateProc\fR(
         Tcl_Interp *\fIinterp\fR,
-        char *\fIname\fR,
+        const char *\fIname\fR,
         int \fIobjc\fR,
         Tcl_Obj *const \fIobjv\fR[],
         Tk_ImageType *\fItypePtr\fR,
