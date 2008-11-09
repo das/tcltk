@@ -22,10 +22,8 @@
  * Custom option for handling "-orient"
  */
 
-static Tk_CustomOption orientOption = {
-    (Tk_OptionParseProc *) TkOrientParseProc,
-    TkOrientPrintProc,
-    NULL
+static const Tk_CustomOption orientOption = {
+    TkOrientParseProc, TkOrientPrintProc, (ClientData) NULL
 };
 
 /*
