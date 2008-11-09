@@ -827,7 +827,7 @@ declare 216 generic {
     int Tk_CreateConsoleWindow(Tcl_Interp *interp)
 }
 declare 217 generic {
-    void Tk_CreateSmoothMethod(Tcl_Interp *interp, Tk_SmoothMethod *method)
+    void Tk_CreateSmoothMethod(Tcl_Interp *interp, const Tk_SmoothMethod *method)
 }
 
 #declare 218 generic {

@@ -46,7 +46,7 @@ typedef struct PolygonItem  {
     Pixmap disabledFillStipple;	/* Stipple bitmap for filling polygon if state
 				 * is disabled. */
     GC fillGC;			/* Graphics context for filling polygon. */
-    Tk_SmoothMethod *smooth;	/* Non-zero means draw shape smoothed (i.e.
+    const Tk_SmoothMethod *smooth; /* Non-zero means draw shape smoothed (i.e.
 				 * with Bezier splines). */
     int splineSteps;		/* Number of steps in each spline segment. */
     int autoClosed;		/* Zero means the given polygon was closed,
