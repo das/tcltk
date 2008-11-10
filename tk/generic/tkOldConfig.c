@@ -543,9 +543,8 @@ DoConfig(
 	    break;
 	}
 	case TK_CONFIG_CUSTOM:
-	    if ((*specPtr->customPtr->parseProc)(
-		    specPtr->customPtr->clientData, interp, tkwin, value,
-		    widgRec, specPtr->offset) != TCL_OK) {
+	    if (specPtr->customPtr->parseProc(specPtr->customPtr->clientData,
+		    interp, tkwin, value, widgRec, specPtr->offset)!=TCL_OK) {
 		return TCL_ERROR;
 	    }
 	    break;
@@ -723,7 +722,7 @@ FormatConfigInfo(
 	if ((freeProc == TCL_DYNAMIC) || (freeProc == (Tcl_FreeProc *) free)) {
 	    ckfree((char *) argv[4]);
 	} else {
-	    (*freeProc)((char *) argv[4]);
+	    freeProc((char *) argv[4]);
 	}
     }
     return result;
@@ -872,9 +871,8 @@ FormatConfigValue(
 	break;
     }
     case TK_CONFIG_CUSTOM:
-	result = (*specPtr->customPtr->printProc)(
-		specPtr->customPtr->clientData, tkwin, widgRec,
-		specPtr->offset, freeProcPtr);
+	result = specPtr->customPtr->printProc(specPtr->customPtr->clientData,
+		tkwin, widgRec, specPtr->offset, freeProcPtr);
 	break;
     default:
 	result = "?? unknown type ??";
@@ -945,7 +943,7 @@ Tk_ConfigureValue(
 	if ((freeProc == TCL_DYNAMIC) || (freeProc == (Tcl_FreeProc *) free)) {
 	    ckfree((char *) result);
 	} else {
-	    (*freeProc)((char *) result);
+	    freeProc((char *) result);
 	}
     }
     return TCL_OK;

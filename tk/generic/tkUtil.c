@@ -950,7 +950,7 @@ TkFindStateNumObj(
 	if (strcmp(key, mPtr->strKey) == 0) {
 	    typePtr = keyPtr->typePtr;
 	    if ((typePtr != NULL) && (typePtr->freeIntRepProc != NULL)) {
-		(*typePtr->freeIntRepProc)(keyPtr);
+		typePtr->freeIntRepProc(keyPtr);
 	    }
 	    keyPtr->internalRep.twoPtrValue.ptr1 = (void *) mapPtr;
 	    keyPtr->internalRep.twoPtrValue.ptr2 = INT2PTR(mPtr->numKey);

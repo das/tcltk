@@ -7143,9 +7143,9 @@ TkpWmSetState(
  */
 
 static void
-RemapWindows(winPtr, parentPtr)
-     TkWindow *winPtr;
-     TkWindow *parentPtr;
+RemapWindows(
+    TkWindow *winPtr,
+    TkWindow *parentPtr)
 {
     XWindowAttributes win_attr;
 

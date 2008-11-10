@@ -1331,7 +1331,7 @@ InitBorderObj(
     Tcl_GetString(objPtr);
     typePtr = objPtr->typePtr;
     if ((typePtr != NULL) && (typePtr->freeIntRepProc != NULL)) {
-	(*typePtr->freeIntRepProc)(objPtr);
+	typePtr->freeIntRepProc(objPtr);
     }
     objPtr->typePtr = &tkBorderObjType;
     objPtr->internalRep.twoPtrValue.ptr1 = NULL;

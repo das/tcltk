@@ -467,8 +467,7 @@ ColorDlgHookProc(
 	if ((title != NULL) && (title[0] != '\0')) {
 	    Tcl_DString ds;
 
-	    (*tkWinProcs->setWindowText)(hDlg,
-		    Tcl_WinUtfToTChar(title, -1, &ds));
+	    tkWinProcs->setWindowText(hDlg, Tcl_WinUtfToTChar(title,-1,&ds));
 	    Tcl_DStringFree(&ds);
 	}
 	if (tsdPtr->debugFlag) {

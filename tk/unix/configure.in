@@ -72,6 +72,7 @@ if test "${CFLAGS+set}" != "set" ; then
 fi
 
 AC_PROG_CC
+AC_C_INLINE
 
 # limits header checks must come early to prevent
 # an autoconf bug that throws errors on configure

@@ -393,10 +393,13 @@ TestfindwindowObjCmd(
 }
 
 static BOOL CALLBACK
-EnumChildrenProc(HWND hwnd, LPARAM lParam)
+EnumChildrenProc(
+    HWND hwnd,
+    LPARAM lParam)
 {
-    Tcl_Obj *listObj = (Tcl_Obj *)lParam;
-    Tcl_ListObjAppendElement(NULL, listObj, Tcl_NewLongObj((long)hwnd));
+    Tcl_Obj *listObj = (Tcl_Obj *) lParam;
+
+    Tcl_ListObjAppendElement(NULL, listObj, Tcl_NewLongObj((long) hwnd));
     return TRUE;
 }
 
