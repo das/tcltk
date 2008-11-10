@@ -790,7 +790,7 @@ InvokeGenericHandlers(
 	    int done;
 
 	    tsdPtr->handlersActive++;
-	    done = (*curPtr->proc)(curPtr->clientData, eventPtr);
+	    done = curPtr->proc(curPtr->clientData, eventPtr);
 	    tsdPtr->handlersActive--;
 	    if (done) {
 		return done;
@@ -1383,7 +1383,7 @@ Tk_HandleEvent(
 	for (handlerPtr = winPtr->handlerList; handlerPtr != NULL; ) {
 	    if ((handlerPtr->mask & mask) != 0) {
 		ip.nextHandler = handlerPtr->nextPtr;
-		(*(handlerPtr->proc))(handlerPtr->clientData, eventPtr);
+		handlerPtr->proc(handlerPtr->clientData, eventPtr);
 		handlerPtr = ip.nextHandler;
 	    } else {
 		handlerPtr = handlerPtr->nextPtr;
@@ -1787,7 +1787,7 @@ WindowEventProc(
 	return 0;
     }
     if (tsdPtr->restrictProc != NULL) {
-	result = (*tsdPtr->restrictProc)(tsdPtr->restrictArg, &wevPtr->event);
+	result = tsdPtr->restrictProc(tsdPtr->restrictArg, &wevPtr->event);
 	if (result != TK_PROCESS_EVENT) {
 	    if (result == TK_DEFER_EVENT) {
 		return 0;
@@ -2053,7 +2053,7 @@ TkFinalize(
 
 	firstExitPtr = exitPtr->nextPtr;
 	Tcl_MutexUnlock(&exitMutex);
-	(*exitPtr->proc)(exitPtr->clientData);
+	exitPtr->proc(exitPtr->clientData);
 	ckfree((char *) exitPtr);
 	Tcl_MutexLock(&exitMutex);
     }
@@ -2103,7 +2103,7 @@ TkFinalizeThread(
 	     */
 
 	    tsdPtr->firstExitPtr = exitPtr->nextPtr;
-	    (*exitPtr->proc)(exitPtr->clientData);
+	    exitPtr->proc(exitPtr->clientData);
 	    ckfree((char *) exitPtr);
 	}
     }

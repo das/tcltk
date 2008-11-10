@@ -231,7 +231,7 @@ Tk_ParseArgv(
 	    typedef int (ArgvFunc)(char *, const char *, const char *);
 	    ArgvFunc *handlerProc = (ArgvFunc *) infoPtr->src;
 
-	    if ((*handlerProc)(infoPtr->dst, infoPtr->key, argv[srcIndex])) {
+	    if (handlerProc(infoPtr->dst, infoPtr->key, argv[srcIndex])) {
 		srcIndex++;
 		argc--;
 	    }
@@ -242,8 +242,8 @@ Tk_ParseArgv(
 		    const char **);
 	    ArgvGenFunc *handlerProc = (ArgvGenFunc *) infoPtr->src;
 
-	    argc = (*handlerProc)(infoPtr->dst, interp, infoPtr->key,
-		    argc, argv+srcIndex);
+	    argc = handlerProc(infoPtr->dst, interp, infoPtr->key, argc,
+		    argv+srcIndex);
 	    if (argc < 0) {
 		return TCL_ERROR;
 	    }

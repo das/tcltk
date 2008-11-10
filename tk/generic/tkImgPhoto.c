@@ -261,7 +261,7 @@ PhotoFormatThreadExitProc(
 
 void
 Tk_CreateOldPhotoImageFormat(
-    Tk_PhotoImageFormat *formatPtr)
+    const Tk_PhotoImageFormat *formatPtr)
 				/* Structure describing the format. All of the
 				 * fields except "nextPtr" must be filled in
 				 * by caller. Must not have been passed to
@@ -285,7 +285,7 @@ Tk_CreateOldPhotoImageFormat(
 
 void
 Tk_CreatePhotoImageFormat(
-    Tk_PhotoImageFormat *formatPtr)
+    const Tk_PhotoImageFormat *formatPtr)
 				/* Structure describing the format. All of the
 				 * fields except "nextPtr" must be filled in
 				 * by caller. Must not have been passed to
