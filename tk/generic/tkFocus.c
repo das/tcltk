@@ -1059,8 +1059,8 @@ TkFocusFree(
  */
 
 void
-TkFocusSplit(winPtr)
-    TkWindow *winPtr;		/* Window is the new toplevel. Any focus point
+TkFocusSplit(
+    TkWindow *winPtr)		/* Window is the new toplevel. Any focus point
 				 * at or below window must be moved to this
 				 * new toplevel. */
 {
