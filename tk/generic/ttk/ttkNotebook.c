@@ -1214,7 +1214,7 @@ static WidgetCommandSpec NotebookCommands[] =
  * +++ Widget class hooks.
  */
 
-static int NotebookInitialize(Tcl_Interp *interp, void *recordPtr)
+static void NotebookInitialize(Tcl_Interp *interp, void *recordPtr)
 {
     Notebook *nb = recordPtr;
 
@@ -1232,8 +1232,6 @@ static int NotebookInitialize(Tcl_Interp *interp, void *recordPtr)
 
     Tk_CreateEventHandler(
 	nb->core.tkwin, NotebookEventMask, NotebookEventHandler, recordPtr);
-
-    return TCL_OK;
 }
 
 static void NotebookCleanup(void *recordPtr)

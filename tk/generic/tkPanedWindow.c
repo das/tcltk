@@ -493,7 +493,7 @@ Tk_PanedWindowObjCmd(
 	return TCL_ERROR;
     }
 
-    Tcl_SetObjResult(interp, Tcl_NewStringObj(Tk_PathName(pwPtr->tkwin), -1));
+    Tcl_SetObjResult(interp, TkNewWindowObj(pwPtr->tkwin));
     return TCL_OK;
 }
 

@@ -308,7 +308,7 @@ Tk_MenubuttonObjCmd(
 	return TCL_ERROR;
     }
 
-    Tcl_SetObjResult(interp, Tcl_NewStringObj(Tk_PathName(mbPtr->tkwin), -1));
+    Tcl_SetObjResult(interp, TkNewWindowObj(mbPtr->tkwin));
     return TCL_OK;
 }
 
@@ -363,9 +363,8 @@ MenuButtonWidgetObjCmd(
 		mbPtr->optionTable, objv[2], mbPtr->tkwin);
 	if (objPtr == NULL) {
 	    goto error;
-	} else {
-	    Tcl_SetObjResult(interp, objPtr);
 	}
+	Tcl_SetObjResult(interp, objPtr);
 	break;
 
     case COMMAND_CONFIGURE:
@@ -375,9 +374,8 @@ MenuButtonWidgetObjCmd(
 		    mbPtr->tkwin);
 	    if (objPtr == NULL) {
 		goto error;
-	    } else {
-		Tcl_SetObjResult(interp, objPtr);
 	    }
+	    Tcl_SetObjResult(interp, objPtr);
 	} else {
 	    result = ConfigureMenuButton(interp, mbPtr, objc-2, objv+2);
 	}

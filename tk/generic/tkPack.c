@@ -407,6 +407,7 @@ Tk_PackObjCmd(
     case PACK_SLAVES: {
 	Tk_Window master;
 	Packer *masterPtr, *slavePtr;
+	Tcl_Obj *resultObj;
 
 	if (objc != 3) {
 	    Tcl_WrongNumArgs(interp, 2, objv, "window");
@@ -415,11 +416,14 @@ Tk_PackObjCmd(
 	if (TkGetWindowFromObj(interp, tkwin, objv[2], &master) != TCL_OK) {
 	    return TCL_ERROR;
 	}
+	resultObj = Tcl_NewObj();
 	masterPtr = GetPacker(master);
 	for (slavePtr = masterPtr->slavePtr; slavePtr != NULL;
 		slavePtr = slavePtr->nextPtr) {
-	    Tcl_AppendElement(interp, Tk_PathName(slavePtr->tkwin));
+	    Tcl_ListObjAppendElement(NULL, resultObj,
+		    TkNewWindowObj(slavePtr->tkwin));
 	}
+	Tcl_SetObjResult(interp, resultObj);
 	break;
     }
     case PACK_UNPACK: {

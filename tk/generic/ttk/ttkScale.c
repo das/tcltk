@@ -100,12 +100,10 @@ static void ScaleVariableChanged(void *recordPtr, const char *value)
 /* ScaleInitialize --
  * 	Scale widget initialization hook.
  */
-static int ScaleInitialize(Tcl_Interp *interp, void *recordPtr)
+static void ScaleInitialize(Tcl_Interp *interp, void *recordPtr)
 {
     Scale *scalePtr = recordPtr;
-
     TtkTrackElementState(&scalePtr->core);
-    return TCL_OK;
 }
 
 static void ScaleCleanup(void *recordPtr)

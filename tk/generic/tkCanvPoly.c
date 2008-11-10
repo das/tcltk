@@ -46,7 +46,7 @@ typedef struct PolygonItem  {
     Pixmap disabledFillStipple;	/* Stipple bitmap for filling polygon if state
 				 * is disabled. */
     GC fillGC;			/* Graphics context for filling polygon. */
-    Tk_SmoothMethod *smooth;	/* Non-zero means draw shape smoothed (i.e.
+    const Tk_SmoothMethod *smooth; /* Non-zero means draw shape smoothed (i.e.
 				 * with Bezier splines). */
     int splineSteps;		/* Number of steps in each spline segment. */
     int autoClosed;		/* Zero means the given polygon was closed,
@@ -57,23 +57,23 @@ typedef struct PolygonItem  {
  * Information used for parsing configuration specs:
  */
 
-static Tk_CustomOption smoothOption = {
+static const Tk_CustomOption smoothOption = {
     TkSmoothParseProc, TkSmoothPrintProc, (ClientData) NULL
 };
-static Tk_CustomOption stateOption = {
+static const Tk_CustomOption stateOption = {
     TkStateParseProc, TkStatePrintProc, (ClientData) 2
 };
-static Tk_CustomOption tagsOption = {
+static const Tk_CustomOption tagsOption = {
     Tk_CanvasTagsParseProc, Tk_CanvasTagsPrintProc, (ClientData) NULL
 };
-static Tk_CustomOption dashOption = {
+static const Tk_CustomOption dashOption = {
     TkCanvasDashParseProc, TkCanvasDashPrintProc, (ClientData) NULL
 };
-static Tk_CustomOption offsetOption = {
+static const Tk_CustomOption offsetOption = {
     TkOffsetParseProc, TkOffsetPrintProc,
     (ClientData) (TK_OFFSET_RELATIVE|TK_OFFSET_INDEX)
 };
-static Tk_CustomOption pixelOption = {
+static const Tk_CustomOption pixelOption = {
     TkPixelParseProc, TkPixelPrintProc, (ClientData) NULL
 };
 

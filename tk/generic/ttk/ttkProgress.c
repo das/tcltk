@@ -185,12 +185,11 @@ static void VariableChanged(void *recordPtr, const char *value)
  * +++ Widget class methods:
  */
 
-static int ProgressbarInitialize(Tcl_Interp *interp, void *recordPtr)
+static void ProgressbarInitialize(Tcl_Interp *interp, void *recordPtr)
 {
     Progressbar *pb = recordPtr;
     pb->progress.variableTrace = 0;
     pb->progress.timer = 0;
-    return TCL_OK;
 }
 
 static void ProgressbarCleanup(void *recordPtr)
