@@ -255,7 +255,7 @@ Tk_MainEx(
      * Invoke application-specific initialization.
      */
 
-    if ((*appInitProc)(interp) != TCL_OK) {
+    if (appInitProc(interp) != TCL_OK) {
 	TkpDisplayWarning(Tcl_GetStringResult(interp),
 		"Application initialization failed");
     }

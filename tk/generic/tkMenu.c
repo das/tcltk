@@ -633,7 +633,7 @@ MenuCmd(
     	}
     }
 
-    Tcl_SetResult(interp, Tk_PathName(menuPtr->tkwin), TCL_STATIC);
+    Tcl_SetObjResult(interp, TkNewWindowObj(menuPtr->tkwin));
     return TCL_OK;
 }
 

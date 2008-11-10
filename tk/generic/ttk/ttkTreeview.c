@@ -985,7 +985,7 @@ static void TreeviewBindEventProc(void *clientData, XEvent *event)
  * +++ Initialization and cleanup.
  */
 
-static int TreeviewInitialize(Tcl_Interp *interp, void *recordPtr)
+static void TreeviewInitialize(Tcl_Interp *interp, void *recordPtr)
 {
     Treeview *tv = recordPtr;
     int unused;
@@ -1050,8 +1050,6 @@ static int TreeviewInitialize(Tcl_Interp *interp, void *recordPtr)
      */
     tv->tree.treeArea = tv->tree.headingArea = Ttk_MakeBox(0,0,0,0);
     tv->tree.slack = 0;
-
-    return TCL_OK;
 }
 
 static void TreeviewCleanup(void *recordPtr)

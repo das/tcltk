@@ -588,7 +588,8 @@ TkMacOSXStopTclEventLoopCarbonTimer(void)
  */
 
 MODULE_SCOPE void
-TkMacOSXTrackingLoop(int tracking)
+TkMacOSXTrackingLoop(
+    int tracking)
 {
     static int previousServiceMode = TCL_SERVICE_NONE;
 

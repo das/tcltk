@@ -98,7 +98,7 @@ Tk_ManageGeometry(
 	    && ((winPtr->geomMgrPtr != mgrPtr)
 		|| (winPtr->geomData != clientData))
 	    && (winPtr->geomMgrPtr->lostSlaveProc != NULL)) {
-	(*winPtr->geomMgrPtr->lostSlaveProc)(winPtr->geomData, tkwin);
+	winPtr->geomMgrPtr->lostSlaveProc(winPtr->geomData, tkwin);
     }
 
     winPtr->geomMgrPtr = mgrPtr;
@@ -154,7 +154,7 @@ Tk_GeometryRequest(
     winPtr->reqHeight = reqHeight;
     if ((winPtr->geomMgrPtr != NULL)
 	    && (winPtr->geomMgrPtr->requestProc != NULL)) {
-	(*winPtr->geomMgrPtr->requestProc)(winPtr->geomData, tkwin);
+	winPtr->geomMgrPtr->requestProc(winPtr->geomData, tkwin);
     }
 }
 

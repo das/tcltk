@@ -935,7 +935,7 @@ EntryEventProc(ClientData clientData, XEvent *eventPtr)
  * +++ Initialization and cleanup.
  */
 
-static int
+static void
 EntryInitialize(Tcl_Interp *interp, void *recordPtr)
 {
     Entry *entryPtr = recordPtr;
@@ -960,8 +960,6 @@ EntryInitialize(Tcl_Interp *interp, void *recordPtr)
     entryPtr->entry.insertPos		= 0;
     entryPtr->entry.selectFirst 	= -1;
     entryPtr->entry.selectLast		= -1;
-
-    return TCL_OK;
 }
 
 static void
@@ -1827,13 +1825,13 @@ static Tk_OptionSpec ComboboxOptionSpecs[] =
 /* ComboboxInitialize --
  * 	Initialization hook for combobox widgets.
  */
-static int
+static void
 ComboboxInitialize(Tcl_Interp *interp, void *recordPtr)
 {
     Combobox *cb = recordPtr;
     TtkTrackElementState(&cb->core);
     ValuesInitialize(interp, recordPtr);
-    return EntryInitialize(interp, recordPtr);
+    EntryInitialize(interp, recordPtr);
 }
 
 /* ComboboxConfigure --
@@ -1941,14 +1939,14 @@ static Tk_OptionSpec SpinboxOptionSpecs[] =
  * 	Initialization hook for spinbox widgets.
  */
 
-static int
+static void
 SpinboxInitialize(Tcl_Interp *interp, void *recordPtr)
 {
     Spinbox *sbPtr = recordPtr;
     sbPtr->spinbox.valueCount = 0;
     TtkTrackElementState(&sbPtr->core);
     ValuesInitialize(interp, recordPtr);
-    return EntryInitialize(interp, recordPtr);
+    EntryInitialize(interp, recordPtr);
 }
 
 /*

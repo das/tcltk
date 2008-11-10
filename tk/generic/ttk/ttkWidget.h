@@ -75,7 +75,7 @@ struct WidgetSpec_
     /*
      * Hooks:
      */
-    int  	(*initializeProc)(Tcl_Interp *, void *recordPtr);
+    void  	(*initializeProc)(Tcl_Interp *, void *recordPtr);
     void	(*cleanupProc)(void *recordPtr);
     int 	(*configureProc)(Tcl_Interp *, void *recordPtr, int flags);
     int 	(*postConfigureProc)(Tcl_Interp *, void *recordPtr, int flags);
@@ -88,7 +88,7 @@ struct WidgetSpec_
 /*
  * Common factors for widget implementations:
  */
-MODULE_SCOPE int  TtkNullInitialize(Tcl_Interp *, void *);
+MODULE_SCOPE void TtkNullInitialize(Tcl_Interp *, void *);
 MODULE_SCOPE int  TtkNullPostConfigure(Tcl_Interp *, void *, int);
 MODULE_SCOPE void TtkNullCleanup(void *recordPtr);
 MODULE_SCOPE Ttk_Layout TtkWidgetGetLayout(
