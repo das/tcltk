@@ -669,7 +669,7 @@ ReconfigureWindowsMenu(
 	    }
 	}
 	if (!systemMenu) {
-	    (*tkWinProcs->insertMenu)(winMenuHdl, 0xFFFFFFFF, flags,
+	    tkWinProcs->insertMenu(winMenuHdl, 0xFFFFFFFF, flags,
 		    itemID, lpNewItem);
 	}
 	Tcl_DStringFree(&translatedText);

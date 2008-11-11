@@ -27,13 +27,13 @@ typedef struct SmoothAssocData {
 				 * option. */
 } SmoothAssocData;
 
-Tk_SmoothMethod tkBezierSmoothMethod = {
+const Tk_SmoothMethod tkBezierSmoothMethod = {
     "true",
     TkMakeBezierCurve,
     (void (*) (Tcl_Interp *interp, Tk_Canvas canvas, double *coordPtr,
 	    int numPoints, int numSteps)) TkMakeBezierPostscript,
 };
-static Tk_SmoothMethod tkRawSmoothMethod = {
+static const Tk_SmoothMethod tkRawSmoothMethod = {
     "raw",
     TkMakeRawCurve,
     (void (*) (Tcl_Interp *interp, Tk_Canvas canvas, double *coordPtr,
@@ -633,7 +633,7 @@ InitSmoothMethods(
 void
 Tk_CreateSmoothMethod(
     Tcl_Interp *interp,
-    Tk_SmoothMethod *smooth)
+    const Tk_SmoothMethod *smooth)
 {
     SmoothAssocData *methods, *typePtr2, *prevPtr, *ptr;
     methods = Tcl_GetAssocData(interp, "smoothMethod", NULL);
@@ -728,9 +728,9 @@ TkSmoothParseProc(
     char *widgRec,		/* Pointer to record for item. */
     int offset)			/* Offset into item. */
 {
-    register Tk_SmoothMethod **smoothPtr =
-	    (Tk_SmoothMethod **) (widgRec + offset);
-    Tk_SmoothMethod *smooth = NULL;
+    register const Tk_SmoothMethod **smoothPtr =
+	    (const Tk_SmoothMethod **) (widgRec + offset);
+    const Tk_SmoothMethod *smooth = NULL;
     int b;
     size_t length;
     SmoothAssocData *methods;

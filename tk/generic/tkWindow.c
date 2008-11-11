@@ -1706,7 +1706,7 @@ Tk_MakeWindowExist(
 
     createProc = Tk_GetClassProc(winPtr->classProcsPtr, createProc);
     if (createProc != NULL && parent != None) {
-	winPtr->window = (*createProc)(tkwin, parent, winPtr->instanceData);
+	winPtr->window = createProc(tkwin, parent, winPtr->instanceData);
     } else {
 	winPtr->window = TkpMakeWindow(winPtr, parent);
     }

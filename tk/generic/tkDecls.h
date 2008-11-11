@@ -295,7 +295,7 @@ EXTERN void		Tk_CreateItemType (Tk_ItemType * typePtr);
 #define Tk_CreatePhotoImageFormat_TCL_DECLARED
 /* 40 */
 EXTERN void		Tk_CreatePhotoImageFormat (
-				Tk_PhotoImageFormat * formatPtr);
+				const Tk_PhotoImageFormat * formatPtr);
 #endif
 #ifndef Tk_CreateSelHandler_TCL_DECLARED
 #define Tk_CreateSelHandler_TCL_DECLARED
@@ -1353,7 +1353,7 @@ EXTERN int		Tk_CreateConsoleWindow (Tcl_Interp * interp);
 #define Tk_CreateSmoothMethod_TCL_DECLARED
 /* 217 */
 EXTERN void		Tk_CreateSmoothMethod (Tcl_Interp * interp,
-				Tk_SmoothMethod * method);
+				const Tk_SmoothMethod * method);
 #endif
 /* Slot 218 is reserved */
 /* Slot 219 is reserved */
@@ -1692,7 +1692,7 @@ EXTERN void		Tk_CreateOldImageType (Tk_ImageType * typePtr);
 #define Tk_CreateOldPhotoImageFormat_TCL_DECLARED
 /* 273 */
 EXTERN void		Tk_CreateOldPhotoImageFormat (
-				Tk_PhotoImageFormat * formatPtr);
+				const Tk_PhotoImageFormat * formatPtr);
 #endif
 
 typedef struct TkStubHooks {
@@ -1746,7 +1746,7 @@ typedef struct TkStubs {
     void (*tk_CreateGenericHandler) (Tk_GenericProc * proc, ClientData clientData); /* 37 */
     void (*tk_CreateImageType) (Tk_ImageType * typePtr); /* 38 */
     void (*tk_CreateItemType) (Tk_ItemType * typePtr); /* 39 */
-    void (*tk_CreatePhotoImageFormat) (Tk_PhotoImageFormat * formatPtr); /* 40 */
+    void (*tk_CreatePhotoImageFormat) (const Tk_PhotoImageFormat * formatPtr); /* 40 */
     void (*tk_CreateSelHandler) (Tk_Window tkwin, Atom selection, Atom target, Tk_SelectionProc * proc, ClientData clientData, Atom format); /* 41 */
     Tk_Window (*tk_CreateWindow) (Tcl_Interp * interp, Tk_Window parent, const char * name, const char * screenName); /* 42 */
     Tk_Window (*tk_CreateWindowFromPath) (Tcl_Interp * interp, Tk_Window tkwin, const char * pathName, const char * screenName); /* 43 */
@@ -1923,7 +1923,7 @@ typedef struct TkStubs {
     int (*tk_SetOptions) (Tcl_Interp * interp, char * recordPtr, Tk_OptionTable optionTable, int objc, Tcl_Obj *const objv[], Tk_Window tkwin, Tk_SavedOptions * savePtr, int * maskPtr); /* 214 */
     void (*tk_InitConsoleChannels) (Tcl_Interp * interp); /* 215 */
     int (*tk_CreateConsoleWindow) (Tcl_Interp * interp); /* 216 */
-    void (*tk_CreateSmoothMethod) (Tcl_Interp * interp, Tk_SmoothMethod * method); /* 217 */
+    void (*tk_CreateSmoothMethod) (Tcl_Interp * interp, const Tk_SmoothMethod * method); /* 217 */
     void *reserved218;
     void *reserved219;
     int (*tk_GetDash) (Tcl_Interp * interp, const char * value, Tk_Dash * dash); /* 220 */
@@ -1979,7 +1979,7 @@ typedef struct TkStubs {
     void (*tk_ResetUserInactiveTime) (Display * dpy); /* 270 */
     Tcl_Interp * (*tk_Interp) (Tk_Window tkwin); /* 271 */
     void (*tk_CreateOldImageType) (Tk_ImageType * typePtr); /* 272 */
-    void (*tk_CreateOldPhotoImageFormat) (Tk_PhotoImageFormat * formatPtr); /* 273 */
+    void (*tk_CreateOldPhotoImageFormat) (const Tk_PhotoImageFormat * formatPtr); /* 273 */
 } TkStubs;
 
 #if defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS)

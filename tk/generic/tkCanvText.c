@@ -84,13 +84,13 @@ typedef struct TextItem {
  * Information used for parsing configuration specs:
  */
 
-static Tk_CustomOption stateOption = {
+static const Tk_CustomOption stateOption = {
     TkStateParseProc, TkStatePrintProc, (ClientData) 2
 };
-static Tk_CustomOption tagsOption = {
+static const Tk_CustomOption tagsOption = {
     Tk_CanvasTagsParseProc, Tk_CanvasTagsPrintProc, (ClientData) NULL
 };
-static Tk_CustomOption offsetOption = {
+static const Tk_CustomOption offsetOption = {
     TkOffsetParseProc, TkOffsetPrintProc, (ClientData) (TK_OFFSET_RELATIVE)
 };
 

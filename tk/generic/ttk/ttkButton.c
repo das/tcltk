@@ -118,13 +118,12 @@ static void TextVariableChanged(void *clientData, const char *value)
     TtkResizeWidget(&basePtr->core);
 }
 
-static int
+static void
 BaseInitialize(Tcl_Interp *interp, void *recordPtr)
 {
     Base *basePtr = recordPtr;
     basePtr->base.textVariableTrace = 0;
     basePtr->base.imageSpec = NULL;
-    return TCL_OK;
 }
 
 static void
@@ -453,7 +452,7 @@ static void CheckbuttonVariableChanged(void *clientData, const char *value)
     }
 }
 
-static int CheckbuttonInitialize(Tcl_Interp *interp, void *recordPtr)
+static void CheckbuttonInitialize(Tcl_Interp *interp, void *recordPtr)
 {
     Checkbutton *checkPtr = recordPtr;
     Tcl_Obj *objPtr;
@@ -464,8 +463,7 @@ static int CheckbuttonInitialize(Tcl_Interp *interp, void *recordPtr)
     Tcl_IncrRefCount(objPtr);
     Tcl_DecrRefCount(checkPtr->checkbutton.variableObj);
     checkPtr->checkbutton.variableObj = objPtr;
-
-    return BaseInitialize(interp, recordPtr);
+    BaseInitialize(interp, recordPtr);
 }
 
 static void

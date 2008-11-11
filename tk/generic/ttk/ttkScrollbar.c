@@ -49,7 +49,7 @@ static Tk_OptionSpec ScrollbarOptionSpecs[] =
  * +++ Widget hooks.
  */
 
-static int 
+static void 
 ScrollbarInitialize(Tcl_Interp *interp, void *recordPtr)
 {
     Scrollbar *sb = recordPtr;
@@ -57,8 +57,6 @@ ScrollbarInitialize(Tcl_Interp *interp, void *recordPtr)
     sb->scrollbar.last = 1.0;
 
     TtkTrackElementState(&sb->core);
-
-    return TCL_OK;
 }
 
 static Ttk_Layout ScrollbarGetLayout(

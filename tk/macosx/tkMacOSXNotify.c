@@ -78,15 +78,20 @@ Tk_MacOSXSetupTkNotifier(void)
 
     if (!tsdPtr->initialized) {
 	tsdPtr->initialized = 1;
-	/* Install TkAqua event source in main event loop thread. */
+
+	/*
+	 * Install TkAqua event source in main event loop thread.
+	 */
+
 	if (GetCurrentEventLoop() == GetMainEventLoop()) {
 	    if (!pthread_main_np()) {
 		/*
-		 * Panic if the Carbon main event loop thread (i.e. the
-		 * thread  where HIToolbox was first loaded) is not the
-		 * main application thread, as Carbon does not support
-		 * this properly.
+		 * Panic if the Carbon main event loop thread (i.e. the thread
+		 * where HIToolbox was first loaded) is not the main
+		 * application thread, as Carbon does not support this
+		 * properly.
 		 */
+
 		Tcl_Panic("Tk_MacOSXSetupTkNotifier: %s",
 		    "first [load] of TkAqua has to occur in the main thread!");
 	    }
@@ -115,8 +120,8 @@ Tk_MacOSXSetupTkNotifier(void)
  */
 
 static void
-TkMacOSXNotifyExitHandler(clientData)
-    ClientData clientData;	/* Not used. */
+TkMacOSXNotifyExitHandler(
+    ClientData clientData)	/* Not used. */
 {
     ThreadSpecificData *tsdPtr = Tcl_GetThreadData(&dataKey,
 	    sizeof(ThreadSpecificData));
@@ -131,24 +136,24 @@ TkMacOSXNotifyExitHandler(clientData)
  *
  * TkMacOSXEventsSetupProc --
  *
- *	This procedure implements the setup part of the TkAqua Events
- *	event source. It is invoked by Tcl_DoOneEvent before entering
- *	the notifier to check for events.
+ *	This procedure implements the setup part of the TkAqua Events event
+ *	source. It is invoked by Tcl_DoOneEvent before entering the notifier
+ *	to check for events.
  *
  * Results:
  *	None.
  *
  * Side effects:
- *	If TkAqua events are queued, then the maximum block time will be
- *	set to 0 to ensure that the notifier returns control to Tcl.
+ *	If TkAqua events are queued, then the maximum block time will be set
+ *	to 0 to ensure that the notifier returns control to Tcl.
  *
  *----------------------------------------------------------------------
  */
 
 static void
-TkMacOSXEventsSetupProc(clientData, flags)
-    ClientData clientData;
-    int flags;
+TkMacOSXEventsSetupProc(
+    ClientData clientData,
+    int flags)
 {
     static const Tcl_Time zeroBlockTime = { 0, 0 };
     ThreadSpecificData *tsdPtr = Tcl_GetThreadData(&dataKey,
@@ -168,7 +173,7 @@ TkMacOSXEventsSetupProc(clientData, flags)
 	}
     }
 
-    if (tsdPtr->currentEvent || GetNumEventsInQueue((EventQueueRef)clientData)) {
+    if (tsdPtr->currentEvent || GetNumEventsInQueue((EventQueueRef) clientData)) {
 	Tcl_SetMaxBlockTime(&zeroBlockTime);
     }
 }
@@ -178,8 +183,7 @@ TkMacOSXEventsSetupProc(clientData, flags)
  *
  * TkMacOSXEventsCheckProc --
  *
- *	This procedure processes events sitting in the TkAqua event
- *	queue.
+ *	This procedure processes events sitting in the TkAqua event queue.
  *
  * Results:
  *	None.
@@ -191,9 +195,9 @@ TkMacOSXEventsSetupProc(clientData, flags)
  */
 
 static void
-TkMacOSXEventsCheckProc(clientData, flags)
-    ClientData clientData;
-    int flags;
+TkMacOSXEventsCheckProc(
+    ClientData clientData,
+    int flags)
 {
     ThreadSpecificData *tsdPtr = Tcl_GetThreadData(&dataKey,
 	    sizeof(ThreadSpecificData));
@@ -227,9 +231,12 @@ TkMacOSXEventsCheckProc(clientData, flags)
 	    }
 	} while (currentEvent);
     
-	numFound = GetNumEventsInQueue((EventQueueRef)clientData);
+	numFound = GetNumEventsInQueue((EventQueueRef) clientData);
 
-	/* Avoid starving other event sources: */
+    /*
+     * Avoid starving other event sources:
+     */
+
 	if (numFound > 4) {
 	    numFound = 4;
 	}
