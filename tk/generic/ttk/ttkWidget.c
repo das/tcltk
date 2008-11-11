@@ -61,8 +61,7 @@ static void SizeChanged(WidgetCore *corePtr)
 static Drawable BeginDrawing(Tk_Window tkwin)
 {
     return Tk_GetPixmap(Tk_Display(tkwin), Tk_WindowId(tkwin),
-	    Tk_Width(tkwin), Tk_Height(tkwin),
-	    DefaultDepthOfScreen(Tk_Screen(tkwin)));
+	    Tk_Width(tkwin), Tk_Height(tkwin), Tk_Depth(tkwin));
 }
 
 /* EndDrawing --
