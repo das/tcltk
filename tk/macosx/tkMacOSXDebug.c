@@ -251,7 +251,8 @@ static MyEventName classicEventNames [] = {
 #endif
 
 MODULE_SCOPE char *
-TkMacOSXCarbonEventToAscii(EventRef eventRef)
+TkMacOSXCarbonEventToAscii(
+    EventRef eventRef)
 {
     EventClass eventClass;
     EventKind eventKind;
@@ -291,33 +292,35 @@ TkMacOSXCarbonEventToAscii(EventRef eventRef)
 }
 
 MODULE_SCOPE char *
-TkMacOSXCarbonEventKindToAscii(EventRef eventRef, char *buf)
+TkMacOSXCarbonEventKindToAscii(
+    EventRef eventRef,
+    char *buf)
 {
-   EventClass eventClass;
-   EventKind eventKind;
-   MyEventNameList *list = eventNameList;
-   MyEventName *names = NULL;
-   int found = 0;
+    EventClass eventClass;
+    EventKind eventKind;
+    MyEventNameList *list = eventNameList;
+    MyEventName *names = NULL;
+    int found = 0;
 
-   eventClass = GetEventClass(eventRef);
-   eventKind = GetEventKind(eventRef);
-   while (list->names && (!names) ) {
-       if (eventClass == list -> c) {
-	   names = list -> names;
-       } else {
-	   list++;
-       }
-   }
-   if (names) {
-       found = 0;
-       while (names->name && !found) {
-	   if (eventKind == names->kind) {
-	       sprintf(buf,"%s",names->name);
-	       found = 1;
-	   } else {
-	       names++;
-	   }
-       }
+    eventClass = GetEventClass(eventRef);
+    eventKind = GetEventKind(eventRef);
+    while (list->names && (!names) ) {
+	if (eventClass == list -> c) {
+	    names = list -> names;
+	} else {
+	    list++;
+	}
+    }
+    if (names) {
+	found = 0;
+	while (names->name && !found) {
+	    if (eventKind == names->kind) {
+		sprintf(buf,"%s",names->name);
+		found = 1;
+	    } else {
+		names++;
+	    }
+	}
     }
     if (!found) {
 	sprintf(buf,"%d", eventKind);
@@ -330,7 +333,9 @@ TkMacOSXCarbonEventKindToAscii(EventRef eventRef, char *buf)
 #ifdef TK_MACOSXDEBUG_UNUSED
 
 MODULE_SCOPE char *
-TkMacOSXClassicEventToAscii(EventRecord *eventPtr, char *buf)
+TkMacOSXClassicEventToAscii(
+    EventRecord *eventPtr,
+    char *buf)
 {
     MyEventName *names = NULL;
     int found = 0;
@@ -355,17 +360,20 @@ TkMacOSXClassicEventToAscii(EventRecord *eventPtr, char *buf)
 		(int) eventPtr->message, eventPtr->modifiers, buf);
     }
     return buf;
-
 }
 
 MODULE_SCOPE void
-TkMacOSXPrintPoint(char *tag, Point *p)
+TkMacOSXPrintPoint(
+    char *tag,
+    Point *p)
 {
     TkMacOSXDbgMsg("%s %4d %4d", tag,p->h,p->v );
 }
 
 MODULE_SCOPE void
-TkMacOSXPrintRect(char *tag, Rect *r)
+TkMacOSXPrintRect(
+    char *tag,
+    Rect *r)
 {
     TkMacOSXDbgMsg("%s %4d %4d %4d %4d (%dx%d)",
 	    tag, r->left, r->top, r->right, r->bottom,
@@ -373,20 +381,26 @@ TkMacOSXPrintRect(char *tag, Rect *r)
 }
 
 MODULE_SCOPE void
-TkMacOSXPrintRegion(char *tag, RgnHandle rgn)
+TkMacOSXPrintRegion(
+    char *tag,
+    RgnHandle rgn)
 {
     Rect r;
+
     GetRegionBounds(rgn,&r);
     TkMacOSXPrintRect(tag,&r);
 }
 
 MODULE_SCOPE void
-TkMacOSXPrintWindowTitle(char *tag, WindowRef window)
+TkMacOSXPrintWindowTitle(
+    char *tag,
+    WindowRef window)
 {
     Str255 title;
-    GetWTitle(window,title);
+
+    GetWTitle(window, title);
     title[title[0] + 1] = 0;
-    TkMacOSXDbgMsg("%s %s", tag, title +1 );
+    TkMacOSXDbgMsg("%s %s", tag, title+1);
 }
 
 typedef struct {
@@ -409,15 +423,16 @@ static MsgName msgNames [] = {
 };
 
 MODULE_SCOPE char *
-TkMacOSXMenuMessageToAscii(int msg, char *s)
+TkMacOSXMenuMessageToAscii(
+    int msg,
+    char *s)
 {
     MsgName *msgNamePtr;
-    for (msgNamePtr = msgNames;msgNamePtr->name;) {
+
+    for (msgNamePtr=msgNames ; msgNamePtr->name ; msgNamePtr++) {
 	if (msgNamePtr->msg == msg) {
 	   strcpy(s,msgNamePtr->name);
 	   return s;
-	} else {
-	    msgNamePtr++;
 	}
     }
     sprintf(s, "unknown : %d", msg);
@@ -437,9 +452,12 @@ static MsgName trackingNames [] = {
 };
 
 MODULE_SCOPE char *
-TkMacOSXMouseTrackingResultToAscii(MouseTrackingResult r, char *buf)
+TkMacOSXMouseTrackingResultToAscii(
+    MouseTrackingResult r,
+    char *buf)
 {
     MsgName *namePtr;
+
     for (namePtr = trackingNames; namePtr->name; namePtr++) {
 	if (namePtr->msg == r) {
 	    strcpy(buf, namePtr->name);
@@ -511,10 +529,11 @@ TkMacOSXDebugFlashRegion(
 
 MODULE_SCOPE void *
 TkMacOSXGetNamedDebugSymbol(
-    const char* module,
-    const char* symbol)
+    const char *module,
+    const char *symbol)
 {
     void *addr = TkMacOSXGetNamedSymbol(module, symbol);
+
 #ifndef __LP64__
     if (!addr) {
 	const struct mach_header *mh = NULL;
@@ -617,5 +636,11 @@ TkMacOSXGetNamedDebugSymbol(
 #endif /* __LP64__ */
     return addr;
 }
-
 #endif /* TK_MAC_DEBUG */
+
+/*
+ * Local Variables:
+ * c-basic-offset: 4
+ * fill-column: 78
+ * End:
+ */

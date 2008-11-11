@@ -632,7 +632,8 @@ XGetWindowProperty(
 }
 
 void
-XRefreshKeyboardMapping( XMappingEvent* x)
+XRefreshKeyboardMapping(
+    XMappingEvent *x)
 {
     /* used by tkXEvent.c */
     Debugger();
@@ -1122,24 +1123,24 @@ AddPixel(
 
 void
 XChangeWindowAttributes(
-    Display* display,
+    Display *display,
     Window w,
     unsigned long value_mask,
-    XSetWindowAttributes* attributes)
+    XSetWindowAttributes *attributes)
 {
 }
 
 void
 XSetWindowBackground(
-	Display *display,
-	Window window,
-	unsigned long value)
+    Display *display,
+    Window window,
+    unsigned long value)
 {
 }
 
 void
 XSetWindowBackgroundPixmap(
-    Display* display,
+    Display *display,
     Window w,
     Pixmap background_pixmap)
 {
@@ -1147,7 +1148,7 @@ XSetWindowBackgroundPixmap(
 
 void
 XSetWindowBorder(
-    Display* display,
+    Display *display,
     Window w,
     unsigned long border_pixel)
 {
@@ -1155,7 +1156,7 @@ XSetWindowBorder(
 
 void
 XSetWindowBorderPixmap(
-    Display* display,
+    Display *display,
     Window w,
     Pixmap border_pixmap)
 {
@@ -1163,7 +1164,7 @@ XSetWindowBorderPixmap(
 
 void
 XSetWindowBorderWidth(
-    Display* display,
+    Display *display,
     Window w,
     unsigned int width)
 {
@@ -1171,7 +1172,7 @@ XSetWindowBorderWidth(
 
 void
 XSetWindowColormap(
-    Display* display,
+    Display *display,
     Window w,
     Colormap colormap)
 {
@@ -1180,24 +1181,25 @@ XSetWindowColormap(
 
 Status
 XStringListToTextProperty(
-    char** list,
+    char **list,
     int count,
-    XTextProperty* text_prop_return)
+    XTextProperty *text_prop_return)
 {
     Debugger();
     return (Status) 0;
 }
+
 void
 XSetWMClientMachine(
-    Display* display,
+    Display *display,
     Window w,
-    XTextProperty* text_prop)
+    XTextProperty *text_prop)
 {
     Debugger();
 }
+
 XIC
-XCreateIC(
-    void)
+XCreateIC(void)
 {
     Debugger();
     return (XIC) 0;

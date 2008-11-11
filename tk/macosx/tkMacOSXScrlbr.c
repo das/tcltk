@@ -328,10 +328,10 @@ TkpDisplayScrollbar(
  */
 
 void
-TkpConfigureScrollbar(scrollPtr)
-    register TkScrollbar *scrollPtr;	/* Information about widget; may or
-					 * may not already have values for
-					 * some fields. */
+TkpConfigureScrollbar(
+    register TkScrollbar *scrollPtr)
+				/* Information about widget; may or may not
+				 * already have values for some fields. */
 {
 }
 
@@ -554,7 +554,9 @@ TkpScrollbarPosition(
  */
 
 static pascal void
-ThumbActionProc(ControlRef theControl, ControlPartCode partCode)
+ThumbActionProc(
+    ControlRef theControl,
+    ControlPartCode partCode)
 {
     TkScrollbar *scrollPtr = (TkScrollbar *)(intptr_t)
 	    GetControlReference(theControl);

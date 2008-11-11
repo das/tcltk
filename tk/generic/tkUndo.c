@@ -656,7 +656,7 @@ EvaluateActionList(
 
     while (action != NULL) {
 	if (action->funcPtr != NULL) {
-	    result = (*action->funcPtr)(interp, action->clientData,
+	    result = action->funcPtr(interp, action->clientData,
 		    action->action);
 	} else if (action->command != NULL) {
 	    Tcl_Obj *cmdNameObj, *evalObj;
