@@ -2522,7 +2522,7 @@ Tk_FindPhoto(
     ClientData clientData =
 	    Tk_GetImageMasterData(interp, imageName, &typePtr);
 
-    if (typePtr != &tkPhotoImageType) {
+    if ((typePtr == NULL) || (typePtr->name != tkPhotoImageType.name)) {
 	return NULL;
     }
     return clientData;
