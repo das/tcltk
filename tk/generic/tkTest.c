@@ -61,8 +61,8 @@ typedef struct TImageInstance {
  */
 
 static int		ImageCreate(Tcl_Interp *interp,
-			    char *name, int argc, Tcl_Obj *const objv[],
-			    Tk_ImageType *typePtr, Tk_ImageMaster master,
+			    const char *name, int argc, Tcl_Obj *const objv[],
+			    const Tk_ImageType *typePtr, Tk_ImageMaster master,
 			    ClientData *clientDataPtr);
 static ClientData	ImageGet(Tk_Window tkwin, ClientData clientData);
 static void		ImageDisplay(ClientData clientData,
@@ -1491,11 +1491,11 @@ static int
 ImageCreate(
     Tcl_Interp *interp,		/* Interpreter for application containing
 				 * image. */
-    char *name,			/* Name to use for image. */
+    const char *name,			/* Name to use for image. */
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[],	/* Argument strings for options (doesn't
 				 * include image name or type). */
-    Tk_ImageType *typePtr,	/* Pointer to our type record (not used). */
+    const Tk_ImageType *typePtr,	/* Pointer to our type record (not used). */
     Tk_ImageMaster master,	/* Token for image, to be used by us in later
 				 * callbacks. */
     ClientData *clientDataPtr)	/* Store manager's token for image here; it
