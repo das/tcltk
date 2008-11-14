@@ -1187,8 +1187,8 @@ typedef int (Tk_ImageCreateProc) (Tcl_Interp *interp, char *name, int argc,
 	char **argv, Tk_ImageType *typePtr, Tk_ImageMaster master,
 	ClientData *masterDataPtr);
 #else
-typedef int (Tk_ImageCreateProc) (Tcl_Interp *interp, char *name, int objc,
-	Tcl_Obj *const objv[], Tk_ImageType *typePtr, Tk_ImageMaster master,
+typedef int (Tk_ImageCreateProc) (Tcl_Interp *interp, CONST86 char *name, int objc,
+	Tcl_Obj *const objv[], CONST86 Tk_ImageType *typePtr, Tk_ImageMaster master,
 	ClientData *masterDataPtr);
 #endif
 typedef ClientData (Tk_ImageGetProc) (Tk_Window tkwin, ClientData masterData);
