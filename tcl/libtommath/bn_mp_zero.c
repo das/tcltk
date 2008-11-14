@@ -12,15 +12,25 @@
  * The library is free for all purposes without any express
  * guarantee it works.
  *
- * Tom St Denis, tomstdenis@iahu.ca, http://math.libtomcrypt.org
+ * Tom St Denis, tomstdenis@gmail.com, http://math.libtomcrypt.com
  */
 
 /* set to zero */
-void
-mp_zero (mp_int * a)
+void mp_zero (mp_int * a)
 {
+  int       n;
+  mp_digit *tmp;
+
   a->sign = MP_ZPOS;
   a->used = 0;
-  memset (a->dp, 0, sizeof (mp_digit) * a->alloc);
+
+  tmp = a->dp;
+  for (n = 0; n < a->alloc; n++) {
+     *tmp++ = 0;
+  }
 }
 #endif
+
+/* $Source$ */
+/* $Revision$ */
+/* $Date$ */

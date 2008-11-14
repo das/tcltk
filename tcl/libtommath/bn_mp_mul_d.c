@@ -12,7 +12,7 @@
  * The library is free for all purposes without any express
  * guarantee it works.
  *
- * Tom St Denis, tomstdenis@iahu.ca, http://math.libtomcrypt.org
+ * Tom St Denis, tomstdenis@gmail.com, http://math.libtomcrypt.com
  */
 
 /* multiply by a digit */
@@ -57,8 +57,9 @@ mp_mul_d (mp_int * a, mp_digit b, mp_int * c)
     u       = (mp_digit) (r >> ((mp_word) DIGIT_BIT));
   }
 
-  /* store final carry [if any] */
+  /* store final carry [if any] and increment ix offset  */
   *tmpc++ = u;
+  ++ix;
 
   /* now zero digits above the top */
   while (ix++ < olduse) {
@@ -72,3 +73,7 @@ mp_mul_d (mp_int * a, mp_digit b, mp_int * c)
   return MP_OKAY;
 }
 #endif
+
+/* $Source$ */
+/* $Revision$ */
+/* $Date$ */
