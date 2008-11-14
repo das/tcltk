@@ -12,7 +12,7 @@
  * The library is free for all purposes without any express
  * guarantee it works.
  *
- * Tom St Denis, tomstdenis@iahu.ca, http://math.libtomcrypt.org
+ * Tom St Denis, tomstdenis@gmail.com, http://math.libtomcrypt.com
  */
 
 /* hac 14.61, pp608 */
@@ -33,8 +33,8 @@ int mp_invmod_slow (mp_int * a, mp_int * b, mp_int * c)
   }
 
   /* x = a, y = b */
-  if ((res = mp_copy (a, &x)) != MP_OKAY) {
-    goto LBL_ERR;
+  if ((res = mp_mod(a, b, &x)) != MP_OKAY) {
+      goto LBL_ERR;
   }
   if ((res = mp_copy (b, &y)) != MP_OKAY) {
     goto LBL_ERR;
@@ -169,3 +169,7 @@ LBL_ERR:mp_clear_multi (&x, &y, &u, &v, &A, &B, &C, &D, NULL);
   return res;
 }
 #endif
+
+/* $Source$ */
+/* $Revision$ */
+/* $Date$ */
