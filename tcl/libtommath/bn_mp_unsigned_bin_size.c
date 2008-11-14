@@ -12,14 +12,17 @@
  * The library is free for all purposes without any express
  * guarantee it works.
  *
- * Tom St Denis, tomstdenis@iahu.ca, http://math.libtomcrypt.org
+ * Tom St Denis, tomstdenis@gmail.com, http://math.libtomcrypt.com
  */
 
 /* get the size for an unsigned equivalent */
-int
-mp_unsigned_bin_size (mp_int * a)
+int mp_unsigned_bin_size (mp_int * a)
 {
   int     size = mp_count_bits (a);
   return (size / 8 + ((size & 7) != 0 ? 1 : 0));
 }
 #endif
+
+/* $Source$ */
+/* $Revision$ */
+/* $Date$ */
