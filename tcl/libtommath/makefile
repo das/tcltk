@@ -3,12 +3,18 @@
 #Tom St Denis
 
 #version of library 
-VERSION=0.33
+VERSION=0.39
 
 CFLAGS  +=  -I./ -Wall -W -Wshadow -Wsign-compare
 
+ifndef MAKE
+   MAKE=make
+endif
+
+ifndef IGNORE_SPEED
+
 #for speed 
-CFLAGS += -O3 -funroll-all-loops
+CFLAGS += -O3 -funroll-loops
 
 #for size 
 #CFLAGS += -Os
@@ -19,14 +25,27 @@ CFLAGS  += -fomit-frame-pointer
 #debug
 #CFLAGS += -g3
 
+endif
+
 #install as this user
-USER=root
-GROUP=root
+ifndef INSTALL_GROUP
+   GROUP=wheel
+else
+   GROUP=$(INSTALL_GROUP)
+endif
+
+ifndef INSTALL_USER
+   USER=root
+else
+   USER=$(INSTALL_USER)
+endif
 
 default: libtommath.a
 
 #default files to install
-LIBNAME=libtommath.a
+ifndef LIBNAME
+   LIBNAME=libtommath.a
+endif
 HEADERS=tommath.h tommath_class.h tommath_superclass.h
 
 #LIBPATH-The directory for libtommath to be installed to.
@@ -57,15 +76,17 @@ bn_mp_prime_is_prime.o bn_mp_prime_next_prime.o bn_mp_dr_reduce.o \
 bn_mp_dr_is_modulus.o bn_mp_dr_setup.o bn_mp_reduce_setup.o \
 bn_mp_toom_mul.o bn_mp_toom_sqr.o bn_mp_div_3.o bn_s_mp_exptmod.o \
 bn_mp_reduce_2k.o bn_mp_reduce_is_2k.o bn_mp_reduce_2k_setup.o \
+bn_mp_reduce_2k_l.o bn_mp_reduce_is_2k_l.o bn_mp_reduce_2k_setup_l.o \
 bn_mp_radix_smap.o bn_mp_read_radix.o bn_mp_toradix.o bn_mp_radix_size.o \
 bn_mp_fread.o bn_mp_fwrite.o bn_mp_cnt_lsb.o bn_error.o \
 bn_mp_init_multi.o bn_mp_clear_multi.o bn_mp_exteuclid.o bn_mp_toradix_n.o \
 bn_mp_prime_random_ex.o bn_mp_get_int.o bn_mp_sqrt.o bn_mp_is_square.o bn_mp_init_set.o \
-bn_mp_init_set_int.o bn_mp_invmod_slow.o bn_mp_prime_rabin_miller_trials.o
+bn_mp_init_set_int.o bn_mp_invmod_slow.o bn_mp_prime_rabin_miller_trials.o \
+bn_mp_to_signed_bin_n.o bn_mp_to_unsigned_bin_n.o
 
-libtommath.a:  $(OBJECTS)
-	$(AR) $(ARFLAGS) libtommath.a $(OBJECTS)
-	ranlib libtommath.a
+$(LIBNAME):  $(OBJECTS)
+	$(AR) $(ARFLAGS) $@ $(OBJECTS)
+	ranlib $@
 
 #make a profiled library (takes a while!!!)
 #
@@ -87,27 +108,27 @@ profiled_single:
 	./ltmtest
 	rm -f *.o ltmtest
 	$(CC) $(CFLAGS) -fbranch-probabilities -DTESTING -c mpi.c -o mpi.o
-	$(AR) $(ARFLAGS) libtommath.a mpi.o
-	ranlib libtommath.a	
+	$(AR) $(ARFLAGS) $(LIBNAME) mpi.o
+	ranlib $(LIBNAME)	
 
-install: libtommath.a
+install: $(LIBNAME)
 	install -d -g $(GROUP) -o $(USER) $(DESTDIR)$(LIBPATH)
 	install -d -g $(GROUP) -o $(USER) $(DESTDIR)$(INCPATH)
 	install -g $(GROUP) -o $(USER) $(LIBNAME) $(DESTDIR)$(LIBPATH)
 	install -g $(GROUP) -o $(USER) $(HEADERS) $(DESTDIR)$(INCPATH)
 
-test: libtommath.a demo/demo.o
-	$(CC) $(CFLAGS) demo/demo.o libtommath.a -o test
+test: $(LIBNAME) demo/demo.o
+	$(CC) $(CFLAGS) demo/demo.o $(LIBNAME) -o test
 	
 mtest: test	
 	cd mtest ; $(CC) $(CFLAGS) mtest.c -o mtest
         
-timing: libtommath.a
-	$(CC) $(CFLAGS) -DTIMER demo/timing.c libtommath.a -o ltmtest
+timing: $(LIBNAME)
+	$(CC) $(CFLAGS) -DTIMER demo/timing.c $(LIBNAME) -o ltmtest
 
 # makes the LTM book DVI file, requires tetex, perl and makeindex [part of tetex I think]
 docdvi: tommath.src
-	cd pics ; make 
+	cd pics ; MAKE=${MAKE} ${MAKE} 
 	echo "hello" > tommath.ind
 	perl booker.pl
 	latex tommath > /dev/null
@@ -124,7 +145,7 @@ poster: poster.tex
 docs:   docdvi
 	dvipdf tommath
 	rm -f tommath.log tommath.aux tommath.dvi tommath.idx tommath.toc tommath.lof tommath.ind tommath.ilg
-	cd pics ; make clean
+	cd pics ; MAKE=${MAKE} ${MAKE} clean
 	
 #LTM user manual
 mandvi: bn.tex
@@ -144,14 +165,21 @@ pretty:
 
 clean:
 	rm -f *.bat *.pdf *.o *.a *.obj *.lib *.exe *.dll etclib/*.o demo/demo.o test ltmtest mpitest mtest/mtest mtest/mtest.exe \
-        *.idx *.toc *.log *.aux *.dvi *.lof *.ind *.ilg *.ps *.log *.s mpi.c *.da *.dyn *.dpi tommath.tex `find -type f | grep [~] | xargs` *.lo *.la
+        *.idx *.toc *.log *.aux *.dvi *.lof *.ind *.ilg *.ps *.log *.s mpi.c *.da *.dyn *.dpi tommath.tex `find . -type f | grep [~] | xargs` *.lo *.la
 	rm -rf .libs
-	cd etc ; make clean
-	cd pics ; make clean
+	cd etc ; MAKE=${MAKE} ${MAKE} clean
+	cd pics ; MAKE=${MAKE} ${MAKE} clean
+
+#zipup the project (take that!)
+no_oops: clean
+	cd .. ; cvs commit 
+	echo Scanning for scratch/dirty files
+	find . -type f | grep -v CVS | xargs -n 1 bash mess.sh
 
 zipup: clean manual poster docs
 	perl gen.pl ; mv mpi.c pre_gen/ ; \
 	cd .. ; rm -rf ltm* libtommath-$(VERSION) ; mkdir libtommath-$(VERSION) ; \
 	cp -R ./libtommath/* ./libtommath-$(VERSION)/ ; \
 	tar -c libtommath-$(VERSION)/* | bzip2 -9vvc > ltm-$(VERSION).tar.bz2 ; \
-	zip -9 -r ltm-$(VERSION).zip libtommath-$(VERSION)/*
+	zip -9 -r ltm-$(VERSION).zip libtommath-$(VERSION)/* ; \
+	mv -f ltm* ~ ; rm -rf libtommath-$(VERSION)
