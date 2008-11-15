@@ -2660,6 +2660,12 @@ WmManageCmd(
     register WmInfo *wmPtr = winPtr->wmInfoPtr;
 
     if (!Tk_IsTopLevel(frameWin)) {
+	if (!Tk_IsManageable(frameWin)) {
+	    Tcl_AppendResult(interp, "window \"",
+		Tk_PathName(frameWin), "\" is not manageable: must be "
+		"a frame, labelframe or toplevel", NULL);
+	    return TCL_ERROR;
+	}
 	TkFocusSplit(winPtr);
 	Tk_UnmapWindow(frameWin);
 	winPtr->flags |= TK_TOP_HIERARCHY|TK_TOP_LEVEL|TK_HAS_WRAPPER|TK_WIN_MANAGED;
