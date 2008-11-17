@@ -183,10 +183,6 @@ WidgetInstanceObjCmd(
 
     Tcl_Preserve(clientData);
     status = TtkWidgetEnsembleCommand(commands,1, interp,objc,objv,clientData);
-    if (WidgetDestroyed(corePtr)) {
-	status = TCL_ERROR;
-	Tcl_SetResult(interp, "Widget has been destroyed", TCL_STATIC);
-    }
     Tcl_Release(clientData);
 
     return status;
@@ -664,6 +660,10 @@ Tcl_Interp *interp, int objc, Tcl_Obj *const objv[], void *recordPtr)
 	Tk_FreeSavedOptions(&savedOptions);
 
 	status = corePtr->widgetSpec->postConfigureProc(interp,recordPtr,mask);
+	if (WidgetDestroyed(corePtr)) {
+	    Tcl_SetResult(interp, "Widget has been destroyed", TCL_STATIC);
+	    status = TCL_ERROR;
+	}
 	if (status != TCL_OK) {
 	    return status;
 	}
