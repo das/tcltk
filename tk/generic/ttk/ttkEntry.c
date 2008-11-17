@@ -1709,12 +1709,11 @@ typedef struct {
     {TK_OPTION_STRING, "-values", "values", "Values", \
         "", Tk_Offset(Values, values.valuesObj), -1, 0, 0, VALUES_CHANGED}
 
-static int
+static void
 ValuesInitialize(Tcl_Interp *interp, void *recordPtr)
 {
     Values *valPtr = recordPtr;
     valPtr->values.currentIndex = -1;
-    return TCL_OK;
 }
 
 static int
