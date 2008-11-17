@@ -490,6 +490,13 @@ it to be ignored by the window manager;  among other things, this means
 that the window will not be reparented from the root window into a
 decorative frame and the user will not be able to manipulate the
 window using the normal window manager mechanisms.
+.RS
+.PP
+Note that the override-redirect flag is only guaranteed to be taken notice of
+when the window is first mapped or when mapped after the state is changed from
+withdrawn to normal. Some, but not all, platforms will take notice at
+additional times.
+.RE
 .TP
 \fBwm positionfrom \fIwindow\fR ?\fIwho\fR?
 .
