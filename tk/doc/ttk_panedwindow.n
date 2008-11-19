@@ -58,7 +58,6 @@ Additional commands:
 .TP
 \fIpathname \fBadd\fR \fIsubwindow\fR \fIoptions...\fR
 Adds a new pane to the window.
-\fIsubwindow\fR must be a direct child of the paned window \fIpathname\fR.
 See \fBPANE OPTIONS\fR for the list of available options.
 .TP
 \fIpathname \fBforget\fR \fIpane\fR
