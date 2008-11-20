@@ -3537,8 +3537,9 @@ WmCommandCmd(
     }
     if (objc == 3) {
 	if (wmPtr->cmdArgv != NULL) {
-	    Tcl_SetResult(interp,
-		    Tcl_Merge(wmPtr->cmdArgc, wmPtr->cmdArgv), TCL_DYNAMIC);
+		argv3 = Tcl_Merge(wmPtr->cmdArgc, wmPtr->cmdArgv);
+	    Tcl_SetResult(interp, argv3, TCL_VOLATILE);
+	    ckfree(argv3);
 	}
 	return TCL_OK;
     }
@@ -3713,7 +3714,8 @@ WmForgetCmd(
 	/* Already not managed by wm - ignore it */
     }
     return TCL_OK;
-}
+}
+
 /*
  *----------------------------------------------------------------------
  *
