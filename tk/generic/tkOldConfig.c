@@ -632,9 +632,9 @@ Tk_ConfigureInfo(
 	if (specPtr == NULL) {
 	    return TCL_ERROR;
 	}
-	Tcl_SetResult(interp,
-		FormatConfigInfo(interp, tkwin, specPtr, widgRec),
-		TCL_DYNAMIC);
+	list = FormatConfigInfo(interp, tkwin, specPtr, widgRec);
+	Tcl_SetResult(interp, list, TCL_VOLATILE);
+	ckfree(list);
 	return TCL_OK;
     }
 
