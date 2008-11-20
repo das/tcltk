@@ -1134,7 +1134,8 @@ Tk_SendCmd(
 	Tcl_SetObjErrorCode(interp, errorObjPtr);
 	ckfree(pending.errorCode);
     }
-    Tcl_SetResult(interp, pending.result, TCL_DYNAMIC);
+    Tcl_SetResult(interp, pending.result, TCL_VOLATILE);
+    ckfree(pending.result);
     return pending.code;
 }
 
