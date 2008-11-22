@@ -956,6 +956,19 @@ MODULE_SCOPE TkMainInfo		*tkMainWindowList;
 MODULE_SCOPE Tk_ImageType	tkPhotoImageType;
 MODULE_SCOPE Tcl_HashTable	tkPredefBitmapTable;
 
+/*
+ * The definition of pi, at least from the perspective of double-precision
+ * floats.
+ */
+
+#ifndef PI
+#define PI	3.14159265358979323846
+#endif
+
+/*
+ * Exported internals.
+ */
+
 #include "tkIntDecls.h"
 
 #ifdef BUILD_tk
@@ -1213,6 +1226,19 @@ MODULE_SCOPE void	TkpMakeTransparentWindowExist(Tk_Window tkwin,
 MODULE_SCOPE void	TkpCreateBusy(Tk_FakeWin *winPtr, Tk_Window tkRef,
 			    Window *parentPtr, Tk_Window tkParent,
 			    TkBusy busy);
+
+MODULE_SCOPE void	TkDrawAngledTextLayout(Display *display,
+			    Drawable drawable, GC gc, Tk_TextLayout layout,
+			    int x, int y, double angle, int firstChar,
+			    int lastChar);
+MODULE_SCOPE void	TkpDrawAngledChars(Display *display,Drawable drawable,
+			    GC gc, Tk_Font tkfont, const char *source,
+			    int numBytes, double x, double y, double angle);
+MODULE_SCOPE void	TkUnderlineAngledTextLayout(Display *display,
+			    Drawable drawable, GC gc, Tk_TextLayout layout,
+			    int x, int y, double angle, int underline);
+MODULE_SCOPE int	TkIntersectAngledTextLayout(Tk_TextLayout layout,
+			    int x,int y, int width, int height, double angle);
 
 /*
  * Unsupported commands.
