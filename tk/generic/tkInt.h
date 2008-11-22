@@ -962,7 +962,11 @@ MODULE_SCOPE Tcl_HashTable	tkPredefBitmapTable;
  */
 
 #ifndef PI
+#ifdef M_PI
+#define PI	M_PI
+#else
 #define PI	3.14159265358979323846
+#endif
 #endif
 
 /*
