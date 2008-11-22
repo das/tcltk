@@ -1299,9 +1299,9 @@ DrawCharsInContext(
      */
 
     if (drawingContext.context && angle != 0.0) {
-	CGContextTranslateCTM(drawingContext.context, x, y);
-	CGContextRotateCTM(drawingContext.context, angle * PI/180.0);
-	CGContextTranslateCTM(drawingContext.context, -x, -y);
+	CGContextConcatCTM(drawingContext.context, CGAffineTransformTranslate(
+		CGAffineTransformRotate(CGAffineTransformMakeTranslation(
+		x, y), angle * PI/180.0), -x, -y));
     }
 
     ChkErr(ATSUDrawText, fontPtr->atsuLayout, lineOffset+urstart, urlen, fx,
