@@ -16,6 +16,8 @@
 #include "tkInt.h"
 #include "tkFont.h"
 
+#define ROUND16(x) ((short)((x) + 0.5))
+
 /*
  * The following structure is used to keep track of all the fonts that exist
  * in the current application. It must be stored in the TkMainInfo for the
@@ -2454,10 +2456,10 @@ TkUnderlineAngledTextLayout(
 	 * minimizes roundoff errors.
 	 */
 
-	points[0].x = x + round(xx*cosA + dy*sinA);
-	points[0].y = y + round(dy*cosA - xx*sinA);
-	points[1].x = x + round(xx*cosA + dy*sinA + width*cosA);
-	points[1].y = y + round(dy*cosA - xx*sinA - width*sinA);
+	points[0].x = x + ROUND16(xx*cosA + dy*sinA);
+	points[0].y = y + ROUND16(dy*cosA - xx*sinA);
+	points[1].x = x + ROUND16(xx*cosA + dy*sinA + width*cosA);
+	points[1].y = y + ROUND16(dy*cosA - xx*sinA - width*sinA);
 	if (fontPtr->underlineHeight == 1) {
 	    /*
 	     * Thin underlines look better when rotated when drawn as a line
@@ -2466,13 +2468,13 @@ TkUnderlineAngledTextLayout(
 
 	    XDrawLines(display, drawable, gc, points, 2, CoordModeOrigin);
 	} else {
-	    points[2].x = x + round(xx*cosA + dy*sinA + width*cosA
+	    points[2].x = x + ROUND16(xx*cosA + dy*sinA + width*cosA
 		    - fontPtr->underlineHeight*sinA);
-	    points[2].y = y + round(dy*cosA - xx*sinA - width*sinA
+	    points[2].y = y + ROUND16(dy*cosA - xx*sinA - width*sinA
 		    + fontPtr->underlineHeight*cosA);
-	    points[3].x = x + round(xx*cosA + dy*sinA
+	    points[3].x = x + ROUND16(xx*cosA + dy*sinA
 		    - fontPtr->underlineHeight*sinA);
-	    points[3].y = y + round(dy*cosA - xx*sinA
+	    points[3].y = y + ROUND16(dy*cosA - xx*sinA
 		    + fontPtr->underlineHeight*cosA);
 	    points[4].x = points[0].x;
 	    points[4].y = points[0].y;
