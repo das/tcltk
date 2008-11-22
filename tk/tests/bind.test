@@ -3069,11 +3069,11 @@ test bind-22.10 {HandleEventGenerate} -setup {
     set x {}
 } -body {
     bind .t.f <Key> {set x "%s %K"}
-    event gen .t.f <Control-Key-1>
+    event gen .t.f <Control-Key-j>
     set x
 } -cleanup {
     destroy .t.f
-} -result {4 1}
+} -result {4 j}
 test bind-22.11 {HandleEventGenerate} -setup {
     frame .t.f -class Test -width 150 -height 100
     pack .t.f
