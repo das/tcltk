@@ -970,6 +970,14 @@ MODULE_SCOPE Tcl_HashTable	tkPredefBitmapTable;
 #endif
 
 /*
+ * The following magic value is stored in the "send_event" field of FocusIn
+ * and FocusOut events. This allows us to separate "real" events coming from
+ * the server from those that we generated.
+ */
+
+#define GENERATED_FOCUS_EVENT_MAGIC	((Bool) 0x547321ac)
+
+/*
  * Exported internals.
  */
 
