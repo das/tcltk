@@ -1191,8 +1191,8 @@ TextToPoint(
     px = pointPtr[0] - textPtr->drawOrigin[0];
     py = pointPtr[1] - textPtr->drawOrigin[1];
     value = (double) Tk_DistanceToTextLayout(textPtr->textLayout,
-	    (int)(px*textPtr->cosine - py*textPtr->sine),
-	    (int)(py*textPtr->cosine + px*textPtr->sine));
+	    (int) (px*textPtr->cosine - py*textPtr->sine),
+	    (int) (py*textPtr->cosine + px*textPtr->sine));
 
     if ((state == TK_STATE_HIDDEN) || (textPtr->color == NULL) ||
 	    (textPtr->text == NULL) || (*textPtr->text == 0)) {
@@ -1385,10 +1385,10 @@ GetTextIndex(
 	    goto badIndex;
 	}
 	y = (int) ((tmp < 0) ? tmp - 0.5 : tmp + 0.5);
-	x += canvasPtr->scrollX1 - (int)textPtr->drawOrigin[0];
-	y += canvasPtr->scrollY1 - (int)textPtr->drawOrigin[1];
+	x += canvasPtr->scrollX1 - (int) textPtr->drawOrigin[0];
+	y += canvasPtr->scrollY1 - (int) textPtr->drawOrigin[1];
 	*indexPtr = Tk_PointToChar(textPtr->textLayout, 
-	    (int)(x*c-y*s), (int)(y*c+x*s));
+		(int) (x*c - y*s), (int) (y*c + x*s));
     } else if (Tcl_GetIntFromObj(NULL, obj, indexPtr) == TCL_OK) {
 	if (*indexPtr < 0) {
 	    *indexPtr = 0;
