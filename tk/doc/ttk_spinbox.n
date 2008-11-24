@@ -26,7 +26,7 @@ to a Tcl variable.
 \-class	\-cursor	\-style
 \-takefocus	\-xscrollcommand
 .SE
-.SO ttk::entry
+.SO ttk_entry
 \-validate	\-validatecommand
 .SE
 .SH "WIDGET-SPECIFIC OPTIONS"
