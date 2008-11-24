@@ -1819,6 +1819,15 @@ the top center point of the rectangular region occupied by the
 text will be at the positioning point.
 This option defaults to \fBcenter\fR.
 .TP
+\fB\-angle \fIrotationDegrees\fR
+.VS 8.6
+\fIRotationDegrees\fR tells how many degrees to rotate the text anticlockwise
+about the positioning point for the text; it may have any floating-point value
+from 0.0 to 360.0. For example, if \fIrotationDegrees\fR is \fB90\fR, then the
+text will be drawn vertically from bottom to top.
+This option defaults to \fB0.0\fR.
+.VE 8.6
+.TP
 \fB\-font \fIfontName\fR
 Specifies the font to use for the text item.
 \fIFontName\fR may be any string acceptable to \fBTk_GetFont\fR.
