@@ -19,7 +19,6 @@
  * These macros convert between X's bizarre angle units to radians.
  */
 
-#define PI 3.14159265358979
 #define XAngleToRadians(a) ((double)(a) / 64 * PI / 180);
 
 /*

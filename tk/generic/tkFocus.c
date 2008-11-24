@@ -70,14 +70,6 @@ typedef struct TkDisplayFocusInfo {
 } DisplayFocusInfo;
 
 /*
- * The following magic value is stored in the "send_event" field of FocusIn
- * and FocusOut events that are generated in this file. This allows us to
- * separate "real" events coming from the server from those that we generated.
- */
-
-#define GENERATED_EVENT_MAGIC	((Bool) 0x547321ac)
-
-/*
  * Debugging support...
  */
 
@@ -290,7 +282,7 @@ TkFocusFilterEvent(
      * pass the event through to Tk bindings.
      */
 
-    if (eventPtr->xfocus.send_event == GENERATED_EVENT_MAGIC) {
+    if (eventPtr->xfocus.send_event == GENERATED_FOCUS_EVENT_MAGIC) {
 	eventPtr->xfocus.send_event = 0;
 	return 1;
     }
@@ -908,7 +900,7 @@ GenerateFocusEvents(
     }
 
     event.xfocus.serial = LastKnownRequestProcessed(winPtr->display);
-    event.xfocus.send_event = GENERATED_EVENT_MAGIC;
+    event.xfocus.send_event = GENERATED_FOCUS_EVENT_MAGIC;
     event.xfocus.display = winPtr->display;
     event.xfocus.mode = NotifyNormal;
     TkInOutEvents(&event, sourcePtr, destPtr, FocusOut, FocusIn,
