@@ -405,6 +405,7 @@ proc ttk::combobox::Post {cb} {
 
     # Post the listbox:
     #
+    wm attribute $popdown -topmost 1
     wm deiconify $popdown
     raise $popdown
 }
