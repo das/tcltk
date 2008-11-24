@@ -132,7 +132,7 @@ typedef struct NewGrabWinEvent {
  * we generated.
  */
 
-#define GENERATED_EVENT_MAGIC ((Bool) 0x147321ac)
+#define GENERATED_GRAB_EVENT_MAGIC ((Bool) 0x147321ac)
 
 /*
  * Mask that selects any of the state bits corresponding to buttons, plus
@@ -722,7 +722,7 @@ TkPointerEvent(
 	 * serverWinPtr.
 	 */
 
-	if (eventPtr->xcrossing.send_event != GENERATED_EVENT_MAGIC) {
+	if (eventPtr->xcrossing.send_event != GENERATED_GRAB_EVENT_MAGIC) {
 	    if ((eventPtr->type == LeaveNotify) &&
 		    (winPtr->flags & TK_TOP_HIERARCHY)) {
 		dispPtr->serverWinPtr = NULL;
@@ -1151,7 +1151,7 @@ MovePointer2(
     }
 
     event.xcrossing.serial = LastKnownRequestProcessed(winPtr->display);
-    event.xcrossing.send_event = GENERATED_EVENT_MAGIC;
+    event.xcrossing.send_event = GENERATED_GRAB_EVENT_MAGIC;
     event.xcrossing.display = winPtr->display;
     event.xcrossing.root = RootWindow(winPtr->display, winPtr->screenNum);
     event.xcrossing.time = TkCurrentTime(winPtr->dispPtr);

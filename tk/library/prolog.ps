@@ -189,11 +189,12 @@ systemdict /ISOLatin1Encoding known not {
     } if
 } bind def
 
-% x y strings spacing xoffset yoffset justify stipple DrawText --
+% angle x y strings spacing xoffset yoffset justify stipple DrawText --
 % This procedure does all of the real work of drawing text.  The
 % color and font must already have been set by the caller, and the
 % following arguments must be on the stack:
 %
+% angle -	Angle through which to rotate text, in degrees.
 % x, y -	Coordinates at which to draw text.
 % strings -	An array of strings, one for each line of the text item,
 %		in order from top to bottom.
@@ -235,11 +236,12 @@ systemdict /ISOLatin1Encoding known not {
     exch pop exch sub /height exch def pop
     newpath
 
-    % Translate coordinates first so that the origin is at the upper-left
-    % corner of the text's bounding box. Remember that x and y for
-    % positioning are still on the stack.
+    % Translate and rotatecoordinates first so that the origin is at the
+    % upper-left corner of the text's bounding box. Remember that angle, x and
+    % y for positioning are still on the stack.
 
     translate
+    rotate
     lineLength xoffset mul
     strings length 1 sub spacing mul height add yoffset mul translate
 

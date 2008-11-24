@@ -3388,6 +3388,10 @@ HandleEventGenerate(
 	event.xkey.y_root = -1;
     }
 
+    if (event.xany.type == FocusIn || event.xany.type == FocusOut) {
+	event.xany.send_event = GENERATED_FOCUS_EVENT_MAGIC;
+    }
+
     /*
      * Process the remaining arguments to fill in additional fields of the
      * event.
