@@ -39,7 +39,6 @@ static int		TestwinlocaleObjCmd(ClientData clientData,
 MODULE_SCOPE int	TkplatformtestInit(Tcl_Interp *interp);
 static Tk_GetSelProc		SetSelectionResult;
 
-
 /*
  *----------------------------------------------------------------------
  *
@@ -480,8 +479,6 @@ TestwinlocaleObjCmd(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument values. */
 {
-    Tk_Window tkwin = (Tk_Window) clientData;
-
     if (objc != 1) {
 	Tcl_WrongNumArgs(interp, 1, objv, NULL);
 	return TCL_ERROR;
