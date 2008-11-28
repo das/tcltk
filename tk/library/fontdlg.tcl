@@ -243,6 +243,7 @@ proc ::tk::choosefont::Apply {} {
             ::bgerror $err
         }
     }
+    event generate $S(-parent) <<TkChoosefontFontChanged>>
 }
 
 # ::tk::choosefont::Init --

@@ -1890,6 +1890,7 @@ TkMacOSXProcessFontEvent(
 			ckfree((char *)tmpv);
 		    }
 		}
+		TkSendVirtualEvent(cfdPtr->parent, "TkChoosefontFontChanged");
 	    }
 	    break;
 	}

@@ -2447,6 +2447,9 @@ HookProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 	if (phd && phd->cmdObj) {
 	    ApplyLogfont(phd->interp, phd->cmdObj, hdc, &lf);
 	}
+	if (phd && phd->parent) {
+	    TkSendVirtualEvent(phd->parent, "TkChoosefontFontChanged");
+	}
 	return 1;
     }
     return 0; /* pass on for default processing */
@@ -2733,8 +2736,13 @@ ChoosefontShowCmd(
 
     if (TCL_OK == r) {
 	oldMode = Tcl_SetServiceMode(TCL_SERVICE_ALL);
-	if (ChooseFont(&cf) && hdPtr->cmdObj) {
-	    ApplyLogfont(hdPtr->interp, hdPtr->cmdObj, hdc, &lf);
+	if (ChooseFont(&cf)) {
+	    if (hdPtr->cmdObj) {
+		ApplyLogfont(hdPtr->interp, hdPtr->cmdObj, hdc, &lf);
+	    }
+	    if (hdPtr->parent) {
+		TkSendVirtualEvent(hdPtr->parent, "TkChoosefontFontChanged");
+	    }
 	}
 	Tcl_SetServiceMode(oldMode);
 	EnableWindow(cf.hwndOwner, 1);
