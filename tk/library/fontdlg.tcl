@@ -10,10 +10,10 @@
 #
 # RCS: @(#) $Id$
 
-namespace eval ::tk::choosefont {
+namespace eval ::tk::fontchooser {
     variable S
 
-    set S(W) .__tk__chooseFont
+    set S(W) .__tk__fontchooser
     set S(fonts) [lsort -dictionary [font families]]
     set S(styles) [list \
                        [::msgcat::mc "Regular"] \
@@ -29,6 +29,8 @@ namespace eval ::tk::choosefont {
     set S(sampletext) [::msgcat::mc "AaBbYyZz01"]
     set S(-parent) .
     set S(-title) [::msgcat::mc "Font"]
+    set S(-font) {}
+    set S(-command) {}
 
     # Canonical versions of font families, styles, etc. for easier searching
     set S(fonts,lcase) {}
@@ -37,23 +39,23 @@ namespace eval ::tk::choosefont {
     foreach style $S(styles) { lappend S(styles,lcase) [string tolower $style]}
     set S(sizes,lcase) $S(sizes)
 
-    ::ttk::style layout ChoosefontFrame {
+    ::ttk::style layout FontchooserFrame {
         Entry.field -sticky news -border true -children {
-            ChoosefontFrame.padding -sticky news
+            FontchooserFrame.padding -sticky news
         }
     }
     bind [winfo class .] <<ThemeChanged>> \
-        [list +ttk::style layout ChoosefontFrame \
-             [ttk::style layout ChoosefontFrame]]
+        [list +ttk::style layout FontchooserFrame \
+             [ttk::style layout FontchooserFrame]]
 
     namespace ensemble create -map {
-        show ::tk::choosefont::Show
-        hide ::tk::choosefont::Hide
-        configure ::tk::choosefont::Configure
+        show ::tk::fontchooser::Show
+        hide ::tk::fontchooser::Hide
+        configure ::tk::fontchooser::Configure
     }
 }
 
-proc ::tk::choosefont::Show {} {
+proc ::tk::fontchooser::Show {} {
     variable S
     if {![winfo exists $S(W)]} {
         Create
@@ -63,12 +65,12 @@ proc ::tk::choosefont::Show {} {
     wm deiconify $S(W)
 }
 
-proc ::tk::choosefont::Hide {} {
+proc ::tk::fontchooser::Hide {} {
     variable S
     wm withdraw $S(W)
 }
 
-proc ::tk::choosefont::Configure {args} {
+proc ::tk::fontchooser::Configure {args} {
     variable S
     
     set specs {
@@ -83,14 +85,17 @@ proc ::tk::choosefont::Configure {args} {
     }
 
     tclParseConfigSpec [namespace which -variable S] $specs "" $args
+    if {$S(-parent) ne "."} {
+	winfo toplevel $S(-parent)
+    }
     if {[string trim $S(-title)] eq ""} {
         set S(-title) [::msgcat::mc "Font"]
     }
 }
 
-proc ::tk::choosefont::Create {} {
+proc ::tk::fontchooser::Create {} {
     variable S
-    set windowName __tk__choosefont
+    set windowName __tk__fontchooser
     if {$S(-parent) eq "."} {
         set S(W) .$windowName
     } else {
@@ -173,9 +178,7 @@ proc ::tk::choosefont::Create {} {
         
         grid $S(W).ok     -in $bbox -sticky new -pady {0 2}
         grid $S(W).cancel -in $bbox -sticky new -pady 2
-        if {$S(-command) ne ""} {
-            grid $S(W).apply -in $bbox -sticky new -pady 2
-        }
+        grid $S(W).apply -in $bbox -sticky new -pady 2
         grid columnconfigure $bbox 0 -weight 1
         
         grid $WE.strike -sticky w -padx 10
@@ -209,14 +212,14 @@ proc ::tk::choosefont::Create {} {
     return
 }
 
-# ::tk::choosefont::Done --
+# ::tk::fontchooser::Done --
 #
 #       Handles teardown of the dialog, calling -command if needed
 #
 # Arguments:
 #       ok              true if user pressed OK
 #
-proc ::tk::::choosefont::Done {ok} {
+proc ::tk::::fontchooser::Done {ok} {
     variable S
     
     if {! $ok} {
@@ -231,29 +234,29 @@ proc ::tk::::choosefont::Done {ok} {
     }
 }
 
-# ::tk::choosefont::Apply --
+# ::tk::fontchooser::Apply --
 #
 #	Call the -command procedure appending the current font
 #	Errors are reported via the background error mechanism
 #
-proc ::tk::choosefont::Apply {} {
+proc ::tk::fontchooser::Apply {} {
     variable S
     if {$S(-command) ne ""} {
         if {[catch {uplevel #0 $S(-command) [list $S(result)]} err]} {
             ::bgerror $err
         }
     }
-    event generate $S(-parent) <<TkChoosefontFontChanged>>
+    event generate $S(-parent) <<TkFontchooserFontChanged>>
 }
 
-# ::tk::choosefont::Init --
+# ::tk::fontchooser::Init --
 #
 #       Initializes dialog to a default font
 #
 # Arguments:
 #       defaultFont     font to use as the default
 #
-proc ::tk::choosefont::Init {{defaultFont ""}} {
+proc ::tk::fontchooser::Init {{defaultFont ""}} {
     variable S
 
     if {$S(first) || $defaultFont ne ""} {
@@ -282,14 +285,14 @@ proc ::tk::choosefont::Init {{defaultFont ""}} {
     Update
 }
 
-# ::tk::choosefont::Click --
+# ::tk::fontchooser::Click --
 #
 #       Handles all button clicks, updating the appropriate widgets
 #
 # Arguments:
 #       who             which widget got pressed
 #
-proc ::tk::choosefont::Click {who} {
+proc ::tk::fontchooser::Click {who} {
     variable S
 
     if {$who eq "font"} {
@@ -302,14 +305,14 @@ proc ::tk::choosefont::Click {who} {
     Update
 }
 
-# ::tk::choosefont::Tracer --
+# ::tk::fontchooser::Tracer --
 #
 #       Handles traces on key variables, updating the appropriate widgets
 #
 # Arguments:
 #       standard trace arguments (not used)
 #
-proc ::tk::choosefont::Tracer {var1 var2 op} {
+proc ::tk::fontchooser::Tracer {var1 var2 op} {
     variable S
 
     set bad 0
@@ -339,11 +342,11 @@ proc ::tk::choosefont::Tracer {var1 var2 op} {
     $S(W).ok config -state $nstate
 }
 
-# ::tk::choosefont::Update --
+# ::tk::fontchooser::Update --
 #
 #       Shows a sample of the currently selected font
 #
-proc ::tk::choosefont::Update {} {
+proc ::tk::fontchooser::Update {} {
     variable S
 
     set S(result) [list $S(font) $S(size)]
@@ -356,24 +359,24 @@ proc ::tk::choosefont::Update {} {
     $S(sample) config -font $S(result)
 }
 
-# ::tk::choosefont::Visibility --
+# ::tk::fontchooser::Visibility --
 #
 #	Notify the parent when the dialog visibility changes
 #
-proc ::tk::choosefont::Visibility {w visible} {
+proc ::tk::fontchooser::Visibility {w visible} {
     variable S
     if {$w eq $S(W)} {
-        event generate $S(-parent) <<TkChoosefontVisibility>>
+        event generate $S(-parent) <<TkFontchooserVisibility>>
     }
 }
 
-# ::tk::choosefont::ttk_listbox --
+# ::tk::fontchooser::ttk_listbox --
 #
 #	Create a properly themed scrolled listbox.
 #	This is exactly right on XP but may need adjusting on other platforms.
 #
-proc ::tk::choosefont::ttk_slistbox {w args} {
-    set f [ttk::frame $w -style ChoosefontFrame -padding 2]
+proc ::tk::fontchooser::ttk_slistbox {w args} {
+    set f [ttk::frame $w -style FontchooserFrame -padding 2]
     if {[catch {
         listbox $f.list -relief flat -highlightthickness 0 -borderwidth 0 {*}$args
         ttk::scrollbar $f.vs -command [list $f.list yview]

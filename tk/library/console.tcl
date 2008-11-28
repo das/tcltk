@@ -8,7 +8,7 @@
 #
 # Copyright (c) 1995-1997 Sun Microsystems, Inc.
 # Copyright (c) 1998-2000 Ajuba Solutions.
-# Copyright (c) 2007 Daniel A. Steffen <das@users.sourceforge.net>
+# Copyright (c) 2007-2008 Daniel A. Steffen <das@users.sourceforge.net>
 #
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -22,7 +22,7 @@ namespace eval ::tk::console {
     variable magicKeys   1   ; # enable brace matching and proc/var recognition
     variable maxLines    600 ; # maximum # of lines buffered in console
     variable showMatches 1   ; # show multiple expand matches
-
+    variable useFontchooser [llength [info command ::tk::fontchooser]]
     variable inPlugin [info exists embed_args]
     variable defaultPrompt   ; # default prompt if tcl_prompt1 isn't used
 
@@ -97,23 +97,23 @@ proc ::tk::ConsoleInit {} {
     }
 
     AmpMenuArgs .menubar.edit add separator
-    if {[llength [info command ::tk::choosefont]]} {
+    if {$::tk::console::useFontchooser} {
         if {[tk windowingsystem] eq "aqua"} {
             .menubar.edit add command -label tk_choose_font_marker
             set index [.menubar.edit index tk_choose_font_marker]
             .menubar.edit entryconfigure $index \
                 -label [mc "Show Fonts"]\
                 -accelerator "$mod-T"\
-                -command [list ::tk::console::ChooseFont]
-            bind Console <<TkChoosefontVisibility>> \
-                [list ::tk::console::ChooseFontVisibility $index]
-	    ::tk::console::ChooseFontVisibility $index
+                -command [list ::tk::console::FontchooserToggle]
+            bind Console <<TkFontchooserVisibility>> \
+                [list ::tk::console::FontchooserVisibility $index]
+	    ::tk::console::FontchooserVisibility $index
         } else {
             AmpMenuArgs .menubar.edit add command -label [mc "&Font..."] \
-                -command [list ::tk::console::ChooseFont]
+                -command [list ::tk::console::FontchooserToggle]
         }
-	bind Console <FocusIn>  [list ::tk::console::ChooseFontFocus %W 1]
-	bind Console <FocusOut> [list ::tk::console::ChooseFontFocus %W 0]
+	bind Console <FocusIn>  [list ::tk::console::FontchooserFocus %W 1]
+	bind Console <FocusOut> [list ::tk::console::FontchooserFocus %W 0]
     }
     AmpMenuArgs .menubar.edit add command -label [mc "&Increase Font Size"] \
         -accel "$mod++" -command {event generate .console <<Console_FontSizeIncr>>}
@@ -413,8 +413,8 @@ proc ::tk::ConsoleBind {w} {
 	    event add $ev $key
 	    bind Console $key {}
 	}
-	if {[llength [info command ::tk::choosefont]]} {
-	    bind Console <Command-Key-t> [list ::tk::console::ChooseFont]
+	if {$::tk::console::useFontchooser} {
+	    bind Console <Command-Key-t> [list ::tk::console::FontchooserToggle]
 	}
     }
     bind Console <<Console_Expand>> {
@@ -577,8 +577,8 @@ proc ::tk::ConsoleBind {w} {
         if {$size < 0} {set sign -1} else {set sign 1}
         set size [expr {(abs($size) + 1) * $sign}]
         font configure TkConsoleFont -size $size
-	if {[llength [info command ::tk::choosefont]]} {
-	    ::tk::choosefont configure -font TkConsoleFont
+	if {$::tk::console::useFontchooser} {
+	    tk fontchooser configure -font TkConsoleFont
 	}
     }
     bind Console <<Console_FontSizeDecr>> {
@@ -587,8 +587,8 @@ proc ::tk::ConsoleBind {w} {
         if {$size < 0} {set sign -1} else {set sign 1}
         set size [expr {(abs($size) - 1) * $sign}]
         font configure TkConsoleFont -size $size
-	if {[llength [info command ::tk::choosefont]]} {
-	    ::tk::choosefont configure -font TkConsoleFont
+	if {$::tk::console::useFontchooser} {
+	    tk fontchooser configure -font TkConsoleFont
 	}
     }
 
@@ -695,32 +695,32 @@ Tcl $::tcl_patchLevel
 Tk $::tk_patchLevel"
 }
 
-# ::tk::console::ChooseFont --
+# ::tk::console::Fontchooser* --
 # 	Let the user select the console font (TIP 324).
 
-proc ::tk::console::ChooseFont {} {
-    if {[::tk::choosefont configure -visible]} {
-	::tk::choosefont hide
+proc ::tk::console::FontchooserToggle {} {
+    if {[tk fontchooser configure -visible]} {
+	tk fontchooser hide
     } else {
-	::tk::choosefont show
+	tk fontchooser show
     }
 }
-proc ::tk::console::ChooseFontVisibility {index} {
-    if {[::tk::choosefont configure -visible]} {
+proc ::tk::console::FontchooserVisibility {index} {
+    if {[tk fontchooser configure -visible]} {
 	.menubar.edit entryconfigure $index -label [msgcat::mc "Hide Fonts"]
     } else {
 	.menubar.edit entryconfigure $index -label [msgcat::mc "Show Fonts"]
     }
 }
-proc ::tk::console::ChooseFontFocus {w isFocusIn} {
+proc ::tk::console::FontchooserFocus {w isFocusIn} {
     if {$isFocusIn} {
-	::tk::choosefont configure -parent $w -font TkConsoleFont \
-		-command [namespace code [list ApplyFont]]
+	tk fontchooser configure -parent $w -font TkConsoleFont \
+		-command [namespace code [list FontchooserApply]]
     } else {
-	::tk::choosefont configure -parent $w -font {} -command {}
+	tk fontchooser configure -parent $w -font {} -command {}
     }
 }
-proc ::tk::console::ApplyFont {font args} {
+proc ::tk::console::FontchooserApply {font args} {
     catch {font configure TkConsoleFont {*}[font actual $font]}
 }
 

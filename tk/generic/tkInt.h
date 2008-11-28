@@ -1031,8 +1031,6 @@ MODULE_SCOPE int	Tk_CanvasObjCmd(ClientData clientData,
 MODULE_SCOPE int	Tk_CheckbuttonObjCmd(ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *const objv[]);
-MODULE_SCOPE int	TkChoosefontInit(Tcl_Interp *interp, 
-			    ClientData clientData);
 MODULE_SCOPE int	Tk_ClipboardObjCmd(ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *const objv[]);
@@ -1040,9 +1038,6 @@ MODULE_SCOPE int	Tk_ChooseColorObjCmd(ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *const objv[]);
 MODULE_SCOPE int	Tk_ChooseDirectoryObjCmd(ClientData clientData,
-			    Tcl_Interp *interp, int objc,
-			    Tcl_Obj *const objv[]);
-MODULE_SCOPE int	Tk_ChooseFontObjCmd(ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *const objv[]);
 MODULE_SCOPE int	Tk_DestroyObjCmd(ClientData clientData,
@@ -1273,6 +1268,8 @@ MODULE_SCOPE Tcl_Command TkMakeEnsemble(Tcl_Interp *interp,
 			    const char *namespace, const char *name,
 			    ClientData clientData, const TkEnsemble *map);
 MODULE_SCOPE int	TkInitTkCmd(Tcl_Interp *interp,
+			    ClientData clientData);
+MODULE_SCOPE int	TkInitFontchooser(Tcl_Interp *interp, 
 			    ClientData clientData);
 
 /*

@@ -1,4 +1,4 @@
-# Test the "tk::choosefont" command
+# Test the "tk::fontchooser" command
 #
 # Copyright (c) 2008 Pat Thoyts
 #
@@ -12,8 +12,6 @@ tcltest::loadTestedCommands
 # the following helper functions are related to the functions used
 # in winDialog.test where they are used to send messages to the win32
 # dialog (hence the wierdness).
-
-testConstraint scriptImpl [llength [info proc ::tk::choosefont::Configure]]
 
 proc start {cmd} {
     set ::tk_dialog {}
@@ -48,46 +46,46 @@ proc Click {button} {
     }
 }
 proc ApplyFont {font} {
-    puts stderr "apply: $font"
+#    puts stderr "apply: $font"
     set ::testfont $font
 }
 
 # -------------------------------------------------------------------------
 
-test fontdlg-1.1 {tk::choosefont: usage} -returnCodes error -body {
-    tk::choosefont -z
+test fontdlg-1.1 {tk fontchooser: usage} -returnCodes error -body {
+    tk fontchooser -z
 } -result {unknown or ambiguous subcommand "-z": must be configure, hide, or show}
 
-test fontdlg-1.2 {tk::choosefont: usage} -returnCodes error -body {
-    tk::choosefont configure -z
+test fontdlg-1.2 {tk fontchooser: usage} -returnCodes error -body {
+    tk fontchooser configure -z
 } -match glob -result {bad option "-z":*}
 
-test fontdlg-1.3 {tk::choosefont: usage} -returnCodes error -body {
-    tk::choosefont configure -parent . -font
+test fontdlg-1.3 {tk fontchooser: usage} -returnCodes error -body {
+    tk fontchooser configure -parent . -font
 } -result {value for "-font" missing}
 
-test fontdlg-1.4 {tk::choosefont: usage} -returnCodes error -body {
-    tk::choosefont configure -parent . -title
+test fontdlg-1.4 {tk fontchooser: usage} -returnCodes error -body {
+    tk fontchooser configure -parent . -title
 } -result {value for "-title" missing}
 
-test fontdlg-1.5 {tk::choosefont: usage} -returnCodes error -body {
-    tk::choosefont configure -parent . -command
+test fontdlg-1.5 {tk fontchooser: usage} -returnCodes error -body {
+    tk fontchooser configure -parent . -command
 } -result {value for "-command" missing}
 
-test fontdlg-1.6 {tk::choosefont: usage} -returnCodes error -body {
-    tk::choosefont configure -title . -parent
+test fontdlg-1.6 {tk fontchooser: usage} -returnCodes error -body {
+    tk fontchooser configure -title . -parent
 } -result {value for "-parent" missing}
 
-test fontdlg-1.7 {tk::choosefont: usage} -returnCodes error -body {
-    tk::choosefont configure -parent abc
+test fontdlg-1.7 {tk fontchooser: usage} -returnCodes error -body {
+    tk fontchooser configure -parent abc
 } -result {bad window path name "abc"}
 
-test fontdlg-1.8 {tk::choosefont: usage} -returnCodes ok -body {
-    tk::choosefont configure -visible
+test fontdlg-1.8 {tk fontchooser: usage} -returnCodes ok -body {
+    tk fontchooser configure -visible
 } -result {0}
 
-test fontdlg-1.9 {tk::choosefont: usage} -returnCodes error -body {
-    tk::choosefont configure -visible 1
+test fontdlg-1.9 {tk fontchooser: usage} -returnCodes error -body {
+    tk fontchooser configure -visible 1
 } -match glob -result {*}
 
 # -------------------------------------------------------------------------
@@ -95,10 +93,13 @@ test fontdlg-1.9 {tk::choosefont: usage} -returnCodes error -body {
 # implementation here even when the current platform defines a native
 # font dialog. This is intentional in this test file.
 
-test fontdlg-2.0 {choosefont -title} -constraints scriptImpl -body {
+source [file join $tk_library fontdlg.tcl]
+testConstraint scriptImpl [llength [info proc ::tk::fontchooser::Configure]]
+
+test fontdlg-2.0 {fontchooser -title} -constraints scriptImpl -body {
     start {
-        tk::choosefont configure -title "Hello"
-        tk::choosefont show
+        tk::fontchooser::Configure -title "Hello"
+        tk::fontchooser::Show
     }
     then {
         set x [wm title $::tk_dialog]
@@ -107,11 +108,11 @@ test fontdlg-2.0 {choosefont -title} -constraints scriptImpl -body {
     set x
 } -result {Hello}
 
-test fontdlg-2.1 {choosefont -title (cyrillic)} -constraints scriptImpl -body {
+test fontdlg-2.1 {fontchooser -title (cyrillic)} -constraints scriptImpl -body {
     start {
-        tk::choosefont configure \
+        tk::fontchooser::Configure \
             -title "\u041f\u0440\u0438\u0432\u0435\u0442"
-        tk::choosefont show
+        tk::fontchooser::Show
     }
     then {
         set x [wm title $::tk_dialog]
@@ -120,10 +121,10 @@ test fontdlg-2.1 {choosefont -title (cyrillic)} -constraints scriptImpl -body {
     set x
 } -result "\u041f\u0440\u0438\u0432\u0435\u0442"
 
-test fontdlg-3.0 {choosefont -parent} -constraints scriptImpl -body {
+test fontdlg-3.0 {fontchooser -parent} -constraints scriptImpl -body {
     start {
-        tk::choosefont configure -parent .
-        tk::choosefont show
+        tk::fontchooser::Configure -parent .
+        tk::fontchooser::Show
     }
     then {
         set x [winfo parent $::tk_dialog]
@@ -132,14 +133,14 @@ test fontdlg-3.0 {choosefont -parent} -constraints scriptImpl -body {
     set x
 } -result {.}
 
-test fontdlg-3.1 {choosefont -parent (invalid)} -body {
-    tk::choosefont configure -parent junk
+test fontdlg-3.1 {fontchooser -parent (invalid)} -constraints scriptImpl -body {
+    tk::fontchooser::Configure -parent junk
 } -returnCodes error -match glob -result {bad window path *}
 
-test fontdlg-4.0 {choosefont -font} -constraints scriptImpl -body {
+test fontdlg-4.0 {fontchooser -font} -constraints scriptImpl -body {
     start {
-        tk::choosefont configure -command ApplyFont -font courier
-        tk::choosefont show
+        tk::fontchooser::Configure -command ApplyFont -font courier
+        tk::fontchooser::Show
     }
     then {
         Click cancel
@@ -147,10 +148,10 @@ test fontdlg-4.0 {choosefont -font} -constraints scriptImpl -body {
     set ::testfont
 } -result {}
 
-test fontdlg-4.1 {choosefont -font} -constraints scriptImpl -body {
+test fontdlg-4.1 {fontchooser -font} -constraints scriptImpl -body {
     start {
-        tk::choosefont configure -command ApplyFont -font courier
-        tk::choosefont show
+        tk::fontchooser::Configure -command ApplyFont -font courier
+        tk::fontchooser::Show
     }
     then {
         Click ok
@@ -158,10 +159,10 @@ test fontdlg-4.1 {choosefont -font} -constraints scriptImpl -body {
     expr {$::testfont ne {}}
 } -result {1}
 
-test fontdlg-4.2 {choosefont -font} -constraints scriptImpl -body {
+test fontdlg-4.2 {fontchooser -font} -constraints scriptImpl -body {
     start {
-        tk::choosefont configure -command ApplyFont -font TkDefaultFont
-        tk::choosefont show
+        tk::fontchooser::Configure -command ApplyFont -font TkDefaultFont
+        tk::fontchooser::Show
     }
     then {
         Click ok
@@ -169,10 +170,10 @@ test fontdlg-4.2 {choosefont -font} -constraints scriptImpl -body {
     expr {$::testfont ne {}}
 } -result {1}
 
-test fontdlg-4.3 {choosefont -font} -constraints scriptImpl -body {
+test fontdlg-4.3 {fontchooser -font} -constraints scriptImpl -body {
     start {
-        tk::choosefont configure -command ApplyFont -font {times 14 bold}
-        tk::choosefont show
+        tk::fontchooser::Configure -command ApplyFont -font {times 14 bold}
+        tk::fontchooser::Show
     }
     then {
         Click ok
@@ -180,10 +181,10 @@ test fontdlg-4.3 {choosefont -font} -constraints scriptImpl -body {
     expr {$::testfont ne {}}
 } -result {1}
 
-test fontdlg-4.4 {choosefont -font} -constraints scriptImpl -body {
+test fontdlg-4.4 {fontchooser -font} -constraints scriptImpl -body {
     start {
-        tk::choosefont configure -command ApplyFont -font {times 14 bold}
-        tk::choosefont show
+        tk::fontchooser::Configure -command ApplyFont -font {times 14 bold}
+        tk::fontchooser::Show
     }
     then {
         Click ok

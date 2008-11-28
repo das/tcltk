@@ -2425,13 +2425,13 @@ HookProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 	if (IsWindow(hwndCtrl)) {
 	    EnableWindow(hwndCtrl, FALSE);
 	}
-	TkSendVirtualEvent(phd->parent, "TkChoosefontVisibility");
+	TkSendVirtualEvent(phd->parent, "TkFontchooserVisibility");
 	return 1; /* we handled the message */
     }
 
     if (WM_DESTROY == msg) {
 	phd->hwnd = NULL;
-	TkSendVirtualEvent(phd->parent, "TkChoosefontVisibility");
+	TkSendVirtualEvent(phd->parent, "TkFontchooserVisibility");
 	return 0;
     }
 
@@ -2448,7 +2448,7 @@ HookProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 	    ApplyLogfont(phd->interp, phd->cmdObj, hdc, &lf);
 	}
 	if (phd && phd->parent) {
-	    TkSendVirtualEvent(phd->parent, "TkChoosefontFontChanged");
+	    TkSendVirtualEvent(phd->parent, "TkFontchooserFontChanged");
 	}
 	return 1;
     }
@@ -2456,22 +2456,22 @@ HookProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 }
 
 /*
- * Helper for the ChoosefontConfigure command to return the
+ * Helper for the FontchooserConfigure command to return the
  * current value of any of the options (which may be NULL in 
  * the structure)
  */
 
-enum ChoosefontOption {
-    ChooseFontParent, ChooseFontTitle, ChooseFontFont, ChooseFontCmd,
-    ChooseFontVisible
+enum FontchooserOption {
+    FontchooserParent, FontchooserTitle, FontchooserFont, FontchooserCmd,
+    FontchooserVisible
 };
 
 static Tcl_Obj *
-ChoosefontCget(HookData *hdPtr, int optionIndex)
+FontchooserCget(HookData *hdPtr, int optionIndex)
 {
     Tcl_Obj *resObj = NULL;
     switch(optionIndex) {
-	case ChooseFontParent: {
+	case FontchooserParent: {
 	    if (hdPtr->parentObj) {
 		resObj = hdPtr->parentObj;
 	    } else {
@@ -2479,7 +2479,7 @@ ChoosefontCget(HookData *hdPtr, int optionIndex)
 	    }
 	    break;
 	}
-	case ChooseFontTitle: {
+	case FontchooserTitle: {
 	    if (hdPtr->titleObj) {
 		resObj = hdPtr->titleObj;
 	    } else {
@@ -2487,7 +2487,7 @@ ChoosefontCget(HookData *hdPtr, int optionIndex)
 	    }
 	    break;
 	}
-	case ChooseFontFont: {
+	case FontchooserFont: {
 	    if (hdPtr->fontObj) {
 		resObj = hdPtr->fontObj;
 	    } else {
@@ -2495,7 +2495,7 @@ ChoosefontCget(HookData *hdPtr, int optionIndex)
 	    }
 	    break;
 	}
-	case ChooseFontCmd: {
+	case FontchooserCmd: {
 	    if (hdPtr->cmdObj) {
 		resObj = hdPtr->cmdObj;
 	    } else {
@@ -2503,7 +2503,7 @@ ChoosefontCget(HookData *hdPtr, int optionIndex)
 	    }
 	    break;
 	}
-	case ChooseFontVisible: {
+	case FontchooserVisible: {
 	    resObj = Tcl_NewBooleanObj(hdPtr->hwnd && IsWindow(hdPtr->hwnd));
 	    break;
 	}
@@ -2517,9 +2517,9 @@ ChoosefontCget(HookData *hdPtr, int optionIndex)
 /*
  * ----------------------------------------------------------------------
  *
- * Tk_ChooseFontObjCmd --
+ * FontchooserConfigureCmd --
  *
- *	Implementation of the 'tk::choosefont configure' ensemble command.
+ *	Implementation of the 'tk fontchooser configure' ensemble command.
  *	See the user documentation for what it does.
  *
  * Results:
@@ -2532,7 +2532,7 @@ ChoosefontCget(HookData *hdPtr, int optionIndex)
  */
 
 static int
-ChoosefontConfigureCmd(
+FontchooserConfigureCmd(
     ClientData clientData,	/* Main window */
     Tcl_Interp *interp,
     int objc,
@@ -2545,7 +2545,7 @@ ChoosefontConfigureCmd(
 	"-parent", "-title", "-font", "-command", "-visible", NULL
     };
 
-    hdPtr = Tcl_GetAssocData(interp, "::tk::choosefont", NULL);
+    hdPtr = Tcl_GetAssocData(interp, "::tk::fontchooser", NULL);
 
     /*
      * with no arguments we return all the options in a dict
@@ -2556,7 +2556,7 @@ ChoosefontConfigureCmd(
 	Tcl_Obj *dictObj = Tcl_NewDictObj();
 	for (i = 0; r == TCL_OK && optionStrings[i] != NULL; ++i) {
 	    keyObj = Tcl_NewStringObj(optionStrings[i], -1);
-	    valueObj = ChoosefontCget(hdPtr, i);
+	    valueObj = FontchooserCget(hdPtr, i);
 	    r = Tcl_DictObjPut(interp, dictObj, keyObj, valueObj);
 	}
 	if (r == TCL_OK) {
@@ -2573,7 +2573,7 @@ ChoosefontConfigureCmd(
 	}
 	if (objc == 2) {
 	    /* if one option and no arg - return the current value */
-	    Tcl_SetObjResult(interp, ChoosefontCget(hdPtr, optionIndex));
+	    Tcl_SetObjResult(interp, FontchooserCget(hdPtr, optionIndex));
 	    return TCL_OK;
 	}
 	if (i + 1 == objc) {
@@ -2582,13 +2582,13 @@ ChoosefontConfigureCmd(
 	    return TCL_ERROR;
 	}
 	switch (optionIndex) {
-	    case ChooseFontVisible: {
+	    case FontchooserVisible: {
 		const char *msg = "cannot change read-only option "
 		    "\"-visible\": use the show or hide command";
 		Tcl_SetObjResult(interp, Tcl_NewStringObj(msg, -1));
 		return TCL_ERROR;
 	    }
-	    case ChooseFontParent: {
+	    case FontchooserParent: {
 		Tk_Window parent = Tk_NameToWindow(interp,
 		    Tcl_GetString(objv[i+1]), tkwin);
 		if (parent == None) {
@@ -2604,7 +2604,7 @@ ChoosefontConfigureCmd(
 		Tcl_IncrRefCount(hdPtr->parentObj);
 		break;
 	    }
-	    case ChooseFontTitle: {
+	    case FontchooserTitle: {
 		if (hdPtr->titleObj) {
 		    Tcl_DecrRefCount(hdPtr->titleObj);
 		}
@@ -2615,7 +2615,7 @@ ChoosefontConfigureCmd(
 		Tcl_IncrRefCount(hdPtr->titleObj);
 		break;
 	    }
-	    case ChooseFontFont: {
+	    case FontchooserFont: {
 		if (hdPtr->fontObj) {
 		    Tcl_DecrRefCount(hdPtr->fontObj);
 		}
@@ -2631,7 +2631,7 @@ ChoosefontConfigureCmd(
 		}
 		break;
 	    }
-	    case ChooseFontCmd: {
+	    case FontchooserCmd: {
 		if (hdPtr->cmdObj) {
 		    Tcl_DecrRefCount(hdPtr->cmdObj);
 		}
@@ -2655,12 +2655,12 @@ ChoosefontConfigureCmd(
 /* 
  * ---------------------------------------------------------------------- 
  *
- * ChoosefontShowCmd --
+ * FontchooserShowCmd --
  *
- *	Implements the 'tk::choosefont show' ensemble command. The
+ *	Implements the 'tk fontchooser show' ensemble command. The
  *	per-interp configuration data for the dialog is held in an interp
  *	associated structure.
- *	Calls the Win32 ChooseFont API which provides a modal dialog.
+ *	Calls the Win32 FontChooser API which provides a modal dialog.
  *	See HookProc where we make a few changes to the dialog and set
  *	some additional state.
  *
@@ -2668,7 +2668,7 @@ ChoosefontConfigureCmd(
  */
 
 static int
-ChoosefontShowCmd(
+FontchooserShowCmd(
     ClientData clientData,	/* Main window */
     Tcl_Interp *interp,
     int objc,
@@ -2682,7 +2682,7 @@ ChoosefontShowCmd(
     int r = TCL_OK, oldMode = 0;
     Tcl_Obj *resObj = NULL;
 
-    hdPtr = Tcl_GetAssocData(interp, "::tk::choosefont", NULL);
+    hdPtr = Tcl_GetAssocData(interp, "::tk::fontchooser", NULL);
 
     tkwin = parent = (Tk_Window) clientData;
     if (hdPtr->parentObj) {
@@ -2736,12 +2736,12 @@ ChoosefontShowCmd(
 
     if (TCL_OK == r) {
 	oldMode = Tcl_SetServiceMode(TCL_SERVICE_ALL);
-	if (ChooseFont(&cf)) {
+	if (FontChooser(&cf)) {
 	    if (hdPtr->cmdObj) {
 		ApplyLogfont(hdPtr->interp, hdPtr->cmdObj, hdc, &lf);
 	    }
 	    if (hdPtr->parent) {
-		TkSendVirtualEvent(hdPtr->parent, "TkChoosefontFontChanged");
+		TkSendVirtualEvent(hdPtr->parent, "TkFontchooserFontChanged");
 	    }
 	}
 	Tcl_SetServiceMode(oldMode);
@@ -2756,24 +2756,24 @@ ChoosefontShowCmd(
 /* 
  * ----------------------------------------------------------------------
  *
- * ChoosefontHideCmd --
+ * FontchooserHideCmd --
  *
- *	Implementation of the 'tk::choosefont hide' ensemble. See the
+ *	Implementation of the 'tk fontchooser hide' ensemble. See the
  *	user documentation for details.
- *	As the Win32 ChooseFont function is always modal all we do here
+ *	As the Win32 FontChooser function is always modal all we do here
  *	is destroy the dialog
  *
  * ----------------------------------------------------------------------
  */
 
 static int
-ChoosefontHideCmd(
+FontchooserHideCmd(
     ClientData clientData,	/* Main window */
     Tcl_Interp *interp,
     int objc,
     Tcl_Obj *const objv[])
 {
-    HookData *hdPtr = Tcl_GetAssocData(interp, "::tk::choosefont", NULL);
+    HookData *hdPtr = Tcl_GetAssocData(interp, "::tk::fontchooser", NULL);
     if (hdPtr->hwnd && IsWindow(hdPtr->hwnd)) {
 	EndDialog(hdPtr->hwnd, 0);
     }
@@ -2809,30 +2809,28 @@ DeleteHookData(ClientData clientData, Tcl_Interp *interp)
 /*
  * ----------------------------------------------------------------------
  *
- * TkChoosefontInit --
+ * TkInitFontchooser --
  *
- *	Set up the tk::choosefont ensemble and associate the font chooser
- *	configuration data with the Tcl interpreter. There is one 
- *	font chooser per interp.
+ *	Associate the font chooser configuration data with the Tcl
+ *	interpreter. There is one font chooser per interp.
  *
  * ----------------------------------------------------------------------
  */
 
-static const TkEnsemble choosefontEnsemble[] = {
-    { "configure", ChoosefontConfigureCmd, NULL },
-    { "show", ChoosefontShowCmd, NULL },
-    { "hide", ChoosefontHideCmd, NULL },
+MODULE_SCOPE const TkEnsemble tkFontchooserEnsemble[];
+const TkEnsemble tkFontchooserEnsemble[] = {
+    { "configure", FontchooserConfigureCmd, NULL },
+    { "show", FontchooserShowCmd, NULL },
+    { "hide", FontchooserHideCmd, NULL },
 };
 
 int
-TkChoosefontInit(Tcl_Interp *interp, ClientData clientData)
+TkInitFontchooser(Tcl_Interp *interp, ClientData clientData)
 {
     HookData *hdPtr = NULL;
     hdPtr = (HookData *)ckalloc(sizeof(HookData));
     memset(hdPtr, 0, sizeof(HookData));
-    Tcl_SetAssocData(interp, "::tk::choosefont", DeleteHookData, hdPtr);
-    TkMakeEnsemble(interp, "::tk", "choosefont", 
-	clientData, choosefontEnsemble);
+    Tcl_SetAssocData(interp, "::tk::fontchooser", DeleteHookData, hdPtr);
     return TCL_OK;
 }
 

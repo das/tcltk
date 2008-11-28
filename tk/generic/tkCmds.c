@@ -51,6 +51,12 @@ static int		WindowingsystemCmd(ClientData dummy,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *const *objv);
 
+#if defined(__WIN32__) || defined(MAC_OSX_TK)
+MODULE_SCOPE const TkEnsemble tkFontchooserEnsemble[];
+#else
+#define tkFontchooserEnsemble NULL
+#endif
+
 /*
  * Table of tk subcommand names and implementations.
  */
@@ -63,6 +69,7 @@ static const TkEnsemble tkCmdMap[] = {
     {"scaling",		ScalingCmd },
     {"useinputmethods",	UseinputmethodsCmd },
     {"windowingsystem",	WindowingsystemCmd },
+    {"fontchooser",	NULL, tkFontchooserEnsemble},
     {NULL}
 };
 
@@ -635,6 +642,9 @@ int
 TkInitTkCmd(Tcl_Interp *interp, ClientData clientData)
 {
     TkMakeEnsemble(interp, "::", "tk", clientData, tkCmdMap);
+#if defined(__WIN32__) || defined(MAC_OSX_TK)
+    TkInitFontchooser(interp, clientData);
+#endif
     return TCL_OK;
 }
 
