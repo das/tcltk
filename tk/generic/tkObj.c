@@ -267,6 +267,8 @@ Tk_GetDoublePixelsFromObj(
 	    /* internally "shimmer" to pixel units */
 	    pixelPtr->units=-1;
 	    pixelPtr->value=d;
+	} else {
+	    d=pixelPtr->value;
 	}
     }
     *doublePtr = d;
