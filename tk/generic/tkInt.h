@@ -1141,6 +1141,11 @@ MODULE_SCOPE int	Tk_WinfoObjCmd(ClientData clientData,
 MODULE_SCOPE int	Tk_WmObjCmd(ClientData clientData, Tcl_Interp *interp,
 			    int objc, Tcl_Obj *const objv[]);
 
+MODULE_SCOPE int	Tk_GetDoublePixelsFromObj(Tcl_Interp *interp,
+						  Tk_Window tkwin,
+						  Tcl_Obj *objPtr,
+						  double *doublePtr);
+
 MODULE_SCOPE void	TkEventInit(void);
 MODULE_SCOPE void	TkRegisterObjTypes(void);
 MODULE_SCOPE int	TkCreateMenuCmd(Tcl_Interp *interp);

@@ -626,7 +626,7 @@ Tk_ConfigureInfo(
      * handle that one spec specially.
      */
 
-    Tcl_SetResult(interp, NULL, TCL_STATIC);
+    Tcl_ResetResult(interp);
     if (argvName != NULL) {
 	specPtr = FindConfigSpec(interp, specs, argvName, needFlags,hateFlags);
 	if (specPtr == NULL) {
