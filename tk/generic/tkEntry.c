@@ -2528,7 +2528,7 @@ GetEntryIndex(
 	break;
     case 's':
 	if (entryPtr->selectFirst < 0) {
-	    Tcl_SetResult(interp, NULL, TCL_STATIC);
+	    Tcl_ResetResult(interp);
 	    Tcl_AppendResult(interp, "selection isn't in widget ",
 		    Tk_PathName(entryPtr->tkwin), NULL);
 	    return TCL_ERROR;
@@ -2942,7 +2942,7 @@ EntryUpdateScrollbar(
 	Tcl_AddErrorInfo(interp, ")");
 	Tcl_BackgroundError(interp);
     }
-    Tcl_SetResult(interp, NULL, TCL_STATIC);
+    Tcl_ResetResult(interp);
     Tcl_Release(interp);
 }
 
@@ -3157,11 +3157,11 @@ EntryValidate(
 	Tcl_AddErrorInfo(interp,
 		 "\nvalid boolean not returned by validation command");
 	Tcl_BackgroundError(interp);
-	Tcl_SetResult(interp, NULL, 0);
+	Tcl_ResetResult(interp);
 	return TCL_ERROR;
     }
 
-    Tcl_SetResult(interp, NULL, 0);
+    Tcl_ResetResult(interp);
     return (bool ? TCL_OK : TCL_BREAK);
 }
 
@@ -4292,7 +4292,7 @@ SpinboxInvoke(
 	    return TCL_OK;
 	}
 
-	Tcl_SetResult(interp, NULL, 0);
+	Tcl_ResetResult(interp);
     }
 
     return TCL_OK;

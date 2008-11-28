@@ -4323,12 +4323,10 @@ TkTextGetTabs(
 	}
 
 	prevStop = lastStop;
-	if (Tk_GetMMFromObj(interp, textPtr->tkwin, objv[i],
-		&lastStop) != TCL_OK) {
+	if (Tk_GetDoublePixelsFromObj (interp, textPtr->tkwin, objv[i],
+				       &lastStop) != TCL_OK) {
 	    goto error;
 	}
-	lastStop *= WidthOfScreen(Tk_Screen(textPtr->tkwin));
-	lastStop /= WidthMMOfScreen(Tk_Screen(textPtr->tkwin));
 
 	if (i > 0 && (tabPtr->location <= (tabPtr-1)->location)) {
 	    /*
