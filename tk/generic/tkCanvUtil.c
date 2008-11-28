@@ -261,12 +261,7 @@ Tk_CanvasGetCoordFromObj(
 				 * form may be used here). */
     double *doublePtr)		/* Place to store converted coordinate. */
 {
-    if (Tk_GetMMFromObj(Canvas(canvas)->interp, Canvas(canvas)->tkwin, obj,
-	    doublePtr) != TCL_OK) {
-	return TCL_ERROR;
-    }
-    *doublePtr *= Canvas(canvas)->pixelsPerMM;
-    return TCL_OK;
+    return Tk_GetDoublePixelsFromObj(Canvas(canvas)->interp, Canvas(canvas)->tkwin, obj, doublePtr);
 }
 
 /*
