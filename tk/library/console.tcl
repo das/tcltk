@@ -696,10 +696,10 @@ Tk $::tk_patchLevel"
 }
 
 # ::tk::console::ChooseFont --
-# 	Let the user select the console font (TIP 213).
+# 	Let the user select the console font (TIP 324).
 
 proc ::tk::console::ChooseFont {} {
-    if {[tk::choosefont configure -visible]} {
+    if {[::tk::choosefont configure -visible]} {
 	::tk::choosefont hide
     } else {
 	::tk::choosefont show

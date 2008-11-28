@@ -1,6 +1,6 @@
 # fontdlg.tcl - 
 #
-#	A themeable Tk font selection dialog. See TIP #213.
+#	A themeable Tk font selection dialog. See TIP #324.
 #
 # Copyright (C) 2008 Keith Vetter
 # Copyright (C) 2008 Pat Thoyts <patthoyts@users.sourceforge.net>

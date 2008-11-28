@@ -2616,22 +2616,32 @@ ChoosefontConfigureCmd(
 		if (hdPtr->fontObj) {
 		    Tcl_DecrRefCount(hdPtr->fontObj);
 		}
-		hdPtr->fontObj = objv[i+1];
-		if (Tcl_IsShared(hdPtr->fontObj)) {
-		    hdPtr->fontObj = Tcl_DuplicateObj(hdPtr->fontObj);
+		Tcl_GetStringFromObj(objv[i+1], &len);
+		if (len) {
+		    hdPtr->fontObj = objv[i+1];
+		    if (Tcl_IsShared(hdPtr->fontObj)) {
+			hdPtr->fontObj = Tcl_DuplicateObj(hdPtr->fontObj);
+		    }
+		    Tcl_IncrRefCount(hdPtr->fontObj);
+		} else {
+		    hdPtr->fontObj = NULL;
 		}
-		Tcl_IncrRefCount(hdPtr->fontObj);
 		break;
 	    }
 	    case ChooseFontCmd: {
 		if (hdPtr->cmdObj) {
 		    Tcl_DecrRefCount(hdPtr->cmdObj);
 		}
-		hdPtr->cmdObj = objv[i+1];
-		if (Tcl_IsShared(hdPtr->cmdObj)) {
-		    hdPtr->cmdObj = Tcl_DuplicateObj(hdPtr->cmdObj);
+		Tcl_GetStringFromObj(objv[i+1], &len);
+		if (len) {
+		    hdPtr->cmdObj = objv[i+1];
+		    if (Tcl_IsShared(hdPtr->cmdObj)) {
+			hdPtr->cmdObj = Tcl_DuplicateObj(hdPtr->cmdObj);
+		    }
+		    Tcl_IncrRefCount(hdPtr->cmdObj);
+		} else {
+		    hdPtr->cmdObj = NULL;
 		}
-		Tcl_IncrRefCount(hdPtr->cmdObj);
 		break;
 	    }
 	}
