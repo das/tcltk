@@ -1776,8 +1776,9 @@ static const TkEnsemble choosefontEnsemble[] = {
 
 static Tcl_Interp *choosefontInterp = NULL;
 static FMFontFamily fontPanelFontFamily = kInvalidFontFamily;
-static FMFontStyle fontPanelFontStyle = 0;
+static FMFontStyle fontPanelFontStyle = -1;
 static FMFontSize fontPanelFontSize = 0;
+static FMFont fontPanelFontID = kInvalidFont;
 
 static const char *choosefontOptionStrings[] = {
     "-parent", "-title", "-font", "-command",
@@ -1836,81 +1837,58 @@ TkMacOSXProcessFontEvent(
 	case kEventFontSelection: {
 	    Tcl_Obj *fontObj = NULL;
 
+	    fontPanelFontFamily = kInvalidFontFamily;
+	    fontPanelFontStyle = -1;
+	    fontPanelFontSize = 0;
+	    fontPanelFontID = kInvalidFont;
 	    err = ChkErr(GetEventParameter, eventPtr->eventRef,
 		    kEventParamFMFontFamily, typeFMFontFamily, NULL,
 		    sizeof(FMFontFamily), NULL, &fontPanelFontFamily);
-	    if (err != noErr) goto noQDFont;
-	    err = ChkErr(GetEventParameter, eventPtr->eventRef,
+	    err |= ChkErr(GetEventParameter, eventPtr->eventRef,
 		    kEventParamFMFontStyle, typeFMFontStyle, NULL,
 		    sizeof(FMFontStyle), NULL, &fontPanelFontStyle);
-	    if (err != noErr) goto noQDFont;
-	    err = ChkErr(GetEventParameter, eventPtr->eventRef,
+	    err |= ChkErr(GetEventParameter, eventPtr->eventRef,
 		    kEventParamFMFontSize, typeFMFontSize, NULL,
 		    sizeof(FMFontSize), NULL, &fontPanelFontSize);
-	    if (err != noErr) goto noQDFont;
-	    fontObj = TkMacOSXFontDescriptionForFMFontInfo(
-		    fontPanelFontFamily, fontPanelFontStyle,
-		    fontPanelFontSize);
-	noQDFont:
 	    if (err != noErr) {
-		ATSUFontID fontID;
+		/*
+		 * No/incomplete QD font spec, use ATSUI font ID
+		 */
 		Fixed fontFixedSize;
 
 		err = ChkErr(GetEventParameter, eventPtr->eventRef,
 			kEventParamATSUFontID, typeATSUFontID, NULL,
-			sizeof(ATSUFontID), NULL, &fontID);
-		if (err != noErr) goto noATSFont;
-		err = ChkErr(FMGetFontFamilyInstanceFromFont, fontID,
-			&fontPanelFontFamily, &fontPanelFontStyle);
-		if (err != noErr) {
-		    fontPanelFontFamily = kInvalidFontFamily;
+			sizeof(ATSUFontID), NULL, &fontPanelFontID);
+		if (err == noErr) {
+		    ChkErr(FMGetFontFamilyInstanceFromFont, fontPanelFontID,
+			    &fontPanelFontFamily, &fontPanelFontStyle);
 		}
 		err = ChkErr(GetEventParameter, eventPtr->eventRef,
 			kEventParamATSUFontSize, typeATSUSize, NULL,
 			sizeof(Fixed), NULL, &fontFixedSize);
-		if (err != noErr) goto noATSFont;
-		fontPanelFontSize = FixedToInt(fontFixedSize);
-		if (fontPanelFontFamily != kInvalidFontFamily) {
-		    fontObj = TkMacOSXFontDescriptionForFMFontInfo(
-			    fontPanelFontFamily, fontPanelFontStyle,
-			    fontPanelFontSize);
-		} else {
-		    CFStringRef fontName;
-
-		    err = ChkErr(ATSFontGetName,
-			    FMGetATSFontRefFromFont(fontID),
-			    kATSOptionFlagsDefault, &fontName);
-		    if (err != noErr) goto noATSFont;
-		    if (fontName) {
-			Tcl_Obj *objv[] = {
-				TkMacOSXGetStringObjFromCFString(fontName),
-				Tcl_NewIntObj(fontPanelFontSize)
-				};
-
-			if (objv[0]) {
-			    fontObj = Tcl_NewListObj(2, objv);
-			} else {
-			    Tcl_DecrRefCount(objv[1]);
-			}
-			CFRelease(fontName);
-		    }
+		if (err == noErr) {
+		    fontPanelFontSize = FixedToInt(fontFixedSize);
 		}
 	    }
-	noATSFont:
-	    if (cfdPtr->cmdObj) {
-		int objc, result;
-		Tcl_Obj **objv, **tmpv;
+	    fontObj = TkMacOSXFontDescriptionForFMFontInfo(
+		fontPanelFontFamily, fontPanelFontStyle,
+		fontPanelFontSize, fontPanelFontID);
+	    if (fontObj) {
+		if (cfdPtr->cmdObj) {
+		    int objc, result;
+		    Tcl_Obj **objv, **tmpv;
 
-		result = Tcl_ListObjGetElements(choosefontInterp,
-			cfdPtr->cmdObj, &objc, &objv);
-		if (result == TCL_OK) {
-		    tmpv = (Tcl_Obj **) ckalloc(sizeof(Tcl_Obj *) *
-			    (unsigned)(objc + 2));
-		    memcpy(tmpv, objv, sizeof(Tcl_Obj *) * objc);
-		    tmpv[objc] = fontObj ? fontObj : Tcl_NewObj();
-		    result = TkBackgroundEvalObjv(choosefontInterp, objc+1,
-			    tmpv, TCL_EVAL_GLOBAL);
-		    ckfree((char *)tmpv);
+		    result = Tcl_ListObjGetElements(choosefontInterp,
+			    cfdPtr->cmdObj, &objc, &objv);
+		    if (result == TCL_OK) {
+			tmpv = (Tcl_Obj **) ckalloc(sizeof(Tcl_Obj *) *
+				(unsigned)(objc + 2));
+			memcpy(tmpv, objv, sizeof(Tcl_Obj *) * objc);
+			tmpv[objc] = fontObj;
+			result = TkBackgroundEvalObjv(choosefontInterp, objc+1,
+				tmpv, TCL_EVAL_GLOBAL);
+			ckfree((char *)tmpv);
+		    }
 		}
 	    }
 	    break;
@@ -1962,11 +1940,10 @@ ChoosefontCget(ChoosefontData *cfdPtr, int optionIndex)
 	    break;
 	}
 	case ChoosefontFont: {
-	    if (fontPanelFontFamily != kInvalidFontFamily) {
-		resObj = TkMacOSXFontDescriptionForFMFontInfo(
-		    fontPanelFontFamily, fontPanelFontStyle,
-		    fontPanelFontSize);
-	    } else {
+	    resObj = TkMacOSXFontDescriptionForFMFontInfo(
+		fontPanelFontFamily, fontPanelFontStyle,
+		fontPanelFontSize, fontPanelFontID);
+	    if (!resObj) {
 		resObj = Tcl_NewObj();
 	    }
 	    break;
