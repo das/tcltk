@@ -2154,7 +2154,7 @@ TkGetMenuIndex(
 	    *indexPtr = i;
 	    goto success;
 	}
-	Tcl_SetResult(interp, NULL, TCL_STATIC);
+	Tcl_ResetResult(interp);
     }
 
     for (i = 0; i < menuPtr->numEntries; i++) {
@@ -2956,7 +2956,7 @@ GetIndexFromCoords(
     return TCL_OK;
 
   error:
-    Tcl_SetResult(interp, NULL, TCL_STATIC);
+    Tcl_ResetResult(interp);
     return TCL_ERROR;
 }
 
