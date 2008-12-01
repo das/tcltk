@@ -2088,6 +2088,10 @@ FontchooserConfigureCmd(
 		    ChkErr(SetFontInfoForSelection,
 			    kFontSelectionATSUIType, 0, NULL, NULL);
 		}
+		if (FPIsFontPanelVisible()) {
+		    TkSendVirtualEvent(fcdPtr->parent,
+			    "TkFontchooserFontChanged");
+		}
 		break;
 	    }
 	    case FontchooserCmd:
@@ -2143,9 +2147,9 @@ FontchooserShowCmd(
     }
     if (!FPIsFontPanelVisible()) {
 	ChkErr(FPShowHideFontPanel);
-	fontchooserInterp = interp;
 	TkSendVirtualEvent(fcdPtr->parent, "TkFontchooserVisibility");
     }
+    fontchooserInterp = interp;
 
     return TCL_OK;
 }
