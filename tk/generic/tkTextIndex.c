@@ -382,7 +382,7 @@ TkTextMakePixelIndex(
 
 TkTextIndex *
 TkTextMakeByteIndex(
-    TkTextBTree tree,		/* Tree that lineIndex and byteIndex refer
+    const TkTextBTree tree,	/* Tree that lineIndex and byteIndex refer
 				 * to. */
     const TkText *textPtr,
     int lineIndex,		/* Index of desired line (0 means first line
