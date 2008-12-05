@@ -16,6 +16,7 @@
 
 #include "tkInt.h"
 #include "tkCanvas.h"
+#include "tkFont.h"
 
 /*
  * See tkCanvas.h for key data structures used to implement canvases.
