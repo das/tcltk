@@ -535,7 +535,7 @@ declare 161 generic {
 	    struct TkTextIndex *dstPtr)
 }
 declare 162 generic {
-    struct TkTextIndex *TkTextMakeByteIndex(const TkTextBTree tree,
+    struct TkTextIndex *TkTextMakeByteIndex(TkTextBTree tree,
 	    const struct TkText *textPtr, int lineIndex,
 	    int byteIndex, struct TkTextIndex *indexPtr)
 }
