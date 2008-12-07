@@ -323,6 +323,9 @@ Tk_GetOpenFileObjCmd(
 		break;
 	    case OPEN_MESSAGE:
 		choice = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
+		if (message) {
+		    CFRelease(message);
+		}
 		message = CFStringCreateWithBytes(NULL, (unsigned char*)
 			choice, choiceLen, kCFStringEncodingUTF8, false);
 		break;
@@ -342,6 +345,9 @@ Tk_GetOpenFileObjCmd(
 		break;
 	    case OPEN_TITLE:
 		choice = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
+		if (title) {
+		    CFRelease(title);
+		}
 		title = CFStringCreateWithBytes(NULL, (unsigned char*)
 			choice, choiceLen, kCFStringEncodingUTF8, false);
 		break;
@@ -486,6 +492,9 @@ Tk_GetSaveFileObjCmd(
 		break;
 	    case SAVE_MESSAGE:
 		choice = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
+		if (message) {
+		    CFRelease(message);
+		}
 		message = CFStringCreateWithBytes(NULL, (unsigned char*)
 			choice, choiceLen, kCFStringEncodingUTF8, false);
 		break;
@@ -499,6 +508,9 @@ Tk_GetSaveFileObjCmd(
 		break;
 	    case SAVE_TITLE:
 		choice = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
+		if (title) {
+		    CFRelease(title);
+		}
 		title = CFStringCreateWithBytes(NULL, (unsigned char*)
 			choice, choiceLen, kCFStringEncodingUTF8, false);
 		break;
@@ -592,6 +604,9 @@ Tk_ChooseDirectoryObjCmd(clientData, interp, objc, objv)
 		break;
 	    case CHOOSE_MESSAGE:
 		choice = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
+		if (message) {
+		    CFRelease(message);
+		}
 		message = CFStringCreateWithBytes(NULL, (unsigned char*)
 			choice, choiceLen, kCFStringEncodingUTF8, false);
 		break;
@@ -605,6 +620,9 @@ Tk_ChooseDirectoryObjCmd(clientData, interp, objc, objv)
 		break;
 	    case CHOOSE_TITLE:
 		choice = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
+		if (title) {
+		    CFRelease(title);
+		}
 		title = CFStringCreateWithBytes(NULL, (unsigned char*) choice,
 			choiceLen, kCFStringEncodingUTF8, false);
 		break;
@@ -1479,6 +1497,9 @@ Tk_MessageBoxObjCmd(
 #if 0
 	    case ALERT_DETAIL:
 		str = Tcl_GetString(objv[i + 1]);
+		if (finemessageTextCF) {
+		    CFRelease(finemessageTextCF);
+		}
 		finemessageTextCF = CFStringCreateWithCString(NULL, str,
 			kCFStringEncodingUTF8);
 		break;
@@ -1508,6 +1529,9 @@ Tk_MessageBoxObjCmd(
 
 	    case ALERT_MESSAGE:
 		str = Tcl_GetString(objv[i + 1]);
+		if (messageTextCF) {
+		    CFRelease(messageTextCF);
+		}
 		messageTextCF = CFStringCreateWithCString(NULL, str,
 			kCFStringEncodingUTF8);
 		break;
