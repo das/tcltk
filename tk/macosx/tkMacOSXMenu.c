@@ -4121,12 +4121,8 @@ MenuDefProc(
 
     menuID = GetMenuID(menu);
     commandEntryPtr = Tcl_FindHashEntry(&commandTable, (char*)(intptr_t)menuID);
-
-    if (commandEntryPtr) {
-	menuPtr = Tcl_GetHashValue(commandEntryPtr);
-    } else {
-	menuPtr = NULL;
-    }
+    if (!commandEntryPtr) return;
+    menuPtr = Tcl_GetHashValue(commandEntryPtr);
 
     switch (message) {
     case kMenuInitMsg:
