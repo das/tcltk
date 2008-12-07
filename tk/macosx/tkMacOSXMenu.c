@@ -3194,8 +3194,8 @@ TkpComputeStandardMenuGeometry(
 	    &activeBorderWidth);
     x = y = borderWidth;
     indicatorSpace = labelWidth = accelWidth = maxAccelTextWidth = 0;
-    windowHeight = windowWidth = maxWidth = lastColumnBreak = 0;
-    maxModifierWidth = nonAccelMargin = maxNonAccelMargin = 0;
+    windowHeight = maxWidth = lastColumnBreak = 0;
+    maxModifierWidth = maxNonAccelMargin = 0;
     maxEntryWithAccelWidth = maxEntryWithoutAccelWidth = 0;
     maxIndicatorSpace = 0;
 
@@ -3265,7 +3265,7 @@ TkpComputeStandardMenuGeometry(
 	    lastColumnBreak = i;
 	    y = borderWidth;
 	}
-	geometryPtr = (EntryGeometry *) mePtr->platformEntryData;
+	/*geometryPtr = (EntryGeometry *) mePtr->platformEntryData;*/ /* dead code */
 
 	if (mePtr->type == SEPARATOR_ENTRY) {
 	    GetMenuSeparatorGeometry(menuPtr, mePtr, tkfont,
