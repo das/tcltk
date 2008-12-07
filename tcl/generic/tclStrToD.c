@@ -1788,7 +1788,7 @@ TclDoubleDigits(
 
     if (v == 0.0) {
 	*buffer++ = '0';
-	*buffer++ = '\0';
+	*buffer = '\0';
 	return 1;
     }
 
@@ -1977,7 +1977,7 @@ TclDoubleDigits(
 	}
     };
     *buffer++ = c;
-    *buffer++ = '\0';
+    *buffer = '\0';
 
     /*
      * Free memory, and return.

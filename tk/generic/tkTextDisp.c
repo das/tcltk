@@ -1979,8 +1979,8 @@ UpdateDisplayInfo(
 	     */
 
 	    dInfoPtr->newTopPixelOffset -= spaceLeft;
-	    y += spaceLeft;
-	    spaceLeft = 0;
+	    /*y += spaceLeft;*/ /* dead code */
+	    /*spaceLeft = 0;*/ /* dead code */
 	} else {
 	    int lineNum, bytesToCount;
 	    DLine *lowestPtr;

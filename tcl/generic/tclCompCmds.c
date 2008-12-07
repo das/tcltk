@@ -1534,7 +1534,7 @@ TclCompileForCmd(
     if (TclFixupForwardJump(envPtr, &jumpEvalCondFixup, jumpDist, 127)) {
 	bodyCodeOffset += 3;
 	nextCodeOffset += 3;
-	testCodeOffset += 3;
+	/*testCodeOffset += 3;*/ /* dead code */
     }
 
     envPtr->line = mapPtr->loc[eclIndex].line[2];

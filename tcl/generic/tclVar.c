@@ -517,7 +517,7 @@ TclObjLookupVarEx(
     const char *errMsg = NULL;
     CallFrame *varFramePtr = iPtr->varFramePtr;
     Namespace *nsPtr;
-    char *part2 = part2Ptr? TclGetString(part2Ptr):NULL;
+    char *part2;
     char *newPart2 = NULL;
 
     *arrayPtrPtr = NULL;
@@ -615,7 +615,7 @@ TclObjLookupVarEx(
 		}
 		return NULL;
 	    }
-	    part2 = newPart2 = part1Ptr->internalRep.twoPtrValue.ptr2;
+	    newPart2 = part1Ptr->internalRep.twoPtrValue.ptr2;
 	    if (newPart2) {
 		part2Ptr = Tcl_NewStringObj(newPart2, -1);
 		Tcl_IncrRefCount(part2Ptr);
