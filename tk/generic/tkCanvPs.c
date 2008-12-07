@@ -1255,7 +1255,7 @@ TkPostscriptImage(
      * monochrome screen, use gray or monochrome mode instead.
      */
 
-    if (!cdata.color && level == 2) {
+    if (!cdata.color && level >= 2) {
 	level = 1;
     }
 
@@ -1272,7 +1272,7 @@ TkPostscriptImage(
     switch (level) {
     case 0: bytesPerLine = (width + 7) / 8;  maxWidth = 240000; break;
     case 1: bytesPerLine = width;	     maxWidth = 60000;  break;
-    case 2: bytesPerLine = 3 * width;	     maxWidth = 20000;  break;
+    default: bytesPerLine = 3 * width;	     maxWidth = 20000;  break;
     }
 
     if (bytesPerLine > 60000) {
@@ -1300,7 +1300,7 @@ TkPostscriptImage(
 	    sprintf(buffer, "%d %d 8 matrix {\n<", width, rows);
 	    Tcl_AppendResult(interp, buffer, NULL);
 	    break;
-	case 2:
+	default:
 	    sprintf(buffer, "%d %d 8 matrix {\n<", width, rows);
 	    Tcl_AppendResult(interp, buffer, NULL);
 	    break;
@@ -1362,7 +1362,7 @@ TkPostscriptImage(
 		    }
 		}
 		break;
-	    case 2:
+	    default:
 		/*
 		 * Finally, color mode. Here, just output the red, green, and
 		 * blue values directly.
@@ -1388,7 +1388,7 @@ TkPostscriptImage(
 	switch (level) {
 	case 0: case 1:
 	    sprintf(buffer, ">\n} image\n"); break;
-	case 2:
+	default:
 	    sprintf(buffer, ">\n} false 3 colorimage\n"); break;
 	}
 	Tcl_AppendResult(interp, buffer, NULL);
@@ -1587,7 +1587,7 @@ Tk_PostscriptPhoto(
     switch (colorLevel) {
     case 0: bytesPerLine = (width + 7) / 8; maxWidth = 240000; break;
     case 1: bytesPerLine = width;	    maxWidth = 60000;  break;
-    case 2: bytesPerLine = 3 * width;	    maxWidth = 20000;  break;
+    default: bytesPerLine = 3 * width;	    maxWidth = 20000;  break;
     }
     if (bytesPerLine > 60000) {
 	Tcl_ResetResult(interp);
