@@ -279,7 +279,9 @@ proc ttk::combobox::PopdownWindow {cb} {
     variable scrollbar
 
     if {![winfo exists $cb.popdown]} {
-	set popdown [PopdownToplevel $cb.popdown]
+	set poplevel [PopdownToplevel $cb.popdown]
+
+        set popdown [ttk::frame $poplevel.f -style ComboboxPopdownFrame]
 
 	$scrollbar $popdown.sb \
 	    -orient vertical -command [list $popdown.l yview]
@@ -294,9 +296,14 @@ proc ttk::combobox::PopdownWindow {cb} {
 	bindtags $popdown.l \
 	    [list $popdown.l ComboboxListbox Listbox $popdown all]
 
-	grid $popdown.l $popdown.sb -sticky news
+	grid $popdown.l -row 0 -column 0 -padx {1 0} -pady 1 -sticky nsew
+        grid $popdown.sb -row 0 -column 1 -padx {0 1} -pady 1 -sticky ns
 	grid columnconfigure $popdown 0 -weight 1
 	grid rowconfigure $popdown 0 -weight 1
+
+        grid $popdown -sticky news -padx 0 -pady 0
+        grid rowconfigure $poplevel 0 -weight 1
+        grid columnconfigure $poplevel 0 -weight 1
     }
     return $cb.popdown
 }
@@ -311,11 +318,11 @@ proc ttk::combobox::PopdownToplevel {w} {
     switch -- [tk windowingsystem] {
 	default -
 	x11 {
-	    $w configure -relief solid -borderwidth 1
+	    $w configure -relief flat -borderwidth 0
 	    wm overrideredirect $w true
 	}
 	win32 {
-	    $w configure -relief solid -borderwidth 1
+	    $w configure -relief flat -borderwidth 0
 	    wm overrideredirect $w true
 	}
 	aqua {
@@ -335,7 +342,7 @@ proc ttk::combobox::PopdownToplevel {w} {
 proc ttk::combobox::ConfigureListbox {cb} {
     variable Values
 
-    set popdown [PopdownWindow $cb]
+    set popdown [PopdownWindow $cb].f
     set values [$cb cget -values]
     set current [$cb current]
     if {$current < 0} {
@@ -350,8 +357,10 @@ proc ttk::combobox::ConfigureListbox {cb} {
     if {$height > [$cb cget -height]} {
 	set height [$cb cget -height]
     	grid $popdown.sb
+        grid configure $popdown.l -padx {1 0}
     } else {
 	grid remove $popdown.sb
+        grid configure $popdown.l -padx 1
     }
     $popdown.l configure -height $height
 }
@@ -424,7 +433,7 @@ proc ttk::combobox::Unpost {cb} {
 #	Return the combobox main widget that owns the listbox.
 #
 proc ttk::combobox::LBMaster {lb} {
-    winfo parent [winfo parent $lb]
+    winfo parent [winfo parent [winfo parent $lb]]
 }
 
 ## LBSelect $lb --

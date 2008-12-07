@@ -1,17 +1,77 @@
+2008-12-06  Donal K. Fellows  <dkf@users.sf.net>
+
+	TIP #197 IMPLEMENTATION
+
+	* generic/tkText.c (insertUnfocussedStrings, optionSpecs):
+	* generic/tkText.h (TkText, TkTextInsertUnfocussed):
+	* doc/text.n, tests/text.test:
+	Added definitions/tests/docs for "-insertunfocussed" field.
+	* generic/tkTextMark.c (TkTextInsertDisplayProc):
+	* generic/tkText.c (TextBlinkProc):
+	Added user-controlledrendering of insertion cursor when focus is not
+	in the text widget.
+
+2008-12-05  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* library/ttk/ttk.tcl:        Added vista theme to iron out the visual
+	* library/ttk/vistaTheme.tcl: differences between vista and XP.
+	* library/ttk/xpTheme.tcl:
+	* win/ttkWinXPTheme.c:
+
+2008-12-05  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tkCanvPs.c (Tk_PostscriptFont): Ensure that font sizes can
+	ever be negative; it triggers a really strange case that is definitely
+	not what is wanted. [Bug 2107938]
+	* library/mkpsenc.tcl: Corrected and improved generation of postscript
+	* library/prolog.ps:  prolog. Removed prolog.ps, which wasn't used and
+	was misleading.
+
+2008-12-04  Jan Nijtmans  <nijtmans@users.sf.net>
+
+	* generic/tkInt.decls:	Move 10 functions from tkText.h to
+	* generic/tkText.h:     stub table [Feature Request 220906]
+	* generic/tkStubInit.c (regenerated)
+	* generic/tkIntDecls.h (regenerated)
+
+2008-12-04  Donal K. Fellows  <dkf@users.sf.net>
+
+	* doc/ttk_button.n, doc/ttk_checkbutton.n, doc/ttk_menubutton.n: 
+	* doc/ttk_radiobutton.n: Added mention of the Toolbutton style to all
+	widgets that can sensibly make use of it.
+
+2008-12-03  Joe English  <jenglish@users.sourceforge.net>
+
+	* generic/ttk/ttkState.c, generic/ttk/ttkTheme.h,
+	* generic/ttk/ttkWidget.c, doc/ttk_widget.n:
+	Add new "hover" state (patch from Pat Thoyts; needed to support proper
+	visual feedback on Vista).
+
+2008-11-29  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* library/ttk/altTheme.tcl:     Use a styled frame around the popdown
+	* library/ttk/clamTheme.tcl:    listbox so we can adjust the border
+	* library/ttk/classicTheme.tcl: for each theme as needed.
+	* library/ttk/combobox.tcl:
+	* library/ttk/defaults.tcl:
+	* library/ttk/winTheme.tcl:
+	* library/ttk/xpTheme.tcl:
+	* tests/ttk/combobox.test:
+
 2008-11-28  Alexandre Ferrieux 	<ferrieux@users.sourceforge.net>
 
-	* generic/tkCanvUtil.c	Millimeter patch. Fixes [1813597,2218964]
-	* generic/tkInt.h	by eliminating the functional redundancy
-	* generic/tkObj.c       and unnecessary loss of precision of the
-	* generic/tkText.c      {pixel,mm}ObjType tandem.
+	* generic/tkCanvUtil.c:	Millimeter patch. Fixes [1813597,2218964]
+	* generic/tkInt.h:	by eliminating the functional redundancy
+	* generic/tkObj.c:	and unnecessary loss of precision of the
+	* generic/tkText.c:	{pixel,mm}ObjType tandem.
 
 2008-11-27  Jan Nijtmans  <nijtmans@users.sf.net>
 
-	* generic/tkCanvLine.c:   Replace Tcl_SetResult(interp, NULL, ....)
-	* generic/tkEntry.c       calls with Tcl_ResetResult(interp)
+	* generic/tkCanvLine.c:	Replace Tcl_SetResult(interp, NULL, ....)
+	* generic/tkEntry.c:	calls with Tcl_ResetResult(interp)
 	* generic/tkMenu.c
 	* generic/tkOldConfig.c
-	* win/tkWinTest.c:  eliminate warning: unused variable 'tkwin'
+	* win/tkWinTest.c:	Eliminate warning: unused variable 'tkwin'
 
 2008-11-23  Pat Thoyts  <patthoyts@users.sourceforge.net>
 
@@ -30,7 +90,7 @@
 2008-11-22  Pat Thoyts  <patthoyts@users.sourceforge.net>
 
 	* library/ttk/combobox.tcl: [Bug 1939129,1991930] combobox dropdown
-	                            was drawn behind topmost toplevels.
+				    was drawn behind topmost toplevels.
 	* generic/tkCanvText.c:  Fixed up complaints from MSVC engendered
 	* generic/tkFont.c:      by the last commit. In particular replaced
 	* win/tkWinDraw.c:       round() which is a C99 function.

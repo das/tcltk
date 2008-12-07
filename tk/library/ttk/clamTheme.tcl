@@ -105,6 +105,8 @@ namespace eval ttk::theme::clam {
 				  readonly $colors(-frame)] \
 	    -foreground [list {readonly focus} $colors(-selectfg)] \
 	    ;
+	ttk::style configure ComboboxPopdownFrame \
+	    -relief solid -borderwidth 1
 
 	ttk::style configure TSpinbox -arrowsize 10 -padding {2 0 10 0}
 	ttk::style map TSpinbox \
