@@ -1019,27 +1019,27 @@ Tk_CreateWindow(
 				 * window. */
 {
     TkWindow *parentPtr = (TkWindow *) parent;
-    TkWindow *winPtr;
 
-    if ((parentPtr != NULL) && (parentPtr->flags & TK_ALREADY_DEAD)) {
-	Tcl_AppendResult(interp,
-		"can't create window: parent has been destroyed", NULL);
-	return NULL;
-    } else if ((parentPtr != NULL) &&
-	    (parentPtr->flags & TK_CONTAINER)) {
-	Tcl_AppendResult(interp,
-		"can't create window: its parent has -container = yes", NULL);
-	return NULL;
-    }
-
-    if (screenName == NULL) {
-	winPtr = TkAllocWindow(parentPtr->dispPtr, parentPtr->screenNum,
-		parentPtr);
-	if (NameWindow(interp, winPtr, parentPtr, name) != TCL_OK) {
-	    Tk_DestroyWindow((Tk_Window) winPtr);
+    if (parentPtr) {
+	if (parentPtr->flags & TK_ALREADY_DEAD) {
+	    Tcl_AppendResult(interp,
+		    "can't create window: parent has been destroyed", NULL);
 	    return NULL;
+	} else if (parentPtr->flags & TK_CONTAINER) {
+	    Tcl_AppendResult(interp,
+		    "can't create window: its parent has -container = yes",
+		    NULL);
+	    return NULL;
+	} else if (screenName == NULL) {
+	    TkWindow *winPtr = TkAllocWindow(parentPtr->dispPtr,
+		    parentPtr->screenNum, parentPtr);
+
+	    if (NameWindow(interp, winPtr, parentPtr, name) != TCL_OK) {
+		Tk_DestroyWindow((Tk_Window) winPtr);
+		return NULL;
+	    }
+	    return (Tk_Window) winPtr;
 	}
-	return (Tk_Window) winPtr;
     }
     return CreateTopLevelWindow(interp, parent, name, screenName,
 	    /* flags */ 0);
@@ -1081,32 +1081,32 @@ Tk_CreateAnonymousWindow(
 				 * window. */
 {
     TkWindow *parentPtr = (TkWindow *) parent;
-    TkWindow *winPtr;
 
-    if ((parentPtr != NULL) && (parentPtr->flags & TK_ALREADY_DEAD)) {
-	Tcl_AppendResult(interp,
-		"can't create window: parent has been destroyed", NULL);
-	return NULL;
-    } else if ((parentPtr != NULL) &&
-	    (parentPtr->flags & TK_CONTAINER)) {
-	Tcl_AppendResult(interp,
-		"can't create window: its parent has -container = yes", NULL);
-	return NULL;
-    }
-    if (screenName == NULL) {
-	winPtr = TkAllocWindow(parentPtr->dispPtr, parentPtr->screenNum,
-		parentPtr);
-	/*
-	 * Add the anonymous window flag now, so that NameWindow will behave
-	 * correctly.
-	 */
-
-	winPtr->flags |= TK_ANONYMOUS_WINDOW;
-	if (NameWindow(interp, winPtr, parentPtr, NULL) != TCL_OK) {
-	    Tk_DestroyWindow((Tk_Window) winPtr);
+    if (parentPtr) {
+	if (parentPtr->flags & TK_ALREADY_DEAD) {
+	    Tcl_AppendResult(interp,
+		    "can't create window: parent has been destroyed", NULL);
 	    return NULL;
+	} else if (parentPtr->flags & TK_CONTAINER) {
+	    Tcl_AppendResult(interp,
+		    "can't create window: its parent has -container = yes",
+		    NULL);
+	    return NULL;
+	} else if (screenName == NULL) {
+	    TkWindow *winPtr = TkAllocWindow(parentPtr->dispPtr,
+		    parentPtr->screenNum, parentPtr);
+	    /*
+	     * Add the anonymous window flag now, so that NameWindow will
+	     * behave correctly.
+	     */
+
+	    winPtr->flags |= TK_ANONYMOUS_WINDOW;
+	    if (NameWindow(interp, winPtr, parentPtr, NULL) != TCL_OK) {
+		Tk_DestroyWindow((Tk_Window) winPtr);
+		return NULL;
+	    }
+	    return (Tk_Window) winPtr;
 	}
-	return (Tk_Window) winPtr;
     }
     return CreateTopLevelWindow(interp, parent, NULL, screenName,
 	    TK_ANONYMOUS_WINDOW);
