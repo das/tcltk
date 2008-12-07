@@ -15,6 +15,7 @@
 
 #include "tclInt.h"
 #include <locale.h>
+#include "tclFileSystem.h"
 
 /*
  * The state structure used by [foreach]. Note that the actual structure has
@@ -44,6 +45,8 @@ static int		CheckAccess(Tcl_Interp *interp, Tcl_Obj *pathPtr,
 			    int mode);
 static int		EncodingDirsObjCmd(ClientData dummy,
 			    Tcl_Interp *interp, int objc,
+			    Tcl_Obj *const objv[]);
+static int		FileTempfileCmd(Tcl_Interp *interp, int objc,
 			    Tcl_Obj *const objv[]);
 static inline int	ForeachAssignments(Tcl_Interp *interp,
 			    struct ForeachState *statePtr);
@@ -219,7 +222,7 @@ Tcl_CaseObjCmd(
 	if (result == TCL_ERROR) {
 	    Tcl_AppendObjToErrorInfo(interp, Tcl_ObjPrintf(
 		    "\n    (\"%.50s\" arm line %d)",
-		    TclGetString(armPtr), interp->errorLine));
+		    TclGetString(armPtr), Tcl_GetErrorLine(interp)));
 	}
 	return result;
     }
@@ -310,7 +313,7 @@ CatchObjCmdCallback(
 
     if (rewind || Tcl_LimitExceeded(interp)) {
 	Tcl_AppendObjToErrorInfo(interp, Tcl_ObjPrintf(
-		"\n    (\"catch\" body line %d)", interp->errorLine));
+		"\n    (\"catch\" body line %d)", Tcl_GetErrorLine(interp)));
 	return TCL_ERROR;
     }
 
@@ -700,7 +703,7 @@ EvalCmdErrMsg(
 {
     if (result == TCL_ERROR) {
 	Tcl_AppendObjToErrorInfo(interp, Tcl_ObjPrintf(
-		"\n    (\"eval\" body line %d)", interp->errorLine));
+		"\n    (\"eval\" body line %d)", Tcl_GetErrorLine(interp)));
     }
     return result;
 }
@@ -893,8 +896,8 @@ Tcl_FileObjCmd(
 	"normalize",    "owned",
 	"pathtype",	"readable",	"readlink",	"rename",
 	"rootname",	"separator",    "size",		"split",
-	"stat",		"system",
-	"tail",		"type",		"volumes",	"writable",
+	"stat",		"system",	"tail",		"tempfile",
+	"type",		"volumes",	"writable",
 	NULL
     };
     enum options {
@@ -906,8 +909,8 @@ Tcl_FileObjCmd(
 	FCMD_NORMALIZE,	FCMD_OWNED,
 	FCMD_PATHTYPE,	FCMD_READABLE,	FCMD_READLINK,	FCMD_RENAME,
 	FCMD_ROOTNAME,	FCMD_SEPARATOR,	FCMD_SIZE,	FCMD_SPLIT,
-	FCMD_STAT,	FCMD_SYSTEM,
-	FCMD_TAIL,	FCMD_TYPE,	FCMD_VOLUMES,	FCMD_WRITABLE
+	FCMD_STAT,	FCMD_SYSTEM,	FCMD_TAIL,	FCMD_TEMPFILE,
+	FCMD_TYPE,	FCMD_VOLUMES,	FCMD_WRITABLE
     };
 
     if (objc < 2) {
@@ -1414,6 +1417,8 @@ Tcl_FileObjCmd(
 	Tcl_DecrRefCount(dirPtr);
 	return TCL_OK;
     }
+    case FCMD_TEMPFILE:
+	return FileTempfileCmd(interp, objc, objv);
     case FCMD_VOLUMES:
 	if (objc != 2) {
 	    Tcl_WrongNumArgs(interp, 2, objv, NULL);
@@ -1635,6 +1640,163 @@ GetTypeFromMode(
 }
 
 /*
+ *---------------------------------------------------------------------------
+ *
+ * FileTempfileCmd
+ *
+ *	This function implements the "tempfile" subcommand of the "file"
+ *	command.
+ *
+ * Results:
+ *	Returns a standard Tcl result.
+ *
+ * Side effects:
+ *	Creates a temporary file. Opens a channel to that file and puts the
+ *	name of that channel in the result. *Might* register suitable exit
+ *	handlers to ensure that the temporary file gets deleted. Might write
+ *	to a variable, so reentrancy is a potential issue.
+ *
+ *---------------------------------------------------------------------------
+ */
+
+static int
+FileTempfileCmd(
+    Tcl_Interp *interp,
+    int objc,
+    Tcl_Obj *const objv[])
+{
+    Tcl_Obj *nameVarObj = NULL;	/* Variable to store the name of the temporary
+				 * file in. */
+    Tcl_Obj *nameObj = NULL;	/* Object that will contain the filename. */
+    Tcl_Channel chan;		/* The channel opened (RDWR) on the temporary
+				 * file, or NULL if there's an error. */
+    Tcl_Obj *tempDirObj = NULL, *tempBaseObj = NULL, *tempExtObj = NULL;
+				/* Pieces of template. Each piece is NULL if
+				 * it is omitted. The platform temporary file
+				 * engine might ignore some pieces. */
+
+    if (objc < 2 || objc > 4) {
+	Tcl_WrongNumArgs(interp, 2, objv, "?nameVar? ?template?");
+	return TCL_ERROR;
+    }
+
+    if (objc > 2) {
+	nameVarObj = objv[2];
+	TclNewObj(nameObj);
+    }
+    if (objc > 3) {
+	int length;
+	const char *string = TclGetStringFromObj(objv[3], &length);
+
+	/*
+	 * Treat an empty string as if it wasn't there.
+	 */
+
+	if (length == 0) {
+	    goto makeTemporary;
+	}
+
+	/*
+	 * The template only gives a directory if there is a directory
+	 * separator in it.
+	 */
+
+	if (strchr(string, '/') != NULL
+		|| (tclPlatform == TCL_PLATFORM_WINDOWS
+		    && strchr(string, '\\') != NULL)) {
+	    tempDirObj = TclPathPart(interp, objv[3], TCL_PATH_DIRNAME);
+
+	    /*
+	     * Only allow creation of temporary files in the native filesystem
+	     * since they are frequently used for integration with external
+	     * tools or system libraries. [Bug 2388866]
+	     */
+
+	    if (Tcl_FSGetFileSystemForPath(tempDirObj)
+		    != &tclNativeFilesystem) {
+		TclDecrRefCount(tempDirObj);
+		tempDirObj = NULL;
+	    }
+	}
+
+	/*
+	 * The template only gives the filename if the last character isn't a
+	 * directory separator.
+	 */
+
+	if (string[length-1] != '/' && (tclPlatform != TCL_PLATFORM_WINDOWS
+		|| string[length-1] != '\\')) {
+	    Tcl_Obj *tailObj = TclPathPart(interp, objv[3], TCL_PATH_TAIL);
+
+	    tempBaseObj = TclPathPart(interp, tailObj, TCL_PATH_ROOT);
+	    tempExtObj = TclPathPart(interp, tailObj, TCL_PATH_EXTENSION);
+	    TclDecrRefCount(tailObj);
+	}
+    }
+
+    /*
+     * Convert empty parts of the template into unspecified parts.
+     */
+
+    if (tempDirObj && !TclGetString(tempDirObj)[0]) {
+	TclDecrRefCount(tempDirObj);
+	tempDirObj = NULL;
+    }
+    if (tempBaseObj && !TclGetString(tempBaseObj)[0]) {
+	TclDecrRefCount(tempBaseObj);
+	tempBaseObj = NULL;
+    }
+    if (tempExtObj && !TclGetString(tempExtObj)[0]) {
+	TclDecrRefCount(tempExtObj);
+	tempExtObj = NULL;
+    }
+
+    /*
+     * Create and open the temporary file.
+     */
+
+  makeTemporary:
+    chan = TclpOpenTemporaryFile(tempDirObj,tempBaseObj,tempExtObj, nameObj);
+
+    /*
+     * If we created pieces of template, get rid of them now.
+     */
+
+    if (tempDirObj) {
+	TclDecrRefCount(tempDirObj);
+    }
+    if (tempBaseObj) {
+	TclDecrRefCount(tempBaseObj);
+    }
+    if (tempExtObj) {
+	TclDecrRefCount(tempExtObj);
+    }
+
+    /*
+     * Deal with results.
+     */
+
+    if (chan == NULL) {
+	if (nameVarObj) {
+	    TclDecrRefCount(nameObj);
+	}
+	Tcl_AppendResult(interp, "can't create temporary file: ",
+		Tcl_PosixError(interp), NULL);
+	return TCL_ERROR;
+    }
+    Tcl_RegisterChannel(interp, chan);
+    if (nameVarObj != NULL) {
+	if (Tcl_ObjSetVar2(interp, nameVarObj, NULL, nameObj,
+		TCL_LEAVE_ERR_MSG) == NULL) {
+	    Tcl_UnregisterChannel(interp, chan);
+	    return TCL_ERROR;
+	}
+    }
+    Tcl_AppendResult(interp, Tcl_GetChannelName(chan), NULL);
+    return TCL_OK;
+}
+
+/*
  *----------------------------------------------------------------------
  *
  * Tcl_ForObjCmd --
@@ -1745,7 +1907,8 @@ TclNRForIterCallback(
 	Tcl_ResetResult(interp);
 	break;
     case TCL_ERROR:
-	Tcl_AppendObjToErrorInfo(interp, Tcl_ObjPrintf(msg, interp->errorLine));
+	Tcl_AppendObjToErrorInfo(interp,
+		Tcl_ObjPrintf(msg, Tcl_GetErrorLine(interp)));
     }
     return result;
 }
@@ -1951,7 +2114,7 @@ ForeachLoopStep(
 	goto done;
     case TCL_ERROR:
 	Tcl_AppendObjToErrorInfo(interp, Tcl_ObjPrintf(
-		"\n    (\"foreach\" body line %d)", interp->errorLine));
+		"\n    (\"foreach\" body line %d)", Tcl_GetErrorLine(interp)));
     default:
 	goto done;
     }

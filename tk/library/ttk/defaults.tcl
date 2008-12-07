@@ -99,6 +99,13 @@ namespace eval ttk::theme::default {
 	    -background [list selected $colors(-selectbg)] \
 	    -foreground [list selected $colors(-selectfg)] ;
 
+	# Combobox popdown frame
+	ttk::style layout ComboboxPopdownFrame {
+	    ComboboxPopdownFrame.border -sticky nswe
+	}
+ 	ttk::style configure ComboboxPopdownFrame \
+	    -borderwidth 1 -relief solid
+
 	#
 	# Toolbar buttons:
 	#

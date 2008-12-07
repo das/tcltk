@@ -733,7 +733,7 @@ Ttk_LayoutTemplate Ttk_BuildLayoutTemplate(Ttk_LayoutSpec spec)
 	    last = node;
 	}
 
-	if (spec->opcode & _TTK_CHILDREN) {
+	if (spec->opcode & _TTK_CHILDREN && last) {
 	    int depth = 1;
 	    last->child = Ttk_BuildLayoutTemplate(spec+1);
 

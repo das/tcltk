@@ -376,7 +376,7 @@ GenerateEditEvent(
 
     XQueryPointer(NULL, None, NULL, NULL,
 	    &event.x_root, &event.y_root, &x, &y, &event.state);
-    tkwin = Tk_TopCoordsToWindow(tkwin, x, y, &event.x, &event.y);
+    Tk_TopCoordsToWindow(tkwin, x, y, &event.x, &event.y);
     event.same_screen = true;
 
     switch (flag) {
