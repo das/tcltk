@@ -256,7 +256,7 @@ Tk_SetAppName(
     Tcl_IncrRefCount(resultObjPtr);
     for (i = 0; ; ) {
 	result = Tcl_ListObjIndex(NULL, resultObjPtr, i, &interpNamePtr);
-	if (interpNamePtr == NULL) {
+	if (result != TCL_OK || interpNamePtr == NULL) {
 	    break;
 	}
 	interpName = Tcl_GetString(interpNamePtr);
@@ -329,10 +329,10 @@ Tk_SendObjCmd(
 {
     const char *const sendOptions[] = {"-async", "-displayof", "-", NULL};
     char *stringRep, *destName;
-    int async = 0;
+    /*int async = 0;*/
     int i, index, firstArg;
     RegisteredInterp *riPtr;
-    Tcl_Obj *resultPtr, *listObjPtr;
+    Tcl_Obj *listObjPtr;
     int result = TCL_OK;
 
     for (i = 1; i < (objc - 1); ) {
@@ -343,7 +343,7 @@ Tk_SendObjCmd(
 		return TCL_ERROR;
 	    }
 	    if (index == 0) {
-		async = 1;
+		/*async = 1;*/
 		i++;
 	    } else if (index == 1) {
 		i += 2;
@@ -363,8 +363,6 @@ Tk_SendObjCmd(
 
     destName = Tcl_GetString(objv[i]);
     firstArg = i + 1;
-
-    resultPtr = Tcl_GetObjResult(interp);
 
     /*
      * See if the target interpreter is local. If so, execute the command

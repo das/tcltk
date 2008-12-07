@@ -3316,7 +3316,6 @@ UpdateGeometryInfo(
     TkWindow *winPtr = clientData;
     WmInfo *wmPtr = winPtr->wmInfoPtr;
     int x, y, width, height, min, max;
-    unsigned long serial;
 
     wmPtr->flags &= ~WM_UPDATE_PENDING;
 
@@ -3481,7 +3480,6 @@ UpdateGeometryInfo(
 	}
 	return;
     }
-    serial = NextRequest(winPtr->display);
     if (wmPtr->flags & WM_MOVE_PENDING) {
 	wmPtr->configWidth = width;
 	wmPtr->configHeight = height;

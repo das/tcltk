@@ -135,7 +135,6 @@ Tk_ChooseColorObjCmd(
     Tk_Window parent, tkwin = clientData;
     const char *title;
     int i, srcRead, dstWrote;
-    CMError cmerr;
     CMProfileRef prof;
     NColorPickerInfo cpinfo;
     static RGBColor color = {0xffff, 0xffff, 0xffff};
@@ -196,7 +195,7 @@ Tk_ChooseColorObjCmd(
 	}
     }
 
-    cmerr = CMGetDefaultProfileBySpace(cmRGBData, &prof);
+    ChkErr(CMGetDefaultProfileBySpace, cmRGBData, &prof);
     cpinfo.theColor.profile = prof;
     cpinfo.dstProfile = prof;
     cpinfo.flags = kColorPickerDialogIsMoveable | kColorPickerDialogIsModal;
@@ -209,7 +208,7 @@ Tk_ChooseColorObjCmd(
     TkMacOSXTrackingLoop(1);
     err = ChkErr(NPickColor, &cpinfo);
     TkMacOSXTrackingLoop(0);
-    cmerr = CMCloseProfile(prof);
+    ChkErr(CMCloseProfile, prof);
     if ((err == noErr) && (cpinfo.newColorChosen != 0)) {
 	char colorstr[8];
 
@@ -315,7 +314,7 @@ Tk_GetOpenFileObjCmd(
 	    }
 	    break;
 	case OPEN_INITFILE:
-	    initialFile = Tcl_GetString(objv[i + 1]);
+	    initialFile = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
 	    /* empty strings should be like no selection given */
 	    if (choiceLen == 0) {
 		initialFile = NULL;
@@ -323,6 +322,9 @@ Tk_GetOpenFileObjCmd(
 	    break;
 	case OPEN_MESSAGE:
 	    choice = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
+	    if (message) {
+		CFRelease(message);
+	    }
 	    message = CFStringCreateWithBytes(NULL, (unsigned char *) choice,
 		    choiceLen, kCFStringEncodingUTF8, false);
 	    break;
@@ -341,6 +343,9 @@ Tk_GetOpenFileObjCmd(
 	    break;
 	case OPEN_TITLE:
 	    choice = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
+	    if (title) {
+		CFRelease(title);
+	    }
 	    title = CFStringCreateWithBytes(NULL, (unsigned char *) choice,
 		    choiceLen, kCFStringEncodingUTF8, false);
 	    break;
@@ -370,7 +375,8 @@ Tk_GetOpenFileObjCmd(
 	while (filterPtr && i-- > 0) {
 	    filterPtr = filterPtr->next;
 	}
-	Tcl_SetVar(interp, Tcl_GetString(typeVariablePtr), filterPtr->name, 0);
+	Tcl_SetVar(interp, Tcl_GetString(typeVariablePtr), filterPtr ?
+		filterPtr->name : "", 0);
     }
 
   end:
@@ -478,6 +484,9 @@ Tk_GetSaveFileObjCmd(
 	    break;
 	case SAVE_MESSAGE:
 	    choice = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
+	    if (message) {
+		CFRelease(message);
+	    }
 	    message = CFStringCreateWithBytes(NULL, (unsigned char *) choice,
 		    choiceLen, kCFStringEncodingUTF8, false);
 	    break;
@@ -490,6 +499,9 @@ Tk_GetSaveFileObjCmd(
 	    break;
 	case SAVE_TITLE:
 	    choice = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
+	    if (title) {
+		CFRelease(title);
+	    }
 	    title = CFStringCreateWithBytes(NULL, (unsigned char *) choice,
 		    choiceLen, kCFStringEncodingUTF8, false);
 	    break;
@@ -582,6 +594,9 @@ Tk_ChooseDirectoryObjCmd(
 	    break;
 	case CHOOSE_MESSAGE:
 	    choice = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
+	    if (message) {
+		CFRelease(message);
+	    }
 	    message = CFStringCreateWithBytes(NULL, (unsigned char *) choice,
 		    choiceLen, kCFStringEncodingUTF8, false);
 	    break;
@@ -594,6 +609,9 @@ Tk_ChooseDirectoryObjCmd(
 	    break;
 	case CHOOSE_TITLE:
 	    choice = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
+	    if (title) {
+		CFRelease(title);
+	    }
 	    title = CFStringCreateWithBytes(NULL, (unsigned char *) choice,
 		    choiceLen, kCFStringEncodingUTF8, false);
 	    break;
@@ -1472,6 +1490,9 @@ Tk_MessageBoxObjCmd(
 
 	case ALERT_DETAIL:
 	    str = Tcl_GetString(objv[i + 1]);
+	    if (finemessageTextCF) {
+		CFRelease(finemessageTextCF);
+	    }
 	    finemessageTextCF = CFStringCreateWithCString(NULL, str,
 		    kCFStringEncodingUTF8);
 	    break;
@@ -1499,6 +1520,9 @@ Tk_MessageBoxObjCmd(
 
 	case ALERT_MESSAGE:
 	    str = Tcl_GetString(objv[i + 1]);
+	    if (messageTextCF) {
+		CFRelease(messageTextCF);
+	    }
 	    messageTextCF = CFStringCreateWithCString(NULL, str,
 		    kCFStringEncodingUTF8);
 	    break;
@@ -1563,7 +1587,6 @@ Tk_MessageBoxObjCmd(
 	 * we do this here.
 	 */
 
-	str = Tcl_GetString(objv[indexDefaultOption + 1]);
 	if (Tcl_GetIndexFromObj(interp, objv[indexDefaultOption + 1],
 		movableButtonStrings, "value", TCL_EXACT, &defaultButtonIndex)
 		!= TCL_OK) {
