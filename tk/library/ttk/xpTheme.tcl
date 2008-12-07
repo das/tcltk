@@ -60,41 +60,5 @@ namespace eval ttk::theme::xpnative {
 
 	ttk::style configure Toolbutton -padding {4 4}
 
-	# Vista requires some style modifications. There are some
-	# additional or different elements in use.
-	if {[tk windowingsystem] eq "win32"
-	    && [info exists tcl_platform(osVersion)]
-	    && $tcl_platform(osVersion) >= 6.0} {
-
-	    ttk::style element create Combobox.field vsapi \
-		COMBOBOX 2 {{} 1}
-	    ttk::style element create Combobox.border vsapi \
-		COMBOBOX 4 {disabled 4 focus 3 active 2 {} 1}
-	    ttk::style layout TCombobox {
-		Combobox.border -sticky nswe -border 0 -children {
-		    Combobox.downarrow -side right -sticky ns
-		    Combobox.padding -expand 1 -sticky nswe -children {
-			Combobox.focus -expand 1 -sticky nswe -children {
-			    Combobox.textarea -sticky nswe
-			}
-		    }
-		}
-	    }
-
-            # EDIT EP_EDITBORDER_HVSCROLL
-            ttk::style configure TSpinbox -padding {2 0 15 1}
-            ttk::style element create Vista.Spinbox.field vsapi \
-                EDIT 9 {disabled 4 focus 3 active 2 {} 1} \
-                -padding {1 1 1 2}
-            ttk::style layout TSpinbox {
-                Vista.Spinbox.field -sticky nswe -children {
-                    Spinbox.padding -sticky nswe -children {
-                        Spinbox.textarea -expand 1 -sticky {}
-                    }
-                    Spinbox.uparrow -side top -sticky ens
-                    Spinbox.downarrow -side bottom -sticky ens
-                }
-            }
-	}
     }
 }

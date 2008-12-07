@@ -45,6 +45,10 @@ namespace eval ttk::theme::winnative {
 	    -focusfill	[list {readonly focus} SystemHighlight] \
 	    ;
 
+	ttk::style element create ComboboxPopdownFrame.border from default
+	ttk::style configure ComboboxPopdownFrame \
+	    -borderwidth 1 -relief solid
+
         ttk::style configure TSpinbox -padding {2 0 16 0}
 
 	ttk::style configure TLabelframe -borderwidth 2 -relief groove

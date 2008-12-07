@@ -418,7 +418,7 @@ void
 TkpComputeMenuButtonGeometry(
     register TkMenuButton *mbPtr)	/* Widget record for menu button. */
 {
-    int width, height, mm, pixels;
+    int width, height;
     int hasImageOrBitmap = 0;
 
     mbPtr->inset = mbPtr->highlightWidth + mbPtr->borderWidth;
@@ -462,8 +462,6 @@ TkpComputeMenuButtonGeometry(
 	width += TK_POPUP_OFFSET;
     }
     if (mbPtr->indicatorOn) {
-	mm = WidthMMOfScreen(Tk_Screen(mbPtr->tkwin));
-	pixels = WidthOfScreen(Tk_Screen(mbPtr->tkwin));
 	mbPtr->indicatorHeight = kTriangleHeight;
 	mbPtr->indicatorWidth = kTriangleWidth + kTriangleMargin;
 	width += mbPtr->indicatorWidth;

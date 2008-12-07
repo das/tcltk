@@ -310,6 +310,16 @@ static const TkIntStubs tkIntStubs = {
     TkpTestembedCmd, /* 156 */
     TkpTesttextCmd, /* 157 */
     TkSelGetSelection, /* 158 */
+    TkTextGetIndex, /* 159 */
+    TkTextIndexBackBytes, /* 160 */
+    TkTextIndexForwBytes, /* 161 */
+    TkTextMakeByteIndex, /* 162 */
+    TkTextPrintIndex, /* 163 */
+    TkTextSetMark, /* 164 */
+    TkTextXviewCmd, /* 165 */
+    TkTextChanged, /* 166 */
+    TkBTreeNumLines, /* 167 */
+    TkTextInsertDisplayProc, /* 168 */
 };
 
 static const TkIntPlatStubs tkIntPlatStubs = {

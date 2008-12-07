@@ -2675,7 +2675,7 @@ Tk_CharBbox(
 {
     TextLayout *layoutPtr;
     LayoutChunk *chunkPtr;
-    int i, x, w;
+    int i, x = 0, w;
     Tk_Font tkfont;
     TkFont *fontPtr;
     const char *end;
