@@ -16,6 +16,7 @@
 
 #include "tkInt.h"
 #include "tkCanvas.h"
+#include "tkFont.h"
 
 /*
  * See tkCanvas.h for key data structures used to implement canvases.
@@ -81,7 +82,11 @@ typedef struct TkPostscriptInfo {
 				 * pre-pass that collects font information, so
 				 * the Postscript generated isn't relevant. */
     int prolog;			/* Non-zero means output should contain the
-				 * file prolog.ps in the header. */
+				 * standard prolog in the header. Generated in
+				 * library/mkpsenc.tcl, stored in the variable
+				 * ::tk::ps_preamable [sic]. */
+    Tk_Window tkwin;		/* Window to get font pixel/point transform
+				 * from. */
 } TkPostscriptInfo;
 
 /*
@@ -173,7 +178,7 @@ TkCanvPostscriptCmd(
     Tcl_HashSearch search;
     Tcl_HashEntry *hPtr;
     Tcl_DString buffer;
-    char psenccmd[] = "::tk::ensure_psenc_is_loaded";
+    static const char *psenccmd = "::tk::ensure_psenc_is_loaded";
     int deltaX = 0, deltaY = 0;	/* Offset of lower-left corner of area to be
 				 * marked up, measured in canvas units from
 				 * the positioning point on the page (reflects
@@ -185,7 +190,7 @@ TkCanvPostscriptCmd(
      * process all the arguments to fill the data structure in.
      */
 
-    result = Tcl_EvalEx(interp,psenccmd,-1,TCL_EVAL_GLOBAL);
+    result = Tcl_EvalEx(interp, psenccmd, -1, TCL_EVAL_GLOBAL);
     if (result != TCL_OK) {
         return result;
     }
@@ -213,6 +218,7 @@ TkCanvPostscriptCmd(
     psInfo.chan = NULL;
     psInfo.prepass = 0;
     psInfo.prolog = 1;
+    psInfo.tkwin = tkwin;
     Tcl_InitHashTable(&psInfo.fontTable, TCL_STRING_KEYS);
     result = Tk_ConfigureWidget(interp, tkwin, configSpecs, argc-2, argv+2,
 	    (char *) &psInfo, TK_CONFIG_ARGV_ONLY);
@@ -454,7 +460,7 @@ TkCanvPostscriptCmd(
 	 * Insert the prolog
 	 */
 
-	Tcl_AppendResult(interp, Tcl_GetVar(interp,"::tk::ps_preamable",
+	Tcl_AppendResult(interp, Tcl_GetVar(interp, "::tk::ps_preamable",
 		TCL_GLOBAL_ONLY), NULL);
 
 	if (psInfo.chan != NULL) {
@@ -727,7 +733,7 @@ Tk_PostscriptFont(
 
 	    if (Tcl_ListObjGetElements(interp, list, &objc, &objv) != TCL_OK
 		    || objc != 2
-		    || Tcl_GetString(objv[0])[0]=='\0'
+		    || Tcl_GetString(objv[0])[0] == '\0'
 		    || Tcl_GetDoubleFromObj(interp, objv[1], &size) != TCL_OK
 		    || size <= 0) {
 		Tcl_ResetResult(interp);
@@ -737,7 +743,7 @@ Tk_PostscriptFont(
 	    }
 
 	    fontname = Tcl_GetString(objv[0]);
-	    sprintf(pointString, "%d", (int)size);
+	    sprintf(pointString, "%d", (int) size);
 
 	    Tcl_AppendResult(interp, "/", fontname, " findfont ",
 		    pointString, " scalefont ", NULL);
@@ -756,7 +762,7 @@ Tk_PostscriptFont(
 
     Tcl_DStringInit(&ds);
     points = Tk_PostscriptFontName(tkfont, &ds);
-    sprintf(pointString, "%d", points);
+    sprintf(pointString, "%d", TkFontGetPoints(psInfoPtr->tkwin, points));
     Tcl_AppendResult(interp, "/", Tcl_DStringValue(&ds), " findfont ",
 	    pointString, " scalefont ", NULL);
     if (strncasecmp(Tcl_DStringValue(&ds), "Symbol", 7) != 0) {
@@ -1249,7 +1255,7 @@ TkPostscriptImage(
      * monochrome screen, use gray or monochrome mode instead.
      */
 
-    if (!cdata.color && level == 2) {
+    if (!cdata.color && level >= 2) {
 	level = 1;
     }
 
@@ -1266,7 +1272,7 @@ TkPostscriptImage(
     switch (level) {
     case 0: bytesPerLine = (width + 7) / 8;  maxWidth = 240000; break;
     case 1: bytesPerLine = width;	     maxWidth = 60000;  break;
-    case 2: bytesPerLine = 3 * width;	     maxWidth = 20000;  break;
+    default: bytesPerLine = 3 * width;	     maxWidth = 20000;  break;
     }
 
     if (bytesPerLine > 60000) {
@@ -1294,7 +1300,7 @@ TkPostscriptImage(
 	    sprintf(buffer, "%d %d 8 matrix {\n<", width, rows);
 	    Tcl_AppendResult(interp, buffer, NULL);
 	    break;
-	case 2:
+	default:
 	    sprintf(buffer, "%d %d 8 matrix {\n<", width, rows);
 	    Tcl_AppendResult(interp, buffer, NULL);
 	    break;
@@ -1356,7 +1362,7 @@ TkPostscriptImage(
 		    }
 		}
 		break;
-	    case 2:
+	    default:
 		/*
 		 * Finally, color mode. Here, just output the red, green, and
 		 * blue values directly.
@@ -1382,7 +1388,7 @@ TkPostscriptImage(
 	switch (level) {
 	case 0: case 1:
 	    sprintf(buffer, ">\n} image\n"); break;
-	case 2:
+	default:
 	    sprintf(buffer, ">\n} false 3 colorimage\n"); break;
 	}
 	Tcl_AppendResult(interp, buffer, NULL);
@@ -1581,7 +1587,7 @@ Tk_PostscriptPhoto(
     switch (colorLevel) {
     case 0: bytesPerLine = (width + 7) / 8; maxWidth = 240000; break;
     case 1: bytesPerLine = width;	    maxWidth = 60000;  break;
-    case 2: bytesPerLine = 3 * width;	    maxWidth = 20000;  break;
+    default: bytesPerLine = 3 * width;	    maxWidth = 20000;  break;
     }
     if (bytesPerLine > 60000) {
 	Tcl_ResetResult(interp);
