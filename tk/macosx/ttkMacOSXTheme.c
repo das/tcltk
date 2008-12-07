@@ -473,13 +473,6 @@ static Ttk_ElementSpec ComboboxElementSpec = {
 };
 
 /*----------------------------------------------------------------------
- * +++ DrawThemeTrack-based elements --
- * Progress bars and scales. (See also: <<NOTE-TRACKS>>)
- */
-
-static Ttk_StateTable ThemeTrackEnableTable[] = {
-    { kThemeTrackDisabled, TTK_STATE_DISABLED, 0 },
-    { kThemeTrackInactive, TTK_STATE_BACKGROUND, 0 },
  * +++ Spinbuttons.
  *
  * From Apple HIG, part III, section "Controls", "The Stepper Control":
@@ -530,6 +523,13 @@ static Ttk_ElementSpec SpinButtonElementSpec = {
 
 
 /*----------------------------------------------------------------------
+ * +++ DrawThemeTrack-based elements --
+ * Progress bars and scales. (See also: <<NOTE-TRACKS>>)
+ */
+
+static Ttk_StateTable ThemeTrackEnableTable[] = {
+    { kThemeTrackDisabled, TTK_STATE_DISABLED, 0 },
+    { kThemeTrackInactive, TTK_STATE_BACKGROUND, 0 },
     { kThemeTrackActive, 0, 0 }
     /* { kThemeTrackNothingToScroll, ?, ? }, */
 };
