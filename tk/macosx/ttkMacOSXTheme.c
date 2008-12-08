@@ -221,8 +221,8 @@ static void ButtonElementDraw(
     Drawable d, Ttk_Box b, Ttk_State state)
 {
     ThemeButtonParams *params = clientData;
-    const HIThemeButtonDrawInfo info = computeButtonDrawInfo(params, state);
     CGRect bounds = BoxToRect(d, Ttk_PadBox(b, ButtonMargins));
+    const HIThemeButtonDrawInfo info = computeButtonDrawInfo(params, state);
 
     BEGIN_DRAWING(d)
     ChkErr(HIThemeDrawButton, &bounds, &info, dc.context, HIOrientation, NULL);
@@ -462,7 +462,6 @@ static void ComboboxElementDraw(
     void *clientData, void *elementRecord, Tk_Window tkwin,
     Drawable d, Ttk_Box b, Ttk_State state)
 {
-    //ThemeButtonParams *params = clientData;
     CGRect bounds = BoxToRect(d, Ttk_PadBox(b, ComboboxMargins));
     const HIThemeButtonDrawInfo info = {
 	.version = 0,
@@ -499,30 +498,31 @@ static void SpinButtonElementSize(
     int *widthPtr, int *heightPtr, Ttk_Padding *paddingPtr)
 {
     SInt32 s;
-    GetThemeMetric(kThemeMetricLittleArrowsWidth, &s); *widthPtr = s;
-    GetThemeMetric(kThemeMetricLittleArrowsHeight, &s); *heightPtr = s;
-    *widthPtr += Ttk_PaddingWidth(SpinbuttonMargins);
-    *heightPtr += Ttk_PaddingHeight(SpinbuttonMargins);
+
+    ChkErr(GetThemeMetric, kThemeMetricLittleArrowsWidth, &s);
+    *widthPtr = s + Ttk_PaddingWidth(SpinbuttonMargins);
+    ChkErr(GetThemeMetric, kThemeMetricLittleArrowsHeight, &s);
+    *heightPtr = s + Ttk_PaddingHeight(SpinbuttonMargins);
 }
 
 static void SpinButtonElementDraw(
     void *clientData, void *elementRecord, Tk_Window tkwin,
     Drawable d, Ttk_Box b, Ttk_State state)
 {
-    Rect bounds = BoxToRect(d, Ttk_PadBox(b, SpinbuttonMargins));
-    ThemeButtonDrawInfo info;
-
+    CGRect bounds = BoxToRect(d, Ttk_PadBox(b, SpinbuttonMargins));
     /* @@@ can't currently distinguish PressedUp (== Pressed) from PressedDown;
      * ignore this bit for now [see #2219588]
      */
-    info.state = Ttk_StateTableLookup(ThemeStateTable,
-    	state & ~TTK_STATE_PRESSED);
-    info.value = Ttk_StateTableLookup(ButtonValueTable, state);
-    info.adornment = kThemeAdornmentNone;
+    const HIThemeButtonDrawInfo info = {
+	.version = 0,
+	.state = Ttk_StateTableLookup(ThemeStateTable, state & ~TTK_STATE_PRESSED),
+	.kind = kThemeIncDecButton,
+	.value = Ttk_StateTableLookup(ButtonValueTable, state),
+	.adornment = kThemeAdornmentNone,
+    };
 
     BEGIN_DRAWING(d)
-    DrawThemeButton(
-	&bounds, kThemeIncDecButton, &info, NULL, NULL/*DontErase*/, NULL, 0);
+    ChkErr(HIThemeDrawButton, &bounds, &info, dc.context, HIOrientation, NULL);
     END_DRAWING
 }
 
@@ -968,8 +968,11 @@ static void DisclosureElementSize(
     int *widthPtr, int *heightPtr, Ttk_Padding *paddingPtr)
 {
     SInt32 s;
-    GetThemeMetric(kThemeMetricDisclosureTriangleWidth, &s); *widthPtr = s;
-    GetThemeMetric(kThemeMetricDisclosureTriangleHeight, &s); *heightPtr = s;
+
+    ChkErr(GetThemeMetric, kThemeMetricDisclosureTriangleWidth, &s);
+    *widthPtr = s;
+    ChkErr(GetThemeMetric, kThemeMetricDisclosureTriangleHeight, &s);
+    *heightPtr = s;
 }
 
 static void DisclosureElementDraw(
