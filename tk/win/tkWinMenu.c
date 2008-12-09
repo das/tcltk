@@ -1032,7 +1032,7 @@ TkWinHandleMenuEvent(
 		if ((code != TCL_OK) && (code != TCL_CONTINUE)
 			&& (code != TCL_BREAK)) {
 		    Tcl_AddErrorInfo(interp, "\n    (menu preprocess)");
-		    Tcl_BackgroundError(interp);
+		    Tcl_BackgroundException(interp, code);
 		}
 		Tcl_Release((ClientData)interp);
 	    }
@@ -1091,7 +1091,7 @@ TkWinHandleMenuEvent(
 	    code = TkInvokeMenu(interp, menuPtr, mePtr->index);
 	    if (code != TCL_OK && code != TCL_CONTINUE && code != TCL_BREAK) {
 		Tcl_AddErrorInfo(interp, "\n    (menu invoke)");
-		Tcl_BackgroundError(interp);
+		Tcl_BackgroundException(interp, code);
 	    }
 	    Tcl_Release((ClientData)interp);
 	    *plResult = 0;
