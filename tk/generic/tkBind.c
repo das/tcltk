@@ -1775,7 +1775,7 @@ Tk_BindEvent(
 		break;
 	    } else {
 		Tcl_AddErrorInfo(interp, "\n    (command bound to event)");
-		Tcl_BackgroundError(interp);
+		Tcl_BackgroundException(interp, code);
 		break;
 	    }
 	}
@@ -2663,12 +2663,14 @@ ChangeScreen(
 {
     Tcl_Obj *cmdObj = Tcl_ObjPrintf("::tk::ScreenChanged %s.%d",
 	    dispName, screenIndex);
+    int code;
 
     Tcl_IncrRefCount(cmdObj);
-    if (Tcl_GlobalEvalObj(interp, cmdObj) != TCL_OK) {
+    code = Tcl_GlobalEvalObj(interp, cmdObj);
+    if (code != TCL_OK) {
 	Tcl_AddErrorInfo(interp,
 		"\n    (changing screen in event binding)");
-	Tcl_BackgroundError(interp);
+	Tcl_BackgroundException(interp, code);
     }
     Tcl_DecrRefCount(cmdObj);
 }
