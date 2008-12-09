@@ -1560,6 +1560,7 @@ LostSelection(
     LostCommand *lostPtr = clientData;
     Tcl_Obj *objPtr;
     Tcl_Interp *interp;
+    int code;
 
     interp = lostPtr->interp;
     Tcl_Preserve(interp);
@@ -1573,8 +1574,9 @@ LostSelection(
     Tcl_IncrRefCount(objPtr);
     Tcl_ResetResult(interp);
 
-    if (TkCopyAndGlobalEval(interp, lostPtr->command) != TCL_OK) {
-	Tcl_BackgroundError(interp);
+    code = TkCopyAndGlobalEval(interp, lostPtr->command);
+    if (code != TCL_OK) {
+	Tcl_BackgroundException(interp, code);
     }
 
     Tcl_SetObjResult(interp, objPtr);
