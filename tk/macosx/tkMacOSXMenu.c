@@ -2189,7 +2189,7 @@ EventuallyInvokeMenu (
 
     if (code != TCL_OK && code != TCL_CONTINUE && code != TCL_BREAK) {
 	Tcl_AddErrorInfo(realData->menuPtr->interp, "\n    (menu invoke)");
-	Tcl_BackgroundError(realData->menuPtr->interp);
+	Tcl_BackgroundException(realData->menuPtr->interp, code);
     }
 
     if (realData->menuPtr->tkwin) {
@@ -4076,7 +4076,7 @@ TkMacOSXPreprocessMenu(void)
 		    && (code != TCL_BREAK)) {
 		Tcl_AddErrorInfo(currentMenuBarInterp,
 			"\n    (menu preprocess)");
-		Tcl_BackgroundError(currentMenuBarInterp);
+		Tcl_BackgroundException(currentMenuBarInterp, code);
 	    }
 	    Tcl_Release(currentMenuBarInterp);
 	}
