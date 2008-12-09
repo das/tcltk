@@ -5501,7 +5501,7 @@ CanvasUpdateScrollbars(
 		NULL);
 	Tcl_DecrRefCount(fractions);
 	if (result != TCL_OK) {
-	    Tcl_BackgroundError(interp);
+	    Tcl_BackgroundException(interp, result);
 	}
 	Tcl_ResetResult(interp);
 	Tcl_Release(xScrollCmd);
@@ -5515,7 +5515,7 @@ CanvasUpdateScrollbars(
 		NULL);
 	Tcl_DecrRefCount(fractions);
 	if (result != TCL_OK) {
-	    Tcl_BackgroundError(interp);
+	    Tcl_BackgroundException(interp, result);
 	}
 	Tcl_ResetResult(interp);
 	Tcl_Release(yScrollCmd);

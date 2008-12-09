@@ -3276,7 +3276,7 @@ ListboxUpdateVScrollbar(
     if (result != TCL_OK) {
 	Tcl_AddErrorInfo(interp,
 		"\n    (vertical scrolling command executed by listbox)");
-	Tcl_BackgroundError(interp);
+	Tcl_BackgroundException(interp, result);
     }
     Tcl_Release(interp);
 }
@@ -3341,7 +3341,7 @@ ListboxUpdateHScrollbar(
     if (result != TCL_OK) {
 	Tcl_AddErrorInfo(interp,
 		"\n    (horizontal scrolling command executed by listbox)");
-	Tcl_BackgroundError(interp);
+	Tcl_BackgroundException(interp, result);
     }
     Tcl_Release(interp);
 }
