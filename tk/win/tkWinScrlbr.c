@@ -572,7 +572,7 @@ ScrollbarProc(
 	code = Tcl_GlobalEval(interp, cmdString.string);
 	if (code != TCL_OK && code != TCL_CONTINUE && code != TCL_BREAK) {
 	    Tcl_AddErrorInfo(interp, "\n    (scrollbar command)");
-	    Tcl_BackgroundError(interp);
+	    Tcl_BackgroundException(interp, code);
 	}
 	Tcl_DStringFree(&cmdString);
 
