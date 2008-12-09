@@ -443,9 +443,9 @@ ImgBmapConfigureInstance(
 	Tk_FreeGC(Tk_Display(instancePtr->tkwin), instancePtr->gc);
     }
     instancePtr->gc = None;
-    Tcl_AddErrorInfo(masterPtr->interp, "\n    (while configuring image \"");
-    Tcl_AddErrorInfo(masterPtr->interp, Tk_NameOfImage(masterPtr->tkMaster));
-    Tcl_AddErrorInfo(masterPtr->interp, "\")");
+    Tcl_AppendObjToErrorInfo(masterPtr->interp, Tcl_ObjPrintf(
+	    "\n    (while configuring image \"%s\")", Tk_NameOfImage(
+	    masterPtr->tkMaster)));
     Tcl_BackgroundError(masterPtr->interp);
 }
 

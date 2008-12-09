@@ -911,7 +911,7 @@ EmbWinLayoutProc(
 	}
 	if (code != TCL_OK) {
 	createError:
-	    Tcl_BackgroundError(textPtr->interp);
+	    Tcl_BackgroundException(textPtr->interp, code);
 	    goto gotWindow;
 	}
 	Tcl_DStringInit(&name);
