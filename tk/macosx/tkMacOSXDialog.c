@@ -5,7 +5,7 @@
  *
  * Copyright (c) 1996-1997 Sun Microsystems, Inc.
  * Copyright 2001, Apple Computer, Inc.
- * Copyright (c) 2006-2007 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright (c) 2006-2008 Daniel A. Steffen <das@users.sourceforge.net>
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -1741,3 +1741,531 @@ AlertHandler(
     }
     return eventNotHandledErr;
 }
+
+/*
+ *----------------------------------------------------------------------
+ */
+#pragma mark [tk::choosefont] implementation (TIP 213)
+/*
+ *----------------------------------------------------------------------
+ */
+
+#include "tkMacOSXEvent.h"
+#include "tkMacOSXFont.h"
+
+typedef struct ChoosefontData {
+    Tcl_Obj *titleObj;
+    Tcl_Obj *cmdObj;
+    Tk_Window parent;
+} ChoosefontData;
+
+static Tcl_Obj *ChoosefontCget(ChoosefontData *cfdPtr, int optionIndex);
+static int ChoosefontConfigureCmd(ClientData clientData, Tcl_Interp *interp,
+	int objc, Tcl_Obj *const objv[]);
+static int ChoosefontShowCmd(ClientData clientData, Tcl_Interp *interp,
+	int objc, Tcl_Obj *const objv[]);
+static int ChoosefontHideCmd(ClientData clientData, Tcl_Interp *interp,
+	int objc, Tcl_Obj *const objv[]);
+static void DeleteChoosefontData(ClientData clientData, Tcl_Interp *interp);
+
+static const TkEnsemble choosefontEnsemble[] = {
+    { "configure", ChoosefontConfigureCmd, NULL },
+    { "show", ChoosefontShowCmd, NULL },
+    { "hide", ChoosefontHideCmd, NULL },
+};
+
+static Tcl_Interp *choosefontInterp = NULL;
+static FMFontFamily fontPanelFontFamily = kInvalidFontFamily;
+static FMFontStyle fontPanelFontStyle = 0;
+static FMFontSize fontPanelFontSize = 0;
+
+static const char *choosefontOptionStrings[] = {
+    "-parent", "-title", "-font", "-command",
+    "-visible", NULL
+};
+enum ChoosefontOption {
+    ChoosefontParent, ChoosefontTitle, ChoosefontFont, ChoosefontCmd,
+    ChoosefontVisible
+};
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkMacOSXProcessFontEvent --
+ *
+ *	This processes Font panel events.
+ *
+ * Results:
+ *	True if Tk events are generated - false otherwise.
+ *
+ * Side effects:
+ *	Additional events may be place on the Tk event queue.
+ *
+ *----------------------------------------------------------------------
+ */
+
+MODULE_SCOPE int
+TkMacOSXProcessFontEvent(
+	TkMacOSXEvent * eventPtr,
+	MacEventStatus * statusPtr)
+{
+    OSStatus err;
+    int eventGenerated = 0;
+    ChoosefontData *cfdPtr;
+
+    switch (eventPtr->eKind) {
+	case kEventFontPanelClosed:
+	case kEventFontSelection:
+	    break;
+	default:
+	    goto done;
+    }
+    if (!choosefontInterp) {
+	goto done;
+    }
+    cfdPtr = Tcl_GetAssocData(choosefontInterp, "::tk::choosefont", NULL);
+    switch (eventPtr->eKind) {
+	case kEventFontPanelClosed:
+	    if (!FPIsFontPanelVisible()) {
+		TkSendVirtualEvent(cfdPtr->parent, "TkChoosefontVisibility");
+		choosefontInterp = NULL;
+		eventGenerated = 1;
+	    }
+	    break;
+	case kEventFontSelection: {
+	    Tcl_Obj *fontObj = NULL;
+
+	    err = ChkErr(GetEventParameter, eventPtr->eventRef,
+		    kEventParamFMFontFamily, typeFMFontFamily, NULL,
+		    sizeof(FMFontFamily), NULL, &fontPanelFontFamily);
+	    if (err != noErr) goto noQDFont;
+	    err = ChkErr(GetEventParameter, eventPtr->eventRef,
+		    kEventParamFMFontStyle, typeFMFontStyle, NULL,
+		    sizeof(FMFontStyle), NULL, &fontPanelFontStyle);
+	    if (err != noErr) goto noQDFont;
+	    err = ChkErr(GetEventParameter, eventPtr->eventRef,
+		    kEventParamFMFontSize, typeFMFontSize, NULL,
+		    sizeof(FMFontSize), NULL, &fontPanelFontSize);
+	    if (err != noErr) goto noQDFont;
+	    fontObj = TkMacOSXFontDescriptionForFMFontInfo(
+		    fontPanelFontFamily, fontPanelFontStyle,
+		    fontPanelFontSize);
+	noQDFont:
+	    if (err != noErr) {
+		ATSUFontID fontID;
+		Fixed fontFixedSize;
+
+		err = ChkErr(GetEventParameter, eventPtr->eventRef,
+			kEventParamATSUFontID, typeATSUFontID, NULL,
+			sizeof(ATSUFontID), NULL, &fontID);
+		if (err != noErr) goto noATSFont;
+		err = ChkErr(FMGetFontFamilyInstanceFromFont, fontID,
+			&fontPanelFontFamily, &fontPanelFontStyle);
+		if (err != noErr) {
+		    fontPanelFontFamily = kInvalidFontFamily;
+		}
+		err = ChkErr(GetEventParameter, eventPtr->eventRef,
+			kEventParamATSUFontSize, typeATSUSize, NULL,
+			sizeof(Fixed), NULL, &fontFixedSize);
+		if (err != noErr) goto noATSFont;
+		fontPanelFontSize = FixedToInt(fontFixedSize);
+		if (fontPanelFontFamily != kInvalidFontFamily) {
+		    fontObj = TkMacOSXFontDescriptionForFMFontInfo(
+			    fontPanelFontFamily, fontPanelFontStyle,
+			    fontPanelFontSize);
+		} else {
+		    CFStringRef fontName;
+
+		    err = ChkErr(ATSFontGetName,
+			    FMGetATSFontRefFromFont(fontID),
+			    kATSOptionFlagsDefault, &fontName);
+		    if (err != noErr) goto noATSFont;
+		    if (fontName) {
+			Tcl_Obj *objv[] = {
+				TkMacOSXGetStringObjFromCFString(fontName),
+				Tcl_NewIntObj(fontPanelFontSize)
+				};
+
+			if (objv[0]) {
+			    fontObj = Tcl_NewListObj(2, objv);
+			} else {
+			    Tcl_DecrRefCount(objv[1]);
+			}
+			CFRelease(fontName);
+		    }
+		}
+	    }
+	noATSFont:
+	    if (cfdPtr->cmdObj) {
+		int objc, result;
+		Tcl_Obj **objv, **tmpv;
+
+		result = Tcl_ListObjGetElements(choosefontInterp,
+			cfdPtr->cmdObj, &objc, &objv);
+		if (result == TCL_OK) {
+		    tmpv = (Tcl_Obj **) ckalloc(sizeof(Tcl_Obj *) *
+			    (unsigned)(objc + 2));
+		    memcpy(tmpv, objv, sizeof(Tcl_Obj *) * objc);
+		    tmpv[objc] = fontObj ? fontObj : Tcl_NewObj();
+		    result = TkBackgroundEvalObjv(choosefontInterp, objc+1,
+			    tmpv, TCL_EVAL_GLOBAL);
+		    ckfree((char *)tmpv);
+		}
+	    }
+	    break;
+	}
+    }
+done:
+    return eventGenerated;
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * ChoosefontCget --
+ *
+ *	Helper for the ChoosefontConfigure command to return the
+ *	current value of any of the options (which may be NULL in
+ *	the structure)
+ *
+ * Results:
+ *	Tcl object of option value.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+static Tcl_Obj *
+ChoosefontCget(ChoosefontData *cfdPtr, int optionIndex)
+{
+    Tcl_Obj *resObj = NULL;
+
+    switch(optionIndex) {
+	case ChoosefontParent: {
+	    if (cfdPtr->parent != None) {
+		resObj = Tcl_NewStringObj(
+			((TkWindow*)cfdPtr->parent)->pathName, -1);
+	    } else {
+		resObj = Tcl_NewStringObj(".", 1);
+	    }
+	    break;
+	}
+	case ChoosefontTitle: {
+	    if (cfdPtr->titleObj) {
+		resObj = cfdPtr->titleObj;
+	    } else {
+		resObj = Tcl_NewObj();
+	    }
+	    break;
+	}
+	case ChoosefontFont: {
+	    if (fontPanelFontFamily != kInvalidFontFamily) {
+		resObj = TkMacOSXFontDescriptionForFMFontInfo(
+		    fontPanelFontFamily, fontPanelFontStyle,
+		    fontPanelFontSize);
+	    } else {
+		resObj = Tcl_NewObj();
+	    }
+	    break;
+	}
+	case ChoosefontCmd: {
+	    if (cfdPtr->cmdObj) {
+		resObj = cfdPtr->cmdObj;
+	    } else {
+		resObj = Tcl_NewObj();
+	    }
+	    break;
+	}
+	case ChoosefontVisible: {
+	    resObj = Tcl_NewBooleanObj(FPIsFontPanelVisible());
+	    break;
+	}
+	default: {
+	    resObj = Tcl_NewObj();
+	}
+    }
+    return resObj;
+}
+
+/*
+ * ----------------------------------------------------------------------
+ *
+ * ChoosefontConfigureCmd --
+ *
+ *	Implementation of the 'tk::choosefont configure' ensemble command.
+ *	See the user documentation for what it does.
+ *
+ * Results:
+ *	See the user documentation.
+ *
+ * Side effects:
+ *	Per-interp data structure may be modified
+ *
+ * ----------------------------------------------------------------------
+ */
+
+static int
+ChoosefontConfigureCmd(
+    ClientData clientData,	/* Main window */
+    Tcl_Interp *interp,
+    int objc,
+    Tcl_Obj *const objv[])
+{
+    Tk_Window tkwin = (Tk_Window)clientData;
+    ChoosefontData *cfdPtr = Tcl_GetAssocData(interp, "::tk::choosefont",NULL);
+    int i, r = TCL_OK;
+
+    /*
+     * With no arguments we return all the options in a dict
+     */
+
+    if (objc == 1) {
+	Tcl_Obj *keyObj, *valueObj;
+	Tcl_Obj *dictObj = Tcl_NewDictObj();
+	for (i = 0; r == TCL_OK && choosefontOptionStrings[i] != NULL; ++i) {
+	    keyObj = Tcl_NewStringObj(choosefontOptionStrings[i], -1);
+	    valueObj = ChoosefontCget(cfdPtr, i);
+	    r = Tcl_DictObjPut(interp, dictObj, keyObj, valueObj);
+	}
+	if (r == TCL_OK) {
+	    Tcl_SetObjResult(interp, dictObj);
+	}
+	return r;
+    }
+
+    for (i = 1; i < objc; i += 2) {
+	int optionIndex, len;
+	if (Tcl_GetIndexFromObj(interp, objv[i], choosefontOptionStrings,
+		"option", 0, &optionIndex) != TCL_OK) {
+	    return TCL_ERROR;
+	}
+	if (objc == 2) {
+	    /* With one option and no arg, return the current value */
+	    Tcl_SetObjResult(interp, ChoosefontCget(cfdPtr, optionIndex));
+	    return TCL_OK;
+	}
+	if (i + 1 == objc) {
+	    Tcl_AppendResult(interp, "value for \"",
+		Tcl_GetString(objv[i]), "\" missing", NULL);
+	    return TCL_ERROR;
+	}
+	switch (optionIndex) {
+	    case ChoosefontVisible: {
+		const char *msg = "cannot change read-only option "
+		    "\"-visible\": use the show or hide command";
+
+		Tcl_SetObjResult(interp, Tcl_NewStringObj(msg, sizeof(msg)-1));
+		return TCL_ERROR;
+	    }
+	    case ChoosefontParent: {
+		Tk_Window parent = Tk_NameToWindow(interp,
+		    Tcl_GetString(objv[i+1]), tkwin);
+		if (parent == None) {
+		    return TCL_ERROR;
+		}
+		cfdPtr->parent = parent;
+		break;
+	    }
+	    case ChoosefontTitle:
+		if (cfdPtr->titleObj) {
+		    Tcl_DecrRefCount(cfdPtr->titleObj);
+		}
+		Tcl_GetStringFromObj(objv[i+1], &len);
+		if (len) {
+		    cfdPtr->titleObj = objv[i+1];
+		    if (Tcl_IsShared(cfdPtr->titleObj)) {
+			cfdPtr->titleObj = Tcl_DuplicateObj(cfdPtr->titleObj);
+		    }
+		    Tcl_IncrRefCount(cfdPtr->titleObj);
+		} else {
+		    cfdPtr->titleObj = NULL;
+		}
+		break;
+	    case ChoosefontFont: {
+
+		Tcl_GetStringFromObj(objv[i+1], &len);
+		if (len) {
+		    Tk_Font f = Tk_AllocFontFromObj(interp, tkwin, objv[i+1]);
+		    if (f) {
+			ATSUStyle atsuStyle;
+
+			TkMacOSXFMFontInfoForFont(f, &fontPanelFontFamily,
+				 &fontPanelFontStyle, &fontPanelFontSize,
+				 &atsuStyle);
+			ChkErr(SetFontInfoForSelection,
+				kFontSelectionATSUIType, 1, &atsuStyle, NULL);
+			Tk_FreeFont(f);
+		    } else {
+			return TCL_ERROR;
+		    }
+		} else {
+		    fontPanelFontFamily = kInvalidFontFamily;
+		    ChkErr(SetFontInfoForSelection,
+			    kFontSelectionATSUIType, 0, NULL, NULL);
+		}
+		break;
+	    }
+	    case ChoosefontCmd:
+		if (cfdPtr->cmdObj) {
+		    Tcl_DecrRefCount(cfdPtr->cmdObj);
+		}
+		Tcl_GetStringFromObj(objv[i+1], &len);
+		if (len) {
+		    cfdPtr->cmdObj = objv[i+1];
+		    if (Tcl_IsShared(cfdPtr->cmdObj)) {
+			cfdPtr->cmdObj = Tcl_DuplicateObj(cfdPtr->cmdObj);
+		    }
+		    Tcl_IncrRefCount(cfdPtr->cmdObj);
+		} else {
+		    cfdPtr->cmdObj = NULL;
+		}
+		break;
+	}
+    }
+    return TCL_OK;
+}
+
+/*
+ * ----------------------------------------------------------------------
+ *
+ * ChoosefontShowCmd --
+ *
+ *	Implements the 'tk::choosefont show' ensemble command. The
+ *	per-interp configuration data for the dialog is held in an interp
+ *	associated structure.
+ *
+ * Results:
+ *	See the user documentation.
+ *
+ * Side effects:
+ *	Font Panel may be shown.
+ *
+ * ----------------------------------------------------------------------
+ */
+
+static int
+ChoosefontShowCmd(
+    ClientData clientData,	/* Main window */
+    Tcl_Interp *interp,
+    int objc,
+    Tcl_Obj *const objv[])
+{
+    ChoosefontData *cfdPtr = Tcl_GetAssocData(interp, "::tk::choosefont",NULL);
+
+    if (cfdPtr->parent == None) {
+	cfdPtr->parent = (Tk_Window) clientData;
+    }
+    if (!FPIsFontPanelVisible()) {
+	ChkErr(FPShowHideFontPanel);
+	choosefontInterp = interp;
+	TkSendVirtualEvent(cfdPtr->parent, "TkChoosefontVisibility");
+    }
+
+    return TCL_OK;
+}
+
+/*
+ * ----------------------------------------------------------------------
+ *
+ * ChoosefontHideCmd --
+ *
+ *	Implementation of the 'tk::choosefont hide' ensemble. See the
+ *	user documentation for details.
+ *
+ * Results:
+ *	See the user documentation.
+ *
+ * Side effects:
+ *	Font Panel may be hidden.
+ *
+ * ----------------------------------------------------------------------
+ */
+
+static int
+ChoosefontHideCmd(
+    ClientData clientData,	/* Main window */
+    Tcl_Interp *interp,
+    int objc,
+    Tcl_Obj *const objv[])
+{
+    if (FPIsFontPanelVisible()) {
+	ChkErr(FPShowHideFontPanel);
+    }
+    return TCL_OK;
+}
+
+/*
+ * ----------------------------------------------------------------------
+ *
+ * DeleteChoosefontData --
+ *
+ *	Clean up the font chooser configuration data when the interp
+ *	is destroyed.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	per-interp configuration data is destroyed.
+ *
+ * ----------------------------------------------------------------------
+ */
+
+static void
+DeleteChoosefontData(ClientData clientData, Tcl_Interp *interp)
+{
+    ChoosefontData *cfdPtr = clientData;
+
+    if (cfdPtr->titleObj) {
+	Tcl_DecrRefCount(cfdPtr->titleObj);
+    }
+    if (cfdPtr->cmdObj) {
+	Tcl_DecrRefCount(cfdPtr->cmdObj);
+    }
+    ckfree((char *)cfdPtr);
+
+    if (choosefontInterp == interp) {
+	choosefontInterp = NULL;
+    }
+}
+
+/*
+ * ----------------------------------------------------------------------
+ *
+ * TkChoosefontInit --
+ *
+ *	Set up the tk::choosefont ensemble and associate the font chooser
+ *	configuration data with the Tcl interpreter. There is one
+ *	font chooser per interp.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	per-interp configuration data is destroyed.
+ *
+ * ----------------------------------------------------------------------
+ */
+
+MODULE_SCOPE int
+TkChoosefontInit(Tcl_Interp *interp, ClientData clientData)
+{
+    ChoosefontData *cfdPtr = (ChoosefontData*) ckalloc(sizeof(ChoosefontData));
+
+    bzero(cfdPtr, sizeof(ChoosefontData));
+    Tcl_SetAssocData(interp, "::tk::choosefont", DeleteChoosefontData, cfdPtr);
+    TkMakeEnsemble(interp, "::tk", "choosefont", clientData,
+	    choosefontEnsemble);
+    return TCL_OK;
+}
+
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 4
+ * fill-column: 79
+ * coding: utf-8
+ * End:
+ */

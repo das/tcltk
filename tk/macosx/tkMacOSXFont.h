@@ -30,5 +30,10 @@
 
 MODULE_SCOPE void TkMacOSXInitControlFontStyle(Tk_Font tkfont,
 	ControlFontStylePtr fsPtr);
+MODULE_SCOPE void TkMacOSXFMFontInfoForFont(Tk_Font tkfont,
+	FMFontFamily *fontFamilyPtr, FMFontStyle *fontStylePtr,
+	FMFontSize *fontSizePtr, ATSUStyle *fontATSUStylePtr);
+MODULE_SCOPE Tcl_Obj * TkMacOSXFontDescriptionForFMFontInfo(
+	FMFontFamily fontFamily, FMFontStyle fontStyle, FMFontSize fontSize);
 
 #endif /*TKMACOSXFONT_H*/

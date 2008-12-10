@@ -191,6 +191,7 @@ static TkCmd commands[] = {
     {"tk_getOpenFile",	NULL,		Tk_GetOpenFileObjCmd,	NULL, 0, 1},
     {"tk_getSaveFile",	NULL,		Tk_GetSaveFileObjCmd,	NULL, 0, 1},
     {"tk_messageBox",	NULL,		Tk_MessageBoxObjCmd,	NULL, 0, 1},
+    {"::tk::choosefont",NULL,		NULL, TkChoosefontInit,	0, 1},
 #endif
 
     /*

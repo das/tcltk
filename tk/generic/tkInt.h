@@ -1031,6 +1031,8 @@ MODULE_SCOPE int	Tk_CanvasObjCmd(ClientData clientData,
 MODULE_SCOPE int	Tk_CheckbuttonObjCmd(ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *const objv[]);
+MODULE_SCOPE int	TkChoosefontInit(Tcl_Interp *interp, 
+			    ClientData clientData);
 MODULE_SCOPE int	Tk_ClipboardObjCmd(ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *const objv[]);
@@ -1251,6 +1253,9 @@ MODULE_SCOPE void	TkpMakeTransparentWindowExist(Tk_Window tkwin,
 MODULE_SCOPE void	TkpCreateBusy(Tk_FakeWin *winPtr, Tk_Window tkRef,
 			    Window *parentPtr, Tk_Window tkParent,
 			    TkBusy busy);
+MODULE_SCOPE int	TkBackgroundEvalObjv(Tcl_Interp *interp,
+			    int objc, Tcl_Obj *const *objv, int flags);
+MODULE_SCOPE void	TkSendVirtualEvent(Tk_Window tgtWin, const char *eventName);
 
 MODULE_SCOPE void	TkDrawAngledTextLayout(Display *display,
 			    Drawable drawable, GC gc, Tk_TextLayout layout,

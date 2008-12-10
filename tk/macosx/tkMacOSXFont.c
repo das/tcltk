@@ -2517,6 +2517,86 @@ TkMacOSXInitControlFontStyle(
 /*
  *----------------------------------------------------------------------
  *
+ * TkMacOSXFMFontInfoForFont --
+ *
+ *	Retrieve FontManager/ATSUI font information for a Tk font.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+MODULE_SCOPE void
+TkMacOSXFMFontInfoForFont(
+    Tk_Font tkfont,
+    FMFontFamily *fontFamilyPtr,
+    FMFontStyle *fontStylePtr,
+    FMFontSize *fontSizePtr,
+    ATSUStyle *fontATSUStylePtr)
+{
+    const MacFont * fontPtr = (MacFont *) tkfont;
+
+    if (fontFamilyPtr) {
+	*fontFamilyPtr = fontPtr->qdFont;
+    }
+    if (fontStylePtr) {
+	*fontStylePtr = fontPtr->qdStyle;
+    }
+    if (fontSizePtr) {
+	*fontSizePtr = fontPtr->qdSize;
+    }
+    if (fontATSUStylePtr) {
+	*fontATSUStylePtr = fontPtr->atsuStyle;
+    }
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkMacOSXFontDescriptionForFMFontInfo --
+ *
+ *	Get text description of a font specified by FontManager info.
+ *
+ * Results:
+ *	List object.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+MODULE_SCOPE Tcl_Obj *
+TkMacOSXFontDescriptionForFMFontInfo(
+    FMFontFamily fontFamily,
+    FMFontStyle fontStyle,
+    FMFontSize fontSize)
+{
+    const char *familyName;
+    Tcl_Obj *objv[6];
+    int i = 0;
+
+    familyName = FamilyNameForFamilyID(fontFamily);
+    if (familyName) {
+	objv[i++] = Tcl_NewStringObj(familyName, -1);
+	objv[i++] = Tcl_NewIntObj(fontSize);
+#define S(s) Tcl_NewStringObj(STRINGIFY(s),(int)(sizeof(STRINGIFY(s))-1))
+	objv[i++] = (fontStyle & bold)	 ? S(bold)   : S(normal);
+	objv[i++] = (fontStyle & italic) ? S(italic) : S(roman);
+	if (fontStyle & underline) objv[i++] = S(underline);
+	/*if (fontStyle & overstrike) objv[i++] = S(overstrike);*/
+#undef S
+    }
+    return Tcl_NewListObj(i, objv);
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
  * TkMacOSXUseAntialiasedText --
  *
  *	Enables or disables application-wide use of antialiased text (where
