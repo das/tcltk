@@ -79,6 +79,8 @@ static TkWinProcs asciiProcs = {
     (BOOL (WINAPI *)(HMENU hMenu, UINT uPosition, UINT uFlags,
 	    UINT uIDNewItem, LPCTSTR lpNewItem)) InsertMenuA,
     (int (WINAPI *)(HWND hWnd, LPCTSTR lpString, int nMaxCount)) GetWindowTextA,
+    (HWND (WINAPI *)(LPCTSTR lpClassName, LPCTSTR lpWindowName)) FindWindowA,
+    (int (WINAPI *)(HWND hwnd, LPTSTR lpClassName, int nMaxCount)) GetClassNameA,
 };
 
 static TkWinProcs unicodeProcs = {
@@ -97,6 +99,8 @@ static TkWinProcs unicodeProcs = {
     (BOOL (WINAPI *)(HMENU hMenu, UINT uPosition, UINT uFlags,
 	    UINT uIDNewItem, LPCTSTR lpNewItem)) InsertMenuW,
     (int (WINAPI *)(HWND hWnd, LPCTSTR lpString, int nMaxCount)) GetWindowTextW,
+    (HWND (WINAPI *)(LPCTSTR lpClassName, LPCTSTR lpWindowName)) FindWindowW,
+    (int (WINAPI *)(HWND hwnd, LPTSTR lpClassName, int nMaxCount)) GetClassNameW,
 };
 
 TkWinProcs *tkWinProcs;
