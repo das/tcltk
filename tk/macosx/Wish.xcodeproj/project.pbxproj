@@ -2093,6 +2093,7 @@
 		F9A3084B08F2D4CE00BAE1AB /* Wish.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wish.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9A3084E08F2D4F400BAE1AB /* Tcl.framework */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.framework; path = Tcl.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9A493240CEBF38300B78AE2 /* chanio.test */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = chanio.test; sourceTree = "<group>"; };
+		F9C888C20EEF6571003F63AD /* fontchooser.n */ = {isa = PBXFileReference; explicitFileType = text.man; fileEncoding = 4; path = fontchooser.n; sourceTree = "<group>"; };
 		F9D1360A0CDC252C00DBE0B5 /* mclist.tcl */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = mclist.tcl; sourceTree = "<group>"; };
 		F9ECB1120B26521500A28025 /* pkgIndex.tcl */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = pkgIndex.tcl; sourceTree = "<group>"; };
 		F9ECB1130B26521500A28025 /* platform.tcl */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = platform.tcl; sourceTree = "<group>"; };
@@ -2231,6 +2232,7 @@
 				F966BA3908F27A37005CB29B /* focus.n */,
 				F966BA3A08F27A37005CB29B /* focusNext.n */,
 				F966BA3B08F27A37005CB29B /* font.n */,
+				F9C888C20EEF6571003F63AD /* fontchooser.n */,
 				F966BA3C08F27A37005CB29B /* FontId.3 */,
 				F966BA3D08F27A37005CB29B /* frame.n */,
 				F966BA3E08F27A37005CB29B /* FreeXId.3 */,
