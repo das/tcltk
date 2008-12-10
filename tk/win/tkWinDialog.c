@@ -2566,7 +2566,7 @@ FontchooserConfigureCmd(
     }
 
     for (i = 1; i < objc; i += 2) {
-	int optionIndex;
+	int optionIndex, len;
 	if (Tcl_GetIndexFromObj(interp, objv[i], optionStrings,
 		"option", 0, &optionIndex) != TCL_OK) {
 	    return TCL_ERROR;
@@ -2736,7 +2736,7 @@ FontchooserShowCmd(
 
     if (TCL_OK == r) {
 	oldMode = Tcl_SetServiceMode(TCL_SERVICE_ALL);
-	if (FontChooser(&cf)) {
+	if (ChooseFont(&cf)) {
 	    if (hdPtr->cmdObj) {
 		ApplyLogfont(hdPtr->interp, hdPtr->cmdObj, hdc, &lf);
 	    }
