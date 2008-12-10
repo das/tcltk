@@ -2259,8 +2259,8 @@ MsgBoxCBTProc(
     return CallNextHookEx(tsdPtr->hMsgBoxHook, nCode, wParam, lParam);
 }
 
-/* 
- * ---------------------------------------------------------------------- 
+/*
+ * ----------------------------------------------------------------------
  *
  * SetTkDialog --
  *
@@ -2269,7 +2269,7 @@ MsgBoxCBTProc(
  *	Use of this is enabled when a test program calls TkWinDialogDebug
  *	by calling the test command 'tkwinevent debug 1'
  *
- * ---------------------------------------------------------------------- 
+ * ----------------------------------------------------------------------
  */
 
 static void
@@ -2327,7 +2327,7 @@ GetFontObj(HDC hdc, LOGFONT *plf)
 {
     Tcl_Obj *resObj;
     int len = 0, pt = 0;
-    
+
     resObj = Tcl_NewListObj(0, NULL);
     Tcl_ListObjAppendElement(NULL, resObj,
 	Tcl_NewStringObj(plf->lfFaceName, -1));
@@ -2371,12 +2371,12 @@ ApplyLogfont(Tcl_Interp *interp, Tcl_Obj *cmdObj, HDC hdc, LOGFONT *logfontPtr)
  * HookProc --
  *
  *	Font selection hook. If the user selects Apply on the dialog, we
- *	call the applyProc script with the currently selected font as 
+ *	call the applyProc script with the currently selected font as
  *	arguments.
  *
  * ----------------------------------------------------------------------
  */
-   
+
 typedef struct HookData {
     Tcl_Interp *interp;
     Tcl_Obj *titleObj;
@@ -2395,7 +2395,7 @@ HookProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam)
     static HookData *phd = NULL;
     ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
 	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
-    
+
     if (WM_INITDIALOG == msg && lParam != 0) {
 	phd = (HookData *)pcf->lCustData;
 	phd->hwnd = hwndDlg;
@@ -2457,7 +2457,7 @@ HookProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 
 /*
  * Helper for the FontchooserConfigure command to return the
- * current value of any of the options (which may be NULL in 
+ * current value of any of the options (which may be NULL in
  * the structure)
  */
 
@@ -2652,8 +2652,8 @@ FontchooserConfigureCmd(
     return TCL_OK;
 }
 
-/* 
- * ---------------------------------------------------------------------- 
+/*
+ * ----------------------------------------------------------------------
  *
  * FontchooserShowCmd --
  *
@@ -2664,7 +2664,7 @@ FontchooserConfigureCmd(
  *	See HookProc where we make a few changes to the dialog and set
  *	some additional state.
  *
- * ---------------------------------------------------------------------- 
+ * ----------------------------------------------------------------------
  */
 
 static int
@@ -2727,7 +2727,7 @@ FontchooserShowCmd(
 	if (fontPtr->fa.overstrike) lf.lfStrikeOut = TRUE;
 	Tk_FreeFont(f);
     }
-        
+
     if (TCL_OK == r && hdPtr->cmdObj != NULL) {
 	int len = 0;
 	r = Tcl_ListObjLength(interp, hdPtr->cmdObj, &len);
@@ -2749,11 +2749,11 @@ FontchooserShowCmd(
     }
 
     ReleaseDC(cf.hwndOwner, hdc);
-        
+
     return r;
 }
 
-/* 
+/*
  * ----------------------------------------------------------------------
  *
  * FontchooserHideCmd --
@@ -2780,12 +2780,12 @@ FontchooserHideCmd(
     return TCL_OK;
 }
 
-/* 
+/*
  * ----------------------------------------------------------------------
  *
  * DeleteHookData --
  *
- *	Clean up the font chooser configuration data when the interp 
+ *	Clean up the font chooser configuration data when the interp
  *	is destroyed.
  *
  * ----------------------------------------------------------------------

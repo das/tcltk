@@ -982,7 +982,7 @@ TkFindStateNumObj(
  *
  * TkBackgroundEvalObjv --
  *
- *	Evaluate a command while ensuring that we do not affect the 
+ *	Evaluate a command while ensuring that we do not affect the
  *	interpreters state. This is important when evaluating script
  *	during background tasks.
  *
@@ -999,14 +999,14 @@ TkFindStateNumObj(
 int
 TkBackgroundEvalObjv(
     Tcl_Interp *interp,
-    int objc, 
+    int objc,
     Tcl_Obj *const *objv,
     int flags)
 {
     Tcl_DString errorInfo, errorCode;
     Tcl_SavedResult state;
     int n, r = TCL_OK;
-    
+
     Tcl_DStringInit(&errorInfo);
     Tcl_DStringInit(&errorCode);
 
@@ -1017,11 +1017,11 @@ TkBackgroundEvalObjv(
      */
 
     Tcl_SaveResult(interp, &state);
-    Tcl_DStringAppend(&errorInfo, 
+    Tcl_DStringAppend(&errorInfo,
 	Tcl_GetVar(interp, "errorInfo", TCL_GLOBAL_ONLY), -1);
-    Tcl_DStringAppend(&errorCode, 
+    Tcl_DStringAppend(&errorCode,
 	Tcl_GetVar(interp, "errorCode", TCL_GLOBAL_ONLY), -1);
-    
+
     /*
      * Evaluate the command and handle any error.
      */
@@ -1043,20 +1043,20 @@ TkBackgroundEvalObjv(
     /*
      * Restore the state of the interpreter
      */
-    
+
     Tcl_SetVar(interp, "errorInfo",
 	Tcl_DStringValue(&errorInfo), TCL_GLOBAL_ONLY);
     Tcl_SetVar(interp, "errorCode",
 	Tcl_DStringValue(&errorCode), TCL_GLOBAL_ONLY);
     Tcl_RestoreResult(interp, &state);
-    
+
     /*
      * Clean up references.
      */
-    
+
     Tcl_DStringFree(&errorInfo);
     Tcl_DStringFree(&errorCode);
-    
+
     return r;
 }
 

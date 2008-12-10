@@ -1,4 +1,4 @@
-# fontdlg.tcl - 
+# fontdlg.tcl -
 #
 #	A themeable Tk font selection dialog. See TIP #324.
 #
@@ -72,7 +72,7 @@ proc ::tk::fontchooser::Hide {} {
 
 proc ::tk::fontchooser::Configure {args} {
     variable S
-    
+
     set specs {
         {-parent "" "" .}
         {-title "" "" " "}
@@ -110,7 +110,7 @@ proc ::tk::fontchooser::Create {} {
         wm title $S(W) $S(-title)
         wm transient $S(W) [winfo toplevel $S(-parent)]
         wm geometry $S(W) 430x316
-        
+
         set outer [::ttk::frame $S(W).outer -padding {10 10}]
         ::tk::AmpWidget ::ttk::label $S(W).font -text [::msgcat::mc "&Font:"]
         ::tk::AmpWidget ::ttk::label $S(W).style -text [::msgcat::mc "Font st&yle:"]
@@ -119,17 +119,17 @@ proc ::tk::fontchooser::Create {} {
         ttk::entry $S(W).estyle -textvariable [namespace which -variable S](style)
         ttk::entry $S(W).esize -textvariable [namespace which -variable S](size) \
             -width 0 -validate key -validatecommand {string is double %P}
-        
+
         ttk_slistbox $S(W).lfonts -height 7 -exportselection 0 \
             -selectmode browse -activestyle none \
-            -listvariable [namespace which -variable S](fonts) 
+            -listvariable [namespace which -variable S](fonts)
         ttk_slistbox $S(W).lstyles -width 5 -height 7 -exportselection 0 \
             -selectmode browse -activestyle none \
             -listvariable [namespace which -variable S](styles)
         ttk_slistbox $S(W).lsizes -width 6 -height 7 -exportselection 0 \
             -selectmode browse -activestyle none \
             -listvariable [namespace which -variable S](sizes) \
-            
+
         set WE $S(W).effects
         ::ttk::labelframe $WE -text [::msgcat::mc "Effects"]
         ::tk::AmpWidget ::ttk::checkbutton $WE.strike \
@@ -140,7 +140,7 @@ proc ::tk::fontchooser::Create {} {
             -variable [namespace which -variable S](under) \
             -text [::msgcat::mc "&Underline"] \
             -command [namespace code [list Click under]]
-        
+
         set bbox [::ttk::frame $S(W).bbox]
         ::ttk::button $S(W).ok -text [::msgcat::mc OK] -default active\
             -command [namespace code [list Done 1]]
@@ -149,7 +149,7 @@ proc ::tk::fontchooser::Create {} {
         ::tk::AmpWidget ::ttk::button $S(W).apply -text [::msgcat::mc "&Apply"] \
             -command [namespace code [list Apply]]
         wm protocol $S(W) WM_DELETE_WINDOW [namespace code [list Done 0]]
-        
+
         bind $S(W) <Return> [namespace code [list Done 1]]
         bind $S(W) <Escape> [namespace code [list Done 0]]
         bind $S(W) <Map> [namespace code [list Visibility %W 1]]
@@ -175,16 +175,16 @@ proc ::tk::fontchooser::Create {} {
         grid rowconfigure $WS 0 -weight 1
         grid columnconfigure $WS 0 -weight 1
         grid propagate $WS 0
-        
+
         grid $S(W).ok     -in $bbox -sticky new -pady {0 2}
         grid $S(W).cancel -in $bbox -sticky new -pady 2
         grid $S(W).apply -in $bbox -sticky new -pady 2
         grid columnconfigure $bbox 0 -weight 1
-        
+
         grid $WE.strike -sticky w -padx 10
         grid $WE.under -sticky w -padx 10 -pady {0 30}
         grid columnconfigure $WE 1 -weight 1
-        
+
         grid $S(W).font   x $S(W).style   x $S(W).size   x       -in $outer -sticky w
         grid $S(W).efont  x $S(W).estyle  x $S(W).esize  x $bbox -in $outer -sticky ew
         grid $S(W).lfonts x $S(W).lstyles x $S(W).lsizes x ^     -in $outer -sticky news
@@ -192,13 +192,13 @@ proc ::tk::fontchooser::Create {} {
         grid configure $bbox -sticky n
         grid columnconfigure $outer {1 3 5} -minsize 10
         grid columnconfigure $outer {0 2 4} -weight 1
-        
+
         grid $outer -sticky news
         grid rowconfigure $S(W) 0 -weight 1
         grid columnconfigure $S(W) 0 -weight 1
-        
+
         Init $S(-font)
-        
+
         trace add variable [namespace which -variable S](size) \
             write [namespace code [list Tracer]]
         trace add variable [namespace which -variable S](style) \
@@ -221,7 +221,7 @@ proc ::tk::fontchooser::Create {} {
 #
 proc ::tk::::fontchooser::Done {ok} {
     variable S
-    
+
     if {! $ok} {
         set S(result) ""
     }

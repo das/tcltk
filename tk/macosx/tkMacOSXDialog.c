@@ -1809,8 +1809,8 @@ enum FontchooserOption {
 
 MODULE_SCOPE int
 TkMacOSXProcessFontEvent(
-	TkMacOSXEvent * eventPtr,
-	MacEventStatus * statusPtr)
+    TkMacOSXEvent * eventPtr,
+    MacEventStatus * statusPtr)
 {
     OSStatus err;
     int eventGenerated = 0;
@@ -1886,8 +1886,8 @@ TkMacOSXProcessFontEvent(
 				(unsigned)(objc + 2));
 			memcpy(tmpv, objv, sizeof(Tcl_Obj *) * objc);
 			tmpv[objc] = fontObj;
-			result = TkBackgroundEvalObjv(fontchooserInterp, objc+1,
-				tmpv, TCL_EVAL_GLOBAL);
+			result = TkBackgroundEvalObjv(fontchooserInterp,
+				objc + 1, tmpv, TCL_EVAL_GLOBAL);
 			ckfree((char *)tmpv);
 		    }
 		}
@@ -1919,7 +1919,9 @@ done:
  */
 
 static Tcl_Obj *
-FontchooserCget(FontchooserData *fcdPtr, int optionIndex)
+FontchooserCget(
+    FontchooserData *fcdPtr,
+    int optionIndex)
 {
     Tcl_Obj *resObj = NULL;
 
@@ -1994,7 +1996,8 @@ FontchooserConfigureCmd(
     Tcl_Obj *const objv[])
 {
     Tk_Window tkwin = (Tk_Window)clientData;
-    FontchooserData *fcdPtr = Tcl_GetAssocData(interp, "::tk::fontchooser",NULL);
+    FontchooserData *fcdPtr = Tcl_GetAssocData(interp, "::tk::fontchooser",
+	    NULL);
     int i, r = TCL_OK;
 
     /*
@@ -2132,7 +2135,8 @@ FontchooserShowCmd(
     int objc,
     Tcl_Obj *const objv[])
 {
-    FontchooserData *fcdPtr = Tcl_GetAssocData(interp, "::tk::fontchooser",NULL);
+    FontchooserData *fcdPtr = Tcl_GetAssocData(interp, "::tk::fontchooser",
+	    NULL);
 
     if (fcdPtr->parent == None) {
 	fcdPtr->parent = (Tk_Window) clientData;
@@ -2194,7 +2198,9 @@ FontchooserHideCmd(
  */
 
 static void
-DeleteFontchooserData(ClientData clientData, Tcl_Interp *interp)
+DeleteFontchooserData(
+    ClientData clientData,
+    Tcl_Interp *interp)
 {
     FontchooserData *fcdPtr = clientData;
 
@@ -2229,12 +2235,16 @@ DeleteFontchooserData(ClientData clientData, Tcl_Interp *interp)
  */
 
 MODULE_SCOPE int
-TkInitFontchooser(Tcl_Interp *interp, ClientData clientData)
+TkInitFontchooser(
+    Tcl_Interp *interp,
+    ClientData clientData)
 {
-    FontchooserData *fcdPtr = (FontchooserData*) ckalloc(sizeof(FontchooserData));
+    FontchooserData *fcdPtr = (FontchooserData*)
+	    ckalloc(sizeof(FontchooserData));
 
     bzero(fcdPtr, sizeof(FontchooserData));
-    Tcl_SetAssocData(interp, "::tk::fontchooser", DeleteFontchooserData, fcdPtr);
+    Tcl_SetAssocData(interp, "::tk::fontchooser", DeleteFontchooserData,
+	    fcdPtr);
     return TCL_OK;
 }
 
