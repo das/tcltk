@@ -1047,7 +1047,7 @@ TkMakeEnsemble(
 	if (map[i].proc) {
 	    Tcl_CreateObjCommand(interp, Tcl_GetString(fqdnObj),
 		map[i].proc, clientData, NULL);
-	} else {
+	} else if (map[i].subensemble) {
 	    TkMakeEnsemble(interp, Tcl_DStringValue(&ds),
 		map[i].name, clientData, map[i].subensemble);
 	}
