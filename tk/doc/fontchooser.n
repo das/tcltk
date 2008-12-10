@@ -52,7 +52,8 @@ Hide the font selection dialog if it is visible and cause any pending
 .TP
 \fB\-parent\fR
 Specifies/returns the logical parent window of the font selection dialog
-(similar to the \fB\-parent\fR option to other dialogs).
+(similar to the \fB\-parent\fR option to other dialogs). The font selection
+dialog is hidden if it is visible when the parent window is destroyed.
 .TP
 \fB\-title\fR
 Specifies/returns the title of the dialog. Has no effect on platforms where the

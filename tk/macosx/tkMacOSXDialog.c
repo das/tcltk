@@ -1766,6 +1766,8 @@ static int FontchooserShowCmd(ClientData clientData, Tcl_Interp *interp,
 	int objc, Tcl_Obj *const objv[]);
 static int FontchooserHideCmd(ClientData clientData, Tcl_Interp *interp,
 	int objc, Tcl_Obj *const objv[]);
+static void FontchooserParentEventHandler(ClientData clientData,
+	XEvent *eventPtr);
 static void DeleteFontchooserData(ClientData clientData, Tcl_Interp *interp);
 
 MODULE_SCOPE const TkEnsemble tkFontchooserEnsemble[];
@@ -1829,7 +1831,7 @@ TkMacOSXProcessFontEvent(
     fcdPtr = Tcl_GetAssocData(fontchooserInterp, "::tk::fontchooser", NULL);
     switch (eventPtr->eKind) {
 	case kEventFontPanelClosed:
-	    if (!FPIsFontPanelVisible()) {
+	    if (!FPIsFontPanelVisible() && fcdPtr->parent != None) {
 		TkSendVirtualEvent(fcdPtr->parent, "TkFontchooserVisibility");
 		fontchooserInterp = NULL;
 		eventGenerated = 1;
@@ -2048,7 +2050,13 @@ FontchooserConfigureCmd(
 		if (parent == None) {
 		    return TCL_ERROR;
 		}
+		if (fcdPtr->parent) {
+		    Tk_DeleteEventHandler(fcdPtr->parent, StructureNotifyMask,
+			    FontchooserParentEventHandler, fcdPtr);
+		}
 		fcdPtr->parent = parent;
+		Tk_CreateEventHandler(fcdPtr->parent, StructureNotifyMask,
+			FontchooserParentEventHandler, fcdPtr);
 		break;
 	    }
 	    case FontchooserTitle:
@@ -2144,6 +2152,8 @@ FontchooserShowCmd(
 
     if (fcdPtr->parent == None) {
 	fcdPtr->parent = (Tk_Window) clientData;
+	Tk_CreateEventHandler(fcdPtr->parent, StructureNotifyMask,
+		FontchooserParentEventHandler, fcdPtr);
     }
     if (!FPIsFontPanelVisible()) {
 	ChkErr(FPShowHideFontPanel);
@@ -2182,6 +2192,40 @@ FontchooserHideCmd(
 	ChkErr(FPShowHideFontPanel);
     }
     return TCL_OK;
+}
+
+/*
+ * ----------------------------------------------------------------------
+ *
+ * FontchooserParentEventHandler --
+ *
+ *	Event handler for StructureNotify events on the font chooser's
+ *	parent window.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	Font chooser parent info is cleared and font panel is hidden.
+ *
+ * ----------------------------------------------------------------------
+ */
+
+static void
+FontchooserParentEventHandler(
+    ClientData clientData,
+    XEvent *eventPtr)
+{
+    FontchooserData *fcdPtr = clientData;
+
+    if (eventPtr->type == DestroyNotify) {
+	Tk_DeleteEventHandler(fcdPtr->parent, StructureNotifyMask,
+		FontchooserParentEventHandler, fcdPtr);
+	fcdPtr->parent = None;
+	if (FPIsFontPanelVisible()) {
+	    ChkErr(FPShowHideFontPanel);
+	}
+    }
 }
 
 /*
