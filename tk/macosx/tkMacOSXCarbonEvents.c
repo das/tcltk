@@ -197,6 +197,8 @@ TkMacOSXInitCarbonEvents(
 	{kEventClassApplication, kEventAppShown},
 	{kEventClassApplication, kEventAppAvailableWindowBoundsChanged},
 	{kEventClassAppearance,	 kEventAppearanceScrollBarVariantChanged},
+	{kEventClassFont,	 kEventFontPanelClosed},
+	{kEventClassFont,	 kEventFontSelection},
     };
 
     carbonEventHandlerUPP = NewEventHandlerUPP(CarbonEventHandlerProc);
