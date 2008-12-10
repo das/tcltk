@@ -2822,6 +2822,7 @@ const TkEnsemble tkFontchooserEnsemble[] = {
     { "configure", FontchooserConfigureCmd, NULL },
     { "show", FontchooserShowCmd, NULL },
     { "hide", FontchooserHideCmd, NULL },
+    { NULL, NULL, NULL }
 };
 
 int
