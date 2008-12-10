@@ -103,6 +103,9 @@ TkMacOSXProcessEvent(
     case kEventClassCommand:
 	TkMacOSXProcessCommandEvent(eventPtr, statusPtr);
 	break;
+    case kEventClassFont:
+	TkMacOSXProcessFontEvent(eventPtr, statusPtr);
+	break;
     default: {
 	TkMacOSXDbgMsg("Unrecognised event: %s",
 		TkMacOSXCarbonEventToAscii(eventPtr->eventRef));
