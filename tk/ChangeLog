@@ -1,6 +1,48 @@
+2008-12-10  Daniel Steffen  <das@users.sourceforge.net>
+
+	TIP #324 IMPLEMENTATION
+
+	* generic/tkCmds.c:		Implementation of [tk fontchooser]
+	* generic/tkInt.h:		as a Ttk dialog for X11 and as a native
+	* win/tkWinDialog.c:		platform dialog on Mac OS X & Windows.
+	* win/tkWinInt.h:		(thoyts, vetter, robert, steffen)
+	* win/tkWinTest.c:		[Patch 1477426]
+	* win/tkWinX.c:
+	* macosx/tkMacOSXCarbonEvents.c:
+	* macosx/tkMacOSXDialog.c:
+	* macosx/tkMacOSXEvent.c:
+	* macosx/tkMacOSXEvent.h:
+	* macosx/tkMacOSXFont.c:
+	* macosx/tkMacOSXFont.h:
+	* macosx/Wish.xcodeproj/project.pbxproj:
+	* library/fontchooser.tcl (new):
+	* library/tclIndex:		
+	* library/msgs/de.msg:		
+	* library/msgs/en.msg:
+	* tests/fontchooser.test (new):
+	* tests/winDialog.test:
+	* doc/fontchooser.n (new):
+	* doc/tk.n:
+
+	* library/console.tcl:		Let user select console font via
+					[tk fontchooser].
+	* library/demos/text.tcl:	Add [tk fontchooser] demo.
+
+	* generic/tkUtil.c:		Add TkBackgroundEvalObjv() and
+					TkSendVirtualEvent() utility functions
+					(used by TIP #324 code).
+
+	* generic/tkInt.h:		Turn [tk] into an ensemble.
+	* generic/tkBusy.c:		(thoyts, steffen)
+	* generic/tkCmds.c:
+	* generic/tkWindow.c:
+
+	* macosx/tkMacOSXInit.c (TkpInit):	Unconditionally show Tk console
+						if TK_CONSOLE env var is set.
+
 2008-12-09  Don Porter	<dgp@users.sourceforge.net>
 
-	TIP 337
+	TIP #337 IMPLEMENTATION
 
 	* generic/tkBind.c:	Updated callers of Tcl_BackgroundError()
 	* generic/tkCanvas.c:	to use the new routine
