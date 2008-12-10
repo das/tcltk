@@ -891,7 +891,7 @@ TkWmProtocolEventProc(
 		Tcl_AddErrorInfo(interp,
 			Tk_GetAtomName((Tk_Window) winPtr, protocol));
 		Tcl_AddErrorInfo(interp, "\" window manager protocol)");
-		Tk_BackgroundException(interp, result);
+		Tcl_BackgroundException(interp, result);
 	    }
 	    Tcl_Release(interp);
 	    Tcl_Release(protPtr);
