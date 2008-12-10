@@ -1,14 +1,13 @@
 
  TIP #324: A STANDARD DIALOG FOR FONT SELECTION 
 ================================================
- Version:      $Revision: 1.4 $
+ Version:      $Revision: 1.6 $
  Author:       Adrian Robert <adrian.b.robert_at_gmail.com>
-               Adrian Robert <Adrian.B.Robert_at_gmail.com>
                Daniel A. Steffen <das_at_users.sourceforge.net>
- State:        Draft
+ State:        Accepted
  Type:         Project
  Tcl-Version:  8.6
- Vote:         Pending
+ Vote:         Done
  Created:      Friday, 08 August 2008
  URL:          http://www.tcl.tk/cgi-bin/tct/tip/324.html
  Post-History: 

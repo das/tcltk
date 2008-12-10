@@ -1,12 +1,11 @@
 TIP:            324
 Title:          A Standard Dialog For Font Selection
-Version:        $Revision: 1.4 $
+Version:        $Revision: 1.6 $
 Author:         Adrian Robert <adrian.b.robert@gmail.com>
-Author:         Adrian Robert <Adrian.B.Robert@gmail.com>
 Author:         Daniel A. Steffen <das@users.sourceforge.net>
-State:          Draft
+State:          Accepted
 Type:           Project
-Vote:           Pending
+Vote:           Done
 Created:        08-Aug-2008
 Post-History:   
 Keywords:       Tk
@@ -47,9 +46,9 @@ syntax:
 
 set or query one or more of the configurations options below (analogous to Tk
 widget configuration).
- 
+
  > '''tk fontchooser show'''
- 
+
 show the font selection dialog. Depending on the platform, may return
 immediately or only once the dialog has been withdrawn.
 
@@ -89,7 +88,7 @@ hide the font selection dialog if it is visible and cause any pending
 ~~Events
 
 <<TkFontchooserVisibility>>
- 
+
  > virtual event sent to the dialog parent whenever the visibility of the font
  selection dialog changes, both as a result of user action (e.g. disposing of
  the dialog via OK/Cancel button or close box) and of the '''tk fontchooser
@@ -97,7 +96,7 @@ hide the font selection dialog if it is visible and cause any pending
  visibility of the dialog by querying the ''-visible'' configuration option.
 
 <<TkFontchooserFontChanged>>
- 
+
  > virtual event sent to the dialog parent whenever the font selection dialog
  is visible and the selected font changes, both as a result of user action and
  of the ''-font'' configuration option being set. Binding scripts can determine
