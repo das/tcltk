@@ -978,6 +978,89 @@ TkFindStateNumObj(
 }
 
 /*
+ *----------------------------------------------------------------------
+ *
+ * TkMakeEnsemble --
+ *
+ *	Create an ensemble from a table of implementation commands.
+ *	This may be called recursively to create sub-ensembles.
+ *
+ * Results:
+ *	Handle for the ensemble, or NULL if creation of it fails.
+ *
+ *----------------------------------------------------------------------
+ */
+
+Tcl_Command
+TkMakeEnsemble(
+    Tcl_Interp *interp,
+    const char *namespace,
+    const char *name,
+    ClientData clientData,
+    const TkEnsemble map[])
+{
+    Tcl_Namespace *namespacePtr = NULL;
+    Tcl_Command ensemble = NULL;
+    Tcl_Obj *dictObj = NULL;
+    Tcl_DString ds;
+    int i;
+
+    if (map == NULL) {
+	return NULL;
+    }
+
+    Tcl_DStringInit(&ds);
+
+    namespacePtr = Tcl_FindNamespace(interp, namespace, NULL, 0);
+    if (namespacePtr == NULL) {
+        namespacePtr = Tcl_CreateNamespace(interp, namespace, NULL, NULL);
+        if (namespacePtr == NULL) {
+            Tcl_Panic("failed to create namespace \"%s\"", namespace);
+        }
+    }
+
+    ensemble = Tcl_FindEnsemble(interp, Tcl_NewStringObj(name,-1), 0);
+    if (ensemble == NULL) {
+        ensemble = Tcl_CreateEnsemble(interp, name,
+	    namespacePtr, TCL_ENSEMBLE_PREFIX);
+        if (ensemble == NULL) {
+            Tcl_Panic("failed to create ensemble \"%s\"", name);
+        }
+    }
+
+    Tcl_DStringSetLength(&ds, 0);
+    Tcl_DStringAppend(&ds, namespace, -1);
+    if (!(strlen(namespace) == 2 && namespace[1] == ':')) {
+	Tcl_DStringAppend(&ds, "::", -1);
+    }
+    Tcl_DStringAppend(&ds, name, -1);
+
+    dictObj = Tcl_NewObj();
+    for (i = 0; map[i].name != NULL ; ++i) {
+	Tcl_Obj *nameObj, *fqdnObj;
+
+	nameObj = Tcl_NewStringObj(map[i].name, -1);
+	fqdnObj = Tcl_NewStringObj(Tcl_DStringValue(&ds),
+	    Tcl_DStringLength(&ds));
+	Tcl_AppendStringsToObj(fqdnObj, "::", map[i].name, NULL);
+	Tcl_DictObjPut(NULL, dictObj, nameObj, fqdnObj);
+	if (map[i].proc) {
+	    Tcl_CreateObjCommand(interp, Tcl_GetString(fqdnObj),
+		map[i].proc, clientData, NULL);
+	} else {
+	    TkMakeEnsemble(interp, Tcl_DStringValue(&ds),
+		map[i].name, clientData, map[i].subensemble);
+	}
+    }
+
+    if (ensemble) {
+	Tcl_SetEnsembleMappingDict(interp, ensemble, dictObj);
+    }
+
+    Tcl_DStringFree(&ds);
+    return ensemble;
+}
+/*
  * Local Variables:
  * mode: c
  * c-basic-offset: 4

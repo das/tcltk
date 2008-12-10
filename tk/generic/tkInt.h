@@ -854,6 +854,17 @@ typedef struct TkWindow {
 } TkWindow;
 
 /*
+ * The following structure is used with TkMakeEnsemble to create
+ * ensemble commands and optionally to create sub-ensembles.
+ */
+
+typedef struct TkEnsemble {
+    const char *name;
+    Tcl_ObjCmdProc *proc;
+    const struct TkEnsemble *subensemble;
+} TkEnsemble;
+
+/*
  * The following structure is used as a two way map between integers and
  * strings, usually to map between an internal C representation and the
  * strings used in Tcl.
@@ -1123,9 +1134,6 @@ MODULE_SCOPE int	Tk_SpinboxObjCmd(ClientData clientData,
 MODULE_SCOPE int	Tk_TextObjCmd(ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *const objv[]);
-MODULE_SCOPE int	Tk_TkObjCmd(ClientData clientData,
-			    Tcl_Interp *interp, int objc,
-			    Tcl_Obj *const objv[]);
 MODULE_SCOPE int	Tk_TkwaitObjCmd(ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *const objv[]);
@@ -1256,6 +1264,11 @@ MODULE_SCOPE void	TkUnderlineAngledTextLayout(Display *display,
 			    int x, int y, double angle, int underline);
 MODULE_SCOPE int	TkIntersectAngledTextLayout(Tk_TextLayout layout,
 			    int x,int y, int width, int height, double angle);
+MODULE_SCOPE Tcl_Command TkMakeEnsemble(Tcl_Interp *interp,
+			    const char *namespace, const char *name,
+			    ClientData clientData, const TkEnsemble *map);
+MODULE_SCOPE int	TkInitTkCmd(Tcl_Interp *interp,
+			    ClientData clientData);
 
 /*
  * Unsupported commands.
