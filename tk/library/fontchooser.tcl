@@ -1,4 +1,4 @@
-# fontdlg.tcl -
+# fontchooser.tcl -
 #
 #	A themeable Tk font selection dialog. See TIP #324.
 #
