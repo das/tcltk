@@ -1910,7 +1910,6 @@ static WidgetCommandSpec SpinboxCommands[] = {
     { "bbox", 		EntryBBoxCommand },
     { "cget", 		TtkWidgetCgetCommand },
     { "configure", 	TtkWidgetConfigureCommand },
-//X: { "current", 	ValuesCurrentCommand },
     { "delete", 	EntryDeleteCommand },
     { "get", 		EntryGetCommand },
     { "icursor", 	EntryICursorCommand },
