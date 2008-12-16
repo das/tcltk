@@ -10,7 +10,6 @@ if {![info exists widgetDemo]} {
 }
 
 package require Tk
-package require Ttk
 
 set w .mclist
 catch {destroy $w}
@@ -29,13 +28,8 @@ pack [addSeeDismiss $w.seeDismiss $w] -side bottom -fill x
 ttk::frame $w.container
 ttk::treeview $w.tree -columns {country capital currency} -show headings \
     -yscroll "$w.vsb set" -xscroll "$w.hsb set"
-if {[tk windowingsystem] ne "aqua"} {
-    ttk::scrollbar $w.vsb -orient vertical -command "$w.tree yview"
-    ttk::scrollbar $w.hsb -orient horizontal -command "$w.tree xview"
-} else {
-    scrollbar $w.vsb -orient vertical -command "$w.tree yview"
-    scrollbar $w.hsb -orient horizontal -command "$w.tree xview"
-}
+ttk::scrollbar $w.vsb -orient vertical -command "$w.tree yview"
+ttk::scrollbar $w.hsb -orient horizontal -command "$w.tree xview"
 pack $w.container -fill both -expand 1
 grid $w.tree $w.vsb -in $w.container -sticky nsew
 grid $w.hsb         -in $w.container -sticky nsew
