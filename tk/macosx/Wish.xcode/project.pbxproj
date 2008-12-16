@@ -10,6 +10,9 @@
 		F9067BCD0BFBA2900074F726 /* tkOldTest.c in Sources */ = {isa = PBXBuildFile; fileRef = F966BAFE08F27A39005CB29B /* tkOldTest.c */; };
 		F9152B090EAF8A5000CD5C7B /* tkBusy.c in Sources */ = {isa = PBXBuildFile; fileRef = F9152B080EAF8A5000CD5C7B /* tkBusy.c */; };
 		F9152B0A0EAF8A5700CD5C7B /* tkBusy.c in Sources */ = {isa = PBXBuildFile; fileRef = F9152B080EAF8A5000CD5C7B /* tkBusy.c */; };
+		F921D2DA0E9464B4002E03FA /* TKApplicationPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = F921D2D90E9464B4002E03FA /* TKApplicationPrivate.m */; };
+		F921D5C30E94FA16002E03FA /* TKContentViewPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = F921D5C20E94FA16002E03FA /* TKContentViewPrivate.m */; };
+		F921D5C50E94FA1E002E03FA /* TKContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = F921D5C40E94FA1E002E03FA /* TKContentView.m */; };
 		F92EE8BF0E62F846001A6E80 /* tkImgPhInstance.c in Sources */ = {isa = PBXBuildFile; fileRef = F92EE8BE0E62F846001A6E80 /* tkImgPhInstance.c */; };
 		F92EE8D30E62F939001A6E80 /* tkImgPhInstance.c in Sources */ = {isa = PBXBuildFile; fileRef = F92EE8BE0E62F846001A6E80 /* tkImgPhInstance.c */; };
 		F93599B30DF1F75400E04F67 /* tclOO.c in Sources */ = {isa = PBXBuildFile; fileRef = F93599B20DF1F75400E04F67 /* tclOO.c */; };
@@ -20,6 +23,7 @@
 		F93599C20DF1F78300E04F67 /* tclOOMethod.c in Sources */ = {isa = PBXBuildFile; fileRef = F93599C10DF1F78300E04F67 /* tclOOMethod.c */; };
 		F93599C40DF1F78800E04F67 /* tclOOStubInit.c in Sources */ = {isa = PBXBuildFile; fileRef = F93599C30DF1F78800E04F67 /* tclOOStubInit.c */; };
 		F93599C60DF1F78D00E04F67 /* tclOOStubLib.c in Sources */ = {isa = PBXBuildFile; fileRef = F93599C50DF1F78D00E04F67 /* tclOOStubLib.c */; };
+		F94523A20E6FC2AC00C1D987 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F94523A10E6FC2AC00C1D987 /* Cocoa.framework */; };
 		F95D77EA0DFD820D00A8BF6F /* tclIORTrans.c in Sources */ = {isa = PBXBuildFile; fileRef = F95D77E90DFD820D00A8BF6F /* tclIORTrans.c */; };
 		F96437CA0EF0D4B2003F468E /* tclZlib.c in Sources */ = {isa = PBXBuildFile; fileRef = F96437C90EF0D4B2003F468E /* tclZlib.c */; };
 		F96437CB0EF0D4B2003F468E /* tclZlib.c in Sources */ = {isa = PBXBuildFile; fileRef = F96437C90EF0D4B2003F468E /* tclZlib.c */; };
@@ -309,6 +313,7 @@
 		F96D4AD208F272CA004A47F5 /* tclUnixSock.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D446708F272B9004A47F5 /* tclUnixSock.c */; };
 		F96D4AD408F272CA004A47F5 /* tclUnixThrd.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D446908F272B9004A47F5 /* tclUnixThrd.c */; };
 		F96D4AD608F272CA004A47F5 /* tclUnixTime.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D446B08F272B9004A47F5 /* tclUnixTime.c */; };
+		F9C9CC000E84059800E00935 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9C9CBFF0E84059800E00935 /* ApplicationServices.framework */; };
 		F9E61D28090A481F002B3151 /* bn_mp_cmp_d.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D427108F272B3004A47F5 /* bn_mp_cmp_d.c */; };
 		F9E61D29090A486C002B3151 /* bn_mp_neg.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D42A208F272B3004A47F5 /* bn_mp_neg.c */; };
 		F9E61D2A090A4891002B3151 /* bn_mp_sqrt.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D42C008F272B3004A47F5 /* bn_mp_sqrt.c */; };
@@ -632,6 +637,9 @@
 		F91DC23C0E44C51B002CB8D1 /* nre.test */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = nre.test; sourceTree = "<group>"; };
 		F91DC23D0E44C530002CB8D1 /* unsupported.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = unsupported.test; sourceTree = "<group>"; };
 		F91E62260C1AE686006C9D96 /* Tclsh-Info.plist.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Tclsh-Info.plist.in"; sourceTree = "<group>"; };
+		F921D2D90E9464B4002E03FA /* TKApplicationPrivate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKApplicationPrivate.m; sourceTree = "<group>"; };
+		F921D5C20E94FA16002E03FA /* TKContentViewPrivate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKContentViewPrivate.m; sourceTree = "<group>"; };
+		F921D5C40E94FA1E002E03FA /* TKContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKContentView.m; sourceTree = "<group>"; };
 		F92240290D7C620F005EC715 /* knightstour.tcl */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = knightstour.tcl; sourceTree = "<group>"; };
 		F92D7F100DE777240033A13A /* tsdPerf.tcl */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = tsdPerf.tcl; sourceTree = "<group>"; };
 		F92D7F140DE777670033A13A /* tsdPerf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tsdPerf.c; sourceTree = "<group>"; };
@@ -665,6 +673,7 @@
 		F936FCDA0CCD984600716967 /* ttknote.tcl */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = ttknote.tcl; sourceTree = "<group>"; };
 		F936FCDB0CCD984600716967 /* combo.tcl */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = combo.tcl; sourceTree = "<group>"; };
 		F93E5EFD09CF8711008FA367 /* tkMacOSXFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tkMacOSXFont.h; sourceTree = "<group>"; };
+		F94523A10E6FC2AC00C1D987 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		F95D77E90DFD820D00A8BF6F /* tclIORTrans.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tclIORTrans.c; sourceTree = "<group>"; };
 		F95FAFF90B34F1130072E431 /* macOSXLoad.test */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = macOSXLoad.test; sourceTree = "<group>"; };
 		F962F7C60DADC26200648DB8 /* vsapi.test */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = vsapi.test; sourceTree = "<group>"; };
@@ -2104,6 +2113,7 @@
 		F9A3084E08F2D4F400BAE1AB /* Tcl.framework */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.framework; path = Tcl.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9A493240CEBF38300B78AE2 /* chanio.test */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = chanio.test; sourceTree = "<group>"; };
 		F9C888C20EEF6571003F63AD /* fontchooser.n */ = {isa = PBXFileReference; explicitFileType = text.man; fileEncoding = 4; path = fontchooser.n; sourceTree = "<group>"; };
+		F9C9CBFF0E84059800E00935 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = /System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<absolute>"; };
 		F9D1360A0CDC252C00DBE0B5 /* mclist.tcl */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = mclist.tcl; sourceTree = "<group>"; };
 		F9ECB1120B26521500A28025 /* pkgIndex.tcl */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = pkgIndex.tcl; sourceTree = "<group>"; };
 		F9ECB1130B26521500A28025 /* platform.tcl */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = platform.tcl; sourceTree = "<group>"; };
@@ -2134,6 +2144,8 @@
 				F96437E70EF0D652003F468E /* libz.dylib in Frameworks */,
 				F966C07708F2821B005CB29B /* Carbon.framework in Frameworks */,
 				F966C07908F28233005CB29B /* IOKit.framework in Frameworks */,
+				F94523A20E6FC2AC00C1D987 /* Cocoa.framework in Frameworks */,
+				F9C9CC000E84059800E00935 /* ApplicationServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2607,6 +2619,9 @@
 		F966BB9708F27A3B005CB29B /* macosx */ = {
 			isa = PBXGroup;
 			children = (
+				F921D5C40E94FA1E002E03FA /* TKContentView.m */,
+				F921D5C20E94FA16002E03FA /* TKContentViewPrivate.m */,
+				F921D2D90E9464B4002E03FA /* TKApplicationPrivate.m */,
 				F966BBBA08F27A3B005CB29B /* configure.ac */,
 				F966BBBB08F27A3B005CB29B /* GNUmakefile */,
 				F966BBBE08F27A3B005CB29B /* README */,
@@ -2920,9 +2935,11 @@
 		F966C06F08F281DC005CB29B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F9C9CBFF0E84059800E00935 /* ApplicationServices.framework */,
 				F966C07408F2820D005CB29B /* CoreFoundation.framework */,
 				F96437E60EF0D652003F468E /* libz.dylib */,
 				F966C07608F2821B005CB29B /* Carbon.framework */,
+				F94523A10E6FC2AC00C1D987 /* Cocoa.framework */,
 				F966C07808F28233005CB29B /* IOKit.framework */,
 				F9FD32140CC1AF170073837D /* libX11.dylib */,
 				F9FD32150CC1AF170073837D /* libXext.dylib */,
@@ -4488,6 +4505,9 @@
 				F966C02C08F27A42005CB29B /* xgc.c in Sources */,
 				F966C02D08F27A42005CB29B /* ximage.c in Sources */,
 				F966C02E08F27A42005CB29B /* xutil.c in Sources */,
+				F921D2DA0E9464B4002E03FA /* TKApplicationPrivate.m in Sources */,
+				F921D5C30E94FA16002E03FA /* TKContentViewPrivate.m in Sources */,
+				F921D5C50E94FA1E002E03FA /* TKContentView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4815,6 +4835,9 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CFLAGS = "-arch i386 -arch x86_64 -arch ppc $(CFLAGS)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_GC = required;
+				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PREBINDING = NO;
 			};
@@ -4865,6 +4888,9 @@
 				);
 				CONFIGURE_ARGS = "$(CONFIGURE_ARGS) --enable-symbols=all";
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_GC = required;
+				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
@@ -4880,7 +4906,10 @@
 					"$(NATIVE_ARCH_64_BIT)",
 				);
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_GC = required;
 				GCC_GENERATE_TEST_COVERAGE_FILES = YES;
+				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
@@ -5001,6 +5030,9 @@
 					"$(NATIVE_ARCH_64_BIT)",
 				);
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_GC = required;
+				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
@@ -5012,6 +5044,9 @@
 			baseConfigurationReference = F97AE82B0B65C69B00310EA2 /* Wish-Release.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(NATIVE_ARCH_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_GC = required;
+				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PREBINDING = NO;
 			};
@@ -5026,6 +5061,9 @@
 					"$(NATIVE_ARCH_64_BIT)",
 				);
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_GC = required;
+				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
@@ -5148,6 +5186,9 @@
 				ARCHS = "$(NATIVE_ARCH_64_BIT)";
 				CONFIGURE_ARGS = "--enable-64bit $(CONFIGURE_ARGS)";
 				CPPFLAGS = "-arch $(NATIVE_ARCH_64_BIT) $(CPPFLAGS)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_GC = required;
+				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PREBINDING = NO;
 			};
@@ -5163,6 +5204,9 @@
 				);
 				CONFIGURE_ARGS = "$(CONFIGURE_ARGS) --disable-corefoundation";
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_GC = required;
+				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
@@ -5216,6 +5260,9 @@
 				);
 				CONFIGURE_ARGS = "$(CONFIGURE_ARGS) --disable-threads --disable-corefoundation";
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_GC = required;
+				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
@@ -5268,6 +5315,9 @@
 					"$(NATIVE_ARCH_64_BIT)",
 				);
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_GC = required;
+				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				GCC_VERSION = 4.2;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
@@ -5336,6 +5386,9 @@
 				);
 				CC = "$(DEVELOPER_DIR)/usr/bin/llvm-gcc-4.2";
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_GC = required;
+				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
@@ -5400,6 +5453,9 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CFLAGS = "-arch i386 -arch x86_64 -arch ppc $(CFLAGS)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_GC = required;
+				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				GCC_VERSION = 4.2;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PREBINDING = NO;
@@ -5451,6 +5507,9 @@
 				CC = "$(DEVELOPER_DIR)/usr/bin/llvm-gcc-4.2";
 				CFLAGS = "-arch i386 -arch x86_64 -arch ppc $(CFLAGS)";
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_GC = required;
+				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				GCC_OPTIMIZATION_LEVEL = 4;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
@@ -5580,6 +5639,9 @@
 				);
 				CONFIGURE_ARGS = "$(CONFIGURE_ARGS) --disable-threads";
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_GC = required;
+				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
@@ -5595,6 +5657,9 @@
 					"$(NATIVE_ARCH_64_BIT)",
 				);
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_GC = required;
+				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					PURIFY,
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
@@ -5649,6 +5714,9 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CFLAGS = "-arch i386 -arch ppc $(CFLAGS)";
 				CPPFLAGS = "-isysroot $(SDKROOT) $(CPPFLAGS)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_GC = required;
+				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PREBINDING = NO;
 				SDKROOT = macosx10.5;
