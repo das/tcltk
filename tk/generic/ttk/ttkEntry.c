@@ -1910,7 +1910,6 @@ static WidgetCommandSpec SpinboxCommands[] = {
     { "bbox", 		EntryBBoxCommand },
     { "cget", 		TtkWidgetCgetCommand },
     { "configure", 	TtkWidgetConfigureCommand },
-//X: { "current", 	ValuesCurrentCommand },
     { "delete", 	EntryDeleteCommand },
     { "get", 		EntryGetCommand },
     { "icursor", 	EntryICursorCommand },
@@ -2017,7 +2016,7 @@ TTK_END_LAYOUT
 /*------------------------------------------------------------------------
  * +++ Initialization.
  */
-
+MODULE_SCOPE
 void TtkEntry_Init(Tcl_Interp *interp)
 {
     Ttk_Theme themePtr =  Ttk_GetDefaultTheme(interp);
