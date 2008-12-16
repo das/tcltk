@@ -3,7 +3,7 @@ tcl/unix/tclConfig.h.in~
 tk/macosx/configure
 tk/unix/tkConfig.h.in~
 tk/doc/man.macros
-build/
+build*/
 *.mode1
 *.mode1v3
 cscope.*
