@@ -670,7 +670,7 @@ Tk_GetRelief(
     } else {
 	char buf[200];
 
-	sprintf(buf, "bad relief type \"%.50s\": must be %s",
+	sprintf(buf, "bad relief \"%.50s\": must be %s",
 		name, "flat, groove, raised, ridge, solid, or sunken");
 	Tcl_SetResult(interp, buf, TCL_VOLATILE);
 	return TCL_ERROR;

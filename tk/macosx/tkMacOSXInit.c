@@ -16,8 +16,6 @@
 
 #include "tkMacOSXPrivate.h"
 
-#include "tclInt.h" /* for Tcl_GetStartupScript() & Tcl_SetStartupScript() */
-
 #include <sys/stat.h>
 #include <sys/utsname.h>
 #include <mach-o/dyld.h>
