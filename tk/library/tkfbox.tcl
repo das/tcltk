@@ -19,8 +19,6 @@
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 #
 
-package require Ttk
-
 #----------------------------------------------------------------------
 #
 #		      I C O N   L I S T

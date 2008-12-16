@@ -11,8 +11,6 @@
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 #
 
-package require Ttk
-
 # Ensure existence of ::tk::dialog namespace
 #
 namespace eval ::tk::dialog {}
