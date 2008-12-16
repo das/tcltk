@@ -2326,7 +2326,7 @@ static Tcl_Obj *
 GetFontObj(HDC hdc, LOGFONT *plf)
 {
     Tcl_Obj *resObj;
-    int len = 0, pt = 0;
+    int pt = 0;
 
     resObj = Tcl_NewListObj(0, NULL);
     Tcl_ListObjAppendElement(NULL, resObj,
@@ -2441,7 +2441,6 @@ HookProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam)
      */
     if (WM_COMMAND == msg && LOWORD(wParam) == 1026) {
 	LOGFONT lf = {0};
-	int iPt = 0;
 	HDC hdc = GetDC(hwndDlg);
 	SendMessage(hwndDlg, WM_CHOOSEFONT_GETLOGFONT, 0, (LPARAM)&lf);
 	if (phd && phd->cmdObj) {
@@ -2680,7 +2679,6 @@ FontchooserShowCmd(
     HDC hdc;
     HookData *hdPtr;
     int r = TCL_OK, oldMode = 0;
-    Tcl_Obj *resObj = NULL;
 
     hdPtr = Tcl_GetAssocData(interp, "::tk::fontchooser", NULL);
 
