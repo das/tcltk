@@ -1164,9 +1164,9 @@ typedef struct Tk_Outline {
     Tk_Dash dash;		/* Dash pattern. */
     Tk_Dash activeDash;		/* Dash pattern if state is active. */
     Tk_Dash disabledDash;	/* Dash pattern if state is disabled. */
-    VOID *reserved1;		/* Reserved for future expansion. */
-    VOID *reserved2;
-    VOID *reserved3;
+    void *reserved1;		/* Reserved for future expansion. */
+    void *reserved2;
+    void *reserved3;
     Tk_TSOffset tsoffset;	/* Stipple offset for outline. */
     XColor *color;		/* Outline color. */
     XColor *activeColor;	/* Outline color if state is active. */
