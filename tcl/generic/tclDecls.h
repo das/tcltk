@@ -3761,13 +3761,13 @@ EXTERN int		Tcl_ZlibStreamReset (Tcl_ZlibStream zshandle);
 #ifndef Tcl_SetStartupScript_TCL_DECLARED
 #define Tcl_SetStartupScript_TCL_DECLARED
 /* 622 */
-EXTERN void		Tcl_SetStartupScript (Tcl_Obj * pathPtr,
-				const char* encodingName);
+EXTERN void		Tcl_SetStartupScript (Tcl_Obj * path,
+				const char * encoding);
 #endif
 #ifndef Tcl_GetStartupScript_TCL_DECLARED
 #define Tcl_GetStartupScript_TCL_DECLARED
 /* 623 */
-EXTERN Tcl_Obj *	Tcl_GetStartupScript (const char ** encodingNamePtr);
+EXTERN Tcl_Obj *	Tcl_GetStartupScript (const char ** encodingPtr);
 #endif
 
 typedef struct TclStubHooks {
@@ -4450,8 +4450,8 @@ typedef struct TclStubs {
     int (*tcl_ZlibStreamGet) (Tcl_ZlibStream zshandle, Tcl_Obj * data, int count); /* 619 */
     int (*tcl_ZlibStreamClose) (Tcl_ZlibStream zshandle); /* 620 */
     int (*tcl_ZlibStreamReset) (Tcl_ZlibStream zshandle); /* 621 */
-    void (*tcl_SetStartupScript) (Tcl_Obj * pathPtr, const char* encodingName); /* 622 */
-    Tcl_Obj * (*tcl_GetStartupScript) (const char ** encodingNamePtr); /* 623 */
+    void (*tcl_SetStartupScript) (Tcl_Obj * path, const char * encoding); /* 622 */
+    Tcl_Obj * (*tcl_GetStartupScript) (const char ** encodingPtr); /* 623 */
 } TclStubs;
 
 #if defined(USE_TCL_STUBS) && !defined(USE_TCL_STUB_PROCS)
