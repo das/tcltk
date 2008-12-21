@@ -268,12 +268,7 @@ Tk_CanvasGetCoordFromObj(
 {
     TkCanvas *canvasPtr = (TkCanvas *) canvas;
 
-    if (Tk_GetMMFromObj(canvasPtr->interp, canvasPtr->tkwin, obj,
-	    doublePtr) != TCL_OK) {
-	return TCL_ERROR;
-    }
-    *doublePtr *= canvasPtr->pixelsPerMM;
-    return TCL_OK;
+    return Tk_GetDoublePixelsFromObj(canvasPtr->interp, canvasPtr->tkwin, obj, doublePtr);
 }
 
 /*
