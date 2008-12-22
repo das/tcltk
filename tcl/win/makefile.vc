@@ -76,27 +76,29 @@ the build instructions.
 #		Sets where to install Tcl from the built binaries.
 #		C:\Progra~1\Tcl is assumed when not specified.
 #
-#	OPTS=static,msvcrt,staticpkg,threads,symbols,profile,loimpact,unchecked,none
+#	OPTS=static,msvcrt,staticpkg,threads,symbols,profile,loimpact,unchecked,pdbs,none
 #		Sets special options for the core.  The default is for none.
 #		Any combination of the above may be used (comma separated).
 #		'none' will over-ride everything to nothing.
 #
 #		static  =  Builds a static library of the core instead of a
 #			   dll.  The shell will be static (and large), as well.
-#		msvcrt  =  Effects the static option only to switch it from
+#		msvcrt  =  Affects the static option only to switch it from
 #			   using libcmt(d) as the C runtime [by default] to
 #			   msvcrt(d). This is useful for static embedding
 #			   support.
-#		staticpkg = Effects the static option only to switch
+#		staticpkg = Affects the static option only to switch
 #			   tclshXX.exe to have the dde and reg extension linked
 #			   inside it.
 #		threads =  Turns on full multithreading support.
 #		thrdalloc = Use the thread allocator (shared global free pool)
 #			   This is the default on threaded builds.
-#		tclalloc  = Use the old non-thread allocator
-#		symbols =  Adds symbols for step debugging.
-#		profile =  Adds profiling hooks.  Map file is assumed.
-#		loimpact =  Adds a flag for how NT treats the heap to keep memory
+#		tclalloc = Use the old non-thread allocator
+#		symbols  = Debug build. Links to the debug C runtime, disables 
+#			   optimizations and creates pdb symbols files.
+#		pdbs     = Build detached symbols for release builds.
+#		profile  = Adds profiling hooks.  Map file is assumed.
+#		loimpact = Adds a flag for how NT treats the heap to keep memory
 #			   in use, low.  This is said to impact alloc performance.
 #		unchecked = Allows a symbols build to not use the debug
 #			   enabled runtime (msvcrt.dll not msvcrtd.dll
@@ -194,8 +196,8 @@ DDEVERSION = $(DDEDOTVERSION:.=)
 REGDOTVERSION = 1.2
 REGVERSION = $(REGDOTVERSION:.=)
 
-BINROOT		= .
-ROOT		= ..
+BINROOT		= $(MAKEDIR)     # originally .
+ROOT		= $(MAKEDIR)\..  # originally ..
 
 TCLIMPLIB	= $(OUT_DIR)\$(PROJECT)$(VERSION)$(SUFX).lib
 TCLLIBNAME	= $(PROJECT)$(VERSION)$(SUFX).$(EXT)
@@ -404,6 +406,14 @@ TCLOBJS = \
 	$(TMP_DIR)\tcl.res
 !endif
 
+ZLIBOBJS = \
+	$(TMP_DIR)\adler32.obj $(TMP_DIR)\compress.obj $(TMP_DIR)\crc32.obj \
+        $(TMP_DIR)\deflate.obj $(TMP_DIR)\gzio.obj $(TMP_DIR)\infback.obj \
+        $(TMP_DIR)\inffast.obj $(TMP_DIR)\inflate.obj $(TMP_DIR)\inftrees.obj \
+        $(TMP_DIR)\trees.obj $(TMP_DIR)\uncompr.obj $(TMP_DIR)\zutil.obj
+
+TCLOBJS = $(TCLOBJS) $(ZLIBOBJS)
+
 TCLSTUBOBJS = \
 	$(TMP_DIR)\tclStubLib.obj \
 	$(TMP_DIR)\tclOOStubLib.obj
@@ -415,7 +425,7 @@ GENERICDIR	= $(ROOT)\generic
 TOMMATHDIR	= $(ROOT)\libtommath
 TOOLSDIR	= $(ROOT)\tools
 WINDIR		= $(ROOT)\win
-
+PKGSDIR		= $(ROOT)\pkgs
 
 #---------------------------------------------------------------------
 # Compile flags
@@ -457,8 +467,8 @@ crt = -MT
 !endif
 
 TCL_INCLUDES	= -I"$(WINDIR)" -I"$(GENERICDIR)" -I"$(TOMMATHDIR)"
-TCL_DEFINES	= -DTCL_PIPE_DLL=\"$(TCLPIPEDLLNAME)\" -DTCL_TOMMATH -DMP_PREC=4 -Dinline=__inline
-### TODO: Add -DHAVE_ZLIB=1
+TCL_DEFINES	= -DTCL_PIPE_DLL=\"$(TCLPIPEDLLNAME)\" -DTCL_TOMMATH -DMP_PREC=4 \
+		  -Dinline=__inline -DHAVE_ZLIB=1
 BASE_CFLAGS	= $(cflags) $(cdebug) $(crt) $(TCL_INCLUDES) $(TCL_DEFINES)
 CON_CFLAGS	= $(cflags) $(cdebug) $(crt) -DCONSOLE
 TCL_CFLAGS	= $(BASE_CFLAGS) $(OPTDEFINES)
@@ -524,17 +534,17 @@ TESTFLAGS = $(TESTFLAGS) -file $(TESTPAT)
 # Project specific targets
 #---------------------------------------------------------------------
 
-release:    setup $(TCLSH) $(TCLSTUBLIB) dlls
+release:    setup $(TCLSH) $(TCLSTUBLIB) dlls pkgs
 core:	    setup $(TCLLIB) $(TCLSTUBLIB)
 shell:	    setup $(TCLSH)
 dlls:	    setup $(TCLPIPEDLL) $(TCLREGLIB) $(TCLDDELIB)
-all:	    setup $(TCLSH) $(TCLSTUBLIB) dlls $(CAT32) 
+all:	    setup $(TCLSH) $(TCLSTUBLIB) dlls $(CAT32) pkgs
 tcltest:    setup $(TCLTEST) dlls $(CAT32)
-install:    install-binaries install-libraries install-docs
+install:    install-binaries install-libraries install-docs install-pkgs
 
-
-test: setup $(TCLTEST) dlls $(CAT32)
-	set TCL_LIBRARY=$(ROOT)/library
+test: test-core test-pkgs
+test-core: setup $(TCLTEST) dlls $(CAT32)
+	set TCL_LIBRARY=$(ROOT:\=/)/../library
 !if "$(OS)" == "Windows_NT"  || "$(MSVCDIR)" == "IDE"
 	$(DEBUGGER) $(TCLTEST) "$(ROOT)/tests/all.tcl" $(TESTFLAGS) -loadfile <<
 		set ::ddelib [file normalize $(TCLDDELIB:\=/)]
@@ -622,6 +632,21 @@ $(TCLREGLIB): $(TMP_DIR)\tclWinReg.obj $(TCLSTUBLIB)
 	-@del $*.exp
 	-@del $*.lib
 !endif
+
+pkgs:
+	@for /d %d in ($(PKGSDIR)\*) do \
+	  @pushd %~fd\win & \
+	  $(MAKE) -nologo -f makefile.vc TCLDIR=$(ROOT)
+
+test-pkgs:
+	@for /d %d in ($(PKGSDIR)\*) do \
+	  @pushd %~fd\win & \
+	  $(MAKE) -nologo -f makefile.vc TCLDIR=$(ROOT) test
+
+install-pkgs:
+	@for /d %d in ($(PKGSDIR)\*) do \
+	  @pushd %~fd\win & \
+	  $(MAKE) -nologo -f makefile.vc TCLDIR=$(ROOT) install
 
 $(CAT32): $(WINDIR)\cat.c
 	$(cc32) $(CON_CFLAGS) -Fo$(TMP_DIR)\ $?
@@ -866,6 +891,9 @@ $(TMP_DIR)\tclTestObj.obj: $(GENERICDIR)\tclTestObj.c
 $(TMP_DIR)\tclWinTest.obj: $(WINDIR)\tclWinTest.c
 	$(cc32) $(TCL_CFLAGS) -Fo$@ $?
 
+$(TMP_DIR)\tclZlib.obj: $(GENERICDIR)\tclZlib.c
+	$(cc32) $(TCL_CFLAGS) -I$(COMPATDIR)\zlib -DBUILD_tcl -Fo$@ $?
+
 $(TMP_DIR)\tclPkgConfig.obj: $(GENERICDIR)\tclPkgConfig.c
 	$(cc32) -DBUILD_tcl $(TCL_CFLAGS) \
 	-DCFG_INSTALL_LIBDIR="\"$(LIB_INSTALL_DIR:\=\\)\"" \
@@ -968,6 +996,11 @@ $<
 <<
 
 {$(COMPATDIR)}.c{$(TMP_DIR)}.obj::
+	$(cc32) $(TCL_CFLAGS) -DBUILD_tcl -Fo$(TMP_DIR)\ @<<
+$<
+<<
+
+{$(COMPATDIR)\zlib}.c{$(TMP_DIR)}.obj::
 	$(cc32) $(TCL_CFLAGS) -DBUILD_tcl -Fo$(TMP_DIR)\ @<<
 $<
 <<
