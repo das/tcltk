@@ -143,7 +143,7 @@ zlib-format data on \fIchannel\fR, which must be writable.
 \fBdecompress\fR
 .
 The transformation will be a decompressing transformation that reads
-zlib-format data from \fIchannel\R, which must be readable.
+zlib-format data from \fIchannel\fR, which must be readable.
 .TP
 \fBdeflate\fR
 .
@@ -153,7 +153,7 @@ compressed data on \fIchannel\fR, which must be writable.
 \fBgunzip\fR
 .
 The transformation will be a decompressing transformation that reads
-gzip-format data from \fIchannel\R, which must be readable.
+gzip-format data from \fIchannel\fR, which must be readable.
 .TP
 \fBgzip\fR
 .
@@ -163,9 +163,47 @@ gzip-format data on \fIchannel\fR, which must be writable.
 \fBinflate\fR
 .
 The transformation will be a decompressing transformation that reads raw
-compressed data from \fIchannel\R, which must be readable.
+compressed data from \fIchannel\fR, which must be readable.
 .PP
-\fITODO: not yet implemented!\fR
+The following options may be set when creating a transformation:
+.TP
+\fB\-header\fI dictionary\fR
+.
+Passes a description of the gzip header to create, in the same format that
+\fBzlib gzip\fR understands.
+.TP
+\fB\-level\fI compressionLevel\fR
+.
+How hard to compress the data. Must be an integer from 0 (uncompressed) to 9
+(maximally compressed).
+'\".TP
+'\"\fB\-limit\fI readaheadLimit\fR
+'\".
+'\"The maximum number of bytes ahead to read.
+'\"\fITODO: not yet implemented!\fR
+.PP
+Both compressing and decompressing channel transformations add extra options
+that may be accessed through \fBchan configure\fR. These are:
+.TP
+\fB\-flush\fI type\fR
+.
+This write-only operation flushes the current state of the compressor to the
+underlying channel. It is only valid for compressing transformations. The
+\fItype\fR must be either \fBsync\fR or \fBfull\fR for a normal flush or an
+expensive flush respectively. Note that flushing degrades compression.
+.TP
+\fB\-checksum\fR
+.
+This read-only option, valid for both compressing and decompressing
+transforms, gets the current checksum for the uncompressed data that the
+compression engine has seen so far. The compression algorithm depends on what
+format is being produced or consumed.
+.TP
+\fB\-header\fR
+.
+This read-only option, only valid for decompressing transforms that are
+processing gzip-format data, returns the dictionary describing the header read
+off the data stream.
 .RE
 .TP
 \fBzlib stream\fI mode\fR ?\fIlevel\fR?
@@ -231,16 +269,15 @@ the transformed data.
 The full set of subcommands supported by a streaming instance command,
 \fIstream\fR, is as follows:
 .TP
-\fIstream \fBadd\fR ?\fIoption\fR? \Idata\fR
+\fIstream \fBadd\fR ?\fIoption\fR? \fIdata\fR
 .
 A short-cut for
 .QW "\fIstream \fBput \fIoption data\fR"
 followed by
 .QW "\fIstream \fBget\fR" .
 .TP
-\fIstream \fBadler32\fR
+\fIstream \fBchecksum\fR
 .
-'\" Change name?
 Returns the checksum of the uncompressed data seen so far by this stream.
 .TP
 \fIstream \fBclose\fR
@@ -338,9 +375,7 @@ set compData [$\fIstrm \fBget\fR]
 $\fIstrm \fBclose\fR
 .CE
 .SH "SEE ALSO"
-binary(n), chan(n), encoding(n), Tcl_ZlibDeflate(3)
-.br
-RFC1950 \- RFC1952
+binary(n), chan(n), encoding(n), Tcl_ZlibDeflate(3), RFC1950 \- RFC1952
 .SH "KEYWORDS"
 compress, decompress, deflate, gzip, inflate
 '\" Local Variables:
