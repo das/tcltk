@@ -6570,4 +6570,8 @@ in screen distances, reducing precision loss (ferrieux)
 
 2008-12-22 (bug fix)[2107938] no negative font size in PS (fellows)
 
+2008-12-22 (bug fix)[2264732] crash using nondefault visual (english)
+
+2008-12-22 (bug fix)[2207435] [ttk::entry .t -textvar ::noexist::x] (english)
+
 --- Released 8.5.6, December 23, 2008 --- See ChangeLog for details ---
