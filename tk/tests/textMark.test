@@ -114,7 +114,7 @@ test textMark-4.2 {TkTextMarkCmd - "unset" option} -body {
     .t mark unset a b
     .t index a
 } -returnCodes error -result {bad text index "a"}
-test textMark-4.2 {TkTextMarkCmd - "unset" option} -body {
+test textMark-4.2.1 {TkTextMarkCmd - "unset" option} -body {
     .t mark set a 1.2
     .t mark set b 2.3
     .t mark unset a b

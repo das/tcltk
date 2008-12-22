@@ -217,7 +217,7 @@ EXTERN int		TclGetIntForIndex (Tcl_Interp * interp,
 #define TclGetLoadedPackages_TCL_DECLARED
 /* 37 */
 EXTERN int		TclGetLoadedPackages (Tcl_Interp * interp,
-				char * targetName);
+				const char * targetName);
 #endif
 #ifndef TclGetNamespaceForQualName_TCL_DECLARED
 #define TclGetNamespaceForQualName_TCL_DECLARED
@@ -689,7 +689,7 @@ EXTERN CONST86 struct AuxDataType * TclGetAuxDataType (const char * typeName);
 #ifndef TclHandleCreate_TCL_DECLARED
 #define TclHandleCreate_TCL_DECLARED
 /* 146 */
-EXTERN TclHandle	TclHandleCreate (VOID * ptr);
+EXTERN TclHandle	TclHandleCreate (void * ptr);
 #endif
 #ifndef TclHandleFree_TCL_DECLARED
 #define TclHandleFree_TCL_DECLARED
@@ -1140,7 +1140,7 @@ typedef struct TclIntStubs {
     int (*tclGetIntForIndex) (Tcl_Interp * interp, Tcl_Obj * objPtr, int endValue, int * indexPtr); /* 34 */
     void *reserved35;
     void *reserved36;
-    int (*tclGetLoadedPackages) (Tcl_Interp * interp, char * targetName); /* 37 */
+    int (*tclGetLoadedPackages) (Tcl_Interp * interp, const char * targetName); /* 37 */
     int (*tclGetNamespaceForQualName) (Tcl_Interp * interp, const char * qualName, Namespace * cxtNsPtr, int flags, Namespace ** nsPtrPtr, Namespace ** altNsPtrPtr, Namespace ** actualCxtPtrPtr, const char ** simpleNamePtr); /* 38 */
     TclObjCmdProcType (*tclGetObjInterpProc) (void); /* 39 */
     int (*tclGetOpenMode) (Tcl_Interp * interp, const char * str, int * seekFlagPtr); /* 40 */
@@ -1257,7 +1257,7 @@ typedef struct TclIntStubs {
     int (*tclAddLiteralObj) (struct CompileEnv * envPtr, Tcl_Obj * objPtr, LiteralEntry ** litPtrPtr); /* 143 */
     void (*tclHideLiteral) (Tcl_Interp * interp, struct CompileEnv * envPtr, int index); /* 144 */
     CONST86 struct AuxDataType * (*tclGetAuxDataType) (const char * typeName); /* 145 */
-    TclHandle (*tclHandleCreate) (VOID * ptr); /* 146 */
+    TclHandle (*tclHandleCreate) (void * ptr); /* 146 */
     void (*tclHandleFree) (TclHandle handle); /* 147 */
     TclHandle (*tclHandlePreserve) (TclHandle handle); /* 148 */
     void (*tclHandleRelease) (TclHandle handle); /* 149 */
