@@ -1892,14 +1892,14 @@ EXTERN void		Tcl_GetEncodingNames (Tcl_Interp * interp);
 #define Tcl_GetIndexFromObjStruct_TCL_DECLARED
 /* 304 */
 EXTERN int		Tcl_GetIndexFromObjStruct (Tcl_Interp * interp,
-				Tcl_Obj * objPtr, const VOID * tablePtr,
+				Tcl_Obj * objPtr, const void * tablePtr,
 				int offset, const char * msg, int flags,
 				int * indexPtr);
 #endif
 #ifndef Tcl_GetThreadData_TCL_DECLARED
 #define Tcl_GetThreadData_TCL_DECLARED
 /* 305 */
-EXTERN VOID *		Tcl_GetThreadData (Tcl_ThreadDataKey * keyPtr,
+EXTERN void *		Tcl_GetThreadData (Tcl_ThreadDataKey * keyPtr,
 				int size);
 #endif
 #ifndef Tcl_GetVar2Ex_TCL_DECLARED
@@ -3769,6 +3769,12 @@ EXTERN void		Tcl_SetStartupScript (Tcl_Obj * path,
 /* 623 */
 EXTERN Tcl_Obj *	Tcl_GetStartupScript (const char ** encodingPtr);
 #endif
+#ifndef Tcl_CloseEx_TCL_DECLARED
+#define Tcl_CloseEx_TCL_DECLARED
+/* 624 */
+EXTERN int		Tcl_CloseEx (Tcl_Interp * interp, Tcl_Channel chan,
+				int flags);
+#endif
 
 typedef struct TclStubHooks {
     const struct TclPlatStubs *tclPlatStubs;
@@ -4132,8 +4138,8 @@ typedef struct TclStubs {
     Tcl_Encoding (*tcl_GetEncoding) (Tcl_Interp * interp, const char * name); /* 301 */
     CONST84_RETURN char * (*tcl_GetEncodingName) (Tcl_Encoding encoding); /* 302 */
     void (*tcl_GetEncodingNames) (Tcl_Interp * interp); /* 303 */
-    int (*tcl_GetIndexFromObjStruct) (Tcl_Interp * interp, Tcl_Obj * objPtr, const VOID * tablePtr, int offset, const char * msg, int flags, int * indexPtr); /* 304 */
-    VOID * (*tcl_GetThreadData) (Tcl_ThreadDataKey * keyPtr, int size); /* 305 */
+    int (*tcl_GetIndexFromObjStruct) (Tcl_Interp * interp, Tcl_Obj * objPtr, const void * tablePtr, int offset, const char * msg, int flags, int * indexPtr); /* 304 */
+    void * (*tcl_GetThreadData) (Tcl_ThreadDataKey * keyPtr, int size); /* 305 */
     Tcl_Obj * (*tcl_GetVar2Ex) (Tcl_Interp * interp, const char * part1, const char * part2, int flags); /* 306 */
     ClientData (*tcl_InitNotifier) (void); /* 307 */
     void (*tcl_MutexLock) (Tcl_Mutex * mutexPtr); /* 308 */
@@ -4452,6 +4458,7 @@ typedef struct TclStubs {
     int (*tcl_ZlibStreamReset) (Tcl_ZlibStream zshandle); /* 621 */
     void (*tcl_SetStartupScript) (Tcl_Obj * path, const char * encoding); /* 622 */
     Tcl_Obj * (*tcl_GetStartupScript) (const char ** encodingPtr); /* 623 */
+    int (*tcl_CloseEx) (Tcl_Interp * interp, Tcl_Channel chan, int flags); /* 624 */
 } TclStubs;
 
 #if defined(USE_TCL_STUBS) && !defined(USE_TCL_STUB_PROCS)
@@ -7019,6 +7026,10 @@ extern const TclStubs *tclStubsPtr;
 #ifndef Tcl_GetStartupScript
 #define Tcl_GetStartupScript \
 	(tclStubsPtr->tcl_GetStartupScript) /* 623 */
+#endif
+#ifndef Tcl_CloseEx
+#define Tcl_CloseEx \
+	(tclStubsPtr->tcl_CloseEx) /* 624 */
 #endif
 
 #endif /* defined(USE_TCL_STUBS) && !defined(USE_TCL_STUB_PROCS) */

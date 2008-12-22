@@ -52,11 +52,11 @@ extern "C" {
 
 #define TK_MAJOR_VERSION	8
 #define TK_MINOR_VERSION	6
-#define TK_RELEASE_LEVEL	TCL_ALPHA_RELEASE
-#define TK_RELEASE_SERIAL	4
+#define TK_RELEASE_LEVEL	TCL_BETA_RELEASE
+#define TK_RELEASE_SERIAL	1
 
 #define TK_VERSION		"8.6"
-#define TK_PATCH_LEVEL		"8.6a4"
+#define TK_PATCH_LEVEL		"8.6b1"
 
 /*
  * A special definition used to allow this header file to be included from
@@ -1164,9 +1164,9 @@ typedef struct Tk_Outline {
     Tk_Dash dash;		/* Dash pattern. */
     Tk_Dash activeDash;		/* Dash pattern if state is active. */
     Tk_Dash disabledDash;	/* Dash pattern if state is disabled. */
-    VOID *reserved1;		/* Reserved for future expansion. */
-    VOID *reserved2;
-    VOID *reserved3;
+    void *reserved1;		/* Reserved for future expansion. */
+    void *reserved2;
+    void *reserved3;
     Tk_TSOffset tsoffset;	/* Stipple offset for outline. */
     XColor *color;		/* Outline color. */
     XColor *activeColor;	/* Outline color if state is active. */
