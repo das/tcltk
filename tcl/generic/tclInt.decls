@@ -168,7 +168,7 @@ declare 34 generic {
 #    int TclGetLong(Tcl_Interp *interp, const char *str, long *longPtr)
 #}
 declare 37 generic {
-    int TclGetLoadedPackages(Tcl_Interp *interp, char *targetName)
+    int TclGetLoadedPackages(Tcl_Interp *interp, const char *targetName)
 }
 declare 38 generic {
     int TclGetNamespaceForQualName(Tcl_Interp *interp, const char *qualName,
@@ -579,7 +579,7 @@ declare 145 generic {
     CONST86 struct AuxDataType *TclGetAuxDataType(const char *typeName)
 }
 declare 146 generic {
-    TclHandle TclHandleCreate(VOID *ptr)
+    TclHandle TclHandleCreate(void *ptr)
 }
 declare 147 generic {
     void TclHandleFree(TclHandle handle)

@@ -177,7 +177,7 @@ TkpOpenDisplay(
     Gestalt(gestaltQuickdrawVersion, (long *) &display->proto_minor_version);
     display->proto_major_version = 10;
     display->proto_minor_version -= gestaltMacOSXQD;
-    display->vendor = "Apple";
+    display->vendor = (char*) "Apple";
     Gestalt(gestaltSystemVersion, (long *) &display->release);
 
     /*
