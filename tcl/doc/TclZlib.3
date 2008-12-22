@@ -7,7 +7,7 @@
 '\" RCS: @(#) $Id$
 '\" 
 .so man.macros
-.TH TclZlib 3 8.6 Tcl "Tcl Built-In Commands"
+.TH TclZlib 3 8.6 Tcl "Tcl Library Procedures"
 .BS
 '\" Note:  do not modify the .SH NAME line immediately below!
 .SH NAME
@@ -120,7 +120,7 @@ result. Note that the \fIdictObj\fR parameter is only used when the
 bytes. Typical usage is:
 .PP
 .CS
-checksum = Tcl_ZlibCRC32(Tcl_ZlibCRC32(0,NULL,0), data, length);
+checksum = \fBTcl_ZlibCRC32\fR(\fBTcl_ZlibCRC32\fR(0,NULL,0), data, length);
 .CE
 .PP
 \fBTcl_ZlibStreamInit\fR creates a compressing or decompressing stream that is

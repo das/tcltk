@@ -20,12 +20,21 @@
 #ifdef HAVE_ZLIB
 #include <zlib.h>
 
-#define GZIP_MAGIC_FLAG	16
-#define AUTO_MAGIC_FLAG 32
+/*
+ * Magic flags used with wbits fields to indicate that we're handling the gzip
+ * format or automatic detection of format. Putting it here is slightly less
+ * gross!
+ */
+
+#define WBITS_RAW		(-MAX_WBITS)
+#define WBITS_ZLIB		(MAX_WBITS)
+#define WBITS_GZIP		(MAX_WBITS | 16)
+#define WBITS_AUTODETECT	(MAX_WBITS | 32)
 
 /*
  * Structure used for handling gzip headers that are generated from a
- * dictionary.
+ * dictionary. It comprises the header structure itself plus some working
+ * space that it is very convenient to have attached.
  */
 
 #define MAX_COMMENT_LEN		256
@@ -42,42 +51,70 @@ typedef struct {
 
 typedef struct {
     Tcl_Interp *interp;
-    z_stream stream;
-    int streamEnd;
+    z_stream stream;		/* The interface to the zlib library. */
+    int streamEnd;		/* If we've got to end-of-stream. */
     Tcl_Obj *inData, *outData;	/* Input / output buffers (lists) */
     Tcl_Obj *currentInput;	/* Pointer to what is currently being
 				 * inflated. */
-    int inPos, outPos;
+    int outPos;
     int mode;			/* Either TCL_ZLIB_STREAM_DEFLATE or
 				 * TCL_ZLIB_STREAM_INFLATE. */
     int format;			/* Flags from the TCL_ZLIB_FORMAT_* */
     int level;			/* Default 5, 0-9 */
     int flush;			/* Stores the flush param for deferred the
 				 * decompression. */
-    int wbits;
+    int wbits;			/* The encoded compression mode, so we can
+				 * restart the stream if necessary. */
     Tcl_Command cmd;		/* Token for the associated Tcl command. */
-} zlibStreamHandle;
+} ZlibStreamHandle;
+
+/*
+ * Structure used for stacked channel compression and decompression.
+ */
+
+typedef struct {
+    Tcl_Channel parent;		/* The underlying source and sink of bytes. */
+    int flags;			/* General flag bits, see below... */
+    int mode;			/* Either the value TCL_ZLIB_STREAM_DEFLATE
+				 * for compression on output, or
+				 * TCL_ZLIB_STREAM_INFLATE for decompression
+				 * on input. */
+    z_stream inStream;		/* Structure used by zlib for decompression of
+				 * input. */
+    z_stream outStream;		/* Structure used by zlib for compression of
+				 * output. */
+    char *inBuffer, *outBuffer;	/* Working buffers. */
+    int inAllocated, outAllocated;
+				/* Sizes of working buffers. */
+    GzipHeader inHeader;	/* Header read from input stream, when
+				 * decompressing a gzip stream. */
+    GzipHeader outHeader;	/* Header to write to an output stream, when
+				 * compressing a gzip stream. */
+} ZlibChannelData;
+
+/*
+ * Value bits for the flags field. Definitions are:
+ *	ASYNC -		Whether this is an asynchronous channel.
+ *	IN_HEADER -	Whether the inHeader field has been registered with
+ *			the input compressor.
+ *	OUT_HEADER -	Whether the outputHeader field has been registered
+ *			with the output decompressor.
+ */
+
+#define ASYNC			0x1
+#define IN_HEADER		0x2
+#define OUT_HEADER		0x4
+
+/*
+ * Size of buffers allocated by default. Should be enough...
+ */
+
+#define DEFAULT_BUFFER_SIZE	4096
 
 /*
  * Prototypes for private procedures defined later in this file:
  */
 
-static void		ConvertError(Tcl_Interp *interp, int code);
-static void		ExtractHeader(gz_header *headerPtr, Tcl_Obj *dictObj);
-static int		GenerateHeader(Tcl_Interp *interp, Tcl_Obj *dictObj,
-			    GzipHeader *headerPtr, int *extraSizePtr);
-static int		ZlibCmd(ClientData dummy, Tcl_Interp *ip, int objc,
-			    Tcl_Obj *const objv[]);
-static int		ZlibStreamCmd(ClientData cd, Tcl_Interp *interp,
-			    int objc, Tcl_Obj *const objv[]);
-static void		ZlibStreamCmdDelete(ClientData cd);
-static void		ZlibStreamCleanup(zlibStreamHandle *zsh);
-
-/*
- * Prototypes for private procedures used by channel stacking:
- */
-
-#ifdef ENABLE_CHANSTACKING
 static int		ChanClose(ClientData instanceData,
 			    Tcl_Interp *interp);
 static int		ChanInput(ClientData instanceData, char *buf,
@@ -94,12 +131,27 @@ static void		ChanWatch(ClientData instanceData, int mask);
 static int		ChanGetHandle(ClientData instanceData, int direction,
 			    ClientData *handlePtr);
 static int		ChanBlockMode(ClientData instanceData, int mode);
-static int		ChanFlush(ClientData instanceData);
+#if 0 /* unused */
 static int		ChanHandler(ClientData instanceData,
 			    int interestMask);
-static Tcl_Channel	ZlibStackChannel(Tcl_Interp *interp, int inMode,
-			    int outMode, int format, int level,
-			    Tcl_Channel channel, Tcl_Obj *gzipHeaderDictPtr);
+#endif
+static void		ConvertError(Tcl_Interp *interp, int code);
+static void		ExtractHeader(gz_header *headerPtr, Tcl_Obj *dictObj);
+static int		GenerateHeader(Tcl_Interp *interp, Tcl_Obj *dictObj,
+			    GzipHeader *headerPtr, int *extraSizePtr);
+static int		TclZlibCmd(ClientData dummy, Tcl_Interp *ip, int objc,
+			    Tcl_Obj *const objv[]);
+static int		ZlibStreamCmd(ClientData cd, Tcl_Interp *interp,
+			    int objc, Tcl_Obj *const objv[]);
+static void		ZlibStreamCmdDelete(ClientData cd);
+static void		ZlibStreamCleanup(ZlibStreamHandle *zsh);
+static Tcl_Channel	ZlibStackChannel(Tcl_Interp *interp, int mode,
+			    int format, int level, Tcl_Channel channel,
+			    Tcl_Obj *gzipHeaderDictPtr);
+
+/*
+ * Type of zlib-based compressing and decompressing channels.
+ */
 
 static const Tcl_ChannelType zlibChannelType = {
     "zlib",
@@ -112,47 +164,12 @@ static const Tcl_ChannelType zlibChannelType = {
     ChanGetOption,
     ChanWatch,
     ChanGetHandle,
-    NULL,			/* close2Proc, */
+    NULL,			/* close2Proc */
     ChanBlockMode,
-    ChanFlush,
+    NULL,			/* flushProc */
     NULL /*ChanHandler*/,
     NULL			/* wideSeekProc */
 };
-
-typedef struct {
-    /* Generic channel info */
-    Tcl_Channel channel;
-    int flags;
-    int mask;
-
-    /* Zlib specific channel state */
-    int inMode;
-    int outMode;
-    z_stream inStream;
-    z_stream outStream;
-    char *inBuffer;
-    int inAllocated, inUsed, inPos;
-    char *outBuffer;
-    int outAllocated, outUsed, outPos;
-    int flushType;
-
-    GzipHeader inHeader;
-    GzipHeader outHeader;
-} ZlibChannelData;
-
-/*
- * Value bits for the flags field. Definitions are:
- *	ASYNC -		Whether this is an asynchronous channel.
- *	IN_HEADER -	Whether the inHeader field has been registered with
- *			the input compressor.
- *	OUT_HEADER -	Whether the outputHeader field has been registered
- *			with the output decompressor.
- */
-
-#define ASYNC		0x1
-#define IN_HEADER	0x2
-#define OUT_HEADER	0x4
-#endif /* ENABLE_CHANSTACKING */
 
 /*
  *----------------------------------------------------------------------
@@ -446,7 +463,7 @@ Tcl_ZlibStreamInit(
 {
     int wbits = 0;
     int e;
-    zlibStreamHandle *zsh = NULL;
+    ZlibStreamHandle *zsh = NULL;
     Tcl_DString cmdname;
     Tcl_CmdInfo cmdinfo;
 
@@ -459,13 +476,13 @@ Tcl_ZlibStreamInit(
 
 	switch (format) {
 	case TCL_ZLIB_FORMAT_RAW:
-	    wbits = -MAX_WBITS;
+	    wbits = WBITS_RAW;
 	    break;
 	case TCL_ZLIB_FORMAT_GZIP:
-	    wbits = MAX_WBITS | GZIP_MAGIC_FLAG;
+	    wbits = WBITS_GZIP;
 	    break;
 	case TCL_ZLIB_FORMAT_ZLIB:
-	    wbits = MAX_WBITS;
+	    wbits = WBITS_ZLIB;
 	    break;
 	default:
 	    Tcl_Panic("incorrect zlib data format, must be "
@@ -485,16 +502,16 @@ Tcl_ZlibStreamInit(
 
 	switch (format) {
 	case TCL_ZLIB_FORMAT_RAW:
-	    wbits = -MAX_WBITS;
+	    wbits = WBITS_RAW;
 	    break;
 	case TCL_ZLIB_FORMAT_GZIP:
-	    wbits = MAX_WBITS | GZIP_MAGIC_FLAG;
+	    wbits = WBITS_GZIP;
 	    break;
 	case TCL_ZLIB_FORMAT_ZLIB:
-	    wbits = MAX_WBITS;
+	    wbits = WBITS_ZLIB;
 	    break;
 	case TCL_ZLIB_FORMAT_AUTO:
-	    wbits = MAX_WBITS | AUTO_MAGIC_FLAG;
+	    wbits = WBITS_AUTODETECT;
 	    break;
 	default:
 	    Tcl_Panic("incorrect zlib data format, must be "
@@ -507,7 +524,7 @@ Tcl_ZlibStreamInit(
 		" TCL_ZLIB_STREAM_INFLATE");
     }
 
-    zsh = (zlibStreamHandle *) ckalloc(sizeof(zlibStreamHandle));
+    zsh = (ZlibStreamHandle *) ckalloc(sizeof(ZlibStreamHandle));
     zsh->interp = interp;
     zsh->mode = mode;
     zsh->format = format;
@@ -585,7 +602,6 @@ Tcl_ZlibStreamInit(
     zsh->outData = Tcl_NewListObj(0, NULL);
     Tcl_IncrRefCount(zsh->outData);
 
-    zsh->inPos = 0;
     zsh->outPos = 0;
 
     /*
@@ -624,7 +640,7 @@ static void
 ZlibStreamCmdDelete(
     ClientData cd)
 {
-    zlibStreamHandle *zsh = cd;
+    ZlibStreamHandle *zsh = cd;
 
     zsh->cmd = NULL;
     ZlibStreamCleanup(zsh);
@@ -652,7 +668,7 @@ int
 Tcl_ZlibStreamClose(
     Tcl_ZlibStream zshandle)	/* As obtained from Tcl_ZlibStreamInit. */
 {
-    zlibStreamHandle *zsh = (zlibStreamHandle *) zshandle;
+    ZlibStreamHandle *zsh = (ZlibStreamHandle *) zshandle;
 
     /*
      * If the interp is set, deleting the command will trigger
@@ -687,7 +703,7 @@ Tcl_ZlibStreamClose(
 
 void
 ZlibStreamCleanup(
-    zlibStreamHandle *zsh)
+    ZlibStreamHandle *zsh)
 {
     if (!zsh->streamEnd) {
 	if (zsh->mode == TCL_ZLIB_STREAM_DEFLATE) {
@@ -707,7 +723,7 @@ ZlibStreamCleanup(
 	Tcl_DecrRefCount(zsh->currentInput);
     }
 
-    ckfree((void *) zsh);
+    ckfree((char *) zsh);
 }
 
 /*
@@ -730,7 +746,7 @@ int
 Tcl_ZlibStreamReset(
     Tcl_ZlibStream zshandle)	/* As obtained from Tcl_ZlibStreamInit */
 {
-    zlibStreamHandle *zsh = (zlibStreamHandle*) zshandle;
+    ZlibStreamHandle *zsh = (ZlibStreamHandle *) zshandle;
     int e;
 
     if (!zsh->streamEnd) {
@@ -747,7 +763,6 @@ Tcl_ZlibStreamReset(
 	zsh->currentInput = NULL;
     }
 
-    zsh->inPos = 0;
     zsh->outPos = 0;
     zsh->streamEnd = 0;
     zsh->stream.avail_in = 0;
@@ -802,7 +817,7 @@ Tcl_Obj *
 Tcl_ZlibStreamGetCommandName(
     Tcl_ZlibStream zshandle) /* as obtained from Tcl_ZlibStreamInit */
 {
-    zlibStreamHandle *zsh = (zlibStreamHandle *) zshandle;
+    ZlibStreamHandle *zsh = (ZlibStreamHandle *) zshandle;
     Tcl_Obj *objPtr = Tcl_NewObj();
 
     Tcl_GetCommandFullName(zsh->interp, zsh->cmd, objPtr);
@@ -832,20 +847,41 @@ int
 Tcl_ZlibStreamEof(
     Tcl_ZlibStream zshandle)	/* As obtained from Tcl_ZlibStreamInit */
 {
-    zlibStreamHandle *zsh = (zlibStreamHandle*) zshandle;
+    ZlibStreamHandle *zsh = (ZlibStreamHandle *) zshandle;
 
     return zsh->streamEnd;
 }
 
+/*
+ *----------------------------------------------------------------------
+ *
+ * Tcl_ZlibStreamAdler32 --
+ *
+ *	Return the checksum of the uncompressed data seen so far by the
+ *	stream.
+ *
+ *----------------------------------------------------------------------
+ */
+
 int
 Tcl_ZlibStreamAdler32(
     Tcl_ZlibStream zshandle)	/* As obtained from Tcl_ZlibStreamInit */
 {
-    zlibStreamHandle *zsh = (zlibStreamHandle*) zshandle;
+    ZlibStreamHandle *zsh = (ZlibStreamHandle *) zshandle;
 
     return zsh->stream.adler;
 }
 
+/*
+ *----------------------------------------------------------------------
+ *
+ * Tcl_ZlibStreamPut --
+ *
+ *	Add data to the stream for compression or decompression.
+ *
+ *----------------------------------------------------------------------
+ */
+
 int
 Tcl_ZlibStreamPut(
     Tcl_ZlibStream zshandle,	/* As obtained from Tcl_ZlibStreamInit */
@@ -853,7 +889,7 @@ Tcl_ZlibStreamPut(
     int flush)			/* TCL_ZLIB_NO_FLUSH, TCL_ZLIB_FLUSH,
 				 * TCL_ZLIB_FULLFLUSH, or TCL_ZLIB_FINALIZE */
 {
-    zlibStreamHandle *zsh = (zlibStreamHandle *) zshandle;
+    ZlibStreamHandle *zsh = (ZlibStreamHandle *) zshandle;
     char *dataTmp = NULL;
     int e, size, outSize;
     Tcl_Obj *obj;
@@ -938,6 +974,16 @@ Tcl_ZlibStreamPut(
     return TCL_OK;
 }
 
+/*
+ *----------------------------------------------------------------------
+ *
+ * Tcl_ZlibStreamGet --
+ *
+ *	Retrieve data (now compressed or decompressed) from the stream.
+ *
+ *----------------------------------------------------------------------
+ */
+
 int
 Tcl_ZlibStreamGet(
     Tcl_ZlibStream zshandle,	/* As obtained from Tcl_ZlibStreamInit */
@@ -945,7 +991,7 @@ Tcl_ZlibStreamGet(
     int count)			/* Number of bytes to grab as a maximum, you
 				 * may get less! */
 {
-    zlibStreamHandle *zsh = (zlibStreamHandle *) zshandle;
+    ZlibStreamHandle *zsh = (ZlibStreamHandle *) zshandle;
     int e, i, listLen, itemLen, dataPos = 0;
     Tcl_Obj *itemObj;
     unsigned char *dataPtr, *itemPtr;
@@ -1019,7 +1065,6 @@ Tcl_ZlibStreamGet(
 	    return TCL_ERROR;
 	}
 
-	/*printf("listLen %d, e==%d, avail_out %d\n", listLen, e, zsh->stream.avail_out);*/
 	while ((zsh->stream.avail_out > 0) && (e==Z_OK || e==Z_BUF_ERROR)
 		&& (listLen > 0)) {
 	    /*
@@ -1138,8 +1183,15 @@ Tcl_ZlibStreamGet(
 }
 
 /*
- * Deflate the contents of Tcl_Obj *data with compression level in output
- * format.
+ *----------------------------------------------------------------------
+ *
+ * Tcl_ZlibDeflate --
+ *
+ *	Compress the contents of Tcl_Obj *data with compression level in
+ *	output format, producing the compressed data in the interpreter
+ *	result.
+ *
+ *----------------------------------------------------------------------
  */
 
 int
@@ -1172,9 +1224,9 @@ Tcl_ZlibDeflate(
      */
 
     if (format == TCL_ZLIB_FORMAT_RAW) {
-	wbits = -MAX_WBITS;
+	wbits = WBITS_RAW;
     } else if (format == TCL_ZLIB_FORMAT_GZIP) {
-	wbits = MAX_WBITS | GZIP_MAGIC_FLAG;
+	wbits = WBITS_GZIP;
 
 	/*
 	 * Need to allocate extra space for the gzip header and footer. The
@@ -1193,7 +1245,7 @@ Tcl_ZlibDeflate(
 	    }
 	}
     } else if (format == TCL_ZLIB_FORMAT_ZLIB) {
-	wbits = MAX_WBITS;
+	wbits = WBITS_ZLIB;
     } else {
 	Tcl_Panic("incorrect zlib data format, must be TCL_ZLIB_FORMAT_ZLIB, "
 		"TCL_ZLIB_FORMAT_GZIP or TCL_ZLIB_FORMAT_ZLIB");
@@ -1285,6 +1337,16 @@ Tcl_ZlibDeflate(
     return TCL_ERROR;
 }
 
+/*
+ *----------------------------------------------------------------------
+ *
+ * Tcl_ZlibInflate --
+ *
+ *	Decompress data in an object into the interpreter result.
+ *
+ *----------------------------------------------------------------------
+ */
+
 int
 Tcl_ZlibInflate(
     Tcl_Interp *interp,
@@ -1316,18 +1378,18 @@ Tcl_ZlibInflate(
 
     switch (format) {
     case TCL_ZLIB_FORMAT_RAW:
-	wbits = -MAX_WBITS;
+	wbits = WBITS_RAW;
 	gzipHeaderDictObj = NULL;
 	break;
     case TCL_ZLIB_FORMAT_ZLIB:
-	wbits = MAX_WBITS;
+	wbits = WBITS_ZLIB;
 	gzipHeaderDictObj = NULL;
 	break;
     case TCL_ZLIB_FORMAT_GZIP:
-	wbits = MAX_WBITS | GZIP_MAGIC_FLAG;
+	wbits = WBITS_GZIP;
 	break;
     case TCL_ZLIB_FORMAT_AUTO:
-	wbits = MAX_WBITS | AUTO_MAGIC_FLAG;
+	wbits = WBITS_AUTODETECT;
 	break;
     default:
 	Tcl_Panic("incorrect zlib data format, must be TCL_ZLIB_FORMAT_ZLIB, "
@@ -1462,6 +1524,16 @@ Tcl_ZlibInflate(
     return TCL_ERROR;
 }
 
+/*
+ *----------------------------------------------------------------------
+ *
+ * Tcl_ZlibCRC32, Tcl_ZlibAdler32 --
+ *
+ *	Access to the checksumming engines.
+ *
+ *----------------------------------------------------------------------
+ */
+
 unsigned int
 Tcl_ZlibCRC32(
     unsigned int crc,
@@ -1481,8 +1553,18 @@ Tcl_ZlibAdler32(
     return adler32(adler, (Bytef *) buf, (unsigned) len);
 }
 
+/*
+ *----------------------------------------------------------------------
+ *
+ * TclZlibCmd --
+ *
+ *	Implementation of the [zlib] command.
+ *
+ *----------------------------------------------------------------------
+ */
+
 static int
-ZlibCmd(
+TclZlibCmd(
     ClientData notUsed,
     Tcl_Interp *interp,
     int objc,
@@ -1748,10 +1830,9 @@ ZlibCmd(
 	}
 	Tcl_SetObjResult(interp, Tcl_ZlibStreamGetCommandName(zh));
 	return TCL_OK;
-#ifdef ENABLE_CHANSTACKING
     case z_push: {			/* push mode channel options...*/
 	Tcl_Channel chan;
-	int chanMode, inMode, outMode;
+	int chanMode, mode;
 	static const char *pushOptions[] = {
 	    "-header", "-level", "-limit",
 	    NULL
@@ -1771,33 +1852,27 @@ ZlibCmd(
 	}
 	switch ((enum zlibFormats) format) {
 	case f_deflate:
-	    inMode = TCL_ZLIB_STREAM_PASS;
-	    outMode = TCL_ZLIB_STREAM_DEFLATE;
+	    mode = TCL_ZLIB_STREAM_DEFLATE;
 	    format = TCL_ZLIB_FORMAT_GZIP;
 	    break;
 	case f_inflate:
-	    inMode = TCL_ZLIB_STREAM_INFLATE;
-	    outMode = TCL_ZLIB_STREAM_PASS;
+	    mode = TCL_ZLIB_STREAM_INFLATE;
 	    format = TCL_ZLIB_FORMAT_RAW;
 	    break;
 	case f_compress:
-	    inMode = TCL_ZLIB_STREAM_PASS;
-	    outMode = TCL_ZLIB_STREAM_DEFLATE;
+	    mode = TCL_ZLIB_STREAM_DEFLATE;
 	    format = TCL_ZLIB_FORMAT_ZLIB;
 	    break;
 	case f_decompress:
-	    inMode = TCL_ZLIB_STREAM_INFLATE;
-	    outMode = TCL_ZLIB_STREAM_PASS;
+	    mode = TCL_ZLIB_STREAM_INFLATE;
 	    format = TCL_ZLIB_FORMAT_ZLIB;
 	    break;
 	case f_gzip:
-	    inMode = TCL_ZLIB_STREAM_PASS;
-	    outMode = TCL_ZLIB_STREAM_DEFLATE;
+	    mode = TCL_ZLIB_STREAM_DEFLATE;
 	    format = TCL_ZLIB_FORMAT_GZIP;
 	    break;
 	case f_gunzip:
-	    inMode = TCL_ZLIB_STREAM_INFLATE;
-	    outMode = TCL_ZLIB_STREAM_PASS;
+	    mode = TCL_ZLIB_STREAM_INFLATE;
 	    format = TCL_ZLIB_FORMAT_GZIP;
 	    break;
 	default:
@@ -1814,13 +1889,13 @@ ZlibCmd(
 	 * Sanity checks.
 	 */
 
-	if (outMode != TCL_ZLIB_STREAM_PASS && !(chanMode & TCL_WRITABLE)) {
+	if (mode == TCL_ZLIB_STREAM_DEFLATE && !(chanMode & TCL_WRITABLE)) {
 	    Tcl_AppendResult(interp,
 		    "compression may only be applied to writable channels",
 		    NULL);
 	    return TCL_ERROR;
 	}
-	if (inMode != TCL_ZLIB_STREAM_PASS && !(chanMode & TCL_READABLE)) {
+	if (mode == TCL_ZLIB_STREAM_INFLATE && !(chanMode & TCL_READABLE)) {
 	    Tcl_AppendResult(interp,
 		    "decompression may only be applied to readable channels",
 		    NULL);
@@ -1884,18 +1959,13 @@ ZlibCmd(
 	    }
 	}
 
-	if (ZlibStackChannel(interp, inMode, outMode, format, level, chan,
+	if (ZlibStackChannel(interp, mode, format, level, chan,
 		headerObj) == NULL) {
 	    return TCL_ERROR;
 	}
 	Tcl_SetObjResult(interp, objv[3]);
 	return TCL_OK;
     }
-#else /*ENABLE_CHANSTACKING*/
-    case z_push:
-	Tcl_AppendResult(interp, "unimplemented", NULL);
-	return TCL_ERROR;
-#endif /*ENABLE_CHANSTACKING*/
     };
 
     return TCL_ERROR;
@@ -1911,6 +1981,16 @@ ZlibCmd(
     return TCL_ERROR;
 }
 
+/*
+ *----------------------------------------------------------------------
+ *
+ * ZlibStreamCmd --
+ *
+ *	Implementation of the commands returned by [zlib stream].
+ *
+ *----------------------------------------------------------------------
+ */
+
 static int
 ZlibStreamCmd(
     ClientData cd,
@@ -1924,12 +2004,12 @@ ZlibStreamCmd(
     int buffersize;
     int flush = -1, i;
     static const char *const cmds[] = {
-	"add", "adler32", "close", "eof", "finalize", "flush",
+	"add", "checksum", "close", "eof", "finalize", "flush",
 	"fullflush", "get", "put", "reset",
 	NULL
     };
     enum zlibStreamCommands {
-	zs_add, zs_adler32, zs_close, zs_eof, zs_finalize, zs_flush,
+	zs_add, zs_checksum, zs_close, zs_eof, zs_finalize, zs_flush,
 	zs_fullflush, zs_get, zs_put, zs_reset
     };
     static const char *const add_options[] = {
@@ -1950,7 +2030,7 @@ ZlibStreamCmd(
     }
 
     switch ((enum zlibStreamCommands) command) {
-    case zs_add: /* add ?-flush|-fullflush|-finalize? /data/ */
+    case zs_add:		/* $strm add ?$flushopt? $data */
 	for (i=2; i<objc-1; i++) {
 	    if (Tcl_GetIndexFromObj(interp, objv[i], add_options, "option", 0,
 		    &index) != TCL_OK) {
@@ -2008,7 +2088,7 @@ ZlibStreamCmd(
 	}
 	return Tcl_ZlibStreamGet(zstream, obj, -1);
 
-    case zs_put: /* put ?-flush|-fullflush|-finalize? /data/ */
+    case zs_put:		/* $strm put ?$flushopt? $data */
 	for (i=2; i<objc-1; i++) {
 	    if (Tcl_GetIndexFromObj(interp, objv[i], add_options, "option", 0,
 		    &index) != TCL_OK) {
@@ -2053,7 +2133,12 @@ ZlibStreamCmd(
 	}
 	return Tcl_ZlibStreamPut(zstream, objv[objc-1], flush);
 
-    case zs_get: /* get ?count? */
+    case zs_get:		/* $strm get ?count? */
+	if (objc > 3) {
+	    Tcl_WrongNumArgs(interp, 2, objv, "?count?");
+	    return TCL_ERROR;
+	}
+
 	count = -1;
 	if (objc >= 3) {
 	    if (Tcl_GetIntFromObj(interp, objv[2], &count) != TCL_OK) {
@@ -2061,13 +2146,25 @@ ZlibStreamCmd(
 	    }
 	}
 	return Tcl_ZlibStreamGet(zstream, obj, count);
-    case zs_flush: /* flush */
+    case zs_flush:		/* $strm flush */
+	if (objc != 2) {
+	    Tcl_WrongNumArgs(interp, 2, objv, NULL);
+	    return TCL_ERROR;
+	}
 	Tcl_SetObjLength(obj, 0);
 	return Tcl_ZlibStreamPut(zstream, obj, Z_SYNC_FLUSH);
-    case zs_fullflush: /* fullflush */
+    case zs_fullflush:		/* $strm fullflush */
+	if (objc != 2) {
+	    Tcl_WrongNumArgs(interp, 2, objv, NULL);
+	    return TCL_ERROR;
+	}
 	Tcl_SetObjLength(obj, 0);
 	return Tcl_ZlibStreamPut(zstream, obj, Z_FULL_FLUSH);
-    case zs_finalize: /* finalize */
+    case zs_finalize:		/* $strm finalize */
+	if (objc != 2) {
+	    Tcl_WrongNumArgs(interp, 2, objv, NULL);
+	    return TCL_ERROR;
+	}
 	/*
 	 * The flush commands slightly abuse the empty result obj as input
 	 * data.
@@ -2075,24 +2172,41 @@ ZlibStreamCmd(
 
 	Tcl_SetObjLength(obj, 0);
 	return Tcl_ZlibStreamPut(zstream, obj, Z_FINISH);
-    case zs_close: /* close */
+    case zs_close:		/* $strm close */
+	if (objc != 2) {
+	    Tcl_WrongNumArgs(interp, 2, objv, NULL);
+	    return TCL_ERROR;
+	}
 	return Tcl_ZlibStreamClose(zstream);
-    case zs_eof: /* eof */
+    case zs_eof:		/* $strm eof */
+	if (objc != 2) {
+	    Tcl_WrongNumArgs(interp, 2, objv, NULL);
+	    return TCL_ERROR;
+	}
 	Tcl_SetIntObj(obj, Tcl_ZlibStreamEof(zstream));
 	return TCL_OK;
-    case zs_adler32: /* adler32 */
+    case zs_checksum:		/* $strm checksum */
+	if (objc != 2) {
+	    Tcl_WrongNumArgs(interp, 2, objv, NULL);
+	    return TCL_ERROR;
+	}
 	Tcl_SetIntObj(obj, Tcl_ZlibStreamAdler32(zstream));
 	return TCL_OK;
-    case zs_reset: /* reset */
+    case zs_reset:		/* $strm reset */
+	if (objc != 2) {
+	    Tcl_WrongNumArgs(interp, 2, objv, NULL);
+	    return TCL_ERROR;
+	}
 	return Tcl_ZlibStreamReset(zstream);
     }
 
     return TCL_OK;
 }
 
-#ifdef ENABLE_CHANSTACKING
 /*
- * Set of functions to support channel stacking.
+ *----------------------------------------------------------------------
+ *	Set of functions to support channel stacking.
+ *----------------------------------------------------------------------
  */
 
 static int
@@ -2101,20 +2215,34 @@ ChanClose(
     Tcl_Interp *interp)
 {
     ZlibChannelData *cd = instanceData;
-    Tcl_Channel parent = Tcl_GetStackedChannel(cd->channel);
-    int e;
+    int e, result = TCL_OK;
 
-    // TODO: flush?
-    if (cd->inMode == TCL_ZLIB_STREAM_INFLATE) {
-	e = inflateEnd(&cd->inStream);
-    } else if (cd->inMode == TCL_ZLIB_STREAM_DEFLATE) {
+    if (cd->mode == TCL_ZLIB_STREAM_DEFLATE) {
+	cd->outStream.avail_in = 0;
+	do {
+	    cd->outStream.next_out = (Bytef *) cd->outBuffer;
+	    cd->outStream.avail_out = (unsigned) cd->outAllocated;
+	    e = deflate(&cd->outStream, Z_FINISH);
+	    if (e != Z_OK && e != Z_STREAM_END) {
+		/* TODO: is this the right way to do errors on close? */
+		ConvertError(interp, e);
+		result = TCL_ERROR;
+		break;
+	    }
+	    if (cd->outStream.avail_out != (unsigned) cd->outAllocated) {
+		if (Tcl_WriteRaw(cd->parent, cd->outBuffer,
+			cd->outAllocated - cd->outStream.avail_out) < 0) {
+		    /* TODO: is this the right way to do errors on close? */
+		    Tcl_AppendResult(interp, "error while finalizing file: ",
+			    Tcl_PosixError(interp), NULL);
+		    result = TCL_ERROR;
+		    break;
+		}
+	    }
+	} while (e != Z_STREAM_END);
 	e = deflateEnd(&cd->inStream);
-    }
-
-    if (cd->outMode == TCL_ZLIB_STREAM_INFLATE) {
+    } else {
 	e = inflateEnd(&cd->outStream);
-    } else if (cd->outMode == TCL_ZLIB_STREAM_DEFLATE) {
-	e = deflateEnd(&cd->outStream);
     }
 
     if (cd->inBuffer) {
@@ -2126,7 +2254,7 @@ ChanClose(
 	ckfree(cd->outBuffer);
 	cd->outBuffer = NULL;
     }
-    return TCL_OK;
+    return result;
 }
 
 static int
@@ -2137,17 +2265,56 @@ ChanInput(
     int *errorCodePtr)
 {
     ZlibChannelData *cd = instanceData;
-    Tcl_Channel parent = Tcl_GetStackedChannel(cd->channel);
     Tcl_DriverInputProc *inProc =
-	    Tcl_ChannelInputProc(Tcl_GetChannelType(parent));
+	    Tcl_ChannelInputProc(Tcl_GetChannelType(cd->parent));
+    int e, read, flush = Z_NO_FLUSH;
 
-    if (cd->inMode == TCL_ZLIB_STREAM_PASS) {
-	return inProc(Tcl_GetChannelInstanceData(parent), buf, toRead,
+    if (cd->mode == TCL_ZLIB_STREAM_DEFLATE) {
+	return inProc(Tcl_GetChannelInstanceData(cd->parent), buf, toRead,
 		errorCodePtr);
     }
 
-    // TODO
-    return TCL_OK;
+    cd->inStream.next_out = (Bytef *) buf;
+    cd->inStream.avail_out = toRead;
+    if (cd->inStream.next_in == NULL) {
+	goto doReadFirst;
+    }
+    while (1) {
+	e = inflate(&cd->inStream, flush);
+	if ((e == Z_STREAM_END) || (e==Z_OK && cd->inStream.avail_out==0)) {
+	    return toRead - cd->inStream.avail_out;
+	}
+	if (e != Z_OK) {
+	    Tcl_SetChannelError(cd->parent,
+		    Tcl_NewStringObj(cd->inStream.msg, -1));
+	    return -1;
+	}
+
+	/*
+	 * Check if the inflate stopped early.
+	 */
+
+	if (cd->inStream.avail_in > 0) {
+	    continue;
+	}
+
+	/*
+	 * Emptied the buffer of data from the underlying channel. Get some
+	 * more.
+	 */
+
+    doReadFirst:
+	read = Tcl_ReadRaw(cd->parent, cd->inBuffer, cd->inAllocated);
+	if (read < 0) {
+	    *errorCodePtr = Tcl_GetErrno();
+	    return -1;
+	} else if (read == 0) {
+	    flush = Z_SYNC_FLUSH;
+	}
+
+	cd->inStream.next_in = (Bytef *) cd->inBuffer;
+	cd->inStream.avail_in = read;
+    }
 }
 
 static int
@@ -2158,17 +2325,40 @@ ChanOutput(
     int *errorCodePtr)
 {
     ZlibChannelData *cd = instanceData;
-    Tcl_Channel parent = Tcl_GetStackedChannel(cd->channel);
     Tcl_DriverOutputProc *outProc =
-	    Tcl_ChannelOutputProc(Tcl_GetChannelType(parent));
+	    Tcl_ChannelOutputProc(Tcl_GetChannelType(cd->parent));
+    int e, produced;
 
-    if (cd->outMode == TCL_ZLIB_STREAM_PASS) {
-	return outProc(Tcl_GetChannelInstanceData(parent), buf, toWrite,
+    if (cd->mode == TCL_ZLIB_STREAM_INFLATE) {
+	return outProc(Tcl_GetChannelInstanceData(cd->parent), buf, toWrite,
 		errorCodePtr);
     }
 
-    // TODO
-    return TCL_OK;
+    cd->outStream.next_in = (Bytef *) buf;
+    cd->outStream.avail_in = toWrite;
+    do {
+	cd->outStream.next_out = (Bytef *) cd->outBuffer;
+	cd->outStream.avail_out = cd->outAllocated;
+
+	e = deflate(&cd->outStream, Z_NO_FLUSH);
+	produced = cd->outAllocated - cd->outStream.avail_out;
+
+	if (e == Z_OK && cd->outStream.avail_out > 0) {
+	    if (Tcl_WriteRaw(cd->parent, cd->outBuffer, produced) < 0) {
+		*errorCodePtr = Tcl_GetErrno();
+		return -1;
+	    }
+	}
+    } while (e == Z_OK && produced > 0 && cd->outStream.avail_in > 0);
+
+    if (e != Z_OK) {
+	Tcl_SetChannelError(cd->parent,
+		Tcl_NewStringObj(cd->outStream.msg, -1));
+	*errorCodePtr = EINVAL;
+	return -1;
+    }
+	
+    return toWrite - cd->outStream.avail_out;
 }
 
 static int
@@ -2179,29 +2369,57 @@ ChanSetOption(			/* not used */
     const char *value)
 {
     ZlibChannelData *cd = instanceData;
-    Tcl_Channel parent = Tcl_GetStackedChannel(cd->channel);
     Tcl_DriverSetOptionProc *setOptionProc =
-	    Tcl_ChannelSetOptionProc(Tcl_GetChannelType(parent));
+	    Tcl_ChannelSetOptionProc(Tcl_GetChannelType(cd->parent));
+    static const char *chanOptions = "flush";
+    int haveFlushOpt = (cd->mode == TCL_ZLIB_STREAM_DEFLATE);
 
-    if (optionName && strcmp(optionName, "-flushmode") == 0) {
+    if (haveFlushOpt && optionName && strcmp(optionName, "-flush") == 0) {
+	int flushType;
+
 	if (value[0] == 'f' && strcmp(value, "full") == 0) {
-	    cd->flushType = Z_FULL_FLUSH;
-	    return TCL_OK;
+	    flushType = Z_FULL_FLUSH;
+	    goto doFlush;
 	}
 	if (value[0] == 's' && strcmp(value, "sync") == 0) {
-	    cd->flushType = Z_SYNC_FLUSH;
-	    return TCL_OK;
+	    flushType = Z_SYNC_FLUSH;
+	    goto doFlush;
 	}
-	Tcl_AppendResult(interp, "unknown -flushmode \"", value,
+	Tcl_AppendResult(interp, "unknown -flush type \"", value,
 		"\": must be full or sync", NULL);
 	return TCL_ERROR;
+
+    doFlush:
+	cd->outStream.avail_in = 0;
+	do {
+	    int e;
+
+	    cd->outStream.next_out = (Bytef *) cd->outBuffer;
+	    cd->outStream.avail_out = cd->outAllocated;
+
+	    e = deflate(&cd->outStream, flushType);
+	    if (e != Z_OK) {
+		ConvertError(interp, e);
+		return TCL_ERROR;
+	    }
+
+	    if (cd->outStream.avail_out > 0) {
+		if (Tcl_WriteRaw(cd->parent, cd->outBuffer,
+			PTR2INT(cd->outStream.next_out)) < 0) {
+		    Tcl_AppendResult(interp, "problem flushing channel: ",
+			    Tcl_PosixError(interp), NULL);
+		    return TCL_ERROR;
+		}
+	    }
+	} while (cd->outStream.avail_out > 0);
+	return TCL_OK;
     }
 
     if (setOptionProc == NULL) {
-	return TCL_ERROR;
+	return Tcl_BadChannelOption(interp, optionName, chanOptions);
     }
 
-    return setOptionProc(Tcl_GetChannelInstanceData(parent), interp,
+    return setOptionProc(Tcl_GetChannelInstanceData(cd->parent), interp,
 	    optionName, value);
 }
 
@@ -2213,51 +2431,72 @@ ChanGetOption(
     Tcl_DString *dsPtr)
 {
     ZlibChannelData *cd = instanceData;
-    Tcl_Channel parent = Tcl_GetStackedChannel(cd->channel);
     Tcl_DriverGetOptionProc *getOptionProc =
-	    Tcl_ChannelGetOptionProc(Tcl_GetChannelType(parent));
+	    Tcl_ChannelGetOptionProc(Tcl_GetChannelType(cd->parent));
+    static const char *chanOptions = "checksum header";
 
-    if (strcmp(optionName, "-crc") == 0) {
+    /*
+     * The "crc" option reports the current CRC (calculated with the Adler32
+     * or CRC32 algorithm according to the format) given the data that has
+     * been processed so far.
+     */
+
+    if (optionName == NULL || strcmp(optionName, "-checksum") == 0) {
 	uLong crc;
 	char buf[12];
 
-	if (cd->flags & TCL_WRITABLE) {
+	if (cd->mode == TCL_ZLIB_STREAM_DEFLATE) {
 	    crc = cd->outStream.adler;
 	} else {
 	    crc = cd->inStream.adler;
 	}
 
 	sprintf(buf, "0x%lx", crc);
-	Tcl_DStringAppend(dsPtr, buf, -1);
-	return TCL_OK;
-    }
-
-    if ((cd->flags & IN_HEADER) && (strcmp(optionName, "-header") == 0)) {
-	Tcl_Obj *tmpObj = Tcl_NewObj();
-	int len;
-	char *str;
-
-	ExtractHeader(&cd->inHeader.header, tmpObj);
-	str = Tcl_GetStringFromObj(tmpObj, &len);
-	Tcl_DStringAppend(dsPtr, str, len);
-	Tcl_DecrRefCount(tmpObj);
-	return TCL_OK;
-    }
-
-    if (getOptionProc && getOptionProc(Tcl_GetChannelInstanceData(parent),
-	    interp, optionName, dsPtr) != TCL_OK) {
-	return TCL_ERROR;
-    } else if (optionName != NULL) {
-	return TCL_ERROR;
-    }
-
-    if (optionName == NULL) {
-	Tcl_DStringAppendElement(dsPtr, "-crc");
-	if (cd->flags & IN_HEADER) {
-	    Tcl_DStringAppendElement(dsPtr, "-header");
+	if (optionName == NULL) {
+	    Tcl_DStringAppendElement(dsPtr, "-checksum");
+	    Tcl_DStringAppendElement(dsPtr, buf);
+	} else {
+	    Tcl_DStringAppend(dsPtr, buf, -1);
+	    return TCL_OK;
 	}
     }
-    return TCL_OK;
+
+    /*
+     * The "header" option, which is only valid on inflating gzip channels,
+     * reports the header that has been read from the start of the stream.
+     */
+
+    if ((cd->flags & IN_HEADER) && ((optionName == NULL) ||
+	    (strcmp(optionName, "-header") == 0))) {
+	Tcl_Obj *tmpObj = Tcl_NewObj();
+
+	ExtractHeader(&cd->inHeader.header, tmpObj);
+	if (optionName == NULL) {
+	    Tcl_DStringAppendElement(dsPtr, "-header");
+	    Tcl_DStringAppendElement(dsPtr, Tcl_GetString(tmpObj));
+	    Tcl_DecrRefCount(tmpObj);
+	} else {
+	    int len;
+	    char *str = Tcl_GetStringFromObj(tmpObj, &len);
+
+	    Tcl_DStringAppend(dsPtr, str, len);
+	    Tcl_DecrRefCount(tmpObj);
+	    return TCL_OK;
+	}
+    }
+
+    /*
+     * Now we do the standard processing of the stream we wrapped.
+     */
+
+    if (getOptionProc) {
+	return getOptionProc(Tcl_GetChannelInstanceData(cd->parent),
+		interp, optionName, dsPtr);
+    }
+    if (optionName == NULL) {
+	return TCL_OK;
+    }
+    return Tcl_BadChannelOption(interp, optionName, chanOptions);
 }
 
 static void
@@ -2275,9 +2514,8 @@ ChanGetHandle(
     ClientData *handlePtr)
 {
     ZlibChannelData *cd = instanceData;
-    Tcl_Channel parent = Tcl_GetStackedChannel(cd->channel);
 
-    return Tcl_GetChannelHandle(parent, direction, handlePtr);
+    return Tcl_GetChannelHandle(cd->parent, direction, handlePtr);
 }
 
 static int
@@ -2295,21 +2533,7 @@ ChanBlockMode(
     return TCL_OK;
 }
 
-static int
-ChanFlush(
-    ClientData instanceData)
-{
-    ZlibChannelData *cd = instanceData;
-
-    if (cd->inMode == TCL_ZLIB_STREAM_INFLATE) {
-	// TODO: flush input with Z_SYNC_FLUSH
-    }
-    if (cd->outMode == TCL_ZLIB_STREAM_DEFLATE) {
-	// TODO: flush output with cd->flushType
-    }
-    return TCL_OK;
-}
-
+#if 0 /* unused */
 static int
 ChanHandler(
     ClientData instanceData,
@@ -2321,38 +2545,68 @@ ChanHandler(
 
     return interestMask;
 }
+#endif
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * ZlibStackChannel --
+ *
+ *	Stacks either compression or decompression onto a channel.
+ *
+ * Results:
+ *	The stacked channel, or NULL if there was an error.
+ *
+ *----------------------------------------------------------------------
+ */
 
 static Tcl_Channel
 ZlibStackChannel(
-    Tcl_Interp *interp,
-    int inMode,
-    int outMode,
-    int format,
-    int level,
-    Tcl_Channel channel,
-    Tcl_Obj *gzipHeaderDictPtr)
+    Tcl_Interp *interp,		/* Where to write error messages. */
+    int mode,			/* Whether this is a compressing transform
+				 * (TCL_ZLIB_STREAM_DEFLATE) or a
+				 * decompressing transform
+				 * (TCL_ZLIB_STREAM_INFLATE). Note that
+				 * compressing transforms require that the
+				 * channel is writable, and decompressing
+				 * transforms require that the channel is
+				 * readable. */
+    int format,			/* One of the TCL_ZLIB_FORMAT_* values that
+				 * indicates what compressed format to allow.
+				 * TCL_ZLIB_FORMAT_AUTO is only supported for
+				 * decompressing transforms. */
+    int level,			/* What compression level to use. Ignored for
+				 * decompressing transforms. */
+    Tcl_Channel channel,	/* The channel to attach to. */
+    Tcl_Obj *gzipHeaderDictPtr)	/* A description of header to use, or NULL to
+				 * use a default. Ignored if not compressing
+				 * to produce gzip-format data. */
 {
     ZlibChannelData *cd = (ZlibChannelData *)
 	    ckalloc(sizeof(ZlibChannelData));
+    Tcl_Channel chan;
     int wbits = 0;
     int e;
 
+    if (mode != TCL_ZLIB_STREAM_DEFLATE && mode != TCL_ZLIB_STREAM_INFLATE) {
+	Tcl_Panic("unknown mode: %d", mode);
+    }
+
     memset(cd, 0, sizeof(ZlibChannelData));
-    cd->inMode = inMode;
-    cd->outMode = outMode;
-    cd->flushType = Z_SYNC_FLUSH;
+    cd->mode = mode;
 
     if (format == TCL_ZLIB_FORMAT_GZIP || format == TCL_ZLIB_FORMAT_AUTO) {
-	if (outMode == TCL_ZLIB_STREAM_DEFLATE) {
-	    int dummy = 0;
+	if (mode == TCL_ZLIB_STREAM_DEFLATE) {
+	    if (gzipHeaderDictPtr) {
+		int dummy = 0;
 
-	    cd->flags |= OUT_HEADER;
-	    if (GenerateHeader(interp, gzipHeaderDictPtr, &cd->outHeader,
-		    &dummy) != TCL_OK) {
-		goto error;
+		cd->flags |= OUT_HEADER;
+		if (GenerateHeader(interp, gzipHeaderDictPtr, &cd->outHeader,
+			&dummy) != TCL_OK) {
+		    goto error;
+		}
 	    }
-	}
-	if (inMode == TCL_ZLIB_STREAM_INFLATE) {
+	} else {
 	    cd->flags |= IN_HEADER;
 	    cd->inHeader.header.name = (Bytef *)
 		    &cd->inHeader.nativeFilenameBuf;
@@ -2364,44 +2618,42 @@ ZlibStackChannel(
     }
 
     if (format == TCL_ZLIB_FORMAT_RAW) {
-	wbits = -MAX_WBITS;
+	wbits = WBITS_RAW;
     } else if (format == TCL_ZLIB_FORMAT_ZLIB) {
-	wbits = MAX_WBITS;
+	wbits = WBITS_ZLIB;
     } else if (format == TCL_ZLIB_FORMAT_GZIP) {
-	wbits = MAX_WBITS | GZIP_MAGIC_FLAG;
+	wbits = WBITS_GZIP;
     } else if (format == TCL_ZLIB_FORMAT_AUTO) {
-	wbits = MAX_WBITS | AUTO_MAGIC_FLAG;
+	wbits = WBITS_AUTODETECT;
     } else {
 	Tcl_Panic("bad format: %d", format);
     }
 
     /*
-     * Initialize input inflater if necessary.
+     * Initialize input inflater or the output deflater.
      */
 
-    if (inMode == TCL_ZLIB_STREAM_INFLATE) {
+    if (mode == TCL_ZLIB_STREAM_INFLATE) {
 	e = inflateInit2(&cd->inStream, wbits);
 	if (e != Z_OK) {
 	    goto error;
 	}
+	cd->inAllocated = DEFAULT_BUFFER_SIZE;
+	cd->inBuffer = ckalloc(cd->inAllocated);
 	if (cd->flags & IN_HEADER) {
 	    e = inflateGetHeader(&cd->inStream, &cd->inHeader.header);
 	    if (e != Z_OK) {
 		goto error;
 	    }
 	}
-    }
-
-    /*
-     * Initialize output deflater if necessary.
-     */
-
-    if (outMode == TCL_ZLIB_STREAM_DEFLATE) {
+    } else {
 	e = deflateInit2(&cd->outStream, level, Z_DEFLATED, wbits,
 		MAX_MEM_LEVEL, Z_DEFAULT_STRATEGY);
 	if (e != Z_OK) {
 	    goto error;
 	}
+	cd->outAllocated = DEFAULT_BUFFER_SIZE;
+	cd->outBuffer = ckalloc(cd->outAllocated);
 	if (cd->flags & OUT_HEADER) {
 	    e = deflateSetHeader(&cd->outStream, &cd->outHeader.header);
 	    if (e != Z_OK) {
@@ -2410,32 +2662,62 @@ ZlibStackChannel(
 	}
     }
 
-    cd->channel = Tcl_StackChannel(interp, &zlibChannelType, cd,
-	    TCL_READABLE | TCL_WRITABLE | TCL_EXCEPTION, channel);
-    Tcl_SetObjResult(interp, Tcl_NewStringObj(Tcl_GetChannelName(channel),
-	    -1));
-    return channel;
+    chan = Tcl_StackChannel(interp, &zlibChannelType, cd,
+	    Tcl_GetChannelMode(channel), channel);
+    if (chan == NULL) {
+	goto error;
+    }
+    cd->parent = Tcl_GetStackedChannel(chan);
+    Tcl_SetObjResult(interp, Tcl_NewStringObj(Tcl_GetChannelName(chan), -1));
+    return chan;
 
   error:
-    // TODO: delete memory
+    if (cd->inBuffer) {
+	ckfree(cd->inBuffer);
+	inflateEnd(&cd->inStream);
+    }
+    if (cd->outBuffer) {
+	ckfree(cd->outBuffer);
+	deflateEnd(&cd->outStream);
+    }
     ckfree((char *) cd);
     return NULL;
 }
-#endif /* ENABLE_CHANSTACKING */
 
 /*
- * Finally, the TclZlibInit function. Used to install the zlib API.
+ *----------------------------------------------------------------------
+ *	Finally, the TclZlibInit function. Used to install the zlib API.
+ *----------------------------------------------------------------------
  */
 
 int
 TclZlibInit(
     Tcl_Interp *interp)
 {
+    /*
+     * This does two things. It creates a counter used in the creation of
+     * stream commands, and it creates the namespace that will contain those
+     * commands.
+     */
+
     Tcl_Eval(interp, "namespace eval ::tcl::zlib {variable cmdcounter 0}");
-    Tcl_CreateObjCommand(interp, "zlib", ZlibCmd, 0, 0);
+
+    /*
+     * Create the public scripted interface to this file's functionality.
+     */
+
+    Tcl_CreateObjCommand(interp, "zlib", TclZlibCmd, 0, 0);
     return TCL_OK;
 }
-#else /* HAVE_ZLIB */
+
+/*
+ *----------------------------------------------------------------------
+ *	Stubs used when a suitable zlib installation was not found during
+ *	configure.
+ *----------------------------------------------------------------------
+ */
+
+#else /* !HAVE_ZLIB */
 int
 Tcl_ZlibStreamInit(
     Tcl_Interp *interp,
