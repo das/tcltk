@@ -16,7 +16,7 @@ SHELL=/bin/sh
 TCL_VERSION=8.6
 TCL_MAJOR_VERSION=8
 TCL_MINOR_VERSION=6
-TCL_PATCH_LEVEL="a4"
+TCL_PATCH_LEVEL="b1"
 VER=$TCL_MAJOR_VERSION$TCL_MINOR_VERSION
 
 TCL_DDE_VERSION=1.3
@@ -30,6 +30,8 @@ TCL_REG_MAJOR_VERSION=1
 TCL_REG_MINOR_VERSION=2
 TCL_REG_PATCH_LEVEL="1"
 REGVER=$TCL_REG_MAJOR_VERSION$TCL_REG_MINOR_VERSION
+
+PKG_CFG_ARGS=$@
 
 #------------------------------------------------------------------------
 # Handle the --prefix=... option
@@ -337,25 +339,11 @@ SC_TCL_CFG_ENCODING
 SC_ENABLE_SHARED
 
 #------------------------------------------------------------------------
-#	Add stuff for zlib
+#	Add stuff for zlib; note that this is mostly done in the makefile now
+#	as we just assume that the platform hasn't got a usable z.lib
 #------------------------------------------------------------------------
 
-tcl_ok=yes
-AC_CHECK_HEADER([zlib.h],[
-  AC_CHECK_TYPE([gz_header],[],[
-    tcl_ok=no
-    AC_MSG_WARN([todo: Add -Icompat/zlib/include to compile lines])
-  ],[#include <zlib.h>])],[
-    tcl_ok=no
-    AC_MSG_WARN([todo: Add -Icompat/zlib/include to compile lines])
-  ])
-AS_IF([test $tcl_ok = yes], [
-  AC_SEARCH_LIBS([deflateSetHeader],[z Z zlib Zlib ZLIB],[],[
-    tcl_ok=no
-    AC_MSG_WARN([todo: Add compat/zlib to list of things to build])
-  ])])
-AS_IF([test $tcl_ok = yes], [
-  AC_DEFINE(HAVE_ZLIB, 1, [Is there an installed zlib?])])
+AC_DEFINE(HAVE_ZLIB, 1, [Is there an installed zlib?])
 
 #--------------------------------------------------------------------
 # The statements below define a collection of compile flags.  This
@@ -393,18 +381,29 @@ eval "TCL_SRC_DIR=\"`cd $srcdir/..; pwd`\""
 
 eval "TCL_DLL_FILE=tcl${VER}${DLLSUFFIX}"
 
-eval "TCL_LIB_FILE=${LIBPREFIX}tcl$VER${LIBSUFFIX}"
-
-eval "TCL_LIB_FLAG=\"-ltcl${VER}${LIBFLAGSUFFIX}\""
-eval "TCL_BUILD_LIB_SPEC=\"-L`pwd` ${TCL_LIB_FLAG}\""
-eval "TCL_LIB_SPEC=\"-L${libdir} ${TCL_LIB_FLAG}\""
-
 eval "TCL_STUB_LIB_FILE=\"${LIBPREFIX}tclstub${VER}${LIBSUFFIX}\""
 eval "TCL_STUB_LIB_FLAG=\"-ltclstub${VER}${LIBFLAGSUFFIX}\""
 eval "TCL_BUILD_STUB_LIB_SPEC=\"-L`pwd` ${TCL_STUB_LIB_FLAG}\""
 eval "TCL_STUB_LIB_SPEC=\"-L${libdir} ${TCL_STUB_LIB_FLAG}\""
 eval "TCL_BUILD_STUB_LIB_PATH=\"`pwd`/${TCL_STUB_LIB_FILE}\""
 eval "TCL_STUB_LIB_PATH=\"${libdir}/${TCL_STUB_LIB_FILE}\""
+
+eval "TCL_STATIC_LIB_FILE=\"${LIBPREFIX}tcl${VER}s${LIBSUFFIX}\""
+eval "TCL_STATIC_LIB_FLAG=\"-ltcl${VER}s${LIBFLAGSUFFIX}\""
+
+eval "TCL_IMPORT_LIB_FILE=\"${LIBPREFIX}tcl${VER}${LIBSUFFIX}\""
+eval "TCL_IMPORT_LIB_FLAG=\"-ltcl${VER}${LIBFLAGSUFFIX}\""
+
+if test ${SHARED_BUILD} = 0 ; then
+   eval "TCL_LIB_FILE=\"${TCL_STATIC_LIB_FILE}\""
+   eval "TCL_LIB_FLAG=\"${TCL_STATIC_LIB_FLAG}\""
+else
+   eval "TCL_LIB_FILE=\"${TCL_IMPORT_LIB_FILE}\""
+   eval "TCL_LIB_FLAG=\"${TCL_IMPORT_LIB_FLAG}\""
+fi
+eval "TCL_BUILD_LIB_SPEC=\"-L`pwd` ${TCL_LIB_FLAG}\""
+eval "TCL_LIB_SPEC=\"-L${libdir} ${TCL_LIB_FLAG}\""
+
 
 # Install time header dir can be set via --includedir
 eval "TCL_INCLUDE_SPEC=\"-I${includedir}\""
@@ -455,9 +454,14 @@ AC_SUBST(TCL_VERSION)
 AC_SUBST(TCL_MAJOR_VERSION)
 AC_SUBST(TCL_MINOR_VERSION)
 AC_SUBST(TCL_PATCH_LEVEL)
+AC_SUBST(PKG_CFG_ARGS)
 
 AC_SUBST(TCL_LIB_FILE)
 AC_SUBST(TCL_LIB_FLAG)
+AC_SUBST(TCL_STATIC_LIB_FILE)
+AC_SUBST(TCL_STATIC_LIB_FLAG)
+AC_SUBST(TCL_IMPORT_LIB_FILE)
+AC_SUBST(TCL_IMPORT_LIB_FLAG)
 # empty on win
 AC_SUBST(TCL_LIB_SPEC)
 AC_SUBST(TCL_STUB_LIB_FILE)
@@ -541,3 +545,7 @@ AC_SUBST(RC_DEFINES)
 AC_SUBST(RES)
 
 AC_OUTPUT(Makefile tclConfig.sh tcl.hpj)
+
+dnl Local Variables:
+dnl mode: autoconf;
+dnl End:

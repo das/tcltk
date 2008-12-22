@@ -1,10 +1,205 @@
+2008-12-22  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* win/makefile.vc: Support the pkgs tree in the NMAKE builds.
+
+2008-12-21  Daniel Steffen  <das@users.sourceforge.net>
+
+	* unix/Makefile.in:	Fix broken build of bundled packages when path
+				to build dir contains spaces by switching to
+				relative paths to toplevel build dir.
+
+	* unix/configure.in:	Preserve configure environment variables for
+				sub-configures of bundled packages; reuse
+				configure cache file for sub-configures.
+
+	* unix/configure:	autoconf-2.59
+
+2008-12-21  Donal K. Fellows  <dkf@users.sf.net>
+
+	*** 8.6b1 TAGGED FOR RELEASE ***
+
+	* doc/TclZlib.3: Fix minor typo. [Bug 2455165]
+
+2008-12-20  Kevin B. Kenny  <kennykb@acm.org>
+
+	* win/Makefile.in:	Renamed the static library libtcl86s.a to
+	* win/configure.in:	have a name distinct from the import library
+				libtcl86.a. This renaming dodges an ancient
+				bug in the Makefile revealed by the last
+				commit where the $(TCL_LIB_FILE) rule can
+				fire to try to build the static library in a
+				--enable-shared build (and create a static
+				library that subsequently fails to link).
+				Revised the zlib objects so that they are
+				built directly into the build dir, without
+				building an intermediate static library.
+				*** POTENTIAL INCOMPATIBILITY *** for
+				embedders who link to the static library, but
+				I couldn't figure out how to sort this out
+				any other way.
+	* win/configure:	Autoconf 2.59
+	
+2008-12-20  Donal K. Fellows  <dkf@users.sf.net>
+
+	* win/Makefile.in: Minor updates to make building work better with
+	msys on Windows. (Apparently the gcc used doesn't like a / at the end
+	of a -I argument...)
+
+2008-12-20  Don Porter	<dgp@users.sourceforge.net>
+
+	* changes:	Updates for 8.6b1 release.
+
+2008-12-20  Daniel Steffen  <das@users.sourceforge.net>
+
+	* unix/Makefile.in:	Make package install directory of bundled
+	* unix/configure.in:	packages configurable via PACKAGE_DIR makefile
+				variable (set to platform-specific default).
+
+	* unix/Makefile.in (*-packages): Ensure toplevel targets fail if
+				sub-make/configure fails; fix quoting when
+				builddir path contains spaces.
+
+	* macosx/GNUmakefile:	Add install-packages to install targets.
+
+	* unix/configure:	autoconf-2.59
+
+2008-12-19  Don Porter	<dgp@users.sourceforge.net>
+
+	* doc/NRE.3:		Formatting errors found by `make html`
+	* doc/Tcl_Main.3:
+	* doc/zlib.n:
+
+	* tests/chanio.test:	Add missing [removeFile] cleanups.
+	* tests/io.test:	Add missing [close $f] to io-73.2.
+
+	* unix/Makefile.in:	Update `make dist' target to include the files
+	from the compat/zlib directory as well as all the bundled packages
+	found under the pkgs directory, according to their individual `make
+	dist' targets. Change includes breaking a `configure-packages' target
+	out of the `packages` target.
+
+	* README:		Bump version number to 8.6b1
+	* generic/tcl.h:
+	* library/init.tcl:
+	* tools/tcl.wse.in:
+	* unix/configure.in:
+	* unix/tcl.spec:
+	* win/configure.in:
+
+	* unix/configure:	autoconf-2.59
+	* win/configure:
+
+2008-12-19  Jan Nijtmans  <nijtmans@users.sf.net>
+
+	* generic/tclInt.decls: CONSTify TclGetLoadedPackages second param
+	* generic/tclLoad.c
+	* generic/tclIntDecls.h (regenerated)
+
+2008-12-19  Kevin Kenny  <kennykb@acm.org>
+
+	* generic/tclExecute.c:	Fix compile warnings when --enable-symbols=all
+
+	* win/configure.in:
+	* win/Makefile.in: Added build of packages in the 'pkgs/' directory.
+	* win/configure: Autoconf 2.59
+
+2008-12-19  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* win/makefile.vc: Added build of compat/zlib
+
+2008-12-18  Andreas Kupries  <andreask@activestate.com>
+
+	* generic/tclIO.c (Tcl_CloseEx, CloseWrite, CloseChannelPart)
+	(ChanCloseHalf): Rewrite the half-close to properly flush the channel,
+	like is done for a full close, going through FlushChannel, and using
+	the flag BG_FLUSH_SCHEDULED (async flush during close). New functions
+	CloseWrite, CloseChannelPart, new flag CHANNEL_CLOSEDWRITE.
+
+	* tests/chanio.test (chanio-28.[67]): Reactivated these tests.
+	Replaced tclsh -> [interpreter] to get correct executable for the pipe
+	process, and added after cancel to kill the fail timers when we are
+	done. Removed the explicits calls to [flush], now that [close] handles
+	this correctly.
+
+2008-12-18  Don Porter	<dgp@users.sourceforge.net>
+
+	* tests/chanio.test:	Replaced [chan event] handlers that returned
+	TCL_RETURN return code, with more conventional ones that return TCL_OK
+	to suppress otherwise strange writes of outdated $::errorInfo values
+	to stderr. [Bug 2444274]
+
+	* generic/tclExecute.c:	Disabled apparently faulty assertion. [Bug
+	2415422]
+
+2008-12-18  Donal K. Fellows  <dkf@users.sf.net>
+
+	* unix/configure.in, unix/Makefile.in: Autoconf wizardry.
+	* compat/zlib/*: Import of zlib 1.2.3. The license is directly
+	compatible with Tcl's. This import omits the obsolete and contributed
+	parts (i.e. selected directories) and the supplied examples.
+
+	* generic/tclZlib.c:	First implementation of the compressing and
+	* doc/zlib.n:		decompressing channel transformations.
+	* tests/zlib.test (zlib-8.*):
+
+2008-12-18  Jan Nijtmans  <nijtmans@users.sf.net>
+
+	* generic/tcl.decls:	VOID -> void
+	* generic/tclInt.decls:
+	* compat/dlfcn.h:
+	* generic/tclDecls.h:	(regenerated)
+	* generic/tclIntDecls.h:
+
+2008-12-18  Alexandre Ferrieux	<ferrieux@users.sourceforge.net>
+
+	TIP #332 IMPLEMENTATION - Half-Close for Bidirectional Channels
+
+	* doc/close.n, generic/tclIO.c, generic/tclIOCmd.c:
+	* unix/tclUnixChan.c, unix/tclUnixPipe.c, win/tclWinSock.c:
+	* generic/tcl.decls, generic/tclDecls.h, generic/tclStubInit.c:
+	* tests/chan.test, tests/chanio.test, tests/ioCmd.test:
+
+2008-12-17  Donal K. Fellows  <dkf@users.sf.net>
+
+	* doc/SetChanErr.3: General improvements in nroff rendering and some
+	corrections to language issues.
+
+2008-12-17  Jan Nijtmans  <nijtmans@users.sf.net>
+
+	* generic/tclResult.c:	   Move variable "length" inside if()
+	* generic/tclStringObj.c:  Don't use ckfree((void *)...) but
+	* generic/tclVar.c:	   ckfree((char *)...)
+	* generic/tclZlib.c
+	* generic/tclBasic.c
+
+2008-12-17  Donal K. Fellows  <dkf@users.sf.net>
+
+	* tests/namespace.test (namespace-28.1):	Make tests not
+	* tests/namespace-old.test (namespace-old-9.5): dependent on the
+	global namespace's particular imports. [Bug 2433936]
+
+2008-12-17  Don Porter	<dgp@users.sourceforge.net>
+
+	* unix/Makefile.in:	Modify the distclean-packages target so that
+	empty build directories are deleted.
+
+	* unix/Makefile.in:	Add build support for collections of TEA
+	* unix/configure.in:	packages found under the pkgs directory.
+	[Patch 1163406].  Still needs porting to Windows.
+
+	* unix/configure:	autoconf-2.59
+
+2008-12-17  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tcl.h, generic/tclZlib.c: Removed undocumented flag.
+
 2008-12-16  Jan Nijtmans  <nijtmans@users.sf.net>
 
-	* generic/tclThreadTest.c: eliminate -Wwrite-strings warnings
-	                           in enable-threads build.
-	* generic/tclExecute.c:    use TclNewLiteralStringObj()
-	* unix/tclUnixFCmd.c:      use TclNewLiteralStringObj()
-	* win/tclWinFCmd.c:        use TclNewLiteralStringObj()
+	* generic/tclThreadTest.c: Eliminate -Wwrite-strings warnings in
+				   --enable-threads build.
+	* generic/tclExecute.c:	   Use TclNewLiteralStringObj()
+	* unix/tclUnixFCmd.c:	   Use TclNewLiteralStringObj()
+	* win/tclWinFCmd.c:	   Use TclNewLiteralStringObj()
 
 2008-12-16  Donal K. Fellows  <dkf@users.sf.net>
 
@@ -19,7 +214,7 @@
 2008-12-16  Don Porter	<dgp@users.sourceforge.net>
 
 	* generic/tcl.h:	Add TIP 338 routines to stub table.
-	* generic/tcl.decls:	[Bug 2431338].
+	* generic/tcl.decls:	[Bug 2431338]
 
 	* generic/tclDecls.h:	make genstubs
 	* generic/tclStubInit.c:
@@ -31,16 +226,16 @@
 
 2008-12-15  Alexandre Ferrieux	<ferrieux@users.sourceforge.net>
 
-	* generic/tclBinary.c:	Fix [Bug 2380293]. Redefine non-strict
-	* doc/binary.n:		decoding to ignore only whitespace.
+	* generic/tclBinary.c:	Redefine non-strict decoding to ignore only
+	* doc/binary.n:		whitespace. [Bug 2380293]
 	* tests/binary.test:
 
 2008-12-15  Don Porter	<dgp@users.sourceforge.net>
 
 	* doc/AddErrInfo.3:	Documented Tcl_(Set|Get)ErrorLine (TIP 336).
 	* doc/CrtCommand.3:	Various other documentation updates to
-	* doc/CrtInterp.3:	reflect the lack of access to Tcl_Interp fields
-	* doc/Interp.3:		by default.
+	* doc/CrtInterp.3:	reflect the lack of access to Tcl_Interp
+	* doc/Interp.3:		fields by default.
 	* doc/SetResult.3:
 	* doc/tcl.decls:
 
@@ -52,11 +247,11 @@
 	* generic/tclInt.decls:	and removed their implementations.  Their
 	* generic/tclMain.c:	function can now be completely performed with
 				the new public interface.
-	*** POTENTIAL INCOMPATIBILITY for callers of the internal 
+	*** POTENTIAL INCOMPATIBILITY for callers of the internal
 	    Tcl*Startup* routines. ***
 
 	* generic/tclIntDecls.h:	make genstubs
-	* generic/tclStubInit.c:	
+	* generic/tclStubInit.c:
 	* generic/tclDecls.h:
 
 2008-12-14  Donal K. Fellows  <dkf@users.sf.net>
@@ -114,8 +309,8 @@
 2008-12-11  Jan Nijtmans  <nijtmans@users.sf.net>
 
 	* generic/tclZlib.c: Eliminate warning: different 'const' qualifiers
-	  with msvc compiler. A few more 'const' optimizations.
-	* win/tcl.m4: fix Windows build (msvc) for TIP #234 implementation
+	with msvc compiler. A few more 'const' optimizations.
+	* win/tcl.m4: Fix Windows build (msvc) for TIP #234 implementation
 	* win/Makefile.in:
 	* win/configure:
 
@@ -125,8 +320,8 @@
 	* tests/io.test: internal representation of the tclChannelType to
 	contain not only the ChannelState pointer, but also a reference to
 	the interpreter it was made in. Invalidate and recompute the
-	internal representation when it is used in a different interpreter
-	(Like cmdName intrep's). Added testcase. [Bug 2407783].
+	internal representation when it is used in a different interpreter,
+	like cmdName intrep's. Added testcase. [Bug 2407783]
 
 2008-12-11  Donal K. Fellows  <dkf@users.sf.net>
 
@@ -137,7 +332,7 @@
 
 2008-12-11  Jan Nijtmans  <nijtmans@users.sf.net>
 
-	* win/Makefile.in: fix Windows build (mingw) for TIP #234
+	* win/Makefile.in: Fix Windows build (mingw) for TIP #234
 	implementation (additionally, first make sure that zlib is available,
 	and rename the standard zdll.lib to libz.a, but at least this works so
 	far).
@@ -338,14 +533,14 @@
 	* library/tclIndex: Removed reference to no-longer-extant procedure
 			    'tclLdAout'.
 	* doc/library.n: Corrected mention of 'auto_exec' to 'auto_execok'.
-	[Patch 2114900] thanks to Stu Cassoff <stwo@users.sf.net>
+	[Patch 2114900] thanks to Stuart Cassoff <stwo@users.sf.net>
 
 2008-11-25  Jan Nijtmans  <nijtmans@users.sf.net>
 
-	* generic/tclIndexObj.c:   Eliminate 3 calls to Tcl_SetResult, as
-	* generic/tclIO.c:	   examples how it should have been done.
-	* generic/tclTestObj.c:	   purpose: contribute in the TIP #340
-				   discussion.
+	* generic/tclIndexObj.c: Eliminate 3 calls to Tcl_SetResult, as
+	* generic/tclIO.c:	 examples how it should have been done.
+	* generic/tclTestObj.c:	 purpose: contribute in the TIP #340
+				 discussion.
 
 2008-11-25  Andreas Kupries  <andreask@activestate.com>
 
@@ -356,7 +551,7 @@
 2008-11-25  Jan Nijtmans  <nijtmans@users.sf.net>
 
 	* generic/tclTest.c: Don't assume that Tcl_SetResult sets
-	interp->result, especially not in a dstring test, in preparation for
+	interp->result, especially not in a DString test, in preparation for
 	TIP #340
 
 2008-11-24  Donal K. Fellows  <dkf@users.sf.net>
@@ -371,9 +566,9 @@
 
 2008-11-17  Jan Nijtmans  <nijtmans@users.sf.net>
 
-	* generic/tcl.decls:  Fix signature and implementation of
-	* generic/tclDecls.h: Tcl_HashStats, such that it conforms to the
-	* generic/tclHash.c:  documentation. [Bug 2308236]
+	* generic/tcl.decls:	Fix signature and implementation of
+	* generic/tclDecls.h:	Tcl_HashStats, such that it conforms to the
+	* generic/tclHash.c:	documentation. [Bug 2308236]
 	* generic/tclVar.c:
 	* doc/Hash.3:
 	* generic/tclDictObj.c: Convert Tcl_SetResult call to
@@ -384,8 +579,8 @@
 	* tests/for.test: Check for uncompiled-for-continue [Bug 2186888]
 	fixed earlier.
 
-	* generic/tcl.h:	Fix [Bug 2251175]: missing backslash
-	* generic/tclCompCmds.c substitution on expanded literals.
+	* generic/tcl.h:	 Fix [Bug 2251175]: missing backslash
+	* generic/tclCompCmds.c: substitution on expanded literals.
 	* generic/tclCompile.c
 	* generic/tclParse.c
 	* generic/tclTest.c
@@ -401,10 +596,10 @@
 2008-11-13  Jan Nijtmans  <nijtmans@users.sf.net>
 
 	* generic/tclInt.h:	Rename static function FSUnloadTempFile to
-	* generic/tclIOUtil.c	TclFSUnloadTempFile, needed in tclLoad.c
+	* generic/tclIOUtil.c:	TclFSUnloadTempFile, needed in tclLoad.c
 
-	* generic/tclLoad.c	Fixed [Bug 2269431]: load of shared
-				objects leaves temporary files on windows
+	* generic/tclLoad.c:	Fixed [Bug 2269431]: Load of shared
+				objects leaves temporary files on windows.
 
 2008-11-12  Pat Thoyts	<patthoyts@users.sourceforge.net>
 
@@ -413,24 +608,24 @@
 
 2008-11-11  Jan Nijtmans  <nijtmans@users.sf.net>
 
-	* generic/tclNamesp.c: Eliminate warning: passing arg 4 of
-			       `Tcl_SplitList' from incompatible pointer type.
-	* win/tcl.m4:	    Reverted change from 2008-11-06 (was under the
-			    impression that "-Wno-implicit-int" added an
-			    extra warning)
-	* win/configure:    (regenerated)
-	* unix/tcl.m4:	    Use -O2 as gcc optimization compiler flag, and
-			    get rid of -Wno-implicit-int for UNIX.
-	* unix/configure:   (regenerated)
+	* generic/tclNamesp.c:	Eliminate warning: passing arg 4 of
+				Tcl_SplitList from incompatible pointer type.
+	* win/tcl.m4:	Reverted change from 2008-11-06 (was under the
+			impression that "-Wno-implicit-int" added an extra
+			warning)
+	* win/configure: (regenerated)
+	* unix/tcl.m4:	Use -O2 as gcc optimization compiler flag, and get rid
+			of -Wno-implicit-int for UNIX.
+	* unix/configure: (regenerated)
 
 2008-11-10  Andreas Kupries  <andreask@activestate.com>
 
 	* doc/platform_shell.n: Fixed [Bug 2255235], reported by Ulrich
 	* library/platform/pkgIndex.tcl: Ring <uring@users.sourceforge.net>.
 	* library/platform/shell.tcl: Updated the LOCATE command in the
-	* library/tm.tcl: package 'platform::shell' to handle the new form
+	* library/tm.tcl:   package 'platform::shell' to handle the new form
 	* unix/Makefile.in: of 'provide' commands generated by tm.tcl. Bumped
-	* win/Makefile.in: package to version 1.1.4. Added cross-references
+	* win/Makefile.in:  package to version 1.1.4. Added cross-references
 	to the relevant parts of the code to avoid future desynchronization.
 
 2008-11-07  Pat Thoyts	<patthoyts@users.sourceforge.net>
@@ -449,9 +644,9 @@
 
 2008-11-04  Jeff Hobbs	<jeffh@ActiveState.com>
 
-	* generic/tclPort.h: remove the ../win/ header dir as the build
-	system already has it, and it confuses builds when used with
-	private headers installed.
+	* generic/tclPort.h: Remove the ../win/ header dir as the build system
+	already has it, and it confuses builds when used with private headers
+	installed.
 
 2008-11-01  Donal K. Fellows  <dkf@users.sf.net>
 
@@ -503,7 +698,7 @@
 2008-10-23  Miguel Sofer  <msofer@users.sf.net>
 
 	* generic/tclCmdAH.c (ForNextCallback): handle TCL_CONTINUE in the for
-	body [Bug 2186888].
+	body. [Bug 2186888]
 
 2008-10-22  Jan Nijtmans  <nijtmans@users.sf.net>
 
@@ -542,19 +737,19 @@
 
 2008-10-17  Jan Nijtmans  <nijtmans@users.sf.net>
 
-	* generic/tclOO.decls:	      CONST -> const.
-	* generic/tclOODecls.h:	      (regenerated)
-	* generic/tclOOIntDecls.h:    (regenerated)
+	* generic/tclOO.decls:		CONST -> const.
+	* generic/tclOODecls.h:		(regenerated)
+	* generic/tclOOIntDecls.h:	(regenerated)
 
 2008-10-17  Andreas Kupries  <andreask@activestate.com>
 
-	* generic/tclIORTrans.c (DeleteReflectedTransformMap): Removed
-	debug output in C++ comment.
+	* generic/tclIORTrans.c (DeleteReflectedTransformMap): Removed debug
+	output in C++ comment.
 
 2008-10-17  Don Porter	<dgp@users.sourceforge.net>
 
-	* generic/tclCompile.h:	Declare the internal tclInstructionTable
-	* generic/tclExecute.c:	to simply be "const", not CONST86.
+	* generic/tclCompile.h:	Declare the internal tclInstructionTable to
+	* generic/tclExecute.c:	simply be "const", not CONST86.
 
 	* generic/tclCmdAH.c:	whitespace.
 	* generic/tclCmdIL.c:	Uninitialized variable warning.
@@ -568,9 +763,9 @@
 
 2008-10-16  Jan Nijtmans  <nijtmans@users.sf.net>
 
-	* generic/regc_locale.c:   Add "const" to many internal
-	* generic/tclClock.c:	   const tables. No functional
-	* generic/tclCmdIL.c:	   or API change.
+	* generic/regc_locale.c: Add "const" to many internal const tables.
+	* generic/tclClock.c:	 No functional or API change.
+	* generic/tclCmdIL.c
 	* generic/tclConfig.c
 	* generic/tclDate.c
 	* generic/tclEncoding.c
@@ -597,7 +792,7 @@
 	* generic/tclThreadTest.c
 	* generic/tclTimer.c
 	* generic/tclTrace.c
-	* macosx/tclMacOSXFCmd.c:
+	* macosx/tclMacOSXFCmd.c
 	* win/cat.c
 	* win/tclWinInit.c
 	* win/tclWinTest.c
@@ -611,12 +806,12 @@
 
 2008-10-15  Jan Nijtmans  <nijtmans@users.sf.net>
 
-	* generic/tclInt.h:	  Add "const" to many internal
-	* generic/tclBinary.c:	  const tables, so those will be
-	* generic/tclCompile.c:	  put by the C-compiler in the
-	* generic/tclDictObj.c:	  TEXT segment in stead of the
-	* generic/tclHash.c:	  DATA segment. This makes those
-	* generic/tclListObj.c:	  table sharable in shared libraries.
+	* generic/tclInt.h:	Add "const" to many internal const tables, so
+	* generic/tclBinary.c:	those will be put by the C-compiler in the
+	* generic/tclCompile.c:	TEXT segment in stead of the DATA segment.
+	* generic/tclDictObj.c: This makes those tables sharable in shared
+	* generic/tclHash.c:	libraries.
+	* generic/tclListObj.c:
 	* generic/tclNamesp.c:
 	* generic/tclObj.c:
 	* generic/tclProc.c:
@@ -627,8 +822,8 @@
 
 2008-10-14  Jan Nijtmans  <nijtmans@users.sf.net>
 
-	* generic/tclCmdAH.c:	   Fix minor compiler warnings when compiling
-	* generic/tclCmdMZ.c:	   with -Wwrite-strings
+	* generic/tclCmdAH.c:	Fix minor compiler warnings when compiling
+	* generic/tclCmdMZ.c:	with -Wwrite-strings.
 	* generic/tclIndexObj.c:
 	* generic/tclProc.c:
 	* generic/tclStubLib.c:
@@ -656,7 +851,7 @@
 	* unix/configure:	autoconf-2.59
 	* win/configure:
 
-	* generic/tclExecute.c:	Fix compile warnings when --enable-symbols=all.
+	* generic/tclExecute.c:	Fix compile warnings when --enable-symbols=all
 
 	* generic/tclCmdIL.c:	Fix write to unallocated memory whenever
 	[lrepeat] returns an empty list.
