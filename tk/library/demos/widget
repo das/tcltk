@@ -386,6 +386,7 @@ addFormattedText {
     @@demo msgbox	Message boxes
     @@demo filebox	File selection dialog
     @@demo clrpick	Color picker
+    @@new
     @@demo fontchoose	Font selection dialog
 
     @@subtitle	Animation

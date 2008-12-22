@@ -54,10 +54,10 @@ test clrpick-1.1 {tk_chooseColor command} -body {
 test clrpick-1.2 {tk_chooseColor command } -body {
     tk_chooseColor -initialcolor
 } -returnCodes error -result {value for "-initialcolor" missing}
-test clrpick-1.2 {tk_chooseColor command } -body {
+test clrpick-1.2.1 {tk_chooseColor command } -body {
     tk_chooseColor -parent
 } -returnCodes error -result {value for "-parent" missing}
-test clrpick-1.2 {tk_chooseColor command } -body {
+test clrpick-1.2.2 {tk_chooseColor command } -body {
     tk_chooseColor -title
 } -returnCodes error -result {value for "-title" missing}
 
