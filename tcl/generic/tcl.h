@@ -59,11 +59,11 @@ extern "C" {
 
 #define TCL_MAJOR_VERSION   8
 #define TCL_MINOR_VERSION   6
-#define TCL_RELEASE_LEVEL   TCL_ALPHA_RELEASE
-#define TCL_RELEASE_SERIAL  4
+#define TCL_RELEASE_LEVEL   TCL_BETA_RELEASE
+#define TCL_RELEASE_SERIAL  1
 
 #define TCL_VERSION	    "8.6"
-#define TCL_PATCH_LEVEL	    "8.6a4"
+#define TCL_PATCH_LEVEL	    "8.6b1"
 
 /*
  * The following definitions set up the proper options for Windows compilers.
@@ -2268,10 +2268,9 @@ typedef int (*Tcl_ArgvGenFuncProc)(ClientData clientData, Tcl_Interp *interp,
 
 /*
  * Constants that describe whether the stream is to operate in compressing or
- * decompressing mode. The scripted level doesn't use pass-through mode.
+ * decompressing mode.
  */
 
-#define TCL_ZLIB_STREAM_PASS	0
 #define TCL_ZLIB_STREAM_DEFLATE	16
 #define TCL_ZLIB_STREAM_INFLATE	32
 
