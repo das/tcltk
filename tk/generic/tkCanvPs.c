@@ -42,6 +42,7 @@ typedef struct TkColormapData {	/* Hold color information for a window */
  */
 
 typedef struct TkPostscriptInfo {
+    Tk_Window tkwin;		/* The canvas being printed. */
     int x, y, width, height;	/* Area to print, in canvas pixel
 				 * coordinates. */
     int x2, y2;			/* x+width and y+height. */
@@ -191,6 +192,7 @@ TkCanvPostscriptCmd(
     }
     oldInfoPtr = canvasPtr->psInfo;
     canvasPtr->psInfo = (Tk_PostscriptInfo) psInfoPtr;
+    psInfo.tkwin = canvasPtr->tkwin;
     psInfo.x = canvasPtr->xOrigin;
     psInfo.y = canvasPtr->yOrigin;
     psInfo.width = -1;
