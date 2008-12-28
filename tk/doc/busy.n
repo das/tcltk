@@ -27,6 +27,7 @@
 '\"
 .so man.macros
 .TH busy n "" Tk "Tk Built-In Commands"
+.BS
 '\" Note:  do not modify the .SH NAME line immediately below!
 .SH NAME
 busy \- confine pointer and keyboard events to a window sub-tree
