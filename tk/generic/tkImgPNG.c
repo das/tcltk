@@ -2054,14 +2054,13 @@ ReadIDAT(
 	    }
 
 	    inputObj = Tcl_NewObj();
-	    Tcl_SetByteArrayLength(inputObj, PNG_BLOCK_SZ);
 	    Tcl_IncrRefCount(inputObj);
+	    inputPtr = Tcl_SetByteArrayLength(inputObj, blockSz);
 
 	    /*
 	     * Read the next bit of IDAT chunk data, up to read buffer size.
 	     */
 
-	    inputPtr = Tcl_GetByteArrayFromObj(inputObj, NULL);
 	    if (ReadData(interp, pngPtr, inputPtr, blockSz,
 		    &crc) == TCL_ERROR) {
 		Tcl_DecrRefCount(inputObj);
