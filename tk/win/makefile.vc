@@ -322,6 +322,7 @@ TKOBJS = \
 	$(TMP_DIR)\tkImage.obj \
 	$(TMP_DIR)\tkImgBmap.obj \
 	$(TMP_DIR)\tkImgGIF.obj \
+	$(TMP_DIR)\tkImgPNG.obj \
 	$(TMP_DIR)\tkImgPPM.obj \
 	$(TMP_DIR)\tkImgPhoto.obj \
 	$(TMP_DIR)\tkImgPhInstance.obj \

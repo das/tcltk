@@ -314,6 +314,7 @@ TK_OBJS = \
 	tkImage.$(OBJEXT) \
 	tkImgBmap.$(OBJEXT) \
 	tkImgGIF.$(OBJEXT) \
+	tkImgPNG.$(OBJEXT) \
 	tkImgPPM.$(OBJEXT) \
 	tkImgPhoto.$(OBJEXT) \
 	tkImgPhInstance.$(OBJEXT) \
