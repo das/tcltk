@@ -373,6 +373,7 @@ CreateTopLevelWindow(
 	 */
 
 	Tk_CreatePhotoImageFormat(&tkImgFmtGIF);
+	Tk_CreatePhotoImageFormat(&tkImgFmtPNG);
 	Tk_CreatePhotoImageFormat(&tkImgFmtPPM);
     }
 

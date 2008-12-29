@@ -471,6 +471,13 @@ if {[tk windowingsystem] eq "aqua"} {
 	    %W yview scroll [expr {(2-%D)/3}] pixels
 	}
     }
+    bind Text <Shift-MouseWheel> {
+	if {%D >= 0} {
+	    %W xview scroll [expr {-%D/3}] pixels
+	} else {
+	    %W xview scroll [expr {(2-%D)/3}] pixels
+	}
+    }
 }
 
 if {"x11" eq [tk windowingsystem]} {
@@ -486,6 +493,16 @@ if {"x11" eq [tk windowingsystem]} {
     bind Text <5> {
 	if {!$tk_strictMotif} {
 	    %W yview scroll 50 pixels
+	}
+    }
+    bind Text <Shift-4> {
+	if {!$tk_strictMotif} {
+	    %W xview scroll -50 pixels
+	}
+    }
+    bind Text <Shift-5> {
+	if {!$tk_strictMotif} {
+	    %W xview scroll 50 pixels
 	}
     }
 }
