@@ -247,16 +247,10 @@ InvokeFocusHandlers(
     }
 
     /*
-     * MouseWheel events are not focus specific on Mac OS X.
+     * Only key-related events are directed according to the focus.
      */
 
-#ifdef MAC_OSX_TK
-#define FOCUS_DIRECTED_EVENT_MASK (KeyPressMask|KeyReleaseMask)
-#else
-#define	FOCUS_DIRECTED_EVENT_MASK (KeyPressMask|KeyReleaseMask|MouseWheelMask)
-#endif
-
-    if (mask & FOCUS_DIRECTED_EVENT_MASK) {
+    if (mask & (KeyPressMask|KeyReleaseMask)) {
 	(*winPtrPtr)->dispPtr->lastEventTime = eventPtr->xkey.time;
 	*winPtrPtr = TkFocusKeyEvent(*winPtrPtr, eventPtr);
 	if (*winPtrPtr == NULL) {
