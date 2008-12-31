@@ -1,3 +1,7 @@
+﻿2008-12-31  David Gravereaux <davygrvy@pobox.com>
+
+	* win/rules.vc: small bug not setting SYMBOLS macro fixed.
+
 2008-12-31  Joe English  <jenglish@users.sourceforge.net>
 
 	* generic/ttk/ttkDefaultTheme.c: Fix color palette for
@@ -6,6 +10,7 @@
 	as intended.
 	* library/ttk/altTheme.tcl: Specify dark gray -bordercolor
 	to soften edges.
+	* tests/ttk/{checkbutton,radiobutton}.test: split out of ttk.test.
 
 2008-12-28  Donal K. Fellows  <dkf@users.sf.net>
 
