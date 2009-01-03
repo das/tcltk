@@ -11,6 +11,7 @@ namespace eval ttk::theme::alt {
 	-frame 		"#d9d9d9"
 	-window		"#ffffff"
 	-darker 	"#c3c3c3"
+	-border		"#414141"
 	-activebg 	"#ececec"
 	-disabledfg	"#a3a3a3"
 	-selectbg	"#4a6984"
@@ -23,6 +24,7 @@ namespace eval ttk::theme::alt {
 	    -background 	$colors(-frame) \
 	    -foreground 	black \
 	    -troughcolor	$colors(-darker) \
+	    -bordercolor	$colors(-border) \
 	    -selectbackground 	$colors(-selectbg) \
 	    -selectforeground 	$colors(-selectfg) \
 	    -font 		TkDefaultFont \
