@@ -103,25 +103,36 @@ enum {
     id		    win;
     NSEventType	    type = [theEvent type];
     NSTrackingArea  *trackingArea = nil;
+    NSInteger eventNumber, clickCount, buttonNumber;
 
     switch (type) {
     case NSMouseEntered:
     case NSMouseExited:
+    case NSCursorUpdate:
 	trackingArea = [theEvent trackingArea];
 	/* fall through */
     case NSLeftMouseDown:
     case NSLeftMouseUp:
     case NSRightMouseDown:
     case NSRightMouseUp:
-    case NSLeftMouseDragged:
-    case NSRightMouseDragged:
-    case NSMouseMoved:
-    case NSScrollWheel:
     case NSOtherMouseDown:
     case NSOtherMouseUp:
+
+    case NSLeftMouseDragged:
+    case NSRightMouseDragged:
     case NSOtherMouseDragged:
+
+    case NSMouseMoved:
+	eventNumber = [theEvent eventNumber];
+	if (!trackingArea) {
+	    clickCount = [theEvent clickCount];
+	    buttonNumber = [theEvent buttonNumber];
+	}
+
     case NSTabletPoint:
     case NSTabletProximity:
+
+    case NSScrollWheel:
 	win = [self windowWithWindowNumber:[theEvent windowNumber]];
         break;
 
@@ -224,21 +235,21 @@ enum {
 	xEvent.xbutton.x_root = global.x;
 	xEvent.xbutton.y_root = global.y;
 	xEvent.xany.send_event = false;
-	xEvent.xany.display = winPtr->display;
-	xEvent.xany.window = Tk_WindowId(winPtr);
+	xEvent.xany.display = Tk_Display(tkwin);
+	xEvent.xany.window = Tk_WindowId(tkwin);
 
 	delta = [theEvent deltaY];
 	if (delta != 0.0) {
 	    xEvent.xbutton.state = state;
 	    xEvent.xkey.keycode = delta;
-	    xEvent.xany.serial = LastKnownRequestProcessed(winPtr->display);
+	    xEvent.xany.serial = LastKnownRequestProcessed(Tk_Display(tkwin));
 	    Tk_QueueWindowEvent(&xEvent, TCL_QUEUE_TAIL);
 	}
 	delta = [theEvent deltaX];
 	if (delta != 0.0) {
 	    xEvent.xbutton.state = state | ShiftMask;
 	    xEvent.xkey.keycode = delta;
-	    xEvent.xany.serial = LastKnownRequestProcessed(winPtr->display);
+	    xEvent.xany.serial = LastKnownRequestProcessed(Tk_Display(tkwin));
 	    Tk_QueueWindowEvent(&xEvent, TCL_QUEUE_TAIL);
 	}
     }
