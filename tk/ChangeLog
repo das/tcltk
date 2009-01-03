@@ -1,3 +1,23 @@
+2009-01-03  Jan Nijtmans  <nijtmans@users.sf.net>
+
+	* generic/tk.decls:       CONSTify Tk_ClipboardAppend
+	* generic/tkClipboard.c:
+	* generic/tkDecls.h: (regenerated)
+
+2008-12-31  David Gravereaux <davygrvy@pobox.com>
+
+	* win/rules.vc: small bug not setting SYMBOLS macro fixed.
+
+2008-12-31  Joe English  <jenglish@users.sourceforge.net>
+
+	* generic/ttk/ttkDefaultTheme.c: Fix color palette for
+	radiobutton and checkbutton indicators.  Fixes [Bug 2003310];
+	also makes "alt" theme check/radiobuttons look like Windows 98,
+	as intended.
+	* library/ttk/altTheme.tcl: Specify dark gray -bordercolor
+	to soften edges.
+	* tests/ttk/{checkbutton,radiobutton}.test: split out of ttk.test.
+
 2008-12-28  Donal K. Fellows  <dkf@users.sf.net>
 
 	TIP #171 IMPLEMENTATION
