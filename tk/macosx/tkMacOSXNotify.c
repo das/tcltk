@@ -266,7 +266,7 @@ TkMacOSXEventsCheckProc(
 MODULE_SCOPE int
 TkMacOSXRunTclEventLoop(void)
 {
-    int i = 4, result = 0;
+    int /*i = 4,*/ result = 0;
 
     /* Avoid starving main event loop: process at most 4 events. */
     while(/*--i && */Tcl_ServiceAll()) {
