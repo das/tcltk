@@ -129,7 +129,7 @@ declare 24 generic {
 }
 declare 25 generic {
     int Tk_ClipboardAppend(Tcl_Interp *interp,Tk_Window tkwin,
-	    Atom target, Atom format, char* buffer)
+	    Atom target, Atom format, const char* buffer)
 }
 declare 26 generic {
     int Tk_ClipboardClear(Tcl_Interp *interp, Tk_Window tkwin)
