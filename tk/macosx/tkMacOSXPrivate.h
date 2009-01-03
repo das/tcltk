@@ -258,6 +258,9 @@ VISIBILITY_HIDDEN
 @interface TKApplication(TKMouseEvent)
 - (NSEvent *)tkProcessMouseEvent:(NSEvent *)theEvent;
 @end
+@interface TKApplication(TKKeyEvent)
+- (NSEvent *)tkProcessKeyEvent:(NSEvent *)theEvent;
+@end
 @interface TKApplication(TKWindowEvent)
 - (void)setupApplicationNotifications;
 - (void)setupWindowNotifications;

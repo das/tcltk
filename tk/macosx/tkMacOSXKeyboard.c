@@ -672,26 +672,28 @@ TkpGetKeySym(
     if (eventPtr->xany.send_event == -1) {
 	int modifier = eventPtr->xkey.keycode;
 
-	if (modifier == cmdKey) {
+	if (modifier == NSCommandKeyMask) {
 	    return XK_Meta_L;
-	} else if (modifier == shiftKey) {
+	} else if (modifier == NSShiftKeyMask) {
 	    return XK_Shift_L;
-	} else if (modifier == alphaLock) {
+	} else if (modifier == NSAlphaShiftKeyMask) {
 	    return XK_Caps_Lock;
-	} else if (modifier == optionKey) {
+	} else if (modifier == NSAlternateKeyMask) {
 	    return XK_Alt_L;
-	} else if (modifier == controlKey) {
+	} else if (modifier == NSControlKeyMask) {
 	    return XK_Control_L;
-	} else if (modifier == kEventKeyModifierNumLockMask) {
+	} else if (modifier == NSNumericPadKeyMask) {
 	    return XK_Num_Lock;
-	} else if (modifier == kEventKeyModifierFnMask) {
+	} else if (modifier == NSFunctionKeyMask) {
 	    return XK_Super_L;
+/*
 	} else if (modifier == rightShiftKey) {
 	    return XK_Shift_R;
 	} else if (modifier == rightOptionKey) {
 	    return XK_Alt_R;
 	} else if (modifier == rightControlKey) {
 	    return XK_Control_R;
+*/
 	} else {
 	    /*
 	     * If we get here, we probably need to implement something new.
@@ -701,6 +703,10 @@ TkpGetKeySym(
 	}
     }
 
+    if (eventPtr->xkey.nbytes) {
+	return eventPtr->xkey.nbytes;
+    }
+    
     /*
      * Figure out which of the four slots in the keymap vector to use for this
      * key. Refer to Xlib documentation for more info on how this computation

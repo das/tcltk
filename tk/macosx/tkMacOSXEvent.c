@@ -54,11 +54,10 @@ enum {
 	}
 	break;
     case NSKeyUp:
-	break;
     case NSKeyDown:
-	flags = [theEvent modifierFlags];
-        break;
     case NSFlagsChanged:
+	flags = [theEvent modifierFlags];
+	theEvent = [self tkProcessKeyEvent:theEvent];
 	break;
     case NSLeftMouseDown:
     case NSLeftMouseUp:

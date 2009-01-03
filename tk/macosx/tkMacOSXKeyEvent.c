@@ -103,6 +103,147 @@ static int		KeycodeToUnicodeViaUnicodeResource(UniChar *uniChars,
 			    int maxChars, Ptr uchr, EventKind eKind,
 			    UInt32 keycode, UInt32 modifiers,
 			    UInt32 *deadKeyStatePtr);
+
+@implementation TKApplication(TKKeyEvent)
+- (NSEvent *)tkProcessKeyEvent:(NSEvent *)theEvent {
+    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, theEvent);
+    id		    win;
+    NSEventType	    type = [theEvent type];
+    NSUInteger	    modifiers, len;
+    BOOL	    repeat = NO;
+    unsigned short  keyCode;
+    NSString	    *characters = nil, *charactersIgnoringModifiers = nil;
+
+
+    switch (type) {
+    case NSKeyUp:
+    case NSKeyDown:
+	repeat = [theEvent isARepeat];
+	characters = [theEvent characters];
+	charactersIgnoringModifiers = [theEvent charactersIgnoringModifiers];
+    case NSFlagsChanged:
+	modifiers = [theEvent modifierFlags];
+	keyCode = [theEvent keyCode];
+	win = [self windowWithWindowNumber:[theEvent windowNumber]];
+	TKLog(@"-[%@(%p) %s] %d %u %@ %@ %u %@", [self class], self, _cmd, repeat, modifiers, characters, charactersIgnoringModifiers, keyCode, win);
+	break;
+
+    default:
+	return theEvent;
+	break;
+    }
+
+    unsigned int state = 0;
+
+    if (modifiers & NSAlphaShiftKeyMask) {
+	state |= LockMask;
+    }
+    if (modifiers & NSShiftKeyMask) {
+	state |= ShiftMask;
+    }
+    if (modifiers & NSControlKeyMask) {
+	state |= ControlMask;
+    }
+    if (modifiers & NSCommandKeyMask) {
+	state |= Mod1Mask;		/* command key */
+    }
+    if (modifiers & NSAlternateKeyMask) {
+	state |= Mod2Mask;		/* option key */
+    }
+    if (modifiers & NSNumericPadKeyMask) {
+	state |= Mod3Mask;
+    }
+    if (modifiers & NSFunctionKeyMask) {
+	state |= Mod4Mask;
+    }
+
+    /*
+     * The focus must be in the FrontWindow on the Macintosh. We then query Tk
+     * to determine the exact Tk window that owns the focus.
+     */
+
+    Window window = TkMacOSXGetXWindow([win windowRef]);
+    TkDisplay *dispPtr = TkGetDisplayList();
+    Tk_Window tkwin = Tk_IdToWindow(dispPtr->display, window);
+
+    if (!tkwin) {
+	TkMacOSXDbgMsg("tkwin == NULL");
+	return theEvent;
+    }
+    tkwin = (Tk_Window) ((TkWindow *) tkwin)->dispPtr->focusPtr;
+    if (!tkwin) {
+	TkMacOSXDbgMsg("tkwin == NULL");
+	return theEvent;
+    }
+
+    XEvent xEvent;
+    xEvent.xany.serial = LastKnownRequestProcessed(Tk_Display(tkwin));
+    xEvent.xany.send_event = false;
+    xEvent.xany.display = Tk_Display(tkwin);
+    xEvent.xany.window = Tk_WindowId(tkwin);
+
+    xEvent.xkey.root = XRootWindow(Tk_Display(tkwin), 0);
+    xEvent.xkey.subwindow = None;
+    xEvent.xkey.time = TkpGetMS();
+    xEvent.xkey.state = state;
+    xEvent.xkey.same_screen = true;
+    xEvent.xkey.trans_chars[0] = 0;
+    xEvent.xkey.nbytes = 0;
+    
+    if (type == NSFlagsChanged) {
+	static NSUInteger savedModifiers = 0;
+
+	if (savedModifiers > modifiers) {
+	    xEvent.xany.type = KeyRelease;
+	} else {
+	    xEvent.xany.type = KeyPress;
+	}
+
+	/*
+	 * Use special '-1' to signify a special keycode to our platform
+	 * specific code in tkMacOSXKeyboard.c. This is rather like what
+	 * happens on Windows.
+	 */
+
+	xEvent.xany.send_event = -1;
+
+	/*
+	 * Set keycode (which was zero) to the changed modifier
+	 */
+
+	xEvent.xkey.keycode = (modifiers ^ savedModifiers);
+	savedModifiers = modifiers;
+    } else {
+	if (type == NSKeyUp || repeat) {
+	    xEvent.xany.type = KeyRelease;
+	} else {
+	    xEvent.xany.type = KeyPress;
+	}
+	xEvent.xkey.keycode = keyCode;
+	if (![characters getCString:xEvent.xkey.trans_chars
+		maxLength:XMaxTransChars encoding:NSUTF8StringEncoding]) {
+	    TkMacOSXDbgMsg("characters too long");
+	    return theEvent;
+	}
+	len = [charactersIgnoringModifiers length];
+	if (len) {
+	    xEvent.xkey.nbytes = [charactersIgnoringModifiers characterAtIndex:0];
+	    if (len > 1) {
+		TkMacOSXDbgMsg("more than one charactersIgnoringModifiers");
+	    }
+	}
+	if (repeat) {
+	    Tk_QueueWindowEvent(&xEvent, TCL_QUEUE_TAIL);
+	    xEvent.xany.type = KeyPress;
+	    xEvent.xany.serial = LastKnownRequestProcessed(Tk_Display(tkwin));
+	}
+    }
+    Tk_QueueWindowEvent(&xEvent, TCL_QUEUE_TAIL);
+
+    return theEvent;
+}
+@end
+#pragma mark -
 
 /*
  *----------------------------------------------------------------------
