@@ -79,6 +79,11 @@ static void		ClearPort(CGrafPtr port, HIShapeRef updateRgn);
 extern NSString *NSWindowWillOrderOnScreenNotification;
 extern NSString *NSWindowDidOrderOffScreenNotification;
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 1060
+#define NSWindowWillStartLiveResizeNotification @"NSWindowWillStartLiveResizeNotification"
+#define NSWindowDidEndLiveResizeNotification  @"NSWindowDidEndLiveResizeNotification"
+#endif
+
 @implementation TKApplication(TKWindowEvent)
 - (void)windowActivation:(NSNotification *)notification {
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
