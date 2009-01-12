@@ -1322,8 +1322,7 @@ MatchOneType(
  *
  * TkAboutDlg --
  *
- *	Displays the default Tk About box. This code uses Macintosh resources
- *	to define the content of the About Box.
+ *	Displays the default Tk About box.
  *
  * Results:
  *	None.
@@ -1337,23 +1336,42 @@ MatchOneType(
 void
 TkAboutDlg(void)
 {
-    DialogPtr aboutDlog;
-    WindowRef windowRef;
-    short itemHit = -9;
-
-    aboutDlog = GetNewDialog(TK_DEFAULT_ABOUT, NULL, (void *) (-1));
-    if (!aboutDlog) {
-	return;
+    NSString *path = [[NSApp tkFrameworkBundle]
+	    pathForImageResource:@"Tk.tiff"];
+    if (!path) {
+	// FIXME: fallback to absolute path specific to my box
+	path = @"/Volumes/Users/steffen/Development/TclTk/git/HEAD/tk/macosx/Tk.tiff";
+	TkMacOSXDbgMsg("Fallback to hardcoded path!");
     }
-    windowRef = GetDialogWindow(aboutDlog);
-    SelectWindow(windowRef);
-    TkMacOSXTrackingLoop(1);
-    while (itemHit != 1) {
-	ModalDialog(NULL, &itemHit);
-    }
-    TkMacOSXTrackingLoop(0);
-    DisposeDialog(aboutDlog);
-    SelectWindow(ActiveNonFloatingWindow());
+    NSImage *image = [[NSImage alloc] initWithContentsOfFile:path];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
+    [dateFormatter setDateFormat:@"Y"];
+    NSString *year = [dateFormatter stringFromDate:[NSDate date]];
+    NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+    [style setAlignment:NSCenterTextAlignment];
+    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
+	    @"Tcl & Tk", @"ApplicationName",
+	    @"Tcl " TCL_VERSION " & Tk " TK_VERSION, @"ApplicationVersion",
+	    @TK_PATCH_LEVEL, @"Version",
+	    image, @"ApplicationIcon",
+	    [NSString stringWithFormat:@"Copyright %1$C 1996-%2$@.", 0xA9,
+	    year], @"Copyright",
+	    [[NSAttributedString alloc] initWithString:
+	    [NSString stringWithFormat:
+	    @"%1$C 2002-%2$@ Tcl Core Team." "\n\n"
+	     "%1$C 2002-%2$@ Daniel A. Steffen." "\n\n"
+	     "Daniel A. Steffen" "\n"
+	     "%1$C 2008-2009 Apple Inc." "\n\n"
+	     "Jim Ingham & Ian Reid" "\n"
+	     "%1$C 2001-2002 Apple Computer, Inc." "\n\n"
+	     "Jim Ingham & Ray Johnson" "\n"
+	     "%1$C 1998-2000 Scriptics Inc." "\n"
+	     "%1$C 1996-1997 Sun Microsystems Inc.", 0xA9, year] attributes:
+	    [NSDictionary dictionaryWithObject:style
+	    forKey:NSParagraphStyleAttributeName]], @"Credits",
+	    nil];
+    [NSApp orderFrontStandardAboutPanelWithOptions:options];
 }
 
 /*

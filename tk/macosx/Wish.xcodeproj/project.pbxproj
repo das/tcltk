@@ -324,10 +324,6 @@
 		F9E61D30090A48E2002B3151 /* bn_mp_to_unsigned_bin_n.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D42C708F272B3004A47F5 /* bn_mp_to_unsigned_bin_n.c */; };
 		F9E61D31090A48F9002B3151 /* bn_mp_to_unsigned_bin.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D42C608F272B3004A47F5 /* bn_mp_to_unsigned_bin.c */; };
 		F9E61D32090A48FA002B3151 /* bn_mp_unsigned_bin_size.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D42CC08F272B3004A47F5 /* bn_mp_unsigned_bin_size.c */; };
-		F9EA4AF008FA3BD500B1F5F0 /* tkMacOSXXCursors.r in Rez */ = {isa = PBXBuildFile; fileRef = F966BBF408F27A3C005CB29B /* tkMacOSXXCursors.r */; };
-		F9EA4AF208FA3BD800B1F5F0 /* tkMacOSXCursors.r in Rez */ = {isa = PBXBuildFile; fileRef = F966BBCC08F27A3B005CB29B /* tkMacOSXCursors.r */; };
-		F9EA4AF308FA3BDA00B1F5F0 /* tkMacOSXAETE.r in Rez */ = {isa = PBXBuildFile; fileRef = F966BBC408F27A3B005CB29B /* tkMacOSXAETE.r */; };
-		F9EA4AF408FA3BDB00B1F5F0 /* tkAboutDlg.r in Rez */ = {isa = PBXBuildFile; fileRef = F966BBC108F27A3B005CB29B /* tkAboutDlg.r */; };
 		F9F4415E0C8BAE6F00BCCD67 /* tclDTrace.d in Sources */ = {isa = PBXBuildFile; fileRef = F9F4415D0C8BAE6F00BCCD67 /* tclDTrace.d */; };
 		F9FC77B80AB29E9100B7077D /* tclUnixCompat.c in Sources */ = {isa = PBXBuildFile; fileRef = F9FC77B70AB29E9100B7077D /* tclUnixCompat.c */; };
 		F9FD30BC0CC1AD070073837D /* regcomp.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D3ED008F272A7004A47F5 /* regcomp.c */; };
@@ -675,6 +671,8 @@
 		F93E5EFD09CF8711008FA367 /* tkMacOSXFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tkMacOSXFont.h; sourceTree = "<group>"; };
 		F94523A10E6FC2AC00C1D987 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		F95D77E90DFD820D00A8BF6F /* tclIORTrans.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tclIORTrans.c; sourceTree = "<group>"; };
+		F95D8D4B0F1715610006B020 /* Tk.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Tk.icns; sourceTree = "<group>"; };
+		F95D8D4C0F1715610006B020 /* Tk.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Tk.tiff; sourceTree = "<group>"; };
 		F95FAFF90B34F1130072E431 /* macOSXLoad.test */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = macOSXLoad.test; sourceTree = "<group>"; };
 		F962F7C60DADC26200648DB8 /* vsapi.test */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = vsapi.test; sourceTree = "<group>"; };
 		F96437C90EF0D4B2003F468E /* tclZlib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tclZlib.c; sourceTree = "<group>"; };
@@ -2683,6 +2681,8 @@
 				F966BBF408F27A3C005CB29B /* tkMacOSXXCursors.r */,
 				F966BBF508F27A3C005CB29B /* tkMacOSXXStubs.c */,
 				F96888840AF78938000797B5 /* ttkMacOSXTheme.c */,
+				F95D8D4B0F1715610006B020 /* Tk.icns */,
+				F95D8D4C0F1715610006B020 /* Tk.tiff */,
 				F966BBF808F27A3C005CB29B /* Wish.icns */,
 				F966BBF708F27A3C005CB29B /* Wish-Info.plist.in */,
 				F97AE7F10B65C1E900310EA2 /* Wish-Common.xcconfig */,
@@ -4005,7 +4005,6 @@
 			buildPhases = (
 				F9A5C5F508F651A2008AE941 /* ShellScript */,
 				F9A5C5F608F651AB008AE941 /* ShellScript */,
-				F9EA4ADE08FA3B7F00B1F5F0 /* Rez */,
 				8DD76FAB0486AB0100D96B5E /* Sources */,
 				8DD76FAD0486AB0100D96B5E /* Frameworks */,
 				F95FA74C0B32CE190072E431 /* ShellScript */,
@@ -4075,20 +4074,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXRezBuildPhase section */
-		F9EA4ADE08FA3B7F00B1F5F0 /* Rez */ = {
-			isa = PBXRezBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F9EA4AF008FA3BD500B1F5F0 /* tkMacOSXXCursors.r in Rez */,
-				F9EA4AF208FA3BD800B1F5F0 /* tkMacOSXCursors.r in Rez */,
-				F9EA4AF308FA3BDA00B1F5F0 /* tkMacOSXAETE.r in Rez */,
-				F9EA4AF408FA3BDB00B1F5F0 /* tkAboutDlg.r in Rez */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXRezBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
 		F95FA74C0B32CE190072E431 /* ShellScript */ = {
