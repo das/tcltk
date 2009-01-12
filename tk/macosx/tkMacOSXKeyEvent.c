@@ -75,6 +75,7 @@ static Tk_Window grabWinPtr = NULL;
 				/* Current grab window, NULL if no grab. */
 static Tk_Window keyboardGrabWinPtr = NULL;
 				/* Current keyboard grab window. */
+#ifdef OBSOLETE
 static UInt32 deadKeyStateUp = 0;
 				/* The deadkey state for the current sequence
 				 * of keyup events or 0 if not in a deadkey
@@ -103,6 +104,7 @@ static int		KeycodeToUnicodeViaUnicodeResource(UniChar *uniChars,
 			    int maxChars, Ptr uchr, EventKind eKind,
 			    UInt32 keycode, UInt32 modifiers,
 			    UInt32 *deadKeyStatePtr);
+#endif
 
 @implementation TKApplication(TKKeyEvent)
 - (NSEvent *)tkProcessKeyEvent:(NSEvent *)theEvent {
@@ -266,6 +268,7 @@ TkMacOSXProcessKeyboardEvent(
     TkMacOSXEvent *eventPtr,
     MacEventStatus *statusPtr)
 {
+#ifdef OBSOLETE
     static UInt32 savedKeyCode = 0;
     static UInt32 savedModifiers = 0;
     static UniChar savedChar = 0;
@@ -417,8 +420,11 @@ TkMacOSXProcessKeyboardEvent(
     }
     savedKeyCode = 0;
     return true;
+#endif
+    return false;
 }
 
+#ifdef OBSOLETE
 /*
  *----------------------------------------------------------------------
  *
@@ -1080,6 +1086,7 @@ KeycodeToUnicodeViaKCHRResource(
 
     return uniStrLen;
 }
+#endif
 
 /*
  *----------------------------------------------------------------------
@@ -1114,6 +1121,7 @@ TkMacOSXKeycodeToUnicode(
     UInt32 modifiers,
     UInt32 *deadKeyStatePtr)
 {
+#ifdef OBSOLETE
     Ptr resource = NULL;
     TextEncoding encoding;
 
@@ -1124,6 +1132,8 @@ TkMacOSXKeycodeToUnicode(
 	return KeycodeToUnicodeViaKCHRResource(uniChars, maxChars, resource,
 		encoding, eKind, keycode, modifiers, deadKeyStatePtr);
     }
+#endif
+    return 0;
 }
 
 /*
@@ -1293,10 +1303,12 @@ MODULE_SCOPE void
 TkMacOSXInitKeyboard(
     Tcl_Interp *interp)
 {
+#ifdef OBSOLETE
     Ptr resource;
     TextEncoding encoding;
 
     GetKeyboardLayout(&resource, &encoding);
+#endif
 }
 
 /*

@@ -77,19 +77,21 @@ static int gEatButtonUp = 0;	/* 1 if we need to eat the next up event. */
  * Declarations of functions used only in this file.
  */
 
+#ifdef OBSOLETE
 static void		BringWindowForward(WindowRef wRef, int isFrontProcess,
 			    int frontWindowOnly);
 static int		GeneratePollingEvents(MouseEventData *medPtr);
 static int		GenerateMouseWheelEvent(MouseEventData *medPtr);
-static int		GenerateButtonEvent(MouseEventData *medPtr);
 static int		GenerateToolbarButtonEvent(MouseEventData *medPtr);
 static int		HandleWindowTitlebarMouseDown(MouseEventData *medPtr,
 			    Tk_Window tkwin);
+static Tk_Window	GetGrabWindowForWindow(Tk_Window tkwin);
+static void		TkMacOSXSetEatButtonUp(int f);
+#endif
+static int		GenerateButtonEvent(MouseEventData *medPtr);
 static unsigned int	ButtonModifiers2State(UInt32 buttonState,
 			    UInt32 keyModifiers);
-static Tk_Window	GetGrabWindowForWindow(Tk_Window tkwin);
 static int		TkMacOSXGetEatButtonUp(void);
-static void		TkMacOSXSetEatButtonUp(int f);
 
 #pragma mark TKApplication(TKEvent)
 
@@ -281,6 +283,7 @@ TkMacOSXProcessMouseEvent(
     TkMacOSXEvent *eventPtr,
     MacEventStatus *statusPtr)
 {
+#ifdef OBSOLETE
     Tk_Window tkwin;
     Point where, where2;
     int result;
@@ -288,6 +291,7 @@ TkMacOSXProcessMouseEvent(
     OSStatus err;
     MouseEventData mouseEventData, *medPtr = &mouseEventData;
     int isFrontProcess;
+#endif
 
     switch (eventPtr->eKind) {
     case kEventMouseDown:
@@ -300,6 +304,7 @@ TkMacOSXProcessMouseEvent(
 	return false;
     }
 
+#ifdef OBSOLETE
     err = ChkErr(GetEventParameter, eventPtr->eventRef,
 	    kEventParamMouseLocation, typeQDPoint, NULL, sizeof(where), NULL,
 	    &where);
@@ -525,9 +530,11 @@ TkMacOSXProcessMouseEvent(
     case inContent:
 	return GenerateButtonEvent(medPtr);
     }
+#endif
     return false;
 }
 
+#ifdef OBSOLETE
 /*
  *----------------------------------------------------------------------
  *
@@ -812,6 +819,7 @@ GetGrabWindowForWindow(
     
     return grabWin;
 }
+
 
 /*
  *----------------------------------------------------------------------
@@ -872,6 +880,7 @@ GenerateMouseWheelEvent(
     Tk_QueueWindowEvent(&xEvent, TCL_QUEUE_TAIL);
     return true;
 }
+#endif
 
 /*
  *----------------------------------------------------------------------
@@ -893,6 +902,7 @@ TkMacOSXGetEatButtonUp(void)
     return gEatButtonUp;
 }
 
+#ifdef OBSOLETE
 /*
  *----------------------------------------------------------------------
  *
@@ -913,6 +923,7 @@ TkMacOSXSetEatButtonUp(
 {
     gEatButtonUp = f;
 }
+#endif
 
 /*
  *----------------------------------------------------------------------
@@ -1258,6 +1269,7 @@ GenerateButtonEvent(
     return true;
 }
 
+#ifdef OBSOLETE
 /*
  *----------------------------------------------------------------------
  *
@@ -1313,6 +1325,7 @@ GenerateToolbarButtonEvent(
     Tk_QueueWindowEvent((XEvent *) &event, TCL_QUEUE_TAIL);
     return true;
 }
+#endif
 
 /*
  * Local Variables:

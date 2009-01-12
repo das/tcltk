@@ -230,7 +230,9 @@ MODULE_SCOPE int	TkMacOSXMakeFullscreen(TkWindow *winPtr,
 			    Tcl_Interp *interp);
 MODULE_SCOPE void	TkMacOSXEnterExitFullscreen(TkWindow *winPtr,
 			    int active);
+#ifdef OBSOLETE
 MODULE_SCOPE void	TkMacOSXBringWindowForward(WindowRef wRef);
+#endif
 MODULE_SCOPE NSWindow*	TkMacOSXDrawableWindow(Drawable drawable);
 MODULE_SCOPE void	TkMacOSXWinCGBounds(TkWindow *winPtr, CGRect *bounds);
 MODULE_SCOPE HIShapeRef	TkMacOSXGetClipRgn(Drawable drawable);
