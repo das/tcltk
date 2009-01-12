@@ -16,27 +16,15 @@
 
 #include "tkMacOSXPrivate.h"
 #include "tkMacOSXEvent.h"
+#include <tclInt.h>
 #include <pthread.h>
 #import <objc/objc-auto.h>
-
-/*
- * Declarations of functions used only in this file:
- */
-
-static void TimerProc(CFRunLoopTimerRef timer, void *info);
 
 /*
  * Static data used by several functions in this file:
  */
 
-static CFRunLoopTimerRef runLoopTimer = NULL;
-static int runLoopTimerEnabled = 0, inTrackingLoop = 0;
-
-/*
- * CFTimeInterval to wait forever
- */
-
-#define CF_TIMEINTERVAL_FOREVER 5.05e8
+static int inTrackingLoop = 0;
 
 /*
  * The following static indicates whether this module has been initialized
@@ -52,6 +40,24 @@ static Tcl_ThreadDataKey dataKey;
 static void TkMacOSXNotifyExitHandler(ClientData clientData);
 static void TkMacOSXEventsSetupProc(ClientData clientData, int flags);
 static void TkMacOSXEventsCheckProc(ClientData clientData, int flags);
+
+#pragma mark TKApplication(TKNotify)
+
+@interface TKApplication(TKNotify)
+- (NSEvent *)nextEventMatchingMask:(NSUInteger)mask untilDate:(NSDate *)expiration inMode:(NSString *)mode dequeue:(BOOL)deqFlag;
+@end
+
+@implementation TKApplication(TKNotify)
+- (NSEvent *)nextEventMatchingMask:(NSUInteger)mask untilDate:(NSDate *)expiration inMode:(NSString *)mode dequeue:(BOOL)deqFlag {
+    NSEvent *event = [super nextEventMatchingMask:mask untilDate:expiration inMode:mode dequeue:deqFlag];
+    if (event && inTrackingLoop) {
+	event = [NSApp tkProcessEvent:event];
+    }
+    return event;
+}
+@end
+#pragma mark -
+
 
 /*
  *----------------------------------------------------------------------
@@ -83,13 +89,10 @@ Tk_MacOSXSetupTkNotifier(void)
 	 * Install TkAqua event source in main event loop thread.
 	 */
 
-	if (GetCurrentEventLoop() == GetMainEventLoop()) {
+	if (CFRunLoopGetMain() == CFRunLoopGetCurrent()) {
 	    if (!pthread_main_np()) {
 		/*
-		 * Panic if the Carbon main event loop thread (i.e. the thread
-		 * where HIToolbox was first loaded) is not the main
-		 * application thread, as Carbon does not support this
-		 * properly.
+		 * Panic if main runloop is not on the main application thread.
 		 */
 
 		Tcl_Panic("Tk_MacOSXSetupTkNotifier: %s",
@@ -98,6 +101,9 @@ Tk_MacOSXSetupTkNotifier(void)
 	    Tcl_CreateEventSource(TkMacOSXEventsSetupProc,
 		    TkMacOSXEventsCheckProc, GetMainEventQueue());
 	    TkCreateExitHandler(TkMacOSXNotifyExitHandler, NULL);
+	    Tcl_SetServiceMode(TCL_SERVICE_ALL);
+	    TclMacOSXNotifierAddRunLoopMode(NSEventTrackingRunLoopMode);
+	    TclMacOSXNotifierAddRunLoopMode(NSModalPanelRunLoopMode);
 	}
     }
 }
@@ -155,26 +161,26 @@ TkMacOSXEventsSetupProc(
     ClientData clientData,
     int flags)
 {
-    static const Tcl_Time zeroBlockTime = { 0, 0 };
-    ThreadSpecificData *tsdPtr = Tcl_GetThreadData(&dataKey,
-	    sizeof(ThreadSpecificData));
-
-    if (!(flags & TCL_WINDOW_EVENTS)) {
+    if (!(flags & TCL_WINDOW_EVENTS) || inTrackingLoop) {
 	return;
-    }
-
-    if (!tsdPtr->currentEvent && !inTrackingLoop) {
-	NSEvent *currentEvent = [NSApp nextEventMatchingMask:NSAnyEventMask
-		untilDate:[NSDate distantPast]
-		inMode:NSDefaultRunLoopMode dequeue:YES];
-	if (currentEvent) {
-	    CFRetain(currentEvent);
-	    tsdPtr->currentEvent = currentEvent;
+    } else {
+	static const Tcl_Time zeroBlockTime = { 0, 0 };
+	ThreadSpecificData *tsdPtr = Tcl_GetThreadData(&dataKey,
+		sizeof(ThreadSpecificData));
+	if (!tsdPtr->currentEvent) {
+	    NSEvent *currentEvent = [NSApp nextEventMatchingMask:NSAnyEventMask
+		    untilDate:[NSDate distantPast]
+		    inMode:NSDefaultRunLoopMode dequeue:YES];
+	    if (currentEvent) {
+		CFRetain(currentEvent);
+		tsdPtr->currentEvent = currentEvent;
+	    }
 	}
-    }
 
-    if (tsdPtr->currentEvent || GetNumEventsInQueue((EventQueueRef) clientData)) {
-	Tcl_SetMaxBlockTime(&zeroBlockTime);
+	if (tsdPtr->currentEvent ||
+		GetNumEventsInQueue((EventQueueRef) clientData)) {
+	    Tcl_SetMaxBlockTime(&zeroBlockTime);
+	}
     }
 }
 
@@ -199,18 +205,16 @@ TkMacOSXEventsCheckProc(
     ClientData clientData,
     int flags)
 {
-    ThreadSpecificData *tsdPtr = Tcl_GetThreadData(&dataKey,
-	    sizeof(ThreadSpecificData));
-    int numFound;
-    OSStatus err = noErr;
-    NSEvent *currentEvent = nil, *event;
-
-    if (!(flags & TCL_WINDOW_EVENTS)) {
+    if (!(flags & TCL_WINDOW_EVENTS) || inTrackingLoop) {
 	return;
-    }
+    } else {
+	ThreadSpecificData *tsdPtr = Tcl_GetThreadData(&dataKey,
+		sizeof(ThreadSpecificData));
+	int numFound;
+	OSStatus err = noErr;
+	NSEvent *currentEvent = nil, *event;
 
-    if (!inTrackingLoop) {
-	do {
+ 	do {
 	    if (tsdPtr->currentEvent) {
 		currentEvent = tsdPtr->currentEvent;
 		CFRelease(currentEvent);
@@ -224,10 +228,10 @@ TkMacOSXEventsCheckProc(
 	    if (event) {
 		TKLog(@"   event: %@", event);
 		objc_clear_stack(0);
-		TkMacOSXStartTclEventLoopTimer();
+		TkMacOSXTrackingLoop(1);
 		[NSApp sendEvent:event];
-		TkMacOSXStopTclEventLoopTimer();
-		[NSApp afterEvent];
+		TkMacOSXTrackingLoop(0);
+		objc_collect(OBJC_COLLECT_IF_NEEDED);
 	    }
 	} while (currentEvent);
     
@@ -278,108 +282,6 @@ TkMacOSXRunTclEventLoop(void)
 /*
  *----------------------------------------------------------------------
  *
- * TimerProc --
- *
- *	This procedure is the carbon timer handler that runs the tcl
- *	event loop periodically.
- *
- * Results:
- *	None.
- *
- * Side effects:
- *	Runs the Tcl event loop.
- *
- *----------------------------------------------------------------------
- */
-
-static void
-TimerProc(
-    CFRunLoopTimerRef timer,
-    void *info)
-{
-    if(runLoopTimerEnabled > 0 && TkMacOSXRunTclEventLoop()) {
-//#ifdef TK_MAC_DEBUG_CARBON_EVENTS
-	TkMacOSXDbgMsg("Processed tcl events from runloop timer");
-//#endif /* TK_MAC_DEBUG_CARBON_EVENTS */
-    }
-}
-
-/*
- *----------------------------------------------------------------------
- *
- * TkMacOSXStartTclEventLoopTimer --
- *
- *	This procedure installs (if necessary) and starts a carbon
- *	event timer that runs the tcl event loop periodically.
- *	It should be called whenever a nested carbon event loop might
- *	run by HIToolbox (e.g. during mouse tracking) to ensure that
- *	tcl events continue to be processed.
- *
- * Results:
- *	OS status code.
- *
- * Side effects:
- *	Carbon event timer is installed and started.
- *
- *----------------------------------------------------------------------
- */
-
-MODULE_SCOPE OSStatus
-TkMacOSXStartTclEventLoopTimer(void)
-{
-    OSStatus err = noErr;
-
-    if (++runLoopTimerEnabled > 0) {
-	if(!runLoopTimer) {
-	    runLoopTimer = CFRunLoopTimerCreate(NULL,
-		    CFAbsoluteTimeGetCurrent() + 5 * kEventDurationMillisecond,
-		    5 * kEventDurationMillisecond, 0, 0, TimerProc, NULL);
-	    if (runLoopTimer) {
-		CFRunLoopAddTimer(CFRunLoopGetCurrent(), runLoopTimer,
-			kCFRunLoopCommonModes);
-	    }
-	} else {
-	    CFRunLoopTimerSetNextFireDate(runLoopTimer,
-		    CFAbsoluteTimeGetCurrent() + CF_TIMEINTERVAL_FOREVER);
-	}
-    }
-    return err;
-}
-
-/*
- *----------------------------------------------------------------------
- *
- * TkMacOSXStopTclEventLoopTimer --
- *
- *	This procedure stops the carbon event timer started by
- *	TkMacOSXStartTclEventLoopTimer().
- *
- * Results:
- *	OS status code.
- *
- * Side effects:
- *	Carbon event timer is stopped.
- *
- *----------------------------------------------------------------------
- */
-
-MODULE_SCOPE OSStatus
-TkMacOSXStopTclEventLoopTimer(void)
-{
-    OSStatus err = noErr;
-
-    if (--runLoopTimerEnabled == 0) {
-	if(runLoopTimer) {
-	    CFRunLoopTimerSetNextFireDate(runLoopTimer,
-		    CFAbsoluteTimeGetCurrent() + 5 * kEventDurationMillisecond);
-	}
-    }
-    return err;
-}
-
-/*
- *----------------------------------------------------------------------
- *
  * TkMacOSXTrackingLoop --
  *
  *	Call with 1 before entering a mouse tracking loop (e.g. window
@@ -404,19 +306,17 @@ TkMacOSXTrackingLoop(int tracking)
     if (tracking) {
 	if (!inTrackingLoop++) {
 	    previousServiceMode = Tcl_SetServiceMode(TCL_SERVICE_ALL);
-	    TkMacOSXStartTclEventLoopTimer();
 	}
-//#ifdef TK_MAC_DEBUG_CARBON_EVENTS
+#ifdef TK_MAC_DEBUG_CARBON_EVENTS
 	TkMacOSXDbgMsg("Entering tracking loop");
-//#endif /* TK_MAC_DEBUG_CARBON_EVENTS */
+#endif /* TK_MAC_DEBUG_CARBON_EVENTS */
     } else {
 	if (!--inTrackingLoop) {
-	    TkMacOSXStopTclEventLoopTimer();
 	    previousServiceMode = Tcl_SetServiceMode(previousServiceMode);
 	}
-//#ifdef TK_MAC_DEBUG_CARBON_EVENTS
+#ifdef TK_MAC_DEBUG_CARBON_EVENTS
 	TkMacOSXDbgMsg("Exiting tracking loop");
-//#endif /* TK_MAC_DEBUG_CARBON_EVENTS */
+#endif /* TK_MAC_DEBUG_CARBON_EVENTS */
     }
 }
 
@@ -480,9 +380,9 @@ TkMacOSXReceiveAndDispatchEvent(void)
 	if (!targetRef) {
 	    targetRef = GetEventDispatcherTarget();
 	}
-	TkMacOSXStartTclEventLoopTimer();
+	TkMacOSXTrackingLoop(1);
 	err = SendEventToEventTarget(eventRef, targetRef);
-	TkMacOSXStopTclEventLoopTimer();
+	TkMacOSXTrackingLoop(0);
 #ifdef TK_MAC_DEBUG_CARBON_EVENTS
 	if (err != noErr && err != eventLoopTimedOutErr
 		&& err != eventNotHandledErr) {
