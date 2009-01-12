@@ -19,6 +19,398 @@
 #include "tkMacOSXFont.h"
 #include "tkMacOSXDebug.h"
 
+#if 1
+
+#define NON_BEZEL_INSET 2
+#define NON_BEZEL_BOTTOM_INSET 2
+
+typedef struct {
+    TkButton info;		/* Generic button info */
+    NSButton *button;
+    NSImage *image;
+    int useBezel;
+} MacButton;
+
+static void SetupNSButton(TkButton *butPtr);
+
+/*
+ * The class procedure table for the button widgets.
+ */
+
+Tk_ClassProcs tkpButtonProcs = {
+    sizeof(Tk_ClassProcs),	/* size */
+    TkButtonWorldChanged,	/* worldChangedProc */
+};
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkpCreateButton --
+ *
+ *	Allocate a new TkButton structure.
+ *
+ * Results:
+ *	Returns a newly allocated TkButton structure.
+ *
+ * Side effects:
+ *	Registers an event handler for the widget.
+ *
+ *----------------------------------------------------------------------
+ */
+
+TkButton *
+TkpCreateButton(
+    Tk_Window tkwin)
+{
+    MacButton *macButtonPtr = (MacButton *) ckalloc(sizeof(MacButton));
+
+    macButtonPtr->button = [[NSButton alloc] initWithFrame:NSZeroRect];
+    CFRetain(macButtonPtr->button);
+    macButtonPtr->image = nil;
+
+    return (TkButton *)macButtonPtr;
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkpDisplayButton --
+ *
+ *	This procedure is invoked to display a button widget. It is
+ *	normally invoked as an idle handler.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	Commands are output to X to display the button in its
+ *	current mode. The REDRAW_PENDING flag is cleared.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TkpDisplayButton(
+    ClientData clientData)	/* Information about widget. */
+{
+    MacButton *macButtonPtr = (MacButton *) clientData;
+    TkButton *butPtr = (TkButton *) clientData;
+    Tk_Window tkwin = butPtr->tkwin;
+    TkWindow *winPtr = (TkWindow *) tkwin;
+    MacDrawable *macWin =  (MacDrawable *) winPtr->window;
+    NSView *view = macWin->toplevel ? macWin->toplevel->view : macWin->view;
+    NSCellStateValue state;
+    int height, enabled;
+    NSRect frame;
+
+    butPtr->flags &= ~REDRAW_PENDING;
+    if ((tkwin == NULL) || !Tk_IsMapped(tkwin) || !view) {
+	return;
+    }
+
+    /*
+     * See the comment in UpdateControlColors as to why we use the
+     * highlightbackground for the border of Macintosh buttons.
+     */
+
+    Tk_Fill3DRectangle(tkwin, (Pixmap) macWin, butPtr->type == TYPE_BUTTON ?
+	    butPtr->highlightBorder : butPtr->normalBorder, 0, 0,
+	    Tk_Width(tkwin), Tk_Height(tkwin), 0, TK_RELIEF_FLAT);
+
+    //SetupNSButton(butPtr);
+
+    if ((butPtr->image || butPtr->bitmap != None) && macButtonPtr->image) {
+	NSSize size = [macButtonPtr->image size];
+	int width = size.width, height = size.height;
+	Pixmap pixmap = Tk_GetPixmap(butPtr->display, (Pixmap) macWin,
+		width, height, butPtr->image ? 0 : 1);
+
+	if (butPtr->selectImage != NULL && (butPtr->flags & SELECTED)) {
+	    Tk_RedrawImage(butPtr->selectImage, 0, 0, width, height, pixmap, 0, 0);
+	} else if (butPtr->tristateImage != NULL && (butPtr->flags & TRISTATED)) {
+	    Tk_RedrawImage(butPtr->tristateImage, 0, 0, width, height, pixmap, 0,
+		    0);
+	} else if (butPtr->image != NULL) {
+	    Tk_RedrawImage(butPtr->image, 0, 0, width, height, pixmap, 0, 0);
+	} else {
+	    GC gc;
+	    if ((butPtr->state == STATE_DISABLED) && (butPtr->disabledFg != NULL)) {
+		gc = butPtr->disabledGC;
+	    } else if (butPtr->type == TYPE_BUTTON && butPtr->state == STATE_ACTIVE) {
+		gc = butPtr->activeTextGC;
+	    } else {
+		gc = butPtr->normalTextGC;
+	    }
+	    XSetClipOrigin(butPtr->display, gc, 0, 0);
+	    XCopyPlane(butPtr->display, butPtr->bitmap, pixmap, gc, 0, 0, width,
+		    height, 0, 0, 1);
+	}
+
+        CGImageRef cgImage = TkMacOSXCreateCGImageWithDrawable(pixmap);
+	NSBitmapImageRep *bitmapImageRep = [[NSBitmapImageRep alloc]
+		initWithCGImage:cgImage];
+	CFRelease(cgImage);
+	Tk_FreePixmap(butPtr->display, pixmap);
+        if (bitmapImageRep) {
+	    for (NSImageRep *rep in [macButtonPtr->image representations]) {
+		[macButtonPtr->image removeRepresentation:rep];
+	    }
+            [macButtonPtr->image addRepresentation:bitmapImageRep];
+        }
+    }
+
+    if (butPtr->flags & SELECTED) {
+	state = NSOnState;
+    } else if (butPtr->flags & TRISTATED) {
+	state = NSMixedState;
+    } else {
+	state = NSOffState;
+    }
+    [macButtonPtr->button setState:state];
+    enabled = !(butPtr->state == STATE_DISABLED);
+    [macButtonPtr->button setEnabled:enabled];
+    if (enabled) {
+	//[macButtonPtr->button highlight:(butPtr->state == STATE_ACTIVE)];
+	//[[macButtonPtr->button cell] setHighlighted:(butPtr->state == STATE_ACTIVE)];
+    }
+    if (butPtr->type == TYPE_BUTTON && butPtr->defaultState == STATE_ACTIVE &&
+	    !macButtonPtr->useBezel) {
+	//[[view window] setDefaultButtonCell:[macButtonPtr->button cell]];
+	[macButtonPtr->button setKeyEquivalent:@"\r"];
+    }
+
+    height = Tk_Height(tkwin) - 2*butPtr->inset - (macButtonPtr->useBezel ? 0 : NON_BEZEL_BOTTOM_INSET);
+    frame = NSMakeRect(winPtr->privatePtr->xOff + butPtr->inset,
+	    NSHeight([view bounds]) - height -
+	    (winPtr->privatePtr->yOff + butPtr->inset),
+	    Tk_Width(tkwin) - 2*butPtr->inset, height);
+    TKLog(@"frame %@ boundsheight %f buttonheight %d", NSStringFromRect(frame), NSHeight([view bounds]), height);
+    [macButtonPtr->button setFrame:frame];
+    [view addSubview:macButtonPtr->button];
+    [macButtonPtr->button displayRectIgnoringOpacity:[macButtonPtr->button bounds]];
+}
+
+static void
+SetupNSButton(
+    TkButton *butPtr)
+{
+    MacButton *macButtonPtr = (MacButton *) butPtr;
+    NSButtonType type;
+    NSBezelStyle style = 0;
+
+    macButtonPtr->useBezel = 0;
+    switch (butPtr->type) {
+	case TYPE_BUTTON:
+	    if (!(butPtr->image) && (butPtr->bitmap == None)) {
+		type = NSMomentaryLightButton;
+		style = NSRoundedBezelStyle;
+	    } else {
+		type = NSMomentaryPushInButton;
+		macButtonPtr->useBezel = 1;
+	    }
+	    break;
+	case TYPE_RADIO_BUTTON:
+	    if ((!(butPtr->image) && (butPtr->bitmap == None))
+		    || (butPtr->indicatorOn)) {
+		type = NSRadioButton;
+	    } else {
+		type = NSPushOnPushOffButton;
+		macButtonPtr->useBezel = 1;
+	    }
+	    break;
+	case TYPE_CHECK_BUTTON:
+	    if ((!(butPtr->image) && (butPtr->bitmap == None))
+		    || (butPtr->indicatorOn)) {
+		type = NSSwitchButton;
+	    } else {
+		type = NSPushOnPushOffButton;
+		macButtonPtr->useBezel = 1;
+	    }
+	    break;
+    }
+    if (macButtonPtr->useBezel) {
+	if (butPtr->borderWidth <= 2) {
+	    style = NSSmallSquareBezelStyle;
+	} else if (butPtr->borderWidth == 3) {
+	    style = NSRegularSquareBezelStyle;
+	} else {
+	    style = NSThickSquareBezelStyle;
+	}
+    }
+
+    [macButtonPtr->button setButtonType:type];
+    if (style) {
+	[macButtonPtr->button setBezelStyle:style];
+    }
+    [macButtonPtr->button setAllowsMixedState:YES];
+
+    if (((butPtr->image == NULL) && (butPtr->bitmap == None))
+	    || (butPtr->compound != COMPOUND_NONE)) {
+	/*char title[1024];
+	Tk_Font font;
+	int len;
+
+	len = TkFontGetFirstTextLayout(butPtr->textLayout,
+		&font, title);
+	if (len > 1024) {
+	    Tcl_Panic("overlong button title, buffer overflow!");
+	}
+	title[len] = 0;
+	[macButtonPtr->button setTitle:[[NSString alloc] initWithUTF8String:title]];*/
+	[macButtonPtr->button setTitle:[[NSString alloc] initWithUTF8String:Tcl_GetString(butPtr->textPtr)]];
+	NSTextAlignment alignment;
+	switch (butPtr->justify) {
+	case TK_JUSTIFY_LEFT:
+	    alignment = NSLeftTextAlignment;
+	    break;
+	case TK_JUSTIFY_RIGHT:
+	    alignment = NSRightTextAlignment;
+	    break;
+	case TK_JUSTIFY_CENTER:
+	    alignment = NSCenterTextAlignment;
+	    break;
+	}
+	[macButtonPtr->button setAlignment:alignment];
+	[[macButtonPtr->button cell] setWraps:(butPtr->wrapLength > 0)];
+
+    }
+    if (butPtr->image || butPtr->bitmap != None) {
+	int height, width;
+	if (butPtr->image) {
+	    Tk_SizeOfImage(butPtr->image, &width, &height);
+	} else {
+	    Tk_SizeOfBitmap(butPtr->display, butPtr->bitmap, &width, &height);
+	}
+	if ((butPtr->width > 0) && (butPtr->width < width)) {
+	    width = butPtr->width;
+	}
+	if ((butPtr->height > 0) && (butPtr->height < height)) {
+	    height = butPtr->height;
+	}
+	if (!macButtonPtr->image) {
+	    macButtonPtr->image = [[NSImage alloc] initWithSize:NSZeroSize];
+	    CFRetain(macButtonPtr->image);
+	} else {
+	    for (NSImageRep *rep in [macButtonPtr->image representations]) {
+		[macButtonPtr->image removeRepresentation:rep];
+	    }
+	}
+	[macButtonPtr->image setSize:NSMakeSize(width, height)];
+	[macButtonPtr->button setImage:macButtonPtr->image];
+	NSCellImagePosition pos;
+	switch ((enum compound) butPtr->compound) {
+	    case COMPOUND_TOP:
+		pos = NSImageAbove;
+		break;
+	    case COMPOUND_BOTTOM:
+		pos = NSImageBelow;
+		break;
+	    case COMPOUND_LEFT:
+		pos = NSImageLeft;
+		break;
+	    case COMPOUND_RIGHT:
+		pos = NSImageRight;
+		break;
+	    case COMPOUND_CENTER:
+		pos = NSImageOverlaps;
+		break;
+	    case COMPOUND_NONE:
+		pos = NSImageOnly;
+		break;
+	}
+	[macButtonPtr->button setImagePosition:pos];
+    }
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkpComputeButtonGeometry --
+ *
+ *	After changes in a button's text or bitmap, this procedure
+ *	recomputes the button's geometry and passes this information
+ *	along to the geometry manager for the window.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	The button's window may change size.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TkpComputeButtonGeometry(
+    TkButton *butPtr)		/* Button whose geometry may have changed. */
+{
+    MacButton *macButtonPtr = (MacButton *) butPtr;
+    NSRect bounds;
+    int xInset, yInset;
+
+    if (((butPtr->image == NULL) && (butPtr->bitmap == None))
+	    || (butPtr->compound != COMPOUND_NONE)) {
+	Tk_FreeTextLayout(butPtr->textLayout);
+	butPtr->textLayout = Tk_ComputeTextLayout(butPtr->tkfont,
+		Tcl_GetString(butPtr->textPtr), -1, butPtr->wrapLength,
+		butPtr->justify, 0, &butPtr->textWidth, &butPtr->textHeight);
+    }
+
+    SetupNSButton(butPtr);
+
+    if (butPtr->highlightWidth < 0) {
+	butPtr->highlightWidth = 0;
+    }
+    butPtr->inset = macButtonPtr->useBezel ? butPtr->highlightWidth + butPtr->borderWidth : NON_BEZEL_INSET;
+    butPtr->indicatorSpace = 0;
+
+    [macButtonPtr->button sizeToFit];
+    bounds = [macButtonPtr->button bounds];
+
+    xInset = 2*butPtr->inset + butPtr->indicatorSpace;
+    yInset = 2*butPtr->inset + (macButtonPtr->useBezel ? 0 : NON_BEZEL_BOTTOM_INSET);
+    if ((butPtr->image == NULL) && (butPtr->bitmap == None)) {
+	xInset += 2*butPtr->padX;
+	yInset += 2*butPtr->padY;
+    }
+    TKLog(@"bounds %@ xInset %d yInset %d", NSStringFromRect(bounds), xInset, yInset);
+    Tk_GeometryRequest(butPtr->tkwin, NSWidth(bounds) + xInset,
+	    NSHeight(bounds) + yInset);
+    Tk_SetInternalBorder(butPtr->tkwin, butPtr->inset);
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkpDestroyButton --
+ *
+ *	Free data structures associated with the button control.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	Restores the default control state.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TkpDestroyButton(
+    TkButton *butPtr)
+{
+    MacButton *macButtonPtr = (MacButton *) butPtr;
+
+    if (macButtonPtr->button) {
+	CFRelease(macButtonPtr->button);
+    }
+    if (macButtonPtr->image) {
+	CFRelease(macButtonPtr->image);
+    }
+}
+
+#else
+
 #define DEFAULT_USE_TK_TEXT 0
 
 #define CONTROL_INITIALIZED 1
@@ -1593,3 +1985,5 @@ TkMacOSXComputeDrawParams(
 	return 0;
     }
 }
+
+#endif
