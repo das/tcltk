@@ -237,14 +237,14 @@ FindCursorByName(
 	    image = [NSImage imageNamed:cursorNames[idx].id];
 	    break;
 	case IMAGEPATH: {
-	    NSString *path = [[NSBundle
-		    bundleWithIdentifier:@"com.tcltk.tklibrary"]
+	    NSString *path = [[NSApp tkFrameworkBundle]
 		    pathForImageResource:cursorNames[idx].id];
 	    if (!path) {
 	    	// FIXME: fallback to absolute path specific to my box
 		path = [NSString stringWithFormat:
-			@"/Users/steffen/Development/TclTk/git/HEAD/tk/win/rc/%@",
+			@"/Volumes/Users/steffen/Development/TclTk/git/HEAD/tk/win/rc/%@",
 			cursorNames[idx].id];
+		TkMacOSXDbgMsg("Fallback to hardcoded path!");
 	    }
 	    image = [[NSImage alloc] initWithContentsOfFile:path];
 	    break;

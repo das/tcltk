@@ -247,7 +247,8 @@ VISIBILITY_HIDDEN
 @private
 }
 @end
-@interface TKApplication(TKApplicationPrivate)
+@interface TKApplication(TKInit)
+- (NSBundle *)tkFrameworkBundle;
 @end
 @interface TKApplication(TKEvent)
 - (NSEvent *)tkProcessEvent:(NSEvent *)theEvent;

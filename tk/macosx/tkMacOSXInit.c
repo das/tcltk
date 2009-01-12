@@ -69,6 +69,7 @@ static Map scriptMap[] = {
     {0,			NULL}
 };
 
+static char tkLibPath[PATH_MAX + 1] = "";
 Tcl_Encoding TkMacOSXCarbonEncoding = NULL;
 
 /*
@@ -102,8 +103,13 @@ static char scriptPath[PATH_MAX + 1] = "";
     [self _setupEventLoop];
     [self setWindowsNeedUpdate:YES];
 }
-- (void)postedNotification:(NSNotification *)notification {
-    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+- (NSBundle *)tkFrameworkBundle {
+    if (tkLibPath[0] != '\0') {
+	return [NSBundle bundleWithPath:[NSString stringWithFormat:@"%s/../..",
+		tkLibPath]];
+    } else {
+	return nil;
+    }
 }
 @end
 
@@ -130,7 +136,6 @@ int
 TkpInit(
     Tcl_Interp *interp)
 {
-    static char tkLibPath[PATH_MAX + 1];
     static int initialized = 0;
 
     Tk_MacOSXSetupTkNotifier();
@@ -179,7 +184,9 @@ TkpInit(
 #ifdef TK_FRAMEWORK
 	if (Tcl_MacOSXOpenVersionedBundleResources(interp,
 		"com.tcltk.tklibrary", TK_FRAMEWORK_VERSION, 0, PATH_MAX,
-		tkLibPath) != TCL_OK)
+		tkLibPath) != TCL_OK) {
+	    TkMacOSXDbgMsg("Tcl_MacOSXOpenVersionedBundleResources failed");
+	}
 #endif
 
 	/*
