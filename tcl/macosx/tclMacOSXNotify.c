@@ -554,6 +554,39 @@ Tcl_InitNotifier(void)
 /*
  *----------------------------------------------------------------------
  *
+ * TclMacOSXNotifierAddRunLoopMode --
+ *
+ *	Add the tcl notifier RunLoop source, observer and timer (if any)
+ *	to the given RunLoop mode.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TclMacOSXNotifierAddRunLoopMode(
+    const void *runLoopMode)
+{
+    ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
+    CFStringRef mode = (CFStringRef) runLoopMode;
+
+    if (tsdPtr->runLoop) {
+	CFRunLoopAddSource(tsdPtr->runLoop, tsdPtr->runLoopSource, mode);
+	CFRunLoopAddObserver(tsdPtr->runLoop, tsdPtr->runLoopObserver, mode);
+	if (tsdPtr->runLoopTimer) {
+	    CFRunLoopAddTimer(tsdPtr->runLoop, tsdPtr->runLoopTimer, mode);
+	}
+    }
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
  * StartNotifierThread --
  *
  *	Start notifier thread if necessary.
