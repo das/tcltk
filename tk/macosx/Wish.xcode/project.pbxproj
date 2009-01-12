@@ -10,9 +10,6 @@
 		F9067BCD0BFBA2900074F726 /* tkOldTest.c in Sources */ = {isa = PBXBuildFile; fileRef = F966BAFE08F27A39005CB29B /* tkOldTest.c */; };
 		F9152B090EAF8A5000CD5C7B /* tkBusy.c in Sources */ = {isa = PBXBuildFile; fileRef = F9152B080EAF8A5000CD5C7B /* tkBusy.c */; };
 		F9152B0A0EAF8A5700CD5C7B /* tkBusy.c in Sources */ = {isa = PBXBuildFile; fileRef = F9152B080EAF8A5000CD5C7B /* tkBusy.c */; };
-		F921D2DA0E9464B4002E03FA /* TKApplicationPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = F921D2D90E9464B4002E03FA /* TKApplicationPrivate.m */; };
-		F921D5C30E94FA16002E03FA /* TKContentViewPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = F921D5C20E94FA16002E03FA /* TKContentViewPrivate.m */; };
-		F921D5C50E94FA1E002E03FA /* TKContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = F921D5C40E94FA1E002E03FA /* TKContentView.m */; };
 		F92EE8BF0E62F846001A6E80 /* tkImgPhInstance.c in Sources */ = {isa = PBXBuildFile; fileRef = F92EE8BE0E62F846001A6E80 /* tkImgPhInstance.c */; };
 		F92EE8D30E62F939001A6E80 /* tkImgPhInstance.c in Sources */ = {isa = PBXBuildFile; fileRef = F92EE8BE0E62F846001A6E80 /* tkImgPhInstance.c */; };
 		F93599B30DF1F75400E04F67 /* tclOO.c in Sources */ = {isa = PBXBuildFile; fileRef = F93599B20DF1F75400E04F67 /* tclOO.c */; };
@@ -643,9 +640,6 @@
 		F91DC23C0E44C51B002CB8D1 /* nre.test */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = nre.test; sourceTree = "<group>"; };
 		F91DC23D0E44C530002CB8D1 /* unsupported.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = unsupported.test; sourceTree = "<group>"; };
 		F91E62260C1AE686006C9D96 /* Tclsh-Info.plist.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Tclsh-Info.plist.in"; sourceTree = "<group>"; };
-		F921D2D90E9464B4002E03FA /* TKApplicationPrivate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKApplicationPrivate.m; sourceTree = "<group>"; };
-		F921D5C20E94FA16002E03FA /* TKContentViewPrivate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKContentViewPrivate.m; sourceTree = "<group>"; };
-		F921D5C40E94FA1E002E03FA /* TKContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKContentView.m; sourceTree = "<group>"; };
 		F92240290D7C620F005EC715 /* knightstour.tcl */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = knightstour.tcl; sourceTree = "<group>"; };
 		F92D7F100DE777240033A13A /* tsdPerf.tcl */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = tsdPerf.tcl; sourceTree = "<group>"; };
 		F92D7F140DE777670033A13A /* tsdPerf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tsdPerf.c; sourceTree = "<group>"; };
@@ -2639,9 +2633,6 @@
 		F966BB9708F27A3B005CB29B /* macosx */ = {
 			isa = PBXGroup;
 			children = (
-				F921D5C40E94FA1E002E03FA /* TKContentView.m */,
-				F921D5C20E94FA16002E03FA /* TKContentViewPrivate.m */,
-				F921D2D90E9464B4002E03FA /* TKApplicationPrivate.m */,
 				F966BBBA08F27A3B005CB29B /* configure.ac */,
 				F966BBBB08F27A3B005CB29B /* GNUmakefile */,
 				F966BBBE08F27A3B005CB29B /* README */,
@@ -4532,9 +4523,6 @@
 				F966C02C08F27A42005CB29B /* xgc.c in Sources */,
 				F966C02D08F27A42005CB29B /* ximage.c in Sources */,
 				F966C02E08F27A42005CB29B /* xutil.c in Sources */,
-				F921D2DA0E9464B4002E03FA /* TKApplicationPrivate.m in Sources */,
-				F921D5C30E94FA16002E03FA /* TKContentViewPrivate.m in Sources */,
-				F921D5C50E94FA1E002E03FA /* TKContentView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

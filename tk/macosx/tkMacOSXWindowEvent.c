@@ -243,7 +243,7 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
 }
 
 #define observe(n, s) [nc addObserver:self selector:@selector(s) name:n object:nil]
-- (void)setupWindowNotifications {
+- (void)tkSetupWindowNotifications {
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     observe(NSWindowDidBecomeKeyNotification, windowActivation:);
     observe(NSWindowDidResignKeyNotification, windowActivation:);
@@ -257,7 +257,7 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
     observe(NSWindowWillOrderOnScreenNotification, windowMapped:);
     observe(NSWindowDidOrderOffScreenNotification, windowUnmapped:);
 }
-- (void)setupApplicationNotifications {
+- (void)tkSetupApplicationNotifications {
 }
 #undef observe(n, s)
 @end
@@ -673,44 +673,6 @@ GenerateUpdateEvent(
  }
  #endif
 
-int
-TkMacOSXGenerateExposeEvents(
-	NSWindow *window,
-	HIMutableShapeRef shape)
-{
-    WindowRef macWindow = [window windowRef];
-    Window xwindow = TkMacOSXGetXWindow(macWindow);
-    TkDisplay *dispPtr;
-    TkWindow  *winPtr;
-    int result = 0;
-    CGRect updateBounds;
-
-    dispPtr = TkGetDisplayList();
-    winPtr = (TkWindow *)Tk_IdToWindow(dispPtr->display, xwindow);
-
-    if (!winPtr) {
-	return result;
-    }
-    HIShapeGetBounds(shape, &updateBounds);
-#ifdef TK_MAC_DEBUG_CLIP_REGIONS
-    TkMacOSXDebugFlashRegion(window, shape);
-#endif /* TK_MAC_DEBUG_CLIP_REGIONS */
-    if (winPtr->wmInfoPtr->flags & WM_TRANSPARENT) {
-	ClearPort(TkMacOSXGetDrawablePort(xwindow), shape);
-    }
-    result = GenerateUpdates(shape, &updateBounds, winPtr);
-    if (result) {
-	/*
-	 * Ensure there are no pending idle-time redraws that could prevent
-	 * the just posted Expose events from generating new redraws.
-	 */
-
-	Tcl_DoOneEvent(TCL_IDLE_EVENTS|TCL_DONT_WAIT);
-    }
-    return result;
-
- }
-
 /*
  *----------------------------------------------------------------------
  *
@@ -777,6 +739,7 @@ GenerateUpdates(
     event.xexpose.height = damageBounds.size.height;
     event.xexpose.count = 0;
     Tk_QueueWindowEvent(&event, TCL_QUEUE_TAIL);
+    TKLog(@"Expose %p {{%d, %d}, {%d, %d}}", event.xany.window, event.xexpose.x, event.xexpose.y, event.xexpose.width, event.xexpose.height);
 
     /*
      * Generate updates for the children of this window
@@ -1205,6 +1168,199 @@ ClearPort(
     QDEndCGContext(port, &context);
 }
 
+#pragma mark TKContentView
+
+#import <ApplicationServices/ApplicationServices.h>
+
+#ifndef __OBJC_GC__
+#error OBJC_GC required
+#endif
+
+/*
+ * Custom content view for Tk NSWindows, containing standard NSView subviews.
+ * The goal is to emulate X11-style drawing in response to Expose events:
+ * during the normal AppKit drawing cycle, we supress drawing of all subviews
+ * (using a technique adapted from WebKit's WebHTMLView) and instead send
+ * Expose events about the subviews that would be redrawn.
+ * Our Expose event handling then draws the subviews manually via their
+ * -displayRectIgnoringOpacity:. Window flushing is suspended until all Expose
+ * events for a given draw have been handled.
+ */
+
+@implementation TKContentView
+
+- (void)drawRect:(NSRect)rect {
+    TKLog(@"-[%@(%p) %s]", [self class], self, _cmd);
+
+    const NSRect *rectsBeingDrawn;
+    NSInteger rectsBeingDrawnCount;
+
+    [self getRectsBeingDrawn:&rectsBeingDrawn count:&rectsBeingDrawnCount];
+    //[[NSColor whiteColor] setFill];
+    //NSRectFillList(rectsBeingDrawn, rectsBeingDrawnCount);
+
+    HIMutableShapeRef drawShape = HIShapeCreateMutable();
+    while (rectsBeingDrawnCount--) {
+	CGRect r = NSRectToCGRect(*rectsBeingDrawn++);
+	HIShapeUnionWithRect(drawShape, &r);
+    }
+    if (CFRunLoopGetMain() == CFRunLoopGetCurrent()) {
+	[self generateExposeEvents:drawShape];
+	/*if ([self inLiveResize]) {
+	    while (Tcl_ServiceEvent(TCL_WINDOW_EVENTS)) {}
+	}*/
+    } else {
+	[self performSelectorOnMainThread:@selector(generateExposeEvents:)
+		withObject:(id)drawShape waitUntilDone:NO
+		modes:[NSArray arrayWithObjects:NSRunLoopCommonModes,
+			NSEventTrackingRunLoopMode, nil]];
+    }
+    CFRelease(drawShape);
+}
+
+- (void)generateExposeEvents:(HIMutableShapeRef)shape {
+    NSWindow *w = [self window];
+    TkWindow *winPtr = TkMacOSXGetTkWindow(w);
+    CGRect updateBounds;
+
+    if (!winPtr) {
+	return;
+    }
+    HIShapeGetBounds(shape, &updateBounds);
+    if (winPtr->wmInfoPtr->flags & WM_TRANSPARENT) {
+	ClearPort(TkMacOSXGetDrawablePort(winPtr->window), shape);
+    }
+    if (GenerateUpdates(shape, &updateBounds, winPtr)) {
+	/*
+	 * Ensure there are no pending idle-time redraws that could prevent
+	 * the just posted Expose events from generating new redraws.
+	 */
+
+	Tcl_DoOneEvent(TCL_IDLE_EVENTS|TCL_DONT_WAIT);
+    }
+}
+
+- (BOOL)isOpaque {
+    return YES;
+}
+
+- (BOOL)wantsDefaultClipping {
+    return NO;
+}
+
+@end
+
+#pragma mark TKContentViewPrivate
+
+/*
+ * Technique adapted from WebKit/WebKit/mac/WebView/WebHTMLView.mm to supress
+ * normal AppKit subview drawing and make all drawing go through us.
+ * Overrides NSView internals.
+ */
+
+@interface TKContentView(TKContentViewPrivate)
+- (id)initWithFrame:(NSRect)frame;
+- (void)_setAsideSubviews;
+- (void)_restoreSubviews;
+@end
+
+@interface NSView(TKContentViewPrivate)
+- (void)_recursiveDisplayRectIfNeededIgnoringOpacity:(NSRect)rect isVisibleRect:(BOOL)isVisibleRect rectIsVisibleRectForView:(NSView *)visibleView topView:(BOOL)topView;
+- (void)_recursiveDisplayAllDirtyWithLockFocus:(BOOL)needsLockFocus visRect:(NSRect)visRect;
+- (void)_recursive:(BOOL)recurse displayRectIgnoringOpacity:(NSRect)displayRect inContext:(NSGraphicsContext *)context topView:(BOOL)topView;
+- (void)_lightWeightRecursiveDisplayInRect:(NSRect)visRect;
+- (void)_drawRect:(NSRect)inRect clip:(BOOL)clip;
+- (void)_setDrawsOwnDescendants:(BOOL)drawsOwnDescendants;
+@end
+
+
+@implementation TKContentView(TKContentViewPrivate)
+
+- (id)initWithFrame:(NSRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+	_savedSubviews = nil;
+	_subviewsSetAside = NO;
+	[self _setDrawsOwnDescendants:YES];
+    }
+    return self;
+}
+
+- (void)_setAsideSubviews
+{
+#ifdef TK_MAC_DEBUG
+    if (_subviewsSetAside || _savedSubviews) {
+	Tcl_Panic("TKContentView _setAsideSubviews called incorrectly");
+    }
+#endif
+    _savedSubviews = _subviews;
+    _subviews = nil;
+    _subviewsSetAside = YES;
+ }
+
+ - (void)_restoreSubviews
+ {
+#ifdef TK_MAC_DEBUG
+    if (!_subviewsSetAside || _subviews) {
+	Tcl_Panic("TKContentView _restoreSubviews called incorrectly");
+    }
+#endif
+    _subviews = _savedSubviews;
+    _savedSubviews = nil;
+    _subviewsSetAside = NO;
+}
+
+- (void)_recursiveDisplayRectIfNeededIgnoringOpacity:(NSRect)rect isVisibleRect:(BOOL)isVisibleRect rectIsVisibleRectForView:(NSView *)visibleView topView:(BOOL)topView
+{
+    [self _setAsideSubviews];
+    [super _recursiveDisplayRectIfNeededIgnoringOpacity:rect isVisibleRect:isVisibleRect rectIsVisibleRectForView:visibleView topView:topView];
+    [self _restoreSubviews];
+}
+
+- (void)_recursiveDisplayAllDirtyWithLockFocus:(BOOL)needsLockFocus visRect:(NSRect)visRect
+{
+    BOOL needToSetAsideSubviews = !_subviewsSetAside;
+    if (needToSetAsideSubviews) {
+        [self _setAsideSubviews];
+    }
+    [super _recursiveDisplayAllDirtyWithLockFocus:needsLockFocus visRect:visRect];
+    if (needToSetAsideSubviews) {
+        [self _restoreSubviews];
+    }
+}
+
+- (void)_recursive:(BOOL)recurse displayRectIgnoringOpacity:(NSRect)displayRect inContext:(NSGraphicsContext *)context topView:(BOOL)topView
+{
+    [self _setAsideSubviews];
+    [super _recursive:recurse displayRectIgnoringOpacity:displayRect inContext:context topView:topView];
+    [self _restoreSubviews];
+}
+
+- (void)_lightWeightRecursiveDisplayInRect:(NSRect)visRect {
+    BOOL needToSetAsideSubviews = !_subviewsSetAside;
+    if (needToSetAsideSubviews) {
+        [self _setAsideSubviews];
+    }
+    [super _lightWeightRecursiveDisplayInRect:visRect];
+    if (needToSetAsideSubviews) {
+        [self _restoreSubviews];
+    }
+}
+
+- (void)_drawRect:(NSRect)inRect clip:(BOOL)clip {
+    BOOL subviewsWereSetAside = _subviewsSetAside;
+    if (subviewsWereSetAside) {
+        [self _restoreSubviews];
+    }
+    [super _drawRect:inRect clip:clip];
+    if (subviewsWereSetAside) {
+        [self _setAsideSubviews];
+    }
+}
+
+@end
+
+
 /*
  * Local Variables:
  * fill-column: 78

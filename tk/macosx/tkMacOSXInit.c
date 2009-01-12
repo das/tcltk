@@ -78,22 +78,28 @@ Tcl_Encoding TkMacOSXCarbonEncoding = NULL;
 
 static char scriptPath[PATH_MAX + 1] = "";
 
-@interface TKApplication(Init)
-- (void)setup;
-- (void)postedNotification:(NSNotification *)notification;
-@end
-
 @implementation TKApplication
 @end
 
-@implementation TKApplication(Init)
-- (void)setup {
+@implementation TKApplication(TKInit)
+- (void)_postedNotification:(NSNotification *)notification {
+    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+}
+- (void)_setupEventLoop {
+    _running = 1;
+    if (!_appFlags._hasBeenRun) {
+        _appFlags._hasBeenRun = YES;
+	[self finishLaunching];
+	objc_collect(OBJC_COLLECT_IF_NEEDED);
+    }
+}
+- (void)_setup {
     [self setDelegate:self];
     [[NSNotificationCenter defaultCenter] addObserver:self
-	    selector:@selector(postedNotification:) name:nil object:nil];
-    [self setupApplicationNotifications];
-    [self setupWindowNotifications];
-    [self setupEventLoop];
+	    selector:@selector(_postedNotification:) name:nil object:nil];
+    [self tkSetupApplicationNotifications];
+    [self tkSetupWindowNotifications];
+    [self _setupEventLoop];
     [self setWindowsNeedUpdate:YES];
 }
 - (void)postedNotification:(NSNotification *)notification {
@@ -232,7 +238,7 @@ TkpInit(
 	static NSAutoreleasePool *pool = nil;
 	if (!pool) {pool = [NSAutoreleasePool new];}
 	[TKApplication sharedApplication];
-	[NSApp setup];
+	[NSApp _setup];
 	[pool drain];
 	
 	//NSApplicationLoad();

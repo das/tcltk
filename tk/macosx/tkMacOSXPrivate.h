@@ -248,9 +248,6 @@ VISIBILITY_HIDDEN
 }
 @end
 @interface TKApplication(TKApplicationPrivate)
-- (void)setupEventLoop;
-- (void)afterEvent;
-- (void)eventLoopException:(NSException *)theException;
 @end
 @interface TKApplication(TKEvent)
 - (NSEvent *)tkProcessEvent:(NSEvent *)theEvent;
@@ -262,28 +259,21 @@ VISIBILITY_HIDDEN
 - (NSEvent *)tkProcessKeyEvent:(NSEvent *)theEvent;
 @end
 @interface TKApplication(TKWindowEvent)
-- (void)setupApplicationNotifications;
-- (void)setupWindowNotifications;
+- (void)tkSetupApplicationNotifications;
+- (void)tkSetupWindowNotifications;
 @end
 
 VISIBILITY_HIDDEN
 @interface TKContentView : NSView {
 @private
-    NSArray *emtpySubviews, *savedSubviews;
-    NSInteger lockFocusLevel;
+    id _savedSubviews;
+    BOOL _subviewsSetAside;
 }
 
-- (id)initWithFrame:(NSRect)frame;
-- (BOOL)lockFocusIfCanDraw;
-- (void)unlockFocus;
 - (void)drawRect:(NSRect)rect;
+- (void)generateExposeEvents:(HIMutableShapeRef)shape;
 - (BOOL)isOpaque;
-- (BOOL)isFlipped;
 - (BOOL)wantsDefaultClipping;
-- (BOOL)preservesContentDuringLiveResize;
-- (void)setFrameSize:(NSSize)newSize;
-- (void)viewWillDraw;
-- (void)reenableFlush;
 
 @end
 
