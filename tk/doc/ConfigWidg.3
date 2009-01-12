@@ -105,10 +105,10 @@ option and has the following structure:
 .CS
 typedef struct {
     int \fItype\fR;
-    char *\fIargvName\fR;
-    char *\fIdbName\fR;
-    char *\fIdbClass\fR;
-    char *\fIdefValue\fR;
+    const char *\fIargvName\fR;
+    const char *\fIdbName\fR;
+    const char *\fIdbClass\fR;
+    const char *\fIdefValue\fR;
     int \fIoffset\fR;
     int \fIspecFlags\fR;
     const Tk_CustomOption *\fIcustomPtr\fR;

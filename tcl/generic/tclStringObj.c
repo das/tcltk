@@ -106,11 +106,14 @@ typedef struct String {
 } String;
 
 #define STRING_UALLOC(numChars)	\
-	(numChars * sizeof(Tcl_UniChar))
+	((numChars) * sizeof(Tcl_UniChar))
 #define STRING_SIZE(ualloc) \
-	((unsigned) ((ualloc) \
-                 ? sizeof(String) - sizeof(Tcl_UniChar) + (ualloc) \
-                 : sizeof(String)))
+    ((unsigned) ((ualloc) \
+	? ((sizeof(String) - sizeof(Tcl_UniChar) + (ualloc) > INT_MAX) \
+	    ? Tcl_Panic("unable to alloc %u bytes", \
+	       sizeof(String) - sizeof(Tcl_UniChar) + (ualloc)), INT_MAX \
+	    : (sizeof(String) - sizeof(Tcl_UniChar) + (ualloc))) \
+	: sizeof(String)))
 #define GET_STRING(objPtr) \
 	((String *) (objPtr)->internalRep.otherValuePtr)
 #define SET_STRING(objPtr, stringPtr) \

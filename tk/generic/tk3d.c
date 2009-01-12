@@ -1360,7 +1360,7 @@ Tcl_Obj *
 TkDebugBorder(
     Tk_Window tkwin,		/* The window in which the border will be used
 				 * (not currently used). */
-    char *name)			/* Name of the desired color. */
+    const char *name)		/* Name of the desired color. */
 {
     Tcl_HashEntry *hashPtr;
     Tcl_Obj *resultPtr;

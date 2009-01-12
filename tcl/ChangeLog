@@ -1,3 +1,68 @@
+2009-01-09  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclStringObj.c (STRING_SIZE): Corrected failure to limit
+	memory allocation requests to the sizes that can be supported by
+	Tcl's memory allocation routines.  [Bug 2494093].
+
+2009-01-09  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tclNamesp.c (NamespaceEnsembleCmd): Error out when someone
+	gives wrong # of args to [namespace ensemble create]. [Bug 1558654]
+
+2009-01-08  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclStringObj.c (STRING_UALLOC):  Added missing parens
+	required to get correct results out of things like
+	STRING_UALLOC(num + append).  [Bug 2494093].
+
+2009-01-08  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tclDictObj.c, generic/tclIndexObj.c, generic/tclListObj.c,
+	* generic/tclObj.c, generic/tclStrToD.c, generic/tclUtil.c,
+	* generic/tclVar.c: Generate errorcodes for the error cases which
+	approximate to "I can't interpret that string as one of those" and
+	"You gave me the wrong number of arguments".
+
+2009-01-07  Donal K. Fellows  <dkf@users.sf.net>
+
+	* doc/dict.n: Added more examples. [Tk Bug 2491235]
+
+	* tests/oo.test (oo-22.1): Adjusted test to be less dependent on the
+	specifics of how [info frame] reports general frame information, and
+	instead to focus on what methods add to it; that's really what the
+	test is about anyway.
+
+2009-01-06  Don Porter	<dgp@users.sourceforge.net>
+
+	* tests/stringObj.test:	Revise tests that demand a NULL Tcl_ObjType
+	in certain values to construct those values with [testdstring] so
+	there's no lack of robustness depending on the shimmer history of
+	shared literals.
+
+2009-01-06  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tclDictObj.c (DictIncrCmd): Corrected twiddling in internals
+	of dictionaries so that literals can't get destroyed.
+
+	* tests/expr.test: Eliminate non-ASCII char. [Bug 2006879]
+
+	* generic/tclOOInfo.c (InfoObjectMethodsCmd,InfoClassMethodsCmd): Only
+	delete pointers that were actually allocated! [Bug 2489836]
+
+	* generic/tclOO.c (TclNRNewObjectInstance, Tcl_NewObjectInstance):
+	Perform search for existing commands in right context. [Bug 2481109]
+
+2009-01-05  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tclCmdMZ.c (TclNRSourceObjCmd): Make implementation of the
+	* generic/tclIOUtil.c (TclNREvalFile):    [source] command be NRE
+	enabled so that [yield] inside a script sourced in a coroutine can
+	work. [Bug 2412068]
+
+2009-01-04  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tclCmdAH.c: Tidy up spacing and code style.
+
 2009-01-03  Kevin B. Kenny <kennykb@acm.org>:
 
 	* library/clock.tcl (tcl::clock::add): Fixed error message formatting
