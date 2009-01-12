@@ -1,3 +1,75 @@
+2009-01-11  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* tests/bind.test: Fixed keysym bind tests for unix [Bug 2336454]
+
+2009-01-11  George Peter Staplin <georgeps@users.sourceforge.net>
+
+	* generic/tkEvent.c: Fix a possible segv due to a NULL
+	pointer dereference that occurs when XCreateIC fails.
+
+2009-01-11  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* library/bgerror.tcl: Pretty up the unix tk_messageBox
+	* library/icons.tcl:   icons with PNG images and grouped
+	* library/msgbox.tcl:  all the stock icons in one file.
+	* library/tk.tcl:
+
+2009-01-11  Joe English  <jenglish@users.sourceforge.net>
+
+	* generic/ttk/ttkNotebook.c(NotebookCleanup):
+	Don't call Tk_DeleteOptionTable(), it's unnecessary 
+	and quite possibly harmful [Bug 2496162].
+
+2009-01-08  Jan Nijtmans  <nijtmans@users.sf.net>
+
+	* generic/tk3d.c:     CONSTify TkDebugBorder
+	* generic/tkBind.c:   CONSTify TkStringToKeysym
+	* generic/tkBitmap.c: CONSTify TkDebugBitmap
+	* generic/tkColor.c:  CONSTify TkDebugColor
+	* generic/tkCursor.c: CONSTify TkDebugCursor
+	* generic/tkFont.c:   CONSTify TkDebugFont
+	* generic/tkInt.decls All those mods TIP #27 complient,
+	                      no incompatibility risks.
+	* generic/tkIntDecls.h (regenerated)
+
+2009-01-08  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* library/bgerror.tcl: Theme the bgerror dialog and make use of
+	our PNG support to improve the icon.
+
+2009-01-07  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* library/tkfbox.tcl: [Bug 2473120] mis-ordered messagebox args.
+
+	* win/tkWinWm.c: prevent grabs being bypassed on Windows [Bug 1847002]
+
+2009-01-06  Jan Nijtmans  <nijtmans@users.sf.net>
+
+	* generic/tk.h:          A few const -> CONST86 modifications, improving
+	* generic/tkCanvas.c:    backwards compatibility. Change Tk_ItemIndexProc
+	* generic/tkCanvLine.c:  and Tk_ItemInsertProc signature to have a Tcl_Obj parameter
+	* generic/tkCanvPoly.c:  in stead of a string parameter. This is binary
+	* generic/tkCanvText.c:  and source compatible with previous API, it just prevents
+	* doc/CrtItemType.3:     the need for a type cast in the Tk_ItemType table construction.
+	* doc/Clipboard.3:       Bring doc in line with API
+	* doc/ConfigWidg.3:
+	* doc/ParseArgv.3:
+
+2009-01-06  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tkImgPhoto.c (Tk_PhotoPutBlock): Optimize a common case for
+	photo image building. [Patch 1539990] (jepler)
+
+2009-01-06  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* win/tkWinDialog.c: Use task modal for messagebox instead of system
+	modal. [Bug 2484771] (ferrieux,thoyts,mjanssen)
+
+2009-01-03  Donal K. Fellows  <dkf@users.sf.net>
+
+	* doc/canvas.n: Improve the documentation of the -offset and
+	-outlineoffset item options. [Bug 1836621]
+
 2009-01-03  Jan Nijtmans  <nijtmans@users.sf.net>
 
 	* generic/tk.decls:       CONSTify Tk_ClipboardAppend
@@ -6,17 +78,16 @@
 
 2008-12-31  David Gravereaux <davygrvy@pobox.com>
 
-	* win/rules.vc: small bug not setting SYMBOLS macro fixed.
+	* win/rules.vc: Small bug not setting SYMBOLS macro fixed.
 
 2008-12-31  Joe English  <jenglish@users.sourceforge.net>
 
-	* generic/ttk/ttkDefaultTheme.c: Fix color palette for
-	radiobutton and checkbutton indicators.  Fixes [Bug 2003310];
-	also makes "alt" theme check/radiobuttons look like Windows 98,
-	as intended.
-	* library/ttk/altTheme.tcl: Specify dark gray -bordercolor
-	to soften edges.
-	* tests/ttk/{checkbutton,radiobutton}.test: split out of ttk.test.
+	* generic/ttk/ttkDefaultTheme.c: Fix color palette for radiobutton and
+	checkbutton indicators. Fixes [Bug 2003310]; also makes "alt" theme
+	check/radiobuttons look like Windows 98, as intended.
+	* library/ttk/altTheme.tcl: Specify dark gray -bordercolor to soften
+	edges.
+	* tests/ttk/{checkbutton,radiobutton}.test: Split out of ttk.test.
 
 2008-12-28  Donal K. Fellows  <dkf@users.sf.net>
 
@@ -104,7 +175,7 @@
 
 2008-12-12  Pat Thoyts  <patthoyts@users.sourceforge.net>
 
-	* library/demos/fontchoose.tcl: Simple fontchooser demo
+	* library/demos/fontchoose.tcl: Simple fontchooser demo.
 	* library/demos/widget:
 
 2008-12-11  Jan Nijtmans  <nijtmans@users.sf.net>
