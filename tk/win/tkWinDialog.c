@@ -2151,6 +2151,9 @@ Tk_MessageBoxObjCmd(
 	}
     }
 
+    while (!Tk_IsTopLevel(parent)) {
+	parent = Tk_Parent(parent);
+    }
     Tk_MakeWindowExist(parent);
     hWnd = Tk_GetHWND(Tk_WindowId(parent));
 
@@ -2180,7 +2183,7 @@ Tk_MessageBoxObjCmd(
 	flags = buttonFlagMap[defaultBtnIdx];
     }
 
-    flags |= icon | type | MB_SYSTEMMODAL;
+    flags |= icon | type | MB_TASKMODAL | MB_SETFOREGROUND;
 
     tmpObj = messageObj ? Tcl_DuplicateObj(messageObj)
 	    : Tcl_NewUnicodeObj(NULL, 0);
