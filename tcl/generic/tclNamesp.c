@@ -3332,10 +3332,10 @@ NamespaceEvalCmd(
 	 * TIP #280: Make actual argument location available to eval'd script.
 	 */
 
-	objPtr  = objv[3];
+	objPtr = objv[3];
 	invoker = iPtr->cmdFramePtr;
-	word    = 3;
-	TclArgumentGet (interp, objPtr, &invoker, &word);
+	word = 3;
+	TclArgumentGet(interp, objPtr, &invoker, &word);
     } else {
 	/*
 	 * More than one argument: concatenate them together with spaces
@@ -3343,9 +3343,9 @@ NamespaceEvalCmd(
 	 * object when it decrements its refcount after eval'ing it.
 	 */
 
-	objPtr  = Tcl_ConcatObj(objc-3, objv+3);
+	objPtr = Tcl_ConcatObj(objc-3, objv+3);
 	invoker = NULL;
-	word    = 0;
+	word = 0;
     }
 
     /*
@@ -4861,6 +4861,14 @@ NamespaceEnsembleCmd(
 	Tcl_Obj *unknownObj = NULL;
 	Tcl_Obj *paramObj = NULL;
 
+	/*
+	 * Check that we've got option-value pairs... [Bug 1558654]
+	 */
+
+	if ((objc & 1) == 0) {
+	    Tcl_WrongNumArgs(interp, 3, objv, "?option value ...?");
+	    return TCL_ERROR;
+	}
 	objv += 3;
 	objc -= 3;
 
@@ -4879,7 +4887,7 @@ NamespaceEnsembleCmd(
 	 * memory leaks.
 	 */
 
-	for (; objc>1 ; objc-=2,objv+=2 ) {
+	for (; objc>1 ; objc-=2,objv+=2) {
 	    if (Tcl_GetIndexFromObj(interp, objv[0], createOptions, "option",
 		    0, &index) != TCL_OK) {
 		if (allocatedMapFlag) {
@@ -5180,7 +5188,7 @@ NamespaceEnsembleCmd(
 	     * cause any memory leaks.
 	     */
 
-	    for (; objc>0 ; objc-=2,objv+=2 ) {
+	    for (; objc>0 ; objc-=2,objv+=2) {
 		if (Tcl_GetIndexFromObj(interp, objv[0], configOptions,
 			"option", 0, &index) != TCL_OK) {
 		    if (allocatedMapFlag) {
