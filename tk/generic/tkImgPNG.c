@@ -1169,7 +1169,7 @@ CheckColor(
      */
 
     if (pngPtr->bitDepth < 8) {
-	pngPtr->bitScale = 255 / (pow(2, pngPtr->bitDepth) - 1);
+	pngPtr->bitScale = 255 / (int)(pow(2, pngPtr->bitDepth) - 1);
     } else {
 	pngPtr->bitScale = 1;
     }

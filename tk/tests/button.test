@@ -3256,13 +3256,18 @@ test button-5.4 {ConfigureButton - variable trace} -body {  ;# ex 6.2a
 test button-5.5 {ConfigureButton - image handling} -constraints {
     testImageType
 } -setup {
+    set images [image names]
     image create test image1
     image create test image2
 } -body {
     button .b -image image1
     image delete image1
     .b configure -image image2
-    image names
+    set result {}
+    foreach image [image names] {
+	if {$image ni $images} { lappend result $image }
+    }
+    set result
 } -cleanup {
     destroy .b
     image delete image2
