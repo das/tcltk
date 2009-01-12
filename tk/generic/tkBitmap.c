@@ -1127,7 +1127,7 @@ Tcl_Obj *
 TkDebugBitmap(
     Tk_Window tkwin,		/* The window in which the bitmap will be used
 				 * (not currently used). */
-    char *name)			/* Name of the desired color. */
+    const char *name)		/* Name of the desired color. */
 {
     TkBitmap *bitmapPtr;
     Tcl_HashEntry *hashPtr;

@@ -166,7 +166,7 @@ static int		TextCoords(Tcl_Interp *interp,
 static void		TextDeleteChars(Tk_Canvas canvas,
 			    Tk_Item *itemPtr, int first, int last);
 static void		TextInsert(Tk_Canvas canvas,
-			    Tk_Item *itemPtr, int beforeThis, char *string);
+			    Tk_Item *itemPtr, int beforeThis, Tcl_Obj *obj);
 static int		TextToArea(Tk_Canvas canvas,
 			    Tk_Item *itemPtr, double *rectPtr);
 static double		TextToPoint(Tk_Canvas canvas,
@@ -196,7 +196,7 @@ Tk_ItemType tkTextType = {
     TextToPostscript,		/* postscriptProc */
     ScaleText,			/* scaleProc */
     TranslateText,		/* translateProc */
-    (Tk_ItemIndexProc *) GetTextIndex,/* indexProc */
+    GetTextIndex,		/* indexProc */
     SetTextCursor,		/* icursorProc */
     GetSelText,			/* selectionProc */
     TextInsert,			/* insertProc */
@@ -285,7 +285,7 @@ CreateText(
     if (objc == 1) {
 	i = 1;
     } else {
-	char *arg = Tcl_GetString(objv[1]);
+	const char *arg = Tcl_GetString(objv[1]);
 
 	i = 2;
 	if ((arg[0] == '-') && (arg[1] >= 'a') && (arg[1] <= 'z')) {
@@ -1002,14 +1002,15 @@ TextInsert(
     Tk_Item *itemPtr,		/* Text item to be modified. */
     int index,			/* Character index before which string is to
 				 * be inserted. */
-    char *string)		/* New characters to be inserted. */
+    Tcl_Obj *obj)		/* New characters to be inserted. */
 {
     TextItem *textPtr = (TextItem *) itemPtr;
     int byteIndex, byteCount, charsAdded;
     char *newStr, *text;
+    const char *string;
     Tk_CanvasTextInfo *textInfoPtr = textPtr->textInfoPtr;
 
-    string = Tcl_GetStringFromObj((Tcl_Obj *) string, &byteCount);
+    string = Tcl_GetStringFromObj(obj, &byteCount);
 
     text = textPtr->text;
 
@@ -1345,7 +1346,7 @@ GetTextIndex(
     int c;
     TkCanvas *canvasPtr = (TkCanvas *) canvas;
     Tk_CanvasTextInfo *textInfoPtr = textPtr->textInfoPtr;
-    char *string = Tcl_GetStringFromObj(obj, &length);
+    const char *string = Tcl_GetStringFromObj(obj, &length);
 
     c = string[0];
 
@@ -1371,7 +1372,8 @@ GetTextIndex(
     } else if (c == '@') {
 	int x, y;
 	double tmp, c = textPtr->cosine, s = textPtr->sine;
-	char *end, *p;
+	char *end;
+	const char *p;
 
 	p = string+1;
 	tmp = strtod(p, &end);
@@ -1387,7 +1389,7 @@ GetTextIndex(
 	y = (int) ((tmp < 0) ? tmp - 0.5 : tmp + 0.5);
 	x += canvasPtr->scrollX1 - (int) textPtr->drawOrigin[0];
 	y += canvasPtr->scrollY1 - (int) textPtr->drawOrigin[1];
-	*indexPtr = Tk_PointToChar(textPtr->textLayout, 
+	*indexPtr = Tk_PointToChar(textPtr->textLayout,
 		(int) (x*c - y*s), (int) (y*c + x*s));
     } else if (Tcl_GetIntFromObj(NULL, obj, indexPtr) == TCL_OK) {
 	if (*indexPtr < 0) {

@@ -771,7 +771,7 @@ Tcl_Obj *
 TkDebugColor(
     Tk_Window tkwin,		/* The window in which the color will be used
 				 * (not currently used). */
-    char *name)			/* Name of the desired color. */
+    const char *name)		/* Name of the desired color. */
 {
     Tcl_HashEntry *hashPtr;
     Tcl_Obj *resultPtr;

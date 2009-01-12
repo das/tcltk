@@ -607,7 +607,7 @@ Tk_FontObjCmd(
     }
     case FONT_CONFIGURE: {
 	int result;
-	char *string;
+	const char *string;
 	Tcl_Obj *objPtr;
 	NamedFont *nfPtr;
 	Tcl_HashEntry *namedHashPtr;
@@ -641,7 +641,7 @@ Tk_FontObjCmd(
     }
     case FONT_CREATE: {
 	int skip, i;
-	char *name;
+	const char *name;
 	char buf[16 + TCL_INTEGER_SPACE];
 	TkFontAttributes fa;
 	Tcl_HashEntry *namedHashPtr;
@@ -683,7 +683,7 @@ Tk_FontObjCmd(
     }
     case FONT_DELETE: {
 	int i, result = TCL_OK;
-	char *string;
+	const char *string;
 
 	/*
 	 * Delete the named font. If there are still widgets using this font,
@@ -715,7 +715,7 @@ Tk_FontObjCmd(
 	break;
     }
     case FONT_MEASURE: {
-	char *string;
+	const char *string;
 	Tk_Font tkfont;
 	int length = 0, skip = 0;
 
@@ -3371,7 +3371,7 @@ ConfigAttributesObj(
 {
     int i, n, index;
     Tcl_Obj *optionPtr, *valuePtr;
-    char *value;
+    const char *value;
 
     for (i = 0; i < objc; i += 2) {
 	optionPtr = objv[i];
@@ -3566,7 +3566,7 @@ ParseFontNameObj(
     char *dash;
     int objc, result, i, n;
     Tcl_Obj **objv;
-    char *string;
+    const char *string;
 
     TkInitFontAttributes(faPtr);
 
@@ -4167,7 +4167,7 @@ Tcl_Obj *
 TkDebugFont(
     Tk_Window tkwin,		/* The window in which the font will be used
 				 * (not currently used). */
-    char *name)			/* Name of the desired color. */
+    const char *name)		/* Name of the desired color. */
 {
     TkFont *fontPtr;
     Tcl_HashEntry *hashPtr;
