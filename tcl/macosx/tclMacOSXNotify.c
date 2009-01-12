@@ -7,7 +7,7 @@
  *
  * Copyright (c) 1995-1997 Sun Microsystems, Inc.
  * Copyright 2001, Apple Computer, Inc.
- * Copyright (c) 2005-2008 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright (c) 2005-2009 Daniel A. Steffen <das@users.sourceforge.net>
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -21,7 +21,7 @@
 #include <CoreFoundation/CoreFoundation.h>
 #include <pthread.h>
 
-#define TCL_MAC_DEBUG_NOTIFIER 1
+/* #define TCL_MAC_DEBUG_NOTIFIER 1 */
 
 /*
  * We use the Darwin-native spinlock API rather than pthread mutexes for
@@ -127,7 +127,7 @@ static OSSpinLock notifierLock     = SPINLOCK_INIT;
  * Debug version of SpinLockLock that logs the time spent waiting for the lock
  */
 
-#define SpinLockLockDbg(p)	if(!SpinLockTry(p)) { \
+#define SpinLockLockDbg(p)	if (!SpinLockTry(p)) { \
 				    Tcl_WideInt s = TclpGetWideClicks(), e; \
 				    SpinLockLock(p); e = TclpGetWideClicks(); \
 				    TclMacOSXNotifierDbgMsg("waited on %s for %8.0f ns", \
@@ -347,20 +347,21 @@ static pthread_t notifierThread;
  * Custom runloop mode for running with only the runloop source for the
  * notifier thread
  */
+
 #ifndef TCL_EVENTS_ONLY_RUN_LOOP_MODE
 #define TCL_EVENTS_ONLY_RUN_LOOP_MODE	"com.tcltk.tclEventsOnlyRunLoopMode"
 #endif
 #ifdef __CONSTANT_CFSTRINGS__
-#define tclEventsOnlyRunLoopMode    CFSTR(TCL_EVENTS_ONLY_RUN_LOOP_MODE)
+#define tclEventsOnlyRunLoopMode	CFSTR(TCL_EVENTS_ONLY_RUN_LOOP_MODE)
 #else
 static CFStringRef tclEventsOnlyRunLoopMode = NULL;
 #endif
 
 /*
- * CFTimeInterval to wait forever, as per CFRunLoop.c.
+ * CFTimeInterval to wait forever.
  */
 
-#define CF_TIMEINTERVAL_FOREVER 1.0e10
+#define CF_TIMEINTERVAL_FOREVER 5.05e8
 
 /*
  * Static routines defined in this file.
@@ -385,8 +386,8 @@ static void	AtForkChild(void);
 #if defined(HAVE_WEAK_IMPORT) && MAC_OS_X_VERSION_MIN_REQUIRED < 1040
 /* Support for weakly importing pthread_atfork. */
 #define WEAK_IMPORT_PTHREAD_ATFORK
-extern int pthread_atfork(void (*prepare)(void), void (*parent)(void),
-                          void (*child)(void)) WEAK_IMPORT_ATTRIBUTE;
+extern int	pthread_atfork(void (*prepare)(void), void (*parent)(void),
+		    void (*child)(void)) WEAK_IMPORT_ATTRIBUTE;
 #endif /* HAVE_WEAK_IMPORT */
 /*
  * On Darwin 9 and later, it is not possible to call CoreFoundation after
@@ -420,135 +421,135 @@ MODULE_SCOPE long tclMacOSXDarwinRelease;
 ClientData
 Tcl_InitNotifier(void)
 {
+    ThreadSpecificData *tsdPtr;
+
     if (tclNotifierHooks.initNotifierProc) {
 	return tclNotifierHooks.initNotifierProc();
-    } else {
-	ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
+    }
+
+    tsdPtr = TCL_TSD_INIT(&dataKey);
 
 #ifdef WEAK_IMPORT_SPINLOCKLOCK
-	/*
-	 * Initialize support for weakly imported spinlock API.
-	 */
-	if (pthread_once(&spinLockLockInitControl, SpinLockLockInit)) {
-	    Tcl_Panic("Tcl_InitNotifier: pthread_once failed");
-	}
+    /*
+     * Initialize support for weakly imported spinlock API.
+     */
+
+    if (pthread_once(&spinLockLockInitControl, SpinLockLockInit)) {
+	Tcl_Panic("Tcl_InitNotifier: pthread_once failed");
+    }
 #endif
 
 #ifndef __CONSTANT_CFSTRINGS__
-	if (!tclEventsOnlyRunLoopMode) {
-	    tclEventsOnlyRunLoopMode = CFSTR(TCL_EVENTS_ONLY_RUN_LOOP_MODE);
-	}
-#endif
-
-	/*
-	 * Initialize CFRunLoopSource and add it to CFRunLoop of this thread.
-	 */
-
-	if (!tsdPtr->runLoop) {
-	    CFRunLoopRef runLoop = CFRunLoopGetCurrent();
-	    CFRunLoopSourceRef runLoopSource;
-	    CFRunLoopSourceContext runLoopSourceContext;
-	    CFRunLoopObserverContext runLoopObserverContext;
-	    CFRunLoopObserverRef runLoopObserver;
-
-	    bzero(&runLoopSourceContext, sizeof(CFRunLoopSourceContext));
-	    runLoopSourceContext.info = tsdPtr;
-	    runLoopSourceContext.perform = QueueFileEvents;
-	    runLoopSource = CFRunLoopSourceCreate(NULL, LONG_MIN,
-		    &runLoopSourceContext);
-	    if (!runLoopSource) {
-		Tcl_Panic("Tcl_InitNotifier: could not create CFRunLoopSource");
-	    }
-	    CFRunLoopAddSource(runLoop, runLoopSource, kCFRunLoopCommonModes);
-	    CFRunLoopAddSource(runLoop, runLoopSource,
-		    tclEventsOnlyRunLoopMode);
-
-	    bzero(&runLoopObserverContext, sizeof(CFRunLoopObserverContext));
-	    runLoopObserverContext.info = tsdPtr;
-	    runLoopObserver = CFRunLoopObserverCreate(NULL,
-		    kCFRunLoopEntry|kCFRunLoopExit|kCFRunLoopBeforeWaiting,
-		    TRUE, LONG_MIN, UpdateWaitingListAndServiceEvents,
-		    &runLoopObserverContext);
-	    if (!runLoopObserver) {
-		Tcl_Panic("Tcl_InitNotifier: could not create "
-			"CFRunLoopObserver");
-	    }
-	    CFRunLoopAddObserver(runLoop, runLoopObserver,
-		    kCFRunLoopCommonModes);
-	    CFRunLoopAddObserver(runLoop, runLoopObserver,
-		    tclEventsOnlyRunLoopMode);
-
-	    tsdPtr->runLoop = runLoop;
-	    tsdPtr->runLoopSource = runLoopSource;
-	    tsdPtr->runLoopObserver = runLoopObserver;
-	    tsdPtr->runLoopTimer = NULL;
-	    tsdPtr->waitTime = CF_TIMEINTERVAL_FOREVER;
-	    tsdPtr->tsdLock = SPINLOCK_INIT;
-	}
-
-	LOCK_NOTIFIER_INIT;
-#ifdef HAVE_PTHREAD_ATFORK
-	/*
-	 * Install pthread_atfork handlers to reinitialize the notifier in the
-	 * child of a fork.
-	 */
-
-	if (
-#ifdef WEAK_IMPORT_PTHREAD_ATFORK
-		pthread_atfork != NULL &&
-#endif
-		!atForkInit) {
-	    int result = pthread_atfork(AtForkPrepare, AtForkParent,
-		    AtForkChild);
-
-	    if (result) {
-		Tcl_Panic("Tcl_InitNotifier: pthread_atfork failed");
-	    }
-	    atForkInit = 1;
-	}
-#endif
-	if (notifierCount == 0) {
-	    int fds[2], status;
-
-	    /*
-	     * Initialize trigger pipe.
-	     */
-
-	    if (pipe(fds) != 0) {
-		Tcl_Panic("Tcl_InitNotifier: could not create trigger pipe");
-	    }
-
-	    status = fcntl(fds[0], F_GETFL);
-	    status |= O_NONBLOCK;
-	    if (fcntl(fds[0], F_SETFL, status) < 0) {
-		Tcl_Panic("Tcl_InitNotifier: could not make receive pipe non "
-			"blocking");
-	    }
-	    status = fcntl(fds[1], F_GETFL);
-	    status |= O_NONBLOCK;
-	    if (fcntl(fds[1], F_SETFL, status) < 0) {
-		Tcl_Panic("Tcl_InitNotifier: could not make trigger pipe non "
-			"blocking");
-	    }
-
-	    receivePipe = fds[0];
-	    triggerPipe = fds[1];
-
-	    /*
-	     * Create notifier thread lazily in Tcl_WaitForEvent() to avoid
-	     * interfering with fork() followed immediately by execve()
-	     * (cannot execve() when more than one thread is present).
-	     */
-
-	    notifierThreadRunning = 0;
-	    OPEN_NOTIFIER_LOG;
-	}
-	ENABLE_ASL;
-	notifierCount++;
-	UNLOCK_NOTIFIER_INIT;
-
-	return (ClientData) tsdPtr;
+    if (!tclEventsOnlyRunLoopMode) {
+	tclEventsOnlyRunLoopMode = CFSTR(TCL_EVENTS_ONLY_RUN_LOOP_MODE);
     }
+#endif
+
+    /*
+     * Initialize CFRunLoopSource and add it to CFRunLoop of this thread.
+     */
+
+    if (!tsdPtr->runLoop) {
+	CFRunLoopRef runLoop = CFRunLoopGetCurrent();
+	CFRunLoopSourceRef runLoopSource;
+	CFRunLoopSourceContext runLoopSourceContext;
+	CFRunLoopObserverContext runLoopObserverContext;
+	CFRunLoopObserverRef runLoopObserver;
+
+	bzero(&runLoopSourceContext, sizeof(CFRunLoopSourceContext));
+	runLoopSourceContext.info = tsdPtr;
+	runLoopSourceContext.perform = QueueFileEvents;
+	runLoopSource = CFRunLoopSourceCreate(NULL, LONG_MIN,
+		&runLoopSourceContext);
+	if (!runLoopSource) {
+	    Tcl_Panic("Tcl_InitNotifier: could not create CFRunLoopSource");
+	}
+	CFRunLoopAddSource(runLoop, runLoopSource, kCFRunLoopCommonModes);
+	CFRunLoopAddSource(runLoop, runLoopSource, tclEventsOnlyRunLoopMode);
+
+	bzero(&runLoopObserverContext, sizeof(CFRunLoopObserverContext));
+	runLoopObserverContext.info = tsdPtr;
+	runLoopObserver = CFRunLoopObserverCreate(NULL,
+		kCFRunLoopEntry|kCFRunLoopExit|kCFRunLoopBeforeWaiting, TRUE,
+		LONG_MIN, UpdateWaitingListAndServiceEvents,
+		&runLoopObserverContext);
+	if (!runLoopObserver) {
+	    Tcl_Panic("Tcl_InitNotifier: could not create "
+		    "CFRunLoopObserver");
+	}
+	CFRunLoopAddObserver(runLoop, runLoopObserver, kCFRunLoopCommonModes);
+	CFRunLoopAddObserver(runLoop, runLoopObserver,
+		tclEventsOnlyRunLoopMode);
+
+	tsdPtr->runLoop = runLoop;
+	tsdPtr->runLoopSource = runLoopSource;
+	tsdPtr->runLoopObserver = runLoopObserver;
+	tsdPtr->runLoopTimer = NULL;
+	tsdPtr->waitTime = CF_TIMEINTERVAL_FOREVER;
+	tsdPtr->tsdLock = SPINLOCK_INIT;
+    }
+
+    LOCK_NOTIFIER_INIT;
+#ifdef HAVE_PTHREAD_ATFORK
+    /*
+     * Install pthread_atfork handlers to reinitialize the notifier in the
+     * child of a fork.
+     */
+
+    if (
+#ifdef WEAK_IMPORT_PTHREAD_ATFORK
+	    pthread_atfork != NULL &&
+#endif
+	    !atForkInit) {
+	int result = pthread_atfork(AtForkPrepare, AtForkParent, AtForkChild);
+
+	if (result) {
+	    Tcl_Panic("Tcl_InitNotifier: pthread_atfork failed");
+	}
+	atForkInit = 1;
+    }
+#endif
+    if (notifierCount == 0) {
+	int fds[2], status;
+
+	/*
+	 * Initialize trigger pipe.
+	 */
+
+	if (pipe(fds) != 0) {
+	    Tcl_Panic("Tcl_InitNotifier: could not create trigger pipe");
+	}
+
+	status = fcntl(fds[0], F_GETFL);
+	status |= O_NONBLOCK;
+	if (fcntl(fds[0], F_SETFL, status) < 0) {
+	    Tcl_Panic("Tcl_InitNotifier: could not make receive pipe non "
+		    "blocking");
+	}
+	status = fcntl(fds[1], F_GETFL);
+	status |= O_NONBLOCK;
+	if (fcntl(fds[1], F_SETFL, status) < 0) {
+	    Tcl_Panic("Tcl_InitNotifier: could not make trigger pipe non "
+		    "blocking");
+	}
+
+	receivePipe = fds[0];
+	triggerPipe = fds[1];
+
+	/*
+	 * Create notifier thread lazily in Tcl_WaitForEvent() to avoid
+	 * interfering with fork() followed immediately by execve() (we cannot
+	 * execve() when more than one thread is present).
+	 */
+
+	notifierThreadRunning = 0;
+	OPEN_NOTIFIER_LOG;
+    }
+    ENABLE_ASL;
+    notifierCount++;
+    UNLOCK_NOTIFIER_INIT;
+
+    return (ClientData) tsdPtr;
 }
 
 /*
@@ -649,79 +650,81 @@ void
 Tcl_FinalizeNotifier(
     ClientData clientData)		/* Not used. */
 {
+    ThreadSpecificData *tsdPtr;
+
     if (tclNotifierHooks.finalizeNotifierProc) {
 	tclNotifierHooks.finalizeNotifierProc(clientData);
 	return;
-    } else {
-	ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
+    }
 
-	LOCK_NOTIFIER_INIT;
-	notifierCount--;
-	DISABLE_ASL;
+    tsdPtr = TCL_TSD_INIT(&dataKey);
+
+    LOCK_NOTIFIER_INIT;
+    notifierCount--;
+    DISABLE_ASL;
+
+    /*
+     * If this is the last thread to use the notifier, close the notifier pipe
+     * and wait for the background thread to terminate.
+     */
+
+    if (notifierCount == 0) {
+	int result;
+
+	if (triggerPipe < 0) {
+	    Tcl_Panic("Tcl_FinalizeNotifier: notifier pipe not initialized");
+	}
 
 	/*
-	 * If this is the last thread to use the notifier, close the notifier
-	 * pipe and wait for the background thread to terminate.
+	 * Send "q" message to the notifier thread so that it will terminate.
+	 * The notifier will return from its call to select() and notice that
+	 * a "q" message has arrived, it will then close its side of the pipe
+	 * and terminate its thread. Note the we can not just close the pipe
+	 * and check for EOF in the notifier thread because if a background
+	 * child process was created with exec, select() would not register
+	 * the EOF on the pipe until the child processes had terminated.
+	 * [Bug: 4139] [Bug: 1222872]
 	 */
 
-	if (notifierCount == 0) {
-	    int result;
+	write(triggerPipe, "q", 1);
+	close(triggerPipe);
 
-	    if (triggerPipe < 0) {
-		Tcl_Panic("Tcl_FinalizeNotifier: notifier pipe not initialized");
+	if (notifierThreadRunning) {
+	    result = pthread_join(notifierThread, NULL);
+	    if (result) {
+		Tcl_Panic("Tcl_FinalizeNotifier: unable to join notifier thread");
 	    }
-
-	    /*
-	     * Send "q" message to the notifier thread so that it will
-	     * terminate. The notifier will return from its call to select()
-	     * and notice that a "q" message has arrived, it will then close
-	     * its side of the pipe and terminate its thread. Note the we can
-	     * not just close the pipe and check for EOF in the notifier thread
-	     * because if a background child process was created with exec,
-	     * select() would not register the EOF on the pipe until the child
-	     * processes had terminated. [Bug: 4139] [Bug: 1222872]
-	     */
-
-	    write(triggerPipe, "q", 1);
-	    close(triggerPipe);
-
-	    if (notifierThreadRunning) {
-		result = pthread_join(notifierThread, NULL);
-		if (result) {
-		    Tcl_Panic("Tcl_FinalizeNotifier: unable to join notifier thread");
-		}
-		notifierThreadRunning = 0;
-	    }
-
-	    close(receivePipe);
-	    triggerPipe = -1;
-	    CLOSE_NOTIFIER_LOG;
+	    notifierThreadRunning = 0;
 	}
-	UNLOCK_NOTIFIER_INIT;
 
-	LOCK_NOTIFIER_TSD;	/* for concurrency with Tcl_AlertNotifier */
-	if (tsdPtr->runLoop) {
-	    tsdPtr->runLoop = NULL;
-
-	    /*
-	     * Remove runLoopSource, runLoopObserver and runLoopTimer from all
-	     * CFRunLoops.
-	     */
-
-	    CFRunLoopSourceInvalidate(tsdPtr->runLoopSource);
-	    CFRelease(tsdPtr->runLoopSource);
-	    tsdPtr->runLoopSource = NULL;
-	    CFRunLoopObserverInvalidate(tsdPtr->runLoopObserver);
-	    CFRelease(tsdPtr->runLoopObserver);
-	    tsdPtr->runLoopObserver = NULL;
-	    if (tsdPtr->runLoopTimer) {
-		CFRunLoopTimerInvalidate(tsdPtr->runLoopTimer);
-		CFRelease(tsdPtr->runLoopTimer);
-		tsdPtr->runLoopTimer = NULL;
-	    }
-	}
-	UNLOCK_NOTIFIER_TSD;
+	close(receivePipe);
+	triggerPipe = -1;
+	CLOSE_NOTIFIER_LOG;
     }
+    UNLOCK_NOTIFIER_INIT;
+
+    LOCK_NOTIFIER_TSD;		/* For concurrency with Tcl_AlertNotifier */
+    if (tsdPtr->runLoop) {
+	tsdPtr->runLoop = NULL;
+
+	/*
+	 * Remove runLoopSource, runLoopObserver and runLoopTimer from all
+	 * CFRunLoops.
+	 */
+
+	CFRunLoopSourceInvalidate(tsdPtr->runLoopSource);
+	CFRelease(tsdPtr->runLoopSource);
+	tsdPtr->runLoopSource = NULL;
+	CFRunLoopObserverInvalidate(tsdPtr->runLoopObserver);
+	CFRelease(tsdPtr->runLoopObserver);
+	tsdPtr->runLoopObserver = NULL;
+	if (tsdPtr->runLoopTimer) {
+	    CFRunLoopTimerInvalidate(tsdPtr->runLoopTimer);
+	    CFRelease(tsdPtr->runLoopTimer);
+	    tsdPtr->runLoopTimer = NULL;
+	}
+    }
+    UNLOCK_NOTIFIER_TSD;
 }
 
 /*
@@ -747,19 +750,19 @@ void
 Tcl_AlertNotifier(
     ClientData clientData)
 {
+    ThreadSpecificData *tsdPtr = clientData;
+
     if (tclNotifierHooks.alertNotifierProc) {
 	tclNotifierHooks.alertNotifierProc(clientData);
 	return;
-    } else {
-	ThreadSpecificData *tsdPtr = (ThreadSpecificData *) clientData;
-
-	LOCK_NOTIFIER_TSD;
-	if (tsdPtr->runLoop) {
-	    CFRunLoopSourceSignal(tsdPtr->runLoopSource);
-	    CFRunLoopWakeUp(tsdPtr->runLoop);
-	}
-	UNLOCK_NOTIFIER_TSD;
     }
+
+    LOCK_NOTIFIER_TSD;
+    if (tsdPtr->runLoop) {
+	CFRunLoopSourceSignal(tsdPtr->runLoopSource);
+	CFRunLoopWakeUp(tsdPtr->runLoop);
+    }
+    UNLOCK_NOTIFIER_TSD;
 }
 
 /*
@@ -782,33 +785,35 @@ void
 Tcl_SetTimer(
     const Tcl_Time *timePtr)		/* Timeout value, may be NULL. */
 {
+    ThreadSpecificData *tsdPtr;
+    CFRunLoopTimerRef runLoopTimer;
+    CFTimeInterval waitTime;
+
     if (tclNotifierHooks.setTimerProc) {
 	tclNotifierHooks.setTimerProc(timePtr);
 	return;
-    } else {
-	ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
-	CFRunLoopTimerRef runLoopTimer = tsdPtr->runLoopTimer;
-	CFTimeInterval waitTime;
-
- 	if (!runLoopTimer) {
-	    return;
-	}
-	if (timePtr) {
-	    Tcl_Time vTime  = *timePtr;
-
-	    if (vTime.sec != 0 || vTime.usec != 0) {
-		(*tclScaleTimeProcPtr) (&vTime, tclTimeClientData);
-		waitTime = vTime.sec + 1.0e-6 * vTime.usec;
-	    } else {
-		waitTime = 0;	    
-	    }
-	} else {
-	    waitTime = CF_TIMEINTERVAL_FOREVER;
-	}
-	tsdPtr->waitTime = waitTime;
-	CFRunLoopTimerSetNextFireDate(runLoopTimer,
-		CFAbsoluteTimeGetCurrent() + waitTime);
     }
+
+    tsdPtr = TCL_TSD_INIT(&dataKey);
+    runLoopTimer = tsdPtr->runLoopTimer;
+    if (!runLoopTimer) {
+	return;
+    }
+    if (timePtr) {
+	Tcl_Time vTime  = *timePtr;
+
+	if (vTime.sec != 0 || vTime.usec != 0) {
+	    tclScaleTimeProcPtr(&vTime, tclTimeClientData);
+	    waitTime = vTime.sec + 1.0e-6 * vTime.usec;
+	} else {
+	    waitTime = 0;
+	}
+    } else {
+	waitTime = CF_TIMEINTERVAL_FOREVER;
+    }
+    tsdPtr->waitTime = waitTime;
+    CFRunLoopTimerSetNextFireDate(runLoopTimer,
+	    CFAbsoluteTimeGetCurrent() + waitTime);
 }
 
 /*
@@ -855,24 +860,26 @@ Tcl_ServiceModeHook(
     int mode)			/* Either TCL_SERVICE_ALL, or
 				 * TCL_SERVICE_NONE. */
 {
+    ThreadSpecificData *tsdPtr;
+
     if (tclNotifierHooks.serviceModeHookProc) {
 	tclNotifierHooks.serviceModeHookProc(mode);
 	return;
-    } else {
-	ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
+    }
 
-	if (mode == TCL_SERVICE_ALL && !tsdPtr->runLoopTimer) {
-	    if (!tsdPtr->runLoop) {
-		Tcl_Panic("Tcl_WaitForEvent: Notifier not initialized");
-	    }
-	    tsdPtr->runLoopTimer = CFRunLoopTimerCreate(NULL,
-		    CFAbsoluteTimeGetCurrent() + CF_TIMEINTERVAL_FOREVER,
-		    CF_TIMEINTERVAL_FOREVER, 0, 0, TimerWakeUp, NULL);
-	    if (tsdPtr->runLoopTimer) {
-		CFRunLoopAddTimer(tsdPtr->runLoop, tsdPtr->runLoopTimer,
-			kCFRunLoopCommonModes);
-		StartNotifierThread();
-	    }
+    tsdPtr = TCL_TSD_INIT(&dataKey);
+
+    if (mode == TCL_SERVICE_ALL && !tsdPtr->runLoopTimer) {
+	if (!tsdPtr->runLoop) {
+	    Tcl_Panic("Tcl_WaitForEvent: Notifier not initialized");
+	}
+	tsdPtr->runLoopTimer = CFRunLoopTimerCreate(NULL,
+		CFAbsoluteTimeGetCurrent() + CF_TIMEINTERVAL_FOREVER,
+		CF_TIMEINTERVAL_FOREVER, 0, 0, TimerWakeUp, NULL);
+	if (tsdPtr->runLoopTimer) {
+	    CFRunLoopAddTimer(tsdPtr->runLoop, tsdPtr->runLoopTimer,
+		    kCFRunLoopCommonModes);
+	    StartNotifierThread();
 	}
     }
 }
@@ -904,55 +911,57 @@ Tcl_CreateFileHandler(
 				 * event. */
     ClientData clientData)	/* Arbitrary data to pass to proc. */
 {
+    ThreadSpecificData *tsdPtr;
+    FileHandler *filePtr;
+
     if (tclNotifierHooks.createFileHandlerProc) {
 	tclNotifierHooks.createFileHandlerProc(fd, mask, proc, clientData);
 	return;
-    } else {
-	ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
-	FileHandler *filePtr;
-
-	for (filePtr = tsdPtr->firstFileHandlerPtr; filePtr != NULL;
-		filePtr = filePtr->nextPtr) {
-	    if (filePtr->fd == fd) {
-		break;
-	    }
-	}
-	if (filePtr == NULL) {
-	    filePtr = (FileHandler*) ckalloc(sizeof(FileHandler));
-	    filePtr->fd = fd;
-	    filePtr->readyMask = 0;
-	    filePtr->nextPtr = tsdPtr->firstFileHandlerPtr;
-	    tsdPtr->firstFileHandlerPtr = filePtr;
-	}
-	filePtr->proc = proc;
-	filePtr->clientData = clientData;
-	filePtr->mask = mask;
-
-	/*
-	 * Update the check masks for this file.
-	 */
-
-	LOCK_NOTIFIER_TSD;
-	if (mask & TCL_READABLE) {
-	    FD_SET(fd, &(tsdPtr->checkMasks.readable));
-	} else {
-	    FD_CLR(fd, &(tsdPtr->checkMasks.readable));
-	}
-	if (mask & TCL_WRITABLE) {
-	    FD_SET(fd, &(tsdPtr->checkMasks.writable));
-	} else {
-	    FD_CLR(fd, &(tsdPtr->checkMasks.writable));
-	}
-	if (mask & TCL_EXCEPTION) {
-	    FD_SET(fd, &(tsdPtr->checkMasks.exceptional));
-	} else {
-	    FD_CLR(fd, &(tsdPtr->checkMasks.exceptional));
-	}
-	if (tsdPtr->numFdBits <= fd) {
-	    tsdPtr->numFdBits = fd+1;
-	}
-	UNLOCK_NOTIFIER_TSD;
     }
+
+    tsdPtr = TCL_TSD_INIT(&dataKey);
+
+    for (filePtr = tsdPtr->firstFileHandlerPtr; filePtr != NULL;
+	    filePtr = filePtr->nextPtr) {
+	if (filePtr->fd == fd) {
+	    break;
+	}
+    }
+    if (filePtr == NULL) {
+	filePtr = (FileHandler *) ckalloc(sizeof(FileHandler));
+	filePtr->fd = fd;
+	filePtr->readyMask = 0;
+	filePtr->nextPtr = tsdPtr->firstFileHandlerPtr;
+	tsdPtr->firstFileHandlerPtr = filePtr;
+    }
+    filePtr->proc = proc;
+    filePtr->clientData = clientData;
+    filePtr->mask = mask;
+
+    /*
+     * Update the check masks for this file.
+     */
+
+    LOCK_NOTIFIER_TSD;
+    if (mask & TCL_READABLE) {
+	FD_SET(fd, &(tsdPtr->checkMasks.readable));
+    } else {
+	FD_CLR(fd, &(tsdPtr->checkMasks.readable));
+    }
+    if (mask & TCL_WRITABLE) {
+	FD_SET(fd, &(tsdPtr->checkMasks.writable));
+    } else {
+	FD_CLR(fd, &(tsdPtr->checkMasks.writable));
+    }
+    if (mask & TCL_EXCEPTION) {
+	FD_SET(fd, &(tsdPtr->checkMasks.exceptional));
+    } else {
+	FD_CLR(fd, &(tsdPtr->checkMasks.exceptional));
+    }
+    if (tsdPtr->numFdBits <= fd) {
+	tsdPtr->numFdBits = fd+1;
+    }
+    UNLOCK_NOTIFIER_TSD;
 }
 
 /*
@@ -976,75 +985,78 @@ Tcl_DeleteFileHandler(
     int fd)			/* Stream id for which to remove callback
 				 * function. */
 {
+    FileHandler *filePtr, *prevPtr;
+    int i, numFdBits;
+    ThreadSpecificData *tsdPtr;
+
     if (tclNotifierHooks.deleteFileHandlerProc) {
 	tclNotifierHooks.deleteFileHandlerProc(fd);
 	return;
-    } else {
-	FileHandler *filePtr, *prevPtr;
-	ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
-	int i, numFdBits = -1;
+    }
 
-	/*
-	 * Find the entry for the given file (and return if there isn't one).
-	 */
+    tsdPtr = TCL_TSD_INIT(&dataKey);
+    numFdBits = -1;
 
-	for (prevPtr = NULL, filePtr = tsdPtr->firstFileHandlerPtr; ;
-	     prevPtr = filePtr, filePtr = filePtr->nextPtr) {
-	    if (filePtr == NULL) {
-		return;
-	    }
-	    if (filePtr->fd == fd) {
+    /*
+     * Find the entry for the given file (and return if there isn't one).
+     */
+
+    for (prevPtr = NULL, filePtr = tsdPtr->firstFileHandlerPtr; ;
+	    prevPtr = filePtr, filePtr = filePtr->nextPtr) {
+	if (filePtr == NULL) {
+	    return;
+	}
+	if (filePtr->fd == fd) {
+	    break;
+	}
+    }
+
+    /*
+     * Find current max fd.
+     */
+
+    if (fd+1 == tsdPtr->numFdBits) {
+	numFdBits = 0;
+	for (i = fd-1; i >= 0; i--) {
+	    if (FD_ISSET(i, &(tsdPtr->checkMasks.readable))
+		    || FD_ISSET(i, &(tsdPtr->checkMasks.writable))
+		    || FD_ISSET(i, &(tsdPtr->checkMasks.exceptional))) {
+		numFdBits = i+1;
 		break;
 	    }
 	}
-
-	/*
-	 * Find current max fd.
-	 */
-
-	if (fd+1 == tsdPtr->numFdBits) {
-	    numFdBits = 0;
-	    for (i = fd-1; i >= 0; i--) {
-		if (FD_ISSET(i, &(tsdPtr->checkMasks.readable))
-			|| FD_ISSET(i, &(tsdPtr->checkMasks.writable))
-			|| FD_ISSET(i, &(tsdPtr->checkMasks.exceptional))) {
-		    numFdBits = i+1;
-		    break;
-		}
-	    }
-	}
-
-	LOCK_NOTIFIER_TSD;
-	if (numFdBits != -1) {
-	    tsdPtr->numFdBits = numFdBits;
-	}
-
-	/*
-	 * Update the check masks for this file.
-	 */
-
-	if (filePtr->mask & TCL_READABLE) {
-	    FD_CLR(fd, &(tsdPtr->checkMasks.readable));
-	}
-	if (filePtr->mask & TCL_WRITABLE) {
-	    FD_CLR(fd, &(tsdPtr->checkMasks.writable));
-	}
-	if (filePtr->mask & TCL_EXCEPTION) {
-	    FD_CLR(fd, &(tsdPtr->checkMasks.exceptional));
-	}
-	UNLOCK_NOTIFIER_TSD;
-
-	/*
-	 * Clean up information in the callback record.
-	 */
-
-	if (prevPtr == NULL) {
-	    tsdPtr->firstFileHandlerPtr = filePtr->nextPtr;
-	} else {
-	    prevPtr->nextPtr = filePtr->nextPtr;
-	}
-	ckfree((char *) filePtr);
     }
+
+    LOCK_NOTIFIER_TSD;
+    if (numFdBits != -1) {
+	tsdPtr->numFdBits = numFdBits;
+    }
+
+    /*
+     * Update the check masks for this file.
+     */
+
+    if (filePtr->mask & TCL_READABLE) {
+	FD_CLR(fd, &(tsdPtr->checkMasks.readable));
+    }
+    if (filePtr->mask & TCL_WRITABLE) {
+	FD_CLR(fd, &(tsdPtr->checkMasks.writable));
+    }
+    if (filePtr->mask & TCL_EXCEPTION) {
+	FD_CLR(fd, &(tsdPtr->checkMasks.exceptional));
+    }
+    UNLOCK_NOTIFIER_TSD;
+
+    /*
+     * Clean up information in the callback record.
+     */
+
+    if (prevPtr == NULL) {
+	tsdPtr->firstFileHandlerPtr = filePtr->nextPtr;
+    } else {
+	prevPtr->nextPtr = filePtr->nextPtr;
+    }
+    ckfree((char *) filePtr);
 }
 
 /*
@@ -1143,88 +1155,91 @@ int
 Tcl_WaitForEvent(
     const Tcl_Time *timePtr)		/* Maximum block time, or NULL. */
 {
+    int result, polling;
+    CFTimeInterval waitTime;
+    CFStringRef runLoopMode;
+    SInt32 runLoopStatus;
+    ThreadSpecificData *tsdPtr;
+
     if (tclNotifierHooks.waitForEventProc) {
 	return tclNotifierHooks.waitForEventProc(timePtr);
-    } else {
-	int result = -1, polling = 0;
-	CFTimeInterval waitTime = CF_TIMEINTERVAL_FOREVER;
-	CFStringRef runLoopMode;
-	SInt32 runLoopStatus;
-	ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
+    }
+    result = -1;
+    polling = 0;
+    waitTime = CF_TIMEINTERVAL_FOREVER;
+    tsdPtr = TCL_TSD_INIT(&dataKey);
 
-	if (!tsdPtr->runLoop) {
-	    Tcl_Panic("Tcl_WaitForEvent: Notifier not initialized");
-	}
+    if (!tsdPtr->runLoop) {
+	Tcl_Panic("Tcl_WaitForEvent: Notifier not initialized");
+    }
 
-	if (timePtr) {
-	    Tcl_Time vTime  = *timePtr;
-
-	    /*
-	     * TIP #233 (Virtualized Time). Is virtual time in effect? And do
-	     * we actually have something to scale? If yes to both then we call
-	     * the handler to do this scaling.
-	     */
-
-	    if (vTime.sec != 0 || vTime.usec != 0) {
-		tclScaleTimeProcPtr(&vTime, tclTimeClientData);
-		waitTime = vTime.sec + 1.0e-6 * vTime.usec;
-	    } else {
-		/*
-		 * Polling: pretend to wait for files and tell the notifier
-		 * thread what we are doing. The notifier thread makes
-		 * sure it goes through select with its select mask in the same
-		 * state as ours currently is. We block until that happens.
-		 */
-
-		polling = 1;
-	    }
-	}
-
-	StartNotifierThread();
-
-	LOCK_NOTIFIER_TSD;
-	tsdPtr->polling = polling;
-	UNLOCK_NOTIFIER_TSD;
-	tsdPtr->runLoopSourcePerformed = 0;
+    if (timePtr) {
+	Tcl_Time vTime  = *timePtr;
 
 	/*
-	 * If the Tcl run loop is already running (e.g. if Tcl_WaitForEvent
-	 * was called recursively), re-run it in a custom run loop mode
-	 * containing only the source for the notifier thread, otherwise
-	 * wakeups from other sources added to the common run loop modes
-	 * might get lost.
+	 * TIP #233 (Virtualized Time). Is virtual time in effect? And do we
+	 * actually have something to scale? If yes to both then we call the
+	 * handler to do this scaling.
 	 */
 
-	if (tsdPtr->runLoopRunning) {
-	    runLoopMode = tclEventsOnlyRunLoopMode;
+	if (vTime.sec != 0 || vTime.usec != 0) {
+	    tclScaleTimeProcPtr(&vTime, tclTimeClientData);
+	    waitTime = vTime.sec + 1.0e-6 * vTime.usec;
 	} else {
-	    runLoopMode = kCFRunLoopDefaultMode;
-	    tsdPtr->runLoopRunning = 1;
-	}
-	runLoopStatus = CFRunLoopRunInMode(runLoopMode, waitTime, TRUE);
-	if (runLoopMode == kCFRunLoopDefaultMode) {
-	    tsdPtr->runLoopRunning = 0;
-	}
+	    /*
+	     * Polling: pretend to wait for files and tell the notifier thread
+	     * what we are doing. The notifier thread makes sure it goes
+	     * through select with its select mask in the same state as ours
+	     * currently is. We block until that happens.
+	     */
 
-	LOCK_NOTIFIER_TSD;
-	tsdPtr->polling = 0;
-	UNLOCK_NOTIFIER_TSD;
-	switch (runLoopStatus) {
-	case kCFRunLoopRunFinished:
-	   Tcl_Panic("Tcl_WaitForEvent: CFRunLoop finished");
-	    break;
-	case kCFRunLoopRunTimedOut:
-	    QueueFileEvents(tsdPtr);
-	    result = 0;
-	    break;
-	case kCFRunLoopRunStopped:
-	case kCFRunLoopRunHandledSource:
-	    result = tsdPtr->runLoopSourcePerformed ? 0 : 1;
-	    break;
+	    polling = 1;
 	}
-
-	return result;
     }
+
+    StartNotifierThread();
+
+    LOCK_NOTIFIER_TSD;
+    tsdPtr->polling = polling;
+    UNLOCK_NOTIFIER_TSD;
+    tsdPtr->runLoopSourcePerformed = 0;
+
+    /*
+     * If the Tcl run loop is already running (e.g. if Tcl_WaitForEvent was
+     * called recursively), re-run it in a custom run loop mode containing only
+     * the source for the notifier thread, otherwise wakeups from other sources
+     * added to the common run loop modes might get lost.
+     */
+
+    if (tsdPtr->runLoopRunning) {
+	runLoopMode = tclEventsOnlyRunLoopMode;
+    } else {
+	runLoopMode = kCFRunLoopDefaultMode;
+	tsdPtr->runLoopRunning = 1;
+    }
+    runLoopStatus = CFRunLoopRunInMode(runLoopMode, waitTime, TRUE);
+    if (runLoopMode == kCFRunLoopDefaultMode) {
+	tsdPtr->runLoopRunning = 0;
+    }
+
+    LOCK_NOTIFIER_TSD;
+    tsdPtr->polling = 0;
+    UNLOCK_NOTIFIER_TSD;
+    switch (runLoopStatus) {
+    case kCFRunLoopRunFinished:
+       Tcl_Panic("Tcl_WaitForEvent: CFRunLoop finished");
+	break;
+    case kCFRunLoopRunTimedOut:
+	QueueFileEvents(tsdPtr);
+	result = 0;
+	break;
+    case kCFRunLoopRunStopped:
+    case kCFRunLoopRunHandledSource:
+	result = tsdPtr->runLoopSourcePerformed ? 0 : 1;
+	break;
+    }
+
+    return result;
 }
 
 /*
@@ -1283,8 +1298,8 @@ QueueFileEvents(
 	}
 
 	/*
-	 * Don't bother to queue an event if the mask was previously
-	 * non-zero since an event must still be on the queue.
+	 * Don't bother to queue an event if the mask was previously non-zero
+	 * since an event must still be on the queue.
 	 */
 
 	if (filePtr->readyMask == 0) {
@@ -1379,7 +1394,7 @@ OnOffWaitingList(
     int changeWaitingList;
 #ifdef TCL_MAC_DEBUG_NOTIFIER
     if(SpinLockTry(&notifierLock)) {
-	Tcl_Panic("OnOffWaitingList: notifierLock unlocked");    
+	Tcl_Panic("OnOffWaitingList: notifierLock unlocked");
     }
 #endif
     changeWaitingList = (!onList ^ !tsdPtr->onList);
@@ -1445,7 +1460,7 @@ Tcl_Sleep(
 
     vdelay.sec  = ms / 1000;
     vdelay.usec = (ms % 1000) * 1000;
-    (*tclScaleTimeProcPtr) (&vdelay, tclTimeClientData);
+    tclScaleTimeProcPtr(&vdelay, tclTimeClientData);
 
 
     if (tsdPtr->runLoop) {
@@ -1791,12 +1806,12 @@ NotifierThreadProc(
 
 	    if (found) {
 		/*
-		 * Remove the ThreadSpecificData structure of this thread
-		 * from the waiting list. This prevents us from
-		 * continuously spining on select until the other threads
-		 * runs and services the file event.
+		 * Remove the ThreadSpecificData structure of this thread from
+		 * the waiting list. This prevents us from spinning
+		 * continuously on select until the other threads runs and
+		 * services the file event.
 		 */
-		
+
 		OnOffWaitingList(tsdPtr, 0, 0);
 
 		LOCK_NOTIFIER_TSD;
