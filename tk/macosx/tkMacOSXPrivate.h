@@ -233,12 +233,12 @@ MODULE_SCOPE int	TkMacOSXMakeFullscreen(TkWindow *winPtr,
 MODULE_SCOPE void	TkMacOSXEnterExitFullscreen(TkWindow *winPtr,
 			    int active);
 MODULE_SCOPE void	TkMacOSXBringWindowForward(WindowRef wRef);
-MODULE_SCOPE WindowRef	TkMacOSXDrawableWindow(Drawable drawable);
+MODULE_SCOPE NSWindow*	TkMacOSXDrawableWindow(Drawable drawable);
 MODULE_SCOPE void	TkMacOSXWinCGBounds(TkWindow *winPtr, CGRect *bounds);
 MODULE_SCOPE HIShapeRef	TkMacOSXGetClipRgn(Drawable drawable);
 MODULE_SCOPE CGImageRef	TkMacOSXCreateCGImageWithDrawable(Drawable drawable);
 MODULE_SCOPE Tcl_Obj *	TkMacOSXGetStringObjFromCFString(CFStringRef str);
-MODULE_SCOPE int TkMacOSXGenerateExposeEvents(NSWindow *window, HIMutableShapeRef shape);
+MODULE_SCOPE TkWindow*	TkMacOSXGetTkWindow(NSWindow *w);
 
 #define VISIBILITY_HIDDEN __attribute__((__visibility__("hidden")))
 

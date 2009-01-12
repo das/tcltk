@@ -98,9 +98,6 @@ TkMacOSXHandleMenuSelect(
     MenuItemIndex theItem,
     int optionKeyPressed)
 {
-    Tk_Window tkwin;
-    Window window;
-    TkDisplay *dispPtr;
     Tcl_CmdInfo dummy;
     int code;
 
@@ -165,13 +162,14 @@ TkMacOSXHandleMenuSelect(
 		}
 	    }
 	    break;
-	case kCloseItem:
+	case kCloseItem: {
 	    /* Send close event */
-	    window = TkMacOSXGetXWindow(ActiveNonFloatingWindow());
-	    dispPtr = TkGetDisplayList();
-	    tkwin = Tk_IdToWindow(dispPtr->display, window);
-	    TkGenWMDestroyEvent(tkwin);
+	    TkWindow *winPtr = TkMacOSXGetTkWindow([NSApp keyWindow]);
+	    if (winPtr) {
+		TkGenWMDestroyEvent((Tk_Window)winPtr);
+	    }
 	    break;
+	    }
 	}
 	break;
     case kEditMenu:
@@ -356,14 +354,13 @@ GenerateEditEvent(
 {
     XVirtualEvent event;
     int x, y;
-    Tk_Window tkwin;
-    Window window;
-    TkDisplay *dispPtr;
+    TkWindow *winPtr = TkMacOSXGetTkWindow([NSApp keyWindow]);
+    Tk_Window tkwin = (Tk_Window) winPtr;
 
-    window = TkMacOSXGetXWindow(ActiveNonFloatingWindow());
-    dispPtr = TkGetDisplayList();
-    tkwin = Tk_IdToWindow(dispPtr->display, window);
-    tkwin = (Tk_Window) ((TkWindow *) tkwin)->dispPtr->focusPtr;
+    if (tkwin == NULL) {
+	return;
+    }
+    tkwin = (Tk_Window) winPtr->dispPtr->focusPtr;
     if (tkwin == NULL) {
 	return;
     }

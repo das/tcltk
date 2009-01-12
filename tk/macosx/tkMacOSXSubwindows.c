@@ -125,7 +125,7 @@ XDestroyWindow(
 
 	if (focusPtr == NULL
 		|| (focusPtr->mainPtr->winPtr == macWin->winPtr)) {
-	    winRef = TkMacOSXDrawableWindow(window);
+	    winRef = [TkMacOSXDrawableWindow(window) windowRef];
 	    if (TkpIsWindowFloating (winRef)) {
 		Window window = TkMacOSXGetXWindow(ActiveNonFloatingWindow());
 
@@ -150,7 +150,7 @@ XDestroyWindow(
      */
 
     if (!Tk_IsEmbedded(macWin->winPtr)) {
-	WindowRef winRef = TkMacOSXDrawableWindow(window);
+	WindowRef winRef = [TkMacOSXDrawableWindow(window) windowRef];
 
 	if (winRef) {
 	    WindowGroupRef group;
@@ -258,12 +258,12 @@ XMapWindow(
 	     * XXX windows that have a wmPtr->master parent set.
 	     */
 
-	    WindowRef wRef = TkMacOSXDrawableWindow(window);
+	    WindowRef wRef = [TkMacOSXDrawableWindow(window) windowRef];
 
 	    if ((macWin->winPtr->wmInfoPtr->macClass == kSheetWindowClass)
 		    && (macWin->winPtr->wmInfoPtr->master != None)) {
-		ShowSheetWindow(wRef, TkMacOSXDrawableWindow(
-			macWin->winPtr->wmInfoPtr->master));
+		ShowSheetWindow(wRef, [TkMacOSXDrawableWindow(
+			macWin->winPtr->wmInfoPtr->master) windowRef]);
 	    } else {
 		//ShowWindow(wRef);
 		if (![macWin->winPtr->wmInfoPtr->window isVisible]) {
@@ -375,7 +375,7 @@ XUnmapWindow(
 	     * XXX windows that have a wmPtr->master parent set.
 	     */
 
-	    WindowRef wref = TkMacOSXDrawableWindow(window);
+	    WindowRef wref = [TkMacOSXDrawableWindow(window) windowRef];
 
 	    if ((macWin->winPtr->wmInfoPtr->macClass == kSheetWindowClass)
 		    && (macWin->winPtr->wmInfoPtr->master != None)) {
@@ -758,7 +758,7 @@ XConfigureWindow(
 
     if (value_mask & CWStackMode) {
 	Rect bounds;
-	WindowRef wRef = TkMacOSXDrawableWindow(w);
+	WindowRef wRef = [TkMacOSXDrawableWindow(w) windowRef];
 
 	if (wRef) {
 	    TkMacOSXInvalClipRgns((Tk_Window) winPtr->parentPtr);
@@ -864,7 +864,7 @@ TkMacOSXUpdateClipRgn(
 		    kWindowResizableAttribute) {
 		HIViewRef growBoxView;
 		OSErr err = HIViewFindByID(HIViewGetRoot(
-			TkMacOSXDrawableWindow(winPtr->window)),
+			[TkMacOSXDrawableWindow(winPtr->window) windowRef]),
 			kHIViewWindowGrowBoxID, &growBoxView);
 
 		if (err == noErr) {
@@ -1059,20 +1059,20 @@ TkMacOSXInvalidateWindow(
  *----------------------------------------------------------------------
  */
 
-WindowRef
+NSWindow*
 TkMacOSXDrawableWindow(
     Drawable drawable)
 {
     MacDrawable *macWin = (MacDrawable *) drawable;
-    WindowRef result = NULL;
+    NSWindow *result = NULL;
 
     if (!macWin || macWin->flags & TK_IS_PIXMAP) {
 	result = NULL;
     } else if (macWin->winPtr && macWin->winPtr->wmInfoPtr &&
 	    macWin->winPtr->wmInfoPtr->window) {
-	result = [macWin->winPtr->wmInfoPtr->window windowRef];
-    } else {
-	result = GetWindowFromPort(TkMacOSXGetDrawablePort(drawable));
+	result = macWin->winPtr->wmInfoPtr->window;
+    /*} else {
+	result = GetWindowFromPort(TkMacOSXGetDrawablePort(drawable));*/
     }
     return result;
 }

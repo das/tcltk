@@ -107,7 +107,7 @@ static int		KeycodeToUnicodeViaUnicodeResource(UniChar *uniChars,
 @implementation TKApplication(TKKeyEvent)
 - (NSEvent *)tkProcessKeyEvent:(NSEvent *)theEvent {
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, theEvent);
-    id		    win;
+    NSWindow*	    w;
     NSEventType	    type = [theEvent type];
     NSUInteger	    modifiers, len;
     BOOL	    repeat = NO;
@@ -124,8 +124,8 @@ static int		KeycodeToUnicodeViaUnicodeResource(UniChar *uniChars,
     case NSFlagsChanged:
 	modifiers = [theEvent modifierFlags];
 	keyCode = [theEvent keyCode];
-	win = [self windowWithWindowNumber:[theEvent windowNumber]];
-	TKLog(@"-[%@(%p) %s] %d %u %@ %@ %u %@", [self class], self, _cmd, repeat, modifiers, characters, charactersIgnoringModifiers, keyCode, win);
+	w = [self windowWithWindowNumber:[theEvent windowNumber]];
+	TKLog(@"-[%@(%p) %s] %d %u %@ %@ %u %@", [self class], self, _cmd, repeat, modifiers, characters, charactersIgnoringModifiers, keyCode, w);
 	break;
 
     default:
@@ -162,15 +162,14 @@ static int		KeycodeToUnicodeViaUnicodeResource(UniChar *uniChars,
      * to determine the exact Tk window that owns the focus.
      */
 
-    Window window = TkMacOSXGetXWindow([win windowRef]);
-    TkDisplay *dispPtr = TkGetDisplayList();
-    Tk_Window tkwin = Tk_IdToWindow(dispPtr->display, window);
+    TkWindow *winPtr = TkMacOSXGetTkWindow(w);
+    Tk_Window tkwin = (Tk_Window) winPtr;
 
     if (!tkwin) {
 	TkMacOSXDbgMsg("tkwin == NULL");
 	return theEvent;
     }
-    tkwin = (Tk_Window) ((TkWindow *) tkwin)->dispPtr->focusPtr;
+    tkwin = (Tk_Window) winPtr->dispPtr->focusPtr;
     if (!tkwin) {
 	TkMacOSXDbgMsg("tkwin == NULL");
 	return theEvent;

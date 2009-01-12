@@ -2047,7 +2047,7 @@ TkpSetMainMenubar(
     WindowRef macWindowPtr;
     WindowRef frontNonFloating;
 
-    macWindowPtr = TkMacOSXDrawableWindow(winPtr->window);
+    macWindowPtr = [TkMacOSXDrawableWindow(winPtr->window) windowRef];
 
     frontNonFloating = ActiveNonFloatingWindow();
     if ((macWindowPtr == NULL) || (macWindowPtr != frontNonFloating)) {

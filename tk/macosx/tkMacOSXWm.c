@@ -775,13 +775,14 @@ WmAspectCmd(
 static int
 WmSetAttribute(
     TkWindow *winPtr,		/* Toplevel to work with */
-    WindowRef macWindow,
+    NSWindow *w,
     Tcl_Interp *interp,		/* Current interpreter */
     WmAttribute attribute,	/* Code of attribute to set */
     Tcl_Obj *value)		/* New value */
 {
     WmInfo *wmPtr = winPtr->wmInfoPtr;
     int boolean;
+    WindowRef macWindow = [w windowRef];
 
     switch (attribute) {
     case WMATT_ALPHA: {
@@ -935,11 +936,12 @@ WmSetAttribute(
 static Tcl_Obj *
 WmGetAttribute(
     TkWindow *winPtr,		/* Toplevel to work with */
-    WindowRef macWindow,
+    NSWindow *w,
     WmAttribute attribute)	/* Code of attribute to get */
 {
     WmInfo *wmPtr = winPtr->wmInfoPtr;
     Tcl_Obj *result = NULL;
+    WindowRef macWindow = [w windowRef];
 
     switch (attribute) {
     case WMATT_ALPHA: {
@@ -1012,7 +1014,7 @@ WmAttributesCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     int attribute = 0;
-    WindowRef macWindow;
+    NSWindow *macWindow;
 
     if (winPtr->window == None) {
 	Tk_MakeWindowExist((Tk_Window) winPtr);
@@ -3798,30 +3800,31 @@ Tk_CoordsToWindow(
     Tk_Window tkwin)		/* Token for any window in application; used
 				 * to identify the display. */
 {
-    WindowPtr whichWin;
-    Point where;
-    Window rootChild;
     TkWindow *winPtr, *childPtr;
     TkWindow *nextPtr;		/* Coordinates of highest child found so far
 				 * that contains point. */
     int x, y;			/* Coordinates in winPtr. */
     int tmpx, tmpy, bd;
-    TkDisplay *dispPtr;
 
     /*
      * Step 1: find the top-level window that contains the desired point.
      */
 
-    where.h = rootX;
-    where.v = rootY;
-    FindWindow(where, &whichWin);
-    if (whichWin == NULL) {
+    NSPoint p = NSMakePoint(rootX, tkMacOSXZeroScreenHeight - rootY);
+    NSArray *windows = [NSApp orderedWindows];
+    NSWindow *w = nil;
+    for (w in windows) {
+	if (NSMouseInRect(p, [w frame], NO)) {
+	    break;
+	} else {
+	    w = nil;
+	}
+    }
+    if (!w) {
 	return NULL;
     }
-    rootChild = TkMacOSXGetXWindow(whichWin);
-    dispPtr = TkGetDisplayList();
-    winPtr = (TkWindow *) Tk_IdToWindow(dispPtr->display, rootChild);
-    if (winPtr == NULL) {
+    winPtr = TkMacOSXGetTkWindow(w);
+    if (!winPtr) {
 	return NULL;
     }
 
@@ -4208,7 +4211,7 @@ TkWmRestackToplevel(
 
 	TkWmMapWindow(winPtr);
     }
-    macWindow = TkMacOSXDrawableWindow(winPtr->window);
+    macWindow = [TkMacOSXDrawableWindow(winPtr->window) windowRef];
 
     /*
      * Get the window in which a raise or lower is in relation to.
@@ -4221,7 +4224,7 @@ TkWmRestackToplevel(
 	if (otherPtr->wmInfoPtr->flags & WM_NEVER_MAPPED) {
 	    TkWmMapWindow(otherPtr);
 	}
-	otherMacWindow = TkMacOSXDrawableWindow(otherPtr->window);
+	otherMacWindow = [TkMacOSXDrawableWindow(otherPtr->window) windowRef];
     } else {
 	otherMacWindow = NULL;
     }
@@ -4713,7 +4716,7 @@ TkSetWMName(
     title = CFStringCreateWithBytes(NULL, (const unsigned char *) titleUid,
 	    strlen(titleUid), kCFStringEncodingUTF8, false);
     if (title) {
-	WindowRef macWin = TkMacOSXDrawableWindow(winPtr->window);
+	WindowRef macWin = [TkMacOSXDrawableWindow(winPtr->window) windowRef];
 
 	SetWindowTitleWithCFString(macWin, title);
 	CFRelease(title);
@@ -4782,6 +4785,34 @@ TkMacOSXGetXWindow(
 /*
  *----------------------------------------------------------------------
  *
+ * TkMacOSXGetTkWindow --
+ *
+ *	Returns the TkWindow* associated with the given NSWindow*.
+ *
+ * Results:
+ *	The TkWindow* returned. NULL is returned if not a Tk window.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+TkWindow*
+TkMacOSXGetTkWindow(
+    NSWindow *w)
+{
+    WindowRef whichWindow = [w windowRef];
+    Window window = TkMacOSXGetXWindow(whichWindow);
+    TkDisplay *dispPtr = TkGetDisplayList();
+
+    return (window != None ?
+	    (TkWindow *)Tk_IdToWindow(dispPtr->display, window) : NULL);
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
  * TkMacOSXIsWindowZoomed --
  *
  *	Ask Carbon if the given window is in the zoomed out state. Because
@@ -4834,7 +4865,7 @@ TkMacOSXIsWindowZoomed(
 	idealSize.v = maxHeight;
     }
 
-    return IsWindowInStandardState(TkMacOSXDrawableWindow(winPtr->window),
+    return IsWindowInStandardState([TkMacOSXDrawableWindow(winPtr->window) windowRef],
 	    &idealSize, NULL);
 }
 
@@ -5553,7 +5584,7 @@ TkpWmSetState(
 	return;
     }
 
-    macWin = TkMacOSXDrawableWindow(winPtr->window);
+    macWin = [TkMacOSXDrawableWindow(winPtr->window) windowRef];
 
     if (state == WithdrawnState) {
 	Tk_UnmapWindow((Tk_Window) winPtr);
@@ -5804,7 +5835,7 @@ WmStackorderToplevelWrapperMap(
 
     if (Tk_IsMapped(winPtr) && Tk_IsTopLevel(winPtr)
 	    && (winPtr->display == display)) {
-	macWindow = TkMacOSXDrawableWindow(winPtr->window);
+	macWindow = [TkMacOSXDrawableWindow(winPtr->window) windowRef];
 
 	hPtr = Tcl_CreateHashEntry(table,
 		(const char *) macWindow, &newEntry);
@@ -5942,7 +5973,7 @@ ApplyWindowClassAttributeChanges(
 		    return;
 		}
 	    }
-	    macWindow = TkMacOSXDrawableWindow(winPtr->window);
+	    macWindow = [TkMacOSXDrawableWindow(winPtr->window) windowRef];
 	}
 	if (wmPtr->macClass != oldClass) {
 	    ChkErr(HIWindowChangeClass, macWindow, wmPtr->macClass);
@@ -6031,7 +6062,7 @@ ApplyMasterOverrideChanges(
     }
     if (!macWindow && winPtr->window != None &&
 	    TkMacOSXHostToplevelExists(winPtr)) {
-	macWindow = TkMacOSXDrawableWindow(winPtr->window);
+	macWindow = [TkMacOSXDrawableWindow(winPtr->window) windowRef];
     }
     if (macWindow) {
 	WindowGroupRef group;
@@ -6084,7 +6115,7 @@ WmGetWindowGroup(
 	if (masterWinPtr && masterWinPtr->window != None &&
 		TkMacOSXHostToplevelExists(masterWinPtr)) {
 	    WindowRef masterMacWin =
-		    TkMacOSXDrawableWindow(masterWinPtr->window);
+		    [TkMacOSXDrawableWindow(masterWinPtr->window) windowRef];
 
 	    if (masterMacWin && GetWindowProperty(masterMacWin, 'Tk  ', 'TsGp',
 		    sizeof(group), NULL, &group) != noErr) {

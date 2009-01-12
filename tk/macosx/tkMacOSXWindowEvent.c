@@ -89,14 +89,11 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
     BOOL activate = [[notification name] isEqualToString:NSWindowDidBecomeKeyNotification];
     NSWindow *w = [notification object];
-    WindowRef whichWindow = [w windowRef];
-    Window window = TkMacOSXGetXWindow(whichWindow);
-    TkDisplay *dispPtr = TkGetDisplayList();
-    TkWindow *winPtr = (TkWindow *)Tk_IdToWindow(dispPtr->display, window);
+    TkWindow *winPtr = TkMacOSXGetTkWindow(w);
 
-    GenerateActivateEvents(window, activate);
-    TkMacOSXGenerateFocusEvent(window, activate);
     if (winPtr) {
+	GenerateActivateEvents(winPtr->window, activate);
+	TkMacOSXGenerateFocusEvent(winPtr->window, activate);
 	TkMacOSXEnterExitFullscreen(winPtr, activate);
     }
 }
@@ -146,10 +143,7 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
 #endif
     }
     NSWindow *w = [notification object];
-    WindowRef whichWindow = [w windowRef];
-    Window window = TkMacOSXGetXWindow(whichWindow);
-    TkDisplay *dispPtr = TkGetDisplayList();
-    TkWindow *winPtr = (TkWindow *)Tk_IdToWindow(dispPtr->display, window);
+    TkWindow *winPtr = TkMacOSXGetTkWindow(w);
 
     if (winPtr) {
 	WmInfo *wmPtr = winPtr->wmInfoPtr;
@@ -170,7 +164,7 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
 	    flags |= TK_SIZE_CHANGED;
 	}
 	TkMacOSXInvalClipRgns((Tk_Window) winPtr);
-	TkMacOSXInvalidateWindow((MacDrawable*) window, TK_PARENT_WINDOW);
+	TkMacOSXInvalidateWindow((MacDrawable*) winPtr->window, TK_PARENT_WINDOW);
 	TkGenWMConfigureEvent((Tk_Window)winPtr, x, y, width, height,
 		flags);
 	/*
@@ -191,10 +185,7 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
 - (void)windowExpanded:(NSNotification *)notification {
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
     NSWindow *w = [notification object];
-    WindowRef whichWindow = [w windowRef];
-    Window window = TkMacOSXGetXWindow(whichWindow);
-    TkDisplay *dispPtr = TkGetDisplayList();
-    TkWindow *winPtr = (TkWindow *)Tk_IdToWindow(dispPtr->display, window);
+    TkWindow *winPtr = TkMacOSXGetTkWindow(w);
 
     if (winPtr) {
 	winPtr->wmInfoPtr->hints.initial_state =
@@ -208,10 +199,7 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
 - (void)windowCollapsed:(NSNotification *)notification {
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
     NSWindow *w = [notification object];
-    WindowRef whichWindow = [w windowRef];
-    Window window = TkMacOSXGetXWindow(whichWindow);
-    TkDisplay *dispPtr = TkGetDisplayList();
-    TkWindow *winPtr = (TkWindow *)Tk_IdToWindow(dispPtr->display, window);
+    TkWindow *winPtr = TkMacOSXGetTkWindow(w);
 
     if (winPtr) {
 	Tk_UnmapWindow((Tk_Window) winPtr);
@@ -220,10 +208,7 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
 - (void)windowMapped:(NSNotification *)notification {
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
     NSWindow *w = [notification object];
-    WindowRef whichWindow = [w windowRef];
-    Window window = TkMacOSXGetXWindow(whichWindow);
-    TkDisplay *dispPtr = TkGetDisplayList();
-    TkWindow *winPtr = (TkWindow *)Tk_IdToWindow(dispPtr->display, window);
+    TkWindow *winPtr = TkMacOSXGetTkWindow(w);
 
     if (winPtr) {
 	//Tk_MapWindow((Tk_Window) winPtr);
@@ -232,10 +217,7 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
 - (void)windowUnmapped:(NSNotification *)notification {
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
     NSWindow *w = [notification object];
-    WindowRef whichWindow = [w windowRef];
-    Window window = TkMacOSXGetXWindow(whichWindow);
-    TkDisplay *dispPtr = TkGetDisplayList();
-    TkWindow *winPtr = (TkWindow *)Tk_IdToWindow(dispPtr->display, window);
+    TkWindow *winPtr = TkMacOSXGetTkWindow(w);
 
     if (winPtr) {
 	//Tk_UnmapWindow((Tk_Window) winPtr);
