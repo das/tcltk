@@ -478,6 +478,7 @@ PhotoFormatThreadExitProc(
     while (tsdPtr->formatList != NULL) {
 	freePtr = tsdPtr->formatList;
 	tsdPtr->formatList = tsdPtr->formatList->nextPtr;
+	ckfree((char *) freePtr->name);
 	ckfree((char *) freePtr);
     }
 }
@@ -543,6 +544,10 @@ Tk_CreatePhotoImageFormat(
 	copyPtr->nextPtr = tsdPtr->oldFormatList;
 	tsdPtr->oldFormatList = copyPtr;
     } else {
+	/* for compatibility with aMSN: make a copy of formatPtr->name */
+	char *name = ckalloc(strlen(formatPtr->name) + 1);
+	strcpy(name, formatPtr->name);
+	copyPtr->name = name;
 	copyPtr->nextPtr = tsdPtr->formatList;
 	tsdPtr->formatList = copyPtr;
     }
