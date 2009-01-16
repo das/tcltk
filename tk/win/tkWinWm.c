@@ -2990,8 +2990,13 @@ WmAttributesCmd(tkwin, winPtr, interp, objc, objv)
 		     * translation.  Add the 0.5 to round the value.
 		     */
 		    if (!(wmPtr->exStyleConfig & WS_EX_LAYERED)) {
+#ifdef _WIN64
 			SetWindowLongPtr(wmPtr->wrapper, GWL_EXSTYLE,
 				*stylePtr);
+#else
+			SetWindowLongPtr(wmPtr->wrapper, GWL_EXSTYLE,
+				*stylePtr);
+#endif
 		    }
 		    setLayeredWindowAttributesProc((HWND) wmPtr->wrapper,
 			    wmPtr->colorref, (BYTE) (wmPtr->alpha * 255 + 0.5),
