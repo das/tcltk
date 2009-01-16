@@ -2994,7 +2994,7 @@ WmAttributesCmd(tkwin, winPtr, interp, objc, objv)
 			SetWindowLongPtr(wmPtr->wrapper, GWL_EXSTYLE,
 				*stylePtr);
 #else
-			SetWindowLongPtr(wmPtr->wrapper, GWL_EXSTYLE,
+			SetWindowLong(wmPtr->wrapper, GWL_EXSTYLE,
 				*stylePtr);
 #endif
 		    }
