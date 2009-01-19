@@ -208,6 +208,7 @@ static const CmdInfo builtInCmds[] = {
     {"split",		Tcl_SplitObjCmd,	NULL,			NULL,	1},
     {"subst",		Tcl_SubstObjCmd,	NULL,			NULL,	1},
     {"switch",		Tcl_SwitchObjCmd,	TclCompileSwitchCmd,	NULL,	1},
+    {"throw",		Tcl_ThrowObjCmd,	NULL,			NULL,	1},
     {"trace",		Tcl_TraceObjCmd,	NULL,			NULL,	1},
     {"unset",		Tcl_UnsetObjCmd,	NULL,			NULL,	1},
     {"uplevel",		Tcl_UplevelObjCmd,	NULL,			TclNRUplevelObjCmd,	1},
@@ -3000,11 +3001,10 @@ Tcl_DeleteCommandFromToken(
     }
 
     /*
-     * Mark the Command structure as no longer valid. This allows
-     * TclExecuteByteCode to recognize when a Command has logically been
-     * deleted and a pointer to this Command structure cached in a CmdName
-     * object is invalid. TclExecuteByteCode will look up the command again in
-     * the interpreter's command hashtable.
+     * A number of tests for particular kinds of commands are done by
+     * checking whether the objProc field holds a known value.  Set the
+     * field to NULL so that such tests won't have false positives when
+     * applied to deleted commands.
      */
 
     cmdPtr->objProc = NULL;
