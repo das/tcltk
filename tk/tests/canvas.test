@@ -12,6 +12,7 @@
 package require tcltest 2.1
 eval tcltest::configure $argv
 tcltest::loadTestedCommands
+imageInit
 
 # XXX - This test file is woefully incomplete. At present, only a few of the
 # features are tested.
@@ -935,6 +936,7 @@ test canvas-19.11 {rchars method - errors} -setup {
 } -returnCodes error -result {bad index "foo"}
 
 # cleanup
+imageCleanup
 cleanupTests
 return
 
