@@ -227,10 +227,12 @@ FindCursorByName(
 		sizeof(struct CursorName), NULL, TCL_EXACT, &idx);
     Tcl_DecrRefCount(strPtr);
     if (result == TCL_OK) {
+	NSCursor *macCursor = nil;
+
 	macCursorPtr->type = cursorNames[idx].kind;
 	switch (cursorNames[idx].kind) {
 	case SELECTOR:
-	    macCursorPtr->macCursor = [NSCursor
+	    macCursor = [NSCursor
 		    performSelector:NSSelectorFromString(cursorNames[idx].id)];
 	    break;
 	case IMAGENAMED:
@@ -252,11 +254,12 @@ FindCursorByName(
 	}
 	if (image) {
 	    // FIXME: read hotspot info from .cur files
-	    macCursorPtr->macCursor = [[NSCursor alloc] initWithImage:image
+	    macCursor = [[NSCursor alloc] initWithImage:image
 		    hotSpot:cursorNames[idx].hotspot];
 	}
-	if (macCursorPtr->macCursor) {
-	    CFRetain(macCursorPtr->macCursor);
+	if (macCursor) {
+	    CFRetain(macCursor);
+	    macCursorPtr->macCursor = macCursor;
 	}
     }
 }
