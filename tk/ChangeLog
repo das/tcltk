@@ -1,3 +1,30 @@
+2009-01-16  Don Porter	<dgp@users.sourceforge.net>
+
+	* generic/tk.h:		Bump patchlevel to 8.6b1.1 to distinguish
+	* library/tk.tcl:	CVS snapshots from the 8.6b1 and 8.6b2 releases.
+	* unix/configure.in:
+	* win/configure.in:
+
+	* unix/configure:	autoconf-2.59
+	* win/configure:
+
+2009-01-14  Jan Nijtmans  <nijtmans@users.sf.net>
+
+	* generic/tkImgPhoto.c: fix for aMSN compatibility [tcl-Bug 2507326]
+	* generic/tkMenu.h: CONSTify Tk(Create|Find)MenuReferences
+	* generic/tkMenu.c: various internal "const" decorations.
+
+2009-01-13  Jan Nijtmans  <nijtmans@users.sf.net>
+
+	* unix/tcl.m4: fix [tcl-Bug 2502365] Building of head on
+	  HPUX is broken when using the native CC
+	* unix/configure (autoconf-2.59)
+
+2009-01-13  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* tests/constraints.tcl: Made the tests more independent of the presence
+	* tests/*.test:          of images in the interpreter.
+
 2009-01-11  Pat Thoyts  <patthoyts@users.sourceforge.net>
 
 	* tests/bind.test: Fixed keysym bind tests for unix [Bug 2336454]
