@@ -18,6 +18,10 @@
 #ifndef _TKMACDEFAULT
 #define _TKMACDEFAULT
 
+#ifndef TK_MAC_BUTTON_USE_COMPATIBILITY_METRICS
+#define TK_MAC_BUTTON_USE_COMPATIBILITY_METRICS 1
+#endif
+
 /*
  * The definitions below provide symbolic names for the default colors.
  * NORMAL_BG -		Normal background color.
@@ -70,7 +74,11 @@
 #define DEF_BUTTON_HIGHLIGHT_BG_MONO	DEF_BUTTON_BG_MONO
 #define DEF_BUTTON_HIGHLIGHT		"systemButtonFrame"
 #define DEF_LABEL_HIGHLIGHT_WIDTH	"0"
+#if TK_MAC_BUTTON_USE_COMPATIBILITY_METRICS
 #define DEF_BUTTON_HIGHLIGHT_WIDTH	"4"
+#else
+#define DEF_BUTTON_HIGHLIGHT_WIDTH	"1"
+#endif
 #define DEF_BUTTON_IMAGE		((char *) NULL)
 #define DEF_BUTTON_INDICATOR		"1"
 #define DEF_BUTTON_JUSTIFY		"center"
@@ -78,9 +86,17 @@
 #define DEF_BUTTON_ON_VALUE		"1"
 #define DEF_BUTTON_TRISTATE_VALUE	""
 #define DEF_BUTTON_OVER_RELIEF		""
+#if TK_MAC_BUTTON_USE_COMPATIBILITY_METRICS
 #define DEF_BUTTON_PADX			"12"
+#else
+#define DEF_BUTTON_PADX			"1"
+#endif
 #define DEF_LABCHKRAD_PADX		"1"
+#if TK_MAC_BUTTON_USE_COMPATIBILITY_METRICS
 #define DEF_BUTTON_PADY			"3"
+#else
+#define DEF_BUTTON_PADY			"1"
+#endif
 #define DEF_LABCHKRAD_PADY		"1"
 #define DEF_BUTTON_RELIEF		"flat"
 #define DEF_LABCHKRAD_RELIEF		"flat"
