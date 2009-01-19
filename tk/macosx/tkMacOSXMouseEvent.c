@@ -229,6 +229,7 @@ enum {
 	Tk_UpdatePointer(tkwin, global.x, global.y, state);
     } else {
 	CGFloat delta;
+	int coarseDelta;
 	XEvent xEvent;
 
 	xEvent.type = MouseWheelEvent;
@@ -242,15 +243,17 @@ enum {
 
 	delta = [theEvent deltaY];
 	if (delta != 0.0) {
+	    coarseDelta = (delta > -1.0 && delta < 1.0) ? (signbit(delta) ? -1 : 1) : lround(delta);
 	    xEvent.xbutton.state = state;
-	    xEvent.xkey.keycode = delta;
+	    xEvent.xkey.keycode = coarseDelta;
 	    xEvent.xany.serial = LastKnownRequestProcessed(Tk_Display(tkwin));
 	    Tk_QueueWindowEvent(&xEvent, TCL_QUEUE_TAIL);
 	}
 	delta = [theEvent deltaX];
 	if (delta != 0.0) {
+	    coarseDelta = (delta > -1.0 && delta < 1.0) ? (signbit(delta) ? -1 : 1) : lround(delta);
 	    xEvent.xbutton.state = state | ShiftMask;
-	    xEvent.xkey.keycode = delta;
+	    xEvent.xkey.keycode = coarseDelta;
 	    xEvent.xany.serial = LastKnownRequestProcessed(Tk_Display(tkwin));
 	    Tk_QueueWindowEvent(&xEvent, TCL_QUEUE_TAIL);
 	}
