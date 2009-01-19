@@ -13,7 +13,7 @@ namespace import ::tcltest::*
 eval tcltest::configure $argv
 tcltest::loadTestedCommands
 
-eval image delete [image names]
+imageInit
 
 # Note that we do not use [tcltest::makeFile] because it is
 # only suitable for text files
@@ -164,7 +164,7 @@ test imgPPM-4.1 {StringReadPPM procedure, data too short [Bug 1822391]} -body {
     image delete I
 } -returnCodes error -result {truncated PPM data}
 
-eval image delete [image names]
+imageFinish
 
 # cleanup
 catch {file delete test.ppm}
