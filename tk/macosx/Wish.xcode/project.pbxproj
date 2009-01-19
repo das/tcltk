@@ -4007,7 +4007,6 @@
 				F9A5C5F608F651AB008AE941 /* ShellScript */,
 				8DD76FAB0486AB0100D96B5E /* Sources */,
 				8DD76FAD0486AB0100D96B5E /* Frameworks */,
-				F95FA74C0B32CE190072E431 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -4076,23 +4075,6 @@
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		F95FA74C0B32CE190072E431 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(TARGET_BUILD_DIR)/$(PRODUCT_NAME)",
-				"$(REZ_COLLECTOR_DIR)/$(PRODUCT_NAME).rsrc",
-			);
-			outputPaths = (
-				"$(TARGET_TEMP_DIR)/stamp",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
-			shellScript = "touch -t $(date -r $(expr $(date '+%s') + 5) '+%Y%m%d%H%M.%S') \"${TARGET_TEMP_DIR}/stamp\"\n\n## Xcode bug workaround: Rezzing does not take place for commandline tool targets\n## even when a ResourceManager Resources phase is present, but this script phase's\n## input dependency on the final merged resource file forces the Rezzing.\n";
-			showEnvVarsInLog = 0;
-		};
 		F97AF02F0B665DA900310EA2 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
