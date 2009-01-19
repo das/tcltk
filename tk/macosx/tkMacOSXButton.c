@@ -72,7 +72,7 @@ static const BoundsFix boundsFixes[] = {
 #endif
 
 static NSImage *GetNativeButtonImage(Display *display, Tk_Image image,
-	Pixmap bitmap, GC gc, int width, int height)
+	Pixmap bitmap, GC gc, int width, int height);
 static void DisplayNativeButton(TkButton *butPtr);
 static void ComputeNativeButtonGeometry(TkButton *butPtr);
 static void DisplayUnixButton(TkButton *butPtr);
