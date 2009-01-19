@@ -79,7 +79,9 @@
 
 static OSStatus CarbonEventHandlerProc(EventHandlerCallRef callRef,
 	EventRef event, void *userData);
+#ifdef OBSOLETE
 static OSStatus InstallStandardApplicationEventHandler(void);
+#endif
 
 /*
  * Static data used by several functions in this file:
@@ -126,8 +128,10 @@ CarbonEventHandlerProc(
     if (!(macEvent.eClass == kEventClassMouse && (
 	    macEvent.eKind == kEventMouseMoved ||
 	    macEvent.eKind == kEventMouseDragged))) {
+/*
 	TkMacOSXDbgMsg("Started handling %s",
 		TkMacOSXCarbonEventToAscii(event));
+*/
 	TkMacOSXInitNamedDebugSymbol(HIToolbox, void, _DebugPrintEvent,
 		EventRef inEvent);
 	if (_DebugPrintEvent) {
@@ -148,9 +152,11 @@ CarbonEventHandlerProc(
 #ifdef TK_MAC_DEBUG_CARBON_EVENTS
     if (macEvent.eKind != kEventMouseMoved &&
 	    macEvent.eKind != kEventMouseDragged) {
+/*
 	TkMacOSXDbgMsg("Finished handling %s: %s handled",
 		TkMacOSXCarbonEventToAscii(event),
 		eventStatus.stopProcessing ? "   " : "not");
+*/
     }
 #endif /* TK_MAC_DEBUG_CARBON_EVENTS */
     return err;
@@ -203,7 +209,9 @@ TkMacOSXInitCarbonEvents(
 
     carbonEventHandlerUPP = NewEventHandlerUPP(CarbonEventHandlerProc);
     carbonEventInterp = interp;
+#ifdef OBSOLETE
     ChkErr(InstallStandardApplicationEventHandler);
+#endif
     ChkErr(InstallEventHandler, GetEventDispatcherTarget(),
 	    carbonEventHandlerUPP, GetEventTypeCount(dispatcherEventTypes),
 	    dispatcherEventTypes, (void *) carbonEventInterp, NULL);
@@ -294,7 +302,9 @@ TkMacOSXInstallWindowCarbonEventHandler(
 #endif /* TK_MAC_DEBUG_CARBON_EVENTS */
 }
 #endif
+
 
+#ifdef OBSOLETE
 /*
  *----------------------------------------------------------------------
  *
@@ -337,6 +347,7 @@ InstallStandardApplicationEventHandler(void)
     }
     return err;
 }
+#endif
 /*
  * Local Variables:
  * mode: c

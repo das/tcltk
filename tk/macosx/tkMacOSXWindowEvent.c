@@ -68,11 +68,11 @@
 
 #ifdef HAVE_QUICKDRAW
 static int		GenerateUpdateEvent(Window window);
+static void		ClearPort(CGrafPtr port, HIShapeRef updateRgn);
 #endif
 static int		GenerateUpdates(HIMutableShapeRef updateRgn,
 			    CGRect *updateBounds, TkWindow *winPtr);
 static int		GenerateActivateEvents(Window window, int activeFlag);
-static void		ClearPort(CGrafPtr port, HIShapeRef updateRgn);
 
 #pragma mark TKApplication(TKWindowEvent)
 
@@ -1111,6 +1111,7 @@ Tk_MacOSXIsAppInFront(void)
     return (isFrontProcess == true);
 }
 
+#ifdef HAVE_QUICKDRAW
 /*
  *----------------------------------------------------------------------
  *
@@ -1149,6 +1150,7 @@ ClearPort(
     CGContextClearRect(context, rect);
     QDEndCGContext(port, &context);
 }
+#endif
 
 #pragma mark TKContentView
 
@@ -1210,7 +1212,9 @@ ClearPort(
     }
     HIShapeGetBounds(shape, &updateBounds);
     if (winPtr->wmInfoPtr && winPtr->wmInfoPtr->flags & WM_TRANSPARENT) {
+#ifdef HAVE_QUICKDRAW
 	ClearPort(TkMacOSXGetDrawablePort(winPtr->window), shape);
+#endif
     }
     if (GenerateUpdates(shape, &updateBounds, winPtr)) {
 	/*

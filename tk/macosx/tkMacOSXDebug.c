@@ -60,7 +60,7 @@
 #include "tkMacOSXPrivate.h"
 #include "tkMacOSXDebug.h"
 
-#ifdef TK_MAC_DEBUG
+#ifdef TK_MAC_DEBUG_OBSOLETE
 
 typedef struct {
     EventKind kind;
@@ -497,6 +497,10 @@ TkMacOSXDebugFlashRegion(
 	}
     }
 }
+
+#endif
+
+#ifdef TK_MAC_DEBUG
 
 #include <mach-o/dyld.h>
 #include <mach-o/nlist.h>
