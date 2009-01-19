@@ -20,6 +20,7 @@
 #include <sys/utsname.h>
 #include <mach-o/dyld.h>
 #include <mach-o/getsect.h>
+#include <objc/objc-auto.h>
 
 /*
  * The following structures are used to map the script/language codes of a
@@ -79,6 +80,23 @@ Tcl_Encoding TkMacOSXCarbonEncoding = NULL;
 
 static char scriptPath[PATH_MAX + 1] = "";
 
+#pragma mark TKApplication(TKInit)
+
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 1060
+#define NSTextInputContextKeyboardSelectionDidChangeNotification @"NSTextInputContextKeyboardSelectionDidChangeNotification"
+static void keyboardChanged(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
+    [[NSNotificationCenter defaultCenter] postNotificationName:NSTextInputContextKeyboardSelectionDidChangeNotification object:nil userInfo:nil];
+}
+#endif
+
+@interface TKApplication(TKWindowEvent)
+- (void)_setupWindowNotifications;
+@end
+
+@interface TKApplication(TKKeyboard)
+- (void)keyboardChanged:(NSNotification *)notification;
+@end
+
 @implementation TKApplication
 @end
 
@@ -86,6 +104,15 @@ static char scriptPath[PATH_MAX + 1] = "";
 - (void)_postedNotification:(NSNotification *)notification {
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
 }
+#define observe(n, s) [nc addObserver:self selector:@selector(s) name:(n) object:nil]
+- (void)_setupApplicationNotifications {
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    observe(NSTextInputContextKeyboardSelectionDidChangeNotification, keyboardChanged:);
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 1060
+    CFNotificationCenterAddObserver(CFNotificationCenterGetDistributedCenter(), NULL, &keyboardChanged, kTISNotifySelectedKeyboardInputSourceChanged, NULL, CFNotificationSuspensionBehaviorCoalesce);
+#endif
+}
+#undef observe(n, s)
 - (void)_setupEventLoop {
     _running = 1;
     if (!_appFlags._hasBeenRun) {
@@ -98,8 +125,8 @@ static char scriptPath[PATH_MAX + 1] = "";
     [self setDelegate:self];
     [[NSNotificationCenter defaultCenter] addObserver:self
 	    selector:@selector(_postedNotification:) name:nil object:nil];
-    [self tkSetupApplicationNotifications];
-    [self tkSetupWindowNotifications];
+    [self _setupWindowNotifications];
+    [self _setupApplicationNotifications];
     [self _setupEventLoop];
     [self setWindowsNeedUpdate:YES];
 }
@@ -112,6 +139,8 @@ static char scriptPath[PATH_MAX + 1] = "";
     }
 }
 @end
+#pragma mark -
+
 
 
 /*

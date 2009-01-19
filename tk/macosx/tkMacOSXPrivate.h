@@ -259,10 +259,6 @@ VISIBILITY_HIDDEN
 @interface TKApplication(TKKeyEvent)
 - (NSEvent *)tkProcessKeyEvent:(NSEvent *)theEvent;
 @end
-@interface TKApplication(TKWindowEvent)
-- (void)tkSetupApplicationNotifications;
-- (void)tkSetupWindowNotifications;
-@end
 
 VISIBILITY_HIDDEN
 @interface TKContentView : NSView {

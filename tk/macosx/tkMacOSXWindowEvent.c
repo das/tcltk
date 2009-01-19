@@ -224,8 +224,8 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
     }
 }
 
-#define observe(n, s) [nc addObserver:self selector:@selector(s) name:n object:nil]
-- (void)tkSetupWindowNotifications {
+#define observe(n, s) [nc addObserver:self selector:@selector(s) name:(n) object:nil]
+- (void)_setupWindowNotifications {
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     observe(NSWindowDidBecomeKeyNotification, windowActivation:);
     observe(NSWindowDidResignKeyNotification, windowActivation:);
@@ -238,8 +238,6 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
     observe(NSWindowDidMiniaturizeNotification, windowCollapsed:);
     observe(NSWindowWillOrderOnScreenNotification, windowMapped:);
     observe(NSWindowDidOrderOffScreenNotification, windowUnmapped:);
-}
-- (void)tkSetupApplicationNotifications {
 }
 #undef observe(n, s)
 @end

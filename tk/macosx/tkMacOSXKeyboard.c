@@ -13,7 +13,7 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkMacOSXInt.h"
+#include "tkMacOSXPrivate.h"
 #include "tkMacOSXEvent.h"	/* for TkMacOSXKeycodeToUnicode()
 				 * FIXME: That function should probably move
 				 * here. */
@@ -108,6 +108,8 @@ static Tcl_HashTable vkeyTable;		/* virtualkeyArray hashed by virtual
 static int latin1Table[LATIN1_MAX+1];	/* Reverse mapping table for
 					 * controls, ASCII and Latin-1. */
 
+static int keyboardChanged = 1;
+
 /*
  * Prototypes for static functions used in this file.
  */
@@ -116,6 +118,12 @@ static void	InitKeyMaps (void);
 static void	InitLatin1Table(Display *display);
 static int	XKeysymToMacKeycode(Display *display, KeySym keysym);
 
+@implementation TKApplication(TKKeyboard)
+- (void)keyboardChanged:(NSNotification *)notification {
+    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+    keyboardChanged = 1;
+}
+@end
 
 /*
  *----------------------------------------------------------------------
