@@ -89,7 +89,12 @@ typedef struct {
 				 * QD face numbers. */
     short qdSize;		/* Font size in points. */
     short qdStyle;		/* QuickDraw style bits. */
+    NSFont *nsFont;
 } MacFont;
+
+#define GetNSFontTraitFromTkFontAttributes(fa) \
+	((fa).weight == TK_FW_BOLD ? NSBoldFontMask : NSUnboldFontMask) | \
+	((fa).slant == TK_FS_ITALIC ? NSItalicFontMask : NSUnitalicFontMask)
 
 /*
  * Information about font families, initialized at startup time. Font
@@ -526,6 +531,7 @@ TkpGetFontFromAttributes(
     const char *name;
     const MacFontFamily *familyPtr;
     MacFont *fontPtr;
+    NSFont *nsFont;
 
     familyId = GetAppFont();
     name = NULL;
@@ -556,9 +562,42 @@ TkpGetFontFromAttributes(
     }
     InitFont(familyId, name, TkFontGetPoints(tkwin, faPtr->size),
 	    qdStyle, fontPtr);
+    nsFont = [[NSFontManager sharedFontManager]
+	    fontWithFamily:[[NSString alloc] initWithUTF8String:faPtr->family]
+	    traits:GetNSFontTraitFromTkFontAttributes(*faPtr)
+	    weight:(faPtr->weight == TK_FW_BOLD ? 9 : 5)
+	    size:TkFontGetPoints(tkwin, faPtr->size)];
+    if (nsFont) {
+	CFRetain(nsFont);
+	fontPtr->nsFont = nsFont;
+    }
 
     return (TkFont *) fontPtr;
 }
+
+/*
+ *---------------------------------------------------------------------------
+ *
+ * TkMacOSXNSFontForFont --
+ *
+ *	Return an NSFont for the given Tk_Font, or NULL.
+ *
+ * Results:
+ *	NSFont *.
+ *
+ * Side effects:
+ *	None.
+ *
+ *---------------------------------------------------------------------------
+ */
+
+MODULE_SCOPE NSFont*
+TkMacOSXNSFontForFont(
+    Tk_Font tkfont)
+{
+    return ((MacFont *)tkfont)->nsFont;
+}
+
 
 /*
  *---------------------------------------------------------------------------
@@ -1522,6 +1561,8 @@ InitFont(
     }
 
     fontPtr->font.fid = (Font) fontPtr;
+    
+    fontPtr->nsFont = nil;
 
     faPtr = &fontPtr->font.fa;
     faPtr->family = familyName;
@@ -1949,6 +1990,9 @@ ReleaseFont(
 {
     ATSUDisposeTextLayout(fontPtr->atsuLayout);
     ATSUDisposeStyle(fontPtr->atsuStyle);
+    if (fontPtr->nsFont) {
+	CFRelease(fontPtr->nsFont);
+    }
 }
 
 /*

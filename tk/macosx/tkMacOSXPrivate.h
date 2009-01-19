@@ -18,6 +18,8 @@
 #include "tkMacOSXInt.h"
 #endif
 
+#include "tkMacOSXDefault.h"
+
 /* Macros for Mac OS X API availability checking */
 #define TK_IF_MAC_OS_X_API(vers, symbol, ...) \
 	tk_if_mac_os_x_10_##vers(symbol != NULL, 1, __VA_ARGS__)
@@ -239,6 +241,8 @@ MODULE_SCOPE HIShapeRef	TkMacOSXGetClipRgn(Drawable drawable);
 MODULE_SCOPE CGImageRef	TkMacOSXCreateCGImageWithDrawable(Drawable drawable);
 MODULE_SCOPE Tcl_Obj *	TkMacOSXGetStringObjFromCFString(CFStringRef str);
 MODULE_SCOPE TkWindow*	TkMacOSXGetTkWindow(NSWindow *w);
+MODULE_SCOPE NSFont*	TkMacOSXNSFontForFont(Tk_Font tkfont);
+
 
 #define VISIBILITY_HIDDEN __attribute__((__visibility__("hidden")))
 
