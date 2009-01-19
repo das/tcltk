@@ -197,8 +197,10 @@ static int		WmWithdrawCmd(Tk_Window tkwin, TkWindow *winPtr,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *const objv[]);
 static void		WmUpdateGeom(WmInfo *wmPtr, TkWindow *winPtr);
+#ifdef MAC_OSX_TK_TODO
 static int		WmWinStyle(Tcl_Interp *interp, TkWindow *winPtr,
 			    int objc, Tcl_Obj *const objv[]);
+#endif
 static void		ApplyWindowClassAttributeChanges(TkWindow *winPtr,
 			    WindowRef macWindow, WindowClass oldClass,
 			    WindowAttributes oldAttributes, int create);
@@ -4979,6 +4981,7 @@ TkUnsupported1ObjCmd(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
+#ifdef MAC_OSX_TK_TODO
     static const char *const subcmds[] = {
 	"style", NULL
     };
@@ -5019,8 +5022,11 @@ TkUnsupported1ObjCmd(
     }
     /* won't be reached */
     return TCL_ERROR;
+#endif
+    return TCL_OK;
 }
 
+#ifdef MAC_OSX_TK_TODO
 /*
  *----------------------------------------------------------------------
  *
@@ -5185,6 +5191,7 @@ WmWinStyle(
     }
     return TCL_OK;
 }
+#endif
 
 /*
  *----------------------------------------------------------------------

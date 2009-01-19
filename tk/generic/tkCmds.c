@@ -51,7 +51,7 @@ static int		WindowingsystemCmd(ClientData dummy,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *const *objv);
 
-#if defined(__WIN32__) || defined(MAC_OSX_TK)
+#if defined(__WIN32__) || defined(MAC_OSX_TK_TODO)
 MODULE_SCOPE const TkEnsemble tkFontchooserEnsemble[];
 #else
 #define tkFontchooserEnsemble NULL
@@ -642,7 +642,7 @@ int
 TkInitTkCmd(Tcl_Interp *interp, ClientData clientData)
 {
     TkMakeEnsemble(interp, "::", "tk", clientData, tkCmdMap);
-#if defined(__WIN32__) || defined(MAC_OSX_TK)
+#if defined(__WIN32__) || defined(MAC_OSX_TK_TODO)
     TkInitFontchooser(interp, clientData);
 #endif
     return TCL_OK;

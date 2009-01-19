@@ -180,9 +180,11 @@ TkMacOSXProcessEvent(
     case kEventClassCommand:
 	TkMacOSXProcessCommandEvent(eventPtr, statusPtr);
 	break;
+#ifdef MAC_OSX_TK_TODO
     case kEventClassFont:
 	TkMacOSXProcessFontEvent(eventPtr, statusPtr);
 	break;
+#endif
     default: {
 #ifdef TK_MAC_DEBUG_CARBON_EVENTS
 	TkMacOSXDbgMsg("Unrecognised event: %s",

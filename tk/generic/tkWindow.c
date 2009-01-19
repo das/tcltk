@@ -185,7 +185,7 @@ static TkCmd commands[] = {
      * these commands differently (via the script library).
      */
 
-#if defined(__WIN32__) || defined(MAC_OSX_TK)
+#if defined(__WIN32__) || defined(MAC_OSX_TK_TODO)
     {"tk_chooseColor",	NULL,		Tk_ChooseColorObjCmd,	NULL, 0, 1},
     {"tk_chooseDirectory", NULL,	Tk_ChooseDirectoryObjCmd,NULL, 0,1},
     {"tk_getOpenFile",	NULL,		Tk_GetOpenFileObjCmd,	NULL, 0, 1},

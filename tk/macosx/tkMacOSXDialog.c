@@ -16,6 +16,8 @@
 #include "tkMacOSXPrivate.h"
 #include "tkFileFilter.h"
 
+#ifdef MAC_OSX_TK_TODO
+
 #ifndef StrLength
 #define StrLength(s)	(*((unsigned char *) (s)))
 #endif
@@ -1316,6 +1318,7 @@ MatchOneType(
 
     return UNMATCHED;
 }
+#endif
 
 /*
  *----------------------------------------------------------------------
@@ -1374,6 +1377,7 @@ TkAboutDlg(void)
     [NSApp orderFrontStandardAboutPanelWithOptions:options];
 }
 
+#ifdef MAC_OSX_TK_TODO
 /*
  *----------------------------------------------------------------------
  *
@@ -2303,6 +2307,7 @@ TkInitFontchooser(
     return TCL_OK;
 }
 
+#endif
 /*
  * Local Variables:
  * mode: c
