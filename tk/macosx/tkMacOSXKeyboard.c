@@ -190,53 +190,41 @@ static void
 InitLatin1Table(
     Display *display)
 {
-    static Boolean latin1_initialized = false;
-    static SInt16 lastKeyLayoutID = -1;
+    int keycode;
+    KeySym keysym;
+    int state;
+    int modifiers;
 
-    SInt16 keyScript;
-    SInt16 keyLayoutID;
+    keyboardChanged = 0;
 
-    keyScript = GetScriptManagerVariable(smKeyScript);
-    keyLayoutID = GetScriptVariable(keyScript,smScriptKeys);
+    memset(latin1Table, 0, sizeof(latin1Table));
 
-    if (!latin1_initialized || (lastKeyLayoutID != keyLayoutID)) {
-	int keycode;
-	KeySym keysym;
-	int state;
-	int modifiers;
+    /*
+     * In the common X11 implementations, a keymap has four columns
+     * "plain", "Shift", "Mode_switch" and "Mode_switch + Shift". We don't
+     * use "Mode_switch", but we use "Option" instead. (This is similar to
+     * Apple's X11 implementation, where "Mode_switch" is used as an alias
+     * for "Option".)
+     *
+     * So here we go through all 4 columns of the keymap and find all
+     * Latin-1 compatible keycodes. We go through the columns back-to-front
+     * from the more exotic columns to the more simple, so that simple
+     * keycode-modifier combinations are preferred in the resulting table.
+     */
 
-	latin1_initialized = true;
-	lastKeyLayoutID = keyLayoutID;
+    for (state = 3; state >= 0; state--) {
+	modifiers = 0;
+	if (state & 1) {
+	    modifiers |= shiftKey;
+	}
+	if (state & 2) {
+	    modifiers |= optionKey;
+	}
 
-	memset(latin1Table, 0, sizeof(latin1Table));
-
-	/*
-	 * In the common X11 implementations, a keymap has four columns
-	 * "plain", "Shift", "Mode_switch" and "Mode_switch + Shift". We don't
-	 * use "Mode_switch", but we use "Option" instead. (This is similar to
-	 * Apple's X11 implementation, where "Mode_switch" is used as an alias
-	 * for "Option".)
-	 *
-	 * So here we go through all 4 columns of the keymap and find all
-	 * Latin-1 compatible keycodes. We go through the columns back-to-front
-	 * from the more exotic columns to the more simple, so that simple
-	 * keycode-modifier combinations are preferred in the resulting table.
-	 */
-
-	for (state = 3; state >= 0; state--) {
-	    modifiers = 0;
-	    if (state & 1) {
-		modifiers |= shiftKey;
-	    }
-	    if (state & 2) {
-		modifiers |= optionKey;
-	    }
-
-	    for (keycode = 0; keycode <= MAC_KEYCODE_MAX; keycode++) {
-		keysym = XKeycodeToKeysym(display,keycode<<16,state);
-		if (keysym <= LATIN1_MAX) {
-		    latin1Table[keysym] = keycode | modifiers;
-		}
+	for (keycode = 0; keycode <= MAC_KEYCODE_MAX; keycode++) {
+	    keysym = XKeycodeToKeysym(display,keycode<<16,state);
+	    if (keysym <= LATIN1_MAX) {
+		latin1Table[keysym] = keycode | modifiers;
 	    }
 	}
     }
@@ -476,7 +464,9 @@ XKeysymToMacKeycode(
 	 * character code point are the same.
 	 */
 
-	InitLatin1Table(display);
+	if (keyboardChanged) {
+	    InitLatin1Table(display);
+	}
 	return latin1Table[keysym];
     }
 
