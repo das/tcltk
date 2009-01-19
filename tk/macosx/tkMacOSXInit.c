@@ -129,6 +129,13 @@ static void keyboardChanged(CFNotificationCenterRef center, void *observer, CFSt
     [self _setupApplicationNotifications];
     [self _setupEventLoop];
     [self setWindowsNeedUpdate:YES];
+    [[NSUserDefaults standardUserDefaults] registerDefaults:
+	    [NSDictionary dictionaryWithObjectsAndKeys:
+	    [NSNumber numberWithBool:YES],
+	    @"_NSCanWrapButtonTitles",
+	    [NSNumber numberWithInt:-1],
+	    @"NSStringDrawingTypesetterBehavior",
+	    nil]];
 }
 - (NSBundle *)tkFrameworkBundle {
     if (tkLibPath[0] != '\0') {
