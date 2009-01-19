@@ -6247,7 +6247,7 @@ TkMacOSXEnterExitFullscreen(
     SystemUIOptions options;
 
     GetSystemUIMode(&mode, &options);
-    if (wmPtr->flags & WM_FULLSCREEN && active) {
+    if (wmPtr && wmPtr->flags & WM_FULLSCREEN && active) {
 	static SystemUIMode fullscreenMode = 0;
 	static SystemUIOptions fullscreenOptions = 0;
 

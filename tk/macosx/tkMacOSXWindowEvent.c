@@ -825,9 +825,9 @@ TkMacOSXGenerateFocusEvent(
      * kWindowNoActivatesAttribute.
      */
 
-    if (((TkWindow *)tkwin)->wmInfoPtr->macClass == kHelpWindowClass ||
+    if (((TkWindow *)tkwin)->wmInfoPtr && (((TkWindow *)tkwin)->wmInfoPtr->macClass == kHelpWindowClass ||
 	    ((TkWindow *)tkwin)->wmInfoPtr->attributes &
-		    kWindowNoActivatesAttribute) {
+		    kWindowNoActivatesAttribute)) {
 	return false;
     }
 
@@ -1209,7 +1209,7 @@ ClearPort(
 	return;
     }
     HIShapeGetBounds(shape, &updateBounds);
-    if (winPtr->wmInfoPtr->flags & WM_TRANSPARENT) {
+    if (winPtr->wmInfoPtr && winPtr->wmInfoPtr->flags & WM_TRANSPARENT) {
 	ClearPort(TkMacOSXGetDrawablePort(winPtr->window), shape);
     }
     if (GenerateUpdates(shape, &updateBounds, winPtr)) {
