@@ -4709,20 +4709,12 @@ TkSetWMName(
     TkWindow *winPtr,
     Tk_Uid titleUid)
 {
-    CFStringRef title;
-
     if (Tk_IsEmbedded(winPtr)) {
 	return;
     }
 
-    title = CFStringCreateWithBytes(NULL, (const unsigned char *) titleUid,
-	    strlen(titleUid), kCFStringEncodingUTF8, false);
-    if (title) {
-	WindowRef macWin = [TkMacOSXDrawableWindow(winPtr->window) windowRef];
-
-	SetWindowTitleWithCFString(macWin, title);
-	CFRelease(title);
-    }
+    [TkMacOSXDrawableWindow(winPtr->window)
+	    setTitle:[[NSString alloc] initWithUTF8String:titleUid]];
 }
 
 /*
