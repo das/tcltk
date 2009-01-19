@@ -57,10 +57,11 @@
  */
 
 #include "tkMacOSXPrivate.h"
-#include "tkMacOSXDefault.h"
 #include "tkEntry.h"
 
 static ThemeButtonKind	ComputeIncDecParameters(int height, int *width);
+
+#define HIOrientation kHIThemeOrientationNormal
 
 /*
  *--------------------------------------------------------------
@@ -131,13 +132,19 @@ TkpDrawEntryBorderAndFocus(
     Drawable d,
     int isSpinbox)
 {
-    Rect bounds;
+    CGRect bounds;
     TkMacOSXDrawingContext dc;
     GC bgGC;
     Tk_Window tkwin = entryPtr->tkwin;
-    ThemeDrawState drawState;
     int oldWidth = 0;
     MacDrawable *macDraw = (MacDrawable *) d;
+    const HIThemeFrameDrawInfo info = {
+	.version = 0,
+	.kind = kHIThemeFrameTextFieldSquare,
+	.state = (entryPtr->state == STATE_DISABLED ? kThemeStateInactive :
+		kThemeStateActive),
+	.isFocused = (entryPtr->flags & GOT_FOCUS ? 1 : 0),
+    };
 
     /*
      * I use 6 as the borderwidth. 2 of the 5 go into the actual frame the 3
@@ -183,32 +190,18 @@ TkpDrawEntryBorderAndFocus(
      * 3 according to the Carbon docs.
      */
 
-    bounds.left = macDraw->xOff + MAC_OSX_FOCUS_WIDTH;
-    bounds.top = macDraw->yOff + MAC_OSX_FOCUS_WIDTH;
-    bounds.right = macDraw->xOff + Tk_Width(tkwin) - MAC_OSX_FOCUS_WIDTH;
-    bounds.bottom = macDraw->yOff + Tk_Height(tkwin) - MAC_OSX_FOCUS_WIDTH;
-    if (entryPtr->state == STATE_DISABLED) {
-	drawState = kThemeStateInactive;
-    } else {
-	drawState = kThemeStateActive;
-    }
-    if (!TkMacOSXSetupDrawingContext(d, NULL, 0, &dc)) {
+    bounds.origin.x = macDraw->xOff + MAC_OSX_FOCUS_WIDTH;
+    bounds.origin.y = macDraw->yOff + MAC_OSX_FOCUS_WIDTH;
+    bounds.size.width = Tk_Width(tkwin) - 2*MAC_OSX_FOCUS_WIDTH;
+    bounds.size.height = Tk_Height(tkwin) - 2*MAC_OSX_FOCUS_WIDTH;
+    if (!TkMacOSXSetupDrawingContext(d, NULL, 1, &dc)) {
 	return 0;
     }
-    DrawThemeEditTextFrame(&bounds, drawState);
-    if (entryPtr->flags & GOT_FOCUS) {
-	/*
-	 * Don't call this if we don't have the focus, because then it erases
-	 * the focus rect to white, but we've already drawn the
-	 * highlightbackground above.
-	 */
-
-	DrawThemeFocusRect(&bounds, (entryPtr->flags & GOT_FOCUS) != 0);
-    }
+    ChkErr(HIThemeDrawFrame, &bounds, &info, dc.context, HIOrientation);
+    TkMacOSXRestoreDrawingContext(&dc);
     if (isSpinbox) {
 	Tk_Width(tkwin) = oldWidth;
     }
-    TkMacOSXRestoreDrawingContext(&dc);
     return 1;
 }
 
@@ -237,13 +230,7 @@ TkpDrawSpinboxButtons(
     Spinbox *sbPtr,
     Drawable d)
 {
-    Rect inBounds;
-    ThemeButtonKind inKind;
-    ThemeButtonDrawInfo inNewInfo;
-    ThemeButtonDrawInfo * inPrevInfo = NULL;
-    ThemeEraseUPP inEraseProc = NULL;
-    ThemeButtonDrawUPP inLabelProc = NULL;
-    UInt32 inUserData = 0;
+    CGRect bounds;
     Tk_Window tkwin = sbPtr->entry.tkwin;
     int height = Tk_Height(tkwin);
     int buttonHeight = height - 2 * MAC_OSX_FOCUS_WIDTH;
@@ -252,6 +239,10 @@ TkpDrawSpinboxButtons(
     XRectangle rects[1];
     GC bgGC;
     MacDrawable *macDraw = (MacDrawable *) d;
+    HIThemeButtonDrawInfo info = {
+	.version = 0,
+	.adornment = kThemeAdornmentNone,
+    };
 
     /*
      * FIXME: RAISED really makes more sense
@@ -267,31 +258,29 @@ TkpDrawSpinboxButtons(
      * entry is a little bigger than this, so we give it a little slop.
      */
 
-    inKind = ComputeIncDecParameters(buttonHeight, &incDecWidth);
-    if (inKind == (ThemeButtonKind) 0) {
+    info.kind = ComputeIncDecParameters(buttonHeight, &incDecWidth);
+    if (info.kind == (ThemeButtonKind) 0) {
 	return 0;
     }
 
     if (sbPtr->entry.state == STATE_DISABLED) {
-	inNewInfo.state = kThemeStateInactive;
-	inNewInfo.value = kThemeButtonOff;
+	info.state = kThemeStateInactive;
+	info.value = kThemeButtonOff;
     } else if (sbPtr->selElement == SEL_BUTTONUP) {
-	inNewInfo.state = kThemeStatePressedUp;
-	inNewInfo.value = kThemeButtonOn;
+	info.state = kThemeStatePressedUp;
+	info.value = kThemeButtonOn;
     } else if (sbPtr->selElement == SEL_BUTTONDOWN) {
-	inNewInfo.state = kThemeStatePressedDown;
-	inNewInfo.value = kThemeButtonOn;
+	info.state = kThemeStatePressedDown;
+	info.value = kThemeButtonOn;
     } else {
-	inNewInfo.state = kThemeStateActive;
-	inNewInfo.value = kThemeButtonOff;
+	info.state = kThemeStateActive;
+	info.value = kThemeButtonOff;
     }
 
-    inNewInfo.adornment = kThemeAdornmentNone;
-
-    inBounds.left = macDraw->xOff + Tk_Width(tkwin) - incDecWidth - 1;
-    inBounds.right = macDraw->xOff + Tk_Width(tkwin) - 1;
-    inBounds.top = macDraw->yOff + MAC_OSX_FOCUS_WIDTH;
-    inBounds.bottom = macDraw->yOff + Tk_Height(tkwin) - MAC_OSX_FOCUS_WIDTH;
+    bounds.origin.x = macDraw->xOff + Tk_Width(tkwin) - incDecWidth - 1;
+    bounds.origin.y = macDraw->yOff + MAC_OSX_FOCUS_WIDTH;
+    bounds.size.width = incDecWidth;
+    bounds.size.height = Tk_Height(tkwin) - 2*MAC_OSX_FOCUS_WIDTH;
 
     /*
      * We had to make the entry part of the window smaller so that we wouldn't
@@ -300,17 +289,16 @@ TkpDrawSpinboxButtons(
      */
 
     bgGC = Tk_GCForColor(sbPtr->entry.highlightBgColorPtr, d);
-    rects[0].x = inBounds.left;
+    rects[0].x = bounds.origin.x;
     rects[0].y = 0;
     rects[0].width = Tk_Width(tkwin);
     rects[0].height = Tk_Height(tkwin);
     XFillRectangles(Tk_Display(tkwin), d, bgGC, rects, 1);
 
-    if (!TkMacOSXSetupDrawingContext(d, NULL, 0, &dc)) {
+    if (!TkMacOSXSetupDrawingContext(d, NULL, 1, &dc)) {
 	return 0;
     }
-    ChkErr(DrawThemeButton, &inBounds, inKind, &inNewInfo, inPrevInfo,
-	    inEraseProc, inLabelProc, inUserData);
+    ChkErr(HIThemeDrawButton, &bounds, &info, dc.context, HIOrientation, NULL);
     TkMacOSXRestoreDrawingContext(&dc);
     return 1;
 }
