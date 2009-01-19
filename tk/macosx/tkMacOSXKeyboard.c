@@ -146,13 +146,13 @@ InitKeyMaps(void)
 
     Tcl_InitHashTable(&keycodeTable, TCL_ONE_WORD_KEYS);
     for (kPtr = keyArray; kPtr->keycode != 0; kPtr++) {
-	hPtr = Tcl_CreateHashEntry(&keycodeTable, (char *) kPtr->keycode,
+	hPtr = Tcl_CreateHashEntry(&keycodeTable, INT2PTR(kPtr->keycode),
 		&dummy);
 	Tcl_SetHashValue(hPtr, kPtr->keysym);
     }
     Tcl_InitHashTable(&vkeyTable, TCL_ONE_WORD_KEYS);
     for (kPtr = virtualkeyArray; kPtr->keycode != 0; kPtr++) {
-	hPtr = Tcl_CreateHashEntry(&vkeyTable, (char *) kPtr->keycode,
+	hPtr = Tcl_CreateHashEntry(&vkeyTable, INT2PTR(kPtr->keycode),
 		&dummy);
 	Tcl_SetHashValue(hPtr, kPtr->keysym);
     }
@@ -277,12 +277,12 @@ XKeycodeToKeysym(
     newKeycode = keycode >> 16;
 
     if ((keycode & 0xFFFF) == 0x10) {
-	hPtr = Tcl_FindHashEntry(&vkeyTable, (char *) newKeycode);
+	hPtr = Tcl_FindHashEntry(&vkeyTable, INT2PTR(newKeycode));
 	if (hPtr != NULL) {
 	    return (KeySym) Tcl_GetHashValue(hPtr);
 	}
     }
-    hPtr = Tcl_FindHashEntry(&keycodeTable, (char *) newKeycode);
+    hPtr = Tcl_FindHashEntry(&keycodeTable, INT2PTR(newKeycode));
     if (hPtr != NULL) {
 	return (KeySym) Tcl_GetHashValue(hPtr);
     }

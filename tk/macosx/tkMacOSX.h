@@ -25,7 +25,7 @@
  * embedding where Tk does not control the top-level
  */
 
-typedef int (Tk_MacOSXEmbedRegisterWinProc) (int winID, Tk_Window window);
+typedef int (Tk_MacOSXEmbedRegisterWinProc) (long winID, Tk_Window window);
 typedef void* (Tk_MacOSXEmbedGetGrafPortProc) (Tk_Window window);
 typedef int (Tk_MacOSXEmbedMakeContainerExistProc) (Tk_Window window);
 typedef void (Tk_MacOSXEmbedGetClipProc) (Tk_Window window, RgnHandle rgn);

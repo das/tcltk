@@ -315,7 +315,7 @@ TkpUseWindow(
 	 */
 
 	if (tkMacOSXEmbedHandler == NULL ||
-		tkMacOSXEmbedHandler->registerWinProc((int) parent,
+		tkMacOSXEmbedHandler->registerWinProc((long) parent,
 		(Tk_Window) winPtr) != TCL_OK) {
 	    Tcl_AppendResult(interp, "The window ID ", string,
 		    " does not correspond to a valid Tk Window.", NULL);

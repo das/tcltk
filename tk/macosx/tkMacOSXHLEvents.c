@@ -85,32 +85,32 @@ TkMacOSXInitAppleEvents(
 
 	QuitHandlerUPP = NewAEEventHandlerUPP(QuitHandler);
 	ChkErr(AEInstallEventHandler, kCoreEventClass, kAEQuitApplication,
-		QuitHandlerUPP, (long) interp, false);
+		QuitHandlerUPP, (SRefCon) interp, false);
 
 	OappHandlerUPP = NewAEEventHandlerUPP(OappHandler);
 	ChkErr(AEInstallEventHandler, kCoreEventClass, kAEOpenApplication,
-		OappHandlerUPP, (long) interp, false);
+		OappHandlerUPP, (SRefCon) interp, false);
 
 	RappHandlerUPP = NewAEEventHandlerUPP(RappHandler);
 	ChkErr(AEInstallEventHandler, kCoreEventClass, kAEReopenApplication,
-		RappHandlerUPP, (long) interp, false);
+		RappHandlerUPP, (SRefCon) interp, false);
 
 	OdocHandlerUPP = NewAEEventHandlerUPP(OdocHandler);
 	ChkErr(AEInstallEventHandler, kCoreEventClass, kAEOpenDocuments,
-		OdocHandlerUPP, (long) interp, false);
+		OdocHandlerUPP, (SRefCon) interp, false);
 
 	PrintHandlerUPP = NewAEEventHandlerUPP(PrintHandler);
 	ChkErr(AEInstallEventHandler, kCoreEventClass, kAEPrintDocuments,
-		PrintHandlerUPP, (long) interp, false);
+		PrintHandlerUPP, (SRefCon) interp, false);
 
 	PrefsHandlerUPP = NewAEEventHandlerUPP(PrefsHandler);
 	ChkErr(AEInstallEventHandler, kCoreEventClass, kAEShowPreferences,
-		PrefsHandlerUPP, (long) interp, false);
+		PrefsHandlerUPP, (SRefCon) interp, false);
 
 	if (interp) {
 	    ScriptHandlerUPP = NewAEEventHandlerUPP(ScriptHandler);
 	    ChkErr(AEInstallEventHandler, kAEMiscStandards, kAEDoScript,
-		    ScriptHandlerUPP, (long) interp, false);
+		    ScriptHandlerUPP, (SRefCon) interp, false);
 	}
     }
 }
@@ -502,8 +502,8 @@ ScriptHandler(
     theErr = AEGetParamDesc(event, keyDirectObject, typeWildCard,
 	    &theDesc);
     if (theErr != noErr) {
-	sprintf(errString, "AEDoScriptHandler: GetParamDesc error %ld",
-		theErr);
+	sprintf(errString, "AEDoScriptHandler: GetParamDesc error %d",
+		(int)theErr);
 	theErr = AEPutParamPtr(reply, keyErrorString, typeChar, errString,
 		strlen(errString));
     } else if (MissedAnyParameters(event)) {
