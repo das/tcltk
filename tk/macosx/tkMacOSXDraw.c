@@ -836,7 +836,7 @@ DrawCGImage(
 	}
 	dstBounds = CGRectOffset(dstBounds, macDraw->xOff, macDraw->yOff);
 	if (CGImageIsMask(image)) {
-	    CGContextSaveGState(context);
+	    /*CGContextSaveGState(context);*/
 	    if (macDraw->flags & TK_IS_BW_PIXMAP) {
 		if (imageBackground != TRANSPARENT_PIXEL << 24) {
 		    CGContextClearRect(context, dstBounds);
@@ -874,9 +874,9 @@ DrawCGImage(
 	CGContextDrawImage(context, dstBounds, image);
 	CGContextRestoreGState(context);
 #endif /* TK_MAC_DEBUG_DRAWING */
-	if (CGImageIsMask(image)) {
+	/*if (CGImageIsMask(image)) {
 	    CGContextRestoreGState(context);
-	}
+	}*/
 	if (subImage) {
 	    CFRelease(subImage);
 	}
