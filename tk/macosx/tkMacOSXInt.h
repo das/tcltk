@@ -39,9 +39,7 @@
 struct TkWindowPrivate {
     TkWindow *winPtr;		/* Ptr to tk window or NULL if Pixmap */
     NSView *view;
-    CGrafPtr grafPtr;
     CGContextRef context;
-    ControlRef rootControl;
     int xOff;			/* X offset from toplevel window */
     int yOff;			/* Y offset from toplevel window */
     CGSize size;
@@ -148,17 +146,6 @@ MODULE_SCOPE MenuHandle tkCurrentAppleMenu; /* Handle to current Apple Menu */
 MODULE_SCOPE MenuHandle tkAppleMenu;	/* Handle to default Apple Menu */
 MODULE_SCOPE MenuHandle tkFileMenu;	/* Handles to menus */
 MODULE_SCOPE MenuHandle tkEditMenu;	/* Handles to menus */
-MODULE_SCOPE int tkPictureIsOpen;	/* If this is 1, we are drawing to a
-					 * picture The clipping should then be
-					 * done relative to the bounds of the
-					 * picture rather than the window. As
-					 * of OS X.0.4, something is seriously
-					 * wrong: The clipping bounds only
-					 * seem to work if the top,left values
-					 * are 0,0 The destination rectangle
-					 * for CopyBits should also have
-					 * top,left values of 0,0
-					 */
 MODULE_SCOPE Tcl_Encoding TkMacOSXCarbonEncoding;
 
 /*

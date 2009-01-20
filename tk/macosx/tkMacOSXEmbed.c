@@ -150,7 +150,6 @@ TkpMakeWindow(
 	macWin->referenceCount = 0;
 	macWin->flags = TK_CLIP_INVALID;
 	macWin->view = nil;
-	macWin->grafPtr = NULL;
 	macWin->context = NULL;
 	macWin->size = CGSizeZero;
 	if (Tk_IsTopLevel(macWin->winPtr)) {
@@ -282,7 +281,6 @@ TkpUseWindow(
      */
 
     macWin->view = nil;
-    macWin->grafPtr = NULL;
     macWin->context = NULL;
     macWin->size = CGSizeZero;
     macWin->visRgn = NULL;

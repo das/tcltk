@@ -144,21 +144,15 @@
 
 typedef struct TkMacOSXDrawingContext {
     CGContextRef context;
-    CGrafPtr port, savePort;
     NSView *view;
-    ThemeDrawingState saveState;
-    RgnHandle saveClip;
     HIShapeRef clipRgn;
-    PixPatHandle penPat;
     Rect portBounds;
-    Boolean portChanged;
 } TkMacOSXDrawingContext;
 
 /*
  * Variables internal to TkAqua.
  */
 
-MODULE_SCOPE RgnHandle tkMacOSXtmpQdRgn;
 MODULE_SCOPE CGFloat tkMacOSXZeroScreenHeight;
 
 /*
@@ -218,8 +212,10 @@ MODULE_SCOPE int	TkMacOSXSetupDrawingContext(Drawable d, GC gc,
 			    int useCG, TkMacOSXDrawingContext *dcPtr);
 MODULE_SCOPE void	TkMacOSXRestoreDrawingContext(
 			    TkMacOSXDrawingContext *dcPtr);
+#ifdef OBSOLETE
 MODULE_SCOPE void	TkMacOSXSetColorInPort(unsigned long pixel, int fg,
 			    PixPatHandle penPat, CGrafPtr port);
+#endif
 MODULE_SCOPE void	TkMacOSXSetColorInContext(unsigned long pixel,
 			    CGContextRef context);
 MODULE_SCOPE int	TkMacOSXRunTclEventLoop(void);

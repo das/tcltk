@@ -5246,7 +5246,6 @@ TkMacOSXMakeRealWindowExist(
 {
     WmInfo *wmPtr = winPtr->wmInfoPtr;
     WindowRef newWindow = NULL;
-    ControlRef rootControl = NULL;
     MacDrawable *macWin;
     Rect geometry;
     NSRect structureRect;
@@ -5343,9 +5342,6 @@ TkMacOSXMakeRealWindowExist(
 	    geometry.right - geometry.left, geometry.bottom - geometry.top)
 	    display:NO];
     //TkMacOSXInstallWindowCarbonEventHandler(NULL, newWindow);
-    if (ChkErr(CreateRootControl, newWindow, &rootControl) != noErr ) {
-	Tcl_Panic("couldn't create root control for new Mac window");
-    }
     if (wmPtr->attributes & kWindowResizableAttribute) {
 	HIViewRef growBoxView;
 
@@ -5367,13 +5363,12 @@ TkMacOSXMakeRealWindowExist(
 
     macWin->view = contentView;
     macWin->grafPtr = GetWindowPort(newWindow);
-    macWin->rootControl = rootControl;
 
     if (wmPtr->master != None || winPtr->atts.override_redirect) {
 	ApplyMasterOverrideChanges(winPtr, newWindow);
     }
     SetWindowModified(newWindow, false);
-    TkMacOSXRegisterOffScreenWindow((Window) macWin, (GWorldPtr) newWindow);
+    TkMacOSXRegisterOffScreenWindow((Window) macWin, newWindow);
     macWin->flags |= TK_HOST_EXISTS;
     ChkErr(GetWindowClass, newWindow, &(wmPtr->macClass));
     ChkErr(GetWindowAttributes, newWindow, &(wmPtr->attributes));
@@ -6447,7 +6442,6 @@ RemapWindows(
     if (winPtr->window != None) {
 	MacDrawable *macWin = (MacDrawable *) winPtr->window;
 
-	macWin->grafPtr = NULL;
 	macWin->toplevel = parentWin->toplevel;
 	winPtr->flags &= ~TK_MAPPED;
 #ifdef TK_REBUILD_TOPLEVEL

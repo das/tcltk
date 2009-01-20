@@ -306,6 +306,7 @@ TkSetMacColor(
     return (err == noErr);
 }
 
+#ifdef OBSOLETE
 /*
  *----------------------------------------------------------------------
  *
@@ -332,7 +333,6 @@ TkMacOSXSetColorInPort(
     PixPatHandle penPat,
     CGrafPtr port)
 {
-#ifdef HAVE_QUICKDRAW
     OSStatus err;
     RGBColor c;
     ThemeBrush brush;
@@ -385,8 +385,8 @@ TkMacOSXSetColorInPort(
     if (penPat && !setPenPat) {
 	GetPortBackPixPat(port, penPat);
     }
-#endif
 }
+#endif
 
 /*
  *----------------------------------------------------------------------

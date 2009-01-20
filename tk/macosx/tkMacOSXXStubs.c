@@ -413,14 +413,11 @@ XGetGeometry(
 	*border_width_return = winPtr->changes.border_width;
 	*depth_return = Tk_Depth(winPtr);
     } else {
-	Rect boundsRect;
-	CGrafPtr destPort = TkMacOSXGetDrawablePort(d);
-
-	GetPortBounds(destPort, &boundsRect);
-	*x_return = boundsRect.left;
-	*y_return =  boundsRect.top;
-	*width_return = boundsRect.right - boundsRect.left;
-	*height_return = boundsRect.bottom - boundsRect.top;
+	CGSize size = ((MacDrawable *) d)->size;
+	*x_return = 0;
+	*y_return =  0;
+	*width_return = size.width;
+	*height_return = size.height;
 	*border_width_return = 0;
 	*depth_return = 32;
     }
@@ -856,16 +853,18 @@ XGetImage(
     unsigned long plane_mask,
     int format)
 {
+    MacDrawable *macDraw = (MacDrawable *) d;
+    NSView *view = macDraw->toplevel ? macDraw->toplevel->view : macDraw->view;
     XImage *   imagePtr = NULL;
     Pixmap     pixmap = (Pixmap) NULL;
-    Tk_Window  win = (Tk_Window) ((MacDrawable *) d)->winPtr;
+    Tk_Window  win = (Tk_Window) macDraw->winPtr;
     GC	       gc;
     int	       depth = 32;
     int	       offset = 0;
     int	       bitmap_pad = 32;
     int	       bytes_per_line = 0;
 
-    if (TkMacOSXGetDrawablePort(d)) {
+    if (view) {
 	if (format == ZPixmap) {
 	    if (width > 0 && height > 0) {
 		/*
@@ -885,8 +884,7 @@ XGetImage(
 		XCopyArea(display, d, pixmap, gc, x, y, width, height, 0, 0);
 	    }
 	    imagePtr = XCreateImage(display, NULL, depth, format, offset,
-		    (char *) TkMacOSXGetDrawablePort(pixmap),
-		    width, height, bitmap_pad, bytes_per_line);
+		    (char *) view, width, height, bitmap_pad, bytes_per_line);
 
 	    /*
 	     * Track Pixmap underlying the XImage in the unused obdata field
@@ -962,6 +960,7 @@ ImageGetPixel(
     unsigned char r = 0, g = 0, b = 0;
 
     if (image->obdata) {
+#ifdef HAVE_QUICKDRAW
 	CGrafPtr destPort, savePort;
 	Boolean portChanged;
 	RGBColor cPix;
@@ -980,6 +979,7 @@ ImageGetPixel(
 	if (portChanged) {
 	    QDSwapPort(savePort, NULL);
 	}
+#endif
     } else {
 	unsigned char *srcPtr = (unsigned char*) image->data
 		+ (y * image->bytes_per_line)
@@ -991,12 +991,11 @@ ImageGetPixel(
 		g = (*((unsigned long*) srcPtr) >>  8) & 0xff;
 		b = (*((unsigned long*) srcPtr)      ) & 0xff;
 		/*if (image->byte_order == LSBFirst) {
-		    r = srcPtr[2]; g = srcPtr[1]; b = srcPtr[0]);
+		    r = srcPtr[2]; g = srcPtr[1]; b = srcPtr[0];
 		} else {
-		    r = srcPtr[0]; g = srcPtr[1]; b = srcPtr[2]);
+		    r = srcPtr[0]; g = srcPtr[1]; b = srcPtr[2];
 		}*/
 		break;
-/*
 	    case 16:
 		r = (*((unsigned short*) srcPtr) >> 7) & 0xf8;
 		g = (*((unsigned short*) srcPtr) >> 2) & 0xf8;
@@ -1011,13 +1010,12 @@ ImageGetPixel(
 		b |= b >> 2 | b >> 4 | b >> 6;
 		break;
 	    case 4: {
-		unsigned char c = (x % 2) ? (*srcPtr) : ((*srcPtr) >> 4);
+		unsigned char c = (x % 2) ? *srcPtr : (*srcPtr >> 4);
 		r = (c & 0x04) ? 0xff : 0;
 		g = (c & 0x02) ? 0xff : 0;
 		b = (c & 0x01) ? 0xff : 0;
 		break;
 		}
-*/
 	    case 1:
 		r = g = b = ((*srcPtr) & (0x80 >> (x % 8))) ? 0xff : 0;
 		break;
@@ -1049,32 +1047,66 @@ PutPixel(
     int y,
     unsigned long pixel)
 {
-    CGrafPtr destPort, savePort;
-    Boolean portChanged;
-    RGBColor cPix;
-    unsigned long r, g, b;
+    unsigned char  r, g, b;
 
-    destPort = (CGrafPtr)image->data;
-    portChanged = QDSwapPort(destPort, &savePort);
-    r = (pixel & image->red_mask)>>16;
-    g = (pixel & image->green_mask)>>8;
-    b = (pixel & image->blue_mask);
+    r = ((pixel & image->red_mask)   >> 16) & 0xff;
+    g = ((pixel & image->green_mask) >>  8) & 0xff;
+    b = ((pixel & image->blue_mask)       ) & 0xff;
     if (image->obdata) {
+#ifdef HAVE_QUICKDRAW
 	/*
 	 * Image from XGetImage, 16 bit color values.
 	 */
 
+	CGrafPtr destPort, savePort;
+	Boolean portChanged;
+	RGBColor cPix;
+
+	destPort = (CGrafPtr)image->data;
+	portChanged = QDSwapPort(destPort, &savePort);
+
 	cPix.red = r << 8;
 	cPix.green = g << 8;
 	cPix.blue = b << 8;
+	SetCPixel(x, y, &cPix);
+	if (portChanged) {
+	    QDSwapPort(savePort, NULL);
+	}
+#endif
     } else {
-	cPix.red = r;
-	cPix.green = g;
-	cPix.blue = b;
-    }
-    SetCPixel(x, y, &cPix);
-    if (portChanged) {
-	QDSwapPort(savePort, NULL);
+	unsigned char *dstPtr = (unsigned char*) image->data
+		+ (y * image->bytes_per_line)
+		+ (((image->xoffset + x) * image->bits_per_pixel) / NBBY);
+
+	switch (image->bits_per_pixel) {
+	    case 32:
+		*((unsigned long*) dstPtr) = (r << 16) | (g << 8) | b;
+		/*if (image->byte_order == LSBFirst) {
+		    dstPtr[2] = r; dstPtr[1] = g; dstPtr[0] = b;
+		} else {
+		    dstPtr[0] = r; dstPtr[1] = g; dstPtr[2] = b;
+		}*/
+		break;
+	    case 16:
+		*((unsigned short*) dstPtr) = ((r & 0xf8) << 7) |
+			((g & 0xf8) << 2) | ((b & 0xf8) >> 3);
+		break;
+	    case 8:
+		*dstPtr = ((r & 0xc0) >> 2) | ((g & 0xc0) >> 4) |
+			((b & 0xc0) >> 6);
+		break;
+	    case 4: {
+		unsigned char c = ((r & 0x80) >> 5) | ((g & 0x80) >> 6) |
+			((b & 0x80) >> 7);
+		*dstPtr = (x % 2) ? ((*dstPtr & 0xf0) | (c & 0x0f)) :
+			((*dstPtr & 0x0f) | ((c << 4) & 0xf0));
+		break;
+		}
+	    case 1:
+		*dstPtr = ((r|g|b) & 0x80) ? (*dstPtr | (0x80 >> (x % 8))) :
+			(*dstPtr & ~(0x80 >> (x % 8)));
+		break;
+	}
     }
     return 0;
 }

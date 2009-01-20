@@ -37,32 +37,6 @@ static void		NotifyVisibility(TkWindow *winPtr, XEvent *eventPtr);
 /*
  *----------------------------------------------------------------------
  *
- * AllocGWorld --
- *	Simplifies the allocation of new drawable ports.
- *
- *----------------------------------------------------------------------
- */
-
-static inline void
-AllocGWorld(
-    int width,
-    int height,
-    int mono,
-    CGrafPtr *grafPtrPtr)
-{
-    Rect bounds = {0, 0, height, width};
-
-#ifdef __LITTLE_ENDIAN__
-    ChkErr(NewGWorld, grafPtrPtr, mono ? 1 : 0, &bounds, NULL, NULL,
-	    kNativeEndianPixMap);
-#else
-    ChkErr(NewGWorld, grafPtrPtr, mono ? 1 : 0, &bounds, NULL, NULL, 0);
-#endif
-}
-
-/*
- *----------------------------------------------------------------------
- *
  * XDestroyWindow --
  *
  *	Dealocates the given X Window.
@@ -558,7 +532,7 @@ MoveResizeWindow(
 {
     int deltaX = 0, deltaY = 0, parentBorderwidth = 0;
     MacDrawable *macParent = NULL;
-    CGrafPtr destPort = TkMacOSXGetDrawablePort((Drawable) macWin);
+    NSWindow *macWindow = TkMacOSXDrawableWindow((Drawable) macWin);
 
     /*
      * Find the Parent window, for an embedded window it will be its container.
@@ -592,14 +566,14 @@ MoveResizeWindow(
 	deltaY = macParent->yOff + parentBorderwidth +
 		macWin->winPtr->changes.y - macWin->yOff;
     }
-    if (destPort) {
+    if (macWindow) {
 	TkMacOSXInvalidateWindow(macWin, TK_PARENT_WINDOW);
 	if (macParent) {
 	    TkMacOSXInvalClipRgns((Tk_Window) macParent->winPtr);
 	}
     }
     UpdateOffsets(macWin->winPtr, deltaX, deltaY);
-    if (destPort) {
+    if (macWindow) {
 	TkMacOSXInvalidateWindow(macWin, TK_PARENT_WINDOW);
     }
     GenerateConfigureNotify(macWin->winPtr, 0);
@@ -1376,7 +1350,6 @@ Tk_GetPixmap(
     macPix->toplevel = NULL;
     macPix->flags = TK_IS_PIXMAP | (depth == 1 ? TK_IS_BW_PIXMAP : 0);
     macPix->view = nil;
-    macPix->grafPtr = NULL;
     macPix->context = NULL;
     macPix->size = CGSizeMake(width, height);
 
