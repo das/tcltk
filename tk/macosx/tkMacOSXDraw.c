@@ -1542,56 +1542,32 @@ TkScrollWindow(
     int dx, int dy,		/* Distance rectangle should be moved. */
     TkRegion damageRgn)		/* Region to accumulate damage in. */
 {
-    MacDrawable *destDraw = (MacDrawable *) Tk_WindowId(tkwin);
-    CGrafPtr destPort, savePort;
-    Boolean portChanged;
-    Rect scrollRect;
+    MacDrawable *macDraw = (MacDrawable *) Tk_WindowId(tkwin);
+    NSView *view = macDraw->toplevel ? macDraw->toplevel->view : macDraw->view;
+    CGRect visRect, srcRect, dstRect;
+    CGFloat boundsH;
+    HIShapeRef dmgRgn, dstRgn;
     int result;
-    HIShapeRef dmgRgn;
 
-    /*
-     * Due to the implementation below the behavior may be differnt
-     * than X in certain cases that should never occur in Tk. The
-     * scrollRect is the source rect extended by the offset (the union
-     * of the source rect and the offset rect). Everything
-     * in the extended scrollRect is scrolled. On X, it's possible
-     * to "skip" over an area if the offset makes the source and
-     * destination rects disjoint and non-aligned.
-     */
-
-    scrollRect.left	= destDraw->xOff + x;
-    scrollRect.top	= destDraw->yOff + y;
-    scrollRect.right	= scrollRect.left + width;
-    scrollRect.bottom	= scrollRect.top + height;
-    if (dx < 0) {
-	scrollRect.left += dx;
+    if (view && !CGRectIsEmpty(visRect = NSRectToCGRect([view visibleRect]))) {
+	boundsH = [view bounds].size.height;
+	srcRect = CGRectMake(macDraw->xOff + x, boundsH - height -
+		(macDraw->yOff + y), width, height);
+	dstRect = CGRectIntersection(CGRectOffset(srcRect, dx, -dy), visRect);
+	srcRect = CGRectIntersection(srcRect, visRect);
+	if (!CGRectIsEmpty(srcRect) && !CGRectIsEmpty(dstRect)) {
+	    [view scrollRect:NSRectFromCGRect(srcRect) by:NSMakeSize(dx, -dy)];
+	}
+	srcRect.origin.y = boundsH - srcRect.size.height - srcRect.origin.y;
+	dstRect.origin.y = boundsH - dstRect.size.height - dstRect.origin.y;
+	srcRect = CGRectUnion(srcRect, dstRect);
+	dmgRgn = HIShapeCreateMutableWithRect(&srcRect);
+	dstRgn = HIShapeCreateWithRect(&dstRect);
+	ChkErr(HIShapeDifference, dmgRgn, dstRgn, (HIMutableShapeRef) dmgRgn);
+	CFRelease(dstRgn);
     } else {
-	scrollRect.right += dx;
+	dmgRgn = HIShapeCreateEmpty();
     }
-    if (dy < 0) {
-	scrollRect.top += dy;
-    } else {
-	scrollRect.bottom += dy;
-    }
-
-    destPort = TkMacOSXGetDrawablePort(Tk_WindowId(tkwin));
-    TkMacOSXSetUpClippingRgn(Tk_WindowId(tkwin));
-    TkMacOSXCheckTmpQdRgnEmpty();
-    portChanged = QDSwapPort(destPort, &savePort);
-    ScrollRect(&scrollRect, dx, dy, tkMacOSXtmpQdRgn);
-    if (portChanged) {
-	QDSwapPort(savePort, NULL);
-    }
-
-    /*
-     * Fortunately, the region returned by ScrollRect is semantically
-     * the same as what we need to return in this function. If the
-     * region is empty we return zero to denote that no damage was
-     * created.
-     */
-
-    dmgRgn = HIShapeCreateWithQDRgn(tkMacOSXtmpQdRgn);
-    SetEmptyRgn(tkMacOSXtmpQdRgn);
     TkMacOSXSetWithNativeRegion(damageRgn, dmgRgn);
     result = HIShapeIsEmpty(dmgRgn) ? 0 : 1;
     CFRelease(dmgRgn);
