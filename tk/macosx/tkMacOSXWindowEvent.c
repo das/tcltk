@@ -354,9 +354,11 @@ TkMacOSXProcessAppearanceEvent(
     MacEventStatus *statusPtr)
 {
     switch (eventPtr->eKind) {
+#ifdef OBSOLETE
     case kEventAppearanceScrollBarVariantChanged:
 	TkMacOSXInitScrollbarMetrics();
 	break;
+#endif
     default:
 	break;
     }

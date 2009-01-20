@@ -67,21 +67,20 @@
 #include "tkMacOSXEvent.h"
 #include "tkMacOSXDebug.h"
 
-
+/*
 #ifdef TK_MAC_DEBUG
 #define TK_MAC_DEBUG_CARBON_EVENTS
 #endif
+*/
 
-
+#ifdef OBSOLETE
 /*
  * Declarations of functions used only in this file:
  */
 
 static OSStatus CarbonEventHandlerProc(EventHandlerCallRef callRef,
 	EventRef event, void *userData);
-#ifdef OBSOLETE
 static OSStatus InstallStandardApplicationEventHandler(void);
-#endif
 
 /*
  * Static data used by several functions in this file:
@@ -161,6 +160,8 @@ CarbonEventHandlerProc(
 #endif /* TK_MAC_DEBUG_CARBON_EVENTS */
     return err;
 }
+#endif
+
 
 /*
  *----------------------------------------------------------------------
@@ -182,6 +183,7 @@ MODULE_SCOPE void
 TkMacOSXInitCarbonEvents(
     Tcl_Interp *interp)
 {
+#ifdef OBSOLETE
     const EventTypeSpec dispatcherEventTypes[] = {
 	{kEventClassKeyboard,	 kEventRawKeyDown},
 	{kEventClassKeyboard,	 kEventRawKeyRepeat},
@@ -209,15 +211,14 @@ TkMacOSXInitCarbonEvents(
 
     carbonEventHandlerUPP = NewEventHandlerUPP(CarbonEventHandlerProc);
     carbonEventInterp = interp;
-#ifdef OBSOLETE
     ChkErr(InstallStandardApplicationEventHandler);
-#endif
     ChkErr(InstallEventHandler, GetEventDispatcherTarget(),
 	    carbonEventHandlerUPP, GetEventTypeCount(dispatcherEventTypes),
 	    dispatcherEventTypes, (void *) carbonEventInterp, NULL);
     ChkErr(InstallEventHandler, GetApplicationEventTarget(),
 	    carbonEventHandlerUPP, GetEventTypeCount(applicationEventTypes),
 	    applicationEventTypes, (void *) carbonEventInterp, NULL);
+#endif
 
 #ifdef TK_MAC_DEBUG_CARBON_EVENTS
     TkMacOSXInitNamedSymbol(HIToolbox, void, DebugTraceEvent, OSType, UInt32,
