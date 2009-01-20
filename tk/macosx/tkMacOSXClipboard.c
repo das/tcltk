@@ -49,6 +49,7 @@ TkSelGetSelection(
 				 * once it has been retrieved. */
     ClientData clientData)	/* Arbitrary value to pass to proc. */
 {
+#ifdef MAC_OSX_TK_TODO
     int result;
     OSStatus err;
     long length;
@@ -137,6 +138,7 @@ TkSelGetSelection(
 	    return result;
 	}
     }
+#endif
 
     Tcl_AppendResult(interp, Tk_GetAtomName(tkwin, selection),
 	    " selection doesn't exist or form \"",
@@ -188,7 +190,9 @@ XSetSelectionOwner(
 	if (dispPtr->clipboardActive) {
 	    return;
 	}
+#ifdef MAC_OSX_TK_TODO
 	ClearCurrentScrap();
+#endif
     }
 }
 
@@ -287,6 +291,7 @@ TkSelPropProc(
 void
 TkSuspendClipboard(void)
 {
+#ifdef MAC_OSX_TK_TODO
     TkClipboardTarget *targetPtr;
     TkClipboardBuffer *cbPtr;
     TkDisplay *dispPtr;
@@ -349,6 +354,7 @@ TkSuspendClipboard(void)
 
 	ckfree(buffer);
     }
+#endif
 
     /*
      * The system now owns the scrap. We tell Tk that it has lost the
