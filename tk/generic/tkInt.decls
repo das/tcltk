@@ -790,7 +790,7 @@ declare 14 aqua {
 
 # removed duplicate from tkPlat table(tk.decls)
 #declare 15 aqua {
-#    GWorldPtr TkMacOSXGetDrawablePort(Drawable drawable)
+#    void *TkMacOSXGetDrawablePort(Drawable drawable)
 #}
 
 declare 16 aqua {
@@ -829,7 +829,7 @@ declare 25 aqua {
     void TkMacOSXMenuClick(void)
 }
 declare 26 aqua {
-    void TkMacOSXRegisterOffScreenWindow(Window window, GWorldPtr portPtr)
+    void TkMacOSXRegisterOffScreenWindow(Window window, void *portPtr)
 }
 declare 27 aqua {
     int TkMacOSXResizable(TkWindow *winPtr)
@@ -844,7 +844,7 @@ declare 30 aqua {
     void TkMacOSXSetUpClippingRgn(Drawable drawable)
 }
 declare 31 aqua {
-    void TkMacOSXSetUpGraphicsPort(GC gc, GWorldPtr destPort)
+    void TkMacOSXSetUpGraphicsPort(GC gc, void *destPort)
 }
 declare 32 aqua {
     void TkMacOSXUpdateClipRgn(TkWindow *winPtr)
@@ -856,7 +856,7 @@ declare 34 aqua {
     int TkMacOSXUseMenuID(short macID)
 }
 declare 35 aqua {
-    RgnHandle TkMacOSXVisableClipRgn(TkWindow *winPtr)
+    TkRegion TkMacOSXVisableClipRgn(TkWindow *winPtr)
 }
 declare 36 aqua {
     void TkMacOSXWinBounds(TkWindow *winPtr, Rect *geometry)

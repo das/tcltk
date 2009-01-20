@@ -5407,7 +5407,7 @@ TkMacOSXMakeRealWindowExist(
 void
 TkMacOSXRegisterOffScreenWindow(
     Window window,		/* Window structure. */
-    GWorldPtr portPtr)		/* Pointer to a Mac GWorld. */
+    void *portPtr)		/* Pointer to a Mac Window. */
 {
     Tcl_HashEntry *valueHashPtr;
     int isNew;

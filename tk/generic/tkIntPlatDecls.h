@@ -341,7 +341,7 @@ EXTERN void		TkMacOSXMenuClick (void);
 #define TkMacOSXRegisterOffScreenWindow_TCL_DECLARED
 /* 26 */
 EXTERN void		TkMacOSXRegisterOffScreenWindow (Window window,
-				GWorldPtr portPtr);
+				void * portPtr);
 #endif
 #ifndef TkMacOSXResizable_TCL_DECLARED
 #define TkMacOSXResizable_TCL_DECLARED
@@ -367,7 +367,7 @@ EXTERN void		TkMacOSXSetUpClippingRgn (Drawable drawable);
 #ifndef TkMacOSXSetUpGraphicsPort_TCL_DECLARED
 #define TkMacOSXSetUpGraphicsPort_TCL_DECLARED
 /* 31 */
-EXTERN void		TkMacOSXSetUpGraphicsPort (GC gc, GWorldPtr destPort);
+EXTERN void		TkMacOSXSetUpGraphicsPort (GC gc, void * destPort);
 #endif
 #ifndef TkMacOSXUpdateClipRgn_TCL_DECLARED
 #define TkMacOSXUpdateClipRgn_TCL_DECLARED
@@ -387,7 +387,7 @@ EXTERN int		TkMacOSXUseMenuID (short macID);
 #ifndef TkMacOSXVisableClipRgn_TCL_DECLARED
 #define TkMacOSXVisableClipRgn_TCL_DECLARED
 /* 35 */
-EXTERN RgnHandle	TkMacOSXVisableClipRgn (TkWindow * winPtr);
+EXTERN TkRegion		TkMacOSXVisableClipRgn (TkWindow * winPtr);
 #endif
 #ifndef TkMacOSXWinBounds_TCL_DECLARED
 #define TkMacOSXWinBounds_TCL_DECLARED
@@ -611,12 +611,12 @@ typedef struct TkIntPlatStubs {
     void (*tkMacOSXMakeRealWindowExist) (TkWindow * winPtr); /* 23 */
     BitMapPtr (*tkMacOSXMakeStippleMap) (Drawable d1, Drawable d2); /* 24 */
     void (*tkMacOSXMenuClick) (void); /* 25 */
-    void (*tkMacOSXRegisterOffScreenWindow) (Window window, GWorldPtr portPtr); /* 26 */
+    void (*tkMacOSXRegisterOffScreenWindow) (Window window, void * portPtr); /* 26 */
     int (*tkMacOSXResizable) (TkWindow * winPtr); /* 27 */
     void (*tkMacOSXSetHelpMenuItemCount) (void); /* 28 */
     void (*tkMacOSXSetScrollbarGrow) (TkWindow * winPtr, int flag); /* 29 */
     void (*tkMacOSXSetUpClippingRgn) (Drawable drawable); /* 30 */
-    void (*tkMacOSXSetUpGraphicsPort) (GC gc, GWorldPtr destPort); /* 31 */
+    void (*tkMacOSXSetUpGraphicsPort) (GC gc, void * destPort); /* 31 */
     void (*tkMacOSXUpdateClipRgn) (TkWindow * winPtr); /* 32 */
     void (*tkMacOSXUnregisterMacWindow) (WindowRef portPtr); /* 33 */
     int (*tkMacOSXUseMenuID) (short macID); /* 34 */

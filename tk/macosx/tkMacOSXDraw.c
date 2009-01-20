@@ -1667,7 +1667,7 @@ TkScrollWindow(
  *	None.
  *
  * Side effects:
- *	The current port is adjusted.
+ *	None.
  *
  *----------------------------------------------------------------------
  */
@@ -1675,44 +1675,11 @@ TkScrollWindow(
 void
 TkMacOSXSetUpGraphicsPort(
     GC gc,			/* GC to apply to current port. */
-    GWorldPtr destPort)
+    void *destPort)
 {
-#ifdef HAVE_QUICKDRAW
-    CGrafPtr savePort;
-    Boolean portChanged;
-
-    portChanged = QDSwapPort(destPort, &savePort);
-    PenNormal();
-    if (gc) {
-	if (!penPat) {
-	    if (!tmpPixPat) {
-		penPat = NewPixPat();
-	    } else {
-		penPat = tmpPixPat;
-		tmpPixPat = NULL;
-	    }
-	}
-	TkMacOSXSetColorInPort(gc->foreground, 1, penPat, destPort);
-	PenPixPat(penPat);
-	if(gc->function == GXxor) {
-	    PenMode(patXor);
-	}
-	if (gc->line_width > 1) {
-	    PenSize(gc->line_width, gc->line_width);
-	}
-	if (gc->line_style != LineSolid) {
-	    /*
-	     * FIXME: Here the dash pattern should be set in the drawing
-	     * environment. This is not possible with QuickDraw line drawing.
-	     */
-	}
-    }
-    if (portChanged) {
-	QDSwapPort(savePort, NULL);
-    }
-#endif
 }
 
+
 /*
  *----------------------------------------------------------------------
  *
@@ -2035,7 +2002,7 @@ TkMacOSXGetClipRgn(
  *	None.
  *
  * Side effects:
- *	The clipping region in the current port is changed.
+ *	None.
  *
  *----------------------------------------------------------------------
  */
@@ -2044,16 +2011,6 @@ void
 TkMacOSXSetUpClippingRgn(
     Drawable drawable)		/* Drawable to update. */
 {
-    CGrafPtr port = TkMacOSXGetDrawablePort(drawable);
-
-    if (port) {
-	HIShapeRef clipRgn = TkMacOSXGetClipRgn(drawable);
-
-	if (clipRgn) {
-	    ChkErr(HIShapeSetQDClip, clipRgn, port);
-	    CFRelease(clipRgn);
-	}
-    }
 }
 
 /*

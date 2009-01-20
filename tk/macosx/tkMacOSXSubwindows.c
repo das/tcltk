@@ -847,14 +847,14 @@ TkMacOSXUpdateClipRgn(
 		    ChkErr(HIShapeIntersect,
 			    win2Ptr->privatePtr->aboveVisRgn, rgn, rgn);
 		} else if (tkMacOSXEmbedHandler != NULL) {
+		    TkRegion r;
 		    HIShapeRef visRgn;
 
-		    TkMacOSXCheckTmpQdRgnEmpty();
-		    tkMacOSXEmbedHandler->getClipProc((Tk_Window) winPtr,
-			    tkMacOSXtmpQdRgn);
-		    visRgn = HIShapeCreateWithQDRgn(tkMacOSXtmpQdRgn);
-		    SetEmptyRgn(tkMacOSXtmpQdRgn);
+		    tkMacOSXEmbedHandler->getClipProc((Tk_Window) winPtr, r);
+		    visRgn = TkMacOSXGetNativeRegion(r);
 		    ChkErr(HIShapeIntersect, visRgn, rgn, rgn);
+		    CFRelease(visRgn);
+		    TkpReleaseRegion(r);
 		}
 
 		/*
@@ -954,8 +954,9 @@ TkMacOSXUpdateClipRgn(
  *
  * TkMacOSXVisableClipRgn --
  *
- *	This function returnd the Macintosh cliping region for the given
- *	window. A NULL Rgn means the window is not visible.
+ *	This function returns the Macintosh cliping region for the given
+ *	window. The caller is responsible for disposing of the returned
+ *	region via TkDestroyRegion().
  *
  * Results:
  *	The region.
@@ -966,20 +967,14 @@ TkMacOSXUpdateClipRgn(
  *----------------------------------------------------------------------
  */
 
-RgnHandle
+TkRegion
 TkMacOSXVisableClipRgn(
     TkWindow *winPtr)
 {
-    static RgnHandle visQdRgn = NULL;
-
-    if (visQdRgn == NULL) {
-	visQdRgn = NewRgn();
-    }
     if (winPtr->privatePtr->flags & TK_CLIP_INVALID) {
 	TkMacOSXUpdateClipRgn(winPtr);
     }
-    ChkErr(HIShapeGetAsQDRgn, winPtr->privatePtr->visRgn, visQdRgn);
-    return visQdRgn;
+    return (TkRegion)HIShapeCreateMutableCopy(winPtr->privatePtr->visRgn);
 }
 
 /*
@@ -1085,7 +1080,7 @@ TkMacOSXDrawableWindow(
  *	This function returns the Graphics Port for a given X drawable.
  *
  * Results:
- *	A CGrafPort. Either an off screen pixmap or a Window.
+ *	NULL.
  *
  * Side effects:
  *	None.
@@ -1093,74 +1088,11 @@ TkMacOSXDrawableWindow(
  *----------------------------------------------------------------------
  */
 
-CGrafPtr
+void *
 TkMacOSXGetDrawablePort(
     Drawable drawable)
 {
-    MacDrawable *macWin = (MacDrawable *) drawable;
-    CGrafPtr resultPort = NULL;
-
-    if (!macWin) {
-	return NULL;
-    }
-
-    /*
-     * Handle toplevel windows.
-     */
-
-    if (macWin->toplevel) {
-	TkWindow *contWinPtr;
-
-	if (!(macWin->toplevel->flags & TK_EMBEDDED)) {
-	    return macWin->toplevel->grafPtr;
-	}
-
-	/*
-	 * If the Drawable is in an embedded window, use the Port of its
-	 * container.
-	 *
-	 * TRICKY POINT: we can have cases when a toplevel is being destroyed
-	 * where the winPtr for the toplevel has been freed, but the children
-	 * are not all the way destroyed. The children will call this function
-	 * as they are being destroyed, but Tk_IsEmbedded will return garbage.
-	 * So we check the copy of the TK_EMBEDDED flag we put into the
-	 * toplevel's macWin flags.
-	 */
-
-	contWinPtr = TkpGetOtherWindow(macWin->toplevel->winPtr);
-
-	resultPort = NULL;
-	if (contWinPtr != NULL) {
-	    resultPort = TkMacOSXGetDrawablePort((Drawable)
-		    contWinPtr->privatePtr);
-	} else if (tkMacOSXEmbedHandler != NULL) {
-	    resultPort = tkMacOSXEmbedHandler->getPortProc((Tk_Window)
-		    macWin->winPtr);
-	}
-
-	if (!resultPort) {
-	    /*
-	     * FIXME: So far as I can tell, the only time that this happens is
-	     * when we are tearing down an embedded child interpreter, and most
-	     * of the time, this is harmless... However, we really need to find
-	     * why the embedding loses.
-	     */
-
-	    TkMacOSXDbgMsg("Couldn't find container");
-	}
-
-	/*
-	 * TODO: Here we should handle out of process embedding.
-	 */
-
-	return resultPort;
-    }
-
-    if ((macWin->flags & TK_IS_PIXMAP) && !macWin->grafPtr) {
-	AllocGWorld(macWin->size.width, macWin->size.height,
-		macWin->flags & TK_IS_BW_PIXMAP, &macWin->grafPtr);
-    }
-    return macWin->grafPtr;	
+    return NULL;
 }
 
 /*
@@ -1168,10 +1100,10 @@ TkMacOSXGetDrawablePort(
  *
  * TkMacOSXGetRootControl --
  *
- *	This function returns the Root Control for a given X drawable.
+ *	This function returns the NSView for a given X drawable.
  *
  * Results:
- *	A ControlRef .
+ *	A NSView* .
  *
  * Side effects:
  *	None.
@@ -1179,7 +1111,7 @@ TkMacOSXGetDrawablePort(
  *----------------------------------------------------------------------
  */
 
-ControlRef
+void *
 TkMacOSXGetRootControl(
     Drawable drawable)
 {
@@ -1193,11 +1125,12 @@ TkMacOSXGetRootControl(
     if (macWin == NULL) {
 	return NULL;
     }
-
-    if (!(macWin->toplevel->flags & TK_EMBEDDED)) {
-	return macWin->toplevel->rootControl;
+    if (!macWin->toplevel) {
+	return macWin->view;
     }
-
+    if (!(macWin->toplevel->flags & TK_EMBEDDED)) {
+	return macWin->toplevel->view;
+    }
     contWinPtr = TkpGetOtherWindow(macWin->toplevel->winPtr);
     if (contWinPtr == NULL) {
 	return NULL;
