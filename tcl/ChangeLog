@@ -1,3 +1,26 @@
+2009-01-19  Kevin B. Kenny  <kennykb@acm.org>
+
+	* unix/Makefile.in: Added a CONFIG_INSTALL_DIR parameter so that
+	* unix/tcl.m4:      distributors can control where tclConfig.sh goes.
+	Made the installation of 'ldAix' conditional
+	upon actually being on an AIX system.  Allowed for downstream
+	packagers to customize SHLIB_VERSION on BSD-derived systems.
+	Thanks to Stuart Cassoff for [Patch 907924].
+	* unix/configure: Autoconf 2.59
+	
+2009-01-19  David Gravereaux <davygrvy@pobox.com>
+
+	* win/build.vc.bat: Improved tools detection and error message
+	* win/makefile.vc: Reorganized the $(TCLOBJ) file list into seperate
+	parts for easier maintenance.  Matched all sources built using -GL to
+	both $(lib) and $(link) to use -LTCG and avoid a warning message.
+	Addressed the over-building nature of the htmlhelp target by moving
+	from a pseudo target to a real target dependent on the entire docs/
+	directory contents.
+	* win/nmakehlp.c: Removed -g option and GrepForDefine() func
+	as it isn't being used anymore.  The -V option method is much
+	better.
+
 2009-01-16  Don Porter  <dgp@users.sourceforge.net>
 
 	* generic/tcl.h:	Bump patchlevel to 8.6b1.1 to distinguish
