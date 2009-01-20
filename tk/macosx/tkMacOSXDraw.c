@@ -1805,6 +1805,8 @@ TkMacOSXSetupDrawingContext(
 		"no port or context to draw into !");
     }
     if (dc.context) {
+	CGContextSetTextMatrix(dc.context, CGAffineTransformIdentity);
+	CGContextSetTextDrawingMode(dc.context, kCGTextFill);
 	CGContextConcatCTM(dc.context, CGAffineTransformMake(1.0, 0.0, 0.0,
 		-1.0, 0.0, dc.portBounds.bottom - dc.portBounds.top));
 	if (dc.clipRgn) {
