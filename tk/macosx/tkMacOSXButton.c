@@ -40,7 +40,7 @@ typedef struct {
 /*
  * Use the following heuristic conversion constants to make NSButton-based
  * widget metrics match up with the old Carbon control buttons (for the
- * default Lucida Grande 14 font).
+ * default Lucida Grande 13 font).
  * TODO: provide a scriptable way to turn this off and use the raw NSButton
  *       metrics (will also need dynamic adjustment of the default padding,
  *       c.f. tkMacOSXDefault.h).
@@ -416,7 +416,7 @@ ComputeNativeButtonGeometry(
     MacButton *macButtonPtr = (MacButton *) butPtr;
     NSButton *button = macButtonPtr->button;
     NSButtonCell *cell = [button cell];
-    NSButtonType type;
+    NSButtonType type = -1;
     NSBezelStyle style = 0;
     NSInteger highlightsBy = 0, showsStateBy = 0;
     NSFont *font;
@@ -504,7 +504,7 @@ ComputeNativeButtonGeometry(
     }
     haveCompound = (haveCompound && haveImage && haveText);
     if (haveText) {
-	NSTextAlignment alignment;
+	NSTextAlignment alignment = NSNaturalTextAlignment;
 
 	switch (butPtr->justify) {
 	case TK_JUSTIFY_LEFT:

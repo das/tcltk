@@ -174,11 +174,11 @@ TkpOpenDisplay(
     display->default_screen = 0;
     display->display_name   = (char *) macScreenName;
 
-    Gestalt(gestaltQuickdrawVersion, (long *) &display->proto_minor_version);
+    Gestalt(gestaltQuickdrawVersion, (SInt32 *) &display->proto_minor_version);
     display->proto_major_version = 10;
     display->proto_minor_version -= gestaltMacOSXQD;
     display->vendor = (char*) "Apple";
-    Gestalt(gestaltSystemVersion, (long *) &display->release);
+    Gestalt(gestaltSystemVersion, (SInt32 *) &display->release);
 
     /*
      * These screen bits never change
