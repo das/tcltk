@@ -957,19 +957,11 @@ FindMarkCharacter(
     static const char markChars[] = {kCheckCharCode, kDiamondCharCode,
 	    kBulletCharCode, '-', kCheckCharCode};
     const char *markChar = markChars;
-    int i = sizeof(markChars);
     Tk_Font tkfont;
 
     tkfont = Tk_GetFontFromObj(mePtr->menuPtr->tkwin,
 	    (mePtr->fontPtr == NULL) ? mePtr->menuPtr->fontPtr
 	    : mePtr->fontPtr);
-
-    while (--i) {
-	if (!TkMacOSXIsCharacterMissing(tkfont, *markChar)) {
-	    break;
-	}
-	markChar++;
-    }
     return *markChar;
 }
 
