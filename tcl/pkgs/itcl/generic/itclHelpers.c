@@ -357,11 +357,13 @@ ItclEnsembleSubCmd(
     Tcl_Obj *const *objv,
     const char *functionName)
 {
-    ItclShowArgs(2, functionName, objc, objv);
     int result;
-    Tcl_Obj **newObjv = (Tcl_Obj **)ckalloc(sizeof(Tcl_Obj *)*(objc+1));
+    Tcl_Obj **newObjv;
+    int isRootEnsemble;
+    ItclShowArgs(2, functionName, objc, objv);
 
-    int isRootEnsemble = Tcl_InitRewriteEnsemble(interp, 1, 2, objc, objv);
+    newObjv = (Tcl_Obj **)ckalloc(sizeof(Tcl_Obj *)*(objc+1));
+    isRootEnsemble = Tcl_InitRewriteEnsemble(interp, 1, 2, objc, objv);
     newObjv[0] = Tcl_NewStringObj("::info", -1);
     Tcl_IncrRefCount(newObjv[0]);
     newObjv[1] = Tcl_NewStringObj("itclinfo", -1);
