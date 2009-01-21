@@ -57,9 +57,11 @@
 #include "tkMacOSXDebug.h"
 
 typedef struct {
+#ifdef OBSOLETE
     WindowRef whichWin;
     WindowRef activeNonFloating;
     WindowPartCode windowPart;
+#endif
     unsigned int state;
     long delta;
     Window window;
@@ -155,7 +157,7 @@ enum {
 	global = local;
     }
 
-    Window window = TkMacOSXGetXWindow([win windowRef]);
+    Window window = TkMacOSXGetXWindow(win);
     TkDisplay *dispPtr = TkGetDisplayList();
     Tk_Window tkwin = Tk_IdToWindow(dispPtr->display, window);
     if (!tkwin) {
@@ -1080,61 +1082,31 @@ XQueryPointer(
     unsigned int *mask_return)
 {
     int getGlobal = (root_x_return && root_y_return);
-    int getLocal = (win_x_return && win_y_return);
+    int getLocal = (win_x_return && win_y_return && w != None);
 
     if (getGlobal || getLocal) {
-	Point where, local;
-	OSStatus err = noErr;
-	int gotMouseLoc = 0;
-	EventRef ev = GetCurrentEvent();
-
-	if (ev && getLocal) {
-	    err = ChkErr(GetEventParameter, ev, kEventParamWindowMouseLocation,
-		    typeQDPoint, NULL, sizeof(Point), NULL, &local);
-	    gotMouseLoc = (err == noErr);
-	}
-	if (getGlobal || !gotMouseLoc) {
-	    if (ev) {
-		err = ChkErr(GetEventParameter, ev, kEventParamMouseLocation,
-			typeQDPoint, NULL, sizeof(Point), NULL, &where);
-	    }
-	    if (!ev || err != noErr) {
-		GetGlobalMouse(&where);
-	    }
-	}
+	NSPoint global = [NSEvent mouseLocation];
+	
 	if (getLocal) {
-	    WindowRef whichWin;
+	    MacDrawable *macWin = (MacDrawable *) w;
+	    NSWindow *win = TkMacOSXDrawableWindow(w);
 
-	    if (ev) {
-		err = ChkErr(GetEventParameter, ev, kEventParamWindowRef,
-			typeWindowRef, NULL, sizeof(WindowRef), NULL,
-			&whichWin);
-	    }
-	    if (!ev || err != noErr) {
-		FindWindow(where, &whichWin);
-	    }
-	    if (gotMouseLoc) {
-		if (whichWin) {
-		    Rect widths;
+	    if (win) {
+		NSPoint local;
 
-		    ChkErr(GetWindowStructureWidths, whichWin, &widths);
-		    local.h -= widths.left;
-		    local.v -= widths.top;
+		local = [win convertScreenToBase:global];
+		local.y = [win frame].size.height - local.y;
+		if (macWin->winPtr && macWin->winPtr->wmInfoPtr) {
+		    local.x -= macWin->winPtr->wmInfoPtr->xInParent;
+		    local.y -= macWin->winPtr->wmInfoPtr->yInParent;
 		}
-	    } else {
-		local = where;
-		if (whichWin) {
-		    QDGlobalToLocalPoint(GetWindowPort(whichWin), &local);
-		}
+		*win_x_return = local.x;
+		*win_y_return = local.y;
 	    }
 	}
 	if (getGlobal) {
-	    *root_x_return = where.h;
-	    *root_y_return = where.v;
-	}
-	if (getLocal) {
-	    *win_x_return = local.h;
-	    *win_y_return = local.v;
+	    *root_x_return = global.x;
+	    *root_y_return = tkMacOSXZeroScreenHeight - global.y;
 	}
     }
     if (mask_return) {
@@ -1169,14 +1141,16 @@ TkGenerateButtonEventForXPointer(
     int global_x, global_y, local_x, local_y;
 
     bzero(&med, sizeof(MouseEventData));
-    XQueryPointer(NULL, None, NULL, NULL, &global_x, &global_y,
+    XQueryPointer(NULL, window, NULL, NULL, &global_x, &global_y,
 	    &local_x, &local_y, &med.state);
     med.global.h = global_x;
     med.global.v = global_y;
     med.local.h = local_x;
     med.local.v = local_y;
     med.window = window;
+#ifdef OBSOLETE
     med.activeNonFloating = ActiveNonFloatingWindow();
+#endif
 
     return GenerateButtonEvent(&med);
 }
@@ -1207,6 +1181,8 @@ TkGenerateButtonEvent(
     Window window,		/* X Window containing button event. */
     unsigned int state)		/* Button Key state suitable for X event. */
 {
+    MacDrawable *macWin = (MacDrawable *) window;
+    NSWindow *win = TkMacOSXDrawableWindow(window);
     MouseEventData med;
 
     bzero(&med, sizeof(MouseEventData));
@@ -1214,10 +1190,24 @@ TkGenerateButtonEvent(
     med.window = window;
     med.global.h = x;
     med.global.v = y;
+#ifdef OBSOLETE
     FindWindow(med.global, &med.whichWin);
     med.activeNonFloating = ActiveNonFloatingWindow();
+#endif
     med.local = med.global;
-    QDGlobalToLocalPoint(GetWindowPort(med.whichWin), &med.local);
+
+    if (win) {
+	NSPoint local = NSMakePoint(x, tkMacOSXZeroScreenHeight - y);
+
+	local = [win convertScreenToBase:local];
+	local.y = [win frame].size.height - local.y;
+	if (macWin->winPtr && macWin->winPtr->wmInfoPtr) {
+	    local.x -= macWin->winPtr->wmInfoPtr->xInParent;
+	    local.y -= macWin->winPtr->wmInfoPtr->yInParent;
+	}
+	med.local.h = local.x;
+	med.local.v = tkMacOSXZeroScreenHeight - local.y;
+    }
 
     return GenerateButtonEvent(&med);
 }

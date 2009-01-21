@@ -375,7 +375,7 @@ GenerateEditEvent(
     event.subwindow = None;
     event.time = TkpGetMS();
 
-    XQueryPointer(NULL, None, NULL, NULL,
+    XQueryPointer(NULL, winPtr->window, NULL, NULL,
 	    &event.x_root, &event.y_root, &x, &y, &event.state);
     Tk_TopCoordsToWindow(tkwin, x, y, &event.x, &event.y);
     event.same_screen = true;

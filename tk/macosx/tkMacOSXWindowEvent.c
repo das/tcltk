@@ -281,6 +281,7 @@ TkMacOSXProcessApplicationEvent(
     TkMacOSXEvent *eventPtr,
     MacEventStatus *statusPtr)
 {
+#ifdef OBSOLETE
     Tcl_CmdInfo dummy;
 
     /*
@@ -345,6 +346,7 @@ TkMacOSXProcessApplicationEvent(
     default:
 	break;
     }
+#endif
     return 0;
 }
 
@@ -402,6 +404,7 @@ TkMacOSXProcessWindowEvent(
     TkMacOSXEvent *eventPtr,
     MacEventStatus *statusPtr)
 {
+#ifdef OBSOLETE
     OSStatus err;
     WindowRef whichWindow;
     Window window;
@@ -599,8 +602,9 @@ TkMacOSXProcessWindowEvent(
 	break;
 #endif
     }
-
     return eventFound;
+#endif
+    return false;
 }
 
 #ifdef HAVE_QUICKDRAW
@@ -1189,18 +1193,39 @@ ClearPort(
  * events for a given draw have been handled.
  */
 
+@interface TKContentView(TKWindowEvent)
+- (void)drawRect:(NSRect)rect;
+- (void)generateExposeEvents:(HIMutableShapeRef)shape;
+- (BOOL)isOpaque;
+- (BOOL)wantsDefaultClipping;
+@end
+
+/* From WebKit/WebKit/mac/WebCoreSupport/WebChromeClient.mm: */
+@interface NSWindow(TKSubwindows)
+- (NSRect)_growBoxRect;
+@end
+
 @implementation TKContentView
+@end
+
+@implementation TKContentView(TKWindowEvent)
 
 - (void)drawRect:(NSRect)rect {
+#ifdef TK_MAC_DEBUG_EVENTS
     TKLog(@"-[%@(%p) %s]", [self class], self, _cmd);
-
+#endif
+    NSWindow *w = [self window];
+    TkWindow *winPtr = TkMacOSXGetTkWindow(w);
+    if (winPtr && winPtr->wmInfoPtr &&
+	    (winPtr->wmInfoPtr->attributes & kWindowResizableAttribute)) {
+	NSRect bounds = [w _growBoxRect];
+	if ([self needsToDrawRect:bounds]) {
+	    NSEraseRect(bounds);
+	}
+    }
     const NSRect *rectsBeingDrawn;
-    NSInteger rectsBeingDrawnCount;
-
+    NSInteger rectsBeingDrawnCount;    
     [self getRectsBeingDrawn:&rectsBeingDrawn count:&rectsBeingDrawnCount];
-    //[[NSColor whiteColor] setFill];
-    //NSRectFillList(rectsBeingDrawn, rectsBeingDrawnCount);
-
     HIMutableShapeRef drawShape = HIShapeCreateMutable();
     while (rectsBeingDrawnCount--) {
 	CGRect r = NSRectToCGRect(*rectsBeingDrawn++);

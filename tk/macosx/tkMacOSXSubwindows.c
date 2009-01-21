@@ -33,6 +33,12 @@ static void		GenerateConfigureNotify(TkWindow *winPtr,
 static void		UpdateOffsets(TkWindow *winPtr, int deltaX,
 			    int deltaY);
 static void		NotifyVisibility(TkWindow *winPtr, XEvent *eventPtr);
+
+/* From WebKit/WebKit/mac/WebCoreSupport/WebChromeClient.mm: */
+@interface NSWindow(TKSubwindows)
+- (NSRect)_growBoxRect;
+@end
+
 
 /*
  *----------------------------------------------------------------------
@@ -56,7 +62,6 @@ XDestroyWindow(
     Window window)		/* Window. */
 {
     MacDrawable *macWin = (MacDrawable *) window;
-    WindowRef winRef;
 
     /*
      * Remove any dangling pointers that may exist if the window we are
@@ -85,6 +90,7 @@ XDestroyWindow(
 	return;
     }
 
+#ifdef OBSOLETE
     /*
      * We are relying on the Activate Mac OS event to pass the focus away from
      * a window that is getting Destroyed to the Front non-floating window. BUT
@@ -99,7 +105,7 @@ XDestroyWindow(
 
 	if (focusPtr == NULL
 		|| (focusPtr->mainPtr->winPtr == macWin->winPtr)) {
-	    winRef = [TkMacOSXDrawableWindow(window) windowRef];
+	    NSWindow *wRef = TkMacOSXDrawableWindow(window);
 	    if (TkpIsWindowFloating (winRef)) {
 		Window window = TkMacOSXGetXWindow(ActiveNonFloatingWindow());
 
@@ -109,6 +115,7 @@ XDestroyWindow(
 	    }
 	}
     }
+#endif
     if (macWin->visRgn) {
 	CFRelease(macWin->visRgn);
     }
@@ -124,9 +131,10 @@ XDestroyWindow(
      */
 
     if (!Tk_IsEmbedded(macWin->winPtr)) {
-	WindowRef winRef = [TkMacOSXDrawableWindow(window) windowRef];
+	NSWindow *win = TkMacOSXDrawableWindow(window);
 
-	if (winRef) {
+	if (win) {
+#ifdef OBSOLETE
 	    WindowGroupRef group;
 
 	    if (GetWindowProperty(winRef, 'Tk  ', 'TsGp', sizeof(group), NULL,
@@ -164,17 +172,13 @@ XDestroyWindow(
 		ChkErr(SetWindowGroupOwner, group, NULL);
 		ChkErr(ReleaseWindowGroup, group);
 	    }
-	    TkMacOSXUnregisterMacWindow(winRef);
-	    /*DisposeWindow(winRef);*/
-	    if (macWin->winPtr && macWin->winPtr->wmInfoPtr &&
-		    macWin->winPtr->wmInfoPtr->window) {
-		CFRelease(macWin->winPtr->wmInfoPtr->window);
-	    }
+#endif
+	    TkMacOSXUnregisterMacWindow(win);
+	    CFRelease(win);
 	}
     }
 
     macWin->view = nil;
-    macWin->grafPtr = NULL;
 
     /*
      * Delay deletion of a toplevel data structure untill all children have
@@ -227,19 +231,21 @@ XMapWindow(
     macWin->winPtr->flags |= TK_MAPPED;
     if (Tk_IsTopLevel(macWin->winPtr)) {
 	if (!Tk_IsEmbedded(macWin->winPtr)) {
+#ifdef OBSOLETE
 	    /*
 	     * XXX This should be ShowSheetWindow for kSheetWindowClass
 	     * XXX windows that have a wmPtr->master parent set.
 	     */
 
-	    WindowRef wRef = [TkMacOSXDrawableWindow(window) windowRef];
+	    NSWindow *wRef = TkMacOSXDrawableWindow(window);
 
 	    if ((macWin->winPtr->wmInfoPtr->macClass == kSheetWindowClass)
 		    && (macWin->winPtr->wmInfoPtr->master != None)) {
-		ShowSheetWindow(wRef, [TkMacOSXDrawableWindow(
-			macWin->winPtr->wmInfoPtr->master) windowRef]);
-	    } else {
-		//ShowWindow(wRef);
+		ShowSheetWindow(wRef, TkMacOSXDrawableWindow(
+			macWin->winPtr->wmInfoPtr->master));
+	    } else 
+#endif
+		{
 		if (![macWin->winPtr->wmInfoPtr->window isVisible]) {
 		    [macWin->winPtr->wmInfoPtr->window orderFront:NSApp];
 		}
@@ -344,17 +350,20 @@ XUnmapWindow(
     if (Tk_IsTopLevel(macWin->winPtr)) {
 	if (!Tk_IsEmbedded(macWin->winPtr) &&
 		macWin->winPtr->wmInfoPtr->hints.initial_state!=IconicState) {
+#ifdef OBSOLETE
 	    /*
 	     * XXX This should be HideSheetWindow for kSheetWindowClass
 	     * XXX windows that have a wmPtr->master parent set.
 	     */
 
-	    WindowRef wref = [TkMacOSXDrawableWindow(window) windowRef];
+	    NSWindow *wRef = TkMacOSXDrawableWindow(window);
 
 	    if ((macWin->winPtr->wmInfoPtr->macClass == kSheetWindowClass)
 		    && (macWin->winPtr->wmInfoPtr->master != None)) {
 		HideSheetWindow(wref);
-	    } else {
+	    } else
+#endif
+		{
 		//HideWindow(wref);
 		if ([macWin->winPtr->wmInfoPtr->window isVisible]) {
 		    [macWin->winPtr->wmInfoPtr->window orderOut:NSApp];
@@ -731,13 +740,18 @@ XConfigureWindow(
      */
 
     if (value_mask & CWStackMode) {
+	NSView *view = macWin->toplevel ? macWin->toplevel->view :
+		macWin->view;
 	Rect bounds;
-	WindowRef wRef = [TkMacOSXDrawableWindow(w) windowRef];
+	NSRect r;
 
-	if (wRef) {
+	if (view) {
 	    TkMacOSXInvalClipRgns((Tk_Window) winPtr->parentPtr);
 	    TkMacOSXWinBounds(winPtr, &bounds);
-	    InvalWindowRect(wRef, &bounds);
+	    r = NSMakeRect(bounds.left,
+		[view bounds].size.height - bounds.bottom,
+		bounds.right - bounds.left, bounds.bottom - bounds.top);
+	    [view setNeedsDisplayInRect:r];
 	}
     }
 
@@ -821,7 +835,7 @@ TkMacOSXUpdateClipRgn(
 		    ChkErr(HIShapeIntersect,
 			    win2Ptr->privatePtr->aboveVisRgn, rgn, rgn);
 		} else if (tkMacOSXEmbedHandler != NULL) {
-		    TkRegion r;
+		    TkRegion r = TkCreateRegion();
 		    HIShapeRef visRgn;
 
 		    tkMacOSXEmbedHandler->getClipProc((Tk_Window) winPtr, r);
@@ -836,16 +850,13 @@ TkMacOSXUpdateClipRgn(
 		 */
 	    } else if (winPtr->wmInfoPtr->attributes &
 		    kWindowResizableAttribute) {
-		HIViewRef growBoxView;
-		OSErr err = HIViewFindByID(HIViewGetRoot(
-			[TkMacOSXDrawableWindow(winPtr->window) windowRef]),
-			kHIViewWindowGrowBoxID, &growBoxView);
-
-		if (err == noErr) {
-		    ChkErr(HIViewGetFrame, growBoxView, &bounds);
-		    bounds = CGRectOffset(bounds,
-			    -winPtr->wmInfoPtr->xInParent,
-			    -winPtr->wmInfoPtr->yInParent);
+		NSWindow *w = TkMacOSXDrawableWindow(winPtr->window);
+		
+		if (w) {
+		    bounds = NSRectToCGRect([w _growBoxRect]);
+		    bounds.origin.y = [w contentRectForFrameRect:
+			    [w frame]].size.height - bounds.size.height -
+			    bounds.origin.y;
 		    ChkErr(TkMacOSHIShapeDifferenceWithRect, rgn, &bounds);
 		}
 	    }
@@ -1015,7 +1026,7 @@ TkMacOSXInvalidateWindow(
 /*
  *----------------------------------------------------------------------
  *
- * TkMacOSXGetDrawableWindow --
+ * TkMacOSXDrawableWindow --
  *
  *	This function returns the WindowRef for a given X drawable.
  *
@@ -1037,11 +1048,13 @@ TkMacOSXDrawableWindow(
 
     if (!macWin || macWin->flags & TK_IS_PIXMAP) {
 	result = NULL;
+    } else if (macWin->toplevel && macWin->toplevel->winPtr &&
+	    macWin->toplevel->winPtr->wmInfoPtr &&
+	    macWin->toplevel->winPtr->wmInfoPtr->window) {
+	result = macWin->toplevel->winPtr->wmInfoPtr->window;
     } else if (macWin->winPtr && macWin->winPtr->wmInfoPtr &&
 	    macWin->winPtr->wmInfoPtr->window) {
 	result = macWin->winPtr->wmInfoPtr->window;
-    /*} else {
-	result = GetWindowFromPort(TkMacOSXGetDrawablePort(drawable));*/
     }
     return result;
 }

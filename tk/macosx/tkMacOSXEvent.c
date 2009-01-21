@@ -109,7 +109,7 @@ enum {
  *
  * TkMacOSXFlushWindows --
  *
- *	This routine flushes all the Carbon windows of the application. It is
+ *	This routine flushes all the windows of the application. It is
  *	called by XSync().
  *
  * Results:
@@ -124,11 +124,18 @@ enum {
 MODULE_SCOPE void
 TkMacOSXFlushWindows(void)
 {
-    WindowRef wRef = GetWindowList();
+    NSInteger windowCount;
+    NSInteger *windowNumbers;
 
-    while (wRef) {
-	ChkErr(HIWindowFlush, wRef);
-	wRef = GetNextWindow(wRef);
+    NSCountWindows(&windowCount);
+    if(windowCount) {
+	windowNumbers = (NSInteger *) ckalloc(windowCount * sizeof(NSInteger));
+	NSWindowList(windowCount, windowNumbers);
+	for (NSInteger index = 0; index < windowCount; index++) {
+	    [[NSApp windowWithWindowNumber:windowNumbers[index]]
+		    flushWindowIfNeeded];
+	}
+	ckfree((char*) windowNumbers);
     }
 }
 
@@ -308,6 +315,7 @@ TkMacOSXProcessCommandEvent(
     TkMacOSXEvent *eventPtr,
     MacEventStatus *statusPtr)
 {
+#ifdef OBSOLETE
     HICommand command;
     int menuContext;
     OSStatus err;
@@ -367,6 +375,7 @@ TkMacOSXProcessCommandEvent(
 	    }
 	}
     }
+#endif
     return 0;
 }
 

@@ -731,7 +731,7 @@ TkpDisplayScrollbar(
     if (macScrollPtr->sbHandle == NULL) {
 	Rect r = {0, 0, 1, 1};
 
-	windowRef = [TkMacOSXDrawableWindow(Tk_WindowId(tkwin)) windowRef];
+	windowRef = TkMacOSXDrawableWindow(Tk_WindowId(tkwin));
 	CreateScrollBarControl(windowRef, &r, 0, 0, 0, 0, true, NULL,
 		&(macScrollPtr->sbHandle));
 	SetControlReference(macScrollPtr->sbHandle, (SInt32) scrollPtr);

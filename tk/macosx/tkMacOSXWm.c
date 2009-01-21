@@ -72,11 +72,13 @@ static const Tk_GeomMgr wmMgrType = {
     NULL,			/* lostSlaveProc */
 };
 
+#ifdef MAC_OSX_TK_TODO
 /*
  * The following keeps state for Aqua dock icon bounce notification.
  */
 
 static int tkMacOSXWmAttrNotifyVal = 0;
+#endif
 
 /*
  * Hash table for Mac Window -> TkWindow mapping.
@@ -90,7 +92,7 @@ static int windowHashInit = false;
  */
 
 static void		InitialWindowBounds(TkWindow *winPtr,
-			    WindowRef macWindow, Rect *geometry);
+			    NSWindow *macWindow, Rect *geometry);
 static int		ParseGeometry(Tcl_Interp *interp, char *string,
 			    TkWindow *winPtr);
 static void		TopLevelEventProc(ClientData clientData,
@@ -202,17 +204,86 @@ static int		WmWinStyle(Tcl_Interp *interp, TkWindow *winPtr,
 			    int objc, Tcl_Obj *const objv[]);
 #endif
 static void		ApplyWindowClassAttributeChanges(TkWindow *winPtr,
-			    WindowRef macWindow, WindowClass oldClass,
+			    NSWindow *macWindow, WindowClass oldClass,
 			    WindowAttributes oldAttributes, int create);
 static void		ApplyMasterOverrideChanges(TkWindow *winPtr,
-			    WindowRef macWindow);
+			    NSWindow *macWindow);
+#ifdef OBSOLETE
 static WindowGroupRef	WmGetWindowGroup(TkWindow *winPtr);
+#endif
 static void		GetMinSize(TkWindow *winPtr, int *minWidthPtr,
 			    int *minHeightPtr);
 static void		GetMaxSize(TkWindow *winPtr, int *maxWidthPtr,
 			    int *maxHeightPtr);
 static void		RemapWindows(TkWindow *winPtr,
 			    MacDrawable *parentWin);
+
+@implementation TKApplication(TKWm)
+- (NSRect)windowWillUseStandardFrame:(NSWindow *)window defaultFrame:(NSRect)newFrame {
+    TkWindow *winPtr = TkMacOSXGetTkWindow(window);
+    WmInfo *wmPtr;
+    int maxWidth, maxHeight;
+    NSRect frame;
+
+    if (!winPtr || !winPtr->wmInfoPtr) {
+	return newFrame;
+    }
+    frame = [window frame];
+    wmPtr = winPtr->wmInfoPtr;
+    if ((wmPtr->flags & WM_WIDTH_NOT_RESIZABLE) &&
+	    (wmPtr->flags & WM_HEIGHT_NOT_RESIZABLE)) {
+	return frame;
+    }
+    GetMaxSize(winPtr, &maxWidth, &maxHeight);
+    if (wmPtr->gridWin != NULL) {
+	int base = winPtr->reqWidth - (wmPtr->reqGridWidth * wmPtr->widthInc);
+
+	if (base < 0) {
+	    base = 0;
+	}
+	maxWidth = base + (maxWidth * wmPtr->widthInc);
+	base = winPtr->reqHeight - (wmPtr->reqGridHeight * wmPtr->heightInc);
+	if (base < 0) {
+	    base = 0;
+	}
+	maxHeight = base + (maxHeight * wmPtr->heightInc);
+    }
+    frame = [window contentRectForFrameRect:frame];
+    if (!(wmPtr->flags & WM_WIDTH_NOT_RESIZABLE)) {
+	frame.size.width = maxWidth;
+    }
+    if (!(wmPtr->flags & WM_HEIGHT_NOT_RESIZABLE)) {
+	frame.size.height = maxHeight;
+    }
+    return [window frameRectForContentRect:frame];
+}
+@end
+
+static NSWindow*
+FrontWindowOfLevelAndClass(
+    CGWindowLevel level,
+    Class class)
+{
+    NSWindow *win = nil;
+    NSInteger windowCount;
+    NSInteger *windowNumbers;
+
+    NSCountWindows(&windowCount);
+    if (windowCount) {
+	windowNumbers = (NSInteger *) ckalloc(windowCount * sizeof(NSInteger));
+	NSWindowList(windowCount, windowNumbers);
+	for (NSInteger index = 0; index < windowCount; index++) {
+	    NSWindow *w = [NSApp windowWithWindowNumber:windowNumbers[index]];
+	    if (w && [w level] == level && (!class || [w class] == class)) {
+		win = w;
+		break;
+	    }
+	}
+	ckfree((char *) windowNumbers);
+    }
+
+    return win;
+}
 
 /*
  *----------------------------------------------------------------------
@@ -777,14 +848,14 @@ WmAspectCmd(
 static int
 WmSetAttribute(
     TkWindow *winPtr,		/* Toplevel to work with */
-    NSWindow *w,
+    NSWindow *macWindow,
     Tcl_Interp *interp,		/* Current interpreter */
     WmAttribute attribute,	/* Code of attribute to set */
     Tcl_Obj *value)		/* New value */
 {
+#ifdef MAC_OSX_TK_TODO
     WmInfo *wmPtr = winPtr->wmInfoPtr;
     int boolean;
-    WindowRef macWindow = [w windowRef];
 
     switch (attribute) {
     case WMATT_ALPHA: {
@@ -921,6 +992,7 @@ WmSetAttribute(
     default:
 	return TCL_ERROR;
     }
+#endif
     return TCL_OK;
 }
 
@@ -938,12 +1010,12 @@ WmSetAttribute(
 static Tcl_Obj *
 WmGetAttribute(
     TkWindow *winPtr,		/* Toplevel to work with */
-    NSWindow *w,
+    NSWindow *macWindow,
     WmAttribute attribute)	/* Code of attribute to get */
 {
-    WmInfo *wmPtr = winPtr->wmInfoPtr;
     Tcl_Obj *result = NULL;
-    WindowRef macWindow = [w windowRef];
+#ifdef MAC_OSX_TK_TODO
+    WmInfo *wmPtr = winPtr->wmInfoPtr;
 
     switch (attribute) {
     case WMATT_ALPHA: {
@@ -987,6 +1059,7 @@ WmGetAttribute(
     default:
 	break;
     }
+#endif
     return result;
 }
 
@@ -3813,19 +3886,28 @@ Tk_CoordsToWindow(
      */
 
     NSPoint p = NSMakePoint(rootX, tkMacOSXZeroScreenHeight - rootY);
-    NSArray *windows = [NSApp orderedWindows];
-    NSWindow *w = nil;
-    for (w in windows) {
-	if (NSMouseInRect(p, [w frame], NO)) {
-	    break;
-	} else {
-	    w = nil;
+    NSWindow *win = nil;
+    NSInteger windowCount;
+    NSInteger *windowNumbers;
+
+    NSCountWindows(&windowCount);
+    if (windowCount) {
+	windowNumbers = (NSInteger *) ckalloc(windowCount * sizeof(NSInteger));
+	NSWindowList(windowCount, windowNumbers);
+	for (NSInteger index = 0; index < windowCount; index++) {
+	    NSWindow *w = [NSApp windowWithWindowNumber:windowNumbers[index]];
+	    if (w && NSMouseInRect(p, [w frame], NO)) {
+		win = w;
+		break;
+	    }
 	}
+	ckfree((char *) windowNumbers);
     }
-    if (!w) {
+
+    if (!win) {
 	return NULL;
     }
-    winPtr = TkMacOSXGetTkWindow(w);
+    winPtr = TkMacOSXGetTkWindow(win);
     if (!winPtr) {
 	return NULL;
     }
@@ -4193,7 +4275,8 @@ TkWmRestackToplevel(
 {
     WmInfo *wmPtr;
 
-    WindowRef macWindow, otherMacWindow, frontWindow, tmpWindow;
+    NSWindow *macWindow;
+    NSInteger otherMacWindowNumber;
 
     wmPtr = winPtr->wmInfoPtr;
 
@@ -4213,7 +4296,7 @@ TkWmRestackToplevel(
 
 	TkWmMapWindow(winPtr);
     }
-    macWindow = [TkMacOSXDrawableWindow(winPtr->window) windowRef];
+    macWindow = TkMacOSXDrawableWindow(winPtr->window);
 
     /*
      * Get the window in which a raise or lower is in relation to.
@@ -4226,56 +4309,13 @@ TkWmRestackToplevel(
 	if (otherPtr->wmInfoPtr->flags & WM_NEVER_MAPPED) {
 	    TkWmMapWindow(otherPtr);
 	}
-	otherMacWindow = [TkMacOSXDrawableWindow(otherPtr->window) windowRef];
+	otherMacWindowNumber = [TkMacOSXDrawableWindow(otherPtr->window)
+		windowNumber];
     } else {
-	otherMacWindow = NULL;
+	otherMacWindowNumber = 0;
     }
-
-    frontWindow = ActiveNonFloatingWindow();
-
-    if (aboveBelow == Above) {
-	if (macWindow == frontWindow) {
-	    /*
-	     * Do nothing - it's already at the top.
-	     */
-	} else if (otherMacWindow == frontWindow || otherMacWindow == NULL) {
-	    /*
-	     * Raise the window to the top. If the window is visible then we
-	     * also make it the active window.
-	     */
-
-	    if (wmPtr->hints.initial_state == WithdrawnState) {
-		BringToFront(macWindow);
-	    } else {
-		SelectWindow(macWindow);
-	    }
-	} else {
-	    /*
-	     * Find the window to be above. (Front window will actually be the
-	     * window to be behind.) Front window is NULL if no other windows.
-	     */
-
-	    while (frontWindow != NULL &&
-		    (tmpWindow=GetNextWindow(frontWindow)) != otherMacWindow) {
-		frontWindow = tmpWindow;
-	    }
-	    if (frontWindow != NULL) {
-		SendBehind(macWindow, frontWindow);
-	    }
-	}
-    } else {
-	/*
-	 * Send behind. If it was in front find another window to make active.
-	 */
-
-	if (macWindow == frontWindow) {
-	    tmpWindow = GetNextWindow(macWindow);
-	    if (tmpWindow != NULL) {
-		SelectWindow(tmpWindow);
-	    }
-	}
-	SendBehind(macWindow, otherMacWindow);
-    }
+    [macWindow orderWindow:(aboveBelow == Above ? NSWindowAbove : NSWindowBelow)
+	    relativeTo:otherMacWindowNumber];
 }
 
 /*
@@ -4488,34 +4528,27 @@ TkGetPointerCoords(
 static void
 InitialWindowBounds(
     TkWindow *winPtr,		/* Window to get initial bounds for. */
-    WindowRef macWindow,
+    NSWindow *macWindow,
     Rect *geometry)		/* On return the initial bounds. */
 {
     WmInfo *wmPtr = winPtr->wmInfoPtr;
 
     if (!(wmPtr->sizeHintsFlags & (USPosition | PPosition))) {
-	WindowRef parent;
+	NSWindow *parent = FrontWindowOfLevelAndClass([macWindow level],
+		[macWindow class]);
 
-	parent = GetFrontWindowOfClass(wmPtr->macClass, false);
-	if (parent && parent == macWindow) {
-	    parent = GetNextWindowOfClass(parent, wmPtr->macClass, false);
-	}
 	if (parent && parent != macWindow) {
-	    Rect bounds;
+	    NSRect frame = [parent frame];
 
-	    ChkErr(RepositionWindow, macWindow, parent,
-		    kWindowCascadeOnParentWindowScreen);
-	    ChkErr(GetWindowBounds, macWindow, kWindowStructureRgn, &bounds);
-	    wmPtr->x = bounds.left;
-	    wmPtr->y = bounds.top;
+	    [macWindow cascadeTopLeftFromPoint:NSMakePoint(
+		    frame.origin.x, frame.origin.y + frame.size.height)];
+	    frame = [macWindow frame];
+	    wmPtr->x = frame.origin.x;
+	    wmPtr->y = tkMacOSXZeroScreenHeight -
+		    (frame.origin.y + frame.size.height);
 	} else {
-	    static SInt16 menuBarHeight = 0;
-
-	    if (!menuBarHeight) {
-		ChkErr(GetThemeMenuBarHeight, &menuBarHeight);
-	    }
 	    wmPtr->x = 5;
-	    wmPtr->y = menuBarHeight + 5;
+	    wmPtr->y = tkMacOSXZeroScreenTop + 5;
 	}
     }
 
@@ -4586,9 +4619,10 @@ TkMacOSXResizable(
 
 int
 TkMacOSXGrowToplevel(
-    WindowRef whichWindow,
+    void *whichWindow,
     Point start)
 {
+#ifdef OBSOLETE
     Point where = start;
     TkDisplay *dispPtr;
     Rect portRect;
@@ -4684,6 +4718,7 @@ TkMacOSXGrowToplevel(
 	    return true;
 	}
     }
+#endif
     return false;
 }
 
@@ -4762,14 +4797,14 @@ TkGetTransientMaster(
 
 Window
 TkMacOSXGetXWindow(
-    WindowRef macWinPtr)
+    void *macWinPtr)
 {
     Tcl_HashEntry *hPtr;
 
-    if ((macWinPtr == NULL) || !windowHashInit) {
+    if (!macWinPtr || !windowHashInit) {
 	return None;
     }
-    hPtr = Tcl_FindHashEntry(&windowTable, (char *) macWinPtr);
+    hPtr = Tcl_FindHashEntry(&windowTable, macWinPtr);
     if (hPtr == NULL) {
 	return None;
     }
@@ -4796,8 +4831,7 @@ TkWindow*
 TkMacOSXGetTkWindow(
     NSWindow *w)
 {
-    WindowRef whichWindow = [w windowRef];
-    Window window = TkMacOSXGetXWindow(whichWindow);
+    Window window = TkMacOSXGetXWindow(w);
     TkDisplay *dispPtr = TkGetDisplayList();
 
     return (window != None ?
@@ -4826,41 +4860,7 @@ MODULE_SCOPE int
 TkMacOSXIsWindowZoomed(
     TkWindow *winPtr)
 {
-    WmInfo *wmPtr = winPtr->wmInfoPtr;
-    int maxWidth, maxHeight;
-    Point idealSize;
-
-    if ((wmPtr->flags & WM_WIDTH_NOT_RESIZABLE) &&
-	    (wmPtr->flags & WM_HEIGHT_NOT_RESIZABLE)) {
-	return false;
-    }
-    GetMaxSize(winPtr, &maxWidth, &maxHeight);
-    if (wmPtr->gridWin != NULL) {
-	int base = winPtr->reqWidth - (wmPtr->reqGridWidth * wmPtr->widthInc);
-
-	if (base < 0) {
-	    base = 0;
-	}
-	maxWidth = base + (maxWidth * wmPtr->widthInc);
-	base = winPtr->reqHeight - (wmPtr->reqGridHeight * wmPtr->heightInc);
-	if (base < 0) {
-	    base = 0;
-	}
-	maxHeight = base + (maxHeight * wmPtr->heightInc);
-    }
-    if (wmPtr->flags & WM_WIDTH_NOT_RESIZABLE) {
-	idealSize.h = winPtr->changes.width;
-    } else {
-	idealSize.h = maxWidth;
-    }
-    if (wmPtr->flags & WM_HEIGHT_NOT_RESIZABLE) {
-	idealSize.v = winPtr->changes.height;
-    } else {
-	idealSize.v = maxHeight;
-    }
-
-    return IsWindowInStandardState([TkMacOSXDrawableWindow(winPtr->window) windowRef],
-	    &idealSize, NULL);
+    return [TkMacOSXDrawableWindow(winPtr->window) isZoomed];
 }
 
 /*
@@ -4884,64 +4884,30 @@ TkMacOSXIsWindowZoomed(
 
 int
 TkMacOSXZoomToplevel(
-    WindowRef whichWindow,	/* The Macintosh window to zoom. */
+    void *whichWindow,		/* The Macintosh window to zoom. */
     short zoomPart)		/* Either inZoomIn or inZoomOut */
 {
-    Window window;
-    TkDisplay *dispPtr;
-    TkWindow *winPtr;
+    NSWindow *window = whichWindow;
+    TkWindow *winPtr = TkMacOSXGetTkWindow(window);
     WmInfo *wmPtr;
-    Point idealSize;
-    int maxWidth, maxHeight;
-    OSStatus err;
 
-    window = TkMacOSXGetXWindow(whichWindow);
-    dispPtr = TkGetDisplayList();
-    winPtr = (TkWindow *) Tk_IdToWindow(dispPtr->display, window);
+    if (!winPtr || !winPtr->wmInfoPtr) {
+	return false;
+    }
     wmPtr = winPtr->wmInfoPtr;
-
     if ((wmPtr->flags & WM_WIDTH_NOT_RESIZABLE) &&
 	    (wmPtr->flags & WM_HEIGHT_NOT_RESIZABLE)) {
 	return false;
-    }
-    GetMaxSize(winPtr, &maxWidth, &maxHeight);
-    if (wmPtr->gridWin != NULL) {
-	int base = winPtr->reqWidth - (wmPtr->reqGridWidth * wmPtr->widthInc);
-
-	if (base < 0) {
-	    base = 0;
-	}
-	maxWidth = base + (maxWidth * wmPtr->widthInc);
-	base = winPtr->reqHeight - (wmPtr->reqGridHeight * wmPtr->heightInc);
-	if (base < 0) {
-	    base = 0;
-	}
-	maxHeight = base + (maxHeight * wmPtr->heightInc);
-    }
-    if (wmPtr->flags & WM_WIDTH_NOT_RESIZABLE) {
-	idealSize.h = winPtr->changes.width;
-    } else {
-	idealSize.h = maxWidth;
-    }
-    if (wmPtr->flags & WM_HEIGHT_NOT_RESIZABLE) {
-	idealSize.v = winPtr->changes.height;
-    } else {
-	idealSize.v = maxHeight;
     }
 
     /*
      * Do nothing if already in desired zoom state.
      */
 
-    if (!IsWindowInStandardState(whichWindow, &idealSize, NULL) ==
-	    (zoomPart == inZoomIn)) {
+    if (![window isZoomed] == (zoomPart == inZoomIn)) {
 	return false;
     }
-
-    err = ChkErr(ZoomWindowIdeal, whichWindow, zoomPart, &idealSize);
-    if (err != noErr) {
-	return false;
-    }
+    [window zoom:NSApp];
     wmPtr->hints.initial_state =
 	    (zoomPart == inZoomIn ? NormalState : ZoomState);
     return true;
@@ -5245,13 +5211,11 @@ TkMacOSXMakeRealWindowExist(
     TkWindow *winPtr)		/* Tk window. */
 {
     WmInfo *wmPtr = winPtr->wmInfoPtr;
-    WindowRef newWindow = NULL;
     MacDrawable *macWin;
     Rect geometry;
     NSRect structureRect;
     short structureW, structureH;
     TkMacOSXWindowList *listPtr;
-    OSStatus err;
 
     if (TkMacOSXHostToplevelExists(winPtr)) {
 	return;
@@ -5289,19 +5253,19 @@ TkMacOSXMakeRealWindowExist(
 	 */
     }
 
+#ifdef OBSOLETE
     if (!IsValidWindowClass(wmPtr->macClass)) {
 	TkMacOSXDbgMsg("Invalid window class: %ld", wmPtr->macClass);
 	wmPtr->macClass = kPlainWindowClass;
     }
     wmPtr->attributes = (wmPtr->attributes | kWindowAsyncDragAttribute) &
 	    GetAvailableWindowAttributes(wmPtr->macClass);
-    /*
     err = ChkErr(CreateNewWindow, wmPtr->macClass, wmPtr->attributes,
 	    &initialBounds, &newWindow);
     if (err != noErr) {
 	newWindow = NULL;
     }
-    */
+#endif
 
     NSWindow *window = [[NSWindow alloc] initWithContentRect:NSZeroRect
 	    styleMask:NSTitledWindowMask|NSClosableWindowMask|
@@ -5314,8 +5278,10 @@ TkMacOSXMakeRealWindowExist(
     TKContentView *contentView = [[TKContentView alloc]
 	    initWithFrame:NSZeroRect];
     [window setContentView:contentView];
+    [window setDelegate:NSApp];
+    [window setAcceptsMouseMovedEvents:YES];
+    [window windowRef];
     wmPtr->window = window;
-    newWindow = [window windowRef];
 
     #if 0
     ChkErr(GetWindowStructureWidths, newWindow, &strWidths);
@@ -5334,14 +5300,17 @@ TkMacOSXMakeRealWindowExist(
     structureH = structureRect.size.height;
     wmPtr->parentWidth = winPtr->changes.width + structureW;
     wmPtr->parentHeight = winPtr->changes.height + structureH;
-    InitialWindowBounds(winPtr, newWindow, &geometry);
+    InitialWindowBounds(winPtr, window, &geometry);
     geometry.right +=  structureW;
     geometry.bottom += structureH;
     [window setFrame:NSMakeRect(geometry.left,
 	    tkMacOSXZeroScreenHeight - geometry.bottom,
 	    geometry.right - geometry.left, geometry.bottom - geometry.top)
 	    display:NO];
-    //TkMacOSXInstallWindowCarbonEventHandler(NULL, newWindow);
+    [window setShowsResizeIndicator:
+	    (wmPtr->attributes & kWindowResizableAttribute)];
+ #ifdef OBSOLETE
+    TkMacOSXInstallWindowCarbonEventHandler(NULL, newWindow);
     if (wmPtr->attributes & kWindowResizableAttribute) {
 	HIViewRef growBoxView;
 
@@ -5351,6 +5320,7 @@ TkMacOSXMakeRealWindowExist(
 	    ChkErr(HIGrowBoxViewSetTransparent, growBoxView, true);
 	}
     }
+#endif
 
     /*
      * Add this window to the list of toplevel windows.
@@ -5362,16 +5332,17 @@ TkMacOSXMakeRealWindowExist(
     tkMacOSXWindowListPtr = listPtr;
 
     macWin->view = contentView;
-    macWin->grafPtr = GetWindowPort(newWindow);
 
+#ifdef OBSOLETE
     if (wmPtr->master != None || winPtr->atts.override_redirect) {
 	ApplyMasterOverrideChanges(winPtr, newWindow);
     }
     SetWindowModified(newWindow, false);
-    TkMacOSXRegisterOffScreenWindow((Window) macWin, newWindow);
-    macWin->flags |= TK_HOST_EXISTS;
     ChkErr(GetWindowClass, newWindow, &(wmPtr->macClass));
     ChkErr(GetWindowAttributes, newWindow, &(wmPtr->attributes));
+#endif
+    TkMacOSXRegisterOffScreenWindow((Window) macWin, window);
+    macWin->flags |= TK_HOST_EXISTS;
     //[window makeKeyAndOrderFront:NSApp];
 
 #ifdef TK_MAC_DEBUG_WINDOWS
@@ -5437,14 +5408,14 @@ TkMacOSXRegisterOffScreenWindow(
 
 void
 TkMacOSXUnregisterMacWindow(
-    WindowRef macWinPtr)	/* Reference to a Mac Window */
+    void *macWinPtr)	/* Reference to a Mac Window */
 {
     Tcl_HashEntry *entryPtr;
 
     if (!windowHashInit) {
 	Tcl_Panic("TkMacOSXUnregisterMacWindow: unmapping before inited");
     }
-    entryPtr = Tcl_FindHashEntry(&windowTable,(char *) macWinPtr);
+    entryPtr = Tcl_FindHashEntry(&windowTable, macWinPtr);
     if (!entryPtr) {
 	TkMacOSXDbgMsg("Failed to find window %08x", (int) macWinPtr);
     } else {
@@ -5571,14 +5542,14 @@ TkpWmSetState(
 				 * or WithdrawnState. */
 {
     WmInfo *wmPtr = winPtr->wmInfoPtr;
-    WindowRef macWin;
+    NSWindow *macWin;
 
     wmPtr->hints.initial_state = state;
     if (wmPtr->flags & WM_NEVER_MAPPED) {
 	return;
     }
 
-    macWin = [TkMacOSXDrawableWindow(winPtr->window) windowRef];
+    macWin = TkMacOSXDrawableWindow(winPtr->window);
 
     if (state == WithdrawnState) {
 	Tk_UnmapWindow((Tk_Window) winPtr);
@@ -5588,22 +5559,19 @@ TkpWmSetState(
 	 * the window we also collapse it.
 	 */
 
-	if (IsWindowCollapsable(macWin) && !IsWindowCollapsed(macWin)) {
-	    CollapseWindow(macWin, true);
+	if (macWin && ([macWin styleMask] & NSMiniaturizableWindowMask) &&
+		![macWin isMiniaturized]) {
+	    [macWin miniaturize:NSApp];
 	}
 	Tk_UnmapWindow((Tk_Window) winPtr);
-    } else if (state == NormalState) {
+    } else if (state == NormalState || state == ZoomState) {
 	Tk_MapWindow((Tk_Window) winPtr);
-	if (IsWindowCollapsable(macWin) && IsWindowCollapsed(macWin)) {
-	    CollapseWindow(macWin, false);
+	if (macWin && ([macWin styleMask] & NSMiniaturizableWindowMask) &&
+		[macWin isMiniaturized]) {
+	    [macWin deminiaturize:NSApp];
 	}
-	TkMacOSXZoomToplevel(macWin, inZoomIn);
-    } else if (state == ZoomState) {
-	Tk_MapWindow((Tk_Window) winPtr);
-	if (IsWindowCollapsable(macWin) && IsWindowCollapsed(macWin)) {
-	    CollapseWindow(macWin, false);
-	}
-	TkMacOSXZoomToplevel(macWin, inZoomOut);
+	TkMacOSXZoomToplevel(macWin, state == NormalState ? inZoomIn :
+		inZoomOut);
     }
 }
 
@@ -5625,16 +5593,9 @@ TkpWmSetState(
 
 int
 TkpIsWindowFloating(
-    WindowRef wRef)
+    void *wRef)
 {
-    WindowClass class;
-
-    if (wRef == NULL) {
-	return 0;
-    }
-
-    GetWindowClass(wRef, &class);
-    return (class == kFloatingWindowClass);
+    return [(NSWindow *)wRef level] == kCGFloatingWindowLevel;
 }
 
 /*
@@ -5680,19 +5641,19 @@ TkMacOSXWindowClass(
 
 void
 TkMacOSXWindowOffset(
-    WindowRef wRef,
+    void *wRef,
     int *xOffset,
     int *yOffset)
 {
-    Window window;
-    TkDisplay *dispPtr;
-    TkWindow *winPtr;
+    TkWindow *winPtr = TkMacOSXGetTkWindow(wRef);
 
-    window = TkMacOSXGetXWindow(wRef);
-    dispPtr = TkGetDisplayList();
-    winPtr = (TkWindow *) Tk_IdToWindow(dispPtr->display, window);
-    *xOffset = winPtr->wmInfoPtr->xInParent;
-    *yOffset = winPtr->wmInfoPtr->yInParent;
+    if (winPtr && winPtr->wmInfoPtr) {
+	*xOffset = winPtr->wmInfoPtr->xInParent;
+	*yOffset = winPtr->wmInfoPtr->yInParent;
+    } else {
+	*xOffset = 0;
+	*yOffset = 0;
+    }
 }
 
 /*
@@ -5824,15 +5785,12 @@ WmStackorderToplevelWrapperMap(
 {
     TkWindow *childPtr;
     Tcl_HashEntry *hPtr;
-    WindowRef macWindow;
     int newEntry;
 
     if (Tk_IsMapped(winPtr) && Tk_IsTopLevel(winPtr)
 	    && (winPtr->display == display)) {
-	macWindow = [TkMacOSXDrawableWindow(winPtr->window) windowRef];
-
 	hPtr = Tcl_CreateHashEntry(table,
-		(const char *) macWindow, &newEntry);
+		(char*) TkMacOSXDrawableWindow(winPtr->window), &newEntry);
 	Tcl_SetHashValue(hPtr, winPtr);
     }
 
@@ -5863,11 +5821,12 @@ TkWindow **
 TkWmStackorderToplevel(
     TkWindow *parentPtr)	/* Parent toplevel window. */
 {
-    WindowRef frontWindow;
     TkWindow *childWinPtr, **windows, **window_ptr;
     Tcl_HashTable table;
     Tcl_HashEntry *hPtr;
     Tcl_HashSearch search;
+    NSInteger windowCount;
+    NSInteger *windowNumbers;
 
     /*
      * Map mac windows to a TkWindow of the wrapped toplevel.
@@ -5895,25 +5854,31 @@ TkWmStackorderToplevel(
 	goto done;
     }
 
-    frontWindow = GetFrontWindowOfClass(kAllWindowClasses, false);
-    if (frontWindow == NULL) {
+    NSCountWindows(&windowCount);
+    if (!windowCount) {
 	ckfree((char *) windows);
 	windows = NULL;
     } else {
 	window_ptr = windows + table.numEntries;
 	*window_ptr-- = NULL;
-	while (frontWindow != NULL) {
-	    hPtr = Tcl_FindHashEntry(&table, (char *) frontWindow);
-	    if (hPtr != NULL) {
-		childWinPtr = Tcl_GetHashValue(hPtr);
-		*window_ptr-- = childWinPtr;
+	windowNumbers = (NSInteger *) ckalloc(windowCount * sizeof(NSInteger));
+	NSWindowList(windowCount, windowNumbers);
+	for (NSInteger index = 0; index < windowCount; index++) {
+	    NSWindow *w = [NSApp windowWithWindowNumber:windowNumbers[index]];
+
+	    if (w) {
+		hPtr = Tcl_FindHashEntry(&table, (char*) w);
+		if (hPtr != NULL) {
+		    childWinPtr = Tcl_GetHashValue(hPtr);
+		    *window_ptr-- = childWinPtr;
+		}
 	    }
-	    frontWindow = GetNextWindow(frontWindow);
 	}
 	if (window_ptr != (windows-1)) {
 	    Tcl_Panic("num matched toplevel windows does not equal num "
 		    "children");
 	}
+	ckfree((char *) windowNumbers);
     }
 
   done:
@@ -5940,7 +5905,7 @@ TkWmStackorderToplevel(
 static void
 ApplyWindowClassAttributeChanges(
     TkWindow *winPtr,
-    WindowRef macWindow,
+    NSWindow *macWindow,
     WindowClass oldClass,
     WindowAttributes oldAttributes,
     int create)
@@ -5950,7 +5915,6 @@ ApplyWindowClassAttributeChanges(
 	    kWindowAsyncDragAttribute;
 
     if (wmPtr->macClass != oldClass || newAttributes != oldAttributes) {
-	Rect strWidths;
 
 	if (!macWindow) {
 	    if (winPtr->window == None) {
@@ -5967,8 +5931,11 @@ ApplyWindowClassAttributeChanges(
 		    return;
 		}
 	    }
-	    macWindow = [TkMacOSXDrawableWindow(winPtr->window) windowRef];
+	    macWindow = TkMacOSXDrawableWindow(winPtr->window);
 	}
+	[macWindow setShowsResizeIndicator:
+		(newAttributes & kWindowResizableAttribute)];
+#ifdef OBSOLETE
 	if (wmPtr->macClass != oldClass) {
 	    ChkErr(HIWindowChangeClass, macWindow, wmPtr->macClass);
 	    ChkErr(GetWindowClass, macWindow, &(wmPtr->macClass));
@@ -6000,6 +5967,7 @@ ApplyWindowClassAttributeChanges(
 	 * structure widths:
 	 */
 
+	Rect strWidths;
 	GetWindowStructureWidths(macWindow, &strWidths);
 	wmPtr->xInParent = strWidths.left;
 	wmPtr->yInParent = strWidths.top;
@@ -6007,6 +5975,7 @@ ApplyWindowClassAttributeChanges(
 		+ strWidths.right;
 	wmPtr->parentHeight = winPtr->changes.height + strWidths.top
 		+ strWidths.bottom;
+#endif
     }
 }
 
@@ -6029,7 +5998,7 @@ ApplyWindowClassAttributeChanges(
 static void
 ApplyMasterOverrideChanges(
     TkWindow *winPtr,
-    WindowRef macWindow)
+    NSWindow *macWindow)
 {
     WmInfo *wmPtr = winPtr->wmInfoPtr;
     WindowClass oldClass = wmPtr->macClass;
@@ -6056,11 +6025,9 @@ ApplyMasterOverrideChanges(
     }
     if (!macWindow && winPtr->window != None &&
 	    TkMacOSXHostToplevelExists(winPtr)) {
-	macWindow = [TkMacOSXDrawableWindow(winPtr->window) windowRef];
+	macWindow = TkMacOSXDrawableWindow(winPtr->window);
     }
     if (macWindow) {
-	WindowGroupRef group;
-
 	ApplyWindowClassAttributeChanges(winPtr, macWindow, oldClass,
 		oldAttributes, 0);
 
@@ -6069,13 +6036,16 @@ ApplyMasterOverrideChanges(
 	} else {
 	    wmPtr->flags &= ~WM_TOPMOST;
 	}
-	group = WmGetWindowGroup(winPtr);
+#ifdef OBSOLETE
+	WindowGroupRef group = WmGetWindowGroup(winPtr);
 	if (group && group != GetWindowGroup(macWindow)) {
 	    ChkErr(SetWindowGroup, macWindow, group);
 	}
+#endif
     }
 }
 
+#ifdef OBSOLETE
 /*
  *----------------------------------------------------------------------
  *
@@ -6108,8 +6078,7 @@ WmGetWindowGroup(
 
 	if (masterWinPtr && masterWinPtr->window != None &&
 		TkMacOSXHostToplevelExists(masterWinPtr)) {
-	    WindowRef masterMacWin =
-		    [TkMacOSXDrawableWindow(masterWinPtr->window) windowRef];
+	    NSWindow *masterMacWin = TkMacOSXDrawableWindow(masterWinPtr->window);
 
 	    if (masterMacWin && GetWindowProperty(masterMacWin, 'Tk  ', 'TsGp',
 		    sizeof(group), NULL, &group) != noErr) {
@@ -6129,6 +6098,7 @@ WmGetWindowGroup(
     }
     return group;
 }
+#endif
 
 /*
  *----------------------------------------------------------------------
@@ -6153,6 +6123,7 @@ TkMacOSXMakeFullscreen(
     int fullscreen,
     Tcl_Interp *interp)
 {
+#ifdef MAC_OSX_TK_TODO
     WmInfo *wmPtr = winPtr->wmInfoPtr;
     int result = TCL_OK, wasFullscreen = (wmPtr->flags & WM_FULLSCREEN);
 
@@ -6213,6 +6184,8 @@ TkMacOSXMakeFullscreen(
     }
     TkMacOSXEnterExitFullscreen(winPtr, IsWindowActive(window));
     return result;
+#endif
+    return TCL_OK;
 }
 
 /*
@@ -6385,12 +6358,12 @@ GetMaxSize(
 				 * of the window. */
 {
     WmInfo *wmPtr = winPtr->wmInfoPtr;
-    Rect *maxBounds = (Rect*)(winPtr->display->screens->ext_data);
+    NSRect *maxBounds = (NSRect*)(winPtr->display->screens->ext_data);
 
     if (wmPtr->maxWidth > 0) {
 	*maxWidthPtr = wmPtr->maxWidth;
     } else {
-	int maxWidth = maxBounds->right - maxBounds->left - wmPtr->xInParent;
+	int maxWidth = maxBounds->size.width - wmPtr->xInParent;
 
 	if (wmPtr->gridWin != NULL) {
 	    maxWidth = wmPtr->reqGridWidth
@@ -6401,7 +6374,7 @@ GetMaxSize(
     if (wmPtr->maxHeight > 0) {
 	*maxHeightPtr = wmPtr->maxHeight;
     } else {
-	int maxHeight = maxBounds->bottom - maxBounds->top - wmPtr->yInParent;
+	int maxHeight = maxBounds->size.height - wmPtr->yInParent;
 
 	if (wmPtr->gridWin != NULL) {
 	    maxHeight = wmPtr->reqGridHeight

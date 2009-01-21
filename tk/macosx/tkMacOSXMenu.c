@@ -2036,13 +2036,9 @@ TkpSetMainMenubar(
 				 * NULL, use the default menu bar. */
 {
     TkWindow *winPtr = (TkWindow *) tkwin;
-    WindowRef macWindowPtr;
-    WindowRef frontNonFloating;
+    NSWindow *macWindow = TkMacOSXDrawableWindow(winPtr->window);
 
-    macWindowPtr = [TkMacOSXDrawableWindow(winPtr->window) windowRef];
-
-    frontNonFloating = ActiveNonFloatingWindow();
-    if ((macWindowPtr == NULL) || (macWindowPtr != frontNonFloating)) {
+    if (!macWindow) {
 	return;
     }
 

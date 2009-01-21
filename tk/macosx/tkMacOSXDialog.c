@@ -801,7 +801,7 @@ NavServicesGetFile(
     options.modality = kWindowModalityAppModal;
     if (parent && ((TkWindow *) parent)->window != None &&
 	    TkMacOSXHostToplevelExists(parent)) {
-	options.parentWindow = [TkMacOSXDrawableWindow(Tk_WindowId(parent)) windowRef];
+	options.parentWindow = TkMacOSXDrawableWindow(Tk_WindowId(parent));
     }
 
     /*
@@ -1645,7 +1645,7 @@ Tk_MessageBoxObjCmd(
 	if (!handler) {
 	    handler = NewEventHandlerUPP(AlertHandler);
 	}
-	windowRef = [TkMacOSXDrawableWindow(Tk_WindowId(tkwin)) windowRef];
+	windowRef = TkMacOSXDrawableWindow(Tk_WindowId(tkwin));
 	if (!windowRef) {
 	    goto end;
 	}

@@ -35,6 +35,7 @@
 #define ROOT_ID 10
 
 CGFloat tkMacOSXZeroScreenHeight = 0;
+CGFloat tkMacOSXZeroScreenTop = 0;
 
 /*
  * Declarations of static variables used in this file.
@@ -88,42 +89,35 @@ void
 TkMacOSXDisplayChanged(
     Display *display)
 {
-    GDHandle graphicsDevice;
     Screen *screen;
-    Rect bounds = {0, 0, 0, 0}, *maxBounds;
+    NSArray *nsScreens;
+    
 
     if (display == NULL || display->screens == NULL) {
 	return;
     }
     screen = display->screens;
 
-    graphicsDevice = GetMainDevice();
-    screen->root_depth = (*(*graphicsDevice)->gdPMap)->cmpSize *
-	    (*(*graphicsDevice)->gdPMap)->cmpCount;
-    screen->height = (*graphicsDevice)->gdRect.bottom -
-	    (*graphicsDevice)->gdRect.top;
-    screen->width = (*graphicsDevice)->gdRect.right -
-	    (*graphicsDevice)->gdRect.left;
+    nsScreens = [NSScreen screens];
+    if (nsScreens && [nsScreens count]) {
+	NSScreen *s = [nsScreens objectAtIndex:0];
+	NSRect bounds = [s frame], visible = [s visibleFrame];
+	NSRect maxBounds = NSZeroRect;
 
-    screen->mwidth = (screen->width * 254 + 360) / 720;
-    screen->mheight = (screen->height * 254 + 360) / 720;
+	tkMacOSXZeroScreenHeight = bounds.size.height;
+	tkMacOSXZeroScreenTop = tkMacOSXZeroScreenHeight -
+		(visible.origin.y + visible.size.height);
 
-    maxBounds = (Rect *) screen->ext_data;
-    *maxBounds = bounds;
-    graphicsDevice = GetDeviceList();
-    while (graphicsDevice) {
-	OSStatus err;
+	screen->root_depth = NSBitsPerPixelFromDepth([s depth]);
+	screen->width = bounds.size.width;
+	screen->height = bounds.size.height;
+	screen->mwidth = (bounds.size.width * 254 + 360) / 720;
+	screen->mheight = (bounds.size.height * 254 + 360) / 720;
 
-	err = ChkErr(GetAvailableWindowPositioningBounds, graphicsDevice,
-		&bounds);
-	if (err == noErr) {
-	    UnionRect(&bounds, maxBounds, maxBounds);
+	for (s in nsScreens) {
+	    maxBounds = NSUnionRect(maxBounds, [s visibleFrame]);
 	}
-	graphicsDevice = GetNextDevice(graphicsDevice);
-    }
-    NSArray *screens = [NSScreen screens];
-    if (screens) {
-	tkMacOSXZeroScreenHeight = NSHeight([[screens objectAtIndex:0] frame]);
+	*((NSRect *)screen->ext_data) = maxBounds;
     }
 }
 
@@ -151,7 +145,7 @@ TkpOpenDisplay(
     Display *display;
     Screen *screen;
     int fd = 0;
-    static Rect maxBounds = {0, 0, 0, 0};
+    static NSRect maxBounds = {{0, 0}, {0, 0}};
 
     if (gMacDisplay != NULL) {
 	if (strcmp(gMacDisplay->display->display_name, display_name) == 0) {

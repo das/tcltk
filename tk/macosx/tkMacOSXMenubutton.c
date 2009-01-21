@@ -1057,7 +1057,7 @@ MenuButtonInitControl(
     ControlRef rootControl =
 	    TkMacOSXGetRootControl(Tk_WindowId(butPtr->tkwin));
 
-    mbPtr->windowRef = [TkMacOSXDrawableWindow(Tk_WindowId(butPtr->tkwin)) windowRef];
+    mbPtr->windowRef = TkMacOSXDrawableWindow(Tk_WindowId(butPtr->tkwin));
 
     /*
      * Set up the user pane

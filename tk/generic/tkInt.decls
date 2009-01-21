@@ -794,10 +794,10 @@ declare 14 aqua {
 #}
 
 declare 16 aqua {
-    Window TkMacOSXGetXWindow(WindowRef macWinPtr)
+    Window TkMacOSXGetXWindow(void *macWinPtr)
 }
 declare 17 aqua {
-    int TkMacOSXGrowToplevel(WindowRef whichWindow, Point start)
+    int TkMacOSXGrowToplevel(void *whichWindow, Point start)
 }
 declare 18 aqua {
     void TkMacOSXHandleMenuSelect(MenuID theMenu, MenuItemIndex theItem,
@@ -850,7 +850,7 @@ declare 32 aqua {
     void TkMacOSXUpdateClipRgn(TkWindow *winPtr)
 }
 declare 33 aqua {
-    void TkMacOSXUnregisterMacWindow(WindowRef portPtr)
+    void TkMacOSXUnregisterMacWindow(void *portPtr)
 }
 declare 34 aqua {
     int TkMacOSXUseMenuID(short macID)
@@ -862,7 +862,7 @@ declare 36 aqua {
     void TkMacOSXWinBounds(TkWindow *winPtr, Rect *geometry)
 }
 declare 37 aqua {
-    void TkMacOSXWindowOffset(WindowRef wRef, int *xOffset, int *yOffset)
+    void TkMacOSXWindowOffset(void *wRef, int *xOffset, int *yOffset)
 }
 declare 38 aqua {
     int TkSetMacColor(unsigned long pixel, CGColorRef *macColor)
@@ -874,7 +874,7 @@ declare 40 aqua {
     void TkSuspendClipboard(void)
 }
 declare 41 aqua {
-    int TkMacOSXZoomToplevel(WindowPtr whichWindow, short zoomPart)
+    int TkMacOSXZoomToplevel(void *whichWindow, short zoomPart)
 }
 declare 42 aqua {
     Tk_Window Tk_TopCoordsToWindow(Tk_Window tkwin, int rootX, int rootY,
@@ -890,7 +890,7 @@ declare 45 aqua {
     void TkMacOSXPreprocessMenu(void)
 }
 declare 46 aqua {
-    int TkpIsWindowFloating(WindowRef window)
+    int TkpIsWindowFloating(void *window)
 }
 declare 47 aqua {
     Tk_Window TkMacOSXGetCapture(void)

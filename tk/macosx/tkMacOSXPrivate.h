@@ -154,6 +154,8 @@ typedef struct TkMacOSXDrawingContext {
  */
 
 MODULE_SCOPE CGFloat tkMacOSXZeroScreenHeight;
+MODULE_SCOPE CGFloat tkMacOSXZeroScreenTop;
+
 
 /*
  * Prototypes for TkMacOSXRegion.c.
@@ -266,12 +268,6 @@ VISIBILITY_HIDDEN
     id _savedSubviews;
     BOOL _subviewsSetAside;
 }
-
-- (void)drawRect:(NSRect)rect;
-- (void)generateExposeEvents:(HIMutableShapeRef)shape;
-- (BOOL)isOpaque;
-- (BOOL)wantsDefaultClipping;
-
 @end
 
 #endif /* _TKMACPRIV */

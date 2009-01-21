@@ -294,12 +294,12 @@ EXTERN int		TkMacOSXDoHLEvent (EventRecord * theEvent);
 #ifndef TkMacOSXGetXWindow_TCL_DECLARED
 #define TkMacOSXGetXWindow_TCL_DECLARED
 /* 16 */
-EXTERN Window		TkMacOSXGetXWindow (WindowRef macWinPtr);
+EXTERN Window		TkMacOSXGetXWindow (void * macWinPtr);
 #endif
 #ifndef TkMacOSXGrowToplevel_TCL_DECLARED
 #define TkMacOSXGrowToplevel_TCL_DECLARED
 /* 17 */
-EXTERN int		TkMacOSXGrowToplevel (WindowRef whichWindow,
+EXTERN int		TkMacOSXGrowToplevel (void * whichWindow,
 				Point start);
 #endif
 #ifndef TkMacOSXHandleMenuSelect_TCL_DECLARED
@@ -377,7 +377,7 @@ EXTERN void		TkMacOSXUpdateClipRgn (TkWindow * winPtr);
 #ifndef TkMacOSXUnregisterMacWindow_TCL_DECLARED
 #define TkMacOSXUnregisterMacWindow_TCL_DECLARED
 /* 33 */
-EXTERN void		TkMacOSXUnregisterMacWindow (WindowRef portPtr);
+EXTERN void		TkMacOSXUnregisterMacWindow (void * portPtr);
 #endif
 #ifndef TkMacOSXUseMenuID_TCL_DECLARED
 #define TkMacOSXUseMenuID_TCL_DECLARED
@@ -398,7 +398,7 @@ EXTERN void		TkMacOSXWinBounds (TkWindow * winPtr,
 #ifndef TkMacOSXWindowOffset_TCL_DECLARED
 #define TkMacOSXWindowOffset_TCL_DECLARED
 /* 37 */
-EXTERN void		TkMacOSXWindowOffset (WindowRef wRef, int * xOffset,
+EXTERN void		TkMacOSXWindowOffset (void * wRef, int * xOffset,
 				int * yOffset);
 #endif
 #ifndef TkSetMacColor_TCL_DECLARED
@@ -420,7 +420,7 @@ EXTERN void		TkSuspendClipboard (void);
 #ifndef TkMacOSXZoomToplevel_TCL_DECLARED
 #define TkMacOSXZoomToplevel_TCL_DECLARED
 /* 41 */
-EXTERN int		TkMacOSXZoomToplevel (WindowPtr whichWindow,
+EXTERN int		TkMacOSXZoomToplevel (void * whichWindow,
 				short zoomPart);
 #endif
 #ifndef Tk_TopCoordsToWindow_TCL_DECLARED
@@ -447,7 +447,7 @@ EXTERN void		TkMacOSXPreprocessMenu (void);
 #ifndef TkpIsWindowFloating_TCL_DECLARED
 #define TkpIsWindowFloating_TCL_DECLARED
 /* 46 */
-EXTERN int		TkpIsWindowFloating (WindowRef window);
+EXTERN int		TkpIsWindowFloating (void * window);
 #endif
 #ifndef TkMacOSXGetCapture_TCL_DECLARED
 #define TkMacOSXGetCapture_TCL_DECLARED
@@ -601,8 +601,8 @@ typedef struct TkIntPlatStubs {
     void *reserved13;
     int (*tkMacOSXDoHLEvent) (EventRecord * theEvent); /* 14 */
     void *reserved15;
-    Window (*tkMacOSXGetXWindow) (WindowRef macWinPtr); /* 16 */
-    int (*tkMacOSXGrowToplevel) (WindowRef whichWindow, Point start); /* 17 */
+    Window (*tkMacOSXGetXWindow) (void * macWinPtr); /* 16 */
+    int (*tkMacOSXGrowToplevel) (void * whichWindow, Point start); /* 17 */
     void (*tkMacOSXHandleMenuSelect) (MenuID theMenu, MenuItemIndex theItem, int optionKeyPressed); /* 18 */
     void *reserved19;
     void *reserved20;
@@ -618,20 +618,20 @@ typedef struct TkIntPlatStubs {
     void (*tkMacOSXSetUpClippingRgn) (Drawable drawable); /* 30 */
     void (*tkMacOSXSetUpGraphicsPort) (GC gc, void * destPort); /* 31 */
     void (*tkMacOSXUpdateClipRgn) (TkWindow * winPtr); /* 32 */
-    void (*tkMacOSXUnregisterMacWindow) (WindowRef portPtr); /* 33 */
+    void (*tkMacOSXUnregisterMacWindow) (void * portPtr); /* 33 */
     int (*tkMacOSXUseMenuID) (short macID); /* 34 */
-    RgnHandle (*tkMacOSXVisableClipRgn) (TkWindow * winPtr); /* 35 */
+    TkRegion (*tkMacOSXVisableClipRgn) (TkWindow * winPtr); /* 35 */
     void (*tkMacOSXWinBounds) (TkWindow * winPtr, Rect * geometry); /* 36 */
-    void (*tkMacOSXWindowOffset) (WindowRef wRef, int * xOffset, int * yOffset); /* 37 */
+    void (*tkMacOSXWindowOffset) (void * wRef, int * xOffset, int * yOffset); /* 37 */
     int (*tkSetMacColor) (unsigned long pixel, CGColorRef * macColor); /* 38 */
     void (*tkSetWMName) (TkWindow * winPtr, Tk_Uid titleUid); /* 39 */
     void (*tkSuspendClipboard) (void); /* 40 */
-    int (*tkMacOSXZoomToplevel) (WindowPtr whichWindow, short zoomPart); /* 41 */
+    int (*tkMacOSXZoomToplevel) (void * whichWindow, short zoomPart); /* 41 */
     Tk_Window (*tk_TopCoordsToWindow) (Tk_Window tkwin, int rootX, int rootY, int * newX, int * newY); /* 42 */
     MacDrawable * (*tkMacOSXContainerId) (TkWindow * winPtr); /* 43 */
     MacDrawable * (*tkMacOSXGetHostToplevel) (TkWindow * winPtr); /* 44 */
     void (*tkMacOSXPreprocessMenu) (void); /* 45 */
-    int (*tkpIsWindowFloating) (WindowRef window); /* 46 */
+    int (*tkpIsWindowFloating) (void * window); /* 46 */
     Tk_Window (*tkMacOSXGetCapture) (void); /* 47 */
     void *reserved48;
     Window (*tkGetTransientMaster) (TkWindow * winPtr); /* 49 */
