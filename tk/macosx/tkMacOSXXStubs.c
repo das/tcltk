@@ -20,6 +20,7 @@
 #include "tkMacOSXEvent.h"
 
 #include <IOKit/IOKitLib.h>
+#include <IOKit/hidsystem/IOHIDShared.h>
 
 /*
  * Because this file is still under major development Debugger statements are
@@ -452,7 +453,7 @@ XBell(
     Display* display,
     int percent)
 {
-    SysBeep(percent);
+    NSBeep();
 }
 
 #if 0
@@ -1358,5 +1359,26 @@ void
 Tk_ResetUserInactiveTime(
     Display *dpy)
 {
-    UpdateSystemActivity(UsrActivity);
+    IOGPoint loc;
+    kern_return_t kr;
+    NXEvent nullEvent = {NX_NULLEVENT, {0, 0}, 0, -1, 0};
+    enum { kNULLEventPostThrottle = 10 };
+    static io_connect_t io_connection = MACH_PORT_NULL;
+
+    if (io_connection == MACH_PORT_NULL) {
+	io_service_t service = IOServiceGetMatchingService(
+		kIOMasterPortDefault, IOServiceMatching(kIOHIDSystemClass));
+
+	if (service == MACH_PORT_NULL) {
+	    return;
+	}
+	kr = IOServiceOpen(service, mach_task_self(), kIOHIDParamConnectType, 
+		&io_connection);
+	IOObjectRelease(service);
+	if (kr != KERN_SUCCESS) {
+	    return;
+	}
+    }
+    kr = IOHIDPostEvent(io_connection, NX_NULLEVENT, loc, &nullEvent.data,
+	    FALSE, 0, FALSE);
 }
