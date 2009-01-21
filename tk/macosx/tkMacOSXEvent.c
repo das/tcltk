@@ -26,7 +26,9 @@ enum {
 @implementation TKApplication(TKEvent)
 /* replace by +[addLocalMonitorForEventsMatchingMask ? */
 - (NSEvent *)tkProcessEvent:(NSEvent *)theEvent {
+#ifdef TK_MAC_DEBUG_EVENTS
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, theEvent);
+#endif
     id		    win;
     NSEventType	    type = [theEvent type];
     NSInteger	    subtype;

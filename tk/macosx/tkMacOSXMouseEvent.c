@@ -101,7 +101,9 @@ enum {
 
 @implementation TKApplication(TKMouseEvent)
 - (NSEvent *)tkProcessMouseEvent:(NSEvent *)theEvent {
+#ifdef TK_MAC_DEBUG_EVENTS
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, theEvent);
+#endif
     id		    win;
     NSEventType	    type = [theEvent type];
     NSTrackingArea  *trackingArea = nil;
@@ -146,7 +148,7 @@ enum {
     NSPoint global, local = [theEvent locationInWindow];
     if (win) {
 	global = [win convertBaseToScreen:local];
-	local.y = NSHeight([win frame]) - local.y;
+	local.y = [win frame].size.height - local.y;
 	global.y = tkMacOSXZeroScreenHeight - global.y;
     } else {
 	local.y = tkMacOSXZeroScreenHeight - local.y;
@@ -181,7 +183,7 @@ enum {
     NSInteger button = [theEvent buttonNumber];
     EventRef eventRef = (EventRef)[theEvent eventRef];
     UInt32 buttons;
-    OSStatus err = ChkErr(GetEventParameter, eventRef, kEventParamMouseChord,
+    OSStatus err = GetEventParameter(eventRef, kEventParamMouseChord,
 	    typeUInt32, NULL, sizeof(UInt32), NULL, &buttons);
     if (err == noErr) {
 	state |= (buttons & ((1<<5) - 1)) << 8;
@@ -225,7 +227,9 @@ enum {
     }
 
     if (type != NSScrollWheel) {
+#ifdef TK_MAC_DEBUG_EVENTS
 	TKLog(@"UpdatePointer %p x %f.0 y %f.0 %d", tkwin, global.x, global.y, state);
+#endif
 	Tk_UpdatePointer(tkwin, global.x, global.y, state);
     } else {
 	CGFloat delta;

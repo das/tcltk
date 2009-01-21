@@ -120,7 +120,9 @@ static int	XKeysymToMacKeycode(Display *display, KeySym keysym);
 
 @implementation TKApplication(TKKeyboard)
 - (void)keyboardChanged:(NSNotification *)notification {
+#ifdef TK_MAC_DEBUG_NOTIFICATIONS
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+#endif
     keyboardChanged = 1;
 }
 @end

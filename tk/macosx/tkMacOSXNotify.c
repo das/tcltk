@@ -226,7 +226,9 @@ TkMacOSXEventsCheckProc(
 	    }
 	    event = currentEvent ? [NSApp tkProcessEvent:currentEvent] : nil;
 	    if (event) {
+#ifdef TK_MAC_DEBUG_EVENTS
 		TKLog(@"   event: %@", event);
+#endif
 		objc_clear_stack(0);
 		TkMacOSXTrackingLoop(1);
 		[NSApp sendEvent:event];

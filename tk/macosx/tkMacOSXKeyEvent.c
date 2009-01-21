@@ -108,7 +108,9 @@ static int		KeycodeToUnicodeViaUnicodeResource(UniChar *uniChars,
 
 @implementation TKApplication(TKKeyEvent)
 - (NSEvent *)tkProcessKeyEvent:(NSEvent *)theEvent {
+#ifdef TK_MAC_DEBUG_EVENTS
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, theEvent);
+#endif
     NSWindow*	    w;
     NSEventType	    type = [theEvent type];
     NSUInteger	    modifiers, len;
@@ -127,7 +129,9 @@ static int		KeycodeToUnicodeViaUnicodeResource(UniChar *uniChars,
 	modifiers = [theEvent modifierFlags];
 	keyCode = [theEvent keyCode];
 	w = [self windowWithWindowNumber:[theEvent windowNumber]];
+#ifdef TK_MAC_DEBUG_EVENTS
 	TKLog(@"-[%@(%p) %s] %d %u %@ %@ %u %@", [self class], self, _cmd, repeat, modifiers, characters, charactersIgnoringModifiers, keyCode, w);
+#endif
 	break;
 
     default:

@@ -101,9 +101,11 @@ static void keyboardChanged(CFNotificationCenterRef center, void *observer, CFSt
 @end
 
 @implementation TKApplication(TKInit)
+#ifdef TK_MAC_DEBUG_NOTIFICATIONS
 - (void)_postedNotification:(NSNotification *)notification {
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
 }
+#endif
 #define observe(n, s) [nc addObserver:self selector:@selector(s) name:(n) object:nil]
 - (void)_setupApplicationNotifications {
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -123,8 +125,10 @@ static void keyboardChanged(CFNotificationCenterRef center, void *observer, CFSt
 }
 - (void)_setup {
     [self setDelegate:self];
+#ifdef TK_MAC_DEBUG_NOTIFICATIONS
     [[NSNotificationCenter defaultCenter] addObserver:self
 	    selector:@selector(_postedNotification:) name:nil object:nil];
+#endif
     [self _setupWindowNotifications];
     [self _setupApplicationNotifications];
     [self _setupEventLoop];

@@ -86,7 +86,9 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
 
 @implementation TKApplication(TKWindowEvent)
 - (void)windowActivation:(NSNotification *)notification {
+#ifdef TK_MAC_DEBUG_NOTIFICATIONS
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+#endif
     BOOL activate = [[notification name] isEqualToString:NSWindowDidBecomeKeyNotification];
     NSWindow *w = [notification object];
     TkWindow *winPtr = TkMacOSXGetTkWindow(w);
@@ -98,7 +100,9 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
     }
 }
 - (void)windowDragStart:(NSNotification *)notification {
-   TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+#ifdef TK_MAC_DEBUG_NOTIFICATIONS
+    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+#endif
 #ifdef OBSOLETE
     if (!(TkMacOSXModifierState() & cmdKey)) { 
 	TkMacOSXBringWindowForward(whichWindow);
@@ -107,7 +111,9 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
     //TkMacOSXTrackingLoop(1);
 }
 - (void)windowBoundsChanged:(NSNotification *)notification {
+#ifdef TK_MAC_DEBUG_NOTIFICATIONS
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+#endif
     BOOL movedOnly = [[notification name] isEqualToString:NSWindowDidMoveNotification];
     if (movedOnly) {
 	/* constraining to screen after move not needed with AppKit */
@@ -176,14 +182,18 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
     }
 }
 - (void)windowLiveResize:(NSNotification *)notification {
+#ifdef TK_MAC_DEBUG_NOTIFICATIONS
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+#endif
     BOOL start = [[notification name] isEqualToString:NSWindowWillStartLiveResizeNotification];
 
     TkMacOSXTrackingLoop(start ? 1 : 0);
 }
 /* TODO: this is received too late (after NSWindowDidBecomeKeyNotification) */
 - (void)windowExpanded:(NSNotification *)notification {
+#ifdef TK_MAC_DEBUG_NOTIFICATIONS
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+#endif
     NSWindow *w = [notification object];
     TkWindow *winPtr = TkMacOSXGetTkWindow(w);
 
@@ -197,7 +207,9 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
     }
 }
 - (void)windowCollapsed:(NSNotification *)notification {
+#ifdef TK_MAC_DEBUG_NOTIFICATIONS
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+#endif
     NSWindow *w = [notification object];
     TkWindow *winPtr = TkMacOSXGetTkWindow(w);
 
@@ -206,7 +218,9 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
     }
 }
 - (void)windowMapped:(NSNotification *)notification {
+#ifdef TK_MAC_DEBUG_NOTIFICATIONS
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+#endif
     NSWindow *w = [notification object];
     TkWindow *winPtr = TkMacOSXGetTkWindow(w);
 
@@ -215,7 +229,9 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
     }
 }
 - (void)windowUnmapped:(NSNotification *)notification {
+#ifdef TK_MAC_DEBUG_NOTIFICATIONS
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+#endif
     NSWindow *w = [notification object];
     TkWindow *winPtr = TkMacOSXGetTkWindow(w);
 
@@ -721,7 +737,9 @@ GenerateUpdates(
     event.xexpose.height = damageBounds.size.height;
     event.xexpose.count = 0;
     Tk_QueueWindowEvent(&event, TCL_QUEUE_TAIL);
+#ifdef TK_MAC_DEBUG_EVENTS
     TKLog(@"Expose %p {{%d, %d}, {%d, %d}}", event.xany.window, event.xexpose.x, event.xexpose.y, event.xexpose.width, event.xexpose.height);
+#endif
 
     /*
      * Generate updates for the children of this window
