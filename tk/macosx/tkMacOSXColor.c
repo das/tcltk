@@ -306,88 +306,6 @@ TkSetMacColor(
     return (err == noErr);
 }
 
-#ifdef OBSOLETE
-/*
- *----------------------------------------------------------------------
- *
- * TkMacOSXSetColorInPort --
- *
- *	Sets fore or back color in the given QD port from an X pixel
- *	value, and if the pixel code indicates a system color, sets
- *	the corresponding brush, textColor or background via
- *	Appearance mgr APIs.
- *
- * Results:
- *	None.
- *
- * Side effects:
- *	If penPat is non-NULL it is set to the forground color/pattern.
- *
- *----------------------------------------------------------------------
- */
-
-void
-TkMacOSXSetColorInPort(
-    unsigned long pixel,
-    int fg,
-    PixPatHandle penPat,
-    CGrafPtr port)
-{
-    OSStatus err;
-    RGBColor c;
-    ThemeBrush brush;
-    ThemeTextColor textColor;
-    ThemeBackgroundKind background;
-    int setPenPat = 0;
-
-    if (GetThemeFromPixelCode((pixel >> 24) & 0xff, &brush, &textColor,
-	    &background)) {
-	CGrafPtr savePort;
-	Boolean portChanged;
-
-	portChanged = QDSwapPort(port, &savePort);
-	err = ChkErr(GetThemeColor, pixel, brush, textColor, background, &c);
-	if (err == noErr) {
-	    if (fg) {
-		RGBForeColor(&c);
-		if (penPat) {
-		    MakeRGBPat(penPat, &c);
-		    setPenPat = 1;
-		}
-	    } else {
-		RGBBackColor(&c);
-	    }
-	}
-	err = -1;
-	if (brush) {
-	    err = ChkErr(SetThemeBackground,
-		    brush == kThemeBrushMenuBackgroundSelected ?
-		    kThemeBrushFocusHighlight : brush, 32, true);
-	} else if (textColor && fg) {
-	    err = ChkErr(SetThemeTextColor, textColor, 32, true);
-	} else if (background) {
-	    Rect bounds;
-
-	    GetPortBounds(port, &bounds);
-	    err = ChkErr(ApplyThemeBackground, background, &bounds,
-		    kThemeStateActive, 32, true);
-	}
-	if (penPat && err == noErr && (brush || background)) {
-	    GetPortBackPixPat(port, penPat);
-	    setPenPat = 1;
-	}
-	if (portChanged) {
-	    QDSwapPort(savePort, NULL);
-	}
-    } else {
-	TkMacOSXDbgMsg("Ignored unknown pixel value 0x%lx", pixel);
-    }
-    if (penPat && !setPenPat) {
-	GetPortBackPixPat(port, penPat);
-    }
-}
-#endif
-
 /*
  *----------------------------------------------------------------------
  *
@@ -578,37 +496,6 @@ TkpGetColorByValue(
     tkColPtr->color.pixel = TkpGetPixel(&tkColPtr->color);
     return tkColPtr;
 }
-
-#if !TK_DRAW_IN_CONTEXT
-/*
- *----------------------------------------------------------------------
- *
- * TkMacOSXCompareColors --
- *
- *	On Mac, color codes may specify symbolic values like "highlight
- *	foreground", but we really need the actual values to compare.
- *	Maybe see also: "TIP #154: Add Named Colors to Tk".
- *
- * Results:
- *	Returns true if both colors are the same, false otherwise.
- *
- * Side effects:
- *	None.
- *
- *----------------------------------------------------------------------
- */
-
-int
-TkMacOSXCompareColors(
-    unsigned long c1,
-    unsigned long c2)
-{
-    RGBColor col1, col2;
-    return  TkSetMacColor(c1,&col1) &&
-	    TkSetMacColor(c1,&col2) &&
-	    !memcmp(&col1,&col2,sizeof(col1));
-}
-#endif /* !TK_DRAW_IN_CONTEXT */
 
 /*
  *----------------------------------------------------------------------

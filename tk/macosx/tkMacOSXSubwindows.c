@@ -90,7 +90,7 @@ XDestroyWindow(
 	return;
     }
 
-#ifdef OBSOLETE
+#ifdef MAC_OSX_TK_TODO
     /*
      * We are relying on the Activate Mac OS event to pass the focus away from
      * a window that is getting Destroyed to the Front non-floating window. BUT
@@ -942,10 +942,10 @@ TkMacOSXInvalidateWindow(
  *
  * TkMacOSXDrawableWindow --
  *
- *	This function returns the WindowRef for a given X drawable.
+ *	This function returns the NSWindow for a given X drawable.
  *
  * Results:
- *	A WindowRef, or NULL for off screen pixmaps.
+ *	A NSWindow, or nil for off screen pixmaps.
  *
  * Side effects:
  *	None.
@@ -958,10 +958,10 @@ TkMacOSXDrawableWindow(
     Drawable drawable)
 {
     MacDrawable *macWin = (MacDrawable *) drawable;
-    NSWindow *result = NULL;
+    NSWindow *result = nil;
 
     if (!macWin || macWin->flags & TK_IS_PIXMAP) {
-	result = NULL;
+	result = nil;
     } else if (macWin->toplevel && macWin->toplevel->winPtr &&
 	    macWin->toplevel->winPtr->wmInfoPtr &&
 	    macWin->toplevel->winPtr->wmInfoPtr->window) {

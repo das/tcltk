@@ -196,7 +196,7 @@ static void		ApplyWindowClassAttributeChanges(TkWindow *winPtr,
 			    WindowAttributes oldAttributes, int create);
 static void		ApplyMasterOverrideChanges(TkWindow *winPtr,
 			    NSWindow *macWindow);
-#ifdef OBSOLETE
+#ifdef MAC_OSX_TK_TODO
 static WindowGroupRef	WmGetWindowGroup(TkWindow *winPtr);
 #endif
 static void		GetMinSize(TkWindow *winPtr, int *minWidthPtr,
@@ -205,6 +205,8 @@ static void		GetMaxSize(TkWindow *winPtr, int *maxWidthPtr,
 			    int *maxHeightPtr);
 static void		RemapWindows(TkWindow *winPtr,
 			    MacDrawable *parentWin);
+
+#pragma mark TKApplication(TKWm)
 
 @implementation TKApplication(TKWm)
 - (NSRect)windowWillUseStandardFrame:(NSWindow *)window defaultFrame:(NSRect)newFrame {
@@ -4627,7 +4629,7 @@ TkMacOSXGrowToplevel(
     void *whichWindow,
     Point start)
 {
-#ifdef OBSOLETE
+#ifdef MAC_OSX_TK_TODO
     Point where = start;
     TkDisplay *dispPtr;
     Rect portRect;
@@ -4789,7 +4791,7 @@ TkGetTransientMaster(
  *
  * TkMacOSXGetXWindow --
  *
- *	Returns the X window Id associated with the given WindowRef.
+ *	Returns the X window Id associated with the given NSWindow*.
  *
  * Results:
  *	The window id is returned. None is returned if not a Tk window.
@@ -5212,7 +5214,6 @@ TkMacOSXMakeRealWindowExist(
     Rect geometry;
     NSRect structureRect;
     short structureW, structureH;
-    TkMacOSXWindowList *listPtr;
 
     if (TkMacOSXHostToplevelExists(winPtr)) {
 	return;
@@ -6006,7 +6007,7 @@ ApplyMasterOverrideChanges(
 	} else {
 	    wmPtr->flags &= ~WM_TOPMOST;
 	}
-#ifdef OBSOLETE
+#ifdef MAC_OSX_TK_TODO
 	WindowGroupRef group = WmGetWindowGroup(winPtr);
 	if (group && group != GetWindowGroup(macWindow)) {
 	    ChkErr(SetWindowGroup, macWindow, group);
@@ -6015,7 +6016,7 @@ ApplyMasterOverrideChanges(
     }
 }
 
-#ifdef OBSOLETE
+#ifdef MAC_OSX_TK_TODO
 /*
  *----------------------------------------------------------------------
  *
@@ -6089,7 +6090,7 @@ WmGetWindowGroup(
 int
 TkMacOSXMakeFullscreen(
     TkWindow *winPtr,
-    WindowRef window,
+    NSWindow *window,
     int fullscreen,
     Tcl_Interp *interp)
 {

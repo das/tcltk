@@ -66,28 +66,6 @@ static inline CGRect BoxToRect(Drawable d, Ttk_Box b)
     return rect;
 }
 
-#ifdef HAVE_QUICKDRAW
-/*
- * PatternOrigin --
- *	Compute brush pattern origin for a Drawable relative to a Tk_Window.
- *
- * Notes: This will only be nonzero if the Drawable is an off-screen pixmap.
- * See also SF bug #1157739.
- */
-static Point PatternOrigin(Tk_Window tkwin, Drawable d)
-{
-    MacDrawable *md = (MacDrawable*)d;
-    Rect bounds;
-    Point origin;
-
-    TkMacOSXWinBounds((TkWindow *) tkwin, &bounds);
-    origin.h = md->xOff - bounds.left;
-    origin.v = md->yOff - bounds.top;
-
-    return origin;
-}
-#endif
-
 /*
  * Table mapping Tk states to Appearance manager ThemeStates
  */

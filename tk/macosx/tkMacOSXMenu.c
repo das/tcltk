@@ -26,10 +26,6 @@
 #endif
 */
 
-#ifdef HAVE_QUICKDRAW
-#define USE_TK_MDEF
-#endif
-
 typedef struct MacMenu {
     MenuRef menuHdl;		/* The Menu Manager data structure. */
 #ifdef USE_TK_MDEF
@@ -987,8 +983,9 @@ GetUtfMarkCharacter(
     char markChar,
     const char **markUtfPtr)
 {
-    const MenuSymbol *ms = menuSymbols;
     int len = 0;
+#ifdef MAC_OSX_TK_TODO
+    const MenuSymbol *ms = menuSymbols;
 
     while (ms->unicode) {
 	if (ms->charCode && ms->charCode == markChar) {
@@ -1005,6 +1002,7 @@ GetUtfMarkCharacter(
 		markUtf, TCL_UTF_MAX + 1, NULL, &len, NULL);
 	*markUtfPtr = markUtf;
     }
+#endif
     return len;
 }
 

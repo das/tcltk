@@ -28,13 +28,13 @@
  * Function prototypes
  */
 
-MODULE_SCOPE void TkMacOSXInitControlFontStyle(Tk_Font tkfont,
-	ControlFontStylePtr fsPtr);
+#ifdef MAC_OSX_TK_TODO
 MODULE_SCOPE void TkMacOSXFMFontInfoForFont(Tk_Font tkfont,
 	FMFontFamily *fontFamilyPtr, FMFontStyle *fontStylePtr,
 	FMFontSize *fontSizePtr, ATSUStyle *fontATSUStylePtr);
 MODULE_SCOPE Tcl_Obj * TkMacOSXFontDescriptionForFMFontInfo(
 	FMFontFamily fontFamily, FMFontStyle fontStyle, FMFontSize fontSize,
 	FMFont fontID);
+#endif
 
 #endif /*TKMACOSXFONT_H*/

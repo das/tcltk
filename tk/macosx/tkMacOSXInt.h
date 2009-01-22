@@ -55,18 +55,6 @@ struct TkWindowPrivate {
 typedef struct TkWindowPrivate MacDrawable;
 
 /*
- * This list is used to keep track of toplevel windows that have a Mac
- * window attached. This is useful for several things, not the least
- * of which is maintaining floating windows.
- */
-
-typedef struct TkMacOSXWindowList {
-    struct TkMacOSXWindowList *nextPtr;
-				/* The next window in the list. */
-    TkWindow *winPtr;		/* This window */
-} TkMacOSXWindowList;
-
-/*
  * Defines use for the flags field of the MacDrawable data structure.
  */
 
@@ -134,10 +122,6 @@ MODULE_SCOPE TkMacOSXEmbedHandler *tkMacOSXEmbedHandler;
 #define TK_LAYOUT_WITH_BASE_CHUNKS	1
 #define TK_DRAW_IN_CONTEXT		1
 
-#if !TK_DRAW_IN_CONTEXT
-MODULE_SCOPE int TkMacOSXCompareColors(unsigned long c1, unsigned long c2);
-#endif
-
 /*
  * Globals shared among TkAqua.
  */
@@ -146,7 +130,6 @@ MODULE_SCOPE MenuHandle tkCurrentAppleMenu; /* Handle to current Apple Menu */
 MODULE_SCOPE MenuHandle tkAppleMenu;	/* Handle to default Apple Menu */
 MODULE_SCOPE MenuHandle tkFileMenu;	/* Handles to menus */
 MODULE_SCOPE MenuHandle tkEditMenu;	/* Handles to menus */
-MODULE_SCOPE Tcl_Encoding TkMacOSXCarbonEncoding;
 
 /*
  * Prototypes of internal procs not in the stubs table.

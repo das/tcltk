@@ -22,56 +22,7 @@
 #include <mach-o/getsect.h>
 #include <objc/objc-auto.h>
 
-/*
- * The following structures are used to map the script/language codes of a
- * font to the name that should be passed to Tcl_GetEncoding() to obtain the
- * encoding for that font. The set of numeric constants is fixed and defined
- * by Apple.
- */
-
-typedef struct Map {
-    CFStringEncoding numKey;
-    const char *strKey;
-} Map;
-
-static Map scriptMap[] = {
-    {smRoman,		"macRoman"},
-    {smJapanese,	"macJapan"},
-    {smTradChinese,	"macChinese"},
-    {smKorean,		"macKorean"},
-    {smArabic,		"macArabic"},
-    {smHebrew,		"macHebrew"},
-    {smGreek,		"macGreek"},
-    {smCyrillic,	"macCyrillic"},
-    {smRSymbol,		"macRSymbol"},
-    {smDevanagari,	"macDevanagari"},
-    {smGurmukhi,	"macGurmukhi"},
-    {smGujarati,	"macGujarati"},
-    {smOriya,		"macOriya"},
-    {smBengali,		"macBengali"},
-    {smTamil,		"macTamil"},
-    {smTelugu,		"macTelugu"},
-    {smKannada,		"macKannada"},
-    {smMalayalam,	"macMalayalam"},
-    {smSinhalese,	"macSinhalese"},
-    {smBurmese,		"macBurmese"},
-    {smKhmer,		"macKhmer"},
-    {smThai,		"macThailand"},
-    {smLaotian,		"macLaos"},
-    {smGeorgian,	"macGeorgia"},
-    {smArmenian,	"macArmenia"},
-    {smSimpChinese,	"macSimpChinese"},
-    {smTibetan,		"macTIbet"},
-    {smMongolian,	"macMongolia"},
-    {smGeez,		"macEthiopia"},
-    {smEastEurRoman,	"macCentEuro"},
-    {smVietnamese,	"macVietnam"},
-    {smExtArabic,	"macSindhi"},
-    {0,			NULL}
-};
-
 static char tkLibPath[PATH_MAX + 1] = "";
-Tcl_Encoding TkMacOSXCarbonEncoding = NULL;
 
 /*
  * If the App is in an App package, then we want to add the Scripts directory
@@ -189,9 +140,6 @@ TkpInit(
 	int bundledExecutable = 0;
 	CFBundleRef bundleRef;
 	CFURLRef bundleUrl = NULL;
-	CFStringEncoding encoding;
-	const char *encodingStr = NULL;
-	int i;
 	struct utsname name;
 	long osVersion = 0;
 	struct stat st;
@@ -304,30 +252,13 @@ TkpInit(
 	}
 
 	TkMacOSXInitAppleEvents(interp);
-	TkMacOSXInitCarbonEvents(interp);
 	TkMacOSXInitMenus(interp);
 	TkMacOSXUseAntialiasedText(interp, -1);
 	TkMacOSXInitCGDrawing(interp, TRUE, 0);
-	TkMacOSXInitKeyboard(interp);
 
-	encoding = CFStringGetSystemEncoding();
-
-	for (i = 0; scriptMap[i].strKey != NULL; i++) {
-	    if (scriptMap[i].numKey == encoding) {
-		encodingStr = scriptMap[i].strKey;
-		break;
-	    }
-	}
-	if (encodingStr == NULL) {
-	    encodingStr = "macRoman";
-	}
 	[NSApp _setupEventLoop];
 	[pool drain];
 
-	TkMacOSXCarbonEncoding = Tcl_GetEncoding(NULL, encodingStr);
-	if (TkMacOSXCarbonEncoding == NULL) {
-	    TkMacOSXCarbonEncoding = Tcl_GetEncoding(NULL, NULL);
-	}
 
 	/*
 	 * FIXME: Close stdin & stdout for remote debugging otherwise we will

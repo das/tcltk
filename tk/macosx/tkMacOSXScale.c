@@ -17,6 +17,7 @@
 #include "tkMacOSXPrivate.h"
 #include "tkScale.h"
 
+#ifdef MAC_OSX_TK_TODO
 /*
 #ifdef TK_MAC_DEBUG
 #define TK_MAC_DEBUG_SCALE
@@ -481,4 +482,5 @@ ScaleActionProc(
     TkMacOSXRunTclEventLoop();
     Tcl_Release((ClientData) scalePtr);
 }
+#endif
 

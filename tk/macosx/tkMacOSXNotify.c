@@ -20,19 +20,8 @@
 #include <pthread.h>
 #import <objc/objc-auto.h>
 
-/*
- * Static data used by several functions in this file:
- */
-
-static int inTrackingLoop = 0;
-
-/*
- * The following static indicates whether this module has been initialized
- * in the current thread.
- */
-
 typedef struct ThreadSpecificData {
-    int initialized;
+    int initialized, inTrackingLoop, previousServiceMode;
     NSEvent *currentEvent;
 } ThreadSpecificData;
 static Tcl_ThreadDataKey dataKey;
@@ -49,9 +38,16 @@ static void TkMacOSXEventsCheckProc(ClientData clientData, int flags);
 
 @implementation TKApplication(TKNotify)
 - (NSEvent *)nextEventMatchingMask:(NSUInteger)mask untilDate:(NSDate *)expiration inMode:(NSString *)mode dequeue:(BOOL)deqFlag {
-    NSEvent *event = [super nextEventMatchingMask:mask untilDate:expiration inMode:mode dequeue:deqFlag];
-    if (event && inTrackingLoop) {
-	event = [NSApp tkProcessEvent:event];
+    NSEvent *event = [super nextEventMatchingMask:mask untilDate:expiration
+	    inMode:mode dequeue:deqFlag];
+
+    if (event) {
+	ThreadSpecificData *tsdPtr = Tcl_GetThreadData(&dataKey,
+		sizeof(ThreadSpecificData));
+
+	if (tsdPtr->inTrackingLoop) {
+	    event = [NSApp tkProcessEvent:event];
+	}
     }
     return event;
 }
@@ -161,12 +157,14 @@ TkMacOSXEventsSetupProc(
     ClientData clientData,
     int flags)
 {
-    if (!(flags & TCL_WINDOW_EVENTS) || inTrackingLoop) {
+    ThreadSpecificData *tsdPtr = Tcl_GetThreadData(&dataKey,
+	    sizeof(ThreadSpecificData));
+
+    if (!(flags & TCL_WINDOW_EVENTS) || tsdPtr->inTrackingLoop) {
 	return;
     } else {
 	static const Tcl_Time zeroBlockTime = { 0, 0 };
-	ThreadSpecificData *tsdPtr = Tcl_GetThreadData(&dataKey,
-		sizeof(ThreadSpecificData));
+
 	if (!tsdPtr->currentEvent) {
 	    NSEvent *currentEvent = [NSApp nextEventMatchingMask:NSAnyEventMask
 		    untilDate:[NSDate distantPast]
@@ -176,9 +174,7 @@ TkMacOSXEventsSetupProc(
 		tsdPtr->currentEvent = currentEvent;
 	    }
 	}
-
-	if (tsdPtr->currentEvent ||
-		GetNumEventsInQueue((EventQueueRef) clientData)) {
+	if (tsdPtr->currentEvent) {
 	    Tcl_SetMaxBlockTime(&zeroBlockTime);
 	}
     }
@@ -205,13 +201,12 @@ TkMacOSXEventsCheckProc(
     ClientData clientData,
     int flags)
 {
-    if (!(flags & TCL_WINDOW_EVENTS) || inTrackingLoop) {
+    ThreadSpecificData *tsdPtr = Tcl_GetThreadData(&dataKey,
+	    sizeof(ThreadSpecificData));
+
+    if (!(flags & TCL_WINDOW_EVENTS) ||  tsdPtr->inTrackingLoop) {
 	return;
     } else {
-	ThreadSpecificData *tsdPtr = Tcl_GetThreadData(&dataKey,
-		sizeof(ThreadSpecificData));
-	int numFound;
-	OSStatus err = noErr;
 	NSEvent *currentEvent = nil, *event;
 
  	do {
@@ -236,49 +231,7 @@ TkMacOSXEventsCheckProc(
 		objc_collect(OBJC_COLLECT_IF_NEEDED);
 	    }
 	} while (currentEvent);
-    
-	numFound = GetNumEventsInQueue((EventQueueRef) clientData);
-
-    /*
-     * Avoid starving other event sources:
-     */
-
-	if (numFound > 4) {
-	    numFound = 4;
-	}
-	while (numFound > 0 && err == noErr) {
-	    err = TkMacOSXReceiveAndDispatchEvent();
-	    numFound--;
-	}
     }
-}
-
-/*
- *----------------------------------------------------------------------
- *
- * TkMacOSXRunTclEventLoop --
- *
- *	Process a limited number of tcl events.
- *
- * Results:
- *	Returns 1 if events were handled and 0 otherwise.
- *
- * Side effects:
- *	Runs the Tcl event loop.
- *
- *----------------------------------------------------------------------
- */
-
-MODULE_SCOPE int
-TkMacOSXRunTclEventLoop(void)
-{
-    int /*i = 4,*/ result = 0;
-
-    /* Avoid starving main event loop: process at most 4 events. */
-    while(/*--i && */Tcl_ServiceAll()) {
-	result = 1;
-    }
-    return result;
 }
 
 /*
@@ -303,18 +256,20 @@ TkMacOSXRunTclEventLoop(void)
 MODULE_SCOPE void
 TkMacOSXTrackingLoop(int tracking)
 {
-    static int previousServiceMode = TCL_SERVICE_NONE;
+    ThreadSpecificData *tsdPtr = Tcl_GetThreadData(&dataKey,
+	    sizeof(ThreadSpecificData));
 
     if (tracking) {
-	if (!inTrackingLoop++) {
-	    previousServiceMode = Tcl_SetServiceMode(TCL_SERVICE_ALL);
+	if (!tsdPtr->inTrackingLoop++) {
+	    tsdPtr->previousServiceMode = Tcl_SetServiceMode(TCL_SERVICE_ALL);
 	}
 #ifdef TK_MAC_DEBUG_CARBON_EVENTS
 	TkMacOSXDbgMsg("Entering tracking loop");
 #endif /* TK_MAC_DEBUG_CARBON_EVENTS */
     } else {
-	if (!--inTrackingLoop) {
-	    previousServiceMode = Tcl_SetServiceMode(previousServiceMode);
+	if (!--tsdPtr->inTrackingLoop) {
+	    tsdPtr->previousServiceMode =
+		    Tcl_SetServiceMode(tsdPtr->previousServiceMode);
 	}
 #ifdef TK_MAC_DEBUG_CARBON_EVENTS
 	TkMacOSXDbgMsg("Exiting tracking loop");
@@ -323,78 +278,10 @@ TkMacOSXTrackingLoop(int tracking)
 }
 
 /*
- *----------------------------------------------------------------------
- *
- * TkMacOSXReceiveAndDispatchEvent --
- *
- *	This receives a carbon event and sends it to the carbon event
- *	dispatcher.
- *
- * Results:
- *	Mac OS status
- *
- * Side effects:
- *	This receives and dispatches the next Carbon event.
- *
- *----------------------------------------------------------------------
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 4
+ * fill-column: 79
+ * coding: utf-8
+ * End:
  */
-MODULE_SCOPE OSStatus
-TkMacOSXReceiveAndDispatchEvent(void)
-{
-    static EventTargetRef targetRef = NULL;
-    int numEventTypes = 0;
-    const EventTypeSpec *eventTypes = NULL;
-    EventRef eventRef;
-    OSStatus err;
-#ifdef HAVE_QUICKDRAW
-    const EventTypeSpec trackingEventTypes[] = {
-	{'dniw',		 kEventWindowUpdate},
-	{kEventClassWindow,	 kEventWindowUpdate},
-    };
-
-    if (inTrackingLoop > 0) {
-	eventTypes = trackingEventTypes;
-	numEventTypes = GetEventTypeCount(trackingEventTypes);
-    }
-#endif
-
-    /*
-     * This is a poll, since we have already counted the events coming
-     * into this routine, and are guaranteed to have one waiting.
-     */
-
-    err = ReceiveNextEvent(numEventTypes, eventTypes,
-	    kEventDurationNoWait, true, &eventRef);
-    if (err == noErr) {
-#ifdef TK_MAC_DEBUG_CARBON_EVENTS
-	UInt32 kind = GetEventKind(eventRef);
-
-	if (kind != kEventMouseMoved && kind != kEventMouseDragged) {
-	    TkMacOSXDbgMsg("Dispatching %s", TkMacOSXCarbonEventToAscii(eventRef));
-	    TkMacOSXInitNamedDebugSymbol(HIToolbox, void, _DebugPrintEvent,
-		    EventRef inEvent);
-	    if (_DebugPrintEvent) {
-		/* Carbon-internal event debugging (c.f. Technote 2124) */
-		_DebugPrintEvent(eventRef);
-	    }
-	}
-#endif /* TK_MAC_DEBUG_CARBON_EVENTS */
-	if (!targetRef) {
-	    targetRef = GetEventDispatcherTarget();
-	}
-	TkMacOSXTrackingLoop(1);
-	err = SendEventToEventTarget(eventRef, targetRef);
-	TkMacOSXTrackingLoop(0);
-#ifdef TK_MAC_DEBUG_CARBON_EVENTS
-	if (err != noErr && err != eventLoopTimedOutErr
-		&& err != eventNotHandledErr) {
-	    TkMacOSXDbgMsg("SendEventToEventTarget(%s) failed: %d",
-		    TkMacOSXCarbonEventToAscii(eventRef), (int)err);
-	}
-#endif /* TK_MAC_DEBUG_CARBON_EVENTS */
-	ReleaseEvent(eventRef);
-    } else if (err != eventLoopTimedOutErr) {
-	TkMacOSXDbgMsg("ReceiveNextEvent failed: %d", (int)err);
-    }
-    return err;
-}

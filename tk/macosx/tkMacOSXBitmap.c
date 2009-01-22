@@ -15,7 +15,7 @@
 
 #include "tkMacOSXInt.h"
 
-#ifdef HAVE_QUICKDRAW
+#ifdef MAC_OSX_TK_TODO
 /*
  * Depending on the resource type there are different ways to
  * draw native icons.
@@ -91,7 +91,7 @@ static BuiltInIcon builtInIcons[] = {
 void
 TkpDefineNativeBitmaps(void)
 {
-#ifdef HAVE_QUICKDRAW
+#ifdef MAC_OSX_TK_TODO
     Tcl_HashTable *tablePtr = TkGetBitmapPredefTable();
     BuiltInIcon *builtInPtr;
 
@@ -144,7 +144,7 @@ TkpCreateNativeBitmap(
     const char *source)		/* Info about the icon to build. */
 {
     Pixmap pix;
-#ifdef HAVE_QUICKDRAW
+#ifdef MAC_OSX_TK_TODO
     Rect destRect;
     CGrafPtr savePort;
     Boolean portChanged;
@@ -208,7 +208,7 @@ TkpGetNativeAppBitmap(
     int *height)
 {
     Pixmap pix;
-#ifdef HAVE_QUICKDRAW
+#ifdef MAC_OSX_TK_TODO
     CGrafPtr savePort;
     Boolean portChanged;
     Rect destRect;

@@ -955,7 +955,7 @@ ImageGetPixel(
     unsigned char r = 0, g = 0, b = 0;
 
     if (image->obdata) {
-#ifdef HAVE_QUICKDRAW
+#ifdef MAC_OSX_TK_TODO
 	CGrafPtr destPort, savePort;
 	Boolean portChanged;
 	RGBColor cPix;
@@ -1048,7 +1048,7 @@ PutPixel(
     g = ((pixel & image->green_mask) >>  8) & 0xff;
     b = ((pixel & image->blue_mask)       ) & 0xff;
     if (image->obdata) {
-#ifdef HAVE_QUICKDRAW
+#ifdef MAC_OSX_TK_TODO
 	/*
 	 * Image from XGetImage, 16 bit color values.
 	 */

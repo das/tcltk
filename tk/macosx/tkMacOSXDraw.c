@@ -164,7 +164,7 @@ XCopyArea(
 	}
 	TkMacOSXRestoreDrawingContext(&dc);
     } else {
-#ifdef HAVE_QUICKDRAW
+#ifdef MAC_OSX_TK_TODO
 	MacDrawable *dstDraw = (MacDrawable *) dst;
 	CGrafPtr srcPort;
 
@@ -277,7 +277,7 @@ XCopyPlane(
 	}
 	TkMacOSXRestoreDrawingContext(&dc);
     } else {
-#ifdef HAVE_QUICKDRAW
+#ifdef MAC_OSX_TK_TODO
 	MacDrawable *dstDraw = (MacDrawable *) dst;
 	CGrafPtr srcPort;
 
@@ -341,7 +341,7 @@ end:
 	} else {
 	    TkMacOSXDbgMsg("Invalid source drawable");
 	}
-#endif /* HAVE_QUICKDRAW */
+#endif
     }
 }
 
@@ -394,7 +394,7 @@ TkPutImage(
 	    CFRelease(img);
 	}
     } else {
-#ifdef HAVE_QUICKDRAW
+#ifdef MAC_OSX_TK_TODO
 	MacDrawable *dstDraw = (MacDrawable *) d;
 	Rect srcRect, dstRect, *srcPtr = &srcRect, *dstPtr = &dstRect;
 	const BitMap *dstBit;
@@ -1971,7 +1971,7 @@ TkMacOSXMakeStippleMap(
     Drawable stipple)		/* The stipple pattern. */
 {
     BitMapPtr bitmapPtr = NULL;
-#ifdef HAVE_QUICKDRAW
+#ifdef MAC_OSX_TK_TODO
     CGrafPtr stipplePort;
     const BitMap *stippleBitmap;
     Rect portRect;

@@ -64,31 +64,9 @@
 #include "tkMacOSXInt.h"
 #endif
 
-typedef struct {
-    int stopProcessing;
-    int err;
-    char errMsg[1024];
-} MacEventStatus;
-
-/*
- * The event information in passed in the following structures
- */
-typedef struct {
-    EventRef   eventRef;
-    UInt32     eClass;	/* Defines the class of event : see CarbonEvents.h */
-    UInt32     eKind;	/* Defines the kind of the event : see CarbonEvents.h */
-    Tcl_Interp *interp; /* Interp to handle events in */
-    EventHandlerCallRef callRef;
-} TkMacOSXEvent;
-
 MODULE_SCOPE void TkMacOSXFlushWindows(void);
+#ifdef MAC_OSX_TK_TODO
 MODULE_SCOPE int TkMacOSXProcessEvent(TkMacOSXEvent *eventPtr,
-	MacEventStatus *statusPtr);
-MODULE_SCOPE int TkMacOSXProcessMouseEvent(TkMacOSXEvent *e,
-	MacEventStatus *statusPtr);
-MODULE_SCOPE int TkMacOSXProcessWindowEvent(TkMacOSXEvent *e,
-	MacEventStatus *statusPtr);
-MODULE_SCOPE int TkMacOSXProcessKeyboardEvent(TkMacOSXEvent *e,
 	MacEventStatus *statusPtr);
 MODULE_SCOPE int TkMacOSXProcessApplicationEvent(TkMacOSXEvent *e,
 	MacEventStatus *statusPtr);
@@ -100,5 +78,6 @@ MODULE_SCOPE int TkMacOSXProcessCommandEvent(TkMacOSXEvent *e,
 	MacEventStatus *statusPtr);
 MODULE_SCOPE int TkMacOSXProcessFontEvent(TkMacOSXEvent *e,
 	MacEventStatus *statusPtr);
+#endif
 
 #endif

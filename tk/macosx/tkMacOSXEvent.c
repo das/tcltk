@@ -162,21 +162,13 @@ TkMacOSXFlushWindows(void)
  *----------------------------------------------------------------------
  */
 
+#ifdef MAC_OSX_TK_TODO
 MODULE_SCOPE int
 TkMacOSXProcessEvent(
     TkMacOSXEvent *eventPtr,
     MacEventStatus *statusPtr)
 {
     switch (eventPtr->eClass) {
-    case kEventClassMouse:
-	TkMacOSXProcessMouseEvent(eventPtr, statusPtr);
-	break;
-    case kEventClassWindow:
-	TkMacOSXProcessWindowEvent(eventPtr, statusPtr);
-	break;
-    case kEventClassKeyboard:
-	TkMacOSXProcessKeyboardEvent(eventPtr, statusPtr);
-	break;
     case kEventClassApplication:
 	TkMacOSXProcessApplicationEvent(eventPtr, statusPtr);
 	break;
@@ -189,11 +181,9 @@ TkMacOSXProcessEvent(
     case kEventClassCommand:
 	TkMacOSXProcessCommandEvent(eventPtr, statusPtr);
 	break;
-#ifdef MAC_OSX_TK_TODO
     case kEventClassFont:
 	TkMacOSXProcessFontEvent(eventPtr, statusPtr);
 	break;
-#endif
     default: {
 #ifdef TK_MAC_DEBUG_CARBON_EVENTS
 	TkMacOSXDbgMsg("Unrecognised event: %s",
@@ -315,7 +305,6 @@ TkMacOSXProcessCommandEvent(
     TkMacOSXEvent *eventPtr,
     MacEventStatus *statusPtr)
 {
-#ifdef OBSOLETE
     HICommand command;
     int menuContext;
     OSStatus err;
@@ -375,9 +364,9 @@ TkMacOSXProcessCommandEvent(
 	    }
 	}
     }
-#endif
     return 0;
 }
+#endif
 
 /*
  * Local Variables:

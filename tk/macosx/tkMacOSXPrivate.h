@@ -196,10 +196,8 @@ MODULE_SCOPE void	TkMacOSXDisplayChanged(Display *display);
 MODULE_SCOPE void	TkMacOSXInitScrollbarMetrics(void);
 MODULE_SCOPE int	TkMacOSXUseAntialiasedText(Tcl_Interp *interp,
 			    int enable);
-MODULE_SCOPE void	TkMacOSXInitCarbonEvents(Tcl_Interp *interp);
 MODULE_SCOPE int	TkMacOSXInitCGDrawing(Tcl_Interp *interp, int enable,
 			    int antiAlias);
-MODULE_SCOPE void	TkMacOSXInitKeyboard(Tcl_Interp *interp);
 MODULE_SCOPE int	TkMacOSXGenerateFocusEvent(Window window,
 			    int activeFlag);
 MODULE_SCOPE int	TkMacOSXGenerateParentMenuSelectEvent(MenuRef menu);
@@ -214,25 +212,14 @@ MODULE_SCOPE int	TkMacOSXSetupDrawingContext(Drawable d, GC gc,
 			    int useCG, TkMacOSXDrawingContext *dcPtr);
 MODULE_SCOPE void	TkMacOSXRestoreDrawingContext(
 			    TkMacOSXDrawingContext *dcPtr);
-#ifdef OBSOLETE
-MODULE_SCOPE void	TkMacOSXSetColorInPort(unsigned long pixel, int fg,
-			    PixPatHandle penPat, CGrafPtr port);
-#endif
 MODULE_SCOPE void	TkMacOSXSetColorInContext(unsigned long pixel,
 			    CGContextRef context);
-MODULE_SCOPE int	TkMacOSXRunTclEventLoop(void);
 MODULE_SCOPE void	TkMacOSXTrackingLoop(int tracking);
-MODULE_SCOPE OSStatus	TkMacOSXReceiveAndDispatchEvent(void);
-MODULE_SCOPE void	TkMacOSXInstallWindowCarbonEventHandler(
-			    Tcl_Interp *interp, WindowRef window);
 MODULE_SCOPE int	TkMacOSXMakeFullscreen(TkWindow *winPtr,
-			    WindowRef window, int fullscreen,
+			    NSWindow *window, int fullscreen,
 			    Tcl_Interp *interp);
 MODULE_SCOPE void	TkMacOSXEnterExitFullscreen(TkWindow *winPtr,
 			    int active);
-#ifdef OBSOLETE
-MODULE_SCOPE void	TkMacOSXBringWindowForward(WindowRef wRef);
-#endif
 MODULE_SCOPE NSWindow*	TkMacOSXDrawableWindow(Drawable drawable);
 MODULE_SCOPE void	TkMacOSXWinCGBounds(TkWindow *winPtr, CGRect *bounds);
 MODULE_SCOPE HIShapeRef	TkMacOSXGetClipRgn(Drawable drawable);
