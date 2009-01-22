@@ -1198,6 +1198,8 @@ ClearPort(
 - (void)generateExposeEvents:(HIMutableShapeRef)shape;
 - (BOOL)isOpaque;
 - (BOOL)wantsDefaultClipping;
+- (BOOL)acceptsFirstResponder;
+- (void)keyDown:(NSEvent *)theEvent;
 @end
 
 /* From WebKit/WebKit/mac/WebCoreSupport/WebChromeClient.mm: */
@@ -1275,6 +1277,16 @@ ClearPort(
 
 - (BOOL)wantsDefaultClipping {
     return NO;
+}
+
+- (BOOL)acceptsFirstResponder {
+    return YES;
+}
+
+- (void)keyDown:(NSEvent *)theEvent {
+#ifdef TK_MAC_DEBUG_EVENTS
+    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, theEvent);
+#endif
 }
 
 @end

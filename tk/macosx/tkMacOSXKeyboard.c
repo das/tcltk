@@ -14,9 +14,7 @@
  */
 
 #include "tkMacOSXPrivate.h"
-#include "tkMacOSXEvent.h"	/* for TkMacOSXKeycodeToUnicode()
-				 * FIXME: That function should probably move
-				 * here. */
+#include "tkMacOSXEvent.h"
 
 /*
  * A couple of simple definitions to make code a bit more self-explaining.
@@ -117,6 +115,9 @@ static int keyboardChanged = 1;
 static void	InitKeyMaps (void);
 static void	InitLatin1Table(Display *display);
 static int	XKeysymToMacKeycode(Display *display, KeySym keysym);
+static int	KeycodeToUnicode(UniChar * uniChars, int maxChars,
+			UInt16 keyaction, UInt32 keycode, UInt32 modifiers,
+			UInt32 * deadKeyStatePtr);
 
 @implementation TKApplication(TKKeyboard)
 - (void)keyboardChanged:(NSNotification *)notification {
@@ -197,8 +198,6 @@ InitLatin1Table(
     int state;
     int modifiers;
 
-    keyboardChanged = 0;
-
     memset(latin1Table, 0, sizeof(latin1Table));
 
     /*
@@ -230,6 +229,92 @@ InitLatin1Table(
 	    }
 	}
     }
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * KeycodeToUnicode --
+ *
+ *	Given MacOS key event data this function generates the Unicode
+ *	characters. It does this using OS resources and APIs.
+ *
+ *	The parameter deadKeyStatePtr can be NULL, if no deadkey handling is
+ *	needed.
+ *
+ *	This function is called from XKeycodeToKeysym() in tkMacOSKeyboard.c.
+ *
+ * Results:
+ *	The number of characters generated if any, 0 if we are waiting for
+ *	another byte of a dead-key sequence. Fills in the uniChars array with a
+ *	Unicode string.
+ *
+ * Side Effects:
+ *	None
+ *
+ *----------------------------------------------------------------------
+ */
+
+static int
+KeycodeToUnicode(
+    UniChar *uniChars,
+    int maxChars,
+    UInt16 keyaction,
+    UInt32 keycode,
+    UInt32 modifiers,
+    UInt32 *deadKeyStatePtr)
+{
+    static const void *uchr = NULL;
+    static UInt32 keyboardType = 0;
+    UniCharCount actuallength = 0;
+
+    if (keyboardChanged) {
+	TISInputSourceRef currentKeyboardLayout =
+		TISCopyCurrentKeyboardLayoutInputSource();
+
+	if (currentKeyboardLayout) {
+	    CFDataRef keyLayoutData = (CFDataRef) TISGetInputSourceProperty(
+		    currentKeyboardLayout, kTISPropertyUnicodeKeyLayoutData);
+
+	    if (keyLayoutData) {
+		uchr = CFDataGetBytePtr(keyLayoutData);
+		keyboardType = LMGetKbdType();
+	    }
+	    CFRelease(currentKeyboardLayout);
+	}
+	keyboardChanged = 0;
+    }
+    if (uchr) {
+	OptionBits options = 0;
+	UInt32 dummyState;
+	OSStatus err;
+
+	keycode &= 0xFF;
+	modifiers = (modifiers >> 8) & 0xFF;
+
+	if (!deadKeyStatePtr) {
+	    options = kUCKeyTranslateNoDeadKeysMask;
+	    dummyState = 0;
+	    deadKeyStatePtr = &dummyState;
+	}
+
+	err = ChkErr(UCKeyTranslate, uchr, keycode, keyaction, modifiers,
+		keyboardType, options, deadKeyStatePtr, maxChars,
+		&actuallength, uniChars);
+
+	if (!actuallength && *deadKeyStatePtr) {
+	    /*
+	     * More data later
+	     */
+
+	    return 0;
+	}
+	*deadKeyStatePtr = 0;
+	if (err != noErr) {
+	    actuallength = 0;
+	}
+    }
+    return actuallength;
 }
 
 /*
@@ -297,8 +382,8 @@ XKeycodeToKeysym(
     }
 
     newChar = 0;
-    TkMacOSXKeycodeToUnicode(&newChar, 1, kEventRawKeyDown,
-	    newKeycode & 0x00FF, newKeycode & 0xFF00, NULL);
+    KeycodeToUnicode(&newChar, 1, kUCKeyActionDown, newKeycode & 0x00FF,
+	    newKeycode & 0xFF00, NULL);
 
     /*
      * X11 keysyms are identical to Unicode for ASCII and Latin-1. Give up for
@@ -468,6 +553,7 @@ XKeysymToMacKeycode(
 
 	if (keyboardChanged) {
 	    InitLatin1Table(display);
+	    keyboardChanged = 0;
 	}
 	return latin1Table[keysym];
     }
@@ -703,10 +789,12 @@ TkpGetKeySym(
 	}
     }
 
+#if 0
     if (eventPtr->xkey.nbytes) {
 	return eventPtr->xkey.nbytes;
     }
-    
+#endif
+
     /*
      * Figure out which of the four slots in the keymap vector to use for this
      * key. Refer to Xlib documentation for more info on how this computation

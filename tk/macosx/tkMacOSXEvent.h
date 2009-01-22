@@ -100,10 +100,5 @@ MODULE_SCOPE int TkMacOSXProcessCommandEvent(TkMacOSXEvent *e,
 	MacEventStatus *statusPtr);
 MODULE_SCOPE int TkMacOSXProcessFontEvent(TkMacOSXEvent *e,
 	MacEventStatus *statusPtr);
-MODULE_SCOPE int TkMacOSXKeycodeToUnicode(
-	UniChar * uniChars, int maxChars,
-	EventKind eKind,
-	UInt32 keycode, UInt32 modifiers,
-	UInt32 * deadKeyStatePtr);
 
 #endif

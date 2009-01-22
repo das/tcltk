@@ -117,6 +117,7 @@ static int		KeycodeToUnicodeViaUnicodeResource(UniChar *uniChars,
     BOOL	    repeat = NO;
     unsigned short  keyCode;
     NSString	    *characters = nil, *charactersIgnoringModifiers = nil;
+    static NSUInteger savedModifiers = 0;
 
 
     switch (type) {
@@ -194,10 +195,8 @@ static int		KeycodeToUnicodeViaUnicodeResource(UniChar *uniChars,
     xEvent.xkey.same_screen = true;
     xEvent.xkey.trans_chars[0] = 0;
     xEvent.xkey.nbytes = 0;
-    
-    if (type == NSFlagsChanged) {
-	static NSUInteger savedModifiers = 0;
 
+    if (type == NSFlagsChanged) {
 	if (savedModifiers > modifiers) {
 	    xEvent.xany.type = KeyRelease;
 	} else {
@@ -217,14 +216,14 @@ static int		KeycodeToUnicodeViaUnicodeResource(UniChar *uniChars,
 	 */
 
 	xEvent.xkey.keycode = (modifiers ^ savedModifiers);
-	savedModifiers = modifiers;
     } else {
 	if (type == NSKeyUp || repeat) {
 	    xEvent.xany.type = KeyRelease;
 	} else {
 	    xEvent.xany.type = KeyPress;
 	}
-	xEvent.xkey.keycode = keyCode;
+	xEvent.xkey.keycode = (keyCode << 16) | (UInt16)
+		[characters characterAtIndex:0];
 	if (![characters getCString:xEvent.xkey.trans_chars
 		maxLength:XMaxTransChars encoding:NSUTF8StringEncoding]) {
 	    TkMacOSXDbgMsg("characters too long");
@@ -244,6 +243,7 @@ static int		KeycodeToUnicodeViaUnicodeResource(UniChar *uniChars,
 	}
     }
     Tk_QueueWindowEvent(&xEvent, TCL_QUEUE_TAIL);
+    savedModifiers = modifiers;
 
     return theEvent;
 }
