@@ -122,6 +122,7 @@ static void keyboardChanged(CFNotificationCenterRef center, void *observer, CFSt
 	[self finishLaunching];
 	objc_collect(OBJC_COLLECT_IF_NEEDED);
     }
+    [self setWindowsNeedUpdate:YES];
 }
 - (void)_setup {
     [self setDelegate:self];
@@ -131,8 +132,6 @@ static void keyboardChanged(CFNotificationCenterRef center, void *observer, CFSt
 #endif
     [self _setupWindowNotifications];
     [self _setupApplicationNotifications];
-    [self _setupEventLoop];
-    [self setWindowsNeedUpdate:YES];
     [[NSUserDefaults standardUserDefaults] registerDefaults:
 	    [NSDictionary dictionaryWithObjectsAndKeys:
 	    [NSNumber numberWithBool:YES],
@@ -215,13 +214,13 @@ TkpInit(
 		    (MAC_OS_X_VERSION_MIN_REQUIRED-1000)/10);
 	}
 
+#ifdef TK_FRAMEWORK
 	/*
 	 * When Tk is in a framework, force tcl_findLibrary to look in the
 	 * framework scripts directory.
 	 * FIXME: Should we come up with a more generic way of doing this?
 	 */
 
-#ifdef TK_FRAMEWORK
 	if (Tcl_MacOSXOpenVersionedBundleResources(interp,
 		"com.tcltk.tklibrary", TK_FRAMEWORK_VERSION, 0, PATH_MAX,
 		tkLibPath) != TCL_OK) {
@@ -229,12 +228,12 @@ TkpInit(
 	}
 #endif
 
-	/*
-	 * If we are loaded into an executable that is not a bundled
-	 * application, the window server does not let us come to the
-	 * foreground. For such an executable, notify the window server that
-	 * we are now a full GUI application.
-	 */
+	static NSAutoreleasePool *pool = nil;
+	if (!pool) {
+	    pool = [NSAutoreleasePool new];
+	}
+	[TKApplication sharedApplication];
+	[NSApp _setup];
 
 	/* Check whether we are a bundled executable: */
 	bundleRef = CFBundleGetMainBundle();
@@ -269,26 +268,39 @@ TkpInit(
 	    CFRelease(bundleUrl);
 	}
 
-	/*
-	 * If we are not a bundled executable, notify the window server that
-	 * we are a foregroundable app.
-	 */
-
 	if (!bundledExecutable) {
+	    /*
+	     * If we are loaded into an executable that is not a bundled
+	     * application, the window server does not let us come to the
+	     * foreground. For such an executable, notify the window server
+	     * that we are now a full GUI application.
+	     */
+
 	    OSStatus err = procNotFound;
 	    ProcessSerialNumber psn = { 0, kCurrentProcess };
 
 	    err = ChkErr(TransformProcessType, &psn,
 		    kProcessTransformToForegroundApplication);
+
+	    /*
+	     * Set application to generic Tk icon.
+	     */
+
+	    NSString *path = [[NSApp tkFrameworkBundle]
+		    pathForImageResource:@"Tk.icns"];
+	    if (!path) {
+		// FIXME: fallback to absolute path specific to my box
+		path = @"/Volumes/Users/steffen/Development/TclTk/git/HEAD/tk/macosx/Tk.icns";
+		TkMacOSXDbgMsg("Fallback to hardcoded path!");
+	    }
+	    if (path) {
+		NSImage *image = [[NSImage alloc] initWithContentsOfFile:path];
+		if (image) {
+		    [NSApp setApplicationIconImage:image];
+		}
+	    }
 	}
 
-	static NSAutoreleasePool *pool = nil;
-	if (!pool) {pool = [NSAutoreleasePool new];}
-	[TKApplication sharedApplication];
-	[NSApp _setup];
-	[pool drain];
-	
-	//NSApplicationLoad();
 	TkMacOSXInitAppleEvents(interp);
 	TkMacOSXInitCarbonEvents(interp);
 	TkMacOSXInitMenus(interp);
@@ -307,6 +319,8 @@ TkpInit(
 	if (encodingStr == NULL) {
 	    encodingStr = "macRoman";
 	}
+	[NSApp _setupEventLoop];
+	[pool drain];
 
 	TkMacOSXCarbonEncoding = Tcl_GetEncoding(NULL, encodingStr);
 	if (TkMacOSXCarbonEncoding == NULL) {
