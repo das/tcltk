@@ -1217,10 +1217,8 @@ ClearPort(
     TKLog(@"-[%@(%p) %s]", [self class], self, _cmd);
 #endif
     NSWindow *w = [self window];
-    TkWindow *winPtr = TkMacOSXGetTkWindow(w);
-    if (winPtr && winPtr->wmInfoPtr &&
-	    (winPtr->wmInfoPtr->attributes & kWindowResizableAttribute)) {
-	NSRect bounds = [w _growBoxRect];
+    if ([w showsResizeIndicator]) {
+	NSRect bounds = [self convertRect:[w _growBoxRect] fromView:nil];
 	if ([self needsToDrawRect:bounds]) {
 	    NSEraseRect(bounds);
 	}
