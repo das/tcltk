@@ -122,62 +122,6 @@ XDestroyWindow(
     if (macWin->aboveVisRgn) {
 	CFRelease(macWin->aboveVisRgn);
     }
-
-    /*
-     * Delete the Mac window and remove it from the windowTable. The window
-     * could be NULL if the window was never mapped. However, we don't do this
-     * for embedded windows, they don't go in the window list, and they do not
-     * own their portPtr's.
-     */
-
-    if (!Tk_IsEmbedded(macWin->winPtr)) {
-	NSWindow *win = TkMacOSXDrawableWindow(window);
-
-	if (win) {
-#ifdef OBSOLETE
-	    WindowGroupRef group;
-
-	    if (GetWindowProperty(winRef, 'Tk  ', 'TsGp', sizeof(group), NULL,
-		    &group) == noErr) {
-		TkDisplay *dispPtr = TkGetDisplayList();
-		ItemCount i = CountWindowGroupContents(group,
-			kWindowGroupContentsReturnWindows);
-		WindowRef macWin;
-		WindowGroupRef newGroup;
-		Window window;
-
-		while (i > 0) {
-		    ChkErr(GetIndexedWindow, group, i--, 0, &macWin);
-		    if (!macWin) {
-			continue;
-		    }
-
-		    window = TkMacOSXGetXWindow(macWin);
-		    newGroup = NULL;
-		    if (window != None) {
-			TkWindow *winPtr = (TkWindow *)
-				Tk_IdToWindow(dispPtr->display, window);
-
-			if (winPtr && winPtr->wmInfoPtr) {
-			    newGroup = GetWindowGroupOfClass(
-				    winPtr->wmInfoPtr->macClass);
-			}
-		    }
-		    if (!newGroup) {
-			newGroup =
-				GetWindowGroupOfClass(kDocumentWindowClass);
-		    }
-		    ChkErr(SetWindowGroup, macWin, newGroup);
-		}
-		ChkErr(SetWindowGroupOwner, group, NULL);
-		ChkErr(ReleaseWindowGroup, group);
-	    }
-#endif
-	    TkMacOSXUnregisterMacWindow(win);
-	    CFRelease(win);
-	}
-    }
-
     macWin->view = nil;
 
     /*
@@ -231,25 +175,9 @@ XMapWindow(
     macWin->winPtr->flags |= TK_MAPPED;
     if (Tk_IsTopLevel(macWin->winPtr)) {
 	if (!Tk_IsEmbedded(macWin->winPtr)) {
-#ifdef OBSOLETE
-	    /*
-	     * XXX This should be ShowSheetWindow for kSheetWindowClass
-	     * XXX windows that have a wmPtr->master parent set.
-	     */
+	    NSWindow *win = TkMacOSXDrawableWindow(window);
 
-	    NSWindow *wRef = TkMacOSXDrawableWindow(window);
-
-	    if ((macWin->winPtr->wmInfoPtr->macClass == kSheetWindowClass)
-		    && (macWin->winPtr->wmInfoPtr->master != None)) {
-		ShowSheetWindow(wRef, TkMacOSXDrawableWindow(
-			macWin->winPtr->wmInfoPtr->master));
-	    } else 
-#endif
-		{
-		if (![macWin->winPtr->wmInfoPtr->window isVisible]) {
-		    [macWin->winPtr->wmInfoPtr->window orderFront:NSApp];
-		}
-	    }
+	    [win makeKeyAndOrderFront:NSApp];
 	}
 	TkMacOSXInvalClipRgns((Tk_Window) macWin->winPtr);
 
@@ -350,24 +278,10 @@ XUnmapWindow(
     if (Tk_IsTopLevel(macWin->winPtr)) {
 	if (!Tk_IsEmbedded(macWin->winPtr) &&
 		macWin->winPtr->wmInfoPtr->hints.initial_state!=IconicState) {
-#ifdef OBSOLETE
-	    /*
-	     * XXX This should be HideSheetWindow for kSheetWindowClass
-	     * XXX windows that have a wmPtr->master parent set.
-	     */
+	    NSWindow *win = TkMacOSXDrawableWindow(window);
 
-	    NSWindow *wRef = TkMacOSXDrawableWindow(window);
-
-	    if ((macWin->winPtr->wmInfoPtr->macClass == kSheetWindowClass)
-		    && (macWin->winPtr->wmInfoPtr->master != None)) {
-		HideSheetWindow(wref);
-	    } else
-#endif
-		{
-		//HideWindow(wref);
-		if ([macWin->winPtr->wmInfoPtr->window isVisible]) {
-		    [macWin->winPtr->wmInfoPtr->window orderOut:NSApp];
-		}
+	    if ([win isVisible]) {
+		[win orderOut:NSApp];
 	    }
 	}
 	TkMacOSXInvalClipRgns((Tk_Window) macWin->winPtr);

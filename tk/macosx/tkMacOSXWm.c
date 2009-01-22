@@ -526,8 +526,8 @@ void
 TkWmDeadWindow(
     TkWindow *winPtr)		/* Top-level window that's being deleted. */
 {
-    WmInfo *wmPtr = winPtr->wmInfoPtr;
-    WmInfo *wmPtr2;
+    WmInfo *wmPtr = winPtr->wmInfoPtr, *wmPtr2;
+    NSWindow *window = wmPtr->window;
 
     if (wmPtr == NULL) {
 	return;
@@ -569,10 +569,66 @@ TkWmDeadWindow(
     if (wmPtr->flags & WM_UPDATE_PENDING) {
 	Tk_CancelIdleCall(UpdateGeometryInfo, winPtr);
     }
+
+    /*
+     * Delete the Mac window and remove it from the windowTable. The window
+     * could be nil if the window was never mapped. However, we don't do this
+     * for embedded windows, they don't go in the window list, and they do not
+     * own their portPtr's.
+     */
+
+    if (window && !Tk_IsEmbedded(winPtr) ) {
+#ifdef MAC_OSX_TK_TODO
+	WindowGroupRef group;
+
+	if (GetWindowProperty(winRef, 'Tk  ', 'TsGp', sizeof(group), NULL,
+		&group) == noErr) {
+	    TkDisplay *dispPtr = TkGetDisplayList();
+	    ItemCount i = CountWindowGroupContents(group,
+		    kWindowGroupContentsReturnWindows);
+	    WindowRef macWin;
+	    WindowGroupRef newGroup;
+	    Window window;
+
+	    while (i > 0) {
+		ChkErr(GetIndexedWindow, group, i--, 0, &macWin);
+		if (!macWin) {
+		    continue;
+		}
+
+		window = TkMacOSXGetXWindow(macWin);
+		newGroup = NULL;
+		if (window != None) {
+		    TkWindow *winPtr = (TkWindow *)
+			    Tk_IdToWindow(dispPtr->display, window);
+
+		    if (winPtr && winPtr->wmInfoPtr) {
+			newGroup = GetWindowGroupOfClass(
+				winPtr->wmInfoPtr->macClass);
+		    }
+		}
+		if (!newGroup) {
+		    newGroup =
+			    GetWindowGroupOfClass(kDocumentWindowClass);
+		}
+		ChkErr(SetWindowGroup, macWin, newGroup);
+	    }
+	    ChkErr(SetWindowGroupOwner, group, NULL);
+	    ChkErr(ReleaseWindowGroup, group);
+	}
+#endif
+	[window close];
+	TkMacOSXUnregisterMacWindow(window);
+	if (winPtr->window) {
+	    ((MacDrawable *)winPtr->window)->view = nil;
+	}
+	CFRelease(window);
+    }
+
     ckfree((char *) wmPtr);
     winPtr->wmInfoPtr = NULL;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
