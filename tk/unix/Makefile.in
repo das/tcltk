@@ -389,7 +389,7 @@ AQUA_OBJS = tkMacOSXBitmap.o tkMacOSXButton.o tkMacOSXClipboard.o \
 	tkMacOSXMenubutton.o tkMacOSXMenus.o tkMacOSXMouseEvent.o \
 	tkMacOSXNotify.o tkMacOSXRegion.o tkMacOSXScrlbr.o tkMacOSXSend.o \
 	tkMacOSXSubwindows.o tkMacOSXWindowEvent.o \
-	tkMacOSXWm.o tkMacOSXXStubs.o tkMacOSXCarbonEvents.o \
+	tkMacOSXWm.o tkMacOSXXStubs.o \
 	tkFileFilter.o tkMacWinMenu.o tkPointer.o tkUnix3d.o tkUnixScale.o \
 	xcolors.o xdraw.o xgc.o ximage.o xutil.o \
 	ttkMacOSXTheme.o
@@ -517,7 +517,6 @@ AQUA_SRCS = \
 	$(MAC_OSX_DIR)/tkMacOSXSend.c $(MAC_OSX_DIR)/tkMacOSXSubwindows.c \
 	$(MAC_OSX_DIR)/tkMacOSXTest.c $(MAC_OSX_DIR)/tkMacOSXWindowEvent.c \
 	$(MAC_OSX_DIR)/tkMacOSXWm.c $(MAC_OSX_DIR)/tkMacOSXXStubs.c \
-	$(MAC_OSX_DIR)/tkMacOSXCarbonEvents.c \
 	$(GENERIC_DIR)/tkFileFilter.c $(GENERIC_DIR)/tkMacWinMenu.c \
 	$(GENERIC_DIR)/tkPointer.c $(UNIX_DIR)/tkUnix3d.c \
 	$(UNIX_DIR)/tkUnixScale.c $(XLIB_DIR)/xcolors.c $(XLIB_DIR)/xdraw.c \
@@ -1196,9 +1195,6 @@ tkMacOSXBitmap.o: $(MAC_OSX_DIR)/tkMacOSXBitmap.c
 
 tkMacOSXButton.o: $(MAC_OSX_DIR)/tkMacOSXButton.c
 	$(CC) -c $(CC_SWITCHES) $(MAC_OSX_DIR)/tkMacOSXButton.c
-
-tkMacOSXCarbonEvents.o: $(MAC_OSX_DIR)/tkMacOSXCarbonEvents.c
-	$(CC) -c $(CC_SWITCHES) $(MAC_OSX_DIR)/tkMacOSXCarbonEvents.c
 
 tkMacOSXClipboard.o: $(MAC_OSX_DIR)/tkMacOSXClipboard.c
 	$(CC) -c $(CC_SWITCHES) $(MAC_OSX_DIR)/tkMacOSXClipboard.c

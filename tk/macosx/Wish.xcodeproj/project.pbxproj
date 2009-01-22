@@ -103,7 +103,6 @@
 		F966BE3508F27A40005CB29B /* tkWindow.c in Sources */ = {isa = PBXBuildFile; fileRef = F966BB1208F27A39005CB29B /* tkWindow.c */; };
 		F966BEDB08F27A40005CB29B /* tkMacOSXBitmap.c in Sources */ = {isa = PBXBuildFile; fileRef = F966BBC508F27A3B005CB29B /* tkMacOSXBitmap.c */; };
 		F966BEDC08F27A40005CB29B /* tkMacOSXButton.c in Sources */ = {isa = PBXBuildFile; fileRef = F966BBC608F27A3B005CB29B /* tkMacOSXButton.c */; };
-		F966BEDD08F27A40005CB29B /* tkMacOSXCarbonEvents.c in Sources */ = {isa = PBXBuildFile; fileRef = F966BBC708F27A3B005CB29B /* tkMacOSXCarbonEvents.c */; };
 		F966BEDE08F27A40005CB29B /* tkMacOSXClipboard.c in Sources */ = {isa = PBXBuildFile; fileRef = F966BBC808F27A3B005CB29B /* tkMacOSXClipboard.c */; };
 		F966BEDF08F27A40005CB29B /* tkMacOSXColor.c in Sources */ = {isa = PBXBuildFile; fileRef = F966BBC908F27A3B005CB29B /* tkMacOSXColor.c */; };
 		F966BEE008F27A40005CB29B /* tkMacOSXConfig.c in Sources */ = {isa = PBXBuildFile; fileRef = F966BBCA08F27A3B005CB29B /* tkMacOSXConfig.c */; };
@@ -1031,17 +1030,13 @@
 		F966BBBB08F27A3B005CB29B /* GNUmakefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; fileEncoding = 4; path = GNUmakefile; sourceTree = "<group>"; };
 		F966BBBE08F27A3B005CB29B /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		F966BBC008F27A3B005CB29B /* Tk-Info.plist.in */ = {isa = PBXFileReference; explicitFileType = text.plist; fileEncoding = 4; path = "Tk-Info.plist.in"; sourceTree = "<group>"; };
-		F966BBC108F27A3B005CB29B /* tkAboutDlg.r */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.rez; path = tkAboutDlg.r; sourceTree = "<group>"; };
 		F966BBC208F27A3B005CB29B /* tkMacOSX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tkMacOSX.h; sourceTree = "<group>"; };
-		F966BBC408F27A3B005CB29B /* tkMacOSXAETE.r */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.rez; path = tkMacOSXAETE.r; sourceTree = "<group>"; };
 		F966BBC508F27A3B005CB29B /* tkMacOSXBitmap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tkMacOSXBitmap.c; sourceTree = "<group>"; };
 		F966BBC608F27A3B005CB29B /* tkMacOSXButton.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tkMacOSXButton.c; sourceTree = "<group>"; };
-		F966BBC708F27A3B005CB29B /* tkMacOSXCarbonEvents.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tkMacOSXCarbonEvents.c; sourceTree = "<group>"; };
 		F966BBC808F27A3B005CB29B /* tkMacOSXClipboard.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tkMacOSXClipboard.c; sourceTree = "<group>"; };
 		F966BBC908F27A3B005CB29B /* tkMacOSXColor.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tkMacOSXColor.c; sourceTree = "<group>"; };
 		F966BBCA08F27A3B005CB29B /* tkMacOSXConfig.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tkMacOSXConfig.c; sourceTree = "<group>"; };
 		F966BBCB08F27A3B005CB29B /* tkMacOSXCursor.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tkMacOSXCursor.c; sourceTree = "<group>"; };
-		F966BBCC08F27A3B005CB29B /* tkMacOSXCursors.r */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.rez; path = tkMacOSXCursors.r; sourceTree = "<group>"; };
 		F966BBCD08F27A3B005CB29B /* tkMacOSXDebug.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tkMacOSXDebug.c; sourceTree = "<group>"; };
 		F966BBCE08F27A3B005CB29B /* tkMacOSXDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tkMacOSXDebug.h; sourceTree = "<group>"; };
 		F966BBCF08F27A3B005CB29B /* tkMacOSXDefault.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tkMacOSXDefault.h; sourceTree = "<group>"; };
@@ -1072,10 +1067,8 @@
 		F966BBF108F27A3C005CB29B /* tkMacOSXWindowEvent.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tkMacOSXWindowEvent.c; sourceTree = "<group>"; };
 		F966BBF208F27A3C005CB29B /* tkMacOSXWm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tkMacOSXWm.c; sourceTree = "<group>"; };
 		F966BBF308F27A3C005CB29B /* tkMacOSXWm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tkMacOSXWm.h; sourceTree = "<group>"; };
-		F966BBF408F27A3C005CB29B /* tkMacOSXXCursors.r */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.rez; path = tkMacOSXXCursors.r; sourceTree = "<group>"; };
 		F966BBF508F27A3C005CB29B /* tkMacOSXXStubs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tkMacOSXXStubs.c; sourceTree = "<group>"; };
 		F966BBF708F27A3C005CB29B /* Wish-Info.plist.in */ = {isa = PBXFileReference; explicitFileType = text.plist; fileEncoding = 4; path = "Wish-Info.plist.in"; sourceTree = "<group>"; };
-		F966BBF808F27A3C005CB29B /* Wish.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Wish.icns; sourceTree = "<group>"; };
 		F966BC0308F27A3C005CB29B /* README */ = {isa = PBXFileReference; explicitFileType = text; fileEncoding = 4; path = README; sourceTree = "<group>"; };
 		F966BC0508F27A3C005CB29B /* all.tcl */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = all.tcl; sourceTree = "<group>"; };
 		F966BC0608F27A3C005CB29B /* arc.tcl */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = arc.tcl; sourceTree = "<group>"; };
@@ -2635,17 +2628,13 @@
 				F966BBBB08F27A3B005CB29B /* GNUmakefile */,
 				F966BBBE08F27A3B005CB29B /* README */,
 				F966BBC008F27A3B005CB29B /* Tk-Info.plist.in */,
-				F966BBC108F27A3B005CB29B /* tkAboutDlg.r */,
 				F966BBC208F27A3B005CB29B /* tkMacOSX.h */,
-				F966BBC408F27A3B005CB29B /* tkMacOSXAETE.r */,
 				F966BBC508F27A3B005CB29B /* tkMacOSXBitmap.c */,
 				F966BBC608F27A3B005CB29B /* tkMacOSXButton.c */,
-				F966BBC708F27A3B005CB29B /* tkMacOSXCarbonEvents.c */,
 				F966BBC808F27A3B005CB29B /* tkMacOSXClipboard.c */,
 				F966BBC908F27A3B005CB29B /* tkMacOSXColor.c */,
 				F966BBCA08F27A3B005CB29B /* tkMacOSXConfig.c */,
 				F966BBCB08F27A3B005CB29B /* tkMacOSXCursor.c */,
-				F966BBCC08F27A3B005CB29B /* tkMacOSXCursors.r */,
 				F966BBCD08F27A3B005CB29B /* tkMacOSXDebug.c */,
 				F966BBCE08F27A3B005CB29B /* tkMacOSXDebug.h */,
 				F966BBCF08F27A3B005CB29B /* tkMacOSXDefault.h */,
@@ -2678,12 +2667,10 @@
 				F966BBF108F27A3C005CB29B /* tkMacOSXWindowEvent.c */,
 				F966BBF208F27A3C005CB29B /* tkMacOSXWm.c */,
 				F966BBF308F27A3C005CB29B /* tkMacOSXWm.h */,
-				F966BBF408F27A3C005CB29B /* tkMacOSXXCursors.r */,
 				F966BBF508F27A3C005CB29B /* tkMacOSXXStubs.c */,
 				F96888840AF78938000797B5 /* ttkMacOSXTheme.c */,
 				F95D8D4B0F1715610006B020 /* Tk.icns */,
 				F95D8D4C0F1715610006B020 /* Tk.tiff */,
-				F966BBF808F27A3C005CB29B /* Wish.icns */,
 				F966BBF708F27A3C005CB29B /* Wish-Info.plist.in */,
 				F97AE7F10B65C1E900310EA2 /* Wish-Common.xcconfig */,
 				F97AE8330B65C87F00310EA2 /* Wish-Debug.xcconfig */,
@@ -4452,7 +4439,6 @@
 				F96888230AF786D5000797B5 /* ttkWidget.c in Sources */,
 				F966BEDB08F27A40005CB29B /* tkMacOSXBitmap.c in Sources */,
 				F966BEDC08F27A40005CB29B /* tkMacOSXButton.c in Sources */,
-				F966BEDD08F27A40005CB29B /* tkMacOSXCarbonEvents.c in Sources */,
 				F966BEDE08F27A40005CB29B /* tkMacOSXClipboard.c in Sources */,
 				F966BEDF08F27A40005CB29B /* tkMacOSXColor.c in Sources */,
 				F966BEE008F27A40005CB29B /* tkMacOSXConfig.c in Sources */,
