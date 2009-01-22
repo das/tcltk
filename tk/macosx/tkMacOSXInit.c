@@ -288,11 +288,13 @@ TkpInit(
 
 	    NSString *path = [[NSApp tkFrameworkBundle]
 		    pathForImageResource:@"Tk.icns"];
+#ifdef TK_MAC_DEBUG
 	    if (!path) {
 		// FIXME: fallback to absolute path specific to my box
 		path = @"/Volumes/Users/steffen/Development/TclTk/git/HEAD/tk/macosx/Tk.icns";
 		TkMacOSXDbgMsg("Fallback to hardcoded path!");
 	    }
+#endif
 	    if (path) {
 		NSImage *image = [[NSImage alloc] initWithContentsOfFile:path];
 		if (image) {

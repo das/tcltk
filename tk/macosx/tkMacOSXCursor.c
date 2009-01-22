@@ -241,6 +241,7 @@ FindCursorByName(
 	case IMAGEPATH: {
 	    NSString *path = [[NSApp tkFrameworkBundle]
 		    pathForImageResource:cursorNames[idx].id];
+#ifdef TK_MAC_DEBUG
 	    if (!path) {
 	    	// FIXME: fallback to absolute path specific to my box
 		path = [NSString stringWithFormat:
@@ -248,7 +249,10 @@ FindCursorByName(
 			cursorNames[idx].id];
 		TkMacOSXDbgMsg("Fallback to hardcoded path!");
 	    }
-	    image = [[NSImage alloc] initWithContentsOfFile:path];
+#endif
+	    if (path) {
+		image = [[NSImage alloc] initWithContentsOfFile:path];
+	    }
 	    break;
 	}
 	}

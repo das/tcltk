@@ -1339,14 +1339,21 @@ MatchOneType(
 void
 TkAboutDlg(void)
 {
+    NSImage *image;
     NSString *path = [[NSApp tkFrameworkBundle]
 	    pathForImageResource:@"Tk.tiff"];
+#ifdef TK_MAC_DEBUG
     if (!path) {
 	// FIXME: fallback to absolute path specific to my box
 	path = @"/Volumes/Users/steffen/Development/TclTk/git/HEAD/tk/macosx/Tk.tiff";
 	TkMacOSXDbgMsg("Fallback to hardcoded path!");
     }
-    NSImage *image = [[NSImage alloc] initWithContentsOfFile:path];
+#endif
+    if (path) {
+	image = [[NSImage alloc] initWithContentsOfFile:path];
+    } else {
+	image = [NSImage imageNamed:@"NSApplicationIcon"];
+    }
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
     [dateFormatter setDateFormat:@"Y"];
