@@ -5,10 +5,11 @@
  *
  * Copyright (c) 1996-1997 by Sun Microsystems, Inc.
  * Copyright 2001, Apple Computer, Inc.
- * Copyright (c) 2005-2007 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright (c) 2005-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright 2008-2009, Apple Inc.
  *
- * See the file "license.terms" for information on usage and redistribution of
- * this file, and for a DISCLAIMER OF ALL WARRANTIES.
+ * See the file "license.terms" for information on usage and redistribution
+ * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
  * RCS: @(#) $Id$
  */
@@ -2639,7 +2640,7 @@ DrawMenuEntryAccelerator(
 		    CFRelease(cfStr);
 		}
 	    } else {
-		Tk_DrawChars(menuPtr->display, d, gc, tkfont, accel + 
+		Tk_DrawChars(menuPtr->display, d, gc, tkfont, accel +
 			geometryPtr->accelTextStart, mePtr->accelLength -
 			geometryPtr->accelTextStart, leftEdge, baseline);
 	    }
@@ -3730,7 +3731,7 @@ TkMacOSXGenerateParentMenuSelectEvent(
     }
     return false;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -3768,7 +3769,7 @@ TkMacOSXGenerateMenuSelectEvent(
     }
     return false;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -4732,7 +4733,9 @@ HandleMenuCalcItemMsg(
 
 /*
  * Local Variables:
- * fill-column: 78
+ * mode: c
  * c-basic-offset: 4
+ * fill-column: 79
+ * coding: utf-8
  * End:
  */

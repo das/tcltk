@@ -3,7 +3,8 @@
  *
  *	Macros and declarations that are purely internal & private to TkAqua.
  *
- * Copyright (c) 2005-2007 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright (c) 2005-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright 2008-2009, Apple Inc.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -65,7 +66,7 @@
 #define tk_if_mac_os_x_10_5		tk_if_mac_os_x_no
 #define tk_else_mac_os_x_10_5		tk_else_mac_os_x_no
 #endif /* MAC_OS_X_VERSION_MAX_ALLOWED */
-
+
 /*
  * Macros for DEBUG_ASSERT_MESSAGE et al from Debugging.h.
  */
@@ -137,7 +138,7 @@
 	symbol = TkMacOSXGetNamedSymbol(STRINGIFY(module), \
 		STRINGIFY(_##symbol)); \
     }
-
+
 /*
  * Structure encapsulating current drawing environment.
  */
@@ -228,6 +229,7 @@ MODULE_SCOPE Tcl_Obj *	TkMacOSXGetStringObjFromCFString(CFStringRef str);
 MODULE_SCOPE TkWindow*	TkMacOSXGetTkWindow(NSWindow *w);
 MODULE_SCOPE NSFont*	TkMacOSXNSFontForFont(Tk_Font tkfont);
 
+#pragma mark -
 
 #define VISIBILITY_HIDDEN __attribute__((__visibility__("hidden")))
 

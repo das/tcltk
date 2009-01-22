@@ -7,7 +7,8 @@
  *
  * Copyright (c) 1995-1997 Sun Microsystems, Inc.
  * Copyright 2001, Apple Computer, Inc.
- * Copyright (c) 2006-2007 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright (c) 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright 2008-2009, Apple Inc.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -587,76 +588,73 @@ CreateCGImageWithXImage(
     XImage *image)
 {
     CGImageRef img = NULL;
+    size_t bitsPerComponent, bitsPerPixel;
+    size_t len = image->bytes_per_line * image->height;
+    const CGFloat *decode = NULL;
+    CGBitmapInfo bitmapInfo;
+    CGDataProviderRef provider = NULL;
+    char *data = NULL;
+    CGDataProviderReleaseDataCallback releaseData = ReleaseData;
 
-    {
-	size_t bitsPerComponent, bitsPerPixel;
-	size_t len = image->bytes_per_line * image->height;
-	const CGFloat *decode = NULL;
-	CGBitmapInfo bitmapInfo;
-	CGDataProviderRef provider = NULL;
-	char *data = NULL;
-	CGDataProviderReleaseDataCallback releaseData = ReleaseData;
+    if (image->bits_per_pixel == 1) {
+	/*
+	 * BW image
+	 */
 
-	if (image->bits_per_pixel == 1) {
-	    /*
-	     * BW image
-	     */
+	static const CGFloat decodeWB[2] = {1, 0};
 
-	    static const CGFloat decodeWB[2] = {1, 0};
+	bitsPerComponent = 1;
+	bitsPerPixel = 1;
+	decode = decodeWB;
+	if (image->bitmap_bit_order != MSBFirst) {
+	    char *srcPtr = image->data + image->xoffset;
+	    char *endPtr = srcPtr + len;
+	    char *destPtr = (data = ckalloc(len));
 
-	    bitsPerComponent = 1;
-	    bitsPerPixel = 1;
-	    decode = decodeWB;
-	    if (image->bitmap_bit_order != MSBFirst) {
-		char *srcPtr = image->data + image->xoffset;
-		char *endPtr = srcPtr + len;
-		char *destPtr = (data = ckalloc(len));
-
-		while (srcPtr < endPtr) {
-		    *destPtr++ = xBitReverseTable[(unsigned char)(*(srcPtr++))];
-		}
-	    } else {
-		data = memcpy(ckalloc(len), image->data + image->xoffset,
-			len);
-	    }
-	    if (data) {
-		provider = CGDataProviderCreateWithData(data, data, len, releaseData);
-	    }
-	    if (provider) {
-		img = CGImageMaskCreate(image->width, image->height, bitsPerComponent,
-			bitsPerPixel, image->bytes_per_line,
-			provider, decode, 0);
-	    }
-	} else if (image->format == ZPixmap && image->bits_per_pixel == 32) {
-	    /*
-	     * Color image
-	     */
-
-	    CGColorSpaceRef colorspace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
-
-	    bitsPerComponent = 8;
-	    bitsPerPixel = 32;
-	    bitmapInfo = (image->byte_order == MSBFirst ?
-		    kCGBitmapByteOrder32Big : kCGBitmapByteOrder32Little) |
-		    kCGImageAlphaNoneSkipFirst;
-	    data = memcpy(ckalloc(len), image->data + image->xoffset, len);
-	    if (data) {
-		provider = CGDataProviderCreateWithData(data, data, len, releaseData);
-	    }
-	    if (provider) {
-		img = CGImageCreate(image->width, image->height, bitsPerComponent,
-			bitsPerPixel, image->bytes_per_line, colorspace, bitmapInfo,
-			provider, decode, 0, kCGRenderingIntentDefault);
-	    }
-	    if (colorspace) {
-		CFRelease(colorspace);
+	    while (srcPtr < endPtr) {
+		*destPtr++ = xBitReverseTable[(unsigned char)(*(srcPtr++))];
 	    }
 	} else {
-	    TkMacOSXDbgMsg("Unsupported image type");
+	    data = memcpy(ckalloc(len), image->data + image->xoffset,
+		    len);
+	}
+	if (data) {
+	    provider = CGDataProviderCreateWithData(data, data, len, releaseData);
 	}
 	if (provider) {
-	    CFRelease(provider);
+	    img = CGImageMaskCreate(image->width, image->height, bitsPerComponent,
+		    bitsPerPixel, image->bytes_per_line,
+		    provider, decode, 0);
 	}
+    } else if (image->format == ZPixmap && image->bits_per_pixel == 32) {
+	/*
+	 * Color image
+	 */
+
+	CGColorSpaceRef colorspace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
+
+	bitsPerComponent = 8;
+	bitsPerPixel = 32;
+	bitmapInfo = (image->byte_order == MSBFirst ?
+		kCGBitmapByteOrder32Big : kCGBitmapByteOrder32Little) |
+		kCGImageAlphaNoneSkipFirst;
+	data = memcpy(ckalloc(len), image->data + image->xoffset, len);
+	if (data) {
+	    provider = CGDataProviderCreateWithData(data, data, len, releaseData);
+	}
+	if (provider) {
+	    img = CGImageCreate(image->width, image->height, bitsPerComponent,
+		    bitsPerPixel, image->bytes_per_line, colorspace, bitmapInfo,
+		    provider, decode, 0, kCGRenderingIntentDefault);
+	}
+	if (colorspace) {
+	    CFRelease(colorspace);
+	}
+    } else {
+	TkMacOSXDbgMsg("Unsupported image type");
+    }
+    if (provider) {
+	CFRelease(provider);
     }
 
     return img;
@@ -684,7 +682,7 @@ TkMacOSXCreateCGImageWithDrawable(
 {
     CGImageRef img = NULL;
     MacDrawable *macDraw = (MacDrawable *) drawable;
-    
+
     if (macDraw && (macDraw->flags & TK_IS_PIXMAP) && macDraw->context) {
 	img = CGBitmapContextCreateImage(macDraw->context);
     }
@@ -713,7 +711,7 @@ GetCGContextForDrawable(
     Drawable d)
 {
     MacDrawable *macDraw = (MacDrawable *) d;
-    
+
     if (macDraw && (macDraw->flags & TK_IS_PIXMAP) && !macDraw->context) {
 	const size_t bitsPerComponent = 8;
 	size_t bitsPerPixel, bytesPerRow, len;
@@ -783,7 +781,7 @@ DrawCGImage(
     CGRect dstBounds)
 {
     MacDrawable *macDraw = (MacDrawable *) d;
-    
+
     if (macDraw && context && image) {
 	CGImageRef subImage = NULL;
 
@@ -1693,15 +1691,15 @@ TkMacOSXSetupDrawingContext(
 	}
 	if (gc) {
 	    static const CGLineCap cgCap[] = {
-		[CapNotLast] = kCGLineCapButt, 
-		[CapButt] = kCGLineCapButt, 
-		[CapRound] = kCGLineCapRound, 
-		[CapProjecting] = kCGLineCapSquare, 
+		[CapNotLast] = kCGLineCapButt,
+		[CapButt] = kCGLineCapButt,
+		[CapRound] = kCGLineCapRound,
+		[CapProjecting] = kCGLineCapSquare,
 	    };
 	    static const CGLineJoin cgJoin[] = {
-		[JoinMiter] = kCGLineJoinMiter, 
-		[JoinRound] = kCGLineJoinRound, 
-		[JoinBevel] = kCGLineJoinBevel, 
+		[JoinMiter] = kCGLineJoinMiter,
+		[JoinRound] = kCGLineJoinRound,
+		[JoinBevel] = kCGLineJoinBevel,
 	    };
 	    bool shouldAntialias;
 	    double w = gc->line_width;
@@ -1945,7 +1943,7 @@ ClipToGC(
 	TkMacOSXOffsetRegion(gcClip, -xOffset, -yOffset);
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -2093,3 +2091,12 @@ TkpDrawFrame(
 	    Tk_Height(tkwin) - 2 * highlightWidth,
 	    borderWidth, relief);
 }
+
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 4
+ * fill-column: 79
+ * coding: utf-8
+ * End:
+ */

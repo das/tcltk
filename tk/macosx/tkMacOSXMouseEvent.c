@@ -5,48 +5,11 @@
  *	MacOS X.
  *
  * Copyright 2001, Apple Computer, Inc.
- * Copyright (c) 2005-2007 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright (c) 2005-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright 2008-2009, Apple Inc.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
- *
- *	The following terms apply to all files originating from Apple
- *	Computer, Inc. ("Apple") and associated with the software unless
- *	explicitly disclaimed in individual files.
- *
- *	Apple hereby grants permission to use, copy, modify, distribute, and
- *	license this software and its documentation for any purpose, provided
- *	that existing copyright notices are retained in all copies and that
- *	this notice is included verbatim in any distributions. No written
- *	agreement, license, or royalty fee is required for any of the
- *	authorized uses. Modifications to this software may be copyrighted by
- *	their authors and need not follow the licensing terms described here,
- *	provided that the new terms are clearly indicated on the first page of
- *	each file where they apply.
- *
- *	IN NO EVENT SHALL APPLE, THE AUTHORS OR DISTRIBUTORS OF THE SOFTWARE
- *	BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR
- *	CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OF THIS SOFTWARE, ITS
- *	DOCUMENTATION, OR ANY DERIVATIVES THEREOF, EVEN IF APPLE OR THE
- *	AUTHORS HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. APPLE,
- *	THE AUTHORS AND DISTRIBUTORS SPECIFICALLY DISCLAIM ANY WARRANTIES,
- *	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- *	MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND
- *	NON-INFRINGEMENT. THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, AND
- *	APPLE,THE AUTHORS AND DISTRIBUTORS HAVE NO OBLIGATION TO PROVIDE
- *	MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
- *
- *	GOVERNMENT USE: If you are acquiring this software on behalf of the
- *	U.S. government, the Government shall have only "Restricted Rights" in
- *	the software and related documentation as defined in the Federal
- *	Acquisition Regulations (FARs) in Clause 52.227.19 (c) (2). If you are
- *	acquiring the software on behalf of the Department of Defense, the
- *	software shall be classified as "Commercial Computer Software" and the
- *	Government shall have only "Restricted Rights" as defined in Clause
- *	252.227-7013 (c) (1) of DFARs. Notwithstanding the foregoing, the
- *	authors grant the U.S. Government and others acting in its behalf
- *	permission to use and distribute the software in accordance with the
- *	terms specified in this license.
  *
  * RCS: @(#) $Id$
  */
@@ -68,7 +31,7 @@ static int		GenerateButtonEvent(MouseEventData *medPtr);
 static unsigned int	ButtonModifiers2State(UInt32 buttonState,
 			    UInt32 keyModifiers);
 
-#pragma mark TKApplication(TKEvent)
+#pragma mark TKApplication(TKMouseEvent)
 
 enum {
     NSWindowWillMoveEventType = 20
@@ -153,7 +116,7 @@ enum {
     int win_x, win_y;
     tkwin = Tk_TopCoordsToWindow(tkwin, local.x, local.y,
 		&win_x, &win_y);
- 
+
     unsigned int state = 0;
     NSInteger button = [theEvent buttonNumber];
     EventRef eventRef = (EventRef)[theEvent eventRef];
@@ -241,8 +204,8 @@ enum {
     return theEvent;
 }
 @end
-#pragma mark -
 
+#pragma mark -
 
 #ifdef MAC_OSX_TK_TODO
 /*
@@ -263,7 +226,7 @@ enum {
 
 Tk_Window
 GetGrabWindowForWindow(
-    Tk_Window tkwin) 
+    Tk_Window tkwin)
 {
     Tk_Window grabWin = TkMacOSXGetCapture();
 
@@ -429,7 +392,7 @@ XQueryPointer(
 
     if (getGlobal || getLocal) {
 	NSPoint global = [NSEvent mouseLocation];
-	
+
 	if (getLocal) {
 	    MacDrawable *macWin = (MacDrawable *) w;
 	    NSWindow *win = TkMacOSXDrawableWindow(w);

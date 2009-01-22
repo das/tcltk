@@ -5,7 +5,8 @@
  *
  * Copyright (c) 1996-1997 Sun Microsystems, Inc.
  * Copyright 2001, Apple Computer, Inc.
- * Copyright (c) 2006-2008 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright (c) 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright 2008-2009, Apple Inc.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -107,7 +108,7 @@ static int fileDlgInited = 0;
 
 static NavObjectFilterUPP openFileFilterUPP;
 static NavEventUPP openFileEventUPP;
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -228,7 +229,7 @@ Tk_ChooseColorObjCmd(
   end:
     return result;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -397,7 +398,7 @@ Tk_GetOpenFileObjCmd(
     }
     return result;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -528,7 +529,7 @@ Tk_GetSaveFileObjCmd(
     }
     return result;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -640,7 +641,7 @@ Tk_ChooseDirectoryObjCmd(
     }
     return result;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -725,7 +726,7 @@ HandleInitialDirectory(
     }
     return result;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -749,7 +750,7 @@ InitFileDialogs(void)
     openFileFilterUPP = NewNavObjectFilterUPP(OpenFileFilterProc);
     openFileEventUPP = NewNavEventUPP(OpenEventProc);
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1019,7 +1020,7 @@ NavServicesGetFile(
     }
     return result;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1104,7 +1105,7 @@ OpenEventProc(
 	    break;
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1201,7 +1202,7 @@ OpenFileFilterProc(
     }
     return (result == MATCHED);
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1319,7 +1320,7 @@ MatchOneType(
     return UNMATCHED;
 }
 #endif
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1712,7 +1713,7 @@ Tk_MessageBoxObjCmd(
     }
     return result;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -2313,8 +2314,8 @@ TkInitFontchooser(
 	    fcdPtr);
     return TCL_OK;
 }
-
 #endif
+
 /*
  * Local Variables:
  * mode: c

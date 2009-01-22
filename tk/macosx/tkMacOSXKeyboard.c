@@ -5,7 +5,8 @@
  *
  * Copyright (c) 1995-1997 Sun Microsystems, Inc.
  * Copyright 2001, Apple Computer, Inc.
- * Copyright (c) 2005-2007 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright (c) 2005-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright 2008-2009, Apple Inc.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -119,6 +120,8 @@ static int	KeycodeToUnicode(UniChar * uniChars, int maxChars,
 			UInt16 keyaction, UInt32 keycode, UInt32 modifiers,
 			UInt32 * deadKeyStatePtr);
 
+#pragma mark TKApplication(TKKeyboard)
+
 @implementation TKApplication(TKKeyboard)
 - (void)keyboardChanged:(NSNotification *)notification {
 #ifdef TK_MAC_DEBUG_NOTIFICATIONS
@@ -127,6 +130,8 @@ static int	KeycodeToUnicode(UniChar * uniChars, int maxChars,
     keyboardChanged = 1;
 }
 @end
+
+#pragma mark -
 
 /*
  *----------------------------------------------------------------------
@@ -626,32 +631,6 @@ XKeysymToKeycode(
 
     return result;
 }
-
-/*
-NB: Keep this commented code for a moment for reference.
-
-    if ((keysym >= XK_space) && (XK_asciitilde)) {
-	if (keysym == 'a') {
-	    virtualKeyCode = 0x00;
-	} else if (keysym == 'b' || keysym == 'B') {
-	    virtualKeyCode = 0x0B;
-	} else if (keysym == 'c') {
-	    virtualKeyCode = 0x08;
-	} else if (keysym == 'x' || keysym == 'X') {
-	    virtualKeyCode = 0x07;
-	} else if (keysym == 'z') {
-	    virtualKeyCode = 0x06;
-	} else if (keysym == ' ') {
-	    virtualKeyCode = 0x31;
-	} else if (keysym == XK_Return) {
-	    virtualKeyCode = 0x24;
-	    keysym = '\r';
-	}
-	keycode = keysym + (virtualKeyCode <<16);
-    }
-
-    return keycode;
-*/
 
 /*
  *----------------------------------------------------------------------

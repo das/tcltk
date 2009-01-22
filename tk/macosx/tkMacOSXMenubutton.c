@@ -6,7 +6,8 @@
  *
  * Copyright (c) 1996 by Sun Microsystems, Inc.
  * Copyright 2001, Apple Computer, Inc.
- * Copyright (c) 2006-2007 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright (c) 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright 2008-2009, Apple Inc.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -707,7 +708,7 @@ TkpDisplayMenuButton(
 	    Tk_RedrawImage(butPtr->image, 0, 0, width, height, pixmap, 0, 0);
 	} else {
 	    GC gc;
-	    
+
 	    if (butPtr->state == STATE_DISABLED) {
 		gc = butPtr->disabledGC;
 	    } else if (butPtr->state == STATE_ACTIVE) {
@@ -719,7 +720,7 @@ TkpDisplayMenuButton(
 		    width, height, 0, 0, 1);
 	}
 	mbPtr->bevelButtonContent.contentType = kControlContentCGImageRef;
-	mbPtr->bevelButtonContent.u.imageRef = 
+	mbPtr->bevelButtonContent.u.imageRef =
 		TkMacOSXCreateCGImageWithDrawable(pixmap);
 	Tk_FreePixmap(butPtr->display, pixmap);
 	pixmap = None;
@@ -1288,7 +1289,7 @@ UserPaneBackgroundProc(
 	TkMacOSXSetColorInPort(mbPtr->userPaneBackground, 0, NULL, port);
     }
 }
-
+
 /*
  *--------------------------------------------------------------
  *
@@ -1376,5 +1377,13 @@ MenuButtonEventProc(
 	}
     }
 }
-
 #endif
+
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 4
+ * fill-column: 79
+ * coding: utf-8
+ * End:
+ */

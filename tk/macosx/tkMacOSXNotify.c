@@ -2,11 +2,12 @@
  * tkMacOSXNotify.c --
  *
  *	This file contains the implementation of a tcl event source
- *	for the AppKit & Carbon event loops.
+ *	for the AppKit event loop.
  *
  * Copyright (c) 1995-1997 Sun Microsystems, Inc.
  * Copyright 2001, Apple Computer, Inc.
- * Copyright (c) 2005-2007 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright (c) 2005-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright 2008-2009, Apple Inc.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -52,8 +53,8 @@ static void TkMacOSXEventsCheckProc(ClientData clientData, int flags);
     return event;
 }
 @end
+
 #pragma mark -
-
 
 /*
  *----------------------------------------------------------------------

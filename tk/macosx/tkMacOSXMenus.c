@@ -6,10 +6,11 @@
  *
  * Copyright (c) 1995-1996 Sun Microsystems, Inc.
  * Copyright (c) 2001, Apple Computer, Inc.
- * Copyright (c) 2005-2007 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright (c) 2005-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright 2008-2009, Apple Inc.
  *
- * See the file "license.terms" for information on usage and redistribution of
- * this file, and for a DISCLAIMER OF ALL WARRANTIES.
+ * See the file "license.terms" for information on usage and redistribution
+ * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
  * RCS: @(#) $Id$
  */
@@ -68,7 +69,7 @@ GetWidgetDemoPath(
     if (libpath) {
 	Tcl_Obj *demo[2] = {	Tcl_NewStringObj("demos", 5),
 				Tcl_NewStringObj("widget", 6) };
-	
+
 	Tcl_IncrRefCount(libpath);
 	result = Tcl_FSJoinToPath(libpath, 2, demo);
 	Tcl_DecrRefCount(libpath);
@@ -399,7 +400,9 @@ GenerateEditEvent(
 
 /*
  * Local Variables:
- * fill-column: 78
+ * mode: c
  * c-basic-offset: 4
+ * fill-column: 79
+ * coding: utf-8
  * End:
  */

@@ -5,7 +5,8 @@
  *
  * Copyright (c) 1995-1997 Sun Microsystems, Inc.
  * Copyright 2001, Apple Computer, Inc.
- * Copyright (c) 2005-2007 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright (c) 2005-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright 2008-2009, Apple Inc.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -24,7 +25,7 @@ enum {
 };
 
 @implementation TKApplication(TKEvent)
-/* replace by +[addLocalMonitorForEventsMatchingMask ? */
+/* TODO: replace by +[addLocalMonitorForEventsMatchingMask ? */
 - (NSEvent *)tkProcessEvent:(NSEvent *)theEvent {
 #ifdef TK_MAC_DEBUG_EVENTS
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, theEvent);
@@ -102,6 +103,7 @@ enum {
     return theEvent;
 }
 @end
+
 #pragma mark -
 
 /*
@@ -372,6 +374,7 @@ TkMacOSXProcessCommandEvent(
  * Local Variables:
  * mode: c
  * c-basic-offset: 4
- * fill-column: 78
+ * fill-column: 79
+ * coding: utf-8
  * End:
  */
