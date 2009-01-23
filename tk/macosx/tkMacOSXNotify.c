@@ -22,10 +22,13 @@
 #import <objc/objc-auto.h>
 
 typedef struct ThreadSpecificData {
-    int initialized, inTrackingLoop, previousServiceMode;
+    int initialized, sendEventNestingLevel;
     NSEvent *currentEvent;
 } ThreadSpecificData;
 static Tcl_ThreadDataKey dataKey;
+
+#define TSD_INIT() ThreadSpecificData *tsdPtr = Tcl_GetThreadData(&dataKey, \
+	    sizeof(ThreadSpecificData))
 
 static void TkMacOSXNotifyExitHandler(ClientData clientData);
 static void TkMacOSXEventsSetupProc(ClientData clientData, int flags);
@@ -33,24 +36,29 @@ static void TkMacOSXEventsCheckProc(ClientData clientData, int flags);
 
 #pragma mark TKApplication(TKNotify)
 
-@interface TKApplication(TKNotify)
-- (NSEvent *)nextEventMatchingMask:(NSUInteger)mask untilDate:(NSDate *)expiration inMode:(NSString *)mode dequeue:(BOOL)deqFlag;
-@end
-
 @implementation TKApplication(TKNotify)
-- (NSEvent *)nextEventMatchingMask:(NSUInteger)mask untilDate:(NSDate *)expiration inMode:(NSString *)mode dequeue:(BOOL)deqFlag {
+- (NSEvent *)nextEventMatchingMask:(NSUInteger)mask
+	untilDate:(NSDate *)expiration inMode:(NSString *)mode
+	dequeue:(BOOL)deqFlag {
+    int oldMode = Tcl_SetServiceMode(TCL_SERVICE_ALL);
     NSEvent *event = [super nextEventMatchingMask:mask untilDate:expiration
 	    inMode:mode dequeue:deqFlag];
-
+    Tcl_SetServiceMode(oldMode);
     if (event) {
-	ThreadSpecificData *tsdPtr = Tcl_GetThreadData(&dataKey,
-		sizeof(ThreadSpecificData));
-
-	if (tsdPtr->inTrackingLoop) {
+	TSD_INIT();
+	if (tsdPtr->sendEventNestingLevel) {
 	    event = [NSApp tkProcessEvent:event];
 	}
     }
     return event;
+}
+- (void)sendEvent:(NSEvent *)theEvent {
+    TSD_INIT();
+    int oldMode = Tcl_SetServiceMode(TCL_SERVICE_ALL);
+    tsdPtr->sendEventNestingLevel++;
+    [super sendEvent:theEvent];
+    tsdPtr->sendEventNestingLevel--;
+    Tcl_SetServiceMode(oldMode);
 }
 @end
 
@@ -76,9 +84,7 @@ static void TkMacOSXEventsCheckProc(ClientData clientData, int flags);
 void
 Tk_MacOSXSetupTkNotifier(void)
 {
-    ThreadSpecificData *tsdPtr = Tcl_GetThreadData(&dataKey,
-	    sizeof(ThreadSpecificData));
-
+    TSD_INIT();
     if (!tsdPtr->initialized) {
 	tsdPtr->initialized = 1;
 
@@ -126,9 +132,7 @@ static void
 TkMacOSXNotifyExitHandler(
     ClientData clientData)	/* Not used. */
 {
-    ThreadSpecificData *tsdPtr = Tcl_GetThreadData(&dataKey,
-	    sizeof(ThreadSpecificData));
-
+    TSD_INIT();
     Tcl_DeleteEventSource(TkMacOSXEventsSetupProc,
 	    TkMacOSXEventsCheckProc, GetMainEventQueue());
     tsdPtr->initialized = 0;
@@ -158,14 +162,9 @@ TkMacOSXEventsSetupProc(
     ClientData clientData,
     int flags)
 {
-    ThreadSpecificData *tsdPtr = Tcl_GetThreadData(&dataKey,
-	    sizeof(ThreadSpecificData));
-
-    if (!(flags & TCL_WINDOW_EVENTS) || tsdPtr->inTrackingLoop) {
-	return;
-    } else {
+    if (flags & TCL_WINDOW_EVENTS) {
 	static const Tcl_Time zeroBlockTime = { 0, 0 };
-
+	TSD_INIT();
 	if (!tsdPtr->currentEvent) {
 	    NSEvent *currentEvent = [NSApp nextEventMatchingMask:NSAnyEventMask
 		    untilDate:[NSDate distantPast]
@@ -202,15 +201,10 @@ TkMacOSXEventsCheckProc(
     ClientData clientData,
     int flags)
 {
-    ThreadSpecificData *tsdPtr = Tcl_GetThreadData(&dataKey,
-	    sizeof(ThreadSpecificData));
-
-    if (!(flags & TCL_WINDOW_EVENTS) ||  tsdPtr->inTrackingLoop) {
-	return;
-    } else {
+    if (flags & TCL_WINDOW_EVENTS) {
 	NSEvent *currentEvent = nil, *event;
-
- 	do {
+	TSD_INIT();
+	do {
 	    if (tsdPtr->currentEvent) {
 		currentEvent = tsdPtr->currentEvent;
 		CFRelease(currentEvent);
@@ -226,55 +220,10 @@ TkMacOSXEventsCheckProc(
 		TKLog(@"   event: %@", event);
 #endif
 		objc_clear_stack(0);
-		TkMacOSXTrackingLoop(1);
 		[NSApp sendEvent:event];
-		TkMacOSXTrackingLoop(0);
 		objc_collect(OBJC_COLLECT_IF_NEEDED);
 	    }
 	} while (currentEvent);
-    }
-}
-
-/*
- *----------------------------------------------------------------------
- *
- * TkMacOSXTrackingLoop --
- *
- *	Call with 1 before entering a mouse tracking loop (e.g. window
- *	resizing or menu tracking) to enable tcl event processing but
- *	disable  carbon event processing (except for update events)
- *	during the loop, and with 0 after exiting the loop to reset.
- *
- * Results:
- *	None.
- *
- * Side effects:
- *	None.
- *
- *----------------------------------------------------------------------
- */
-
-MODULE_SCOPE void
-TkMacOSXTrackingLoop(int tracking)
-{
-    ThreadSpecificData *tsdPtr = Tcl_GetThreadData(&dataKey,
-	    sizeof(ThreadSpecificData));
-
-    if (tracking) {
-	if (!tsdPtr->inTrackingLoop++) {
-	    tsdPtr->previousServiceMode = Tcl_SetServiceMode(TCL_SERVICE_ALL);
-	}
-#ifdef TK_MAC_DEBUG_CARBON_EVENTS
-	TkMacOSXDbgMsg("Entering tracking loop");
-#endif /* TK_MAC_DEBUG_CARBON_EVENTS */
-    } else {
-	if (!--tsdPtr->inTrackingLoop) {
-	    tsdPtr->previousServiceMode =
-		    Tcl_SetServiceMode(tsdPtr->previousServiceMode);
-	}
-#ifdef TK_MAC_DEBUG_CARBON_EVENTS
-	TkMacOSXDbgMsg("Exiting tracking loop");
-#endif /* TK_MAC_DEBUG_CARBON_EVENTS */
     }
 }
 

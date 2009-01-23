@@ -215,7 +215,6 @@ MODULE_SCOPE void	TkMacOSXRestoreDrawingContext(
 			    TkMacOSXDrawingContext *dcPtr);
 MODULE_SCOPE void	TkMacOSXSetColorInContext(unsigned long pixel,
 			    CGContextRef context);
-MODULE_SCOPE void	TkMacOSXTrackingLoop(int tracking);
 MODULE_SCOPE int	TkMacOSXMakeFullscreen(TkWindow *winPtr,
 			    NSWindow *window, int fullscreen,
 			    Tcl_Interp *interp);

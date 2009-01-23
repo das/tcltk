@@ -62,7 +62,6 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
 #ifdef TK_MAC_DEBUG_NOTIFICATIONS
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
 #endif
-    //TkMacOSXTrackingLoop(1);
 }
 - (void)windowBoundsChanged:(NSNotification *)notification {
 #ifdef TK_MAC_DEBUG_NOTIFICATIONS
@@ -110,7 +109,6 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
 #endif
     //BOOL start = [[notification name] isEqualToString:NSWindowWillStartLiveResizeNotification];
-    //TkMacOSXTrackingLoop(start ? 1 : 0);
 }
 /* TODO: this is received too late (after NSWindowDidBecomeKeyNotification) */
 - (void)windowExpanded:(NSNotification *)notification {
