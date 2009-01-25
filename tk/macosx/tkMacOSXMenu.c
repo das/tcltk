@@ -184,13 +184,15 @@ static void	RecursivelyClearActiveMenu(TkMenu *menuPtr);
     TkMenuEntry *mePtr = (TkMenuEntry *)[(NSMenuItem *)sender tag];
     if (menuPtr && mePtr) {
 	Tcl_Interp *interp = menuPtr->interp;
-	Tcl_Preserve((ClientData)interp);
+	Tcl_Preserve(interp);
+	Tcl_Preserve(menuPtr);
 	int result = TkInvokeMenu(interp, menuPtr, mePtr->index);
 	if (result != TCL_OK && result != TCL_CONTINUE && result != TCL_BREAK) {
 	    Tcl_AddErrorInfo(interp, "\n    (menu invoke)");
 	    Tcl_BackgroundException(interp, result);
 	}
-	Tcl_Release((ClientData)interp);
+	Tcl_Release(menuPtr);
+	Tcl_Release(interp);
     }
 }
 - (void)tkMenuItemInvokeByKeyEquivalent:(id)sender {
@@ -237,9 +239,19 @@ static void	RecursivelyClearActiveMenu(TkMenu *menuPtr);
     GenerateMenuSelectEvent(self, item);
 }
 - (void)menuNeedsUpdate:(NSMenu*)menu {
-    Tcl_Preserve((ClientData) _tkMenu);
-    TkPostCommand(_tkMenu);
-    Tcl_Release((ClientData) _tkMenu);
+    TkMenu *menuPtr = (TkMenu *)_tkMenu;
+    if (menuPtr) {
+	Tcl_Interp *interp = menuPtr->interp;
+	Tcl_Preserve(interp);
+	Tcl_Preserve(menuPtr);
+	int result = TkPostCommand(_tkMenu);
+	if (result != TCL_OK && result != TCL_CONTINUE && result != TCL_BREAK) {
+	    Tcl_AddErrorInfo(interp, "\n    (menu preprocess)");
+	    Tcl_BackgroundException(interp, result);
+	}
+	Tcl_Release(menuPtr);
+	Tcl_Release(interp);
+    }
 }
 @end
 
