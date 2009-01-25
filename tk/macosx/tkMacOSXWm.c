@@ -293,6 +293,49 @@ FrontWindowOfLevelAndClass(
 
     return win;
 }
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * FrontWindowAtPoint --
+ *
+ *	Find frontmost toplevel window at a given screen location.
+ *
+ * Results:
+ *	TkWindow*.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+static TkWindow*
+FrontWindowAtPoint(
+    int x, int y)
+{
+
+    NSPoint p = NSMakePoint(x, tkMacOSXZeroScreenHeight - y);
+    NSWindow *win = nil;
+    NSInteger windowCount;
+    NSInteger *windowNumbers;
+
+    NSCountWindows(&windowCount);
+    if (windowCount) {
+	windowNumbers = (NSInteger *) ckalloc(windowCount * sizeof(NSInteger));
+	NSWindowList(windowCount, windowNumbers);
+	for (NSInteger index = 0; index < windowCount; index++) {
+	    NSWindow *w = [NSApp windowWithWindowNumber:windowNumbers[index]];
+	    if (w && NSMouseInRect(p, [w frame], NO)) {
+		win = w;
+		break;
+	    }
+	}
+	ckfree((char *) windowNumbers);
+    }
+    return (win ? TkMacOSXGetTkWindow(win) : NULL);
+}
+
 
 /*
  *----------------------------------------------------------------------
@@ -3911,29 +3954,7 @@ Tk_CoordsToWindow(
      * Step 1: find the top-level window that contains the desired point.
      */
 
-    NSPoint p = NSMakePoint(rootX, tkMacOSXZeroScreenHeight - rootY);
-    NSWindow *win = nil;
-    NSInteger windowCount;
-    NSInteger *windowNumbers;
-
-    NSCountWindows(&windowCount);
-    if (windowCount) {
-	windowNumbers = (NSInteger *) ckalloc(windowCount * sizeof(NSInteger));
-	NSWindowList(windowCount, windowNumbers);
-	for (NSInteger index = 0; index < windowCount; index++) {
-	    NSWindow *w = [NSApp windowWithWindowNumber:windowNumbers[index]];
-	    if (w && NSMouseInRect(p, [w frame], NO)) {
-		win = w;
-		break;
-	    }
-	}
-	ckfree((char *) windowNumbers);
-    }
-
-    if (!win) {
-	return NULL;
-    }
-    winPtr = TkMacOSXGetTkWindow(win);
+    winPtr = FrontWindowAtPoint(rootX, rootY);
     if (!winPtr) {
 	return NULL;
     }
