@@ -230,6 +230,7 @@ MODULE_SCOPE NSColor*	TkMacOSXGetNSColor(unsigned long pixel);
 MODULE_SCOPE Tcl_Obj *	TkMacOSXGetStringObjFromCFString(CFStringRef str);
 MODULE_SCOPE TkWindow*	TkMacOSXGetTkWindow(NSWindow *w);
 MODULE_SCOPE NSFont*	TkMacOSXNSFontForFont(Tk_Font tkfont);
+MODULE_SCOPE NSDictionary* TkMacOSXNSFontAttributesForFont(Tk_Font tkfont);
 
 #pragma mark -
 

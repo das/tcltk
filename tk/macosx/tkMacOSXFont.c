@@ -1052,7 +1052,30 @@ MODULE_SCOPE NSFont*
 TkMacOSXNSFontForFont(
     Tk_Font tkfont)
 {
-    return ((MacFont *)tkfont)->nsFont;
+    return tkfont ? ((MacFont *)tkfont)->nsFont : nil;
+}
+
+/*
+ *---------------------------------------------------------------------------
+ *
+ * TkMacOSXNSFontAttributesForFont --
+ *
+ *	Return an NSDictionary of font attributes for the given Tk_Font.
+ *
+ * Results:
+ *	NSFont*.
+ *
+ * Side effects:
+ *	None.
+ *
+ *---------------------------------------------------------------------------
+ */
+
+MODULE_SCOPE NSDictionary*
+TkMacOSXNSFontAttributesForFont(
+    Tk_Font tkfont)
+{
+    return tkfont ? ((MacFont *)tkfont)->nsAttributes : nil;
 }
 
 /*
