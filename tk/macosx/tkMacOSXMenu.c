@@ -138,6 +138,13 @@ static void	RecursivelyClearActiveMenu(TkMenu *menuPtr);
     }
     return self;
 }
+- (id)copyWithZone:(NSZone *)zone {
+    TKMenu *copy = [super copyWithZone:zone];
+    copy->_tkMenu = _tkMenu;
+    copy->_tkOffset = _tkOffset;
+    copy->_tkSpecial = _tkSpecial;
+    return copy;
+}
 - (TkMenu *)tkMenu {
     return _tkMenu;
 }
