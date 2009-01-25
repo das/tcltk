@@ -5,7 +5,8 @@
  *
  * Copyright (c) 1995-1997 Sun Microsystems, Inc.
  * Copyright 2001, Apple Computer, Inc.
- * Copyright (c) 2006-2007 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright (c) 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright 2008-2009, Apple Inc.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -15,21 +16,20 @@
 
 #include "tkMacOSXPrivate.h"
 #include "tkSelect.h"
-
 
 /*
  *----------------------------------------------------------------------
  *
  * TkSelGetSelection --
  *
- *	Retrieve the specified selection from another process. For
- *	now, only fetching XA_STRING from CLIPBOARD is supported.
- *	Eventually other types should be allowed.
+ *	Retrieve the specified selection from another process. For now, only
+ *	fetching XA_STRING from CLIPBOARD is supported. Eventually other types
+ *	should be allowed.
  *
  * Results:
- *	The return value is a standard Tcl return value.
- *	If an error occurs (such as no selection exists)
- *	then an error message is left in the interp's result.
+ *	The return value is a standard Tcl return value. If an error occurs
+ *	(such as no selection exists) then an error message is left in the
+ *	interp's result.
  *
  * Side effects:
  *	None.
@@ -50,6 +50,7 @@ TkSelGetSelection(
 				 * once it has been retrieved. */
     ClientData clientData)	/* Arbitrary value to pass to proc. */
 {
+#ifdef MAC_OSX_TK_TODO
     int result;
     OSStatus err;
     long length;
@@ -72,27 +73,28 @@ TkSelGetSelection(
 	/*
 	 * Try UNICODE first
 	 */
+
 	err = ChkErr(GetScrapFlavorSize, scrapRef, kScrapFlavorTypeUnicode,
 		&length);
 	if (err == noErr && length > 0) {
 	    Tcl_DString ds;
 	    char *data;
 
-	    buf = (char *) ckalloc(length + 2);
+	    buf = ckalloc(length + 2);
 	    buf[length] = 0;
 	    buf[length+1] = 0; /* 2-byte unicode null */
 	    err = ChkErr(GetScrapFlavorData, scrapRef, kScrapFlavorTypeUnicode,
 		    &length, buf);
 	    if (err == noErr) {
 		Tcl_DStringInit(&ds);
-		Tcl_UniCharToUtfDString((Tcl_UniChar *)buf,
-			Tcl_UniCharLen((Tcl_UniChar *)buf), &ds);
+		Tcl_UniCharToUtfDString((Tcl_UniChar *) buf,
+			Tcl_UniCharLen((Tcl_UniChar *) buf), &ds);
 		for (data = Tcl_DStringValue(&ds); *data != '\0'; data++) {
 		    if (*data == '\r') {
 			*data = '\n';
 		    }
 		}
-		result = (*proc)(clientData, interp, Tcl_DStringValue(&ds));
+		result = proc(clientData, interp, Tcl_DStringValue(&ds));
 		Tcl_DStringFree(&ds);
 		ckfree(buf);
 		return result;
@@ -109,7 +111,7 @@ TkSelGetSelection(
 	    Tcl_DString encodedText;
 	    char *data;
 
-	    buf = (char *) ckalloc(length + 1);
+	    buf = ckalloc(length + 1);
 	    buf[length] = 0;
 	    err = ChkErr(GetScrapFlavorData, scrapRef, 'TEXT', &length, buf);
 	    if (err != noErr) {
@@ -130,14 +132,14 @@ TkSelGetSelection(
 
 	    Tcl_ExternalToUtfDString(TkMacOSXCarbonEncoding, buf, length,
 		    &encodedText);
-	    result = (*proc)(clientData, interp,
-		    Tcl_DStringValue(&encodedText));
+	    result = proc(clientData, interp, Tcl_DStringValue(&encodedText));
 	    Tcl_DStringFree(&encodedText);
 
 	    ckfree(buf);
 	    return result;
 	}
     }
+#endif
 
     Tcl_AppendResult(interp, Tk_GetAtomName(tkwin, selection),
 	    " selection doesn't exist or form \"",
@@ -150,9 +152,8 @@ TkSelGetSelection(
  *
  * TkSetSelectionOwner --
  *
- *	This function claims ownership of the specified selection.
- *	If the selection is CLIPBOARD, then we empty the system
- *	clipboard.
+ *	This function claims ownership of the specified selection. If the
+ *	selection is CLIPBOARD, then we empty the system clipboard.
  *
  * Results:
  *	None.
@@ -174,23 +175,25 @@ XSetSelectionOwner(
     TkDisplay *dispPtr;
 
     /*
-     * This is a gross hack because the Tk_InternAtom interface is broken.
-     * It expects a Tk_Window, even though it only needs a Tk_Display.
+     * This is a gross hack because the Tk_InternAtom interface is broken. It
+     * expects a Tk_Window, even though it only needs a Tk_Display.
      */
 
     tkwin = (Tk_Window) TkGetMainInfoList()->winPtr;
 
     if (selection == Tk_InternAtom(tkwin, "CLIPBOARD")) {
 	/*
-	 * Only claim and empty the clipboard if we aren't already the
-	 * owner of the clipboard.
+	 * Only claim and empty the clipboard if we aren't already the owner
+	 * of the clipboard.
 	 */
 
 	dispPtr = TkGetMainInfoList()->winPtr->dispPtr;
 	if (dispPtr->clipboardActive) {
 	    return;
 	}
+#ifdef MAC_OSX_TK_TODO
 	ClearCurrentScrap();
+#endif
     }
 }
 
@@ -199,9 +202,8 @@ XSetSelectionOwner(
  *
  * TkSelUpdateClipboard --
  *
- *	This function is called to force the clipboard to be updated
- *	after new data is added. On the Mac we don't need to do
- *	anything.
+ *	This function is called to force the clipboard to be updated after new
+ *	data is added. On the Mac we don't need to do anything.
  *
  * Results:
  *	None.
@@ -225,8 +227,7 @@ TkSelUpdateClipboard(
  *
  * TkSelEventProc --
  *
- *	This procedure is invoked whenever a selection-related
- *	event occurs.
+ *	This procedure is invoked whenever a selection-related event occurs.
  *
  * Results:
  *	None.
@@ -253,9 +254,8 @@ TkSelEventProc(
  *
  * TkSelPropProc --
  *
- *	This procedure is invoked when property-change events
- *	occur on windows not known to the toolkit. This is a stub
- *	function under Windows.
+ *	This procedure is invoked when property-change events occur on windows
+ *	not known to the toolkit. This is a stub function under Windows.
  *
  * Results:
  *	None.
@@ -277,8 +277,8 @@ TkSelPropProc(
  *
  * TkSuspendClipboard --
  *
- *	Handle clipboard conversion as required by the suppend event.
- *	This function is also called on exit.
+ *	Handle clipboard conversion as required by the suppend event. This
+ *	function is also called on exit.
  *
  * Results:
  *	None.
@@ -292,6 +292,7 @@ TkSelPropProc(
 void
 TkSuspendClipboard(void)
 {
+#ifdef MAC_OSX_TK_TODO
     TkClipboardTarget *targetPtr;
     TkClipboardBuffer *cbPtr;
     TkDisplay *dispPtr;
@@ -354,11 +355,12 @@ TkSuspendClipboard(void)
 
 	ckfree(buffer);
     }
+#endif
 
     /*
-     * The system now owns the scrap. We tell Tk that it has
-     * lost the selection so that it will look for it the next time
-     * it needs it. (Window list NULL if quiting.)
+     * The system now owns the scrap. We tell Tk that it has lost the
+     * selection so that it will look for it the next time it needs it.
+     * (Window list NULL if quiting.)
      */
 
     if (TkGetMainInfoList() != NULL) {
@@ -369,3 +371,12 @@ TkSuspendClipboard(void)
 
     return;
 }
+
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 4
+ * fill-column: 79
+ * coding: utf-8
+ * End:
+ */

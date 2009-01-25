@@ -5,7 +5,8 @@
  *
  * Copyright (c) 1996-1997 Sun Microsystems, Inc.
  * Copyright 2001, Apple Computer, Inc.
- * Copyright (c) 2006-2007 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright (c) 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright 2008-2009, Apple Inc.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -15,6 +16,8 @@
 
 #include "tkMacOSXPrivate.h"
 #include "tkFileFilter.h"
+
+#ifdef MAC_OSX_TK_TODO
 
 #ifndef StrLength
 #define StrLength(s)	(*((unsigned char *) (s)))
@@ -128,18 +131,17 @@ Tk_ChooseColorObjCmd(
     ClientData clientData,	/* Main window associated with interpreter. */
     Tcl_Interp *interp,		/* Current interpreter. */
     int objc,			/* Number of arguments. */
-    Tcl_Obj *CONST objv[])	/* Argument objects. */
+    Tcl_Obj *const objv[])	/* Argument objects. */
 {
     OSStatus err;
     int result = TCL_ERROR;
     Tk_Window parent, tkwin = clientData;
     const char *title;
     int i, srcRead, dstWrote;
-    CMError cmerr;
     CMProfileRef prof;
     NColorPickerInfo cpinfo;
     static RGBColor color = {0xffff, 0xffff, 0xffff};
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"-initialcolor", "-parent", "-title", NULL
     };
     enum options {
@@ -196,7 +198,7 @@ Tk_ChooseColorObjCmd(
 	}
     }
 
-    cmerr = CMGetDefaultProfileBySpace(cmRGBData, &prof);
+    ChkErr(CMGetDefaultProfileBySpace, cmRGBData, &prof);
     cpinfo.theColor.profile = prof;
     cpinfo.dstProfile = prof;
     cpinfo.flags = kColorPickerDialogIsMoveable | kColorPickerDialogIsModal;
@@ -209,7 +211,7 @@ Tk_ChooseColorObjCmd(
     TkMacOSXTrackingLoop(1);
     err = ChkErr(NPickColor, &cpinfo);
     TkMacOSXTrackingLoop(0);
-    cmerr = CMCloseProfile(prof);
+    ChkErr(CMCloseProfile, prof);
     if ((err == noErr) && (cpinfo.newColorChosen != 0)) {
 	char colorstr[8];
 
@@ -249,7 +251,7 @@ Tk_GetOpenFileObjCmd(
     ClientData clientData,	/* Main window associated with interpreter. */
     Tcl_Interp *interp,		/* Current interpreter. */
     int objc,			/* Number of arguments. */
-    Tcl_Obj *CONST objv[])	/* Argument objects. */
+    Tcl_Obj *const objv[])	/* Argument objects. */
 {
     int i, result = TCL_ERROR, multiple = 0;
     OpenFileData ofd;
@@ -262,7 +264,7 @@ Tk_GetOpenFileObjCmd(
     char *initialFile = NULL, *initialDir = NULL;
     Tcl_Obj *typeVariablePtr = NULL;
     const char *initialtype = NULL;
-    static const char *openOptionStrings[] = {
+    static const char *const openOptionStrings[] = {
 	"-defaultextension", "-filetypes", "-initialdir", "-initialfile",
 	"-message", "-multiple", "-parent", "-title", "-typevariable", NULL
     };
@@ -417,7 +419,7 @@ Tk_GetSaveFileObjCmd(
     ClientData clientData,	/* Main window associated with interpreter. */
     Tcl_Interp *interp,		/* Current interpreter. */
     int objc,			/* Number of arguments. */
-    Tcl_Obj *CONST objv[])	/* Argument objects. */
+    Tcl_Obj *const objv[])	/* Argument objects. */
 {
     int i, result = TCL_ERROR;
     char *initialFile = NULL;
@@ -427,7 +429,7 @@ Tk_GetSaveFileObjCmd(
     FSRef dirRef;
     CFStringRef title = NULL, message = NULL;
     OpenFileData ofd;
-    static const char *saveOptionStrings[] = {
+    static const char *const saveOptionStrings[] = {
 	"-defaultextension", "-filetypes", "-initialdir", "-initialfile",
 	"-message", "-parent", "-title", "-typevariable", NULL
     };
@@ -551,7 +553,7 @@ Tk_ChooseDirectoryObjCmd(
     ClientData clientData,	/* Main window associated with interpreter. */
     Tcl_Interp *interp,		/* Current interpreter. */
     int objc,			/* Number of arguments. */
-    Tcl_Obj *CONST objv[])	/* Argument objects. */
+    Tcl_Obj *const objv[])	/* Argument objects. */
 {
     int i, result = TCL_ERROR;
     Tk_Window parent = NULL;
@@ -559,7 +561,7 @@ Tk_ChooseDirectoryObjCmd(
     FSRef dirRef;
     CFStringRef message = NULL, title = NULL;
     OpenFileData ofd;
-    static const char *chooseOptionStrings[] = {
+    static const char *const chooseOptionStrings[] = {
 	"-initialdir", "-message", "-mustexist", "-parent", "-title", NULL
     };
     enum chooseOptions {
@@ -801,17 +803,6 @@ NavServicesGetFile(
     if (parent && ((TkWindow *) parent)->window != None &&
 	    TkMacOSXHostToplevelExists(parent)) {
 	options.parentWindow = TkMacOSXDrawableWindow(Tk_WindowId(parent));
-	TK_IF_HI_TOOLBOX (5,
-	    /*
-	     * Impossible to modify dialog modality with the Cocoa-based
-	     * NavServices implementation.
-	     */
-	) TK_ELSE_HI_TOOLBOX (5,
-	    if (options.parentWindow) {
-		options.modality = kWindowModalityWindowModal;
-		data.sheet = 1;
-	    }
-	) TK_ENDIF
     }
 
     /*
@@ -1328,14 +1319,14 @@ MatchOneType(
 
     return UNMATCHED;
 }
+#endif
 
 /*
  *----------------------------------------------------------------------
  *
  * TkAboutDlg --
  *
- *	Displays the default Tk About box. This code uses Macintosh resources
- *	to define the content of the About Box.
+ *	Displays the default Tk About box.
  *
  * Results:
  *	None.
@@ -1349,24 +1340,51 @@ MatchOneType(
 void
 TkAboutDlg(void)
 {
-    DialogPtr aboutDlog;
-    WindowRef windowRef;
-    short itemHit = -9;
-
-    aboutDlog = GetNewDialog(TK_DEFAULT_ABOUT, NULL, (void *) (-1));
-    if (!aboutDlog) {
-	return;
+    NSImage *image;
+    NSString *path = [[NSApp tkFrameworkBundle]
+	    pathForImageResource:@"Tk.tiff"];
+#ifdef TK_MAC_DEBUG
+    if (!path) {
+	// FIXME: fallback to absolute path specific to my box
+	path = @"/Volumes/Users/steffen/Development/TclTk/git/HEAD/tk/macosx/Tk.tiff";
+	TkMacOSXDbgMsg("Fallback to hardcoded path!");
     }
-    windowRef = GetDialogWindow(aboutDlog);
-    SelectWindow(windowRef);
-    TkMacOSXTrackingLoop(1);
-    while (itemHit != 1) {
-	ModalDialog(NULL, &itemHit);
+#endif
+    if (path) {
+	image = [[NSImage alloc] initWithContentsOfFile:path];
+    } else {
+	image = [NSImage imageNamed:@"NSApplicationIcon"];
     }
-    TkMacOSXTrackingLoop(0);
-    DisposeDialog(aboutDlog);
-    SelectWindow(ActiveNonFloatingWindow());
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
+    [dateFormatter setDateFormat:@"Y"];
+    NSString *year = [dateFormatter stringFromDate:[NSDate date]];
+    NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+    [style setAlignment:NSCenterTextAlignment];
+    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
+	    @"Tcl & Tk", @"ApplicationName",
+	    @"Tcl " TCL_VERSION " & Tk " TK_VERSION, @"ApplicationVersion",
+	    @TK_PATCH_LEVEL, @"Version",
+	    image, @"ApplicationIcon",
+	    [NSString stringWithFormat:@"Copyright %1$C 1996-%2$@.", 0xA9,
+	    year], @"Copyright",
+	    [[NSAttributedString alloc] initWithString:
+	    [NSString stringWithFormat:
+	    @"%1$C 2002-%2$@ Tcl Core Team." "\n\n"
+	     "%1$C 2002-%2$@ Daniel A. Steffen." "\n\n"
+	     "Daniel A. Steffen" "\n"
+	     "%1$C 2008-2009 Apple Inc." "\n\n"
+	     "Jim Ingham & Ian Reid" "\n"
+	     "%1$C 2001-2002 Apple Computer, Inc." "\n\n"
+	     "Jim Ingham & Ray Johnson" "\n"
+	     "%1$C 1998-2000 Scriptics Inc." "\n"
+	     "%1$C 1996-1997 Sun Microsystems Inc.", 0xA9, year] attributes:
+	    [NSDictionary dictionaryWithObject:style
+	    forKey:NSParagraphStyleAttributeName]], @"Credits",
+	    nil];
+    [NSApp orderFrontStandardAboutPanelWithOptions:options];
 }
+#ifdef MAC_OSX_TK_TODO
 
 /*
  *----------------------------------------------------------------------
@@ -1389,7 +1407,7 @@ Tk_MessageBoxObjCmd(
     ClientData clientData,	/* Main window associated with interpreter. */
     Tcl_Interp *interp,		/* Current interpreter. */
     int objc,			/* Number of arguments. */
-    Tcl_Obj *CONST objv[])	/* Argument objects. */
+    Tcl_Obj *const objv[])	/* Argument objects. */
 {
     Tk_Window tkwin = clientData;
     AlertStdCFStringAlertParamRec paramCFStringRec;
@@ -1404,18 +1422,18 @@ Tk_MessageBoxObjCmd(
     int defaultNativeButtonIndex; /* 1, 2, 3: right to left */
     int typeIndex, i, indexDefaultOption = 0, result = TCL_ERROR;
 
-    static const char *movableAlertStrings[] = {
+    static const char *const movableAlertStrings[] = {
 	"-default", "-detail", "-icon", "-message", "-parent", "-title",
 	"-type", NULL
     };
-    static const char *movableTypeStrings[] = {
+    static const char *const movableTypeStrings[] = {
 	"abortretryignore", "ok", "okcancel", "retrycancel", "yesno",
 	"yesnocancel", NULL
     };
-    static const char *movableButtonStrings[] = {
+    static const char *const movableButtonStrings[] = {
 	"abort", "retry", "ignore", "ok", "cancel", "yes", "no", NULL
     };
-    static const char *movableIconStrings[] = {
+    static const char *const movableIconStrings[] = {
 	"error", "info", "question", "warning", NULL
     };
     enum movableAlertOptions {
@@ -1552,6 +1570,7 @@ Tk_MessageBoxObjCmd(
 	    break;
 
 	case ALERT_TITLE:
+	    /* TODO: message box title missing? */
 	    break;
 
 	case ALERT_TYPE:
@@ -1598,7 +1617,6 @@ Tk_MessageBoxObjCmd(
 	 * we do this here.
 	 */
 
-	str = Tcl_GetString(objv[indexDefaultOption + 1]);
 	if (Tcl_GetIndexFromObj(interp, objv[indexDefaultOption + 1],
 		movableButtonStrings, "value", TCL_EXACT, &defaultButtonIndex)
 		!= TCL_OK) {
@@ -1742,3 +1760,13 @@ AlertHandler(
     }
     return eventNotHandledErr;
 }
+#endif
+
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 4
+ * fill-column: 79
+ * coding: utf-8
+ * End:
+ */

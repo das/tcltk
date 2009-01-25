@@ -5,7 +5,8 @@
  *
  * Copyright (c) 1995-1997 Sun Microsystems, Inc.
  * Copyright 2001, Apple Computer, Inc.
- * Copyright (c) 2005-2007 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright (c) 2005-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright 2008-2009, Apple Inc.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -21,7 +22,11 @@
 #endif
 
 #define TextStyle MacTextStyle
+#include <ApplicationServices/ApplicationServices.h>
+#include <Cocoa/Cocoa.h>
+#ifndef NO_CARBON_H
 #include <Carbon/Carbon.h>
+#endif
 #undef TextStyle
 
 /*
@@ -34,9 +39,8 @@
 
 struct TkWindowPrivate {
     TkWindow *winPtr;		/* Ptr to tk window or NULL if Pixmap */
-    CGrafPtr grafPtr;
+    NSView *view;
     CGContextRef context;
-    ControlRef rootControl;
     int xOff;			/* X offset from toplevel window */
     int yOff;			/* Y offset from toplevel window */
     CGSize size;
@@ -50,18 +54,6 @@ struct TkWindowPrivate {
     int flags;			/* Various state see defines below. */
 };
 typedef struct TkWindowPrivate MacDrawable;
-
-/*
- * This list is used to keep track of toplevel windows that have a Mac
- * window attached. This is useful for several things, not the least
- * of which is maintaining floating windows.
- */
-
-typedef struct TkMacOSXWindowList {
-    struct TkMacOSXWindowList *nextPtr;
-				/* The next window in the list. */
-    TkWindow *winPtr;		/* This window */
-} TkMacOSXWindowList;
 
 /*
  * Defines use for the flags field of the MacDrawable data structure.
@@ -130,32 +122,6 @@ MODULE_SCOPE TkMacOSXEmbedHandler *tkMacOSXEmbedHandler;
 
 #define TK_LAYOUT_WITH_BASE_CHUNKS	1
 #define TK_DRAW_IN_CONTEXT		1
-
-#if !TK_DRAW_IN_CONTEXT
-MODULE_SCOPE int TkMacOSXCompareColors(unsigned long c1, unsigned long c2);
-#endif
-
-/*
- * Globals shared among TkAqua.
- */
-
-MODULE_SCOPE MenuHandle tkCurrentAppleMenu; /* Handle to current Apple Menu */
-MODULE_SCOPE MenuHandle tkAppleMenu;	/* Handle to default Apple Menu */
-MODULE_SCOPE MenuHandle tkFileMenu;	/* Handles to menus */
-MODULE_SCOPE MenuHandle tkEditMenu;	/* Handles to menus */
-MODULE_SCOPE int tkPictureIsOpen;	/* If this is 1, we are drawing to a
-					 * picture The clipping should then be
-					 * done relative to the bounds of the
-					 * picture rather than the window. As
-					 * of OS X.0.4, something is seriously
-					 * wrong: The clipping bounds only
-					 * seem to work if the top,left values
-					 * are 0,0 The destination rectangle
-					 * for CopyBits should also have
-					 * top,left values of 0,0
-					 */
-MODULE_SCOPE TkMacOSXWindowList *tkMacOSXWindowListPtr; /* List of toplevels */
-MODULE_SCOPE Tcl_Encoding TkMacOSXCarbonEncoding;
 
 /*
  * Prototypes of internal procs not in the stubs table.

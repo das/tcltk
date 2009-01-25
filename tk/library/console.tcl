@@ -69,10 +69,7 @@ proc ::tk::ConsoleInit {} {
 	    -command {wm withdraw .}
     AmpMenuArgs .menubar.file add command -label [mc "&Clear Console"] \
 	    -command {.console delete 1.0 "promptEnd linestart"}
-    if {[tk windowingsystem] eq "aqua"} {
-	AmpMenuArgs .menubar.file add command \
-		-label [mc &Quit] -command {exit} -accel "Cmd-Q"
-    } else {
+    if {[tk windowingsystem] ne "aqua"} {
 	AmpMenuArgs .menubar.file add command -label [mc E&xit] -command {exit}
     }
 
@@ -102,6 +99,11 @@ proc ::tk::ConsoleInit {} {
         -accel "$mod++" -command {event generate .console <<Console_FontSizeIncr>>}
     AmpMenuArgs .menubar.edit add command -label [mc "&Decrease Font Size"] \
         -accel "$mod+-" -command {event generate .console <<Console_FontSizeDecr>>}
+
+    if {[tk windowingsystem] eq "aqua"} {
+	.menubar add cascade -label [mc Window] -menu [menu .menubar.window]
+	.menubar add cascade -label [mc Help] -menu [menu .menubar.help]
+    }
 
     . configure -menu .menubar
 

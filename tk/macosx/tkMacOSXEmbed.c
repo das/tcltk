@@ -9,10 +9,11 @@
  *
  * Copyright (c) 1996-1997 Sun Microsystems, Inc.
  * Copyright 2001, Apple Computer, Inc.
- * Copyright (c) 2006-2008 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright (c) 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright 2008-2009, Apple Inc.
  *
- * See the file "license.terms" for information on usage and redistribution of
- * this file, and for a DISCLAIMER OF ALL WARRANTIES.
+ * See the file "license.terms" for information on usage and redistribution
+ * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
  *  RCS: @(#) $Id$
  */
@@ -148,7 +149,7 @@ TkpMakeWindow(
 	macWin->drawRect = CGRectNull;
 	macWin->referenceCount = 0;
 	macWin->flags = TK_CLIP_INVALID;
-	macWin->grafPtr = NULL;
+	macWin->view = nil;
 	macWin->context = NULL;
 	macWin->size = CGSizeZero;
 	if (Tk_IsTopLevel(macWin->winPtr)) {
@@ -201,7 +202,7 @@ TkpUseWindow(
 				 * string is bogus. */
     Tk_Window tkwin,		/* Tk window that does not yet have an
 				 * associated X window. */
-    CONST char *string)		/* String identifying an X window to use for
+    const char *string)		/* String identifying an X window to use for
 				 * tkwin; must be an integer value. */
 {
     TkWindow *winPtr = (TkWindow *) tkwin;
@@ -279,7 +280,7 @@ TkpUseWindow(
      * correctly find the container's port.
      */
 
-    macWin->grafPtr = NULL;
+    macWin->view = nil;
     macWin->context = NULL;
     macWin->size = CGSizeZero;
     macWin->visRgn = NULL;
@@ -312,7 +313,7 @@ TkpUseWindow(
 	 */
 
 	if (tkMacOSXEmbedHandler == NULL ||
-		tkMacOSXEmbedHandler->registerWinProc((int) parent,
+		tkMacOSXEmbedHandler->registerWinProc((long) parent,
 		(Tk_Window) winPtr) != TCL_OK) {
 	    Tcl_AppendResult(interp, "The window ID ", string,
 		    " does not correspond to a valid Tk Window.", NULL);
@@ -563,7 +564,7 @@ TkpTestembedCmd(
     ClientData clientData,	/* Main window for application. */
     Tcl_Interp *interp,		/* Current interpreter. */
     int argc,			/* Number of arguments. */
-    CONST char **argv)		/* Argument strings. */
+    const char **argv)		/* Argument strings. */
 {
     int all;
     Container *containerPtr;
@@ -642,6 +643,7 @@ TkpRedirectKeyEvent(
     XEvent *eventPtr)		/* X event to redirect (should be KeyPress or
 				 * KeyRelease). */
 {
+    /* TODO: Implement this or decide it definitely needs no implementation */
 }
 
 /*
@@ -1118,3 +1120,12 @@ EmbedWindowDeleted(
 	ckfree((char *) containerPtr);
     }
 }
+
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 4
+ * fill-column: 79
+ * coding: utf-8
+ * End:
+ */

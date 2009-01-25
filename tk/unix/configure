@@ -9330,14 +9330,14 @@ fi;
 echo "$as_me: WARNING: Aqua can only be used when CoreFoundation is available" >&2;}
 	    tk_aqua=no
 	fi
-	if test ! -d /System/Library/Frameworks/Carbon.framework; then
-	    { echo "$as_me:$LINENO: WARNING: Aqua can only be used when Carbon is available" >&5
-echo "$as_me: WARNING: Aqua can only be used when Carbon is available" >&2;}
+	if test ! -d /System/Library/Frameworks/Cocoa.framework; then
+	    { echo "$as_me:$LINENO: WARNING: Aqua can only be used when Cocoa is available" >&5
+echo "$as_me: WARNING: Aqua can only be used when Cocoa is available" >&2;}
 	    tk_aqua=no
 	fi
-	if test "`uname -r | awk -F. '{print $1}'`" -lt 6; then
-	    { echo "$as_me:$LINENO: WARNING: Aqua requires Mac OS X 10.2 or later" >&5
-echo "$as_me: WARNING: Aqua requires Mac OS X 10.2 or later" >&2;}
+	if test "`uname -r | awk -F. '{print $1}'`" -lt 9; then
+	    { echo "$as_me:$LINENO: WARNING: Aqua requires Mac OS X 10.5 or later" >&5
+echo "$as_me: WARNING: Aqua requires Mac OS X 10.5 or later" >&2;}
 	    tk_aqua=no
 	fi
     fi
@@ -9411,7 +9411,7 @@ echo "${ECHO_T}$tcl_cv_lib_x11_64" >&6
 	fi
 	# remove 64-bit arch flags from CFLAGS et al. for combined 32 & 64 bit
 	# fat builds if configuration does not support 64-bit.
-	if test $tk_aqua = yes -o "$tcl_cv_lib_x11_64" = no; then
+	if test "$tcl_cv_lib_x11_64" = no; then
 	    { echo "$as_me:$LINENO: Removing 64-bit architectures from compiler & linker flags" >&5
 echo "$as_me: Removing 64-bit architectures from compiler & linker flags" >&6;}
 	    for v in CFLAGS CPPFLAGS LDFLAGS; do
@@ -9480,6 +9480,304 @@ fi
 echo "$as_me:$LINENO: result: $tcl_cv_ld_weak_l" >&5
 echo "${ECHO_T}$tcl_cv_ld_weak_l" >&6
     fi
+
+for ac_header in AvailabilityMacros.h
+do
+as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
+if eval "test \"\${$as_ac_Header+set}\" = set"; then
+  echo "$as_me:$LINENO: checking for $ac_header" >&5
+echo $ECHO_N "checking for $ac_header... $ECHO_C" >&6
+if eval "test \"\${$as_ac_Header+set}\" = set"; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+fi
+echo "$as_me:$LINENO: result: `eval echo '${'$as_ac_Header'}'`" >&5
+echo "${ECHO_T}`eval echo '${'$as_ac_Header'}'`" >&6
+else
+  # Is the header compilable?
+echo "$as_me:$LINENO: checking $ac_header usability" >&5
+echo $ECHO_N "checking $ac_header usability... $ECHO_C" >&6
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+$ac_includes_default
+#include <$ac_header>
+_ACEOF
+rm -f conftest.$ac_objext
+if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+  (eval $ac_compile) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_c_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest.$ac_objext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  ac_header_compiler=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+ac_header_compiler=no
+fi
+rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+echo "$as_me:$LINENO: result: $ac_header_compiler" >&5
+echo "${ECHO_T}$ac_header_compiler" >&6
+
+# Is the header present?
+echo "$as_me:$LINENO: checking $ac_header presence" >&5
+echo $ECHO_N "checking $ac_header presence... $ECHO_C" >&6
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+#include <$ac_header>
+_ACEOF
+if { (eval echo "$as_me:$LINENO: \"$ac_cpp conftest.$ac_ext\"") >&5
+  (eval $ac_cpp conftest.$ac_ext) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } >/dev/null; then
+  if test -s conftest.err; then
+    ac_cpp_err=$ac_c_preproc_warn_flag
+    ac_cpp_err=$ac_cpp_err$ac_c_werror_flag
+  else
+    ac_cpp_err=
+  fi
+else
+  ac_cpp_err=yes
+fi
+if test -z "$ac_cpp_err"; then
+  ac_header_preproc=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+  ac_header_preproc=no
+fi
+rm -f conftest.err conftest.$ac_ext
+echo "$as_me:$LINENO: result: $ac_header_preproc" >&5
+echo "${ECHO_T}$ac_header_preproc" >&6
+
+# So?  What about this header?
+case $ac_header_compiler:$ac_header_preproc:$ac_c_preproc_warn_flag in
+  yes:no: )
+    { echo "$as_me:$LINENO: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!" >&5
+echo "$as_me: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!" >&2;}
+    { echo "$as_me:$LINENO: WARNING: $ac_header: proceeding with the compiler's result" >&5
+echo "$as_me: WARNING: $ac_header: proceeding with the compiler's result" >&2;}
+    ac_header_preproc=yes
+    ;;
+  no:yes:* )
+    { echo "$as_me:$LINENO: WARNING: $ac_header: present but cannot be compiled" >&5
+echo "$as_me: WARNING: $ac_header: present but cannot be compiled" >&2;}
+    { echo "$as_me:$LINENO: WARNING: $ac_header:     check for missing prerequisite headers?" >&5
+echo "$as_me: WARNING: $ac_header:     check for missing prerequisite headers?" >&2;}
+    { echo "$as_me:$LINENO: WARNING: $ac_header: see the Autoconf documentation" >&5
+echo "$as_me: WARNING: $ac_header: see the Autoconf documentation" >&2;}
+    { echo "$as_me:$LINENO: WARNING: $ac_header:     section \"Present But Cannot Be Compiled\"" >&5
+echo "$as_me: WARNING: $ac_header:     section \"Present But Cannot Be Compiled\"" >&2;}
+    { echo "$as_me:$LINENO: WARNING: $ac_header: proceeding with the preprocessor's result" >&5
+echo "$as_me: WARNING: $ac_header: proceeding with the preprocessor's result" >&2;}
+    { echo "$as_me:$LINENO: WARNING: $ac_header: in the future, the compiler will take precedence" >&5
+echo "$as_me: WARNING: $ac_header: in the future, the compiler will take precedence" >&2;}
+    (
+      cat <<\_ASBOX
+## ----------------------------- ##
+## Report this to the tk lists.  ##
+## ----------------------------- ##
+_ASBOX
+    ) |
+      sed "s/^/$as_me: WARNING:     /" >&2
+    ;;
+esac
+echo "$as_me:$LINENO: checking for $ac_header" >&5
+echo $ECHO_N "checking for $ac_header... $ECHO_C" >&6
+if eval "test \"\${$as_ac_Header+set}\" = set"; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  eval "$as_ac_Header=\$ac_header_preproc"
+fi
+echo "$as_me:$LINENO: result: `eval echo '${'$as_ac_Header'}'`" >&5
+echo "${ECHO_T}`eval echo '${'$as_ac_Header'}'`" >&6
+
+fi
+if test `eval echo '${'$as_ac_Header'}'` = yes; then
+  cat >>confdefs.h <<_ACEOF
+#define `echo "HAVE_$ac_header" | $as_tr_cpp` 1
+_ACEOF
+
+fi
+
+done
+
+    if test "$ac_cv_header_AvailabilityMacros_h" = yes; then
+	echo "$as_me:$LINENO: checking if weak import is available" >&5
+echo $ECHO_N "checking if weak import is available... $ECHO_C" >&6
+if test "${tcl_cv_cc_weak_import+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+
+	    hold_cflags=$CFLAGS; CFLAGS="$CFLAGS -Werror"
+	    cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+		    #ifdef __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__
+		    #if __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ < 1020
+		    #error __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ < 1020
+		    #endif
+		    #elif MAC_OS_X_VERSION_MIN_REQUIRED < 1020
+		    #error MAC_OS_X_VERSION_MIN_REQUIRED < 1020
+		    #endif
+		    int rand(void) __attribute__((weak_import));
+
+int
+main ()
+{
+rand();
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_c_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  tcl_cv_cc_weak_import=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+tcl_cv_cc_weak_import=no
+fi
+rm -f conftest.err conftest.$ac_objext \
+      conftest$ac_exeext conftest.$ac_ext
+	    CFLAGS=$hold_cflags
+fi
+echo "$as_me:$LINENO: result: $tcl_cv_cc_weak_import" >&5
+echo "${ECHO_T}$tcl_cv_cc_weak_import" >&6
+	if test $tcl_cv_cc_weak_import = yes; then
+
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_WEAK_IMPORT 1
+_ACEOF
+
+	fi
+	echo "$as_me:$LINENO: checking if Darwin SUSv3 extensions are available" >&5
+echo $ECHO_N "checking if Darwin SUSv3 extensions are available... $ECHO_C" >&6
+if test "${tcl_cv_cc_darwin_c_source+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+
+	    hold_cflags=$CFLAGS; CFLAGS="$CFLAGS -Werror"
+	    cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+		    #ifdef __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__
+		    #if __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ < 1050
+		    #error __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ < 1050
+		    #endif
+		    #elif MAC_OS_X_VERSION_MIN_REQUIRED < 1050
+		    #error MAC_OS_X_VERSION_MIN_REQUIRED < 1050
+		    #endif
+		    #define _DARWIN_C_SOURCE 1
+		    #include <sys/cdefs.h>
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext
+if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+  (eval $ac_compile) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_c_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest.$ac_objext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  tcl_cv_cc_darwin_c_source=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+tcl_cv_cc_darwin_c_source=no
+fi
+rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+	    CFLAGS=$hold_cflags
+fi
+echo "$as_me:$LINENO: result: $tcl_cv_cc_darwin_c_source" >&5
+echo "${ECHO_T}$tcl_cv_cc_darwin_c_source" >&6
+	if test $tcl_cv_cc_darwin_c_source = yes; then
+
+cat >>confdefs.h <<\_ACEOF
+#define _DARWIN_C_SOURCE 1
+_ACEOF
+
+	fi
+    fi
 else
     tk_aqua=no
 fi
@@ -9490,8 +9788,9 @@ cat >>confdefs.h <<\_ACEOF
 #define MAC_OSX_TK 1
 _ACEOF
 
-    LIBS="$LIBS -framework Carbon -framework IOKit"
+    LIBS="$LIBS -framework Cocoa -framework Carbon -framework IOKit"
     CFLAGS="$CFLAGS -fpascal-strings"
+    EXTRA_CC_SWITCHES='-x objective-c -std=gnu99 -fobjc-gc-only'
     TK_WINDOWINGSYSTEM=AQUA
     if test -n "${enable_symbols}" -a "${enable_symbols}" != no; then
 
@@ -10850,19 +11149,19 @@ _ACEOF
     EXTRA_INSTALL_BINARIES='@echo "Installing Info.plist to $(LIB_INSTALL_DIR)/Resources" && mkdir -p "$(LIB_INSTALL_DIR)/Resources" && $(INSTALL_DATA) Tk-Info.plist "$(LIB_INSTALL_DIR)/Resources/Info.plist"'
     EXTRA_INSTALL_BINARIES="$EXTRA_INSTALL_BINARIES"' && echo "Installing license.terms to $(LIB_INSTALL_DIR)/Resources" && $(INSTALL_DATA) "$(TOP_DIR)/license.terms" "$(LIB_INSTALL_DIR)/Resources"'
     if test $tk_aqua = yes; then
-        EXTRA_INSTALL_BINARIES="$EXTRA_INSTALL_BINARIES"' && echo "Installing ${TK_RSRC_FILE} to $(LIB_INSTALL_DIR)/Resources" && mkdir -p "$(LIB_INSTALL_DIR)/Resources" && $(INSTALL_DATA) "${TK_RSRC_FILE}" "$(LIB_INSTALL_DIR)/Resources"'
+        EXTRA_INSTALL_BINARIES="$EXTRA_INSTALL_BINARIES"' && echo "Installing Images to $(LIB_INSTALL_DIR)/Resources" && mkdir -p "$(LIB_INSTALL_DIR)/Resources" && for i in Tk.tiff Tk.icns; do $(INSTALL_DATA) "$(MAC_OSX_DIR)/$$i" "$(LIB_INSTALL_DIR)/Resources"; done'
+        EXTRA_INSTALL_BINARIES="$EXTRA_INSTALL_BINARIES"' && echo "Installing Cursors to $(LIB_INSTALL_DIR)/Resources" && mkdir -p "$(LIB_INSTALL_DIR)/Resources" && for i in $(AQUA_RESOURCES); do $(INSTALL_DATA) "$$i" "$(LIB_INSTALL_DIR)/Resources"; done'
         EXTRA_INSTALL_BINARIES="$EXTRA_INSTALL_BINARIES"' && echo "Installing wish$(VERSION) script to $(INSTALL_ROOT)/'"${bindir}"'" && mkdir -p "$(INSTALL_ROOT)/'"${bindir}"'" && printf > "$(INSTALL_ROOT)/'"${bindir}"'/wish$(VERSION)" "#!/bin/sh\n\"\$$(dirname \$$0)'"`eval d="${bindir}"; echo "$d" | sed -e 's#/[^/][^/]*#/..#g'`"'$(bindir)/Wish\" \"\$$@\"" && chmod +x "$(INSTALL_ROOT)/'"${bindir}"'/wish$(VERSION)"'
         bindir="${libdir}/Resources/Wish.app/Contents/MacOS"
         EXTRA_INSTALL_BINARIES="$EXTRA_INSTALL_BINARIES"' && echo "Installing Info.plist to $(BIN_INSTALL_DIR)/.." && $(INSTALL_DATA) Wish-Info.plist "$(BIN_INSTALL_DIR)/../Info.plist" && mv -f "$(BIN_INSTALL_DIR)/wish$(VERSION)" "$(BIN_INSTALL_DIR)/Wish"'
-        EXTRA_INSTALL_BINARIES="$EXTRA_INSTALL_BINARIES"' && echo "Installing Wish.icns to $(BIN_INSTALL_DIR)/../Resources" && mkdir -p "$(BIN_INSTALL_DIR)/../Resources" && $(INSTALL_DATA) "$(MAC_OSX_DIR)/Wish.icns" "$(BIN_INSTALL_DIR)/../Resources"'
-        EXTRA_INSTALL_BINARIES="$EXTRA_INSTALL_BINARIES"' && echo "Installing ${WISH_RSRC_FILE} to $(BIN_INSTALL_DIR)/../Resources" && $(INSTALL_DATA) "${WISH_RSRC_FILE}" "$(BIN_INSTALL_DIR)/../Resources"'
+        EXTRA_INSTALL_BINARIES="$EXTRA_INSTALL_BINARIES"' && echo "Installing Wish.icns to $(BIN_INSTALL_DIR)/../Resources" && mkdir -p "$(BIN_INSTALL_DIR)/../Resources" && $(INSTALL_DATA) "$(MAC_OSX_DIR)/Tk.icns" "$(BIN_INSTALL_DIR)/../Resources/Wish.icns"'
     fi
     EXTRA_INSTALL_BINARIES="$EXTRA_INSTALL_BINARIES"' && echo "Finalizing Tk.framework" && rm -f "$(LIB_INSTALL_DIR)/../Current" && ln -s "$(VERSION)" "$(LIB_INSTALL_DIR)/../Current" && for f in "$(LIB_FILE)" tkConfig.sh Resources Headers PrivateHeaders; do rm -f "$(LIB_INSTALL_DIR)/../../$$f" && ln -s "Versions/Current/$$f" "$(LIB_INSTALL_DIR)/../.."; done && f="$(STUB_LIB_FILE)" && rm -f "$(LIB_INSTALL_DIR)/../../$$f" && ln -s "Versions/$(VERSION)/$$f" "$(LIB_INSTALL_DIR)/../.."'
     # Don't use AC_DEFINE for the following as the framework version define
     # needs to go into the Makefile even when using autoheader, so that we
     # can pick up a potential make override of VERSION. Also, don't put this
     # into CFLAGS as it should not go into tkConfig.sh
-    EXTRA_CC_SWITCHES='-DTK_FRAMEWORK_VERSION=\"$(VERSION)\"'
+    EXTRA_CC_SWITCHES="$EXTRA_CC_SWITCHES"' -DTK_FRAMEWORK_VERSION=\"$(VERSION)\"'
 else
     # libdir must be a fully qualified path and not ${exec_prefix}/lib
     eval libdir="$libdir"
@@ -10885,21 +11184,6 @@ else
             TK_BUILD_LIB_SPEC="-bI:`pwd | sed -e 's/ /\\\\ /g'`/${TK_BUILD_EXP_FILE}"
             TK_LIB_SPEC="-bI:${libdir}/${TK_EXP_FILE}"
         fi
-    fi
-fi
-
-# Support for building the Aqua resource files
-if test $tk_aqua = yes; then
-    LIB_RSRC_FILE='${TK_RSRC_FILE}'
-    APP_RSRC_FILE='${WISH_RSRC_FILE}'
-    REZ=/Developer/Tools/Rez
-    REZ_FLAGS='-d "SystemSevenOrLater=1" -useDF -ro'
-    if test "$SHARED_BUILD" = 0; then
-	EXTRA_INSTALL_BINARIES='@echo "Installing $(TK_RSRC_FILE) to $(LIB_INSTALL_DIR)" && $(INSTALL_DATA) $(TK_RSRC_FILE) "$(LIB_INSTALL_DIR)"'
-	TK_BUILD_LIB_SPEC="$TK_BUILD_LIB_SPEC -sectcreate __TEXT __tk_rsrc `pwd | sed -e 's/ /\\\\ /g'`/\${TK_RSRC_FILE}"
-	TK_LIB_SPEC="$TK_LIB_SPEC -sectcreate __TEXT __tk_rsrc ${libdir}/\${TK_RSRC_FILE}"
-    else
-        TK_SHLIB_LD_EXTRAS="$TK_SHLIB_LD_EXTRAS -sectcreate __TEXT __tk_rsrc \${TK_RSRC_FILE}"
     fi
 fi
 

@@ -5,7 +5,8 @@
  *
  * Copyright (c) 1996-1997 Sun Microsystems, Inc.
  * Copyright 2001, Apple Computer, Inc.
- * Copyright (c) 2006-2007 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright (c) 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright 2008-2009, Apple Inc.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -15,6 +16,7 @@
 
 #include "tkMacOSXInt.h"
 
+#ifdef MAC_OSX_TK_TODO
 /*
  * Depending on the resource type there are different ways to
  * draw native icons.
@@ -67,6 +69,7 @@ static BuiltInIcon builtInIcons[] = {
     {"caution",		TYPE2,	kCautionIcon,				32},
     {NULL,		0,	0,					0}
 };
+#endif
 
 /*
  *----------------------------------------------------------------------
@@ -89,6 +92,7 @@ static BuiltInIcon builtInIcons[] = {
 void
 TkpDefineNativeBitmaps(void)
 {
+#ifdef MAC_OSX_TK_TODO
     Tcl_HashTable *tablePtr = TkGetBitmapPredefTable();
     BuiltInIcon *builtInPtr;
 
@@ -114,6 +118,7 @@ TkpDefineNativeBitmaps(void)
 	    Tcl_SetHashValue(predefHashPtr, predefPtr);
 	}
     }
+#endif
 }
 
 /*
@@ -137,9 +142,10 @@ TkpDefineNativeBitmaps(void)
 Pixmap
 TkpCreateNativeBitmap(
     Display *display,
-    CONST char *source)		/* Info about the icon to build. */
+    const char *source)		/* Info about the icon to build. */
 {
     Pixmap pix;
+#ifdef MAC_OSX_TK_TODO
     Rect destRect;
     CGrafPtr savePort;
     Boolean portChanged;
@@ -171,6 +177,9 @@ TkpCreateNativeBitmap(
     if (portChanged) {
 	QDSwapPort(savePort, NULL);
     }
+#else
+    pix = Tk_GetPixmap(display, None, 32, 32, 0);
+#endif
     return pix;
 }
 
@@ -195,11 +204,12 @@ TkpCreateNativeBitmap(
 Pixmap
 TkpGetNativeAppBitmap(
     Display *display,		/* The display. */
-    CONST char *name,		/* The name of the bitmap. */
+    const char *name,		/* The name of the bitmap. */
     int *width,			/* The width & height of the bitmap. */
     int *height)
 {
     Pixmap pix;
+#ifdef MAC_OSX_TK_TODO
     CGrafPtr savePort;
     Boolean portChanged;
     Rect destRect;
@@ -268,5 +278,19 @@ TkpGetNativeAppBitmap(
     if (portChanged) {
 	QDSwapPort(savePort, NULL);
     }
+#else
+    pix = Tk_GetPixmap(display, None, 32, 32, 0);
+    *width = 32;
+    *height = 32;
+#endif
     return pix;
 }
+
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 4
+ * fill-column: 79
+ * coding: utf-8
+ * End:
+ */

@@ -2,12 +2,13 @@
  * tkMacOSXScrollbar.c --
  *
  *	This file implements the Macintosh specific portion of the scrollbar
- *	widget. The Macintosh scrollbar may also draw a windows grow
- *	region under certain cases.
+ *	widget. The Macintosh scrollbar may also draw a windows grow region
+ *	under certain cases.
  *
  * Copyright (c) 1996 by Sun Microsystems, Inc.
  * Copyright 2001, Apple Computer, Inc.
- * Copyright (c) 2006-2007 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright (c) 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
+ * Copyright 2008-2009, Apple Inc.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -18,6 +19,470 @@
 #include "tkMacOSXPrivate.h"
 #include "tkScrollbar.h"
 #include "tkMacOSXDebug.h"
+
+#ifndef MAC_OSX_TK_TODO
+
+/*
+ * Minimum slider length, in pixels (designed to make sure that the slider is
+ * always easy to grab with the mouse).
+ */
+
+#define MIN_SLIDER_LENGTH	5
+
+/*
+ * Declaration of Unix specific scrollbar structure.
+ */
+
+typedef struct UnixScrollbar {
+    TkScrollbar info;		/* Generic scrollbar info. */
+    GC troughGC;		/* For drawing trough. */
+    GC copyGC;			/* Used for copying from pixmap onto screen. */
+} UnixScrollbar;
+
+/*
+ * The class procedure table for the scrollbar widget. All fields except size
+ * are left initialized to NULL, which should happen automatically since the
+ * variable is declared at this scope.
+ */
+
+Tk_ClassProcs tkpScrollbarProcs = {
+    sizeof(Tk_ClassProcs)	/* size */
+};
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkpCreateScrollbar --
+ *
+ *	Allocate a new TkScrollbar structure.
+ *
+ * Results:
+ *	Returns a newly allocated TkScrollbar structure.
+ *
+ * Side effects:
+ *	Registers an event handler for the widget.
+ *
+ *----------------------------------------------------------------------
+ */
+
+TkScrollbar *
+TkpCreateScrollbar(
+    Tk_Window tkwin)
+{
+    UnixScrollbar *scrollPtr = (UnixScrollbar *)
+	    ckalloc(sizeof(UnixScrollbar));
+
+    scrollPtr->troughGC = None;
+    scrollPtr->copyGC = None;
+
+    Tk_CreateEventHandler(tkwin,
+	    ExposureMask|StructureNotifyMask|FocusChangeMask,
+	    TkScrollbarEventProc, (ClientData) scrollPtr);
+
+    return (TkScrollbar *) scrollPtr;
+}
+
+/*
+ *--------------------------------------------------------------
+ *
+ * TkpDisplayScrollbar --
+ *
+ *	This procedure redraws the contents of a scrollbar window. It is
+ *	invoked as a do-when-idle handler, so it only runs when there's
+ *	nothing else for the application to do.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	Information appears on the screen.
+ *
+ *--------------------------------------------------------------
+ */
+
+void
+TkpDisplayScrollbar(
+    ClientData clientData)	/* Information about window. */
+{
+    register TkScrollbar *scrollPtr = (TkScrollbar *) clientData;
+    register Tk_Window tkwin = scrollPtr->tkwin;
+    XPoint points[7];
+    Tk_3DBorder border;
+    int relief, width, elementBorderWidth;
+    Pixmap pixmap;
+
+    if ((scrollPtr->tkwin == NULL) || !Tk_IsMapped(tkwin)) {
+	goto done;
+    }
+
+    if (scrollPtr->vertical) {
+	width = Tk_Width(tkwin) - 2*scrollPtr->inset;
+    } else {
+	width = Tk_Height(tkwin) - 2*scrollPtr->inset;
+    }
+    elementBorderWidth = scrollPtr->elementBorderWidth;
+    if (elementBorderWidth < 0) {
+	elementBorderWidth = scrollPtr->borderWidth;
+    }
+
+    /*
+     * In order to avoid screen flashes, this procedure redraws the scrollbar
+     * in a pixmap, then copies the pixmap to the screen in a single
+     * operation. This means that there's no point in time where the on-sreen
+     * image has been cleared.
+     */
+
+    pixmap = Tk_GetPixmap(scrollPtr->display, Tk_WindowId(tkwin),
+	    Tk_Width(tkwin), Tk_Height(tkwin), Tk_Depth(tkwin));
+
+    if (scrollPtr->highlightWidth != 0) {
+	GC gc;
+
+	if (scrollPtr->flags & GOT_FOCUS) {
+	    gc = Tk_GCForColor(scrollPtr->highlightColorPtr, pixmap);
+	} else {
+	    gc = Tk_GCForColor(scrollPtr->highlightBgColorPtr, pixmap);
+	}
+	Tk_DrawFocusHighlight(tkwin, gc, scrollPtr->highlightWidth, pixmap);
+    }
+    Tk_Draw3DRectangle(tkwin, pixmap, scrollPtr->bgBorder,
+	    scrollPtr->highlightWidth, scrollPtr->highlightWidth,
+	    Tk_Width(tkwin) - 2*scrollPtr->highlightWidth,
+	    Tk_Height(tkwin) - 2*scrollPtr->highlightWidth,
+	    scrollPtr->borderWidth, scrollPtr->relief);
+    XFillRectangle(scrollPtr->display, pixmap,
+	    ((UnixScrollbar*)scrollPtr)->troughGC,
+	    scrollPtr->inset, scrollPtr->inset,
+	    (unsigned) (Tk_Width(tkwin) - 2*scrollPtr->inset),
+	    (unsigned) (Tk_Height(tkwin) - 2*scrollPtr->inset));
+
+    /*
+     * Draw the top or left arrow. The coordinates of the polygon points
+     * probably seem odd, but they were carefully chosen with respect to X's
+     * rules for filling polygons. These point choices cause the arrows to
+     * just fill the narrow dimension of the scrollbar and be properly
+     * centered.
+     */
+
+    if (scrollPtr->activeField == TOP_ARROW) {
+	border = scrollPtr->activeBorder;
+	relief = scrollPtr->activeField == TOP_ARROW ? scrollPtr->activeRelief
+		: TK_RELIEF_RAISED;
+    } else {
+	border = scrollPtr->bgBorder;
+	relief = TK_RELIEF_RAISED;
+    }
+    if (scrollPtr->vertical) {
+	points[0].x = scrollPtr->inset - 1;
+	points[0].y = scrollPtr->arrowLength + scrollPtr->inset - 1;
+	points[1].x = width + scrollPtr->inset;
+	points[1].y = points[0].y;
+	points[2].x = width/2 + scrollPtr->inset;
+	points[2].y = scrollPtr->inset - 1;
+	Tk_Fill3DPolygon(tkwin, pixmap, border, points, 3,
+		elementBorderWidth, relief);
+    } else {
+	points[0].x = scrollPtr->arrowLength + scrollPtr->inset - 1;
+	points[0].y = scrollPtr->inset - 1;
+	points[1].x = scrollPtr->inset;
+	points[1].y = width/2 + scrollPtr->inset;
+	points[2].x = points[0].x;
+	points[2].y = width + scrollPtr->inset;
+	Tk_Fill3DPolygon(tkwin, pixmap, border, points, 3,
+		elementBorderWidth, relief);
+    }
+
+    /*
+     * Display the bottom or right arrow.
+     */
+
+    if (scrollPtr->activeField == BOTTOM_ARROW) {
+	border = scrollPtr->activeBorder;
+	relief = scrollPtr->activeField == BOTTOM_ARROW
+		? scrollPtr->activeRelief : TK_RELIEF_RAISED;
+    } else {
+	border = scrollPtr->bgBorder;
+	relief = TK_RELIEF_RAISED;
+    }
+    if (scrollPtr->vertical) {
+	points[0].x = scrollPtr->inset;
+	points[0].y = Tk_Height(tkwin) - scrollPtr->arrowLength
+		- scrollPtr->inset + 1;
+	points[1].x = width/2 + scrollPtr->inset;
+	points[1].y = Tk_Height(tkwin) - scrollPtr->inset;
+	points[2].x = width + scrollPtr->inset;
+	points[2].y = points[0].y;
+	Tk_Fill3DPolygon(tkwin, pixmap, border,
+		points, 3, elementBorderWidth, relief);
+    } else {
+	points[0].x = Tk_Width(tkwin) - scrollPtr->arrowLength
+		- scrollPtr->inset + 1;
+	points[0].y = scrollPtr->inset - 1;
+	points[1].x = points[0].x;
+	points[1].y = width + scrollPtr->inset;
+	points[2].x = Tk_Width(tkwin) - scrollPtr->inset;
+	points[2].y = width/2 + scrollPtr->inset;
+	Tk_Fill3DPolygon(tkwin, pixmap, border,
+		points, 3, elementBorderWidth, relief);
+    }
+
+    /*
+     * Display the slider.
+     */
+
+    if (scrollPtr->activeField == SLIDER) {
+	border = scrollPtr->activeBorder;
+	relief = scrollPtr->activeField == SLIDER ? scrollPtr->activeRelief
+		: TK_RELIEF_RAISED;
+    } else {
+	border = scrollPtr->bgBorder;
+	relief = TK_RELIEF_RAISED;
+    }
+    if (scrollPtr->vertical) {
+	Tk_Fill3DRectangle(tkwin, pixmap, border,
+		scrollPtr->inset, scrollPtr->sliderFirst,
+		width, scrollPtr->sliderLast - scrollPtr->sliderFirst,
+		elementBorderWidth, relief);
+    } else {
+	Tk_Fill3DRectangle(tkwin, pixmap, border,
+		scrollPtr->sliderFirst, scrollPtr->inset,
+		scrollPtr->sliderLast - scrollPtr->sliderFirst, width,
+		elementBorderWidth, relief);
+    }
+
+    /*
+     * Copy the information from the off-screen pixmap onto the screen, then
+     * delete the pixmap.
+     */
+
+    XCopyArea(scrollPtr->display, pixmap, Tk_WindowId(tkwin),
+	    ((UnixScrollbar*)scrollPtr)->copyGC, 0, 0,
+	    (unsigned) Tk_Width(tkwin), (unsigned) Tk_Height(tkwin), 0, 0);
+    Tk_FreePixmap(scrollPtr->display, pixmap);
+
+  done:
+    scrollPtr->flags &= ~REDRAW_PENDING;
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkpComputeScrollbarGeometry --
+ *
+ *	After changes in a scrollbar's size or configuration, this procedure
+ *	recomputes various geometry information used in displaying the
+ *	scrollbar.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	The scrollbar will be displayed differently.
+ *
+ *----------------------------------------------------------------------
+ */
+
+extern void
+TkpComputeScrollbarGeometry(
+    register TkScrollbar *scrollPtr)
+				/* Scrollbar whose geometry may have
+				 * changed. */
+{
+    int width, fieldLength;
+
+    if (scrollPtr->highlightWidth < 0) {
+	scrollPtr->highlightWidth = 0;
+    }
+    scrollPtr->inset = scrollPtr->highlightWidth + scrollPtr->borderWidth;
+    width = (scrollPtr->vertical) ? Tk_Width(scrollPtr->tkwin)
+	    : Tk_Height(scrollPtr->tkwin);
+    scrollPtr->arrowLength = width - 2*scrollPtr->inset + 1;
+    fieldLength = (scrollPtr->vertical ? Tk_Height(scrollPtr->tkwin)
+	    : Tk_Width(scrollPtr->tkwin))
+	    - 2*(scrollPtr->arrowLength + scrollPtr->inset);
+    if (fieldLength < 0) {
+	fieldLength = 0;
+    }
+    scrollPtr->sliderFirst = fieldLength*scrollPtr->firstFraction;
+    scrollPtr->sliderLast = fieldLength*scrollPtr->lastFraction;
+
+    /*
+     * Adjust the slider so that some piece of it is always displayed in the
+     * scrollbar and so that it has at least a minimal width (so it can be
+     * grabbed with the mouse).
+     */
+
+    if (scrollPtr->sliderFirst > (fieldLength - 2*scrollPtr->borderWidth)) {
+	scrollPtr->sliderFirst = fieldLength - 2*scrollPtr->borderWidth;
+    }
+    if (scrollPtr->sliderFirst < 0) {
+	scrollPtr->sliderFirst = 0;
+    }
+    if (scrollPtr->sliderLast < (scrollPtr->sliderFirst
+	    + MIN_SLIDER_LENGTH)) {
+	scrollPtr->sliderLast = scrollPtr->sliderFirst + MIN_SLIDER_LENGTH;
+    }
+    if (scrollPtr->sliderLast > fieldLength) {
+	scrollPtr->sliderLast = fieldLength;
+    }
+    scrollPtr->sliderFirst += scrollPtr->arrowLength + scrollPtr->inset;
+    scrollPtr->sliderLast += scrollPtr->arrowLength + scrollPtr->inset;
+
+    /*
+     * Register the desired geometry for the window (leave enough space for
+     * the two arrows plus a minimum-size slider, plus border around the whole
+     * window, if any). Then arrange for the window to be redisplayed.
+     */
+
+    if (scrollPtr->vertical) {
+	Tk_GeometryRequest(scrollPtr->tkwin,
+		scrollPtr->width + 2*scrollPtr->inset,
+		2*(scrollPtr->arrowLength + scrollPtr->borderWidth
+		+ scrollPtr->inset));
+    } else {
+	Tk_GeometryRequest(scrollPtr->tkwin,
+		2*(scrollPtr->arrowLength + scrollPtr->borderWidth
+		+ scrollPtr->inset), scrollPtr->width + 2*scrollPtr->inset);
+    }
+    Tk_SetInternalBorder(scrollPtr->tkwin, scrollPtr->inset);
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkpDestroyScrollbar --
+ *
+ *	Free data structures associated with the scrollbar control.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	Frees the GCs associated with the scrollbar.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TkpDestroyScrollbar(
+    TkScrollbar *scrollPtr)
+{
+    UnixScrollbar *unixScrollPtr = (UnixScrollbar *)scrollPtr;
+
+    if (unixScrollPtr->troughGC != None) {
+	Tk_FreeGC(scrollPtr->display, unixScrollPtr->troughGC);
+    }
+    if (unixScrollPtr->copyGC != None) {
+	Tk_FreeGC(scrollPtr->display, unixScrollPtr->copyGC);
+    }
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkpConfigureScrollbar --
+ *
+ *	This procedure is called after the generic code has finished
+ *	processing configuration options, in order to configure platform
+ *	specific options.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	Configuration info may get changed.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TkpConfigureScrollbar(
+    register TkScrollbar *scrollPtr)
+				/* Information about widget; may or may not
+				 * already have values for some fields. */
+{
+    XGCValues gcValues;
+    GC new;
+    UnixScrollbar *unixScrollPtr = (UnixScrollbar *) scrollPtr;
+
+    Tk_SetBackgroundFromBorder(scrollPtr->tkwin, scrollPtr->bgBorder);
+
+    gcValues.foreground = scrollPtr->troughColorPtr->pixel;
+    new = Tk_GetGC(scrollPtr->tkwin, GCForeground, &gcValues);
+    if (unixScrollPtr->troughGC != None) {
+	Tk_FreeGC(scrollPtr->display, unixScrollPtr->troughGC);
+    }
+    unixScrollPtr->troughGC = new;
+    if (unixScrollPtr->copyGC == None) {
+	gcValues.graphics_exposures = False;
+	unixScrollPtr->copyGC = Tk_GetGC(scrollPtr->tkwin,
+		GCGraphicsExposures, &gcValues);
+    }
+}
+
+/*
+ *--------------------------------------------------------------
+ *
+ * TkpScrollbarPosition --
+ *
+ *	Determine the scrollbar element corresponding to a given position.
+ *
+ * Results:
+ *	One of TOP_ARROW, TOP_GAP, etc., indicating which element of the
+ *	scrollbar covers the position given by (x, y). If (x,y) is outside the
+ *	scrollbar entirely, then OUTSIDE is returned.
+ *
+ * Side effects:
+ *	None.
+ *
+ *--------------------------------------------------------------
+ */
+
+int
+TkpScrollbarPosition(
+    register TkScrollbar *scrollPtr,
+				/* Scrollbar widget record. */
+    int x, int y)		/* Coordinates within scrollPtr's window. */
+{
+    int length, width, tmp;
+    register const int inset = scrollPtr->inset;
+
+    if (scrollPtr->vertical) {
+	length = Tk_Height(scrollPtr->tkwin);
+	width = Tk_Width(scrollPtr->tkwin);
+    } else {
+	tmp = x;
+	x = y;
+	y = tmp;
+	length = Tk_Width(scrollPtr->tkwin);
+	width = Tk_Height(scrollPtr->tkwin);
+    }
+
+    if (x<inset || x>=width-inset || y<inset || y>=length-inset) {
+	return OUTSIDE;
+    }
+
+    /*
+     * All of the calculations in this procedure mirror those in
+     * TkpDisplayScrollbar. Be sure to keep the two consistent.
+     */
+
+    if (y < inset + scrollPtr->arrowLength) {
+	return TOP_ARROW;
+    }
+    if (y < scrollPtr->sliderFirst) {
+	return TOP_GAP;
+    }
+    if (y < scrollPtr->sliderLast) {
+	return SLIDER;
+    }
+    if (y >= length - (scrollPtr->arrowLength + inset)) {
+	return BOTTOM_ARROW;
+    }
+    return BOTTOM_GAP;
+}
+
+#else
 
 #define MIN_SCROLLBAR_VALUE		0
 #define SCROLLBAR_SCALING_VALUE		((double)(LONG_MAX>>1))
@@ -53,10 +518,10 @@ typedef struct MacScrollbar {
  */
 static ControlActionUPP scrollActionProc = NULL;	/* Pointer to func. */
 static ControlActionUPP thumbActionProc = NULL;		/* Pointer to func. */
-static Point mouseDownPoint;	/* Used to store the coordinates where the  */
-				/* mouse was first pressed to begin	    */
-				/* dragging the thumb, because		    */
-				/* ThumbActionProc can't take any args.	    */
+static Point mouseDownPoint;	/* Used to store the coordinates where the
+				 * mouse was first pressed to begin dragging
+				 * the thumb, because ThumbActionProc can't
+				 * take any args. */
 
 typedef struct ScrollbarMetrics {
     SInt32 width, minHeight, minThumbHeight;
@@ -80,14 +545,16 @@ static char defWidth[TCL_INTEGER_SPACE];
  * Forward declarations for procedures defined later in this file:
  */
 
-static pascal void ScrollbarActionProc(ControlRef theControl,
-	ControlPartCode partCode);
-static pascal void ThumbActionProc(ControlRef theControl,
-	ControlPartCode partCode);
-static int ScrollbarBindProc(ClientData clientData, Tcl_Interp *interp,
-	XEvent *eventPtr, Tk_Window tkwin, KeySym keySym);
-static void ScrollbarEventProc(ClientData clientData, XEvent *eventPtr);
-static void UpdateControlValues(MacScrollbar *macScrollPtr);
+static pascal void	ScrollbarActionProc(ControlRef theControl,
+			    ControlPartCode partCode);
+static pascal void	ThumbActionProc(ControlRef theControl,
+			    ControlPartCode partCode);
+static int		ScrollbarBindProc(ClientData clientData,
+			    Tcl_Interp *interp, XEvent *eventPtr,
+			    Tk_Window tkwin, KeySym keySym);
+static void		ScrollbarEventProc(ClientData clientData,
+			    XEvent *eventPtr);
+static void		UpdateControlValues(MacScrollbar *macScrollPtr);
 
 /*
  * The class procedure table for the scrollbar widget. Leave the proc fields
@@ -98,14 +565,13 @@ static void UpdateControlValues(MacScrollbar *macScrollPtr);
 Tk_ClassProcs tkpScrollbarProcs = {
     sizeof(Tk_ClassProcs)	/* size */
 };
-
+
 /*
  *----------------------------------------------------------------------
  *
  * TkMacOSXInitScrollbarMetrics --
  *
- *	This function initializes the current system metrics for a
- *	scrollbar.
+ *	This function initializes the current system metrics for a scrollbar.
  *
  * Results:
  *	None.
@@ -144,7 +610,7 @@ TkMacOSXInitScrollbarMetrics(void)
     metrics[1].minHeight = metrics[1].minThumbHeight +
 	    metrics[1].topArrowHeight + metrics[1].bottomArrowHeight;
 
-    sprintf(defWidth, "%ld", metrics[0].width);
+    sprintf(defWidth, "%d", (int)(metrics[0].width));
     for (specPtr = tkpScrollbarConfigSpecs; specPtr->type != TK_CONFIG_END;
 	    specPtr++) {
 	if (specPtr->offset == Tk_Offset(TkScrollbar, width)) {
@@ -210,9 +676,9 @@ TkpCreateScrollbar(
  *
  * TkpDisplayScrollbar --
  *
- *	This procedure redraws the contents of a scrollbar window.
- *	It is invoked as a do-when-idle handler, so it only runs
- *	when there's nothing else for the application to do.
+ *	This procedure redraws the contents of a scrollbar window. It is
+ *	invoked as a do-when-idle handler, so it only runs when there's
+ *	nothing else for the application to do.
  *
  * Results:
  *	None.
@@ -304,7 +770,7 @@ TkpDisplayScrollbar(
 	QDSwapPort(savePort, NULL);
     }
 
-    done:
+  done:
     scrollPtr->flags &= ~REDRAW_PENDING;
 }
 
@@ -314,8 +780,8 @@ TkpDisplayScrollbar(
  * TkpConfigureScrollbar --
  *
  *	This procedure is called after the generic code has finished
- *	processing configuration options, in order to configure
- *	platform specific options.
+ *	processing configuration options, in order to configure platform
+ *	specific options.
  *
  * Results:
  *	None.
@@ -327,10 +793,10 @@ TkpDisplayScrollbar(
  */
 
 void
-TkpConfigureScrollbar(scrollPtr)
-    register TkScrollbar *scrollPtr;	/* Information about widget; may or
-					 * may not already have values for
-					 * some fields. */
+TkpConfigureScrollbar(
+    register TkScrollbar *scrollPtr)
+				/* Information about widget; may or may not
+				 * already have values for some fields. */
 {
 }
 
@@ -339,9 +805,9 @@ TkpConfigureScrollbar(scrollPtr)
  *
  * TkpComputeScrollbarGeometry --
  *
- *	After changes in a scrollbar's size or configuration, this
- *	procedure recomputes various geometry information used in
- *	displaying the scrollbar.
+ *	After changes in a scrollbar's size or configuration, this procedure
+ *	recomputes various geometry information used in displaying the
+ *	scrollbar.
  *
  * Results:
  *	None.
@@ -378,9 +844,9 @@ TkpComputeScrollbarGeometry(
     scrollPtr->sliderLast = fieldLength * scrollPtr->lastFraction;
 
     /*
-     * Adjust the slider so that some piece of it is always
-     * displayed in the scrollbar and so that it has at least
-     * a minimal width (so it can be grabbed with the mouse).
+     * Adjust the slider so that some piece of it is always displayed in the
+     * scrollbar and so that it has at least a minimal width (so it can be
+     * grabbed with the mouse).
      */
 
     if (scrollPtr->sliderFirst > (fieldLength - 2*scrollPtr->borderWidth)) {
@@ -403,10 +869,9 @@ TkpComputeScrollbarGeometry(
 	    metrics[variant].bottomArrowHeight;
 
     /*
-     * Register the desired geometry for the window (leave enough space
-     * for the two arrows plus a minimum-size slider, plus border around
-     * the whole window, if any). Then arrange for the window to be
-     * redisplayed.
+     * Register the desired geometry for the window (leave enough space for
+     * the two arrows plus a minimum-size slider, plus border around the whole
+     * window, if any). Then arrange for the window to be redisplayed.
      */
 
     if (scrollPtr->vertical) {
@@ -459,14 +924,12 @@ TkpDestroyScrollbar(
  *
  * TkpScrollbarPosition --
  *
- *	Determine the scrollbar element corresponding to a
- *	given position.
+ *	Determine the scrollbar element corresponding to a given position.
  *
  * Results:
- *	One of TOP_ARROW, TOP_GAP, etc., indicating which element
- *	of the scrollbar covers the position given by (x, y). If
- *	(x,y) is outside the scrollbar entirely, then OUTSIDE is
- *	returned.
+ *	One of TOP_ARROW, TOP_GAP, etc., indicating which element of the
+ *	scrollbar covers the position given by (x, y). If (x,y) is outside the
+ *	scrollbar entirely, then OUTSIDE is returned.
  *
  * Side effects:
  *	None.
@@ -496,10 +959,9 @@ TkpScrollbarPosition(
 
     /*
      * All of the calculations in this procedure mirror those in
-     * DisplayScrollbar. Be sure to keep the two consistent. On the
-     * Macintosh we use the OS call TestControl to do this mapping.
-     * For TestControl to work, the scrollbar must be active and must
-     * be in the current port.
+     * DisplayScrollbar. Be sure to keep the two consistent. On the Macintosh
+     * we use the OS call TestControl to do this mapping. For TestControl to
+     * work, the scrollbar must be active and must be in the current port.
      */
 
     destPort = TkMacOSXGetDrawablePort(Tk_WindowId(scrollPtr->tkwin));
@@ -520,18 +982,18 @@ TkpScrollbarPosition(
 	QDSwapPort(savePort, NULL);
     }
     switch (part) {
-	case kAppearancePartUpButton:
-	    return TOP_ARROW;
-	case kAppearancePartPageUpArea:
-	    return TOP_GAP;
-	case kAppearancePartIndicator:
-	    return SLIDER;
-	case kAppearancePartPageDownArea:
-	    return BOTTOM_GAP;
-	case kAppearancePartDownButton:
-	    return BOTTOM_ARROW;
-	default:
-	    return OUTSIDE;
+    case kAppearancePartUpButton:
+	return TOP_ARROW;
+    case kAppearancePartPageUpArea:
+	return TOP_GAP;
+    case kAppearancePartIndicator:
+	return SLIDER;
+    case kAppearancePartPageDownArea:
+	return BOTTOM_GAP;
+    case kAppearancePartDownButton:
+	return BOTTOM_ARROW;
+    default:
+	return OUTSIDE;
     }
 }
 
@@ -541,12 +1003,11 @@ TkpScrollbarPosition(
  * ThumbActionProc --
  *
  *	Callback procedure used by the Macintosh toolbox call
- *	HandleControlClick. This call is used to track the
- *	thumb of the scrollbar. Unlike the
- *	ScrollbarActionProc function this function is called
- *	once and basically takes over tracking the scrollbar
- *	from the control. This is done to avoid conflicts with
- *	what the control plans to draw.
+ *	HandleControlClick. This call is used to track the thumb of the
+ *	scrollbar. Unlike the ScrollbarActionProc function this function is
+ *	called once and basically takes over tracking the scrollbar from the
+ *	control. This is done to avoid conflicts with what the control plans
+ *	to draw.
  *
  * Results:
  *	None.
@@ -558,13 +1019,16 @@ TkpScrollbarPosition(
  */
 
 static pascal void
-ThumbActionProc(ControlRef theControl, ControlPartCode partCode)
+ThumbActionProc(
+    ControlRef theControl,
+    ControlPartCode partCode)
 {
-    TkScrollbar *scrollPtr = (TkScrollbar *)(intptr_t)GetControlReference(
-	    theControl);
+    TkScrollbar *scrollPtr = (TkScrollbar *)(intptr_t)
+	    GetControlReference(theControl);
     MacScrollbar *macScrollPtr = (MacScrollbar *) scrollPtr;
     Tcl_DString cmdString;
-    int origValue, variant;
+    /*int origValue;*/ /* dead code */
+    int variant;
     short trackBarSize;
     double oldFirstFraction, newFirstFraction;
     char valueString[40];
@@ -579,7 +1043,7 @@ ThumbActionProc(ControlRef theControl, ControlPartCode partCode)
     }
 
     Tcl_DStringInit(&cmdString);
-    origValue = GetControl32BitValue(macScrollPtr->sbHandle);
+    /*origValue = GetControl32BitValue(macScrollPtr->sbHandle);*/ /* dead code */
     GetControlBounds(macScrollPtr->sbHandle, &trackRect);
 
     if (scrollPtr->vertical) {
@@ -599,12 +1063,11 @@ ThumbActionProc(ControlRef theControl, ControlPartCode partCode)
     /*
      * Track the mouse while the button is held down. If the mouse is moved,
      * we calculate the value that should be passed to the "command" part of
-     * the scrollbar. Since the mouse may move a distance too small to
-     * cause a change to the first fraction, each calculation must be done
-     * versus what the first fraction was when the mouse button was
-     * initially pressed. Otherwise, moving the mouse too slowly will
-     * cause the calculated fraction delta to be zero and the scrollbar
-     * won't respond.
+     * the scrollbar. Since the mouse may move a distance too small to cause a
+     * change to the first fraction, each calculation must be done versus what
+     * the first fraction was when the mouse button was initially pressed.
+     * Otherwise, moving the mouse too slowly will cause the calculated
+     * fraction delta to be zero and the scrollbar won't respond.
      */
 
     oldFirstFraction = scrollPtr->firstFraction;
@@ -616,17 +1079,16 @@ ThumbActionProc(ControlRef theControl, ControlPartCode partCode)
 		kEventDurationForever, &currentPoint, NULL, &trackingResult);
 	if ((err == noErr) && ((trackingResult == kMouseTrackingMouseDragged)
 		|| (trackingResult == kMouseTrackingMouseMoved))) {
-
 	   /*
-	    * Calculate where the scrollbar should move to, based on
-	    * where the mouse button was pressed and where the scrollbar
-	    * initially was at that time. Note that PtInRect() will
-	    * return false if currentPoint or trackRect are not in
-	    * is not in current graphics port, which may happen if any
-	    * of the waiting idle events change the port (e.g. with
-	    * SetPort()) but fail to restore it before returning and the
-	    * scrollbar will lock in place.
+	    * Calculate where the scrollbar should move to, based on where the
+	    * mouse button was pressed and where the scrollbar initially was
+	    * at that time. Note that PtInRect() will return false if
+	    * currentPoint or trackRect are not in is not in current graphics
+	    * port, which may happen if any of the waiting idle events change
+	    * the port (e.g. with SetPort()) but fail to restore it before
+	    * returning and the scrollbar will lock in place.
 	    */
+
 	    newFirstFraction = oldFirstFraction;
 	    if (PtInRect(currentPoint, &trackRect)) {
 		short pixDiff;
@@ -645,23 +1107,23 @@ ThumbActionProc(ControlRef theControl, ControlPartCode partCode)
 	    }
 
 	    /*
-	     * Move the scrollbar thumb to the new first fraction given
-	     * its position when initially pressed and how far the mouse
-	     * has moved. Process waiting idle tasks afterward to allow
-	     * for the display to update.
+	     * Move the scrollbar thumb to the new first fraction given its
+	     * position when initially pressed and how far the mouse has
+	     * moved. Process waiting idle tasks afterward to allow for the
+	     * display to update.
 	     */
 
 	    Tcl_PrintDouble(NULL, newFirstFraction, valueString);
 	    Tcl_DStringSetLength(&cmdString, 0);
 	    Tcl_DStringAppend(&cmdString, scrollPtr->command,
-		scrollPtr->commandSize);
+		    scrollPtr->commandSize);
 	    Tcl_DStringAppendElement(&cmdString, "moveto");
 	    Tcl_DStringAppendElement(&cmdString, valueString);
 	    interp = scrollPtr->interp;
-	    Tcl_Preserve((ClientData) interp);
+	    Tcl_Preserve(interp);
 	    Tcl_EvalEx(interp, Tcl_DStringValue(&cmdString),
 		    Tcl_DStringLength(&cmdString), TCL_EVAL_GLOBAL);
-	    Tcl_Release((ClientData) interp);
+	    Tcl_Release(interp);
 	    TkMacOSXRunTclEventLoop();
 	}
     } while ((err == noErr) && trackingResult != kMouseTrackingMouseReleased);
@@ -676,8 +1138,8 @@ ThumbActionProc(ControlRef theControl, ControlPartCode partCode)
  * ScrollbarActionProc --
  *
  *	Callback procedure used by the Macintosh toolbox call
- *	HandleControlClick. This call will update the display
- *	while the scrollbar is being manipulated by the user.
+ *	HandleControlClick. This call will update the display while the
+ *	scrollbar is being manipulated by the user.
  *
  * Results:
  *	None.
@@ -702,7 +1164,7 @@ ScrollbarActionProc(
     Tcl_DStringAppend(&cmdString, scrollPtr->command,
 	    scrollPtr->commandSize);
 
-    if (partCode == kAppearancePartUpButton ||
+    if ( partCode == kAppearancePartUpButton ||
 	    partCode == kAppearancePartDownButton ) {
 	Tcl_DStringAppendElement(&cmdString, "scroll");
 	Tcl_DStringAppendElement(&cmdString,
@@ -717,8 +1179,7 @@ ScrollbarActionProc(
     } else if (partCode == kAppearancePartIndicator) {
 	char valueString[TCL_DOUBLE_SPACE];
 
-	Tcl_PrintDouble(NULL,
-		(GetControl32BitValue(macScrollPtr->sbHandle) -
+	Tcl_PrintDouble(NULL, (GetControl32BitValue(macScrollPtr->sbHandle) -
 		MIN_SCROLLBAR_VALUE) / SCROLLBAR_SCALING_VALUE, valueString);
 	Tcl_DStringAppendElement(&cmdString, "moveto");
 	Tcl_DStringAppendElement(&cmdString, valueString);
@@ -736,8 +1197,8 @@ ScrollbarActionProc(
  *
  * ScrollbarBindProc --
  *
- *	This procedure is invoked when the default <ButtonPress>
- *	binding on the Scrollbar bind tag fires.
+ *	This procedure is invoked when the default <ButtonPress> binding on
+ *	the Scrollbar bind tag fires.
  *
  * Results:
  *	None.
@@ -794,7 +1255,7 @@ ScrollbarBindProc(
 
 	    mouseDownPoint.h = where.h;
 	    mouseDownPoint.v = where.v;
-	    part = HandleControlClick(macScrollPtr->sbHandle, where,
+	    HandleControlClick(macScrollPtr->sbHandle, where,
 		    TkMacOSXModifierState(), thumbActionProc);
 	} else if (part == kAppearancePartIndicator) {
 	    /*
@@ -830,8 +1291,8 @@ ScrollbarBindProc(
 	} else if (part != 0) {
 	    /*
 	     * Case 3: in any other part of the scrollbar. We call
-	     * HandleControlClick with the scrollActionProc which will do
-	     * most all the work.
+	     * HandleControlClick with the scrollActionProc which will do most
+	     * all the work.
 	     */
 
 	    HandleControlClick(macScrollPtr->sbHandle, where,
@@ -879,15 +1340,15 @@ ScrollbarBindProc(
  *
  * ScrollbarEventProc --
  *
- *	This procedure is invoked by the Tk dispatcher for various
- *	events on scrollbars.
+ *	This procedure is invoked by the Tk dispatcher for various events on
+ *	scrollbars.
  *
  * Results:
  *	None.
  *
  * Side effects:
- *	When the window gets deleted, internal structures get
- *	cleaned up. When it gets exposed, it is redisplayed.
+ *	When the window gets deleted, internal structures get cleaned up. When
+ *	it gets exposed, it is redisplayed.
  *
  *--------------------------------------------------------------
  */
@@ -918,8 +1379,8 @@ ScrollbarEventProc(
  *
  * UpdateControlValues --
  *
- *	This procedure updates the Macintosh scrollbar control
- *	to display the values defined by the Tk scrollbar.
+ *	This procedure updates the Macintosh scrollbar control to display the
+ *	values defined by the Tk scrollbar.
  *
  * Results:
  *	None.
@@ -936,7 +1397,7 @@ UpdateControlValues(
 {
     TkScrollbar *scrollPtr = (TkScrollbar *) macScrollPtr;
     Tk_Window tkwin = scrollPtr->tkwin;
-    MacDrawable * macDraw = (MacDrawable *) Tk_WindowId(scrollPtr->tkwin);
+    MacDrawable *macDraw = (MacDrawable *) Tk_WindowId(scrollPtr->tkwin);
     double dViewSize;
     Rect contrlRect, portRect;
     int variant, active;
@@ -947,13 +1408,14 @@ UpdateControlValues(
     contrlRect.right  = macDraw->xOff + Tk_Width(tkwin) - scrollPtr->inset;
     contrlRect.bottom = macDraw->yOff + Tk_Height(tkwin) - scrollPtr->inset;
 
-    GetPortBounds (GetWindowPort(GetControlOwner(macScrollPtr->sbHandle)),
+    GetPortBounds(GetWindowPort(GetControlOwner(macScrollPtr->sbHandle)),
 	    &portRect);
 
     /*
-     * If the scrollbar is flush against the bottom right hand corner then
-     * we leave space to draw the grow region for the window.
+     * If the scrollbar is flush against the bottom right hand corner then we
+     * leave space to draw the grow region for the window.
      */
+
     if (portRect.bottom == contrlRect.bottom &&
 	    portRect.right == contrlRect.right) {
 	TkMacOSXSetScrollbarGrow((TkWindow *) tkwin, true);
@@ -962,16 +1424,16 @@ UpdateControlValues(
 	    int growSize;
 
 	    switch (TkMacOSXWindowClass(macDraw->toplevel->winPtr)) {
-		case kFloatingWindowClass:
-		case kUtilityWindowClass:
-		    growSize = metrics[1].width - 1;
-		    break;
-		case kDocumentWindowClass:
-		case kMovableAlertWindowClass:
-		case kMovableModalWindowClass:
-		default:
-		    growSize = metrics[0].width - 1;
-		    break;
+	    case kFloatingWindowClass:
+	    case kUtilityWindowClass:
+		growSize = metrics[1].width - 1;
+		break;
+	    case kDocumentWindowClass:
+	    case kMovableAlertWindowClass:
+	    case kMovableModalWindowClass:
+	    default:
+		growSize = metrics[0].width - 1;
+		break;
 	    }
 	    if (scrollPtr->vertical) {
 		contrlRect.bottom -= growSize;
@@ -1007,23 +1469,21 @@ UpdateControlValues(
     }
 
     /*
-     * Ensure we set scrollbar control bounds only once all size
-     * adjustments have been computed.
+     * Ensure we set scrollbar control bounds only once all size adjustments
+     * have been computed.
      */
 
     SetControlBounds(macScrollPtr->sbHandle, &contrlRect);
 
     /*
-     * Given the Tk parameters for the fractions of the start and
-     * end of the thumb, the following calculation determines the
-     * location for the Macintosh thumb.
-     * The Aqua scroll control works as follows.
-     * The scrollbar's value is the position of the left (or top) side of
-     * the view area in the content area being scrolled.
-     * The maximum value of the control is therefore the dimension of
-     * the content area less the size of the view area.
-     * Since these values are all integers, and Tk gives the thumb position
-     * as fractions, we have introduced a scaling factor.
+     * Given the Tk parameters for the fractions of the start and end of the
+     * thumb, the following calculation determines the location for the
+     * Macintosh thumb. The Aqua scroll control works as follows. The
+     * scrollbar's value is the position of the left (or top) side of the view
+     * area in the content area being scrolled. The maximum value of the
+     * control is therefore the dimension of the content area less the size of
+     * the view area. Since these values are all integers, and Tk gives the
+     * thumb position as fractions, we have introduced a scaling factor.
      */
 
     dViewSize = (scrollPtr->lastFraction - scrollPtr->firstFraction)
@@ -1050,3 +1510,14 @@ UpdateControlValues(
     }
     SetControlVisibility(macScrollPtr->sbHandle, true, false);
 }
+
+#endif
+
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 4
+ * fill-column: 79
+ * coding: utf-8
+ * End:
+ */
