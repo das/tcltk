@@ -687,7 +687,7 @@ static void PbarElementDraw(
     Tcl_GetDoubleFromObj(NULL, pbar->maximumObj, &maximum);
     Tcl_GetIntFromObj(NULL, pbar->phaseObj, &phase);
     factor = ((double)(LONG_MAX>>1))/maximum;
-    
+
     HIThemeTrackDrawInfo info = {
 	.version = 0,
 	.kind = (!strcmp("indeterminate", Tcl_GetString(pbar->modeObj)) && value) ?
@@ -1123,4 +1123,13 @@ int Ttk_MacOSXPlatformInit(Tcl_Interp *interp)
 {
     return AquaTheme_Init(interp);
 }
+
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 4
+ * fill-column: 79
+ * coding: utf-8
+ * End:
+ */
 

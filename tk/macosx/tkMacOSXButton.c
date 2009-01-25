@@ -1130,6 +1130,7 @@ ComputeUnixButtonGeometry(
  * Local Variables:
  * mode: c
  * c-basic-offset: 4
- * fill-column: 78
+ * fill-column: 79
+ * coding: utf-8
  * End:
  */

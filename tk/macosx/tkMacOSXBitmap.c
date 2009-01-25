@@ -285,3 +285,12 @@ TkpGetNativeAppBitmap(
 #endif
     return pix;
 }
+
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 4
+ * fill-column: 79
+ * coding: utf-8
+ * End:
+ */

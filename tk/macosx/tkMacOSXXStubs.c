@@ -1377,3 +1377,12 @@ Tk_ResetUserInactiveTime(
     kr = IOHIDPostEvent(io_connection, NX_NULLEVENT, loc, &nullEvent.data,
 	    FALSE, 0, FALSE);
 }
+
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 4
+ * fill-column: 79
+ * coding: utf-8
+ * End:
+ */

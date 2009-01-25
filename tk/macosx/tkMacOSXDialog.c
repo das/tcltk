@@ -1384,8 +1384,8 @@ TkAboutDlg(void)
 	    nil];
     [NSApp orderFrontStandardAboutPanelWithOptions:options];
 }
-
 #ifdef MAC_OSX_TK_TODO
+
 /*
  *----------------------------------------------------------------------
  *
