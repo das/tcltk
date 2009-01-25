@@ -199,7 +199,7 @@ static void	RecursivelyClearActiveMenu(TkMenu *menuPtr);
 @end
 
 @implementation TKMenu(TKMenuDelegate)
-#define keyEquivModifiersMatchModifiers(km, m) (( \
+#define keyEquivModifiersMatch(km, m) (( \
     ((km) & NSCommandKeyMask) != ((m) & NSCommandKeyMask) || \
     ((km) & NSAlternateKeyMask) != ((m) & NSAlternateKeyMask) || \
     ((km) & NSControlKeyMask) != ((m) & NSControlKeyMask) || \
@@ -207,22 +207,20 @@ static void	RecursivelyClearActiveMenu(TkMenu *menuPtr);
     ((m) & NSFunctionKeyMask))) ? NO : YES)
 - (BOOL)menuHasKeyEquivalent:(NSMenu*)menu forEvent:(NSEvent*)event
 	target:(id*)target action:(SEL*)action {
-    if (!_tkMenu) {
-	return [super menuHasKeyEquivalent:menu	forEvent:event target:target
-		action:action];
-    }
-    NSString *key = [event charactersIgnoringModifiers];
-    NSUInteger modifiers = [event modifierFlags];
-    NSArray *itemArray = [self itemArray];
-    NSUInteger i = 0, maxIndex = ((TkMenu*)_tkMenu)->numEntries + _tkOffset;
-    for (NSMenuItem *item in itemArray) {
-	if (i++ >= _tkOffset && i <= maxIndex && [item isEnabled] &&
-		[[item keyEquivalent] compare:key] == NSOrderedSame) {
-	    NSUInteger keyEquivModifiers = [item keyEquivalentModifierMask];
-	    if (keyEquivModifiersMatchModifiers(keyEquivModifiers, modifiers)) {
-		*target = self;
-		*action = @selector(tkMenuItemInvokeByKeyEquivalent:);
-		return YES;
+    if (_tkMenu) {
+	NSString *key = [event charactersIgnoringModifiers];
+	NSUInteger modifiers = [event modifierFlags];
+	NSArray *itemArray = [self itemArray];
+	NSUInteger i = 0, maxIndex = ((TkMenu*)_tkMenu)->numEntries + _tkOffset;
+	for (NSMenuItem *item in itemArray) {
+	    if (i++ >= _tkOffset && i <= maxIndex && [item isEnabled] &&
+		    [[item keyEquivalent] compare:key] == NSOrderedSame) {
+		NSUInteger keyEquivModifiers = [item keyEquivalentModifierMask];
+		if (keyEquivModifiersMatch(keyEquivModifiers, modifiers)) {
+		    *target = self;
+		    *action = @selector(tkMenuItemInvokeByKeyEquivalent:);
+		    return YES;
+		}
 	    }
 	}
     }
