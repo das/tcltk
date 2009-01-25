@@ -5461,7 +5461,7 @@ TkMacOSXUnregisterMacWindow(
     }
     entryPtr = Tcl_FindHashEntry(&windowTable, macWinPtr);
     if (!entryPtr) {
-	TkMacOSXDbgMsg("Failed to find window %08x", (int) macWinPtr);
+	TkMacOSXDbgMsg("Failed to find window %p", macWinPtr);
     } else {
 	Tcl_DeleteHashEntry(entryPtr);
     }

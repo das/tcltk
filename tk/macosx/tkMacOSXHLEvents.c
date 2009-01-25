@@ -34,19 +34,19 @@ typedef struct KillEvent {
  */
 
 static OSErr		QuitHandler(const AppleEvent *event,
-			    AppleEvent *reply, long handlerRefcon);
+			    AppleEvent *reply, SRefCon handlerRefcon);
 static OSErr		OappHandler(const AppleEvent *event,
-			    AppleEvent *reply, long handlerRefcon);
+			    AppleEvent *reply, SRefCon handlerRefcon);
 static OSErr		RappHandler(const AppleEvent *event,
-			    AppleEvent *reply, long handlerRefcon);
+			    AppleEvent *reply, SRefCon handlerRefcon);
 static OSErr		OdocHandler(const AppleEvent *event,
-			    AppleEvent *reply, long handlerRefcon);
+			    AppleEvent *reply, SRefCon handlerRefcon);
 static OSErr		PrintHandler(const AppleEvent *event,
-			    AppleEvent *reply, long handlerRefcon);
+			    AppleEvent *reply, SRefCon handlerRefcon);
 static OSErr		ScriptHandler(const AppleEvent *event,
-			    AppleEvent *reply, long handlerRefcon);
+			    AppleEvent *reply, SRefCon handlerRefcon);
 static OSErr		PrefsHandler(const AppleEvent *event,
-			    AppleEvent *reply, long handlerRefcon);
+			    AppleEvent *reply, SRefCon handlerRefcon);
 static int		MissedAnyParameters(const AppleEvent *theEvent);
 static int		ReallyKillMe(Tcl_Event *eventPtr, int flags);
 static OSStatus		FSRefToDString(const FSRef *fsref, Tcl_DString *ds);
@@ -159,7 +159,7 @@ static OSErr
 QuitHandler(
     const AppleEvent *event,
     AppleEvent *reply,
-    long handlerRefcon)
+    SRefCon handlerRefcon)
 {
     Tcl_Interp *interp = (Tcl_Interp *) handlerRefcon;
     KillEvent *eventPtr;
@@ -202,7 +202,7 @@ static OSErr
 OappHandler(
     const AppleEvent *event,
     AppleEvent *reply,
-    long handlerRefcon)
+    SRefCon handlerRefcon)
 {
     Tcl_CmdInfo dummy;
     Tcl_Interp *interp = (Tcl_Interp *) handlerRefcon;
@@ -237,7 +237,7 @@ static OSErr
 RappHandler(
     const AppleEvent *event,
     AppleEvent *reply,
-    long handlerRefcon)
+    SRefCon handlerRefcon)
 {
     Tcl_CmdInfo dummy;
     Tcl_Interp *interp = (Tcl_Interp *) handlerRefcon;
@@ -275,7 +275,7 @@ static OSErr
 PrefsHandler(
     const AppleEvent *event,
     AppleEvent *reply,
-    long handlerRefcon)
+    SRefCon handlerRefcon)
 {
     Tcl_CmdInfo dummy;
     Tcl_Interp *interp = (Tcl_Interp *) handlerRefcon;
@@ -310,7 +310,7 @@ static OSErr
 OdocHandler(
     const AppleEvent *event,
     AppleEvent *reply,
-    long handlerRefcon)
+    SRefCon handlerRefcon)
 {
     Tcl_Interp *interp = (Tcl_Interp *) handlerRefcon;
     AEDescList fileSpecList;
@@ -401,7 +401,7 @@ static OSErr
 PrintHandler(
     const AppleEvent * event,
     AppleEvent * reply,
-    long handlerRefcon)
+    SRefCon handlerRefcon)
 {
     Tcl_Interp *interp = (Tcl_Interp *) handlerRefcon;
     AEDescList fileSpecList;
@@ -487,7 +487,7 @@ static OSErr
 ScriptHandler(
     const AppleEvent *event,
     AppleEvent *reply,
-    long handlerRefcon)
+    SRefCon handlerRefcon)
 {
     OSStatus theErr;
     AEDescList theDesc;
