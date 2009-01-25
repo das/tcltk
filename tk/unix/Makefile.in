@@ -1549,17 +1549,18 @@ dist:   $(UNIX_DIR)/configure $(UNIX_DIR)/tkConfig.h.in $(MAC_OSX_DIR)/configure
 	$(TCL_EXE) $(TOOL_DIR)/eolFix.tcl -crlf $(DISTDIR)/win/wish.exe.manifest.in
 	mkdir $(DISTDIR)/macosx
 	cp -p $(MAC_OSX_DIR)/GNUmakefile $(MAC_OSX_DIR)/README \
-		$(MAC_OSX_DIR)/Wish.icns $(MAC_OSX_DIR)/*.[chr] \
+		$(MAC_OSX_DIR)/Tk.* $(MAC_OSX_DIR)/*.[ch] \
 		$(MAC_OSX_DIR)/*.in $(MAC_OSX_DIR)/*.ac \
 		$(MAC_OSX_DIR)/*.xcconfig $(MAC_OSX_DIR)/configure \
 		$(DISTDIR)/macosx
 	cp -p $(TOP_DIR)/license.terms $(DISTDIR)/macosx
-	mkdir $(DISTDIR)/macosx/Wish.pbproj
-	cp -p $(MAC_OSX_DIR)/Wish.pbproj/*.pbx* $(DISTDIR)/macosx/Wish.pbproj
 	mkdir $(DISTDIR)/macosx/Wish.xcode
-	cp -p $(MAC_OSX_DIR)/Wish.xcode/*.pbx* $(DISTDIR)/macosx/Wish.xcode
+	cp -p $(MAC_OSX_DIR)/Wish.xcode/project.pbxproj \
+		$(MAC_OSX_DIR)/Wish.xcode/default.pbxuser \
+		$(DISTDIR)/macosx/Wish.xcode
 	mkdir $(DISTDIR)/macosx/Wish.xcodeproj
-	cp -p $(MAC_OSX_DIR)/Wish.xcodeproj/*.pbx* \
+	cp -p $(MAC_OSX_DIR)/Wish.xcodeproj/project.pbxproj \
+		$(MAC_OSX_DIR)/Wish.xcodeproj/default.pbxuser \
 		$(DISTDIR)/macosx/Wish.xcodeproj
 	mkdir $(DISTDIR)/compat
 	cp -p $(TOP_DIR)/license.terms $(TCLDIR)/compat/unistd.h \
