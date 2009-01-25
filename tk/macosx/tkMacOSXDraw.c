@@ -693,6 +693,56 @@ TkMacOSXCreateCGImageWithDrawable(
 /*
  *----------------------------------------------------------------------
  *
+ * TkMacOSXGetNSImage --
+ *
+ *	Get NSImage for Tk_Image or Pixmap.
+ *
+ * Results:
+ *	NSImage.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+NSImage*
+TkMacOSXGetNSImage(
+    Display *display,
+    Tk_Image image,
+    Pixmap bitmap,
+    GC gc,
+    int width,
+    int height)
+{
+    CGImageRef cgImage;
+    NSImage *nsImage;
+    NSBitmapImageRep *bitmapImageRep;
+    Pixmap pixmap = Tk_GetPixmap(display, None, width, height, 0);
+
+    if (image) {
+	Tk_RedrawImage(image, 0, 0, width, height, pixmap, 0, 0);
+    } else {
+	unsigned long origBackground = gc->background;
+
+	gc->background = TRANSPARENT_PIXEL << 24;
+	XSetClipOrigin(display, gc, 0, 0);
+	XCopyPlane(display, bitmap, pixmap, gc, 0, 0, width, height, 0, 0, 1);
+	gc->background = origBackground;
+    }
+    cgImage = TkMacOSXCreateCGImageWithDrawable(pixmap);
+    nsImage = [[NSImage alloc] initWithSize:NSMakeSize(width, height)];
+    bitmapImageRep = [[NSBitmapImageRep alloc] initWithCGImage:cgImage];
+    [nsImage addRepresentation:bitmapImageRep];
+    CFRelease(cgImage);
+    Tk_FreePixmap(display, pixmap);
+
+    return nsImage;
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
  * GetCGContextForDrawable --
  *
  *	Get CGContext for given Drawable, creating one if necessary.

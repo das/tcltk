@@ -71,8 +71,6 @@ static const BoundsFix boundsFixes[] = {
 
 #endif
 
-static NSImage *GetNativeButtonImage(Display *display, Tk_Image image,
-	Pixmap bitmap, GC gc, int width, int height);
 static void DisplayNativeButton(TkButton *butPtr);
 static void ComputeNativeButtonGeometry(TkButton *butPtr);
 static void DisplayUnixButton(TkButton *butPtr);
@@ -242,56 +240,6 @@ TkpComputeButtonGeometry(
 #pragma mark -
 #pragma mark Native Buttons:
 
-
-/*
- *----------------------------------------------------------------------
- *
- * GetNativeButtonImage --
- *
- *	Get NSImage for button Tk_Image or bitmap.
- *
- * Results:
- *	NSImage.
- *
- * Side effects:
- *	None.
- *
- *----------------------------------------------------------------------
- */
-
-static NSImage*
-GetNativeButtonImage(
-    Display *display,
-    Tk_Image image,
-    Pixmap bitmap,
-    GC gc,
-    int width,
-    int height)
-{
-    CGImageRef cgImage;
-    NSImage *nsImage;
-    NSBitmapImageRep *bitmapImageRep;
-    Pixmap pixmap = Tk_GetPixmap(display, None, width, height, 0);
-
-    if (image) {
-	Tk_RedrawImage(image, 0, 0, width, height, pixmap, 0, 0);
-    } else {
-	unsigned long origBackground = gc->background;
-
-	gc->background = TRANSPARENT_PIXEL << 24;
-	XSetClipOrigin(display, gc, 0, 0);
-	XCopyPlane(display, bitmap, pixmap, gc, 0, 0, width, height, 0, 0, 1);
-	gc->background = origBackground;
-    }
-    cgImage = TkMacOSXCreateCGImageWithDrawable(pixmap);
-    nsImage = [[NSImage alloc] initWithSize:NSMakeSize(width, height)];
-    bitmapImageRep = [[NSBitmapImageRep alloc] initWithCGImage:cgImage];
-    [nsImage addRepresentation:bitmapImageRep];
-    CFRelease(cgImage);
-    Tk_FreePixmap(display, pixmap);
-
-    return nsImage;
-}
 
 /*
  *----------------------------------------------------------------------
@@ -538,27 +486,27 @@ ComputeNativeButtonGeometry(
 	macButtonPtr->tristateImage = nil;
     }
     if (haveImage) {
-	int height, width;
+	int width, height;
 	NSImage *image, *selectImage = nil, *tristateImage = nil;
 	NSCellImagePosition pos = NSImageOnly;
 
 	if (butPtr->image) {
 	    Tk_SizeOfImage(butPtr->image, &width, &height);
-	    image = GetNativeButtonImage(butPtr->display, butPtr->image,
+	    image = TkMacOSXGetNSImage(butPtr->display, butPtr->image,
 		    None, NULL, width, height);
 	    if (butPtr->selectImage) {
-		selectImage = GetNativeButtonImage(butPtr->display,
+		selectImage = TkMacOSXGetNSImage(butPtr->display,
 			butPtr->selectImage, None, NULL, width, height);
 	    }
 	    if (butPtr->tristateImage) {
-		tristateImage = GetNativeButtonImage(butPtr->display,
+		tristateImage = TkMacOSXGetNSImage(butPtr->display,
 			butPtr->tristateImage, None, NULL, width, height);
 	    }
 	} else {
 	    Tk_SizeOfBitmap(butPtr->display, butPtr->bitmap, &width, &height);
-	    image = GetNativeButtonImage(butPtr->display, NULL, butPtr->bitmap,
+	    image = TkMacOSXGetNSImage(butPtr->display, NULL, butPtr->bitmap,
 		    butPtr->normalTextGC, width, height);
-	    selectImage = GetNativeButtonImage(butPtr->display, NULL,
+	    selectImage = TkMacOSXGetNSImage(butPtr->display, NULL,
 		    butPtr->bitmap, butPtr->activeTextGC, width, height);
 	}
 	[button setImage:image];

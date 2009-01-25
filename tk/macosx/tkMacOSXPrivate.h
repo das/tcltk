@@ -224,6 +224,8 @@ MODULE_SCOPE NSWindow*	TkMacOSXDrawableWindow(Drawable drawable);
 MODULE_SCOPE void	TkMacOSXWinCGBounds(TkWindow *winPtr, CGRect *bounds);
 MODULE_SCOPE HIShapeRef	TkMacOSXGetClipRgn(Drawable drawable);
 MODULE_SCOPE CGImageRef	TkMacOSXCreateCGImageWithDrawable(Drawable drawable);
+MODULE_SCOPE NSImage*	TkMacOSXGetNSImage(Display *display, Tk_Image image,
+			    Pixmap bitmap, GC gc, int width, int height);
 MODULE_SCOPE NSColor*	TkMacOSXGetNSColor(unsigned long pixel);
 MODULE_SCOPE Tcl_Obj *	TkMacOSXGetStringObjFromCFString(CFStringRef str);
 MODULE_SCOPE TkWindow*	TkMacOSXGetTkWindow(NSWindow *w);
