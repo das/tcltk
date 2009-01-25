@@ -310,6 +310,41 @@ TkSetMacColor(
 /*
  *----------------------------------------------------------------------
  *
+ * TkMacOSXGetNSColor --
+ *
+ *	Creates a NSColor from a X style pixel value.
+ *
+ * Results:
+ *	Returns nil if not a real pixel, NSColor* otherwise.
+ *
+ * Side effects:
+ *	None
+ *
+ *----------------------------------------------------------------------
+ */
+
+NSColor*
+TkMacOSXGetNSColor(
+    unsigned long pixel)		/* Pixel value to convert. */
+{
+    CGColorRef cgColor;
+    NSColor *nsColor = nil;
+
+    if (TkSetMacColor(pixel, &cgColor)) {
+	NSColorSpace *colorSpace = [[NSColorSpace alloc]
+		initWithCGColorSpace:CGColorGetColorSpace(cgColor)];
+	nsColor = [NSColor colorWithColorSpace:colorSpace
+		components:CGColorGetComponents(cgColor)
+		count:CGColorGetNumberOfComponents(cgColor)];
+	[colorSpace release];
+	CFRelease(cgColor);
+    }
+    return nsColor;
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
  * TkMacOSXSetColorInContext --
  *
  *	Sets fill and stroke color in the given CG context from an X
@@ -398,8 +433,8 @@ TkpGetColor(
     Tk_Uid name)		/* Name of color to allocated (in form
 				 * suitable for passing to XParseColor). */
 {
-    Display *display = Tk_Display(tkwin);
-    Colormap colormap = Tk_Colormap(tkwin);
+    Display *display = tkwin != None ? Tk_Display(tkwin) : NULL;
+    Colormap colormap = tkwin!= None ? Tk_Colormap(tkwin) : None;
     TkColor *tkColPtr;
     XColor color;
 
