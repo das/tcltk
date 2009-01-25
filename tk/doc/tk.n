@@ -80,7 +80,7 @@ is not supported by the system, and in safe interpreters.
 .PP
 If the literal string \fBreset\fR is given as an additional argument,
 the timer is reset and an empty string is returned. Resetting the
-inactivity time is forbidden in safe interpreters and will throw and
+inactivity time is forbidden in safe interpreters and will throw an
 error if tried.
 .RE
 .TP
