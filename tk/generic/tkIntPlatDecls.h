@@ -305,8 +305,8 @@ EXTERN int		TkMacOSXGrowToplevel (void * whichWindow,
 #ifndef TkMacOSXHandleMenuSelect_TCL_DECLARED
 #define TkMacOSXHandleMenuSelect_TCL_DECLARED
 /* 18 */
-EXTERN void		TkMacOSXHandleMenuSelect (MenuID theMenu,
-				MenuItemIndex theItem, int optionKeyPressed);
+EXTERN void		TkMacOSXHandleMenuSelect (short theMenu,
+				unsigned short theItem, int optionKeyPressed);
 #endif
 /* Slot 19 is reserved */
 /* Slot 20 is reserved */
@@ -603,7 +603,7 @@ typedef struct TkIntPlatStubs {
     void *reserved15;
     Window (*tkMacOSXGetXWindow) (void * macWinPtr); /* 16 */
     int (*tkMacOSXGrowToplevel) (void * whichWindow, Point start); /* 17 */
-    void (*tkMacOSXHandleMenuSelect) (MenuID theMenu, MenuItemIndex theItem, int optionKeyPressed); /* 18 */
+    void (*tkMacOSXHandleMenuSelect) (short theMenu, unsigned short theItem, int optionKeyPressed); /* 18 */
     void *reserved19;
     void *reserved20;
     void (*tkMacOSXInvalidateWindow) (MacDrawable * macWin, int flag); /* 21 */

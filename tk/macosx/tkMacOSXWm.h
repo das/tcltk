@@ -17,6 +17,7 @@
 #define _TKMACWM
 
 #include "tkMacOSXInt.h"
+#include "tkMenu.h"
 
 /*
  * A data structure of the following type holds information for
@@ -193,6 +194,7 @@ typedef struct TkWmInfo {
     WindowClass macClass;
     WindowAttributes attributes, configAttributes;
     TkWindow *scrollWinPtr;	/* Ptr to scrollbar handling grow widget. */
+    TkMenu *menuPtr;
     NSWindow *window;
 } WmInfo;
 

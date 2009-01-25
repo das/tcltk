@@ -232,13 +232,30 @@ MODULE_SCOPE TkWindow*	TkMacOSXGetTkWindow(NSWindow *w);
 MODULE_SCOPE NSFont*	TkMacOSXNSFontForFont(Tk_Font tkfont);
 MODULE_SCOPE NSDictionary* TkMacOSXNSFontAttributesForFont(Tk_Font tkfont);
 
-#pragma mark -
+#pragma mark Private Objective-C Classes
 
 #define VISIBILITY_HIDDEN __attribute__((__visibility__("hidden")))
+
+enum { tkMainMenu = 1, tkApplicationMenu, tkWindowsMenu, tkHelpMenu};
+
+VISIBILITY_HIDDEN
+@interface TKMenu : NSMenu {
+@private
+    void *_tkMenu;
+    NSUInteger _tkOffset, _tkSpecial;
+}
+- (void)setSpecial:(NSUInteger)special;
+- (BOOL)isSpecial:(NSUInteger)special;
+@end
 
 VISIBILITY_HIDDEN
 @interface TKApplication : NSApplication {
 @private
+    Tcl_Interp *_eventInterp;
+    NSMenu *_servicesMenu;
+    TKMenu *_defaultMainMenu, *_defaultApplicationMenu;
+    NSArray *_defaultApplicationMenuItems, *_defaultWindowsMenuItems;
+    NSArray *_defaultHelpMenuItems;
 }
 @end
 @interface TKApplication(TKInit)
@@ -253,6 +270,9 @@ VISIBILITY_HIDDEN
 @interface TKApplication(TKKeyEvent)
 - (NSEvent *)tkProcessKeyEvent:(NSEvent *)theEvent;
 @end
+@interface TKApplication(TKMenu)
+- (void)tkSetMainMenu:(TKMenu *)menu;
+@end
 
 VISIBILITY_HIDDEN
 @interface TKContentView : NSView {
@@ -260,6 +280,34 @@ VISIBILITY_HIDDEN
     id _savedSubviews;
     BOOL _subviewsSetAside;
 }
+@end
+
+#pragma mark NSMenu & NSMenuItem Utilities
+
+@interface NSMenu(TKUtils)
++ (id)menuWithTitle:(NSString *)title;
++ (id)menuWithTitle:(NSString *)title menuItems:(NSArray *)items;
++ (id)menuWithTitle:(NSString *)title submenus:(NSArray *)submenus;
+- (NSMenuItem *)itemWithSubmenu:(NSMenu *)submenu;
+- (NSMenuItem *)itemInSupermenu;
+@end
+
+@interface NSMenuItem(TKUtils)
++ (id)itemWithSubmenu:(NSMenu *)submenu;
++ (id)itemWithTitle:(NSString *)title submenu:(NSMenu *)submenu;
++ (id)itemWithTitle:(NSString *)title action:(SEL)action;
++ (id)itemWithTitle:(NSString *)title action:(SEL)action
+	target:(id)target;
++ (id)itemWithTitle:(NSString *)title action:(SEL)action
+	keyEquivalent:(NSString *)keyEquivalent;
++ (id)itemWithTitle:(NSString *)title action:(SEL)action
+	target:(id)target keyEquivalent:(NSString *)keyEquivalent;
++ (id)itemWithTitle:(NSString *)title action:(SEL)action
+	keyEquivalent:(NSString *)keyEquivalent
+	keyEquivalentModifierMask:(NSUInteger)keyEquivalentModifierMask;
++ (id)itemWithTitle:(NSString *)title action:(SEL)action
+	target:(id)target keyEquivalent:(NSString *)keyEquivalent
+	keyEquivalentModifierMask:(NSUInteger)keyEquivalentModifierMask;
 @end
 
 #endif /* _TKMACPRIV */

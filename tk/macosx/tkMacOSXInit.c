@@ -41,12 +41,16 @@ static void keyboardChanged(CFNotificationCenterRef center, void *observer, CFSt
 }
 #endif
 
+@interface TKApplication(TKKeyboard)
+- (void)keyboardChanged:(NSNotification *)notification;
+@end
+
 @interface TKApplication(TKWindowEvent)
 - (void)_setupWindowNotifications;
 @end
 
-@interface TKApplication(TKKeyboard)
-- (void)keyboardChanged:(NSNotification *)notification;
+@interface TKApplication(TKMenus)
+- (void)_setupMenus;
 @end
 
 @implementation TKApplication
@@ -76,7 +80,10 @@ static void keyboardChanged(CFNotificationCenterRef center, void *observer, CFSt
     }
     [self setWindowsNeedUpdate:YES];
 }
-- (void)_setup {
+- (void)_setup:(Tcl_Interp *)interp {
+    _eventInterp = interp;
+    _defaultMainMenu = nil;
+    [self _setupMenus];
     [self setDelegate:self];
 #ifdef TK_MAC_DEBUG_NOTIFICATIONS
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -127,8 +134,6 @@ TkpInit(
     Tcl_Interp *interp)
 {
     static int initialized = 0;
-
-    Tk_MacOSXSetupTkNotifier();
 
     /*
      * Since it is possible for TkInit to be called multiple times and we
@@ -181,7 +186,7 @@ TkpInit(
 	    pool = [NSAutoreleasePool new];
 	}
 	[TKApplication sharedApplication];
-	[NSApp _setup];
+	[NSApp _setup:interp];
 
 	/* Check whether we are a bundled executable: */
 	bundleRef = CFBundleGetMainBundle();
@@ -251,14 +256,11 @@ TkpInit(
 	    }
 	}
 
+	[NSApp _setupEventLoop];
 	TkMacOSXInitAppleEvents(interp);
-	TkMacOSXInitMenus(interp);
 	TkMacOSXUseAntialiasedText(interp, -1);
 	TkMacOSXInitCGDrawing(interp, TRUE, 0);
-
-	[NSApp _setupEventLoop];
 	[pool drain];
-
 
 	/*
 	 * FIXME: Close stdin & stdout for remote debugging otherwise we will
@@ -303,6 +305,8 @@ TkpInit(
 	    }
 	}
     }
+
+    Tk_MacOSXSetupTkNotifier();
 
     if (tkLibPath[0] != '\0') {
 	Tcl_SetVar(interp, "tk_library", tkLibPath, TCL_GLOBAL_ONLY);

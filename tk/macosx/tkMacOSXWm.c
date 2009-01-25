@@ -412,6 +412,7 @@ TkWmNewWindow(
     wmPtr->attributes = kWindowStandardDocumentAttributes
 	    | kWindowLiveResizeAttribute;
     wmPtr->scrollWinPtr = NULL;
+    wmPtr->menuPtr = NULL;
     wmPtr->window = nil;
     winPtr->wmInfoPtr = wmPtr;
 

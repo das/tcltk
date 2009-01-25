@@ -800,7 +800,7 @@ declare 17 aqua {
     int TkMacOSXGrowToplevel(void *whichWindow, Point start)
 }
 declare 18 aqua {
-    void TkMacOSXHandleMenuSelect(MenuID theMenu, MenuItemIndex theItem,
+    void TkMacOSXHandleMenuSelect(short theMenu, unsigned short theItem,
 	    int optionKeyPressed)
 }
 

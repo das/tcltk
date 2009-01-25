@@ -50,6 +50,22 @@ static OSErr		PrefsHandler(const AppleEvent *event,
 static int		MissedAnyParameters(const AppleEvent *theEvent);
 static int		ReallyKillMe(Tcl_Event *eventPtr, int flags);
 static OSStatus		FSRefToDString(const FSRef *fsref, Tcl_DString *ds);
+
+#pragma mark TKApplication(TKHLEvents)
+
+@implementation TKApplication(TKHLEvents)
+
+- (void)terminate:(id)sender {
+    QuitHandler(NULL, NULL, (SRefCon) _eventInterp);
+}
+
+- (void)preferences:(id)sender {
+    PrefsHandler(NULL, NULL, (SRefCon) _eventInterp);
+}
+
+@end
+
+#pragma mark -
 
 /*
  *----------------------------------------------------------------------
