@@ -29,10 +29,6 @@ MODULE_SCOPE int TkMacOSXProcessApplicationEvent(TkMacOSXEvent *e,
 	MacEventStatus *statusPtr);
 MODULE_SCOPE int TkMacOSXProcessAppearanceEvent(TkMacOSXEvent *e,
 	MacEventStatus *statusPtr);
-MODULE_SCOPE int TkMacOSXProcessMenuEvent(TkMacOSXEvent *e,
-	MacEventStatus *statusPtr);
-MODULE_SCOPE int TkMacOSXProcessCommandEvent(TkMacOSXEvent *e,
-	MacEventStatus *statusPtr);
 MODULE_SCOPE int TkMacOSXProcessFontEvent(TkMacOSXEvent *e,
 	MacEventStatus *statusPtr);
 #endif

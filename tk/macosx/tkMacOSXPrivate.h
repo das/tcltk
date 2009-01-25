@@ -157,7 +157,6 @@ typedef struct TkMacOSXDrawingContext {
 MODULE_SCOPE CGFloat tkMacOSXZeroScreenHeight;
 MODULE_SCOPE CGFloat tkMacOSXZeroScreenTop;
 
-
 /*
  * Prototypes for TkMacOSXRegion.c.
  */
@@ -194,17 +193,15 @@ MODULE_SCOPE OSStatus	TkMacOSHIShapeUnion(HIShapeRef inShape1,
 MODULE_SCOPE void *	TkMacOSXGetNamedSymbol(const char *module,
 			    const char *symbol);
 MODULE_SCOPE void	TkMacOSXDisplayChanged(Display *display);
+#ifdef MAC_OSX_TK_TODO
 MODULE_SCOPE void	TkMacOSXInitScrollbarMetrics(void);
+#endif
 MODULE_SCOPE int	TkMacOSXUseAntialiasedText(Tcl_Interp *interp,
 			    int enable);
 MODULE_SCOPE int	TkMacOSXInitCGDrawing(Tcl_Interp *interp, int enable,
 			    int antiAlias);
 MODULE_SCOPE int	TkMacOSXGenerateFocusEvent(Window window,
 			    int activeFlag);
-MODULE_SCOPE int	TkMacOSXGenerateParentMenuSelectEvent(MenuRef menu);
-MODULE_SCOPE int	TkMacOSXGenerateMenuSelectEvent(MenuRef menu,
-			    MenuItemIndex index);
-MODULE_SCOPE void	TkMacOSXClearActiveMenu(MenuRef menu);
 MODULE_SCOPE WindowClass TkMacOSXWindowClass(TkWindow *winPtr);
 MODULE_SCOPE int	TkMacOSXIsWindowZoomed(TkWindow *winPtr);
 MODULE_SCOPE int	TkGenerateButtonEventForXPointer(Window window);

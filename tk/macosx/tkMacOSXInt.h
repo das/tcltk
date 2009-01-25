@@ -124,15 +124,6 @@ MODULE_SCOPE TkMacOSXEmbedHandler *tkMacOSXEmbedHandler;
 #define TK_DRAW_IN_CONTEXT		1
 
 /*
- * Globals shared among TkAqua.
- */
-
-MODULE_SCOPE MenuHandle tkCurrentAppleMenu; /* Handle to current Apple Menu */
-MODULE_SCOPE MenuHandle tkAppleMenu;	/* Handle to default Apple Menu */
-MODULE_SCOPE MenuHandle tkFileMenu;	/* Handles to menus */
-MODULE_SCOPE MenuHandle tkEditMenu;	/* Handles to menus */
-
-/*
  * Prototypes of internal procs not in the stubs table.
  */
 
