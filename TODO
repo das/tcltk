@@ -1,0 +1,36 @@
+TkAqua Cocoa/64bit Port
+=======================
+
+Features yet to be implemented, in order of importance:
+
+TODO for parity with Carbon TkAqua:
+- native scrollbar & menubutton
+- native file, alert & color picker dialogs
+- XGetImage (i.e. copy bits from screen), used by generic Tk drawing code to
+  render transparent images
+- clipboard (scrap) handling
+- grabs (Tk's modal dialogs)
+- transient windows (stay in front of & move with parent window)
+- window resize limits (max/min & increments)
+- Tcl callbacks for app hide & show
+- dock notification (jumping icon)
+- reinit internal state when screen size or scrollbar metrics change
+- transparent windows
+- fullscreen windows
+
+TODO features that are not in Carbon TkAqua yet either:
+- native bitmaps (i.e. access to named OS-provided icons)
+- native scale widget
+- custom menu drawing (for tk menus with very fancy config options that native
+  menus do not support)
+- transparent window resize corner
+- stippled drawing
+
+Known Bugs:
+- mouse ups occasionally seem to go missing
+- sometimes not all exposed areas are redrawn immediately
+- window redraw/activation broken after expansion from dock
+- CoreText measuring bug seen in narrowed widget demo main window
+
+
+-- das 25/01/2009
