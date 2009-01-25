@@ -299,7 +299,7 @@ if test "`uname -s`" = "Darwin" ; then
 	fi
 	# remove 64-bit arch flags from CFLAGS et al. for combined 32 & 64 bit
 	# fat builds if configuration does not support 64-bit.
-	if test $tk_aqua = yes -o "$tcl_cv_lib_x11_64" = no; then
+	if test "$tcl_cv_lib_x11_64" = no; then
 	    AC_MSG_NOTICE([Removing 64-bit architectures from compiler & linker flags])
 	    for v in CFLAGS CPPFLAGS LDFLAGS; do
 		eval $v'="`echo "$'$v' "|sed -e "s/-arch ppc64 / /g" -e "s/-arch x86_64 / /g"`"'

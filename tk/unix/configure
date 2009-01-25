@@ -9118,7 +9118,7 @@ echo "${ECHO_T}$tcl_cv_lib_x11_64" >&6
 	fi
 	# remove 64-bit arch flags from CFLAGS et al. for combined 32 & 64 bit
 	# fat builds if configuration does not support 64-bit.
-	if test $tk_aqua = yes -o "$tcl_cv_lib_x11_64" = no; then
+	if test "$tcl_cv_lib_x11_64" = no; then
 	    { echo "$as_me:$LINENO: Removing 64-bit architectures from compiler & linker flags" >&5
 echo "$as_me: Removing 64-bit architectures from compiler & linker flags" >&6;}
 	    for v in CFLAGS CPPFLAGS LDFLAGS; do
