@@ -47,7 +47,12 @@ static void keyboardChanged(CFNotificationCenterRef center, void *observer, CFSt
 - (void)keyboardChanged:(NSNotification *)notification;
 @end
 
-@interface TKApplication(TKWindowEvent)
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1060
+#define TKApplication_NSApplicationDelegate <NSApplicationDelegate>
+#else
+#define TKApplication_NSApplicationDelegate
+#endif
+@interface TKApplication(TKWindowEvent) TKApplication_NSApplicationDelegate
 - (void)_setupWindowNotifications;
 @end
 
