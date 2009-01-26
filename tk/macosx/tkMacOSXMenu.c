@@ -109,6 +109,14 @@ static void	RecursivelyClearActiveMenu(TkMenu *menuPtr);
 - (void)insertItem:(NSMenuItem *)newItem atTkIndex:(NSInteger)index;
 @end
 
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1060
+#define TKMenu_NSMenuDelegate <NSMenuDelegate>
+#else
+#define TKMenu_NSMenuDelegate
+#endif
+@interface TKMenu(TKMenuDelegate) TKMenu_NSMenuDelegate
+@end
+
 @implementation TKMenu
 - (void)setSpecial:(NSUInteger)special {
     NSAssert(!_tkSpecial, @"Cannot change specialness of a special menu");
