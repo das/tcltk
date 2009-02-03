@@ -190,7 +190,7 @@ Tk_PackObjCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     Tk_Window tkwin = clientData;
-    char *argv2;
+    const char *argv2;
     static const char *const optionStrings[] = {
 	/* after, append, before and unpack are deprecated */
 	"after", "append", "before", "unpack",
@@ -201,7 +201,7 @@ Tk_PackObjCmd(
     int index;
 
     if (objc >= 2) {
-	char *string = Tcl_GetString(objv[1]);
+	const char *string = Tcl_GetString(objv[1]);
 
 	if (string[0] == '.') {
 	    return ConfigureSlaves(interp, tkwin, objc-1, objv+1);
@@ -1135,7 +1135,7 @@ PackAfter(
 	packPtr->flags |= OLD_STYLE;
 	for (index = 0 ; index < optionCount; index++) {
 	    Tcl_Obj *curOptPtr = options[index];
-	    char *curOpt = Tcl_GetStringFromObj(curOptPtr, &length);
+	    const char *curOpt = Tcl_GetStringFromObj(curOptPtr, &length);
 
 	    c = curOpt[0];
 
@@ -1459,7 +1459,7 @@ ConfigureSlaves(
     Packer *masterPtr, *slavePtr, *prevPtr, *otherPtr;
     Tk_Window other, slave, parent, ancestor;
     int i, j, numWindows, tmp, positionGiven;
-    char *string;
+    const char *string;
     static const char *const optionStrings[] = {
 	"-after", "-anchor", "-before", "-expand", "-fill",
 	"-in", "-ipadx", "-ipady", "-padx", "-pady", "-side", NULL };

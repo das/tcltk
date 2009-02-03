@@ -226,7 +226,7 @@ Tk_ImageObjCmd(
     Tcl_HashSearch search;
     char idString[16 + TCL_INTEGER_SPACE];
     TkDisplay *dispPtr = winPtr->dispPtr;
-    char *arg, *name;
+    const char *arg, *name;
     ThreadSpecificData *tsdPtr =
             Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
