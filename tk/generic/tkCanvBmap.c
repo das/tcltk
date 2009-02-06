@@ -201,7 +201,7 @@ TkcCreateBitmap(
     if (objc == 1) {
 	i = 1;
     } else {
-	char *arg = Tcl_GetString(objv[1]);
+	const char *arg = Tcl_GetString(objv[1]);
 	i = 2;
 	if ((arg[0] == '-') && (arg[1] >= 'a') && (arg[1] <= 'z')) {
 	    i = 1;

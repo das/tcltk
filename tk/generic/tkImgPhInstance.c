@@ -350,6 +350,8 @@ TkImgPhotoGet(
 	    WhitePixelOfScreen(Tk_Screen(tkwin));
     gcValues.background = (black != NULL)? black->pixel:
 	    BlackPixelOfScreen(Tk_Screen(tkwin));
+    Tk_FreeColor(white);
+    Tk_FreeColor(black);
     gcValues.graphics_exposures = False;
     instancePtr->gc = Tk_GetGC(tkwin,
 	    GCForeground|GCBackground|GCGraphicsExposures, &gcValues);

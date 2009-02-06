@@ -188,7 +188,7 @@ Tk_GrabObjCmd(
     int globalGrab;
     Tk_Window tkwin;
     TkDisplay *dispPtr;
-    char *arg;
+    const char *arg;
     int index;
     int len;
     static const char *const optionStrings[] = {
