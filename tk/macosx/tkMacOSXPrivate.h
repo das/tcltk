@@ -231,7 +231,7 @@ MODULE_SCOPE NSDictionary* TkMacOSXNSFontAttributesForFont(Tk_Font tkfont);
 
 #pragma mark Private Objective-C Classes
 
-#define VISIBILITY_HIDDEN __attribute__((__visibility__("hidden")))
+#define VISIBILITY_HIDDEN __attribute__((visibility("hidden")))
 
 enum { tkMainMenu = 1, tkApplicationMenu, tkWindowsMenu, tkHelpMenu};
 
