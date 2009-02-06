@@ -139,6 +139,24 @@
 		STRINGIFY(symbol)); \
     }
 
+
+/*
+ * Macros for GC
+ */
+
+#define TkMacOSXMakeUncollectable(x) ({ id o = (id)(x); \
+    if (o) { if(tkMacOSXGCEnabled) CFRetain(o); } o; })
+#define TkMacOSXMakeUncollectableAndRetain(x) ({ id o = (id)(x); \
+    if (o) { if(tkMacOSXGCEnabled) CFRetain(o); else [o retain]; } o; })
+#define TkMacOSXMakeCollectable(x) ({ id o = (id)(x); \
+    if (o) { x = nil; if (tkMacOSXGCEnabled) CFRelease(o); } o; })
+#define TkMacOSXMakeCollectableAndRelease(x) ({ id o = (id)(x); \
+    if (o) { x = nil; if (tkMacOSXGCEnabled) CFRelease(o); \
+    else [o release]; } o; })
+#define TkMacOSXMakeCollectableAndAutorelease(x) ({ id o = (id)(x); \
+    if (o) {  x = nil; if (tkMacOSXGCEnabled) CFRelease(o); \
+    else [o autorelease]; } o; })
+
 /*
  * Structure encapsulating current drawing environment.
  */
@@ -156,6 +174,7 @@ typedef struct TkMacOSXDrawingContext {
 
 MODULE_SCOPE CGFloat tkMacOSXZeroScreenHeight;
 MODULE_SCOPE CGFloat tkMacOSXZeroScreenTop;
+MODULE_SCOPE int tkMacOSXGCEnabled;
 
 /*
  * Prototypes for TkMacOSXRegion.c.
@@ -221,7 +240,9 @@ MODULE_SCOPE NSWindow*	TkMacOSXDrawableWindow(Drawable drawable);
 MODULE_SCOPE void	TkMacOSXWinCGBounds(TkWindow *winPtr, CGRect *bounds);
 MODULE_SCOPE HIShapeRef	TkMacOSXGetClipRgn(Drawable drawable);
 MODULE_SCOPE CGImageRef	TkMacOSXCreateCGImageWithDrawable(Drawable drawable);
-MODULE_SCOPE NSImage*	TkMacOSXGetNSImage(Display *display, Tk_Image image,
+MODULE_SCOPE NSImage*	TkMacOSXGetNSImageWithTkImage(Display *display,
+			    Tk_Image image, int width, int height);
+MODULE_SCOPE NSImage*	TkMacOSXGetNSImageWithBitmap(Display *display,
 			    Pixmap bitmap, GC gc, int width, int height);
 MODULE_SCOPE NSColor*	TkMacOSXGetNSColor(unsigned long pixel);
 MODULE_SCOPE Tcl_Obj *	TkMacOSXGetStringObjFromCFString(CFStringRef str);

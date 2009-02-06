@@ -4779,6 +4779,76 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		F90E36D50F3B5C8400810A10 /* Debug gcc42 nogc */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Wish-Debug.xcconfig */;
+			buildSettings = {
+				ARCHS = (
+					"$(NATIVE_ARCH_32_BIT)",
+					"$(NATIVE_ARCH_64_BIT)",
+				);
+				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_GC = unsupported;
+				GCC_INPUT_FILETYPE = sourcecode.c.objc;
+				GCC_VERSION = 4.2;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+			};
+			name = "Debug gcc42 nogc";
+		};
+		F90E36D60F3B5C8400810A10 /* Debug gcc42 nogc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = Wish;
+				SKIP_INSTALL = NO;
+			};
+			name = "Debug gcc42 nogc";
+		};
+		F90E36D70F3B5C8400810A10 /* Debug gcc42 nogc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURE_ARGS = "tcl_cv_cc_visibility_hidden=no $(CONFIGURE_ARGS)";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"__private_extern__=extern",
+					"$(GCC_PREPROCESSOR_DEFINITIONS)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				OTHER_LDFLAGS = (
+					"$(OTHER_LDFLAGS_AQUA)",
+					"$(OTHER_LDFLAGS)",
+				);
+				PRODUCT_NAME = tktest;
+			};
+			name = "Debug gcc42 nogc";
+		};
+		F90E36D80F3B5C8400810A10 /* Debug gcc42 nogc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURE_ARGS = "tcl_cv_cc_visibility_hidden=no $(CONFIGURE_ARGS)";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"__private_extern__=extern",
+					"$(GCC_PREPROCESSOR_DEFINITIONS)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/usr/X11R6/include,
+					/usr/X11R6/include/freetype2,
+					"$(HEADER_SEARCH_PATHS)",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					/usr/X11R6/lib,
+					"$(LIBRARY_SEARCH_PATHS)",
+				);
+				PRODUCT_NAME = "tktest-X11";
+			};
+			name = "Debug gcc42 nogc";
+		};
 		F91BCC4F093152310042A6BF /* ReleaseUniversal */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -4805,7 +4875,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CFLAGS = "-arch i386 -arch x86_64 -arch ppc $(CFLAGS)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_GC = required;
+				GCC_ENABLE_OBJC_GC = supported;
 				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PREBINDING = NO;
@@ -4858,7 +4928,7 @@
 				CONFIGURE_ARGS = "$(CONFIGURE_ARGS) --enable-symbols=all";
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_GC = required;
+				GCC_ENABLE_OBJC_GC = supported;
 				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
@@ -4876,7 +4946,7 @@
 				);
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_GC = required;
+				GCC_ENABLE_OBJC_GC = supported;
 				GCC_GENERATE_TEST_COVERAGE_FILES = YES;
 				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = YES;
@@ -5000,7 +5070,7 @@
 				);
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_GC = required;
+				GCC_ENABLE_OBJC_GC = supported;
 				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
@@ -5014,7 +5084,7 @@
 			buildSettings = {
 				ARCHS = "$(NATIVE_ARCH_32_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_GC = required;
+				GCC_ENABLE_OBJC_GC = supported;
 				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PREBINDING = NO;
@@ -5031,7 +5101,7 @@
 				);
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_GC = required;
+				GCC_ENABLE_OBJC_GC = supported;
 				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
@@ -5156,7 +5226,7 @@
 				CONFIGURE_ARGS = "--enable-64bit $(CONFIGURE_ARGS)";
 				CPPFLAGS = "-arch $(NATIVE_ARCH_64_BIT) $(CPPFLAGS)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_GC = required;
+				GCC_ENABLE_OBJC_GC = supported;
 				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PREBINDING = NO;
@@ -5174,7 +5244,7 @@
 				CONFIGURE_ARGS = "$(CONFIGURE_ARGS) --disable-corefoundation";
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_GC = required;
+				GCC_ENABLE_OBJC_GC = supported;
 				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
@@ -5230,7 +5300,7 @@
 				CONFIGURE_ARGS = "$(CONFIGURE_ARGS) --disable-threads --disable-corefoundation";
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_GC = required;
+				GCC_ENABLE_OBJC_GC = supported;
 				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
@@ -5285,7 +5355,7 @@
 				);
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_GC = required;
+				GCC_ENABLE_OBJC_GC = supported;
 				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				GCC_VERSION = 4.2;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
@@ -5356,7 +5426,7 @@
 				CC = "$(DEVELOPER_DIR)/usr/bin/llvm-gcc-4.2";
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_GC = required;
+				GCC_ENABLE_OBJC_GC = supported;
 				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
@@ -5423,7 +5493,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CFLAGS = "-arch i386 -arch x86_64 -arch ppc $(CFLAGS)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_GC = required;
+				GCC_ENABLE_OBJC_GC = supported;
 				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				GCC_VERSION = 4.2;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
@@ -5477,7 +5547,7 @@
 				CFLAGS = "-arch i386 -arch x86_64 -arch ppc $(CFLAGS)";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_GC = required;
+				GCC_ENABLE_OBJC_GC = supported;
 				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				GCC_OPTIMIZATION_LEVEL = 4;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
@@ -5609,7 +5679,7 @@
 				CONFIGURE_ARGS = "$(CONFIGURE_ARGS) --disable-threads";
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_GC = required;
+				GCC_ENABLE_OBJC_GC = supported;
 				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
@@ -5627,7 +5697,7 @@
 				);
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_GC = required;
+				GCC_ENABLE_OBJC_GC = unsupported;
 				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					PURIFY,
@@ -5684,7 +5754,7 @@
 				CFLAGS = "-arch i386 -arch ppc $(CFLAGS)";
 				CPPFLAGS = "-isysroot $(SDKROOT) $(CPPFLAGS)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_GC = required;
+				GCC_ENABLE_OBJC_GC = supported;
 				GCC_INPUT_FILETYPE = sourcecode.c.objc;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PREBINDING = NO;
@@ -5700,6 +5770,7 @@
 			buildConfigurations = (
 				F95CC8AC09158F3100EA5ACE /* Debug */,
 				F9988AB20D814C6500B6B03B /* Debug gcc42 */,
+				F90E36D60F3B5C8400810A10 /* Debug gcc42 nogc */,
 				F9988AB60D814C7500B6B03B /* Debug llvmgcc42 */,
 				F95CC8AE09158F3100EA5ACE /* DebugNoFixZL */,
 				F99EE73B0BE835310060D4AF /* DebugUnthreaded */,
@@ -5723,6 +5794,7 @@
 			buildConfigurations = (
 				F95CC8B109158F3100EA5ACE /* Debug */,
 				F9988AB30D814C6500B6B03B /* Debug gcc42 */,
+				F90E36D70F3B5C8400810A10 /* Debug gcc42 nogc */,
 				F9988AB70D814C7500B6B03B /* Debug llvmgcc42 */,
 				F95CC8B309158F3100EA5ACE /* DebugNoFixZL */,
 				F99EE73D0BE835310060D4AF /* DebugUnthreaded */,
@@ -5746,6 +5818,7 @@
 			buildConfigurations = (
 				F95CC8B609158F3100EA5ACE /* Debug */,
 				F9988AB10D814C6500B6B03B /* Debug gcc42 */,
+				F90E36D50F3B5C8400810A10 /* Debug gcc42 nogc */,
 				F9988AB50D814C7500B6B03B /* Debug llvmgcc42 */,
 				F95CC8B809158F3100EA5ACE /* DebugNoFixZL */,
 				F99EE7410BE835310060D4AF /* DebugUnthreaded */,
@@ -5769,6 +5842,7 @@
 			buildConfigurations = (
 				F97258A90A86873D00096C78 /* Debug */,
 				F9988AB40D814C6500B6B03B /* Debug gcc42 */,
+				F90E36D80F3B5C8400810A10 /* Debug gcc42 nogc */,
 				F9988AB80D814C7500B6B03B /* Debug llvmgcc42 */,
 				F97258AB0A86873D00096C78 /* DebugNoFixZL */,
 				F99EE73F0BE835310060D4AF /* DebugUnthreaded */,

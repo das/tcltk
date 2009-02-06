@@ -37,7 +37,7 @@ static Tcl_Obj *	GetWidgetDemoPath(Tcl_Interp *interp);
 	applicationName = [[NSProcessInfo processInfo] processName];
     }
     _servicesMenu = [NSMenu menuWithTitle:@"Services"];
-    _defaultApplicationMenuItems = [NSArray arrayWithObjects:
+    _defaultApplicationMenuItems = [[NSArray arrayWithObjects:
 	    [NSMenuItem separatorItem],
 	    [NSMenuItem itemWithTitle:
 		   [NSString stringWithFormat:@"Preferences%C", 0x2026]
@@ -58,7 +58,7 @@ static Tcl_Obj *	GetWidgetDemoPath(Tcl_Interp *interp);
 	    [NSMenuItem itemWithTitle:
 		   [NSString stringWithFormat:@"Quit %@", applicationName]
 		   action: @selector(terminate:) keyEquivalent:@"q"],
-	    nil];
+	    nil] retain];
     _defaultApplicationMenu = [TKMenu menuWithTitle:applicationName
 	    menuItems:_defaultApplicationMenuItems];
     [_defaultApplicationMenu insertItem:
@@ -85,7 +85,7 @@ static Tcl_Obj *	GetWidgetDemoPath(Tcl_Interp *interp);
 	    [NSMenuItem itemWithTitle:@"Delete" action:@selector(delete:)
 		   target:nil],
 	    nil]];
-    _defaultWindowsMenuItems = [NSArray arrayWithObjects:
+    _defaultWindowsMenuItems = [[NSArray arrayWithObjects:
 	    [NSMenuItem itemWithTitle:@"Minimize"
 		   action:@selector(performMiniaturize:) target:nil
 		   keyEquivalent:@"m"],
@@ -94,26 +94,33 @@ static Tcl_Obj *	GetWidgetDemoPath(Tcl_Interp *interp);
 	    [NSMenuItem separatorItem],
 	    [NSMenuItem itemWithTitle:@"Bring All to Front"
 		   action:@selector(arrangeInFront:)],
-	    nil];
+	    nil] retain];
     TKMenu *windowsMenu = [TKMenu menuWithTitle:@"Window" menuItems:
 	    _defaultWindowsMenuItems];
-    _defaultHelpMenuItems = [NSArray arrayWithObjects:
+    _defaultHelpMenuItems = [[NSArray arrayWithObjects:
 	    [NSMenuItem itemWithTitle:
 		   [NSString stringWithFormat:@"%@ Help", applicationName]
 		   action:@selector(showHelp:) keyEquivalent:@"?"],
-	    nil];
+	    nil] retain];
     TKMenu *helpMenu = [TKMenu menuWithTitle:@"Help" menuItems:
 	    _defaultHelpMenuItems];
     [self setServicesMenu:_servicesMenu];
     [self setWindowsMenu:windowsMenu];
-    _defaultMainMenu = [TKMenu menuWithTitle:@"" submenus:[NSArray
+    _defaultMainMenu = [[TKMenu menuWithTitle:@"" submenus:[NSArray
 	    arrayWithObjects:_defaultApplicationMenu, fileMenu, editMenu,
-	    windowsMenu, helpMenu, nil]];
+	    windowsMenu, helpMenu, nil]] retain];
     [_defaultMainMenu setSpecial:tkMainMenu];
     [_defaultApplicationMenu setSpecial:tkApplicationMenu];
     [windowsMenu setSpecial:tkWindowsMenu];
     [helpMenu setSpecial:tkHelpMenu];
     [self tkSetMainMenu:nil];
+}
+- (void)dealloc {
+    [_defaultMainMenu release];
+    [_defaultHelpMenuItems release];
+    [_defaultWindowsMenuItems release];
+    [_defaultApplicationMenuItems release];
+    [super dealloc];
 }
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem {
     SEL action = [anItem action];
@@ -364,21 +371,21 @@ GenerateEditEvent(
 @implementation NSMenu(TKUtils)
 + (id)menuWithTitle:(NSString *)title {
     NSMenu *m = [[self alloc] initWithTitle:title];
-    return m;
+    return [m autorelease];
 }
 + (id)menuWithTitle:(NSString *)title menuItems:(NSArray *)items {
     NSMenu *m = [[self alloc] initWithTitle:title];
     for (NSMenuItem *i in items) {
 	[m addItem:i];
     }
-    return m;
+    return [m autorelease];
 }
 + (id)menuWithTitle:(NSString *)title submenus:(NSArray *)submenus {
     NSMenu *m = [[self alloc] initWithTitle:title];
     for (NSMenu *i in submenus) {
 	[m addItem:[NSMenuItem itemWithSubmenu:i]];
     }
-    return m;
+    return [m autorelease];
 }
 - (NSMenuItem *)itemWithSubmenu:(NSMenu *)submenu {
     return [self itemAtIndex:[self indexOfItemWithSubmenu:submenu]];
@@ -394,33 +401,33 @@ GenerateEditEvent(
     NSMenuItem *i = [[self alloc] initWithTitle:[submenu title] action:NULL
 	    keyEquivalent:@""];
     [i setSubmenu:submenu];
-    return i;
+    return [i autorelease];
 }
 + (id)itemWithTitle:(NSString *)title submenu:(NSMenu *)submenu {
     NSMenuItem *i = [[self alloc] initWithTitle:title action:NULL
 	    keyEquivalent:@""];
     [i setSubmenu:submenu];
-    return i;
+    return [i autorelease];
 }
 + (id)itemWithTitle:(NSString *)title action:(SEL)action {
     NSMenuItem *i = [[self alloc] initWithTitle:title action:action
 	    keyEquivalent:@""];
     [i setTarget:NSApp];
-    return i;
+    return [i autorelease];
 }
 + (id)itemWithTitle:(NSString *)title action:(SEL)action
 	target:(id)target {
     NSMenuItem *i = [[self alloc] initWithTitle:title action:action
 	    keyEquivalent:@""];
     [i setTarget:target];
-    return i;
+    return [i autorelease];
 }
 + (id)itemWithTitle:(NSString *)title action:(SEL)action
 	keyEquivalent:(NSString *)keyEquivalent {
     NSMenuItem *i = [[self alloc] initWithTitle:title action:action
 	    keyEquivalent:keyEquivalent];
     [i setTarget:NSApp];
-    return i;
+    return [i autorelease];
 }
 + (id)itemWithTitle:(NSString *)title action:(SEL)action
 	target:(id)target keyEquivalent:(NSString *)keyEquivalent {
@@ -436,7 +443,7 @@ GenerateEditEvent(
 	    keyEquivalent:keyEquivalent];
     [i setTarget:NSApp];
     [i setKeyEquivalentModifierMask:keyEquivalentModifierMask];
-    return i;
+    return [i autorelease];
 }
 + (id)itemWithTitle:(NSString *)title action:(SEL)action
 	target:(id)target keyEquivalent:(NSString *)keyEquivalent
@@ -445,7 +452,7 @@ GenerateEditEvent(
 	    keyEquivalent:keyEquivalent];
     [i setTarget:target];
     [i setKeyEquivalentModifierMask:keyEquivalentModifierMask];
-    return i;
+    return [i autorelease];
 }
 @end
 

@@ -138,18 +138,10 @@ TkpDestroyButton(
 {
     MacButton *macButtonPtr = (MacButton *) butPtr;
 
-    if (macButtonPtr->button) {
-	CFRelease(macButtonPtr->button);
-    }
-    if (macButtonPtr->image) {
-	CFRelease(macButtonPtr->selectImage);
-    }
-    if (macButtonPtr->selectImage) {
-	CFRelease(macButtonPtr->selectImage);
-    }
-    if (macButtonPtr->tristateImage) {
-	CFRelease(macButtonPtr->tristateImage);
-    }
+    TkMacOSXMakeCollectableAndRelease(macButtonPtr->button);
+    TkMacOSXMakeCollectableAndRelease(macButtonPtr->selectImage);
+    TkMacOSXMakeCollectableAndRelease(macButtonPtr->selectImage);
+    TkMacOSXMakeCollectableAndRelease(macButtonPtr->tristateImage);
 }
 
 /*
@@ -229,8 +221,7 @@ TkpComputeButtonGeometry(
     case TYPE_RADIO_BUTTON:
 	if (!macButtonPtr->button) {
 	    NSButton *button = [[NSButton alloc] initWithFrame:NSZeroRect];
-	    CFRetain(button);
-	    macButtonPtr->button = button;
+	    macButtonPtr->button = TkMacOSXMakeUncollectable(button);
 	}
 	ComputeNativeButtonGeometry(butPtr);
 	break;
@@ -441,12 +432,13 @@ ComputeNativeButtonGeometry(
 
     if (!haveImage || haveCompound) {
 	int len;
-	char *title = Tcl_GetStringFromObj(butPtr->textPtr, &len);
+	char *text = Tcl_GetStringFromObj(butPtr->textPtr, &len);
 
 	if (len) {
-	    [button setTitle:[[NSString alloc]
-		    initWithBytes:title length:len
-		    encoding:NSUTF8StringEncoding]];
+	    NSString *title = [[NSString alloc] initWithBytes:text length:len
+		    encoding:NSUTF8StringEncoding];
+	    [button setTitle:title];
+	    [title release];
 	    haveText = 1;
 	}
     }
@@ -473,18 +465,9 @@ ComputeNativeButtonGeometry(
     if (font) {
 	[button setFont:font];
     }
-    if (macButtonPtr->image) {
-	CFRelease(macButtonPtr->image);
-	macButtonPtr->image = nil;
-    }
-    if (macButtonPtr->selectImage) {
-	CFRelease(macButtonPtr->selectImage);
-	macButtonPtr->selectImage = nil;
-    }
-    if (macButtonPtr->tristateImage) {
-	CFRelease(macButtonPtr->tristateImage);
-	macButtonPtr->tristateImage = nil;
-    }
+    TkMacOSXMakeCollectableAndRelease(macButtonPtr->image);
+    TkMacOSXMakeCollectableAndRelease(macButtonPtr->selectImage);
+    TkMacOSXMakeCollectableAndRelease(macButtonPtr->tristateImage);
     if (haveImage) {
 	int width, height;
 	NSImage *image, *selectImage = nil, *tristateImage = nil;
@@ -492,21 +475,21 @@ ComputeNativeButtonGeometry(
 
 	if (butPtr->image) {
 	    Tk_SizeOfImage(butPtr->image, &width, &height);
-	    image = TkMacOSXGetNSImage(butPtr->display, butPtr->image,
-		    None, NULL, width, height);
+	    image = TkMacOSXGetNSImageWithTkImage(butPtr->display,
+		    butPtr->image, width, height);
 	    if (butPtr->selectImage) {
-		selectImage = TkMacOSXGetNSImage(butPtr->display,
-			butPtr->selectImage, None, NULL, width, height);
+		selectImage = TkMacOSXGetNSImageWithTkImage(butPtr->display,
+			butPtr->selectImage, width, height);
 	    }
 	    if (butPtr->tristateImage) {
-		tristateImage = TkMacOSXGetNSImage(butPtr->display,
-			butPtr->tristateImage, None, NULL, width, height);
+		tristateImage = TkMacOSXGetNSImageWithTkImage(butPtr->display,
+			butPtr->tristateImage, width, height);
 	    }
 	} else {
 	    Tk_SizeOfBitmap(butPtr->display, butPtr->bitmap, &width, &height);
-	    image = TkMacOSXGetNSImage(butPtr->display, NULL, butPtr->bitmap,
-		    butPtr->normalTextGC, width, height);
-	    selectImage = TkMacOSXGetNSImage(butPtr->display, NULL,
+	    image = TkMacOSXGetNSImageWithBitmap(butPtr->display,
+		    butPtr->bitmap, butPtr->normalTextGC, width, height);
+	    selectImage = TkMacOSXGetNSImageWithBitmap(butPtr->display,
 		    butPtr->bitmap, butPtr->activeTextGC, width, height);
 	}
 	[button setImage:image];
@@ -514,14 +497,13 @@ ComputeNativeButtonGeometry(
 	    [button setAlternateImage:selectImage];
 	}
 	if (tristateImage) {
-	    CFRetain(image);
-	    macButtonPtr->image = image;
+	    macButtonPtr->image = TkMacOSXMakeUncollectableAndRetain(image);
 	    if (selectImage) {
-		CFRetain(selectImage);
-		macButtonPtr->selectImage = selectImage;
+		macButtonPtr->selectImage =
+			TkMacOSXMakeUncollectableAndRetain(selectImage);
 	    }
-	    CFRetain(tristateImage);
-	    macButtonPtr->tristateImage = tristateImage;
+	    macButtonPtr->tristateImage =
+		    TkMacOSXMakeUncollectableAndRetain(tristateImage);
 	}
 	if (haveCompound) {
 	    switch ((enum compound) butPtr->compound) {

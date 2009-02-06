@@ -40,9 +40,10 @@ static void TkMacOSXEventsCheckProc(ClientData clientData, int flags);
 - (NSEvent *)nextEventMatchingMask:(NSUInteger)mask
 	untilDate:(NSDate *)expiration inMode:(NSString *)mode
 	dequeue:(BOOL)deqFlag {
+    NSAutoreleasePool *pool = [NSAutoreleasePool new];
     int oldMode = Tcl_SetServiceMode(TCL_SERVICE_ALL);
-    NSEvent *event = [super nextEventMatchingMask:mask untilDate:expiration
-	    inMode:mode dequeue:deqFlag];
+    NSEvent *event = [[super nextEventMatchingMask:mask untilDate:expiration
+	    inMode:mode dequeue:deqFlag] retain];
     Tcl_SetServiceMode(oldMode);
     if (event) {
 	TSD_INIT();
@@ -50,7 +51,8 @@ static void TkMacOSXEventsCheckProc(ClientData clientData, int flags);
 	    event = [NSApp tkProcessEvent:event];
 	}
     }
-    return event;
+    [pool drain];
+    return [event autorelease];
 }
 - (void)sendEvent:(NSEvent *)theEvent {
     TSD_INIT();
@@ -170,8 +172,8 @@ TkMacOSXEventsSetupProc(
 		    untilDate:[NSDate distantPast]
 		    inMode:NSDefaultRunLoopMode dequeue:YES];
 	    if (currentEvent) {
-		CFRetain(currentEvent);
-		tsdPtr->currentEvent = currentEvent;
+		tsdPtr->currentEvent =
+			TkMacOSXMakeUncollectableAndRetain(currentEvent);
 	    }
 	}
 	if (tsdPtr->currentEvent) {
@@ -202,28 +204,39 @@ TkMacOSXEventsCheckProc(
     int flags)
 {
     if (flags & TCL_WINDOW_EVENTS) {
-	NSEvent *currentEvent = nil, *event;
+	NSEvent *currentEvent = nil;
+	NSAutoreleasePool *pool = nil;
 	TSD_INIT();
+	if (tsdPtr->currentEvent) {
+	    currentEvent = TkMacOSXMakeCollectableAndAutorelease(
+		    tsdPtr->currentEvent);
+	}
 	do {
-	    if (tsdPtr->currentEvent) {
-		currentEvent = tsdPtr->currentEvent;
-		CFRelease(currentEvent);
-		tsdPtr->currentEvent = nil;
-	    } else {
+	    if (!currentEvent) {
 		currentEvent = [NSApp nextEventMatchingMask:NSAnyEventMask
 			untilDate:[NSDate distantPast]
 			inMode:NSDefaultRunLoopMode dequeue:YES];
 	    }
-	    event = currentEvent ? [NSApp tkProcessEvent:currentEvent] : nil;
-	    if (event) {
-#ifdef TK_MAC_DEBUG_EVENTS
-		TKLog(@"   event: %@", event);
-#endif
-		objc_clear_stack(0);
-		[NSApp sendEvent:event];
-		objc_collect(OBJC_COLLECT_IF_NEEDED);
+	    if (!currentEvent) {
+		break;
 	    }
-	} while (currentEvent);
+	    [currentEvent retain];
+	    pool = [NSAutoreleasePool new];
+	    if (tkMacOSXGCEnabled) {
+		objc_clear_stack(0);
+	    }
+	    currentEvent = [NSApp tkProcessEvent:currentEvent];
+	    if (currentEvent) {
+#ifdef TK_MAC_DEBUG_EVENTS
+		TKLog(@"   event: %@", currentEvent);
+#endif
+		[NSApp sendEvent:currentEvent];
+		[currentEvent release];
+		currentEvent = nil;
+	    }
+	    [pool drain];
+	    pool = nil;
+	} while (1);
     }
 }
 

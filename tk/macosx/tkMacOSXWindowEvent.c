@@ -818,10 +818,6 @@ ClearPort(
 
 #import <ApplicationServices/ApplicationServices.h>
 
-#ifndef __OBJC_GC__
-#error OBJC_GC required
-#endif
-
 /*
  * Custom content view for Tk NSWindows, containing standard NSView subviews.
  * The goal is to emulate X11-style drawing in response to Expose events:

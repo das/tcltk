@@ -693,9 +693,45 @@ TkMacOSXCreateCGImageWithDrawable(
 /*
  *----------------------------------------------------------------------
  *
- * TkMacOSXGetNSImage --
+ * CreateNSImageWithPixmap --
  *
- *	Get NSImage for Tk_Image or Pixmap.
+ *	Create NSImage for Pixmap.
+ *
+ * Results:
+ *	NSImage.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+static NSImage*
+CreateNSImageWithPixmap(
+    Pixmap pixmap,
+    int width,
+    int height)
+{
+    CGImageRef cgImage;
+    NSImage *nsImage;
+    NSBitmapImageRep *bitmapImageRep;
+
+    cgImage = TkMacOSXCreateCGImageWithDrawable(pixmap);
+    nsImage = [[NSImage alloc] initWithSize:NSMakeSize(width, height)];
+    bitmapImageRep = [[NSBitmapImageRep alloc] initWithCGImage:cgImage];
+    [nsImage addRepresentation:bitmapImageRep];
+    [bitmapImageRep release];
+    CFRelease(cgImage);
+
+    return nsImage;
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkMacOSXGetNSImageWithTkImage --
+ *
+ *	Get autoreleased NSImage for Tk_Image.
  *
  * Results:
  *	NSImage.
@@ -707,37 +743,59 @@ TkMacOSXCreateCGImageWithDrawable(
  */
 
 NSImage*
-TkMacOSXGetNSImage(
+TkMacOSXGetNSImageWithTkImage(
     Display *display,
     Tk_Image image,
+    int width,
+    int height)
+{
+    Pixmap pixmap = Tk_GetPixmap(display, None, width, height, 0);
+    NSImage *nsImage;
+
+    Tk_RedrawImage(image, 0, 0, width, height, pixmap, 0, 0);
+    nsImage = CreateNSImageWithPixmap(pixmap, width, height);
+    Tk_FreePixmap(display, pixmap);
+
+    return [nsImage autorelease];
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkMacOSXGetNSImageWithBitmap --
+ *
+ *	Get autoreleased NSImage for Bitmap.
+ *
+ * Results:
+ *	NSImage.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+NSImage*
+TkMacOSXGetNSImageWithBitmap(
+    Display *display,
     Pixmap bitmap,
     GC gc,
     int width,
     int height)
 {
-    CGImageRef cgImage;
-    NSImage *nsImage;
-    NSBitmapImageRep *bitmapImageRep;
     Pixmap pixmap = Tk_GetPixmap(display, None, width, height, 0);
+    NSImage *nsImage;
 
-    if (image) {
-	Tk_RedrawImage(image, 0, 0, width, height, pixmap, 0, 0);
-    } else {
-	unsigned long origBackground = gc->background;
+    unsigned long origBackground = gc->background;
 
-	gc->background = TRANSPARENT_PIXEL << 24;
-	XSetClipOrigin(display, gc, 0, 0);
-	XCopyPlane(display, bitmap, pixmap, gc, 0, 0, width, height, 0, 0, 1);
-	gc->background = origBackground;
-    }
-    cgImage = TkMacOSXCreateCGImageWithDrawable(pixmap);
-    nsImage = [[NSImage alloc] initWithSize:NSMakeSize(width, height)];
-    bitmapImageRep = [[NSBitmapImageRep alloc] initWithCGImage:cgImage];
-    [nsImage addRepresentation:bitmapImageRep];
-    CFRelease(cgImage);
+    gc->background = TRANSPARENT_PIXEL << 24;
+    XSetClipOrigin(display, gc, 0, 0);
+    XCopyPlane(display, bitmap, pixmap, gc, 0, 0, width, height, 0, 0, 1);
+    gc->background = origBackground;
+    nsImage = CreateNSImageWithPixmap(pixmap, width, height);
     Tk_FreePixmap(display, pixmap);
 
-    return nsImage;
+    return [nsImage autorelease];
 }
 
 /*

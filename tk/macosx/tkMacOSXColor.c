@@ -312,7 +312,7 @@ TkSetMacColor(
  *
  * TkMacOSXGetNSColor --
  *
- *	Creates a NSColor from a X style pixel value.
+ *	Creates an autoreleased NSColor from a X style pixel value.
  *
  * Results:
  *	Returns nil if not a real pixel, NSColor* otherwise.

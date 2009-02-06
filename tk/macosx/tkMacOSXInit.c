@@ -19,7 +19,6 @@
 
 #include <sys/stat.h>
 #include <sys/utsname.h>
-#include <dlfcn.h>
 #include <objc/objc-auto.h>
 
 static char tkLibPath[PATH_MAX + 1] = "";
@@ -30,6 +29,8 @@ static char tkLibPath[PATH_MAX + 1] = "";
  */
 
 static char scriptPath[PATH_MAX + 1] = "";
+
+int tkMacOSXGCEnabled = 0;
 
 #pragma mark TKApplication(TKInit)
 
@@ -80,7 +81,6 @@ static void keyboardChanged(CFNotificationCenterRef center, void *observer, CFSt
     if (!_appFlags._hasBeenRun) {
         _appFlags._hasBeenRun = YES;
 	[self finishLaunching];
-	objc_collect(OBJC_COLLECT_IF_NEEDED);
     }
     [self setWindowsNeedUpdate:YES];
 }
@@ -189,6 +189,7 @@ TkpInit(
 	if (!pool) {
 	    pool = [NSAutoreleasePool new];
 	}
+	tkMacOSXGCEnabled = ([NSGarbageCollector defaultCollector] != nil);
 	[TKApplication sharedApplication];
 	[NSApp _setup:interp];
 
@@ -256,6 +257,7 @@ TkpInit(
 		NSImage *image = [[NSImage alloc] initWithContentsOfFile:path];
 		if (image) {
 		    [NSApp setApplicationIconImage:image];
+		    [image release];
 		}
 	    }
 	}
@@ -265,6 +267,7 @@ TkpInit(
 	TkMacOSXUseAntialiasedText(interp, -1);
 	TkMacOSXInitCGDrawing(interp, TRUE, 0);
 	[pool drain];
+	pool = [NSAutoreleasePool new];
 
 	/*
 	 * FIXME: Close stdin & stdout for remote debugging otherwise we will
