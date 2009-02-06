@@ -233,8 +233,8 @@ FindCursorByName(
 	macCursorPtr->type = cursorNames[idx].kind;
 	switch (cursorNames[idx].kind) {
 	case SELECTOR:
-	    macCursor = [NSCursor
-		    performSelector:NSSelectorFromString(cursorNames[idx].id)];
+	    macCursor = [[NSCursor performSelector:
+		    NSSelectorFromString(cursorNames[idx].id)] retain];
 	    break;
 	case IMAGENAMED:
 	    image = [NSImage imageNamed:cursorNames[idx].id];
@@ -252,7 +252,8 @@ FindCursorByName(
 	    }
 #endif
 	    if (path) {
-		image = [[NSImage alloc] initWithContentsOfFile:path];
+		image = [[[NSImage alloc] initWithContentsOfFile:path]
+			autorelease];
 	    }
 	    break;
 	}
@@ -262,10 +263,7 @@ FindCursorByName(
 	    macCursor = [[NSCursor alloc] initWithImage:image
 		    hotSpot:cursorNames[idx].hotspot];
 	}
-	if (macCursor) {
-	    CFRetain(macCursor);
-	    macCursorPtr->macCursor = macCursor;
-	}
+	macCursorPtr->macCursor = TkMacOSXMakeUncollectable(macCursor);
     }
 }
 
@@ -377,10 +375,7 @@ TkpFreeCursor(
 {
     TkMacOSXCursor *macCursorPtr = (TkMacOSXCursor *) cursorPtr;
 
-    if (macCursorPtr->macCursor) {
-	CFRelease(macCursorPtr->macCursor);
-    }
-
+    TkMacOSXMakeCollectableAndRelease(macCursorPtr->macCursor);
     if (macCursorPtr == gCurrentCursor) {
 	gCurrentCursor = NULL;
     }

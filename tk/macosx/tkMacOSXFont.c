@@ -169,7 +169,7 @@ FindNSFont(
     NSString *family;
 
     if (familyName) {
-	family = [[NSString alloc] initWithUTF8String:familyName];
+	family = [[[NSString alloc] initWithUTF8String:familyName] autorelease];
     } else {
 	family = [defaultFont familyName];
     }
@@ -283,8 +283,7 @@ InitFont(
 		NSUnderlineStyleNone], NSStrikethroughStyleAttributeName,
 	    [NSNumber numberWithInt:fmPtr->fixed ? 0 : 1],
 		NSLigatureAttributeName, nil];
-    CFRetain(nsAttributes);
-    fontPtr->nsAttributes = nsAttributes;
+    fontPtr->nsAttributes = TkMacOSXMakeUncollectableAndRetain(nsAttributes);
     fontPtr->nsFont = nsFont;
     #undef nCh
 }
@@ -329,6 +328,7 @@ CreateNamedSystemFont(
  *	This procedure is called when an application is created. It
  *	initializes all the structures that are used by the
  *	platform-dependant code on a per application basis.
+ *	Note that this is called before TkpInit() !
  *
  * Results:
  *	None.
@@ -348,6 +348,7 @@ TkpFontPkgInit(
     const struct SystemFontMapEntry *systemFont = systemFontMap;
     NSFont *nsFont;
     TkFontAttributes fa;
+    NSAutoreleasePool *pool = [NSAutoreleasePool new];
 
     /* force this for now */
     if (!mainPtr->winPtr->mainPtr) {
@@ -366,6 +367,7 @@ TkpFontPkgInit(
 	    if (systemFont->tkName1) {
 		CreateNamedSystemFont(interp, tkwin, systemFont->tkName1, &fa);
 	    }
+	    CFRelease(nsFont);
 	}
 	systemFont++;
     }
@@ -374,6 +376,7 @@ TkpFontPkgInit(
 	    kCTFontUserFixedPitchFontType, 11, NULL);
     if (nsFont) {
 	GetTkFontAttributesForNSFont(nsFont, &fa);
+	CFRelease(nsFont);
     } else {
 	fa.family = Tk_GetUid("Monaco");
 	fa.size = 11;
@@ -381,6 +384,7 @@ TkpFontPkgInit(
 	fa.slant = TK_FS_ROMAN;
     }
     CreateNamedSystemFont(interp, tkwin, "TkFixedFont", &fa);
+    [pool drain];
 }
 
 /*
@@ -416,7 +420,7 @@ TkpGetNativeFont(
 {
     MacFont *fontPtr = NULL;
     ThemeFontID themeFontId;
-    NSFont *nsFont;
+    CTFontRef ctFont;
 
     if (strcmp(name, SYSTEMFONT_NAME) == 0) {
 	themeFontId = kThemeSystemFont;
@@ -427,11 +431,11 @@ TkpGetNativeFont(
     } else {
 	return NULL;
     }
-    nsFont = (NSFont*) CTFontCreateUIFontForLanguage(HIThemeGetUIFontType(
+    ctFont = CTFontCreateUIFontForLanguage(HIThemeGetUIFontType(
 	    themeFontId), 0, NULL);
-    if (nsFont) {
+    if (ctFont) {
 	fontPtr = (MacFont *) ckalloc(sizeof(MacFont));
-	InitFont(nsFont, NULL, fontPtr);
+	InitFont((NSFont*) ctFont, NULL, fontPtr);
     }
 
     return (TkFont *) fontPtr;
@@ -504,7 +508,7 @@ TkpGetFontFromAttributes(
 	fontPtr = (MacFont *) tkFontPtr;
 	TkpDeleteFont(tkFontPtr);
     }
-    CFRetain(nsFont);
+    CFRetain(nsFont); /* Always needed to allow unconditional CFRelease below */
     InitFont(nsFont, faPtr, fontPtr);
 
     return (TkFont *) fontPtr;
@@ -535,12 +539,8 @@ TkpDeleteFont(
 {
     MacFont *fontPtr = (MacFont *) tkFontPtr;
 
-    if (fontPtr->nsAttributes) {
-	CFRelease(fontPtr->nsAttributes);
-    }
-    if (fontPtr->nsFont) {
-	CFRelease(fontPtr->nsFont);
-    }
+    TkMacOSXMakeCollectableAndRelease(fontPtr->nsAttributes);
+    CFRelease(fontPtr->nsFont); /* Either a CTFontRef or a CFRetained NSFont */
 }
 
 /*
@@ -773,6 +773,7 @@ TkpMeasureCharsInContext(
     CFIndex start, len;
     CFRange range;
     NSString *string;
+    NSAttributedString *attributedString;
     CTTypesetterRef typesetter;
     CTLineRef line;
     CGFloat offset;
@@ -784,9 +785,10 @@ TkpMeasureCharsInContext(
     range = CFRangeMake(0, len);
     string = [[NSString alloc] initWithBytesNoCopy:(void*)source
 		length:numBytes encoding:NSUTF8StringEncoding freeWhenDone:NO];
+    attributedString = [[NSAttributedString alloc] initWithString:string
+	    attributes:fontPtr->nsAttributes];
     typesetter = CTTypesetterCreateWithAttributedStringAndOptions(
-	    (CFAttributedStringRef)[[NSAttributedString alloc] initWithString:
-	    string attributes:fontPtr->nsAttributes], (CFDictionaryRef)
+	    (CFAttributedStringRef)attributedString, (CFDictionaryRef)
 	    [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:0]
 	    forKey:(id)kCTTypesetterOptionDisableBidiProcessing]);
     line = CTTypesetterCreateLine(typesetter, range);
@@ -833,6 +835,8 @@ TkpMeasureCharsInContext(
     }
     CFRelease(line);
     CFRelease(typesetter);
+    [attributedString release];
+    [string release];
     *lengthPtr = width - offset;
     return (Tcl_UtfAtIndex(source, index) - source) - rangeStart;
 }
@@ -949,6 +953,7 @@ DrawCharsInContext(
     CFIndex start, len;
     CFRange range;
     NSString *string;
+    NSAttributedString *attributedString;
     CTTypesetterRef typesetter;
     CTLineRef line;
     CGFloat offset;
@@ -968,15 +973,17 @@ DrawCharsInContext(
     TkSetMacColor(gc->foreground, &fg);
     attributes = [fontPtr->nsAttributes mutableCopy];
     [attributes setObject:(id)fg forKey:(id)kCTForegroundColorAttributeName];
+    CFRelease(fg);
 
     start = Tcl_NumUtfChars(source, rangeStart);
     len = Tcl_NumUtfChars(source, rangeStart + rangeLength);
     range = CFRangeMake(0, len);
     string = [[NSString alloc] initWithBytesNoCopy:(void*)source
 		length:numBytes encoding:NSUTF8StringEncoding freeWhenDone:NO];
+    attributedString = [[NSAttributedString alloc] initWithString:string
+	    attributes:attributes];
     typesetter = CTTypesetterCreateWithAttributedStringAndOptions(
-	    (CFAttributedStringRef)[[NSAttributedString alloc] initWithString:
-	    string attributes:attributes], (CFDictionaryRef)
+	    (CFAttributedStringRef)attributedString, (CFDictionaryRef)
 	    [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:0]
 	    forKey:(id)kCTTypesetterOptionDisableBidiProcessing]);
     line = CTTypesetterCreateLine(typesetter, range);
@@ -1003,6 +1010,9 @@ DrawCharsInContext(
     CTLineDraw(line, context);
     CFRelease(line);
     CFRelease(typesetter);
+    [attributedString release];
+    [string release];
+    [attributes release];
     TkMacOSXRestoreDrawingContext(&drawingContext);
 }
 

@@ -580,7 +580,6 @@ TkWmDeadWindow(
     TkWindow *winPtr)		/* Top-level window that's being deleted. */
 {
     WmInfo *wmPtr = winPtr->wmInfoPtr, *wmPtr2;
-    NSWindow *window = wmPtr->window;
 
     if (wmPtr == NULL) {
 	return;
@@ -630,7 +629,7 @@ TkWmDeadWindow(
      * own their portPtr's.
      */
 
-    if (window && !Tk_IsEmbedded(winPtr) ) {
+    if (wmPtr->window && !Tk_IsEmbedded(winPtr) ) {
 #ifdef MAC_OSX_TK_TODO
 	WindowGroupRef group;
 
@@ -670,12 +669,12 @@ TkWmDeadWindow(
 	    ChkErr(ReleaseWindowGroup, group);
 	}
 #endif
-	[window close];
-	TkMacOSXUnregisterMacWindow(window);
+	[wmPtr->window close];
+	TkMacOSXUnregisterMacWindow(wmPtr->window);
 	if (winPtr->window) {
 	    ((MacDrawable *)winPtr->window)->view = nil;
 	}
-	CFRelease(window);
+	TkMacOSXMakeCollectableAndRelease(wmPtr->window);
     }
 
     ckfree((char *) wmPtr);
@@ -1032,6 +1031,7 @@ WmSetAttribute(
 	    filename = [[NSString alloc] initWithUTF8String:path];
 	}
 	[macWindow setRepresentedFilename:filename];
+	[filename release];
 	break;
     }
     case WMATT_TOPMOST:
@@ -4796,8 +4796,9 @@ TkSetWMName(
 	return;
     }
 
-    [TkMacOSXDrawableWindow(winPtr->window)
-	    setTitle:[[NSString alloc] initWithUTF8String:titleUid]];
+    NSString *title = [[NSString alloc] initWithUTF8String:titleUid];
+    [TkMacOSXDrawableWindow(winPtr->window) setTitle:title];
+    [title release];
 }
 
 /*
@@ -5352,10 +5353,11 @@ TkMacOSXMakeRealWindowExist(
     if (!window) {
 	Tcl_Panic("couldn't allocate new Mac window");
     }
-    CFRetain(window);
+    TkMacOSXMakeUncollectable(window);
     TKContentView *contentView = [[TKContentView alloc]
 	    initWithFrame:NSZeroRect];
     [window setContentView:contentView];
+    [contentView release];
     [window setDelegate:NSApp];
     [window setAcceptsMouseMovedEvents:YES];
     [window setReleasedWhenClosed:NO];

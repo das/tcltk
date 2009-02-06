@@ -1351,7 +1351,7 @@ TkAboutDlg(void)
     }
 #endif
     if (path) {
-	image = [[NSImage alloc] initWithContentsOfFile:path];
+	image = [[[NSImage alloc] initWithContentsOfFile:path] autorelease];
     } else {
 	image = [NSImage imageNamed:@"NSApplicationIcon"];
     }
@@ -1359,7 +1359,9 @@ TkAboutDlg(void)
     [dateFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
     [dateFormatter setDateFormat:@"Y"];
     NSString *year = [dateFormatter stringFromDate:[NSDate date]];
-    NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+    [dateFormatter release];
+    NSMutableParagraphStyle *style = [[[NSParagraphStyle defaultParagraphStyle]
+	    mutableCopy] autorelease];
     [style setAlignment:NSCenterTextAlignment];
     NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
 	    @"Tcl & Tk", @"ApplicationName",
@@ -1368,7 +1370,7 @@ TkAboutDlg(void)
 	    image, @"ApplicationIcon",
 	    [NSString stringWithFormat:@"Copyright %1$C 1996-%2$@.", 0xA9,
 	    year], @"Copyright",
-	    [[NSAttributedString alloc] initWithString:
+	    [[[NSAttributedString alloc] initWithString:
 	    [NSString stringWithFormat:
 	    @"%1$C 2002-%2$@ Tcl Core Team." "\n\n"
 	     "%1$C 2002-%2$@ Daniel A. Steffen." "\n\n"
@@ -1380,7 +1382,7 @@ TkAboutDlg(void)
 	     "%1$C 1998-2000 Scriptics Inc." "\n"
 	     "%1$C 1996-1997 Sun Microsystems Inc.", 0xA9, year] attributes:
 	    [NSDictionary dictionaryWithObject:style
-	    forKey:NSParagraphStyleAttributeName]], @"Credits",
+	    forKey:NSParagraphStyleAttributeName]] autorelease], @"Credits",
 	    nil];
     [NSApp orderFrontStandardAboutPanelWithOptions:options];
 }

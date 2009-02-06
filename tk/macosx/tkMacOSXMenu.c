@@ -138,8 +138,10 @@ static void	RecursivelyClearActiveMenu(TkMenu *menuPtr);
     return self;
 }
 - (id)initWithTkMenu:(TkMenu *)tkMenu {
-    self = [self initWithTitle:[[NSString alloc] initWithUTF8String:
-	    Tk_PathName(tkMenu->tkwin)]];
+    NSString *title = [[NSString alloc] initWithUTF8String:
+	    Tk_PathName(tkMenu->tkwin)];
+    self = [self initWithTitle:title];
+    [title release];
     if (self) {
 	_tkMenu = tkMenu;
 	[self setDelegate:self];
@@ -148,6 +150,7 @@ static void	RecursivelyClearActiveMenu(TkMenu *menuPtr);
 }
 - (id)copyWithZone:(NSZone *)zone {
     TKMenu *copy = [super copyWithZone:zone];
+    NSAssert(_tkMenu == nil, @"Cannot copy tkMenu");
     copy->_tkMenu = _tkMenu;
     copy->_tkOffset = _tkOffset;
     copy->_tkSpecial = _tkSpecial;
@@ -295,7 +298,7 @@ static void	RecursivelyClearActiveMenu(TkMenu *menuPtr);
 	    TkMenuEntry *mePtr = (TkMenuEntry *)[applicationMenuItem tag];
 	    if (!mePtr || !(mePtr->entryFlags & ENTRY_APPLE_MENU)) {
 		applicationMenuItem = [NSMenuItem itemWithSubmenu:
-			[_defaultApplicationMenu copy]];
+			[[_defaultApplicationMenu copy] autorelease]];
 		[menu insertItem:applicationMenuItem atIndex:0];
 	    }
 	    [menu setSpecial:tkMainMenu];
@@ -303,7 +306,7 @@ static void	RecursivelyClearActiveMenu(TkMenu *menuPtr);
 	applicationMenu = (TKMenu *)[applicationMenuItem submenu];
 	if (![applicationMenu isSpecial:tkApplicationMenu]) {
 	    for (NSMenuItem *item in _defaultApplicationMenuItems) {
-		[applicationMenu addItem:[item copy]];
+		[applicationMenu addItem:[[item copy] autorelease]];
 	    }
 	    [applicationMenu setSpecial:tkApplicationMenu];
 	}
@@ -316,7 +319,8 @@ static void	RecursivelyClearActiveMenu(TkMenu *menuPtr);
 			![submenu isSpecial:tkWindowsMenu]) {
 		    NSInteger index = 0;
 		    for (NSMenuItem *i in _defaultWindowsMenuItems) {
-			[submenu insertItem:[i copy] atIndex:index++];
+			[submenu insertItem:[[i copy] autorelease] atIndex:
+				index++];
 		    }
 		    [self setWindowsMenu:submenu];
 		    [submenu setSpecial:tkWindowsMenu];
@@ -324,7 +328,8 @@ static void	RecursivelyClearActiveMenu(TkMenu *menuPtr);
 			![submenu isSpecial:tkHelpMenu]) {
 		    NSInteger index = 0;
 		    for (NSMenuItem *i in _defaultHelpMenuItems) {
-			[submenu insertItem:[i copy] atIndex:index++];
+			[submenu insertItem:[[i copy] autorelease] atIndex:
+				index++];
 		    }
 		    [submenu setSpecial:tkHelpMenu];
 		}
@@ -370,8 +375,8 @@ TkpNewMenu(
 				 * platform structure for. */
 {
     TKMenu *menu = [[TKMenu alloc] initWithTkMenu:menuPtr];
-    CFRetain(menu);
-    menuPtr->platformData = (TkMenuPlatformData) menu;
+    menuPtr->platformData = (TkMenuPlatformData)
+	    TkMacOSXMakeUncollectable(menu);
     CheckForSpecialMenu(menuPtr);
     return TCL_OK;
 }
@@ -396,10 +401,7 @@ void
 TkpDestroyMenu(
     TkMenu *menuPtr)		/* The common menu structure */
 {
-    if (menuPtr->platformData) {
-	CFRelease(menuPtr->platformData);
-	menuPtr->platformData = NULL;
-    }
+    TkMacOSXMakeCollectableAndRelease(menuPtr->platformData);
 }
 
 /*
@@ -428,12 +430,12 @@ TkpMenuNewEntry(
     TKMenu *menu = (TKMenu *) mePtr->menuPtr->platformData;
     NSMenuItem *menuItem;
     if (mePtr->type == SEPARATOR_ENTRY || mePtr->type == TEAROFF_ENTRY) {
-	menuItem = [NSMenuItem separatorItem];
+	menuItem = [[NSMenuItem separatorItem] retain];
     } else {
 	menuItem = [menu tkNewMenuItem:mePtr];
     }
-    CFRetain(menuItem);
-    mePtr->platformEntryData = (TkMenuPlatformEntryData) menuItem;
+    mePtr->platformEntryData = (TkMenuPlatformEntryData)
+	    TkMacOSXMakeUncollectable(menuItem);
     /* Caller TkMenuEntry() already did this same insertion into the generic
      * TkMenu so we just match it for the platform menu. */
     [menu insertItem:menuItem atTkIndex:mePtr->index];
@@ -478,22 +480,22 @@ TkpConfigureMenuEntry(
 
     if (mePtr->image) {
     	Tk_SizeOfImage(mePtr->image, &imageWidth, &imageHeight);
-	image = TkMacOSXGetNSImage(mePtr->menuPtr->display, mePtr->image, None,
-		NULL, imageWidth, imageHeight);
+	image = TkMacOSXGetNSImageWithTkImage(mePtr->menuPtr->display,
+		mePtr->image, imageWidth, imageHeight);
     } else if (mePtr->bitmapPtr != None) {
 	Pixmap bitmap = Tk_GetBitmapFromObj(mePtr->menuPtr->tkwin,
 		mePtr->bitmapPtr);
 	Tk_SizeOfBitmap(mePtr->menuPtr->display, bitmap, &imageWidth,
 		&imageHeight);
-	image = TkMacOSXGetNSImage(mePtr->menuPtr->display, NULL, bitmap, gc,
-		imageWidth, imageHeight);
+	image = TkMacOSXGetNSImageWithBitmap(mePtr->menuPtr->display, bitmap,
+		gc, imageWidth, imageHeight);
     }
     [menuItem setImage:image];
     if ((!image || mePtr->compound != COMPOUND_NONE) && mePtr->labelPtr &&
 	    mePtr->labelLength) {
-	title = [[NSString alloc] initWithBytesNoCopy:
+	title = [[[NSString alloc] initWithBytesNoCopy:
 		Tcl_GetString(mePtr->labelPtr) length:mePtr->labelLength
-		encoding:NSUTF8StringEncoding freeWhenDone:NO];
+		encoding:NSUTF8StringEncoding freeWhenDone:NO] autorelease];
 	if ([title hasSuffix:@"..."]) {
 	    title = [NSString stringWithFormat:@"%@%C",
 		    [title substringToIndex:[title length] - 3], 0x2026];
@@ -507,13 +509,13 @@ TkpConfigureMenuEntry(
 	if (gc->foreground != defaultFg || gc->background != defaultBg) {
 	    NSColor *color = TkMacOSXGetNSColor(gc->foreground != defaultFg ?
 		    gc->foreground : gc->background);
-	    attributes = [attributes mutableCopy];
+	    attributes = [[attributes mutableCopy] autorelease];
 	    [(NSMutableDictionary *)attributes setObject:color
 		    forKey:NSForegroundColorAttributeName];
 	}
 	if (attributes) {
-	    attributedTitle = [[NSAttributedString alloc]
-		    initWithString:title attributes:attributes];
+	    attributedTitle = [[[NSAttributedString alloc]
+		    initWithString:title attributes:attributes] autorelease];
 	}
     }
     [menuItem setAttributedTitle:attributedTitle];
@@ -574,9 +576,8 @@ TkpDestroyMenuEntry(
     if (mePtr->platformEntryData && mePtr->menuPtr->platformData) {
 	[(NSMenu *) mePtr->menuPtr->platformData
 		removeItem:(NSMenuItem *)mePtr->platformEntryData ];
-	CFRelease(mePtr->platformEntryData);
-	mePtr->platformEntryData = NULL;
     }
+    TkMacOSXMakeCollectableAndRelease(mePtr->platformEntryData);
 }
 
 /*
@@ -616,6 +617,7 @@ TkpPostMenu(
 	[popUpButtonCell setMenu:menu];
 	[popUpButtonCell selectItem:nil];
 	[popUpButtonCell performClickWithFrame:frame inView:view];
+	[popUpButtonCell release];
 	return TCL_OK;
     } else {
 	return TCL_ERROR;
@@ -823,9 +825,10 @@ ParseAccelerator(
 	}
     }
     if (ch) {
-	return [[NSString alloc] initWithCharacters:&ch length:1];
+	return [[[NSString alloc] initWithCharacters:&ch length:1] autorelease];
     } else {
-	return [[[NSString alloc] initWithUTF8String:accel] lowercaseString];
+	return [[[[NSString alloc] initWithUTF8String:accel] autorelease]
+		lowercaseString];
     }
 }
 
