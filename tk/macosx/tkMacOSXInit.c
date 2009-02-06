@@ -21,8 +21,7 @@
 
 #include <sys/stat.h>
 #include <sys/utsname.h>
-#include <mach-o/dyld.h>
-#include <mach-o/getsect.h>
+#include <dlfcn.h>
 #include <objc/objc-auto.h>
 
 static char tkLibPath[PATH_MAX + 1] = "";
@@ -454,8 +453,7 @@ TkMacOSXDefaultStartupScript(void)
  *
  *	Dynamically acquire address of a named symbol from a loaded dynamic
  *	library, so that we can use API that may not be available on all OS
- *	versions. If module is non-NULL and not the empty string, use twolevel
- *	namespace lookup.
+ *	versions.
  *
  * Results:
  *	Address of given symbol or NULL if unavailable.
@@ -471,22 +469,9 @@ TkMacOSXGetNamedSymbol(
     const char* module,
     const char* symbol)
 {
-    NSSymbol nsSymbol = NULL;
-
-    if (module && *module) {
-	if (NSIsSymbolNameDefinedWithHint(symbol, module)) {
-	    nsSymbol = NSLookupAndBindSymbolWithHint(symbol, module);
-	}
-    } else {
-	if (NSIsSymbolNameDefined(symbol)) {
-	    nsSymbol = NSLookupAndBindSymbol(symbol);
-	}
-    }
-
-    if (!nsSymbol) {
-	return NULL;
-    }
-    return NSAddressOfSymbol(nsSymbol);
+    void *addr = dlsym(RTLD_NEXT, symbol);
+    dlerror();
+    return addr;
 }
 
 /*
