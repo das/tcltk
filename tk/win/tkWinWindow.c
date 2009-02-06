@@ -83,7 +83,7 @@ Tk_AttachHWND(
 
     twdPtr->window.handle = hwnd;
     entryPtr = Tcl_CreateHashEntry(&tsdPtr->windowTable, (char *)hwnd, &new);
-    Tcl_SetHashValue(entryPtr, (ClientData)tkwin);
+    Tcl_SetHashValue(entryPtr, tkwin);
 
     return (Window)twdPtr;
 }
