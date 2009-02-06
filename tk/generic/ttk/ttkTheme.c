@@ -332,7 +332,7 @@ static Theme *NewTheme(Ttk_ResourceCache cache, Ttk_Theme parent)
     themePtr->rootStyle->styleName =
 	Tcl_GetHashKey(&themePtr->styleTable, entryPtr);
     themePtr->rootStyle->cache = themePtr->cache;
-    Tcl_SetHashValue(entryPtr, (ClientData)themePtr->rootStyle);
+    Tcl_SetHashValue(entryPtr, themePtr->rootStyle);
 
     return themePtr;
 }
@@ -563,7 +563,7 @@ Ttk_CreateTheme(
     if (!parent) parent = pkgPtr->defaultTheme;
 
     themePtr = NewTheme(pkgPtr->cache, parent);
-    Tcl_SetHashValue(entryPtr, (ClientData) themePtr);
+    Tcl_SetHashValue(entryPtr, themePtr);
 
     return themePtr;
 }
@@ -711,7 +711,7 @@ Ttk_Style Ttk_GetStyle(Ttk_Theme themePtr, const char *styleName)
 
 	stylePtr->styleName = Tcl_GetHashKey(&themePtr->styleTable, entryPtr);
 	stylePtr->cache = stylePtr->parentStyle->cache;
-	Tcl_SetHashValue(entryPtr, (ClientData)stylePtr);
+	Tcl_SetHashValue(entryPtr, stylePtr);
 	return stylePtr;
     }
     return (Style*)Tcl_GetHashValue(entryPtr);

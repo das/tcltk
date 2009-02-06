@@ -32,6 +32,10 @@
  */
 #include "itclInt.h"
 
+#ifdef ITCL_PRESERVE_DEBUG
+#include <malloc.h>
+#endif
+
 /*
  *  POOL OF LIST ELEMENTS FOR LINKED LIST
  */
@@ -644,7 +648,7 @@ ItclDbgPreserveData(
 	    ipiPtr->size = ITCL_PRESERVE_BUCKET_SIZE;
 	    ipiPtr->numEntries = 0;
 	    ipiPtr->clientData = cdata;
-	    ipiPtr->entries = (ItclPreserveInfoEntry *)ckalloc(
+	    ipiPtr->entries = (ItclPreserveInfoEntry *)malloc(
 	            sizeof(ItclPreserveInfoEntry) * ipiPtr->size);
 	    Tcl_SetHashValue(hPtr, ipiPtr);
 	}
@@ -652,7 +656,7 @@ ItclDbgPreserveData(
         if (ipiPtr->numEntries >= ipiPtr->size) {
             ipiPtr->size += ITCL_PRESERVE_BUCKET_SIZE;
             ipiPtr->entries = (ItclPreserveInfoEntry *)
-                    ckrealloc((char *)ipiPtr->entries,
+                    realloc((char *)ipiPtr->entries,
                     sizeof(ItclPreserveInfoEntry) *
                     ipiPtr->size);
         }
@@ -724,7 +728,7 @@ ItclDbgReleaseData(
             if (ipiPtr->numEntries >= ipiPtr->size) {
                 ipiPtr->size += ITCL_PRESERVE_BUCKET_SIZE;
                 ipiPtr->entries = (ItclPreserveInfoEntry *)
-                        ckrealloc((char *)ipiPtr->entries,
+                        realloc((char *)ipiPtr->entries,
                         sizeof(ItclPreserveInfoEntry) *
                         ipiPtr->size);
             }

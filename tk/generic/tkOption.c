@@ -223,7 +223,7 @@ static int		GetDefaultOptions(Tcl_Interp *interp,
 static ElArray *	NewArray(int numEls);
 static void		OptionThreadExitProc(ClientData clientData);
 static void		OptionInit(TkMainInfo *mainPtr);
-static int		ParsePriority(Tcl_Interp *interp, char *string);
+static int		ParsePriority(Tcl_Interp *interp, const char *string);
 static int		ReadOptionFile(Tcl_Interp *interp, Tk_Window tkwin,
 			    const char *fileName, int priority);
 static void		SetupStacks(TkWindow *winPtr, int leaf);
@@ -855,7 +855,7 @@ TkOptionClassChanged(
 static int
 ParsePriority(
     Tcl_Interp *interp,		/* Interpreter to use for error reporting. */
-    char *string)		/* Describes a priority level, either
+    const char *string)		/* Describes a priority level, either
 				 * symbolically or numerically. */
 {
     int priority, c;

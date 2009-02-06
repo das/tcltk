@@ -1029,6 +1029,7 @@ ItclFreeClass(
     if (iclsPtr->flags & ITCL_CLASS_IS_FREED) {
         return;
     }
+    ItclDeleteClassesDictInfo(iclsPtr->interp, iclsPtr);
     iclsPtr->flags |= ITCL_CLASS_IS_FREED;
 
     /*
@@ -2349,6 +2350,8 @@ Itcl_DeleteVariable(
     ItclVariable *ivPtr;
 
     ivPtr = (ItclVariable *)cdata;
+if (ivPtr->arrayInitPtr != NULL) {
+}
     hPtr = Tcl_FindHashEntry(&ivPtr->infoPtr->classes, (char *)ivPtr->iclsPtr);
     if (hPtr != NULL) {
 	/* unlink owerself from list of class variables */

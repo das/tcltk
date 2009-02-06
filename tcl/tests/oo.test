@@ -209,6 +209,18 @@ test oo-1.17 {basic test of OO functionality: Bug 2481109} -body {
 } -cleanup {
     namespace delete ::foo
 } -result ::foo::lreplace
+# Check for Bug 2519474; problem in tclNamesp.c, but tested here...
+test oo-1.18 {OO: create object in NS with same name as global cmd} -setup {
+    proc test-oo-1.18 {} return
+    oo::class create A
+    oo::class create B {superclass A}
+} -body {
+    oo::define B constructor {} {A create test-oo-1.18}
+    B create C
+} -cleanup {
+    rename test-oo-1.18 {}
+    A destroy
+} -result ::C
 
 test oo-2.1 {basic test of OO functionality: constructor} -setup {
     # This is a bit complex because it needs to run in a sub-interp as
@@ -245,6 +257,27 @@ test oo-2.2 {basic test of OO functionality: constructor} {
     testClass destroy
     return $result
 } {::foo->construct ::foo->bar}
+test oo-2.4 {OO constructor - Bug 2531577} -setup {
+    oo::class create foo
+} -body {
+    oo::define foo constructor {} return
+    [foo new] destroy
+    oo::define foo constructor {} {}
+    llength [info command [foo new]]
+} -cleanup {
+    foo destroy
+} -result 1
+test oo-2.5 {OO constructor - Bug 2531577} -setup {
+    oo::class create foo
+    set result {}
+} -body {
+    oo::define foo constructor {} {error x}
+    lappend result [catch {foo new}]
+    oo::define foo constructor {} {}
+    lappend result [llength [info command [foo new]]]
+} -cleanup {
+    foo destroy
+} -result {1 1}
 
 test oo-3.1 {basic test of OO functionality: destructor} -setup {
     # This is a bit complex because it needs to run in a sub-interp as
