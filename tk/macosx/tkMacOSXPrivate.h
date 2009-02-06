@@ -136,7 +136,7 @@
     static ret (* symbol)(__VA_ARGS__) = (void*)(-1L); \
     if (symbol == (void*)(-1L)) { \
 	symbol = TkMacOSXGetNamedSymbol(STRINGIFY(module), \
-		STRINGIFY(_##symbol)); \
+		STRINGIFY(symbol)); \
     }
 
 /*
