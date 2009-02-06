@@ -393,6 +393,13 @@ static Tk_ClassProcs menuClass = {
  *--------------------------------------------------------------
  */
 
+static void
+FreeOptionTables(
+    ClientData clientData)
+{
+    ckfree(clientData);
+}
+
 int
 TkCreateMenuCmd(
     Tcl_Interp *interp)		/* Interpreter we are creating the command
@@ -416,7 +423,8 @@ TkCreateMenuCmd(
     optionTablesPtr->entryOptionTables[CHECK_BUTTON_ENTRY] =
 	    Tk_CreateOptionTable(interp, specsArray[CHECK_BUTTON_ENTRY]);
 
-    Tcl_CreateObjCommand(interp, "menu", MenuCmd, optionTablesPtr, NULL);
+    Tcl_CreateObjCommand(interp, "menu", MenuCmd, optionTablesPtr,
+	    FreeOptionTables);
 
     if (Tcl_IsSafe(interp)) {
 	Tcl_HideCommand(interp, "menu", "menu");
