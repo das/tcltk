@@ -108,7 +108,7 @@ proc ::tk::ConsoleInit {} {
     . configure -menu .menubar
 
     # See if we can find a better font than the TkFixedFont
-    font create TkConsoleFont {*}[font configure TkFixedFont]
+    catch {font create TkConsoleFont {*}[font configure TkFixedFont]}
     set families [font families]
     switch -exact -- [tk windowingsystem] {
         aqua { set preferred {Monaco 10} }
