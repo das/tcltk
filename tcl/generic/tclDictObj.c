@@ -33,8 +33,6 @@ static int		DictExistsCmd(ClientData dummy, Tcl_Interp *interp,
 			    int objc, Tcl_Obj *const *objv);
 static int		DictFilterCmd(ClientData dummy, Tcl_Interp *interp,
 			    int objc, Tcl_Obj *const *objv);
-static int		DictForCmd(ClientData dummy, Tcl_Interp *interp,
-			    int objc, Tcl_Obj *const *objv);
 static int		DictGetCmd(ClientData dummy, Tcl_Interp *interp,
 			    int objc, Tcl_Obj *const *objv);
 static int		DictIncrCmd(ClientData dummy, Tcl_Interp *interp,
@@ -93,7 +91,7 @@ static const EnsembleImplMap implementationMap[] = {
     {"create",	DictCreateCmd },
     {"exists",	DictExistsCmd },
     {"filter",	DictFilterCmd },
-    {"for",	DictForCmd,	TclCompileDictForCmd, DictForNRCmd },
+    {"for",	NULL,		TclCompileDictForCmd, DictForNRCmd },
     {"get",	DictGetCmd,	TclCompileDictGetCmd },
     {"incr",	DictIncrCmd,	TclCompileDictIncrCmd },
     {"info",	DictInfoCmd },
@@ -475,7 +473,8 @@ UpdateStringOfDict(
     ChainEntry *cPtr;
     Tcl_Obj *keyPtr, *valuePtr;
     int numElems, i, length;
-    char *elem, *dst;
+    const char *elem;
+    char *dst;
 
     /*
      * This field is the most useful one in the whole hash structure, and it
@@ -566,10 +565,11 @@ SetDictFromAny(
     Tcl_Interp *interp,
     Tcl_Obj *objPtr)
 {
-    char *string, *s;
+    const char *string;
+    char *s;
     const char *elemStart, *nextElem;
     int lenRemain, length, elemSize, hasBrace, result, isNew;
-    char *limit;		/* Points just after string's last byte. */
+    const char *limit;	/* Points just after string's last byte. */
     register const char *p;
     register Tcl_Obj *keyPtr, *valuePtr;
     Dict *dict;
@@ -1837,7 +1837,7 @@ DictKeysCmd(
     Tcl_Obj *const *objv)
 {
     Tcl_Obj *listPtr;
-    char *pattern = NULL;
+    const char *pattern = NULL;
 
     if (objc!=2 && objc!=3) {
 	Tcl_WrongNumArgs(interp, 1, objv, "dictionary ?pattern?");
@@ -1922,7 +1922,7 @@ DictValuesCmd(
     Tcl_Obj *valuePtr = NULL, *listPtr;
     Tcl_DictSearch search;
     int done;
-    char *pattern;
+    const char *pattern;
 
     if (objc!=2 && objc!=3) {
 	Tcl_WrongNumArgs(interp, 1, objv, "dictionary ?pattern?");
@@ -2069,7 +2069,6 @@ DictInfoCmd(
 {
     Tcl_Obj *dictPtr;
     Dict *dict;
-    char *buf;
 
     if (objc != 2) {
 	Tcl_WrongNumArgs(interp, 1, objv, "dictionary");
@@ -2085,9 +2084,7 @@ DictInfoCmd(
     }
     dict = dictPtr->internalRep.otherValuePtr;
 
-    buf = Tcl_HashStats(&dict->table);
-    Tcl_SetObjResult(interp, Tcl_NewStringObj(buf, -1));
-    ckfree(buf);
+    Tcl_SetResult(interp, Tcl_HashStats(&dict->table), TCL_DYNAMIC);
     return TCL_OK;
 }
 
@@ -2368,7 +2365,7 @@ DictAppendCmd(
 /*
  *----------------------------------------------------------------------
  *
- * DictForCmd --
+ * DictForNRCmd --
  *
  *	This function implements the "dict for" Tcl command. See the user
  *	documentation for details on what it does, and TIP#111 for the formal
@@ -2382,16 +2379,6 @@ DictAppendCmd(
  *
  *----------------------------------------------------------------------
  */
-
-static int
-DictForCmd(
-    ClientData dummy,
-    Tcl_Interp *interp,
-    int objc,
-    Tcl_Obj *const *objv)
-{
-    return Tcl_NRCallObjProc(interp, DictForNRCmd, dummy, objc, objv);
-}
 
 static int
 DictForNRCmd(
@@ -2732,7 +2719,7 @@ DictFilterCmd(
     Tcl_Obj **varv, *keyObj = NULL, *valueObj = NULL, *resultObj, *boolObj;
     Tcl_DictSearch search;
     int index, varc, done, result, satisfied;
-    char *pattern;
+    const char *pattern;
 
     if (objc < 3) {
 	Tcl_WrongNumArgs(interp, 1, objv, "dictionary filterType ?arg ...?");

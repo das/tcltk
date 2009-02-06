@@ -3787,7 +3787,7 @@ TkFontParseXLFD(
     }
 
     Tcl_DStringInit(&ds);
-    Tcl_DStringAppend(&ds, (char *) str, -1);
+    Tcl_DStringAppend(&ds, str, -1);
     src = Tcl_DStringValue(&ds);
 
     field[0] = src;

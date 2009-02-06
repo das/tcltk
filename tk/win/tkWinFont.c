@@ -2363,7 +2363,7 @@ SeenName(
 	}
 	seen += strlen(seen) + 1;
     }
-    Tcl_DStringAppend(dsPtr, (char *) name, (int) (strlen(name) + 1));
+    Tcl_DStringAppend(dsPtr, name, (int) (strlen(name) + 1));
     return 0;
 }
 
@@ -2615,7 +2615,7 @@ FamilyOrAliasExists(
     int i;
 
     if (FamilyExists(hdc, faceName) != 0) {
-	return (char *) faceName;
+	return faceName;
     }
     aliases = TkFontGetAliasList(faceName);
     if (aliases != NULL) {
