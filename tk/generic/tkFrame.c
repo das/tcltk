@@ -760,7 +760,7 @@ FrameWidgetObjCmd(
 	     */
 
 	    for (i = 2; i < objc; i++) {
-		char *arg = Tcl_GetStringFromObj(objv[i], &length);
+		const char *arg = Tcl_GetStringFromObj(objv[i], &length);
 		if (length < 2) {
 		    continue;
 		}
@@ -1071,7 +1071,7 @@ FrameWorldChanged(
     GC gc;
     int anyTextLabel, anyWindowLabel;
     int bWidthLeft, bWidthRight, bWidthTop, bWidthBottom;
-    char *labelText;
+    const char *labelText;
 
     anyTextLabel = (framePtr->type == TYPE_LABELFRAME) &&
 	    (labelframePtr->textPtr != NULL) &&

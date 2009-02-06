@@ -712,7 +712,8 @@ DoObjConfig(
 	break;
     }
     case TK_OPTION_STRING: {
-	char *newStr, *value;
+	char *newStr;
+	const char *value;
 	int length;
 
 	if (nullOK && ObjectIsEmpty(valuePtr)) {
@@ -1123,7 +1124,7 @@ GetOptionFromObj(
     OptionTable *tablePtr)	/* Table in which to look up objPtr. */
 {
     Option *bestPtr;
-    char *name;
+    const char *name;
 
     /*
      * First, check to see if the object already has the answer cached.

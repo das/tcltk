@@ -791,7 +791,7 @@ Send(
 
 	if (ei.bstrSource != NULL) {
 	    int len;
-	    char *szErrorInfo;
+	    const char *szErrorInfo;
 
 	    opError = Tcl_NewUnicodeObj(ei.bstrSource, -1);
 	    Tcl_ListObjIndex(interp, opError, 0, &opErrorCode);

@@ -128,7 +128,7 @@ TkTextMarkCmd(
     case MARK_GRAVITY: {
 	char c;
 	int length;
-	char *str;
+	const char *str;
 
 	if (objc < 4 || objc > 5) {
 	    Tcl_WrongNumArgs(interp, 3, objv, "markName ?gravity?");
