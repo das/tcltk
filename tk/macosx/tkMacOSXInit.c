@@ -19,6 +19,7 @@
 
 #include <sys/stat.h>
 #include <sys/utsname.h>
+#include <dlfcn.h>
 #include <objc/objc-auto.h>
 
 static char tkLibPath[PATH_MAX + 1] = "";
