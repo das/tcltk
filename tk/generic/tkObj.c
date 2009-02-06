@@ -383,7 +383,8 @@ SetPixelFromAny(
     Tcl_Obj *objPtr)		/* The object to convert. */
 {
     const Tcl_ObjType *typePtr;
-    char *string, *rest;
+    const char *string;
+    char *rest;
     double d;
     int i, units;
 
@@ -637,7 +638,8 @@ SetMMFromAny(
     Tcl_Obj *objPtr)		/* The object to convert. */
 {
     const Tcl_ObjType *typePtr;
-    char *string, *rest;
+    const char *string;
+    char *rest;
     double d;
     int units;
     MMRep *mmPtr;

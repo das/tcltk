@@ -465,7 +465,7 @@ TkMacOSXUseMenuID(
  */
 
 int
- TkMacOSXGetNewMenuID(
+TkMacOSXGetNewMenuID(
     Tcl_Interp *interp,		/* Used for error reporting */
     TkMenu *menuPtr,		/* The menu we are working with */
     int cascade,		/* 0 if we are working with a normal menu;
@@ -537,7 +537,7 @@ int
 	Tcl_AppendResult(interp, "No more menus can be allocated.", NULL);
 	return TCL_ERROR;
     }
-    Tcl_SetHashValue(commandEntryPtr, (char *) menuPtr);
+    Tcl_SetHashValue(commandEntryPtr, menuPtr);
     *menuIDPtr = returnID;
     return TCL_OK;
 }
@@ -2650,7 +2650,7 @@ DrawMenuEntryAccelerator(
 		    CFRelease(cfStr);
 		}
 	    } else {
-		Tk_DrawChars(menuPtr->display, d, gc, tkfont, accel + 
+		Tk_DrawChars(menuPtr->display, d, gc, tkfont, accel +
 			geometryPtr->accelTextStart, mePtr->accelLength -
 			geometryPtr->accelTextStart, leftEdge, baseline);
 	    }
