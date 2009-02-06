@@ -2536,6 +2536,7 @@ MODULE_SCOPE const Tcl_ObjType tclEnsembleCmdType;
 MODULE_SCOPE const Tcl_ObjType tclWideIntType;
 #endif
 MODULE_SCOPE const Tcl_ObjType tclRegexpType;
+MODULE_SCOPE Tcl_ObjType tclCmdNameType;
 
 /*
  * Variables denoting the hash key types defined in the core.
@@ -2640,6 +2641,10 @@ MODULE_SCOPE int	TclFileMakeDirsCmd(Tcl_Interp *interp,
 			    int objc, Tcl_Obj *const objv[]);
 MODULE_SCOPE int	TclFileRenameCmd(Tcl_Interp *interp,
 			    int objc, Tcl_Obj *const objv[]);
+MODULE_SCOPE void	TclCreateLateExitHandler (Tcl_ExitProc * proc,
+						   ClientData clientData);
+MODULE_SCOPE void	TclDeleteLateExitHandler (Tcl_ExitProc * proc,
+						   ClientData clientData);
 MODULE_SCOPE void	TclFinalizeAllocSubsystem(void);
 MODULE_SCOPE void	TclFinalizeAsync(void);
 MODULE_SCOPE void	TclFinalizeDoubleConversion(void);

@@ -619,7 +619,7 @@ Ttk_LayoutTemplate Ttk_ParseLayoutTemplate(Tcl_Interp *interp, Tcl_Obj *objPtr)
 	return 0;
 
     while (i < objc) {
-	char *elementName = Tcl_GetString(objv[i]);
+	const char *elementName = Tcl_GetString(objv[i]);
 	unsigned flags = 0x0, sticky = TTK_FILL_BOTH;
 	Tcl_Obj *childSpec = 0;
 

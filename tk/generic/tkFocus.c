@@ -119,7 +119,7 @@ Tk_FocusObjCmd(
     TkWindow *winPtr = clientData;
     TkWindow *newPtr, *focusWinPtr, *topLevelPtr;
     ToplevelFocusInfo *tlFocusPtr;
-    char *windowName;
+    const char *windowName;
     int index;
 
     /*

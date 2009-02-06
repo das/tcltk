@@ -83,7 +83,7 @@ static int StateSpecSetFromAny(Tcl_Interp *interp, Tcl_Obj *objPtr)
 	return status;
 
     for (i = 0; i < objc; ++i) {
-	char *stateName = Tcl_GetString(objv[i]);
+	const char *stateName = Tcl_GetString(objv[i]);
 	int on, j;
 
 	if (*stateName == '!') {

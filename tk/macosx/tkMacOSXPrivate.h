@@ -20,65 +20,65 @@
 
 /* Define constants only available on Mac OS X 10.3 or later */
 #if MAC_OS_X_VERSION_MAX_ALLOWED < 1030
-    #define kEventAppAvailableWindowBoundsChanged 110
-    #define kEventParamTransactionID 'trns'
-    #define kEventParamWindowPartCode 'wpar'
-    #define typeWindowPartCode 'wpar'
-    #define kMenuAttrDoNotUseUserCommandKeys (1 << 7)
-    #define kSimpleWindowClass 18
-    #define kWindowDoesNotCycleAttribute (1L << 15)
-    #define kWindowAsyncDragAttribute (1L << 23)
-    #define kThemeBrushAlternatePrimaryHighlightColor -5
-    #define kThemeResizeUpCursor 19
-    #define kThemeResizeDownCursor 19
-    #define kThemeResizeUpDownCursor 19
-    #define kThemePoofCursor 19
-    #define kThemeBackgroundMetal 6
-    #define kThemeIncDecButtonSmall 21
-    #define kThemeIncDecButtonMini 22
-    #define kThemeComboBox 16
-    #define kThemeMiniSystemFont 109
-    #define kAppearancePartUpButton 20
-    #define kAppearancePartDownButton 21
-    #define kAppearancePartPageUpArea 22
-    #define kAppearancePartPageDownArea 23
-    #define kAppearancePartIndicator 129
-    #define kUIModeAllSuppressed 4
-    #define FixedToInt(a) ((short)(((Fixed)(a) + fixed1/2) >> 16))
-    #define IntToFixed(a) ((Fixed)(a) << 16)
+#   define kEventAppAvailableWindowBoundsChanged 110
+#   define kEventParamTransactionID 'trns'
+#   define kEventParamWindowPartCode 'wpar'
+#   define typeWindowPartCode 'wpar'
+#   define kMenuAttrDoNotUseUserCommandKeys (1 << 7)
+#   define kSimpleWindowClass 18
+#   define kWindowDoesNotCycleAttribute (1L << 15)
+#   define kWindowAsyncDragAttribute (1L << 23)
+#   define kThemeBrushAlternatePrimaryHighlightColor -5
+#   define kThemeResizeUpCursor 19
+#   define kThemeResizeDownCursor 19
+#   define kThemeResizeUpDownCursor 19
+#   define kThemePoofCursor 19
+#   define kThemeBackgroundMetal 6
+#   define kThemeIncDecButtonSmall 21
+#   define kThemeIncDecButtonMini 22
+#   define kThemeComboBox 16
+#   define kThemeMiniSystemFont 109
+#   define kAppearancePartUpButton 20
+#   define kAppearancePartDownButton 21
+#   define kAppearancePartPageUpArea 22
+#   define kAppearancePartPageDownArea 23
+#   define kAppearancePartIndicator 129
+#   define kUIModeAllSuppressed 4
+#   define FixedToInt(a) ((short)(((Fixed)(a) + fixed1/2) >> 16))
+#   define IntToFixed(a) ((Fixed)(a) << 16)
 #endif
 /* Define constants only available on Mac OS X 10.4 or later */
 #if MAC_OS_X_VERSION_MAX_ALLOWED < 1040
-    #define kWindowNoTitleBarAttribute (1L << 9)
-    #define kWindowMetalNoContentSeparatorAttribute (1L << 11)
-    #define kThemeDisclosureTriangle 6
-    #define kThemeBrushListViewOddRowBackground 56
-    #define kThemeBrushListViewEvenRowBackground 57
-    #define kThemeBrushListViewColumnDivider 58
-    #define kThemeMetricScrollBarMinThumbHeight 132
-    #define kThemeMetricSmallScrollBarMinThumbHeight 134
-    #define kThemeScrollBarMedium kThemeMediumScrollBar
-    #define kThemeScrollBarSmall kThemeSmallScrollBar
-    #ifdef __BIG_ENDIAN__
-    #define kCGBitmapByteOrder32Host (4 << 12)
-    #else
-    #define kCGBitmapByteOrder32Host (2 << 12)
-    #endif
+#   define kWindowNoTitleBarAttribute (1L << 9)
+#   define kWindowMetalNoContentSeparatorAttribute (1L << 11)
+#   define kThemeDisclosureTriangle 6
+#   define kThemeBrushListViewOddRowBackground 56
+#   define kThemeBrushListViewEvenRowBackground 57
+#   define kThemeBrushListViewColumnDivider 58
+#   define kThemeMetricScrollBarMinThumbHeight 132
+#   define kThemeMetricSmallScrollBarMinThumbHeight 134
+#   define kThemeScrollBarMedium kThemeMediumScrollBar
+#   define kThemeScrollBarSmall kThemeSmallScrollBar
+#   ifdef __BIG_ENDIAN__
+#       define kCGBitmapByteOrder32Host (4 << 12)
+#   else
+#       define kCGBitmapByteOrder32Host (2 << 12)
+#   endif
 #endif
 /* Define constants only available on Mac OS X 10.5 or later */
 #if MAC_OS_X_VERSION_MAX_ALLOWED < 1050
-    #define kWindowUnifiedTitleAndToolbarAttribute (1L << 7)
-    #define kWindowTexturedSquareCornersAttribute (1L << 10)
+#   define kWindowUnifiedTitleAndToolbarAttribute (1L << 7)
+#   define kWindowTexturedSquareCornersAttribute (1L << 10)
 #endif
 /* HIToolbox version constants */
 #ifndef kHIToolboxVersionNumber10_3
-    #define kHIToolboxVersionNumber10_3 (145)
+#   define kHIToolboxVersionNumber10_3 (145)
 #endif
 #ifndef kHIToolboxVersionNumber10_4
-    #define kHIToolboxVersionNumber10_4 (219)
+#   define kHIToolboxVersionNumber10_4 (219)
 #endif
 #ifndef kHIToolboxVersionNumber10_5
-    #define kHIToolboxVersionNumber10_5 (343)
+#   define kHIToolboxVersionNumber10_5 (343)
 #endif
 /* Macros for HIToolbox runtime version checking */
 MODULE_SCOPE float tkMacOSXToolboxVersionNumber;
