@@ -1955,6 +1955,7 @@ DestroyText(
 	if (sharedTextPtr->bindingTable != NULL) {
 	    Tk_DeleteBindingTable(sharedTextPtr->bindingTable);
 	}
+	ckfree((char *) sharedTextPtr);
     }
 
     if (textPtr->tabArrayPtr != NULL) {
