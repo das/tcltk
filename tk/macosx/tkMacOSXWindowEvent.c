@@ -160,6 +160,17 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
 	//Tk_UnmapWindow((Tk_Window) winPtr);
     }
 }
+- (void)windowClosed:(NSNotification *)notification {
+#ifdef TK_MAC_DEBUG_NOTIFICATIONS
+    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+#endif
+    NSWindow *w = [notification object];
+    TkWindow *winPtr = TkMacOSXGetTkWindow(w);
+
+    if (winPtr) {
+	TkGenWMDestroyEvent((Tk_Window) winPtr);
+    }
+}
 
 #define observe(n, s) [nc addObserver:self selector:@selector(s) name:(n) object:nil]
 - (void)_setupWindowNotifications {
@@ -175,6 +186,7 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
     observe(NSWindowDidMiniaturizeNotification, windowCollapsed:);
     observe(NSWindowWillOrderOnScreenNotification, windowMapped:);
     observe(NSWindowDidOrderOffScreenNotification, windowUnmapped:);
+    observe(NSWindowWillCloseNotification, windowClosed:);
 }
 #undef observe(n, s)
 @end
