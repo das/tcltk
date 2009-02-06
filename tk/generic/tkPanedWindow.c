@@ -754,7 +754,7 @@ ConfigureSlaves(
     Tk_Window tkwin = NULL, ancestor, parent;
     Slave *slavePtr, **inserts, **newSlaves;
     Slave options;
-    char *arg;
+    const char *arg;
 
     /*
      * Find the non-window name arguments; these are the configure options for
@@ -2369,7 +2369,8 @@ SetSticky(
     int flags)			/* Flags for the option, set Tk_SetOptions. */
 {
     int sticky = 0;
-    char c, *string, *internalPtr;
+    char c, *internalPtr;
+    const char *string;
 
     internalPtr = ComputeSlotAddress(recordPtr, internalOffset);
 

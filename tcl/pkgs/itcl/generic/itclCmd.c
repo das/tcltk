@@ -606,6 +606,7 @@ NRDelObjectCmd(
      */
     for (i=1; i < objc; i++) {
         name = Tcl_GetStringFromObj(objv[i], (int*)NULL);
+	contextIoPtr = NULL;
         if (Itcl_FindObject(interp, name, &contextIoPtr) != TCL_OK) {
             return TCL_ERROR;
         }
