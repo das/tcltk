@@ -465,7 +465,7 @@ TkMacOSXUseMenuID(
  */
 
 int
- TkMacOSXGetNewMenuID(
+TkMacOSXGetNewMenuID(
     Tcl_Interp *interp,		/* Used for error reporting */
     TkMenu *menuPtr,		/* The menu we are working with */
     int cascade,		/* 0 if we are working with a normal menu;
