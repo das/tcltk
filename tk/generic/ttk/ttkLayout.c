@@ -532,7 +532,7 @@ static Ttk_LayoutNode *Ttk_NewLayoutNode(
     node->eclass = elementClass;
     node->state = 0u;
     node->next = node->child = 0;
-    /* parcel uninitialized */
+    node->parcel = Ttk_MakeBox(0,0,0,0);
 
     return node;
 }
