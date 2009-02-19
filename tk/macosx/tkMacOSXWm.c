@@ -5367,6 +5367,7 @@ TkMacOSXMakeRealWindowExist(
     [window setDelegate:NSApp];
     [window setAcceptsMouseMovedEvents:YES];
     [window setReleasedWhenClosed:NO];
+    [window setAutodisplay:NO];
     if (styleMask & NSUtilityWindowMask) {
 	[(NSPanel*)window setFloatingPanel:YES];
     }
