@@ -97,6 +97,15 @@ extern char *dlerror(void) WEAK_IMPORT_ATTRIBUTE;
 MODULE_SCOPE long tclMacOSXDarwinRelease;
 #endif
 
+#ifdef TCL_DEBUG_LOAD
+#define TclLoadDbgMsg(m, ...) do { \
+	    fprintf(stderr, "%s:%d: %s(): " m ".\n", \
+	    strrchr(__FILE__, '/')+1, __LINE__, __func__, ##__VA_ARGS__); \
+	} while (0)
+#else
+#define TclLoadDbgMsg(m, ...)
+#endif
+
 #endif /* HAVE_COREFOUNDATION */
 
 /*
@@ -238,9 +247,13 @@ Tcl_MacOSXOpenVersionedBundleResources(
 		if (tclMacOSXDarwinRelease >= 8)
 #endif
 		{
+		    const char *errMsg = nil;
 		    openresourcemap = dlsym(RTLD_NEXT,
 			    "CFBundleOpenBundleResourceMap");
-		    dlerror();
+		    if (!openresourcemap) {
+			errMsg = dlerror();
+			TclLoadDbgMsg("dlsym() failed: %s", errMsg);
+		    }
 		}
 		if (!openresourcemap)
 #endif
