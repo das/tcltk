@@ -164,8 +164,10 @@ TkMacOSXEventsSetupProc(
     ClientData clientData,
     int flags)
 {
-    if (flags & TCL_WINDOW_EVENTS) {
+    if (flags & TCL_WINDOW_EVENTS &&
+	    ![[NSRunLoop currentRunLoop] currentMode]) {
 	static const Tcl_Time zeroBlockTime = { 0, 0 };
+
 	TSD_INIT();
 	if (!tsdPtr->currentEvent) {
 	    NSEvent *currentEvent = [NSApp nextEventMatchingMask:NSAnyEventMask
@@ -203,9 +205,11 @@ TkMacOSXEventsCheckProc(
     ClientData clientData,
     int flags)
 {
-    if (flags & TCL_WINDOW_EVENTS) {
+    if (flags & TCL_WINDOW_EVENTS &&
+	    ![[NSRunLoop currentRunLoop] currentMode]) {
 	NSEvent *currentEvent = nil;
 	NSAutoreleasePool *pool = nil;
+
 	TSD_INIT();
 	if (tsdPtr->currentEvent) {
 	    currentEvent = TkMacOSXMakeCollectableAndAutorelease(
