@@ -1961,6 +1961,16 @@ AtForkChild(void)
 }
 #endif /* HAVE_PTHREAD_ATFORK */
 
+#else /* HAVE_COREFOUNDATION */
+
+void
+TclMacOSXNotifierAddRunLoopMode(
+    CONST void *runLoopMode)
+{
+    Tcl_Panic("TclMacOSXNotifierAddRunLoopMode: "
+	    "Tcl not built with CoreFoundation support");
+}
+
 #endif /* HAVE_COREFOUNDATION */
 
 /*
