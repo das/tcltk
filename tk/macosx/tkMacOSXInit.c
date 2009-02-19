@@ -96,13 +96,6 @@ static void keyboardChanged(CFNotificationCenterRef center, void *observer, CFSt
 #endif
     [self _setupWindowNotifications];
     [self _setupApplicationNotifications];
-    [[NSUserDefaults standardUserDefaults] registerDefaults:
-	    [NSDictionary dictionaryWithObjectsAndKeys:
-	    [NSNumber numberWithBool:YES],
-	    @"_NSCanWrapButtonTitles",
-	    [NSNumber numberWithInt:-1],
-	    @"NSStringDrawingTypesetterBehavior",
-	    nil]];
 }
 - (NSBundle *)tkFrameworkBundle {
     if (tkLibPath[0] != '\0') {
@@ -191,6 +184,15 @@ TkpInit(
 	    pool = [NSAutoreleasePool new];
 	}
 	tkMacOSXGCEnabled = ([NSGarbageCollector defaultCollector] != nil);
+	[[NSUserDefaults standardUserDefaults] registerDefaults:
+		[NSDictionary dictionaryWithObjectsAndKeys:
+		[NSNumber numberWithBool:YES],
+		@"_NSCanWrapButtonTitles",
+		[NSNumber numberWithInt:-1],
+		@"NSStringDrawingTypesetterBehavior",
+		[NSNumber numberWithDouble:1],
+		@"NSIdleTimeBeforeLiveResizeCacheFlush",
+		nil]];
 	[TKApplication sharedApplication];
 	[NSApp _setup:interp];
 
