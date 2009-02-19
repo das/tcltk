@@ -26,7 +26,7 @@
 #endif
 */
 
-typedef struct {
+typedef struct MacButton {
     TkButton info;
     NSButton *button;
     NSImage *image, *selectImage, *tristateImage;
@@ -62,11 +62,11 @@ typedef struct {
 	INT_MIN)
 
 static const BoundsFix boundsFixes[] = {
-    [fixForTypeStyle(NSSwitchButton,0)] =		{ 2, 2, -1, 0, 2, 1 },
-    [fixForTypeStyle(NSRadioButton,0)] =		{ 0, 2, -1, 0, 1, 1 },
-    [fixForTypeStyle(0,NSRoundedBezelStyle)] =		{ 28, 16, -6, 0, 0, 3 },
+    [fixForTypeStyle(NSSwitchButton,0)] =		{  2,  2, -1,  0, 2, 1 },
+    [fixForTypeStyle(NSRadioButton,0)] =		{  0,  2, -1,  0, 1, 1 },
+    [fixForTypeStyle(0,NSRoundedBezelStyle)] =		{ 28, 16, -6,  0, 0, 3 },
     [fixForTypeStyle(0,NSRegularSquareBezelStyle)] =	{ 28, 15, -2, -1 },
-    [fixForTypeStyle(0,NSShadowlessSquareBezelStyle)] =	{ 2, 2 },
+    [fixForTypeStyle(0,NSShadowlessSquareBezelStyle)] =	{  2,  2 },
 };
 
 #endif
@@ -260,9 +260,13 @@ DisplayNativeButton(
     TkWindow *winPtr = (TkWindow *) tkwin;
     MacDrawable *macWin =  (MacDrawable *) winPtr->window;
     NSView *view = macWin->toplevel ? macWin->toplevel->view : macWin->view;
+    NSRect frame;
     NSCellStateValue state;
     int enabled;
-    NSRect frame;
+
+    if (!view) {
+	return;
+    }
 
     /*
      * We cannot change the background color of the button itself, only the
@@ -278,6 +282,9 @@ DisplayNativeButton(
 	    butPtr->highlightBorder : butPtr->normalBorder, 0, 0,
 	    Tk_Width(tkwin), Tk_Height(tkwin), 0, TK_RELIEF_FLAT);
 
+    if ([button superview] != view) {
+	[view addSubview:button];
+    }
     if (macButtonPtr->tristateImage) {
 	NSImage *selectImage = macButtonPtr->selectImage ?
 		macButtonPtr->selectImage : macButtonPtr->image;
@@ -306,9 +313,8 @@ DisplayNativeButton(
     } else {
 	[button setKeyEquivalent:@""];
     }
-
-    frame = NSMakeRect(winPtr->privatePtr->xOff, winPtr->privatePtr->yOff,
-	    Tk_Width(tkwin), Tk_Height(tkwin));
+    frame = NSMakeRect(macWin->xOff, macWin->yOff, Tk_Width(tkwin),
+	    Tk_Height(tkwin));
 #if TK_MAC_BUTTON_USE_COMPATIBILITY_METRICS
     BoundsFix boundsFix = boundsFixes[macButtonPtr->fix];
     frame = NSOffsetRect(frame, boundsFix.offsetX, boundsFix.offsetY);
@@ -316,17 +322,16 @@ DisplayNativeButton(
     frame = NSInsetRect(frame, boundsFix.inset + NATIVE_BUTTON_INSET,
 	    boundsFix.inset + NATIVE_BUTTON_INSET);
 #endif
-    frame.origin.y = NSHeight([view bounds]) -
-	    (frame.origin.y + NSHeight(frame));
-    [button setFrame:frame];
-    if ([button superview] != view) {
-	[view addSubview:button];
+    frame.origin.y = [view bounds].size.height -
+	    (frame.origin.y + frame.size.height);
+    if (!NSEqualRects(frame, [button frame])) {
+	[button setFrame:frame];
     }
     [button displayRectIgnoringOpacity:[button bounds]];
 #ifdef TK_MAC_DEBUG_BUTTON
     TKLog(@"button %s frame %@ width %d height %d",
 	    ((TkWindow *)butPtr->tkwin)->pathName, NSStringFromRect(frame),
-	    Tk_Width(tkwin),  Tk_Height(tkwin));
+	    Tk_Width(tkwin), Tk_Height(tkwin));
 #endif
 }
 
