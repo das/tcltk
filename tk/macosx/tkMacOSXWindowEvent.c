@@ -21,7 +21,8 @@
 
 /*
 #ifdef TK_MAC_DEBUG
-#define TK_MAC_DEBUG_CLIP_REGIONS
+#define TK_MAC_DEBUG_EVENTS
+#define TK_MAC_DEBUG_DRAWING
 #endif
 */
 
@@ -381,8 +382,9 @@ GenerateUpdates(
     event.xexpose.height = damageBounds.size.height;
     event.xexpose.count = 0;
     Tk_QueueWindowEvent(&event, TCL_QUEUE_TAIL);
-#ifdef TK_MAC_DEBUG_EVENTS
-    TKLog(@"Expose %p {{%d, %d}, {%d, %d}}", event.xany.window, event.xexpose.x, event.xexpose.y, event.xexpose.width, event.xexpose.height);
+#ifdef TK_MAC_DEBUG_DRAWING
+    TKLog(@"Expose %p {{%d, %d}, {%d, %d}}", event.xany.window, event.xexpose.x,
+	event.xexpose.y, event.xexpose.width, event.xexpose.height);
 #endif
 
     /*
@@ -849,8 +851,14 @@ ClearPort(
 @implementation TKContentView(TKWindowEvent)
 
 - (void)drawRect:(NSRect)rect {
-#ifdef TK_MAC_DEBUG_EVENTS
-    TKLog(@"-[%@(%p) %s]", [self class], self, _cmd);
+    const NSRect *rectsBeingDrawn;
+    NSInteger rectsBeingDrawnCount;
+    [self getRectsBeingDrawn:&rectsBeingDrawn count:&rectsBeingDrawnCount];
+#ifdef TK_MAC_DEBUG_DRAWING
+    TKLog(@"-[%@(%p) %s%@]", [self class], self, _cmd, NSStringFromRect(rect));
+    [[NSColor colorWithDeviceRed:0.0 green:1.0 blue:0.0 alpha:.1] setFill];
+    NSRectFillListUsingOperation(rectsBeingDrawn, rectsBeingDrawnCount,
+	    NSCompositeSourceOver);
 #endif
     NSWindow *w = [self window];
     if ([w showsResizeIndicator]) {
@@ -859,9 +867,6 @@ ClearPort(
 	    NSEraseRect(bounds);
 	}
     }
-    const NSRect *rectsBeingDrawn;
-    NSInteger rectsBeingDrawnCount;
-    [self getRectsBeingDrawn:&rectsBeingDrawn count:&rectsBeingDrawnCount];
     HIMutableShapeRef drawShape = HIShapeCreateMutable();
     while (rectsBeingDrawnCount--) {
 	CGRect r = NSRectToCGRect(*rectsBeingDrawn++);
@@ -902,6 +907,17 @@ ClearPort(
     }
 }
 
+#ifdef TK_MAC_DEBUG_DRAWING
+- (void)setFrameSize:(NSSize)newSize {
+    TKLog(@"-[%@(%p) %s%@]", [self class], self, _cmd, NSStringFromSize(newSize));
+    [super setFrameSize:newSize];
+}
+- (void)setNeedsDisplayInRect:(NSRect)invalidRect {
+    TKLog(@"-[%@(%p) %s%@]", [self class], self, _cmd,
+	    NSStringFromRect(invalidRect));
+    [super setNeedsDisplayInRect:invalidRect];
+}
+#endif
 - (BOOL)isOpaque {
     return YES;
 }
@@ -1020,6 +1036,9 @@ ClearPort(
 }
 
 - (void)_drawRect:(NSRect)inRect clip:(BOOL)clip {
+#ifdef TK_MAC_DEBUG_DRAWING
+    TKLog(@"-[%@(%p) %s%@]", [self class], self, _cmd, NSStringFromRect(inRect));
+#endif
     BOOL subviewsWereSetAside = _subviewsSetAside;
     if (subviewsWereSetAside) {
         [self _restoreSubviews];

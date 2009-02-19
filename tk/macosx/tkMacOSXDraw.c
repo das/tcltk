@@ -23,6 +23,7 @@
 /*
 #ifdef TK_MAC_DEBUG
 #define TK_MAC_DEBUG_DRAWING
+#define TK_MAC_DEBUG_IMAGE_DRAWING
 #endif
 */
 
@@ -919,7 +920,7 @@ DrawCGImage(
 		TkMacOSXSetColorInContext(imageForeground, context);
 	    }
 	}
-#ifdef TK_MAC_DEBUG_DRAWING
+#ifdef TK_MAC_DEBUG_IMAGE_DRAWING
 	CGContextSaveGState(context);
 	CGContextSetLineWidth(context, 1.0);
 	CGContextSetRGBStrokeColor(context, 0, 0, 0, 0.1);
@@ -936,13 +937,13 @@ DrawCGImage(
 	TkMacOSXDbgMsg("Drawing CGImage at (x=%f, y=%f), (w=%f, h=%f)",
 		dstBounds.origin.x, dstBounds.origin.y,
 		dstBounds.size.width, dstBounds.size.height);
-#else /* TK_MAC_DEBUG_DRAWING */
+#else /* TK_MAC_DEBUG_IMAGE_DRAWING */
 	CGContextSaveGState(context);
 	CGContextTranslateCTM(context, 0, dstBounds.origin.y + CGRectGetMaxY(dstBounds));
 	CGContextScaleCTM(context, 1, -1);
 	CGContextDrawImage(context, dstBounds, image);
 	CGContextRestoreGState(context);
-#endif /* TK_MAC_DEBUG_DRAWING */
+#endif /* TK_MAC_DEBUG_IMAGE_DRAWING */
 	/*if (CGImageIsMask(image)) {
 	    CGContextRestoreGState(context);
 	}*/
@@ -1790,7 +1791,7 @@ TkMacOSXSetupDrawingContext(
 #ifdef TK_MAC_DEBUG_DRAWING
 	    CGContextSaveGState(dc.context);
 	    ChkErr(HIShapeReplacePathInCGContext, dc.clipRgn, dc.context);
-	    CGContextSetRGBFillColor(dc.context, 1.0, 0.0, 0.0, 0.2);
+	    CGContextSetRGBFillColor(dc.context, 1.0, 0.0, 0.0, 0.1);
 	    CGContextEOFillPath(dc.context);
 	    CGContextRestoreGState(dc.context);
 #endif /* TK_MAC_DEBUG_DRAWING */
@@ -1924,8 +1925,20 @@ TkMacOSXGetClipRgn(
     if (macDraw->winPtr && macDraw->flags & TK_CLIP_INVALID) {
 	TkMacOSXUpdateClipRgn(macDraw->winPtr);
 #ifdef TK_MAC_DEBUG_DRAWING
-	TkMacOSXDbgMsg("%s visRgn  ", macDraw->winPtr->pathName);
-	TkMacOSXDebugFlashRegion(drawable, macDraw->visRgn);
+	TkMacOSXDbgMsg("%s", macDraw->winPtr->pathName);
+	NSView *view = macDraw->toplevel ? macDraw->toplevel->view :
+		macDraw->view;
+	if ([view lockFocusIfCanDraw]) {
+	    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
+	    CGContextSaveGState(context);
+	    CGContextConcatCTM(context, CGAffineTransformMake(1.0, 0.0, 0.0,
+		    -1.0, 0.0, [view bounds].size.height));
+	    ChkErr(HIShapeReplacePathInCGContext, macDraw->visRgn, context);
+	    CGContextSetRGBFillColor(context, 0.0, 1.0, 0.0, 0.1);
+	    CGContextEOFillPath(context);
+	    CGContextRestoreGState(context);
+	    [view unlockFocus];
+	}
 #endif /* TK_MAC_DEBUG_DRAWING */
     }
 
@@ -1944,10 +1957,6 @@ TkMacOSXGetClipRgn(
     } else if (macDraw->flags & TK_CLIPPED_DRAW) {
 	clipRgn = HIShapeCreateWithRect(&r);
     }
-#ifdef TK_MAC_DEBUG_DRAWING
-    TkMacOSXDbgMsg("%s clipRgn ", macDraw->winPtr->pathName);
-    TkMacOSXDebugFlashRegion(drawable, clipRgn);
-#endif /* TK_MAC_DEBUG_DRAWING */
 
     return clipRgn;
 }

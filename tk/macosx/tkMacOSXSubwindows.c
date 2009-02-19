@@ -706,6 +706,9 @@ TkMacOSXUpdateClipRgn(
     if (macWin && macWin->flags & TK_CLIP_INVALID) {
 	TkWindow *win2Ptr;
 
+#ifdef TK_MAC_DEBUG_CLIP_REGIONS
+	TkMacOSXDbgMsg("%s", winPtr->pathName);
+#endif
 	if (Tk_IsMapped(winPtr)) {
 	    int rgnChanged = 0;
 	    CGRect bounds;
@@ -842,10 +845,6 @@ TkMacOSXUpdateClipRgn(
 	    macWin->visRgn = HIShapeCreateCopy(macWin->aboveVisRgn);
 	}
 	macWin->flags &= ~TK_CLIP_INVALID;
-
-#ifdef TK_MAC_DEBUG_CLIP_REGIONS
-	TkMacOSXDebugFlashRegion((Drawable) macWin, macWin->visRgn);
-#endif /* TK_MAC_DEBUG_CLIP_REGIONS */
     }
 }
 
@@ -923,6 +922,9 @@ TkMacOSXInvalidateWindow(
 {
     HIShapeRef rgn;
 
+#ifdef TK_MAC_DEBUG_CLIP_REGIONS
+    TkMacOSXDbgMsg("%s", winPtr->pathName);
+#endif
     if (macWin->flags & TK_CLIP_INVALID) {
 	TkMacOSXUpdateClipRgn(macWin->winPtr);
     }
@@ -933,9 +935,6 @@ TkMacOSXInvalidateWindow(
 		InvalViewRect, macWin->toplevel ? macWin->toplevel->view :
 		macWin->view);
     }
-#ifdef TK_MAC_DEBUG_CLIP_REGIONS
-    TkMacOSXDebugFlashRegion((Drawable) macWin, rgn);
-#endif /* TK_MAC_DEBUG_CLIP_REGIONS */
 }
 
 /*
