@@ -1782,10 +1782,6 @@ PostProcessEntry(
     	return TCL_ERROR;
     }
 
-    if (TkpConfigureMenuEntry(mePtr) != TCL_OK) {
-    	return TCL_ERROR;
-    }
-
     /*
      * Get the images for the entry, if there are any. Allocate the new images
      * before freeing the old ones, so that the reference counts don't go to
@@ -1880,6 +1876,10 @@ PostProcessEntry(
 		    TCL_GLOBAL_ONLY|TCL_TRACE_WRITES|TCL_TRACE_UNSETS,
 		    MenuVarProc, (ClientData) mePtr);
 	}
+    }
+
+    if (TkpConfigureMenuEntry(mePtr) != TCL_OK) {
+	return TCL_ERROR;
     }
 
     return TCL_OK;
