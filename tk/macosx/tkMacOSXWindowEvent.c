@@ -990,6 +990,7 @@ ClearPort(
 - (void)_recursiveDisplayAllDirtyWithLockFocus:(BOOL)needsLockFocus visRect:(NSRect)visRect;
 - (void)_recursive:(BOOL)recurse displayRectIgnoringOpacity:(NSRect)displayRect inContext:(NSGraphicsContext *)context topView:(BOOL)topView;
 - (void)_lightWeightRecursiveDisplayInRect:(NSRect)visRect;
+- (BOOL)_drawRectIfEmpty;
 - (void)_drawRect:(NSRect)inRect clip:(BOOL)clip;
 - (void)_setDrawsOwnDescendants:(BOOL)drawsOwnDescendants;
 @end
@@ -1066,6 +1067,14 @@ ClearPort(
     if (needToSetAsideSubviews) {
         [self _restoreSubviews];
     }
+}
+
+- (BOOL)_drawRectIfEmpty {
+    /*
+     * Our -drawRect manages subview drawing directly, so it needs to be called
+     * even if the area to be redrawn is completely obscured by subviews.
+     */
+    return YES;
 }
 
 - (void)_drawRect:(NSRect)inRect clip:(BOOL)clip {
