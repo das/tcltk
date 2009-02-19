@@ -111,7 +111,7 @@ XDestroyWindow(
 		Window window = TkMacOSXGetXWindow(ActiveNonFloatingWindow());
 
 		if (window != None) {
-		    TkMacOSXGenerateFocusEvent(window, 1);
+		    TkMacOSXGenerateFocusEvent(macWin->winPtr, 1);
 		}
 	    }
 	}
