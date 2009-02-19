@@ -91,10 +91,10 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
 	    height = bounds.size.height - wmPtr->yInParent;
 	    flags |= TK_SIZE_CHANGED;
 	}
-	TkMacOSXInvalClipRgns((Tk_Window) winPtr);
-	TkMacOSXInvalidateWindow((MacDrawable*) winPtr->window, TK_PARENT_WINDOW);
-	TkGenWMConfigureEvent((Tk_Window)winPtr, x, y, width, height,
-		flags);
+	TkGenWMConfigureEvent((Tk_Window)winPtr, x, y, width, height, flags);
+	if (Tcl_GetServiceMode() != TCL_SERVICE_NONE) {
+	    while (Tcl_ServiceEvent(0)) {} /* propagate geometry changes immediately */
+	}
 	/*
 	if (wmPtr->attributes & kWindowResizableAttribute) {
 	    [w setShowsResizeIndicator:NO];
@@ -902,13 +902,23 @@ ClearPort(
 	ClearPort(TkMacOSXGetDrawablePort(winPtr->window), shape);
 #endif
     }
-    if (GenerateUpdates(shape, &updateBounds, winPtr)) {
+    if (GenerateUpdates(shape, &updateBounds, winPtr) &&
+	    ![[NSRunLoop currentRunLoop] currentMode] &&
+	    Tcl_GetServiceMode() != TCL_SERVICE_NONE) {
 	/*
 	 * Ensure there are no pending idle-time redraws that could prevent
 	 * the just posted Expose events from generating new redraws.
 	 */
 
-	Tcl_DoOneEvent(TCL_IDLE_EVENTS|TCL_DONT_WAIT);
+	while (Tcl_DoOneEvent(TCL_IDLE_EVENTS|TCL_DONT_WAIT)) {}
+
+	/*
+	 * For smoother drawing, process Expose events and resulting redraws
+	 * immediately instead of at idle time.
+	 */
+
+	while (Tcl_ServiceEvent(0)) {}
+	while (Tcl_DoOneEvent(TCL_IDLE_EVENTS|TCL_DONT_WAIT)) {}
     }
 }
 

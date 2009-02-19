@@ -36,11 +36,19 @@ static void TkMacOSXEventsCheckProc(ClientData clientData, int flags);
 
 #pragma mark TKApplication(TKNotify)
 
+@implementation NSWindow(TKNotify)
+- (id)tkDisplayIfNeeded {
+    [self displayIfNeeded];
+    return nil;
+}
+@end
+
 @implementation TKApplication(TKNotify)
 - (NSEvent *)nextEventMatchingMask:(NSUInteger)mask
 	untilDate:(NSDate *)expiration inMode:(NSString *)mode
 	dequeue:(BOOL)deqFlag {
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
+    [NSApp makeWindowsPerform:@selector(tkDisplayIfNeeded) inOrder:NO];
     int oldMode = Tcl_SetServiceMode(TCL_SERVICE_ALL);
     NSEvent *event = [[super nextEventMatchingMask:mask untilDate:expiration
 	    inMode:mode dequeue:deqFlag] retain];
