@@ -663,36 +663,34 @@ Tcl_FinalizeNotifier(
      */
 
     if (notifierCount == 0) {
-	int result;
+	if (triggerPipe != -1) {
+	    /*
+	     * Send "q" message to the notifier thread so that it will
+	     * terminate. The notifier will return from its call to select()
+	     * and notice that a "q" message has arrived, it will then close
+	     * its side of the pipe and terminate its thread. Note the we can
+	     * not just close the pipe and check for EOF in the notifier thread
+	     * because if a background child process was created with exec,
+	     * select() would not register the EOF on the pipe until the child
+	     * processes had terminated. [Bug: 4139] [Bug: 1222872]
+	     */
 
-	if (triggerPipe < 0) {
-	    Tcl_Panic("Tcl_FinalizeNotifier: notifier pipe not initialized");
-	}
+	    write(triggerPipe, "q", 1);
+	    close(triggerPipe);
 
-	/*
-	 * Send "q" message to the notifier thread so that it will terminate.
-	 * The notifier will return from its call to select() and notice that
-	 * a "q" message has arrived, it will then close its side of the pipe
-	 * and terminate its thread. Note the we can not just close the pipe
-	 * and check for EOF in the notifier thread because if a background
-	 * child process was created with exec, select() would not register
-	 * the EOF on the pipe until the child processes had terminated.
-	 * [Bug: 4139] [Bug: 1222872]
-	 */
+	    if (notifierThreadRunning) {
+		int result = pthread_join(notifierThread, NULL);
 
-	write(triggerPipe, "q", 1);
-	close(triggerPipe);
-
-	if (notifierThreadRunning) {
-	    result = pthread_join(notifierThread, NULL);
-	    if (result) {
-		Tcl_Panic("Tcl_FinalizeNotifier: unable to join notifier thread");
+		if (result) {
+		    Tcl_Panic("Tcl_FinalizeNotifier: unable to join notifier "
+			    "thread");
+		}
+		notifierThreadRunning = 0;
 	    }
-	    notifierThreadRunning = 0;
-	}
 
-	close(receivePipe);
-	triggerPipe = -1;
+	    close(receivePipe);
+	    triggerPipe = -1;
+	}
 	CLOSE_NOTIFIER_LOG;
     }
     UNLOCK_NOTIFIER_INIT;
@@ -855,7 +853,7 @@ Tcl_ServiceModeHook(
 
     if (mode == TCL_SERVICE_ALL && !tsdPtr->runLoopTimer) {
 	if (!tsdPtr->runLoop) {
-	    Tcl_Panic("Tcl_WaitForEvent: Notifier not initialized");
+	    Tcl_Panic("Tcl_ServiceModeHook: Notifier not initialized");
 	}
 	tsdPtr->runLoopTimer = CFRunLoopTimerCreate(NULL,
 		CFAbsoluteTimeGetCurrent() + CF_TIMEINTERVAL_FOREVER,
