@@ -36,12 +36,15 @@ static int		GenerateActivateEvents(Window window, int activeFlag);
 
 #pragma mark TKApplication(TKWindowEvent)
 
+#ifdef TK_MAC_DEBUG_NOTIFICATIONS
 extern NSString *NSWindowWillOrderOnScreenNotification;
+extern NSString *NSWindowDidOrderOnScreenNotification;
 extern NSString *NSWindowDidOrderOffScreenNotification;
 
 #if MAC_OS_X_VERSION_MIN_REQUIRED < 1060
 #define NSWindowWillStartLiveResizeNotification @"NSWindowWillStartLiveResizeNotification"
 #define NSWindowDidEndLiveResizeNotification  @"NSWindowDidEndLiveResizeNotification"
+#endif
 #endif
 
 @implementation TKApplication(TKWindowEvent)
@@ -58,11 +61,6 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
 	TkMacOSXGenerateFocusEvent(winPtr->window, activate);
 	TkMacOSXEnterExitFullscreen(winPtr, activate);
     }
-}
-- (void)windowDragStart:(NSNotification *)notification {
-#ifdef TK_MAC_DEBUG_NOTIFICATIONS
-    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
-#endif
 }
 - (void)windowBoundsChanged:(NSNotification *)notification {
 #ifdef TK_MAC_DEBUG_NOTIFICATIONS
@@ -105,12 +103,6 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
 	*/
     }
 }
-- (void)windowLiveResize:(NSNotification *)notification {
-#ifdef TK_MAC_DEBUG_NOTIFICATIONS
-    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
-#endif
-    //BOOL start = [[notification name] isEqualToString:NSWindowWillStartLiveResizeNotification];
-}
 /* TODO: this is received too late (after NSWindowDidBecomeKeyNotification) */
 - (void)windowExpanded:(NSNotification *)notification {
 #ifdef TK_MAC_DEBUG_NOTIFICATIONS
@@ -139,28 +131,6 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
 	Tk_UnmapWindow((Tk_Window) winPtr);
     }
 }
-- (void)windowMapped:(NSNotification *)notification {
-#ifdef TK_MAC_DEBUG_NOTIFICATIONS
-    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
-#endif
-    NSWindow *w = [notification object];
-    TkWindow *winPtr = TkMacOSXGetTkWindow(w);
-
-    if (winPtr) {
-	//Tk_MapWindow((Tk_Window) winPtr);
-    }
-}
-- (void)windowUnmapped:(NSNotification *)notification {
-#ifdef TK_MAC_DEBUG_NOTIFICATIONS
-    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
-#endif
-    NSWindow *w = [notification object];
-    TkWindow *winPtr = TkMacOSXGetTkWindow(w);
-
-    if (winPtr) {
-	//Tk_UnmapWindow((Tk_Window) winPtr);
-    }
-}
 - (void)windowClosed:(NSNotification *)notification {
 #ifdef TK_MAC_DEBUG_NOTIFICATIONS
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
@@ -172,22 +142,57 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
 	TkGenWMDestroyEvent((Tk_Window) winPtr);
     }
 }
+#ifdef TK_MAC_DEBUG_NOTIFICATIONS
+- (void)windowDragStart:(NSNotification *)notification {
+    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+}
+- (void)windowLiveResize:(NSNotification *)notification {
+    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+    //BOOL start = [[notification name] isEqualToString:NSWindowWillStartLiveResizeNotification];
+}
+- (void)windowMapped:(NSNotification *)notification {
+    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+    NSWindow *w = [notification object];
+    TkWindow *winPtr = TkMacOSXGetTkWindow(w);
+
+    if (winPtr) {
+	//Tk_MapWindow((Tk_Window) winPtr);
+    }
+}
+- (void)windowBecameVisible:(NSNotification *)notification {
+#ifdef TK_MAC_DEBUG_NOTIFICATIONS
+    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+#endif
+}
+- (void)windowUnmapped:(NSNotification *)notification {
+    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+    NSWindow *w = [notification object];
+    TkWindow *winPtr = TkMacOSXGetTkWindow(w);
+
+    if (winPtr) {
+	//Tk_UnmapWindow((Tk_Window) winPtr);
+    }
+}
+#endif
 
 #define observe(n, s) [nc addObserver:self selector:@selector(s) name:(n) object:nil]
 - (void)_setupWindowNotifications {
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     observe(NSWindowDidBecomeKeyNotification, windowActivation:);
     observe(NSWindowDidResignKeyNotification, windowActivation:);
-    observe(NSWindowWillMoveNotification, windowDragStart:);
     observe(NSWindowDidMoveNotification, windowBoundsChanged:);
     observe(NSWindowDidResizeNotification, windowBoundsChanged:);
-    observe(NSWindowWillStartLiveResizeNotification, windowLiveResize:);
-    observe(NSWindowDidEndLiveResizeNotification, windowLiveResize:);
     observe(NSWindowDidDeminiaturizeNotification, windowExpanded:);
     observe(NSWindowDidMiniaturizeNotification, windowCollapsed:);
-    observe(NSWindowWillOrderOnScreenNotification, windowMapped:);
-    observe(NSWindowDidOrderOffScreenNotification, windowUnmapped:);
     observe(NSWindowWillCloseNotification, windowClosed:);
+#ifdef TK_MAC_DEBUG_NOTIFICATIONS
+    observe(NSWindowWillMoveNotification, windowDragStart:);
+    observe(NSWindowWillStartLiveResizeNotification, windowLiveResize:);
+    observe(NSWindowDidEndLiveResizeNotification, windowLiveResize:);
+    observe(NSWindowWillOrderOnScreenNotification, windowMapped:);
+    observe(NSWindowDidOrderOnScreenNotification, windowBecameVisible:);
+    observe(NSWindowDidOrderOffScreenNotification, windowUnmapped:);
+#endif
 }
 #undef observe(n, s)
 @end
