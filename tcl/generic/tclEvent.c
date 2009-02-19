@@ -1352,7 +1352,7 @@ Tcl_VwaitObjCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     int done, foundEvent;
-    char *nameString;
+    const char *nameString;
 
     if (objc != 2) {
 	Tcl_WrongNumArgs(interp, 1, objv, "name");
