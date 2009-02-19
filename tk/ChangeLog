@@ -1,3 +1,49 @@
+2009-02-17  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* win/tcl.m4, win/configure: Check if cl groks _WIN64 already to
+	avoid CC manipulation that can screw up later configure checks.
+	Use 'd'ebug runtime in 64-bit builds.
+
+2009-02-16  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* win/configure.in, win/configure: align better with tcl
+	version. Ensures finding correct CPP for Win64.
+
+2009-02-16  Donal K. Fellows  <dkf@users.sf.net>
+
+	* doc/ttk_intro.n: [Bug 2604420]: Improve wording so that this page
+	feels less obviously incomplete.
+
+2009-02-12  Donal K. Fellows  <dkf@users.sf.net>
+
+	* library/iconlist.tcl: Split out the IconList megawidget from
+	tkfbox.tcl into its own file so as to make it easier to maintain. Also
+	cleans up the API for the megawidget, making it more like a
+	conventional Tk widget.
+
+2009-02-11  Donal K. Fellows  <dkf@users.sf.net>
+
+	* library/demos/items.tcl, .../label.tcl, .../twind.tcl:
+	* library/demos/images/ouster.png: [Bug 2588919]: Demo GOOBE. Added
+	new image of John Ousterhout that does not look quite so massively out
+	of date, and also showed off a bit of how we can adjust PNG images
+	when loading them. Also labeled JO as the creator; it's the TCT who
+	are the proprietors now.
+
+2009-02-10  Jan Nijtmans  <nijtmans@users.sf.net>
+
+	* unix/tcl.m4: fix [tcl-Bug 2502365]: Building of head on HPUX is
+	broken when using the native CC.
+	* unix/configure (autoconf-2.59)
+
+2008-02-08  Joe English  <jenglish@users.sourceforge.net>
+
+	* generic/ttk/*.[ch]: Renamed several internal data structures
+	and functions: ElementImpl -> ElementClass, LayoutNode -> Element.
+	Remove more unnecessary casts.  Add function Ttk_ClientRegion,
+	common factor of entry, scale, progress, and treeview widgets.
+	* generic/ttk/ttkTrack.c: Fix [Bug 2431428].
+
 2008-02-06  Daniel Steffen  <das@users.sourceforge.net>
 
 	* generic/tkImgPhInstance.c:	fix numerous leaks discovered with the
