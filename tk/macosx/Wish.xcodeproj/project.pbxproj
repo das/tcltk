@@ -441,7 +441,7 @@
 		F9FD31400CC1AD070073837D /* tclMacOSXBundle.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D433908F272B5004A47F5 /* tclMacOSXBundle.c */; };
 		F9FD31410CC1AD070073837D /* tclMacOSXFCmd.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D433D08F272B5004A47F5 /* tclMacOSXFCmd.c */; };
 		F9FD31420CC1AD070073837D /* tclMacOSXNotify.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D433E08F272B5004A47F5 /* tclMacOSXNotify.c */; };
-		F9FD31430CC1AD070073837D /* tclLoadDyld.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D445B08F272B9004A47F5 /* tclLoadDyld.c */; };
+		F9FD31430CC1AD070073837D /* tclLoadDyld.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D445B08F272B9004A47F5 /* tclLoadDyld.c */; settings = {COMPILER_FLAGS = "-Wno-deprecated-declarations"; }; };
 		F9FD31440CC1AD070073837D /* tclUnixChan.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D445F08F272B9004A47F5 /* tclUnixChan.c */; };
 		F9FD31450CC1AD070073837D /* tclUnixCompat.c in Sources */ = {isa = PBXBuildFile; fileRef = F9FC77B70AB29E9100B7077D /* tclUnixCompat.c */; };
 		F9FD31460CC1AD070073837D /* tclUnixEvent.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D446008F272B9004A47F5 /* tclUnixEvent.c */; };
