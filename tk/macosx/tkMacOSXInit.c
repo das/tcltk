@@ -472,7 +472,9 @@ TkMacOSXGetNamedSymbol(
     const char* symbol)
 {
     void *addr = dlsym(RTLD_NEXT, symbol);
-    dlerror();
+    if (!addr) {
+	(void) dlerror(); /* Clear dlfcn error state */
+    }
     return addr;
 }
 
