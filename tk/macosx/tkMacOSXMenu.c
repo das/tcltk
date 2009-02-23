@@ -93,12 +93,17 @@ static int gNoTkMenus = 0;	/* This is used by Tk_MacOSXTurnOffMenus as
 				 * the flag that Tk is not to draw any
 				 * menus. */
 static unsigned long defaultBg = 0, defaultFg = 0;
+static SInt32 menuMarkColumnWidth = 0, menuIconTrailingEdgeMargin = 0;
+static SInt32 menuTextLeadingEdgeMargin = 0, menuTextTrailingEdgeMargin = 0;
+static SInt16 menuItemExtraHeight = 0, menuItemExtraWidth = 0;
+static SInt16 menuSeparatorHeight = 0;
 
 static void	CheckForSpecialMenu(TkMenu *menuPtr);
 static NSString *ParseAccelerator(const char *accel, NSUInteger *maskPtr);
 static int	GenerateMenuSelectEvent(TKMenu *menu, NSMenuItem *menuItem);
 static void	MenuSelectEvent(TkMenu *menuPtr);
 static void	RecursivelyClearActiveMenu(TkMenu *menuPtr);
+static int	ModifierCharWidth(Tk_Font tkfont);
 
 #pragma mark TKMenu
 
@@ -179,8 +184,8 @@ static void	RecursivelyClearActiveMenu(TkMenu *menuPtr);
 - (NSMenuItem *)tkNewMenuItem:(TkMenuEntry *)mePtr {
     NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:@""
 	action:@selector(tkMenuItemInvoke:) keyEquivalent:@""];
-    [menuItem setTag:(NSInteger)mePtr];
     [menuItem setTarget:self];
+    [menuItem setTag:(NSInteger)mePtr];
     return menuItem;
 }
 @end
@@ -190,9 +195,9 @@ static void	RecursivelyClearActiveMenu(TkMenu *menuPtr);
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
     return [menuItem isEnabled];
 }
-- (void)tkMenuItemInvoke:(id)sender {
+- (void)tkMenuItemInvoke:(NSMenuItem *)menuItem {
     TkMenu *menuPtr = (TkMenu *)_tkMenu;
-    TkMenuEntry *mePtr = (TkMenuEntry *)[(NSMenuItem *)sender tag];
+    TkMenuEntry *mePtr = (TkMenuEntry *)[menuItem tag];
     if (menuPtr && mePtr) {
 	Tcl_Interp *interp = menuPtr->interp;
 	Tcl_Preserve(interp);
@@ -206,7 +211,7 @@ static void	RecursivelyClearActiveMenu(TkMenu *menuPtr);
 	Tcl_Release(interp);
     }
 }
-- (void)tkMenuItemInvokeByKeyEquivalent:(id)sender {
+- (void)tkMenuItemInvokeByKeyEquivalent:(NSMenuItem *)menuItem {
     /* Ignore key equivalents for our menus, Tk handles them directly. */
 }
 @end
@@ -835,6 +840,252 @@ ParseAccelerator(
 }
 
 /*
+ *--------------------------------------------------------------
+ *
+ * ModifierCharWidth --
+ *
+ *	Helper mesuring width of command char in given font.
+ *
+ * Results:
+ *	Width of command char.
+ *
+ * Side effects:
+ *	None.
+ *
+ *--------------------------------------------------------------
+ */
+
+static int
+ModifierCharWidth(Tk_Font tkfont)
+{
+    static NSString *cmdChar = nil;
+
+    if (!cmdChar) {
+	unichar cmd = kCommandUnicode;
+	cmdChar = [[NSString alloc] initWithCharacters:&cmd length:1];
+    }
+    return [cmdChar sizeWithAttributes:
+	    TkMacOSXNSFontAttributesForFont(tkfont)].width;
+}
+
+/*
+ *--------------------------------------------------------------
+ *
+ * TkpComputeStandardMenuGeometry --
+ *
+ *	This procedure is invoked to recompute the size and layout of a menu
+ *	that is not a menubar clone.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	Fields of menu entries are changed to reflect their current positions,
+ *	and the size of the menu window itself may be changed.
+ *
+ *--------------------------------------------------------------
+ */
+
+void
+TkpComputeStandardMenuGeometry(
+    TkMenu *menuPtr)		/* Structure describing menu. */
+{
+    Tk_Font tkfont, menuFont;
+    Tk_FontMetrics menuMetrics, entryMetrics, *fmPtr;
+    int modifierCharWidth, menuModifierCharWidth;
+    int x, y, modifierWidth, labelWidth, indicatorSpace;
+    int windowWidth, windowHeight, accelWidth;
+    int i, j, lastColumnBreak, maxWidth;
+    int entryWidth, maxIndicatorSpace, borderWidth, activeBorderWidth;
+    TkMenuEntry *mePtr, *columnEntryPtr;
+    int haveAccel = 0;
+
+    if (menuPtr->tkwin == NULL) {
+	return;
+    }
+
+    Tk_GetPixelsFromObj(NULL, menuPtr->tkwin, menuPtr->borderWidthPtr,
+	    &borderWidth);
+    Tk_GetPixelsFromObj(NULL, menuPtr->tkwin, menuPtr->activeBorderWidthPtr,
+	    &activeBorderWidth);
+    x = y = borderWidth;
+    indicatorSpace = labelWidth = accelWidth = 0;
+    windowHeight = maxWidth = lastColumnBreak = 0;
+    maxIndicatorSpace = 0;
+
+    /*
+     * On the Mac especially, getting font metrics can be quite slow, so we
+     * want to do it intelligently. We are going to precalculate them and pass
+     * them down to all of the measuring and drawing routines. We will measure
+     * the font metrics of the menu once. If an entry does not have its own
+     * font set, then we give the geometry/drawing routines the menu's font
+     * and metrics. If an entry has its own font, we will measure that font
+     * and give all of the geometry/drawing the entry's font and metrics.
+     */
+
+    menuFont = Tk_GetFontFromObj(menuPtr->tkwin, menuPtr->fontPtr);
+    Tk_GetFontMetrics(menuFont, &menuMetrics);
+    menuModifierCharWidth = ModifierCharWidth(menuFont);
+
+    for (i = 0; i < menuPtr->numEntries; i++) {
+	mePtr = menuPtr->entries[i];
+	if (mePtr->type == CASCADE_ENTRY || mePtr->accelLength > 0) {
+	    haveAccel = 1;
+	    break;
+	}
+    }
+
+    for (i = 0; i < menuPtr->numEntries; i++) {
+	mePtr = menuPtr->entries[i];
+	if (mePtr->fontPtr == NULL) {
+	    tkfont = menuFont;
+	    fmPtr = &menuMetrics;
+	    modifierCharWidth = menuModifierCharWidth;
+	} else {
+	    tkfont = Tk_GetFontFromObj(menuPtr->tkwin, mePtr->fontPtr);
+	    Tk_GetFontMetrics(tkfont, &entryMetrics);
+	    fmPtr = &entryMetrics;
+	    modifierCharWidth = ModifierCharWidth(tkfont);
+	}
+
+	if ((i > 0) && mePtr->columnBreak) {
+	    if (maxIndicatorSpace != 0) {
+		maxIndicatorSpace += 2;
+	    }
+	    for (j = lastColumnBreak; j < i; j++) {
+		columnEntryPtr = menuPtr->entries[j];
+		columnEntryPtr->indicatorSpace = maxIndicatorSpace;
+		columnEntryPtr->width = maxIndicatorSpace + maxWidth
+			+ 2 * activeBorderWidth;
+		columnEntryPtr->x = x;
+		columnEntryPtr->entryFlags &= ~ENTRY_LAST_COLUMN;
+	    }
+	    x += maxIndicatorSpace + maxWidth + 2 * borderWidth;
+	    windowWidth = x;
+	    maxWidth = maxIndicatorSpace = 0;
+	    lastColumnBreak = i;
+	    y = borderWidth;
+	}
+	entryWidth = accelWidth = modifierWidth = indicatorSpace = 0;
+	if (mePtr->type == SEPARATOR_ENTRY || mePtr->type == TEAROFF_ENTRY) {
+	    mePtr->height = menuSeparatorHeight;
+	} else {
+	    /*
+	     * For each entry, compute the height required by that particular
+	     * entry, plus three widths: the width of the label, the width to
+	     * allow for an indicator to be displayed to the left of the label
+	     * (if any), and the width of the accelerator to be displayed to
+	     * the right of the label (if any). These sizes depend, of course,
+	     * on the type of the entry.
+	     */
+
+	    NSMenuItem *menuItem = (NSMenuItem *) mePtr->platformEntryData;
+	    int haveImage = 0, width = 0, height = 0;
+
+	    if (mePtr->image) {
+		Tk_SizeOfImage(mePtr->image, &width, &height);
+		haveImage = 1;
+	    } else if (mePtr->bitmapPtr) {
+		Pixmap bitmap = Tk_GetBitmapFromObj(menuPtr->tkwin,
+			mePtr->bitmapPtr);
+		Tk_SizeOfBitmap(menuPtr->display, bitmap, &width, &height);
+		haveImage = 1;
+	    }
+	    if (!haveImage || (mePtr->compound != COMPOUND_NONE)) {
+		NSAttributedString *attrTitle = [menuItem attributedTitle];
+		NSSize size;
+
+		if (attrTitle) {
+		    size = [attrTitle size];
+		} else {
+		    size = [[menuItem title] sizeWithAttributes:
+			TkMacOSXNSFontAttributesForFont(tkfont)];
+		}
+		size.width += menuTextLeadingEdgeMargin +
+			menuTextTrailingEdgeMargin;
+		if (size.height < fmPtr->linespace) {
+		    size.height = fmPtr->linespace;
+		}
+		if (haveImage && (mePtr->compound != COMPOUND_NONE)) {
+		    int margin = width + menuIconTrailingEdgeMargin;
+
+		    if (margin > menuTextLeadingEdgeMargin) {
+			margin = menuTextLeadingEdgeMargin;
+		    }
+		    width += size.width + menuIconTrailingEdgeMargin - margin;
+		    if (size.height > height) {
+			height = size.height;
+		    }
+		} else {
+		    width = size.width;
+		    height = size.height;
+		}
+	    }
+	    labelWidth = width + menuItemExtraWidth;
+	    mePtr->height = height + menuItemExtraHeight;
+
+	    if (mePtr->type == CASCADE_ENTRY) {
+		modifierWidth = modifierCharWidth;
+	    } else if (mePtr->accelLength == 0) {
+		if (haveAccel && !mePtr->hideMargin) {
+		    modifierWidth = modifierCharWidth;
+		}
+	    } else {
+		NSUInteger modifMask = [menuItem keyEquivalentModifierMask];
+		int i = 0;
+
+		while (modifiers[i].name) {
+		    if (modifMask & modifiers[i].mask) {
+			modifMask &= ~modifiers[i].mask;
+			modifierWidth += modifierCharWidth;
+		    }
+		    i++;
+		}
+		accelWidth = [[menuItem keyEquivalent] sizeWithAttributes:
+			TkMacOSXNSFontAttributesForFont(tkfont)].width;
+	    }
+	    if (!mePtr->hideMargin) {
+		indicatorSpace = menuMarkColumnWidth;
+	    }
+	    if (indicatorSpace > maxIndicatorSpace) {
+		maxIndicatorSpace = indicatorSpace;
+	    }
+	    entryWidth = labelWidth + modifierWidth + accelWidth;
+	    if (entryWidth > maxWidth) {
+		maxWidth = entryWidth;
+	    }
+	    mePtr->height += 2 * activeBorderWidth;
+	}
+	mePtr->y = y;
+	y += menuPtr->entries[i]->height + borderWidth;
+	if (y > windowHeight) {
+	    windowHeight = y;
+	}
+    }
+
+    for (j = lastColumnBreak; j < menuPtr->numEntries; j++) {
+	columnEntryPtr = menuPtr->entries[j];
+	columnEntryPtr->indicatorSpace = maxIndicatorSpace;
+	columnEntryPtr->width = maxIndicatorSpace + maxWidth
+		+ 2 * activeBorderWidth;
+	columnEntryPtr->x = x;
+	columnEntryPtr->entryFlags |= ENTRY_LAST_COLUMN;
+    }
+    windowWidth = x + maxIndicatorSpace + maxWidth
+	    + 2 * activeBorderWidth + borderWidth;
+    windowHeight += borderWidth;
+
+    if (windowWidth <= 0) {
+	windowWidth = 1;
+    }
+    if (windowHeight <= 0) {
+	windowHeight = 1;
+    }
+    menuPtr->totalWidth = windowWidth;
+    menuPtr->totalHeight = windowHeight;
+}
+
+/*
  *----------------------------------------------------------------------
  *
  * GenerateMenuSelectEvent --
@@ -1035,6 +1286,18 @@ TkpMenuInit(void)
     tkColPtr = TkpGetColor(None, DEF_MENU_FG);
     defaultFg = tkColPtr->color.pixel;
     ckfree((char *) tkColPtr);
+
+    ChkErr(GetThemeMetric, kThemeMetricMenuMarkColumnWidth,
+	    &menuMarkColumnWidth);
+    ChkErr(GetThemeMetric, kThemeMetricMenuTextLeadingEdgeMargin,
+	    &menuTextLeadingEdgeMargin);
+    ChkErr(GetThemeMetric, kThemeMetricMenuTextTrailingEdgeMargin,
+	    &menuTextTrailingEdgeMargin);
+    ChkErr(GetThemeMetric, kThemeMetricMenuIconTrailingEdgeMargin,
+	    &menuIconTrailingEdgeMargin);
+    ChkErr(GetThemeMenuItemExtra, kThemeMenuItemPlain, &menuItemExtraHeight,
+	    &menuItemExtraWidth);
+    ChkErr(GetThemeMenuSeparatorHeight, &menuSeparatorHeight);
 }
 
 #pragma mark -
@@ -1147,32 +1410,7 @@ TkpComputeMenubarGeometry(
     TkpComputeStandardMenuGeometry(menuPtr);
 }
 
-/*
- *--------------------------------------------------------------
- *
- * TkpComputeStandardMenuGeometry --
- *
- *	This procedure is invoked to recompute the size and layout of a menu
- *	that is not a menubar clone.
- *
- * Results:
- *	None.
- *
- * Side effects:
- *	Fields of menu entries are changed to reflect their current positions,
- *	and the size of the menu window itself may be changed.
- *
- *--------------------------------------------------------------
- */
 
-void
-TkpComputeStandardMenuGeometry(
-    TkMenu *menuPtr)		/* Structure describing menu. */
-{
-    menuPtr->totalWidth = 0;
-    menuPtr->totalHeight = 0;
-}
-
 /*
  *----------------------------------------------------------------------
  *
