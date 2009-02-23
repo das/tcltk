@@ -212,9 +212,6 @@ MODULE_SCOPE OSStatus	TkMacOSHIShapeUnion(HIShapeRef inShape1,
 MODULE_SCOPE void *	TkMacOSXGetNamedSymbol(const char *module,
 			    const char *symbol);
 MODULE_SCOPE void	TkMacOSXDisplayChanged(Display *display);
-#ifdef MAC_OSX_TK_TODO
-MODULE_SCOPE void	TkMacOSXInitScrollbarMetrics(void);
-#endif
 MODULE_SCOPE int	TkMacOSXUseAntialiasedText(Tcl_Interp *interp,
 			    int enable);
 MODULE_SCOPE int	TkMacOSXInitCGDrawing(Tcl_Interp *interp, int enable,
