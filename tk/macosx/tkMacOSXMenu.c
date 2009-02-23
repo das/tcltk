@@ -607,6 +607,7 @@ TkpPostMenu(
 {
     NSWindow *win = [NSApp keyWindow];
     if (win) {
+	int oldMode = Tcl_SetServiceMode(TCL_SERVICE_NONE);
 	NSView *view = [win contentView];
 	NSRect frame = NSMakeRect(x, tkMacOSXZeroScreenHeight - y - 1, 1, 1);
 	frame.origin = [view convertPoint:
@@ -618,6 +619,7 @@ TkpPostMenu(
 	[popUpButtonCell selectItem:nil];
 	[popUpButtonCell performClickWithFrame:frame inView:view];
 	[popUpButtonCell release];
+	Tcl_SetServiceMode(oldMode);
 	return TCL_OK;
     } else {
 	return TCL_ERROR;
@@ -863,7 +865,9 @@ GenerateMenuSelectEvent(
 	} else {
 	    TkActivateMenuEntry(menuPtr, index);
 	    MenuSelectEvent(menuPtr);
-	    Tcl_ServiceAll();
+	    if (Tcl_GetServiceMode() != TCL_SERVICE_NONE) {
+		while (Tcl_ServiceEvent(0)) {}
+	    }
 	    return true;
 	}
     }
