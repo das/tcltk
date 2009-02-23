@@ -901,7 +901,8 @@ ClearPort(
 	[self performSelectorOnMainThread:@selector(generateExposeEvents:)
 		withObject:(id)drawShape waitUntilDone:NO
 		modes:[NSArray arrayWithObjects:NSRunLoopCommonModes,
-			NSEventTrackingRunLoopMode, nil]];
+			NSEventTrackingRunLoopMode, NSModalPanelRunLoopMode,
+			nil]];
     }
     CFRelease(drawShape);
 }
