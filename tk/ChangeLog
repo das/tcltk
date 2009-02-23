@@ -1,3 +1,25 @@
+2009-02-23  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* win/rc/*.cur: [Patch 2513104] fix cursor hotspots (cjmcdonald)
+
+	* win/tkWinMenu.c: Applied patch for menu image display bug
+	[Bug 1329198, 456299] [Patch 2507419] (cjmcdonald)
+
+2009-02-22  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* win/tkWinCursor.c: Applied patch to support stock Win32 help arrow
+	cursor when question_arrow requested [Patch 2542828] (danckaert)
+
+2009-02-21  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* library/ttk/vistaTheme.tcl: Correct the ttk::treeview border on
+	* win/ttkWinXpTheme.c:        XP and vista.
+
+	* library/console.tcl: [Bug 2546087] In 2004 a fix to Tcl channels
+	prevented the exposure of the internal UTF-8 representation of the
+	ASCII NUL character (\uc080). Since then strings in the console
+	have been truncated at NUL. This restores the older behaviour.
+
 2009-02-17  Jeff Hobbs  <jeffh@ActiveState.com>
 
 	* win/tcl.m4, win/configure: Check if cl groks _WIN64 already to
