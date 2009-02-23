@@ -1010,21 +1010,18 @@ WmSetAttribute(
 	if (Tcl_GetBooleanFromObj(interp, value, &boolean) != TCL_OK) {
 	    return TCL_ERROR;
 	}
-#ifdef MAC_OSX_TK_TODO
 	if (boolean == !tkMacOSXWmAttrNotifyVal) {
-	    static NMRec notifyRec;
+	    static NSInteger request = -1;
 
+	    if (request >= 0) {
+		[NSApp cancelUserAttentionRequest:request];
+		request = -1;
+	    }
 	    if (boolean) {
-		bzero(&notifyRec, sizeof(notifyRec));
-		notifyRec.qType = nmType;
-		notifyRec.nmMark = 1;
-		ChkErr(NMInstall, &notifyRec);
-	    } else {
-		ChkErr(NMRemove, &notifyRec);
+		request = [NSApp requestUserAttention:NSCriticalRequest];
 	    }
 	    tkMacOSXWmAttrNotifyVal = boolean;
 	}
-#endif
 	break;
     case WMATT_TITLEPATH: {
 	const char *path = Tcl_FSGetNativePath(value);
