@@ -663,7 +663,7 @@ proc ::tk::ConsoleInsert {w s} {
 
 proc ::tk::ConsoleOutput {dest string} {
     set w .console
-    $w insert output $string $dest
+    $w insert output [string map {\0 \u25a1} $string] $dest
     ::tk::console::ConstrainBuffer $w $::tk::console::maxLines
     $w see insert
 }
