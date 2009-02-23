@@ -207,41 +207,6 @@ enum {
 
 #pragma mark -
 
-#ifdef MAC_OSX_TK_TODO
-/*
- *----------------------------------------------------------------------
- *
- * GetGrabWindowForWindow --
- *
- *	Get the grab window for the given window, if any.
- *
- * Results:
- *	Grab Tk_Window or None.
- *
- * Side effects:
- *	None.
- *
- *----------------------------------------------------------------------
- */
-
-Tk_Window
-GetGrabWindowForWindow(
-    Tk_Window tkwin)
-{
-    Tk_Window grabWin = TkMacOSXGetCapture();
-
-    if (!grabWin) {
-	int grabState = TkGrabState((TkWindow *) tkwin);
-
-	if (grabState != TK_GRAB_NONE && grabState != TK_GRAB_IN_TREE) {
-	    grabWin = (Tk_Window) (((TkWindow *) tkwin)->dispPtr->grabWinPtr);
-	}
-    }
-
-    return grabWin;
-}
-#endif
-
 /*
  *----------------------------------------------------------------------
  *

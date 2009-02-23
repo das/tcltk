@@ -36,6 +36,10 @@ static void TkMacOSXEventsCheckProc(ClientData clientData, int flags);
 
 #pragma mark TKApplication(TKNotify)
 
+@interface NSApplication(TKNotify)
+- (void)_modalSession:(NSModalSession)session sendEvent:(NSEvent *)event;
+@end
+
 @implementation NSWindow(TKNotify)
 - (id)tkDisplayIfNeeded {
     [self displayIfNeeded];
@@ -73,6 +77,39 @@ static void TkMacOSXEventsCheckProc(ClientData clientData, int flags);
 @end
 
 #pragma mark -
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * GetRunLoopMode --
+ *
+ * Results:
+ *	RunLoop mode that should be passed to -nextEventMatchingMask:
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+static NSString *
+GetRunLoopMode(NSModalSession modalSession)
+{
+    NSString *runLoopMode = nil;
+
+    if (modalSession) {
+	runLoopMode = NSModalPanelRunLoopMode;
+    } else if (TkMacOSXGetCapture()) {
+	runLoopMode = NSEventTrackingRunLoopMode;
+    }
+    if (!runLoopMode) {
+	runLoopMode = [[NSRunLoop currentRunLoop] currentMode];
+    }
+    if (!runLoopMode) {
+	runLoopMode = NSDefaultRunLoopMode;
+    }
+    return runLoopMode;
+}
 
 /*
  *----------------------------------------------------------------------
@@ -180,7 +217,8 @@ TkMacOSXEventsSetupProc(
 	if (!tsdPtr->currentEvent) {
 	    NSEvent *currentEvent = [NSApp nextEventMatchingMask:NSAnyEventMask
 		    untilDate:[NSDate distantPast]
-		    inMode:NSDefaultRunLoopMode dequeue:YES];
+		    inMode:GetRunLoopMode(TkMacOSXGetModalSession())
+		    dequeue:YES];
 	    if (currentEvent) {
 		tsdPtr->currentEvent =
 			TkMacOSXMakeUncollectableAndRetain(currentEvent);
@@ -217,6 +255,7 @@ TkMacOSXEventsCheckProc(
 	    ![[NSRunLoop currentRunLoop] currentMode]) {
 	NSEvent *currentEvent = nil;
 	NSAutoreleasePool *pool = nil;
+	NSModalSession modalSession;
 
 	TSD_INIT();
 	if (tsdPtr->currentEvent) {
@@ -224,10 +263,11 @@ TkMacOSXEventsCheckProc(
 		    tsdPtr->currentEvent);
 	}
 	do {
+	    modalSession = TkMacOSXGetModalSession();
 	    if (!currentEvent) {
 		currentEvent = [NSApp nextEventMatchingMask:NSAnyEventMask
 			untilDate:[NSDate distantPast]
-			inMode:NSDefaultRunLoopMode dequeue:YES];
+			inMode:GetRunLoopMode(modalSession) dequeue:YES];
 	    }
 	    if (!currentEvent) {
 		break;
@@ -242,7 +282,11 @@ TkMacOSXEventsCheckProc(
 #ifdef TK_MAC_DEBUG_EVENTS
 		TKLog(@"   event: %@", currentEvent);
 #endif
-		[NSApp sendEvent:currentEvent];
+		if (modalSession) {
+		    [NSApp _modalSession:modalSession sendEvent:currentEvent];
+		} else {
+		    [NSApp sendEvent:currentEvent];
+		}
 		[currentEvent release];
 		currentEvent = nil;
 	    }

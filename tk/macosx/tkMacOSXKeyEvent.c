@@ -27,6 +27,7 @@ static Tk_Window grabWinPtr = NULL;
 				/* Current grab window, NULL if no grab. */
 static Tk_Window keyboardGrabWinPtr = NULL;
 				/* Current keyboard grab window. */
+static NSModalSession modalSession = NULL;
 
 #pragma mark TKApplication(TKKeyEvent)
 
@@ -201,7 +202,17 @@ XGrabKeyboard(
     Time time)
 {
     keyboardGrabWinPtr = Tk_IdToWindow(display, grab_window);
+    if (keyboardGrabWinPtr && grabWinPtr) {
+	NSWindow *w = TkMacOSXDrawableWindow(grab_window);
+	MacDrawable *macWin = (MacDrawable *) grab_window;
 
+	if (w && macWin->toplevel->winPtr == (TkWindow*) grabWinPtr) {
+	    if (modalSession) {
+		Tcl_Panic("XGrabKeyboard: already grabbed");
+	    }
+	    modalSession = [NSApp beginModalSessionForWindow:w];
+	}
+    }
     return GrabSuccess;
 }
 
@@ -227,6 +238,10 @@ XUngrabKeyboard(
     Time time)
 {
     keyboardGrabWinPtr = NULL;
+    if (modalSession) {
+	[NSApp endModalSession:modalSession];
+	modalSession = NULL;
+    }
 }
 
 /*
@@ -236,6 +251,7 @@ XUngrabKeyboard(
  *
  * Results:
  *	Returns the current grab window
+ *
  * Side effects:
  *	None.
  *
@@ -246,6 +262,26 @@ Tk_Window
 TkMacOSXGetCapture(void)
 {
     return grabWinPtr;
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkMacOSXGetModalSession --
+ *
+ * Results:
+ *	Returns the current modal session
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+MODULE_SCOPE NSModalSession
+TkMacOSXGetModalSession(void)
+{
+    return modalSession;
 }
 
 /*
@@ -273,25 +309,6 @@ TkpSetCapture(
     while (winPtr && !Tk_IsTopLevel(winPtr)) {
 	winPtr = winPtr->parentPtr;
     }
-#if 0
-    {
-	TkWindow *w = NULL;
-	WindowModality m;
-
-	if (winPtr) {
-	    w = winPtr;
-	    m = kWindowModalityAppModal;
-	} else if (grabWinPtr) {
-	    w = (TkWindow *) grabWinPtr;
-	    m = kWindowModalityNone;
-	}
-
-	if (w && w->window != None && TkMacOSXHostToplevelExists(w)) {
-	    ChkErr(SetWindowModality, TkMacOSXDrawableWindow(w->window), m,
-		    NULL);
-	}
-    }
-#endif
     grabWinPtr = (Tk_Window) winPtr;
 }
 
