@@ -609,7 +609,7 @@ TkpPostMenu(
     if (win) {
 	int oldMode = Tcl_SetServiceMode(TCL_SERVICE_NONE);
 	NSView *view = [win contentView];
-	NSRect frame = NSMakeRect(x, tkMacOSXZeroScreenHeight - y - 1, 1, 1);
+	NSRect frame = NSMakeRect(x + 9, tkMacOSXZeroScreenHeight - y - 9, 1, 1);
 	frame.origin = [view convertPoint:
 		[win convertScreenToBase:frame.origin] fromView:nil];
 	NSMenu *menu = (NSMenu *) menuPtr->platformData;
