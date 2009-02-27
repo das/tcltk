@@ -61,7 +61,7 @@ static int		DefaultErrorHandler(Display *display,
 
 static int		DestroyImage(XImage *image);
 static unsigned long	ImageGetPixel(XImage *image, int x, int y);
-static int		PutPixel(XImage *image, int x, int y,
+static int		ImagePutPixel(XImage *image, int x, int y,
 			    unsigned long pixel);
 #if 0
 static XImage *		SubImage(XImage *image, int x, int y,
@@ -814,7 +814,7 @@ XCreateImage(
     ximage->f.create_image = NULL;
     ximage->f.destroy_image = DestroyImage;
     ximage->f.get_pixel = ImageGetPixel;
-    ximage->f.put_pixel = PutPixel;
+    ximage->f.put_pixel = ImagePutPixel;
     ximage->f.sub_image = NULL;
     ximage->f.add_pixel = NULL;
 
@@ -962,43 +962,23 @@ ImageGetPixel(
 {
     unsigned char r = 0, g = 0, b = 0;
 
-    if (image->obdata) {
-#ifdef MAC_OSX_TK_TODO
-	CGrafPtr destPort, savePort;
-	Boolean portChanged;
-	RGBColor cPix;
-
-	destPort = (CGrafPtr) image->data;
-	portChanged = QDSwapPort(destPort, &savePort);
-	GetCPixel(x, y, &cPix);
-
-	/*
-	 * Image from XGetImage, 16 bit color values.
-	 */
-
-	r = ((cPix.red)   >> 8) & 0xff;
-	g = ((cPix.green) >> 8) & 0xff;
-	b = ((cPix.blue)  >> 8) & 0xff;
-	if (portChanged) {
-	    QDSwapPort(savePort, NULL);
-	}
-#endif
-    } else {
-	unsigned char *srcPtr = (unsigned char*) image->data
+    if (image && image->data) {
+	unsigned char *srcPtr = ((unsigned char*) image->data)
 		+ (y * image->bytes_per_line)
 		+ (((image->xoffset + x) * image->bits_per_pixel) / NBBY);
 
 	switch (image->bits_per_pixel) {
-	    case 32:
-		r = (*((unsigned long*) srcPtr) >> 16) & 0xff;
-		g = (*((unsigned long*) srcPtr) >>  8) & 0xff;
-		b = (*((unsigned long*) srcPtr)      ) & 0xff;
+	    case 32: {
+		r = (*((unsigned int*) srcPtr) >> 16) & 0xff;
+		g = (*((unsigned int*) srcPtr) >>  8) & 0xff;
+		b = (*((unsigned int*) srcPtr)      ) & 0xff;
 		/*if (image->byte_order == LSBFirst) {
 		    r = srcPtr[2]; g = srcPtr[1]; b = srcPtr[0];
 		} else {
-		    r = srcPtr[0]; g = srcPtr[1]; b = srcPtr[2];
+		    r = srcPtr[1]; g = srcPtr[2]; b = srcPtr[3];
 		}*/
 		break;
+	    }
 	    case 16:
 		r = (*((unsigned short*) srcPtr) >> 7) & 0xf8;
 		g = (*((unsigned short*) srcPtr) >> 2) & 0xf8;
@@ -1030,7 +1010,7 @@ ImageGetPixel(
 /*
  *----------------------------------------------------------------------
  *
- * PutPixel --
+ * ImagePutPixel --
  *
  *	Set a single pixel in an image.
  *
@@ -1044,50 +1024,28 @@ ImageGetPixel(
  */
 
 static int
-PutPixel(
+ImagePutPixel(
     XImage *image,
     int x,
     int y,
     unsigned long pixel)
 {
-    unsigned char  r, g, b;
-
-    r = ((pixel & image->red_mask)   >> 16) & 0xff;
-    g = ((pixel & image->green_mask) >>  8) & 0xff;
-    b = ((pixel & image->blue_mask)       ) & 0xff;
-    if (image->obdata) {
-#ifdef MAC_OSX_TK_TODO
-	/*
-	 * Image from XGetImage, 16 bit color values.
-	 */
-
-	CGrafPtr destPort, savePort;
-	Boolean portChanged;
-	RGBColor cPix;
-
-	destPort = (CGrafPtr)image->data;
-	portChanged = QDSwapPort(destPort, &savePort);
-
-	cPix.red = r << 8;
-	cPix.green = g << 8;
-	cPix.blue = b << 8;
-	SetCPixel(x, y, &cPix);
-	if (portChanged) {
-	    QDSwapPort(savePort, NULL);
-	}
-#endif
-    } else {
-	unsigned char *dstPtr = (unsigned char*) image->data
+    if (image && image->data) {
+	unsigned char r = ((pixel & image->red_mask)   >> 16) & 0xff;
+	unsigned char g = ((pixel & image->green_mask) >>  8) & 0xff;
+	unsigned char b = ((pixel & image->blue_mask)       ) & 0xff;
+	unsigned char *dstPtr = ((unsigned char*) image->data)
 		+ (y * image->bytes_per_line)
 		+ (((image->xoffset + x) * image->bits_per_pixel) / NBBY);
 
 	switch (image->bits_per_pixel) {
 	    case 32:
-		*((unsigned long*) dstPtr) = (r << 16) | (g << 8) | b;
+		*((unsigned int*) dstPtr) = (0xff << 24) | (r << 16) |
+			(g << 8) | b;
 		/*if (image->byte_order == LSBFirst) {
-		    dstPtr[2] = r; dstPtr[1] = g; dstPtr[0] = b;
+		    dstPtr[3] = 0xff; dstPtr[2] = r; dstPtr[1] = g; dstPtr[0] = b;
 		} else {
-		    dstPtr[0] = r; dstPtr[1] = g; dstPtr[2] = b;
+		    dstPtr[0] = 0xff; dstPtr[1] = r; dstPtr[2] = g; dstPtr[3] = b;
 		}*/
 		break;
 	    case 16:
