@@ -877,37 +877,44 @@ XGetImage(
     int format)
 {
     MacDrawable *macDraw = (MacDrawable *) d;
-    NSView *view = macDraw->toplevel ? macDraw->toplevel->view : macDraw->view;
     XImage *   imagePtr = NULL;
     Pixmap     pixmap = (Pixmap) NULL;
     Tk_Window  win = (Tk_Window) macDraw->winPtr;
     GC	       gc;
+    char *     data = NULL;
     int	       depth = 32;
     int	       offset = 0;
-    int	       bitmap_pad = 32;
+    int	       bitmap_pad = 0;
     int	       bytes_per_line = 0;
 
-    if (view) {
-	if (format == ZPixmap) {
-	    if (width > 0 && height > 0) {
-		/*
-		 * Tk_GetPixmap fails for zero width or height.
-		 */
+    if (format == ZPixmap) {
+	if (width > 0 && height > 0) {
+	    /*
+	     * Tk_GetPixmap fails for zero width or height.
+	     */
 
-		pixmap = Tk_GetPixmap(display, d, width, height, depth);
-	    }
-	    if (win) {
-		XGCValues values;
+	    pixmap = Tk_GetPixmap(display, d, width, height, depth);
+	}
+	if (win) {
+	    XGCValues values;
 
-		gc = Tk_GetGC(win, 0, &values);
-	    } else {
-		gc = XCreateGC(display, pixmap, 0, NULL);
+	    gc = Tk_GetGC(win, 0, &values);
+	} else {
+	    gc = XCreateGC(display, pixmap, 0, NULL);
+	}
+	if (pixmap) {
+	    CGContextRef context;
+
+	    XCopyArea(display, d, pixmap, gc, x, y, width, height, 0, 0);
+	    context = ((MacDrawable *) pixmap)->context;
+	    if (context) {
+		data = CGBitmapContextGetData(context);
+		bytes_per_line = CGBitmapContextGetBytesPerRow(context);
 	    }
-	    if (pixmap) {
-		XCopyArea(display, d, pixmap, gc, x, y, width, height, 0, 0);
-	    }
+	}
+	if (data) {
 	    imagePtr = XCreateImage(display, NULL, depth, format, offset,
-		    (char *) view, width, height, bitmap_pad, bytes_per_line);
+		    data, width, height, bitmap_pad, bytes_per_line);
 
 	    /*
 	     * Track Pixmap underlying the XImage in the unused obdata field
@@ -915,14 +922,14 @@ XGetImage(
 	     */
 
 	    imagePtr->obdata = (XPointer) pixmap;
-	    if (!win) {
-		XFreeGC(display, gc);
-	    }
-	} else {
-	    TkpDisplayWarning(
-		    "XGetImage: only ZPixmap types are implemented",
-		    "XGetImage Failure");
+	} else if (pixmap) {
+	    Tk_FreePixmap(display, pixmap);	
 	}
+	if (!win) {
+	    XFreeGC(display, gc);
+	}
+    } else {
+	TkMacOSXDbgMsg("Invalid image format");
     }
     return imagePtr;
 }
