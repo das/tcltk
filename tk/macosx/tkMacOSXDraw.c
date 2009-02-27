@@ -165,45 +165,48 @@ XCopyArea(
 	    TkMacOSXDbgMsg("Ignored QD drawing of CG drawable");
 	}
 	TkMacOSXRestoreDrawingContext(&dc);
-    } else {
-#ifdef MAC_OSX_TK_TODO
-	MacDrawable *dstDraw = (MacDrawable *) dst;
-	CGrafPtr srcPort;
-
-	srcPort = TkMacOSXGetDrawablePort(src);
-	if (srcPort) {
-	    Rect srcRect, dstRect, *srcPtr = &srcRect, *dstPtr = &dstRect;
-	    const BitMap *srcBit, *dstBit;
-	    RGBColor black = {0, 0, 0}, white = {0xffff, 0xffff, 0xffff};
-
-	    if (!TkMacOSXSetupDrawingContext(dst, gc, 0, &dc)) {
-		return;
+    } else if (TkMacOSXDrawableWindow(src)) {
+	NSView *view = srcDraw->toplevel ? srcDraw->toplevel->view :
+		srcDraw->view;
+	NSInteger gs = [[view window] gState];
+	/* // alternative using per-view gState:
+	NSInteger gs = [view gState];
+	if (!gs) {
+	    [view allocateGState];
+	    if ([view lockFocusIfCanDraw]) {
+		[view unlockFocus];
 	    }
-	    if (dc.context) {
-		TkMacOSXDbgMsg("Ignored CG drawing of QD drawable");
-		goto end;
-	    }
-	    if (!dc.port) {
-		TkMacOSXDbgMsg("Invalid destination drawable");
-		goto end;
-	    }
-	    srcBit = GetPortBitMapForCopyBits(srcPort);
-	    dstBit = GetPortBitMapForCopyBits(dc.port);
-	    SetRect(srcPtr, srcDraw->xOff + src_x, srcDraw->yOff + src_y,
-		    srcDraw->xOff + src_x + width,
-		    srcDraw->yOff + src_y + height);
-	    SetRect(dstPtr, dstDraw->xOff + dest_x, dstDraw->yOff + dest_y,
-		    dstDraw->xOff + dest_x + width,
-		    dstDraw->yOff + dest_y + height);
-	    RGBForeColor(&black);
-	    RGBBackColor(&white);
-	    CopyBits(srcBit, dstBit, srcPtr, dstPtr, srcCopy, NULL);
-end:
-	    TkMacOSXRestoreDrawingContext(&dc);
-	} else {
-	    TkMacOSXDbgMsg("Invalid source drawable");
+	    gs = [view gState];
 	}
-#endif
+	*/
+	if (!gs || !TkMacOSXSetupDrawingContext(dst, gc, 1, &dc)) {
+	    return;
+	}
+	if (dc.context) {
+	    NSGraphicsContext *gc = nil;
+	    CGFloat boundsH = [view bounds].size.height;
+	    NSRect srcRect = NSMakeRect(srcDraw->xOff + src_x, boundsH -
+		    height - (srcDraw->yOff + src_y), width, height);
+
+	    if (((MacDrawable *) dst)->flags & TK_IS_PIXMAP) {
+		gc = [NSGraphicsContext graphicsContextWithGraphicsPort:
+			dc.context flipped:NO];
+		if (gc) {
+		    [NSGraphicsContext saveGraphicsState];
+		    [NSGraphicsContext setCurrentContext:gc];
+		}
+	    }
+	    NSCopyBits(gs, srcRect, NSMakePoint(dest_x,
+		    (dc.portBounds.bottom - dc.portBounds.top) - dest_y));
+	    if (gc) {
+		[NSGraphicsContext restoreGraphicsState];
+	    }
+	} else {
+	    TkMacOSXDbgMsg("Invalid destination drawable");
+	}
+	TkMacOSXRestoreDrawingContext(&dc);
+    } else {
+	TkMacOSXDbgMsg("Invalid source drawable");
     }
 }
 
@@ -279,71 +282,8 @@ XCopyPlane(
 	}
 	TkMacOSXRestoreDrawingContext(&dc);
     } else {
-#ifdef MAC_OSX_TK_TODO
-	MacDrawable *dstDraw = (MacDrawable *) dst;
-	CGrafPtr srcPort;
-
-	srcPort = TkMacOSXGetDrawablePort(src);
-	if (srcPort) {
-	    Rect srcRect, dstRect, *srcPtr = &srcRect, *dstPtr = &dstRect;
-	    const BitMap *srcBit, *dstBit;
-	    TkpClipMask *clipPtr = (TkpClipMask *) gc->clip_mask;
-
-	    if (!TkMacOSXSetupDrawingContext(dst, gc, 0, &dc)) {
-		return;
-	    }
-	    if (dc.context) {
-		TkMacOSXDbgMsg("Ignored CG drawing of QD drawable");
-		goto end;
-	    }
-	    if (!dc.port) {
-		TkMacOSXDbgMsg("Invalid destination drawable");
-		goto end;
-	    }
-	    srcBit = GetPortBitMapForCopyBits(srcPort);
-	    dstBit = GetPortBitMapForCopyBits(dc.port);
-	    SetRect(srcPtr, srcDraw->xOff + src_x, srcDraw->yOff + src_y,
-		    srcDraw->xOff + src_x + width,
-		    srcDraw->yOff + src_y + height);
-	    SetRect(dstPtr, dstDraw->xOff + dest_x, dstDraw->yOff + dest_y,
-		    dstDraw->xOff + dest_x + width,
-		    dstDraw->yOff + dest_y + height);
-	    TkMacOSXSetColorInPort(gc->foreground, 1, NULL, dc.port);
-	    if (!clipPtr || clipPtr->type == TKP_CLIP_REGION) {
-		/*
-		 * Opaque bitmaps.
-		 */
-
-		TkMacOSXSetColorInPort(gc->background, 0, NULL, dc.port);
-		CopyBits(srcBit, dstBit, srcPtr, dstPtr, srcCopy, NULL);
-	    } else if (clipPtr->type == TKP_CLIP_PIXMAP) {
-		if (clipPtr->value.pixmap == src) {
-		    /*
-		     * Transparent bitmaps. If it's color ignore the forecolor.
-		     */
-		    short tmode = GetPixDepth(GetPortPixMap(srcPort)) == 1 ?
-			    srcOr : transparent;
-
-		    CopyBits(srcBit, dstBit, srcPtr, dstPtr, tmode, NULL);
-		} else {
-		    /*
-		     * Two arbitrary bitmaps.
-		     */
-
-		    CGrafPtr mskPort = TkMacOSXGetDrawablePort(
-			    clipPtr->value.pixmap);
-		    const BitMap *mskBit = GetPortBitMapForCopyBits(mskPort);
-
-		    CopyDeepMask(srcBit, mskBit, dstBit, srcPtr, srcPtr,
-			    dstPtr, srcCopy, NULL);
-		}
-	    }
-end:
-	    TkMacOSXRestoreDrawingContext(&dc);
-	} else {
-	    TkMacOSXDbgMsg("Invalid source drawable");
-	}
-#endif
+	XCopyArea(display, src, dst, gc, src_x, src_y, width, height, dest_x,
+		dest_y);
     }
 }
 
