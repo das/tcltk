@@ -14,25 +14,7 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkMacOSXInt.h"
-
-#ifdef MAC_OSX_TK_TODO
-/*
- * Depending on the resource type there are different ways to
- * draw native icons.
- */
-#define TYPE1	0		/* Family icon suite. */
-#define TYPE2	1		/* ICON resource. */
-#define TYPE3	2		/* cicn resource. */
-
-/*
- * This data structure describes the id and type of a given icon.
- * It is used as the source for native icons.
- */
-typedef struct {
-    int id;			/* Resource Id for Icon. */
-    long int type;		/* Type of icon. */
-} NativeIcon;
+#include "tkMacOSXPrivate.h"
 
 /*
  * This structure holds information about native bitmaps.
@@ -40,9 +22,7 @@ typedef struct {
 
 typedef struct {
     const char *name;		/* Name of icon. */
-    long int type;		/* Type of icon. */
-    int id;			/* Id of icon. */
-    int size;			/* Size of icon. */
+    OSType iconType;		/* OSType of icon. */
 } BuiltInIcon;
 
 /*
@@ -51,25 +31,26 @@ typedef struct {
  */
 
 static BuiltInIcon builtInIcons[] = {
-    {"document",	TYPE1,	kGenericDocumentIconResource,		32},
-    {"stationery",	TYPE1,	kGenericStationeryIconResource,		32},
-    {"edition",		TYPE1,	kGenericEditionFileIconResource,	32},
-    {"application",	TYPE1,	kGenericApplicationIconResource,	32},
-    {"accessory",	TYPE1,	kGenericDeskAccessoryIconResource,	32},
-    {"folder",		TYPE1,	kGenericFolderIconResource,		32},
-    {"pfolder",		TYPE1,	kPrivateFolderIconResource,		32},
-    {"trash",		TYPE1,	kTrashIconResource,			32},
-    {"floppy",		TYPE1,	kFloppyIconResource,			32},
-    {"ramdisk",		TYPE1,	kGenericRAMDiskIconResource,		32},
-    {"cdrom",		TYPE1,	kGenericCDROMIconResource,		32},
-    {"preferences",	TYPE1,	kGenericPreferencesIconResource,	32},
-    {"querydoc",	TYPE1,	kGenericQueryDocumentIconResource,	32},
-    {"stop",		TYPE2,	kStopIcon,				32},
-    {"note",		TYPE2,	kNoteIcon,				32},
-    {"caution",		TYPE2,	kCautionIcon,				32},
-    {NULL,		0,	0,					0}
+    {"document",	kGenericDocumentIcon},
+    {"stationery",	kGenericStationeryIcon},
+    {"edition",		kGenericEditionFileIcon},
+    {"application",	kGenericApplicationIcon},
+    {"accessory",	kGenericDeskAccessoryIcon},
+    {"folder",		kGenericFolderIcon},
+    {"pfolder",		kPrivateFolderIcon},
+    {"trash",		kTrashIcon},
+    {"floppy",		kGenericFloppyIcon},
+    {"ramdisk",		kGenericRAMDiskIcon},
+    {"cdrom",		kGenericCDROMIcon},
+    {"preferences",	kGenericPreferencesIcon},
+    {"querydoc",	kGenericQueryDocumentIcon},
+    {"stop",		kAlertStopIcon},
+    {"note",		kAlertNoteIcon},
+    {"caution",		kAlertCautionIcon},
+    {NULL}
 };
-#endif
+
+#define builtInIconSize 32
 
 /*
  *----------------------------------------------------------------------
@@ -92,13 +73,12 @@ static BuiltInIcon builtInIcons[] = {
 void
 TkpDefineNativeBitmaps(void)
 {
-#ifdef MAC_OSX_TK_TODO
     Tcl_HashTable *tablePtr = TkGetBitmapPredefTable();
     BuiltInIcon *builtInPtr;
 
     for (builtInPtr = builtInIcons; builtInPtr->name != NULL; builtInPtr++) {
 	Tcl_HashEntry *predefHashPtr;
-	const char * name;
+	Tk_Uid name;
 	int isNew;
 
 	name = Tk_GetUid(builtInPtr->name);
@@ -106,19 +86,52 @@ TkpDefineNativeBitmaps(void)
 	if (isNew) {
 	    TkPredefBitmap *predefPtr = (TkPredefBitmap *)
 		    ckalloc(sizeof(TkPredefBitmap));
-	    NativeIcon *nativeIconPtr = (NativeIcon *)
-		    ckalloc(sizeof(NativeIcon));
-
-	    nativeIconPtr->id = builtInPtr->id;
-	    nativeIconPtr->type = builtInPtr->type;
-	    predefPtr->source = (char *) nativeIconPtr;
-	    predefPtr->width = builtInPtr->size;
-	    predefPtr->height = builtInPtr->size;
+	    predefPtr->source = UINT2PTR(builtInPtr->iconType);
+	    predefPtr->width = builtInIconSize;
+	    predefPtr->height = builtInIconSize;
 	    predefPtr->native = 1;
 	    Tcl_SetHashValue(predefHashPtr, predefPtr);
 	}
     }
-#endif
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * GetBitmapForIcon --
+ *
+ * Results:
+ *	Bitmap for the given IconRef.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+static Pixmap
+GetBitmapForIcon(
+    Display *display,
+    IconRef icon)
+{
+    TkMacOSXDrawingContext dc;
+    Pixmap pixmap;
+
+    pixmap = Tk_GetPixmap(display, None, builtInIconSize, builtInIconSize, 0);
+    if (TkMacOSXSetupDrawingContext(pixmap, NULL, 1, &dc)) {
+	if (dc.context) {
+	    const CGAffineTransform t = { .a= 1, .b = 0, .c = 0, .d = -1,
+		    .tx = 0, .ty = builtInIconSize };
+	    const CGRect r = { .origin = { .x = 0, .y = 0 }, .size = {
+		    .width = builtInIconSize, .height = builtInIconSize } };
+
+	    CGContextConcatCTM(dc.context, t);
+	    PlotIconRefInContext(dc.context, &r, kAlignNone,
+		    kTransformNone, NULL, kPlotIconRefNormalFlags, icon);
+	}
+	TkMacOSXRestoreDrawingContext(&dc);
+    }
+    return pixmap;
 }
 
 /*
@@ -126,15 +139,13 @@ TkpDefineNativeBitmaps(void)
  *
  * TkpCreateNativeBitmap --
  *
- *	Add native bitmaps.
+ *	Create native bitmap.
  *
  * Results:
- *	A standard Tcl result. If an error occurs then TCL_ERROR is
- *	returned and a message is left in the interp's result.
+ *	Native bitmap.
  *
  * Side effects:
- *	"Name" is entered into the bitmap table and may be used from
- *	here on to refer to the given bitmap.
+ *	None.
  *
  *----------------------------------------------------------------------
  */
@@ -144,43 +155,20 @@ TkpCreateNativeBitmap(
     Display *display,
     const char *source)		/* Info about the icon to build. */
 {
-    Pixmap pix;
-#ifdef MAC_OSX_TK_TODO
-    Rect destRect;
-    CGrafPtr savePort;
-    Boolean portChanged;
-    const NativeIcon *nativeIconPtr;
+    Pixmap pixmap;
+    IconRef icon;
+    OSErr err;
 
-    pix = Tk_GetPixmap(display, None, 32, 32, 0);
-    portChanged = QDSwapPort(TkMacOSXGetDrawablePort(pix), &savePort);
-
-    nativeIconPtr = (const NativeIcon *) source;
-    SetRect(&destRect, 0, 0, 32, 32);
-    if (nativeIconPtr->type == TYPE1) {
-	RGBColor white = {0xFFFF, 0xFFFF, 0xFFFF};
-
-	RGBForeColor(&white);
-	PaintRect(&destRect);
-	PlotIconID(&destRect, atAbsoluteCenter, ttNone, nativeIconPtr->id);
-    } else if (nativeIconPtr->type == TYPE2) {
-	Handle icon = GetIcon(nativeIconPtr->id);
-
-	if (icon != NULL) {
-	    RGBColor black = {0, 0, 0};
-
-	    RGBForeColor(&black);
-	    PlotIcon(&destRect, icon);
-	    ReleaseResource(icon);
-	}
+    err = ChkErr(GetIconRef, kOnSystemDisk, kSystemIconsCreator,
+	    PTR2UINT(source), &icon);
+    if (err == noErr) {
+	pixmap = GetBitmapForIcon(display, icon);
+	ReleaseIconRef(icon);
+    } else {
+	pixmap = Tk_GetPixmap(display, None, builtInIconSize,
+		builtInIconSize, 0);
     }
-
-    if (portChanged) {
-	QDSwapPort(savePort, NULL);
-    }
-#else
-    pix = Tk_GetPixmap(display, None, 32, 32, 0);
-#endif
-    return pix;
+    return pixmap;
 }
 
 /*
@@ -188,15 +176,19 @@ TkpCreateNativeBitmap(
  *
  * TkpGetNativeAppBitmap --
  *
- *	Add native bitmaps.
+ *	Get a named native bitmap.
+ *
+ *	Attemps to interpret the given name in order as:
+ *	    - NSImage named image name
+ *	    - NSImage path to image file
+ *	    - NSImage url string
+ *	    - 4-char OSType of IconServices icon
  *
  * Results:
- *	A standard Tcl result. If an error occurs then TCL_ERROR is
- *	returned and a message is left in the interp's result.
+ *	Native bitmap or None.
  *
  * Side effects:
- *	"Name" is entered into the bitmap table and may be used from
- *	here on to refer to the given bitmap.
+ *	None.
  *
  *----------------------------------------------------------------------
  */
@@ -208,82 +200,69 @@ TkpGetNativeAppBitmap(
     int *width,			/* The width & height of the bitmap. */
     int *height)
 {
-    Pixmap pix;
-#ifdef MAC_OSX_TK_TODO
-    CGrafPtr savePort;
-    Boolean portChanged;
-    Rect destRect;
-    Handle resource;
-    int type = -1, destWrote;
-    Str255 nativeName;
-    Tcl_Encoding encoding;
+    Pixmap pixmap = None;
+    NSString *string = [NSString stringWithUTF8String:name];
+    NSImage *image = [NSImage imageNamed:string];
 
-    /*
-     * macRoman is the encoding that the resource fork uses.
-     */
-
-    encoding = Tcl_GetEncoding(NULL, "macRoman");
-    Tcl_UtfToExternal(NULL, encoding, name, strlen(name), 0, NULL,
-	    (char *) &nativeName[1], 255, NULL, &destWrote, NULL);
-    nativeName[0] = destWrote;
-    Tcl_FreeEncoding(encoding);
-
-    resource = GetNamedResource('cicn', nativeName);
-    if (resource != NULL) {
-	type = TYPE3;
-    } else {
-	resource = GetNamedResource('ICON', nativeName);
-	if (resource != NULL) {
-	    type = TYPE2;
+    if (!image) {
+	image = [[[NSImage alloc] initWithContentsOfFile:string] autorelease];
+    }
+    if (!image) {
+	NSURL *url = [NSURL URLWithString:string];
+	if (url) {
+	    image = [[[NSImage alloc] initWithContentsOfURL:url] autorelease];
 	}
     }
+    if (image) {
+	TkMacOSXDrawingContext dc;
+	NSSize size = [image size];
 
-    if (resource == NULL) {
-	return (Pixmap) NULL;
+	pixmap = Tk_GetPixmap(display, None, size.width, size.height, 0);
+	*width = size.width;
+	*height = size.height;
+	if (TkMacOSXSetupDrawingContext(pixmap, NULL, 1, &dc)) {
+	    if (dc.context) {
+		CGAffineTransform t = { .a= 1, .b = 0, .c = 0, .d = -1,
+			.tx = 0, .ty = size.height};
+
+		CGContextConcatCTM(dc.context, t);
+		[NSGraphicsContext saveGraphicsState];
+		[NSGraphicsContext setCurrentContext:[NSGraphicsContext
+			graphicsContextWithGraphicsPort:dc.context flipped:NO]];
+		[image drawAtPoint:NSZeroPoint fromRect:NSZeroRect
+			operation:NSCompositeCopy fraction:1.0];
+		[NSGraphicsContext restoreGraphicsState];
+	    }
+	    TkMacOSXRestoreDrawingContext(&dc);
+	}
+    } else {
+	Tcl_Encoding encoding = Tcl_GetEncoding(NULL, "macRoman");
+	Tcl_DString ds;
+
+	Tcl_UtfToExternalDString(encoding, name, -1, &ds);
+	if (Tcl_DStringLength(&ds) <= 4) {
+	    char string[4] = {};
+	    OSType iconType;
+	    IconRef icon;
+	    OSErr err;
+
+	    memcpy(string, Tcl_DStringValue(&ds),
+		    (size_t) Tcl_DStringLength(&ds));
+	    iconType = (OSType) string[0] << 24 | (OSType) string[1] << 16 |
+		     (OSType) string[2] <<  8 | (OSType) string[3];
+	    err = ChkErr(GetIconRef, kOnSystemDisk, kSystemIconsCreator,
+		    iconType, &icon);
+	    if (err == noErr) {
+		pixmap = GetBitmapForIcon(display, icon);
+		*width = builtInIconSize;
+		*height = builtInIconSize;
+		ReleaseIconRef(icon);
+	    }
+	}
+	Tcl_DStringFree(&ds);
+	Tcl_FreeEncoding(encoding);
     }
-
-    pix = Tk_GetPixmap(display, None, 32, 32, 0);
-    portChanged = QDSwapPort(TkMacOSXGetDrawablePort(pix), &savePort);
-
-    SetRect(&destRect, 0, 0, 32, 32);
-    if (type == TYPE2) {
-	RGBColor black = {0, 0, 0};
-
-	RGBForeColor(&black);
-	PlotIcon(&destRect, resource);
-	ReleaseResource(resource);
-    } else if (type == TYPE3) {
-	RGBColor white = {0xFFFF, 0xFFFF, 0xFFFF};
-	short id;
-	ResType theType;
-	Str255 dummy;
-
-	/*
-	 * We need to first paint the background white. Also, for some reason
-	 * we *must* use GetCIcon instead of GetNamedResource for PlotCIcon to
-	 * work - so we use GetResInfo to get the id.
-	 */
-
-	RGBForeColor(&white);
-	PaintRect(&destRect);
-	GetResInfo(resource, &id, &theType, dummy);
-	ReleaseResource(resource);
-	resource = (Handle) GetCIcon(id);
-	PlotCIcon(&destRect, (CIconHandle) resource);
-	DisposeCIcon((CIconHandle) resource);
-    }
-
-    *width = 32;
-    *height = 32;
-    if (portChanged) {
-	QDSwapPort(savePort, NULL);
-    }
-#else
-    pix = Tk_GetPixmap(display, None, 32, 32, 0);
-    *width = 32;
-    *height = 32;
-#endif
-    return pix;
+    return pixmap;
 }
 
 /*
