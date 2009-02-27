@@ -14,7 +14,6 @@ TODO for parity with Carbon TkAqua:
 - fullscreen windows
 
 TODO features that are not in Carbon TkAqua yet either:
-- native bitmaps (i.e. access to named OS-provided icons)
 - native scale widget
 - custom menu drawing (for tk menus with very fancy config options that native
   menus do not support)
