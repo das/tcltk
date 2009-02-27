@@ -4,8 +4,6 @@ TkAqua Cocoa/64bit Port
 Features yet to be implemented, in order of importance:
 
 TODO for parity with Carbon TkAqua:
-- XGetImage (i.e. copy bits from screen), used by generic Tk drawing code to
-  render transparent images
 - clipboard (scrap) handling
 - transient windows (stay in front of & move with parent window)
 - window resize limits (max/min & increments)
@@ -27,4 +25,4 @@ Known Bugs:
 - CoreText measuring bug seen in narrowed widget demo main window
 
 
--- das 23/02/2009
+-- das 27/02/2009
