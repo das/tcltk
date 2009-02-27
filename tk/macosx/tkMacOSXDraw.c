@@ -469,12 +469,11 @@ TkMacOSXCreateCGImageWithDrawable(
     Drawable drawable)
 {
     CGImageRef img = NULL;
-    MacDrawable *macDraw = (MacDrawable *) drawable;
+    CGContextRef context = GetCGContextForDrawable(drawable);
 
-    if (macDraw && (macDraw->flags & TK_IS_PIXMAP) && macDraw->context) {
-	img = CGBitmapContextCreateImage(macDraw->context);
+    if (context) {
+	img = CGBitmapContextCreateImage(context);
     }
-
     return img;
 }
 
