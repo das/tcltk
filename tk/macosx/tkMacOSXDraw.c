@@ -537,7 +537,13 @@ CreateCGImageWithXImage(
     char *data = NULL;
     CGDataProviderReleaseDataCallback releaseData = ReleaseData;
 
-    if (image->bits_per_pixel == 1) {
+    if (image->obdata) {
+	/*
+	 * Image from XGetImage
+	 */
+
+	img = TkMacOSXCreateCGImageWithDrawable((Pixmap) image->obdata);
+    } else if (image->bits_per_pixel == 1) {
 	/*
 	 * BW image
 	 */
