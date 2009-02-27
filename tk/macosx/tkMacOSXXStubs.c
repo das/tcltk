@@ -63,11 +63,6 @@ static int		DestroyImage(XImage *image);
 static unsigned long	ImageGetPixel(XImage *image, int x, int y);
 static int		ImagePutPixel(XImage *image, int x, int y,
 			    unsigned long pixel);
-#if 0
-static XImage *		SubImage(XImage *image, int x, int y,
-			    unsigned int width, unsigned int height);
-static int		AddPixel(XImage *image, long value);
-#endif
 
 /*
  *----------------------------------------------------------------------
@@ -92,7 +87,7 @@ TkMacOSXDisplayChanged(
 {
     Screen *screen;
     NSArray *nsScreens;
-    
+
 
     if (display == NULL || display->screens == NULL) {
 	return;
@@ -718,7 +713,7 @@ XSetClipRectangles(
 
     while (n--) {
 	XRectangle rect = *rectangles;
-	
+
 	rect.x += clip_x_origin;
 	rect.y += clip_y_origin;
 	TkUnionRectWithRegion(&rect, clipRgn, clipRgn);
@@ -766,6 +761,7 @@ TkGetServerInfo(
 }
 
 #pragma mark XImage handling
+
 /*
  *----------------------------------------------------------------------
  *
@@ -923,7 +919,7 @@ XGetImage(
 
 	    imagePtr->obdata = (XPointer) pixmap;
 	} else if (pixmap) {
-	    Tk_FreePixmap(display, pixmap);	
+	    Tk_FreePixmap(display, pixmap);
 	}
 	if (!win) {
 	    XFreeGC(display, gc);
@@ -1098,29 +1094,6 @@ ImagePutPixel(
     }
     return 0;
 }
-
-#if 0
-static XImage *
-SubImage(
-    XImage *image,
-    int x,
-    int y,
-    unsigned int width,
-    unsigned int height)
-{
-    Debugger();
-    return NULL;
-}
-
-static int
-AddPixel(
-    XImage *image,
-    long value)
-{
-    Debugger();
-    return 0;
-}
-#endif
 
 /*
  *----------------------------------------------------------------------
@@ -1359,7 +1332,7 @@ Tk_ResetUserInactiveTime(
 	if (service == MACH_PORT_NULL) {
 	    return;
 	}
-	kr = IOServiceOpen(service, mach_task_self(), kIOHIDParamConnectType, 
+	kr = IOServiceOpen(service, mach_task_self(), kIOHIDParamConnectType,
 		&io_connection);
 	IOObjectRelease(service);
 	if (kr != KERN_SUCCESS) {

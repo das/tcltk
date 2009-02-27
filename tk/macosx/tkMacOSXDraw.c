@@ -153,8 +153,9 @@ XCopyArea(
 	    CGImageRef img = TkMacOSXCreateCGImageWithDrawable(src);
 
 	    if (img) {
-		DrawCGImage(dst, dc.context, img, gc->foreground, gc->background,
-			CGRectMake(0, 0, srcDraw->size.width, srcDraw->size.height),
+		DrawCGImage(dst, dc.context, img, gc->foreground,
+			gc->background, CGRectMake(0, 0,
+			srcDraw->size.width, srcDraw->size.height),
 			CGRectMake(src_x, src_y, width, height),
 			CGRectMake(dest_x, dest_y, width, height));
 		CFRelease(img);
@@ -162,7 +163,7 @@ XCopyArea(
 		TkMacOSXDbgMsg("Invalid source drawable");
 	    }
 	} else {
-	    TkMacOSXDbgMsg("Ignored QD drawing of CG drawable");
+	    TkMacOSXDbgMsg("Invalid destination drawable");
 	}
 	TkMacOSXRestoreDrawingContext(&dc);
     } else if (TkMacOSXDrawableWindow(src)) {
@@ -269,8 +270,9 @@ XCopyPlane(
 			clipPtr->value.pixmap == src) {
 		    imageBackground = TRANSPARENT_PIXEL << 24;
 		}
-		DrawCGImage(dst, dc.context, img, gc->foreground, imageBackground,
-			CGRectMake(0, 0, srcDraw->size.width, srcDraw->size.height),
+		DrawCGImage(dst, dc.context, img, gc->foreground,
+			imageBackground, CGRectMake(0, 0,
+			srcDraw->size.width, srcDraw->size.height),
 			CGRectMake(src_x, src_y, width, height),
 			CGRectMake(dest_x, dest_y, width, height));
 		CFRelease(img);
@@ -278,7 +280,7 @@ XCopyPlane(
 		TkMacOSXDbgMsg("Invalid source drawable");
 	    }
 	} else {
-	    TkMacOSXDbgMsg("Ignored QD drawing of CGImage drawable");
+	    TkMacOSXDbgMsg("Invalid destination drawable");
 	}
 	TkMacOSXRestoreDrawingContext(&dc);
     } else {
@@ -334,172 +336,11 @@ TkPutImage(
 		    CGRectMake(src_x, src_y, width, height),
 		    CGRectMake(dest_x, dest_y, width, height));
 	    CFRelease(img);
+	} else {
+	    TkMacOSXDbgMsg("Invalid source drawable");
 	}
     } else {
-#ifdef MAC_OSX_TK_TODO
-	MacDrawable *dstDraw = (MacDrawable *) d;
-	Rect srcRect, dstRect, *srcPtr = &srcRect, *dstPtr = &dstRect;
-	const BitMap *dstBit;
-	RGBColor black = {0, 0, 0}, white = {0xffff, 0xffff, 0xffff};
-	int i, j;
-	char *newData = NULL;
-	char *dataPtr, *newPtr, *oldPtr;
-	int rowBytes = image->bytes_per_line, sliceRowBytes, lastSliceRowBytes;
-	int slices, sliceWidth, lastSliceWidth;
-
-	dstBit = GetPortBitMapForCopyBits(dc.port);
-	SetRect(srcPtr, src_x, src_y, src_x + width, src_y + height);
-	SetRect(dstPtr, dstDraw->xOff + dest_x, dstDraw->yOff + dest_y,
-		dstDraw->xOff + dest_x + width,
-		dstDraw->yOff + dest_y + height);
-	RGBForeColor(&black);
-	RGBBackColor(&white);
-	if (image->obdata) {
-	    /*
-	     * Image from XGetImage, copy from containing GWorld directly.
-	     */
-
-	    CopyBits(GetPortBitMapForCopyBits(TkMacOSXGetDrawablePort(
-		    (Drawable)image->obdata)), dstBit,
-		    srcPtr, dstPtr, srcCopy, NULL);
-	} else if (image->depth == 1) {
-	    /*
-	     * BW image
-	     */
-
-	    const int maxRowBytes = 0x3ffe;
-	    BitMap bitmap;
-	    int odd;
-
-	    if (rowBytes > maxRowBytes) {
-		slices = rowBytes / maxRowBytes;
-		sliceRowBytes = maxRowBytes;
-		lastSliceRowBytes = rowBytes - (slices * maxRowBytes);
-		if (!lastSliceRowBytes) {
-		    slices--;
-		    lastSliceRowBytes = maxRowBytes;
-		}
-		sliceWidth = (long) image->width * maxRowBytes / rowBytes;
-		lastSliceWidth = image->width - (sliceWidth * slices);
-	    } else {
-		slices = 0;
-		sliceRowBytes = lastSliceRowBytes = rowBytes;
-		sliceWidth = lastSliceWidth = image->width;
-	    }
-	    bitmap.bounds.top = bitmap.bounds.left = 0;
-	    bitmap.bounds.bottom = (short) image->height;
-	    dataPtr = image->data + image->xoffset;
-	    do {
-		if (slices) {
-		    bitmap.bounds.right = bitmap.bounds.left + sliceWidth;
-		} else {
-		    sliceRowBytes = lastSliceRowBytes;
-		    bitmap.bounds.right = bitmap.bounds.left + lastSliceWidth;
-		}
-		oldPtr = dataPtr;
-		odd = sliceRowBytes % 2;
-		if (!newData) {
-		    newData = ckalloc(image->height * (sliceRowBytes+odd));
-		}
-		newPtr = newData;
-		if (image->bitmap_bit_order != MSBFirst) {
-		    for (i = 0; i < image->height; i++) {
-			for (j = 0; j < sliceRowBytes; j++) {
-			    *newPtr = xBitReverseTable[(unsigned char)*oldPtr];
-			    newPtr++; oldPtr++;
-			}
-			if (odd) {
-			    *newPtr++ = 0;
-			}
-			oldPtr += rowBytes - sliceRowBytes;
-		    }
-		} else {
-		    for (i = 0; i < image->height; i++) {
-			memcpy(newPtr, oldPtr, sliceRowBytes);
-			newPtr += sliceRowBytes;
-			if (odd) {
-			    *newPtr++ = 0;
-			}
-			oldPtr += rowBytes;
-		    }
-		}
-		bitmap.baseAddr = newData;
-		bitmap.rowBytes = sliceRowBytes + odd;
-		CopyBits(&bitmap, dstBit, srcPtr, dstPtr, srcCopy, NULL);
-		if (slices) {
-		    bitmap.bounds.left = bitmap.bounds.right;
-		    dataPtr += sliceRowBytes;
-		}
-	    } while (slices--);
-	    ckfree(newData);
-	} else {
-	    /*
-	     * Color image
-	     */
-
-	    const int maxRowBytes = 0x3ffc;
-	    PixMap pixmap;
-
-	    pixmap.bounds.left = 0;
-	    pixmap.bounds.top = 0;
-	    pixmap.bounds.bottom = (short) image->height;
-	    pixmap.pixelType = RGBDirect;
-	    pixmap.pmVersion = baseAddr32;	/* 32bit clean */
-	    pixmap.packType = 0;
-	    pixmap.packSize = 0;
-	    pixmap.hRes = 0x00480000;
-	    pixmap.vRes = 0x00480000;
-	    pixmap.pixelSize = 32;
-	    pixmap.cmpCount = 3;
-	    pixmap.cmpSize = 8;
-	    pixmap.pixelFormat = image->byte_order == MSBFirst ?
-		    k32ARGBPixelFormat : k32BGRAPixelFormat;
-	    pixmap.pmTable = NULL;
-	    pixmap.pmExt = 0;
-	    if (rowBytes > maxRowBytes) {
-		slices = rowBytes / maxRowBytes;
-		sliceRowBytes = maxRowBytes;
-		lastSliceRowBytes = rowBytes - (slices * maxRowBytes);
-		if (!lastSliceRowBytes) {
-		    slices--;
-		    lastSliceRowBytes = maxRowBytes;
-		}
-		sliceWidth = (long) image->width * maxRowBytes / rowBytes;
-		lastSliceWidth = image->width - (sliceWidth * slices);
-		dataPtr = image->data + image->xoffset;
-		newData = (char *) ckalloc(image->height * sliceRowBytes);
-		do {
-		    if (slices) {
-			pixmap.bounds.right = pixmap.bounds.left + sliceWidth;
-		    } else {
-			sliceRowBytes = lastSliceRowBytes;
-			pixmap.bounds.right = pixmap.bounds.left + lastSliceWidth;
-		    }
-		    oldPtr = dataPtr;
-		    newPtr = newData;
-		    for (i = 0; i < image->height; i++) {
-			memcpy(newPtr, oldPtr, sliceRowBytes);
-			oldPtr += rowBytes;
-			newPtr += sliceRowBytes;
-		    }
-		    pixmap.baseAddr = newData;
-		    pixmap.rowBytes = sliceRowBytes | 0x8000;
-		    CopyBits((BitMap*) &pixmap, dstBit, srcPtr, dstPtr, srcCopy,
-			    NULL);
-		    if (slices) {
-			pixmap.bounds.left = pixmap.bounds.right;
-			dataPtr += sliceRowBytes;
-		    }
-		} while (slices--);
-		ckfree(newData);
-	    } else {
-		pixmap.bounds.right = (short) image->width;
-		pixmap.baseAddr = image->data + image->xoffset;
-		pixmap.rowBytes = rowBytes | 0x8000;
-		CopyBits((BitMap*) &pixmap, dstBit, srcPtr, dstPtr, srcCopy, NULL);
-	    }
-	}
-#endif
+	TkMacOSXDbgMsg("Invalid destination drawable");
     }
     TkMacOSXRestoreDrawingContext(&dc);
 }
