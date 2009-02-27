@@ -302,7 +302,7 @@ proc ::tk::MessageBox {args} {
 	if {$windowingsystem eq "aqua"
 		|| ([winfo depth $w] < 4) || $tk_strictMotif} {
 	    # ttk::label has no -bitmap option
-	    label $w.bitmap -bitmap $data(-icon) -background $bg
+	    label $w.bitmap -bitmap $data(-icon);# -background $bg
 	} else {
 	    canvas $w.bitmap -width 32 -height 32 -highlightthickness 0 \
 		    -background $bg
