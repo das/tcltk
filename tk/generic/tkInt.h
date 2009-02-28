@@ -681,7 +681,7 @@ typedef struct TkMainInfo {
  */
 
 typedef struct {
-    const char *source;		/* Bits for bitmap. */
+    const void *source;		/* Bits for bitmap. */
     int width, height;		/* Dimensions of bitmap. */
     int native;			/* 0 means generic (X style) bitmap, 1 means
     				 * native style bitmap. */
