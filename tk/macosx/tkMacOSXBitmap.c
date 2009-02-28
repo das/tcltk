@@ -153,7 +153,7 @@ GetBitmapForIcon(
 Pixmap
 TkpCreateNativeBitmap(
     Display *display,
-    const char *source)		/* Info about the icon to build. */
+    const void *source)		/* Info about the icon to build. */
 {
     Pixmap pixmap;
     IconRef icon;
