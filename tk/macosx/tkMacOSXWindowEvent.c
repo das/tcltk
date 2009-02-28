@@ -207,129 +207,51 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
 #undef observe(n, s)
 @end
 
-#pragma mark -
-
-#ifdef MAC_OSX_TK_TODO
-/*
- *----------------------------------------------------------------------
- *
- * TkMacOSXProcessApplicationEvent --
- *
- *	This processes Application level events, mainly activate and
- *	deactivate.
- *
- * Results:
- *	0.
- *
- * Side effects:
- *	Hide or reveal floating windows.
- *
- *----------------------------------------------------------------------
- */
+#pragma mark TKApplication(TKApplicationEvent)
 
-MODULE_SCOPE int
-TkMacOSXProcessApplicationEvent(
-    TkMacOSXEvent *eventPtr,
-    MacEventStatus *statusPtr)
-{
+@implementation TKApplication(TKApplicationEvent)
+- (void)applicationActivate:(NSNotification *)notification {
+#ifdef TK_MAC_DEBUG_NOTIFICATIONS
+    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+#endif
+    [NSApp tkCheckPasteboard];
+}
+- (void)applicationDeactivate:(NSNotification *)notification {
+#ifdef TK_MAC_DEBUG_NOTIFICATIONS
+    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+#endif
+    TkSuspendClipboard();
+}
+- (void)applicationShowHide:(NSNotification *)notification {
+#ifdef TK_MAC_DEBUG_NOTIFICATIONS
+    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
+#endif
+    const char *cmd = ([[notification name] isEqualToString:
+	    NSApplicationDidUnhideNotification] ?
+	    "::tk::mac::OnShow" : "::tk::mac::OnHide");
     Tcl_CmdInfo dummy;
 
-    /*
-     * This is a bit of a hack. We get "show" events both when we come back
-     * from being hidden, and whenever we are activated. I only want to run
-     * the "show" proc when we have been hidden already, not as a substitute
-     * for <Activate>. So I use this toggle...
-     */
-
-    static int toggleHide = 0;
-
-    switch (eventPtr->eKind) {
-    case kEventAppActivated:
-	ShowFloatingWindows();
-	break;
-    case kEventAppDeactivated:
-	TkSuspendClipboard();
-	HideFloatingWindows();
-	break;
-    case kEventAppQuit:
-	statusPtr->stopProcessing = 1;
-	break;
-    case kEventAppHidden:
-	if (toggleHide == 0) {
-	    toggleHide = 1;
-	    if (eventPtr->interp && Tcl_GetCommandInfo(eventPtr->interp,
-		    "::tk::mac::OnHide", &dummy)) {
-		Tcl_GlobalEval(eventPtr->interp, "::tk::mac::OnHide");
-	    }
+    if (_eventInterp && Tcl_GetCommandInfo(_eventInterp, cmd, &dummy)) {
+	int code = Tcl_EvalEx(_eventInterp, cmd, -1, TCL_EVAL_GLOBAL);
+	if (code != TCL_OK) {
+	    Tcl_BackgroundException(_eventInterp, code);
 	}
-	statusPtr->stopProcessing = 1;
-	break;
-    case kEventAppShown:
-	if (toggleHide == 1) {
-	    toggleHide = 0;
-	    if (eventPtr->interp && Tcl_GetCommandInfo(eventPtr->interp,
-		    "::tk::mac::OnShow", &dummy)) {
-		Tcl_GlobalEval(eventPtr->interp, "::tk::mac::OnShow");
-	    }
-	}
-	statusPtr->stopProcessing = 1;
-	break;
-    case kEventAppAvailableWindowBoundsChanged: {
-	static UInt32 prevId = 0;
-	UInt32 id;
-	OSStatus err;
-
-	err = ChkErr(GetEventParameter, eventPtr->eventRef,
-		kEventParamTransactionID, typeUInt32, NULL, sizeof(id), NULL,
-		&id);
-	if (err != noErr || id != prevId) {
-	    TkDisplay *dispPtr = TkGetDisplayList();
-
-	    prevId = id;
-	    TkMacOSXDisplayChanged(dispPtr->display);
-	}
-	/*
-	 * Should we call ::tk::mac::OnDisplayChanged?
-	 */
-	break;
+	Tcl_ResetResult(_eventInterp);
     }
-    default:
-	break;
-    }
-    return 0;
 }
-
-/*
- *----------------------------------------------------------------------
- *
- * TkMacOSXProcessAppearanceEvent --
- *
- *	This processes Appearance events.
- *
- * Results:
- *	0.
- *
- * Side effects:
- *	None.
- *
- *----------------------------------------------------------------------
- */
-
-MODULE_SCOPE int
-TkMacOSXProcessAppearanceEvent(
-    TkMacOSXEvent *eventPtr,
-    MacEventStatus *statusPtr)
-{
-    switch (eventPtr->eKind) {
-    case kEventAppearanceScrollBarVariantChanged:
-	TkMacOSXInitScrollbarMetrics();
-	break;
-    default:
-	break;
-    }
-    return 0;
-}
+- (void)displayChanged:(NSNotification *)notification {
+#ifdef TK_MAC_DEBUG_NOTIFICATIONS
+    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
 #endif
+    TkDisplay *dispPtr = TkGetDisplayList();
+
+    if (dispPtr) {
+	TkMacOSXDisplayChanged(dispPtr->display);
+    }
+}
+@end
+
+#pragma mark -
 
 /*
  *----------------------------------------------------------------------
