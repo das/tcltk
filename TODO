@@ -4,12 +4,9 @@ TkAqua Cocoa/64bit Port
 Features yet to be implemented, in order of importance:
 
 TODO for parity with Carbon TkAqua:
-- clipboard (scrap) handling
 - transient windows (stay in front of & move with parent window)
 - window resize limits (max/min & increments)
 - native file, alert & color picker dialogs
-- Tcl callbacks for app hide & show
-- reinit internal state when screen size changes
 - transparent windows
 - fullscreen windows
 
@@ -24,4 +21,4 @@ Known Bugs:
 - CoreText measuring bug seen in narrowed widget demo main window
 
 
--- das 27/02/2009
+-- das 28/02/2009
