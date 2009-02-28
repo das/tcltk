@@ -289,6 +289,10 @@ VISIBILITY_HIDDEN
 @interface TKApplication(TKMenu)
 - (void)tkSetMainMenu:(TKMenu *)menu;
 @end
+@interface TKApplication(TKClipboard)
+- (void)tkProvidePasteboard:(TkDisplay *)dispPtr;
+- (void)tkCheckPasteboard;
+@end
 
 VISIBILITY_HIDDEN
 @interface TKContentView : NSView {

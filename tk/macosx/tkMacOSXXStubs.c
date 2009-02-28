@@ -271,7 +271,7 @@ TkClipCleanup(
      * needed.
      */
 
-    TkSuspendClipboard();
+    [NSApp tkProvidePasteboard:dispPtr];
 
     if (dispPtr->clipWindow != NULL) {
 	Tk_DeleteSelHandler(dispPtr->clipWindow, dispPtr->clipboardAtom,

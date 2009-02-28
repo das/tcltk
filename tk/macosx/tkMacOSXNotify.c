@@ -73,6 +73,7 @@ static void TkMacOSXEventsCheckProc(ClientData clientData, int flags);
     [super sendEvent:theEvent];
     tsdPtr->sendEventNestingLevel--;
     Tcl_SetServiceMode(oldMode);
+    [NSApp tkCheckPasteboard];
 }
 @end
 
