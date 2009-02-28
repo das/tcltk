@@ -427,7 +427,7 @@ declare 119 {aqua win} {
 	    TkRegion src, TkRegion dr_return)
 }
 declare 121 aqua {
-    Pixmap TkpCreateNativeBitmap(Display *display, const char *source)
+    Pixmap TkpCreateNativeBitmap(Display *display, const void *source)
 }
 declare 122 aqua {
     void TkpDefineNativeBitmaps(void)
@@ -741,7 +741,7 @@ declare 0 aqua {
 
 # removed duplicates from tkInt table
 #declare 1 aqua {
-#    Pixmap TkpCreateNativeBitmap(Display *display, const char *source)
+#    Pixmap TkpCreateNativeBitmap(Display *display, const void *source)
 #}
 #
 #declare 2 aqua {
