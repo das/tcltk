@@ -1653,6 +1653,13 @@ Tk_MapWindow(tkwin)
     if (winPtr->window == None) {
 	Tk_MakeWindowExist(tkwin);
     }
+    /*
+     * [Bug 2645457]: the previous call permits events to be processed and can
+     * lead to the destruction of the window under some conditions.
+     */
+    if (winPtr->flags & TK_ALREADY_DEAD) {
+	return;
+    }
     if (winPtr->flags & TK_WIN_MANAGED) {
 	/*
 	 * Lots of special processing has to be done for top-level
