@@ -138,13 +138,14 @@ Tk_ClassProcs tkpScrollbarProcs = {
 #endif
     UpdateScrollbarMetrics();
 }
-#define observe(n, s) [nc addObserver:self selector:@selector(s) name:(n) object:nil]
 - (void)_setupScrollBarNotifications {
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+#define observe(n, s) [nc addObserver:self selector:@selector(s) name:(n) object:nil]
     observe(NSAppleAquaScrollBarVariantChanged, scrollBarVariantChanged:);
+#undef observe(n, s)
+
     UpdateScrollbarMetrics();
 }
-#undef observe(n, s)
 @end
 
 #pragma mark -

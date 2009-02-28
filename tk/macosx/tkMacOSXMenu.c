@@ -1290,11 +1290,12 @@ TkpMenuInit(void)
 {
     TkColor *tkColPtr;
 
-#define observe(n, s) [nc addObserver:NSApp selector:@selector(s) name:(n) object:nil]
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+#define observe(n, s) [nc addObserver:NSApp selector:@selector(s) name:(n) object:nil]
     observe(NSMenuDidBeginTrackingNotification, menuBeginTracking:);
     observe(NSMenuDidEndTrackingNotification, menuEndTracking:);
 #undef observe(n, s)
+
     [NSMenuItem setUsesUserKeyEquivalents:NO];
     tkColPtr = TkpGetColor(None, DEF_MENU_BG_COLOR);
     defaultBg = tkColPtr->color.pixel;

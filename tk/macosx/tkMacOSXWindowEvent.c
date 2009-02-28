@@ -185,9 +185,9 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
 }
 #endif
 
-#define observe(n, s) [nc addObserver:self selector:@selector(s) name:(n) object:nil]
 - (void)_setupWindowNotifications {
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+#define observe(n, s) [nc addObserver:self selector:@selector(s) name:(n) object:nil]
     observe(NSWindowDidBecomeKeyNotification, windowActivation:);
     observe(NSWindowDidResignKeyNotification, windowActivation:);
     observe(NSWindowDidMoveNotification, windowBoundsChanged:);
@@ -203,8 +203,8 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
     observe(NSWindowDidOrderOnScreenNotification, windowBecameVisible:);
     observe(NSWindowDidOrderOffScreenNotification, windowUnmapped:);
 #endif
-}
 #undef observe(n, s)
+}
 @end
 
 #pragma mark TKApplication(TKApplicationEvent)

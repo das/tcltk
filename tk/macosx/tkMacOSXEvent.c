@@ -142,54 +142,6 @@ TkMacOSXFlushWindows(void)
 }
 
 /*
- *----------------------------------------------------------------------
- *
- * TkMacOSXProcessEvent --
- *
- *	This dispatches a filtered Carbon event to the appropriate handler
- *
- *	Note on MacEventStatus.stopProcessing: Please be conservative in the
- *	individual handlers and don't assume the event is fully handled unless
- *	you *really* need to ensure that other handlers don't see the event
- *	anymore. Some OS manager or library might be interested in events even
- *	after they are already handled on the Tk level.
- *
- * Results:
- *	0 on success
- *	-1 on failure
- *
- * Side effects:
- *	Converts a Carbon event to a Tk event
- *
- *----------------------------------------------------------------------
- */
-
-#ifdef MAC_OSX_TK_TODO
-MODULE_SCOPE int
-TkMacOSXProcessEvent(
-    TkMacOSXEvent *eventPtr,
-    MacEventStatus *statusPtr)
-{
-    switch (eventPtr->eClass) {
-    case kEventClassApplication:
-	TkMacOSXProcessApplicationEvent(eventPtr, statusPtr);
-	break;
-    case kEventClassAppearance:
-	TkMacOSXProcessAppearanceEvent(eventPtr, statusPtr);
-	break;
-    default: {
-#ifdef TK_MAC_DEBUG_CARBON_EVENTS
-	TkMacOSXDbgMsg("Unrecognised event: %s",
-		TkMacOSXCarbonEventToAscii(eventPtr->eventRef));
-#endif /* TK_MAC_DEBUG_CARBON_EVENTS */
-	break;
-    }
-    }
-    return 0;
-}
-#endif
-
-/*
  * Local Variables:
  * mode: c
  * c-basic-offset: 4

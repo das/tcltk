@@ -22,13 +22,5 @@
 #endif
 
 MODULE_SCOPE void TkMacOSXFlushWindows(void);
-#ifdef MAC_OSX_TK_TODO
-MODULE_SCOPE int TkMacOSXProcessEvent(TkMacOSXEvent *eventPtr,
-	MacEventStatus *statusPtr);
-MODULE_SCOPE int TkMacOSXProcessApplicationEvent(TkMacOSXEvent *e,
-	MacEventStatus *statusPtr);
-MODULE_SCOPE int TkMacOSXProcessAppearanceEvent(TkMacOSXEvent *e,
-	MacEventStatus *statusPtr);
-#endif
 
 #endif
