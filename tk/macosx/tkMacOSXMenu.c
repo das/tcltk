@@ -139,6 +139,7 @@ static int	ModifierCharWidth(Tk_Font tkfont);
 	_tkMenu = NULL;
 	_tkOffset = 0;
 	_tkSpecial = 0;
+	[self setDelegate:self];
     }
     return self;
 }
@@ -149,7 +150,6 @@ static int	ModifierCharWidth(Tk_Font tkfont);
     [title release];
     if (self) {
 	_tkMenu = tkMenu;
-	[self setDelegate:self];
     }
     return self;
 }
@@ -195,24 +195,31 @@ static int	ModifierCharWidth(Tk_Font tkfont);
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
     return [menuItem isEnabled];
 }
-- (void)tkMenuItemInvoke:(NSMenuItem *)menuItem {
-    TkMenu *menuPtr = (TkMenu *)_tkMenu;
-    TkMenuEntry *mePtr = (TkMenuEntry *)[menuItem tag];
-    if (menuPtr && mePtr) {
-	Tcl_Interp *interp = menuPtr->interp;
-	Tcl_Preserve(interp);
-	Tcl_Preserve(menuPtr);
-	int result = TkInvokeMenu(interp, menuPtr, mePtr->index);
-	if (result != TCL_OK && result != TCL_CONTINUE && result != TCL_BREAK) {
-	    Tcl_AddErrorInfo(interp, "\n    (menu invoke)");
-	    Tcl_BackgroundException(interp, result);
+- (void)tkMenuItemInvoke:(id)sender {
+    /*
+     * With the delegate matching key equivalents, when a menu action is sent
+     * in response to a key equivalent, sender is the whole menu and not the
+     * the specific menu item, use this to ignore key equivalents for our menus
+     * (as Tk handles them directly via bindings).
+     */
+    if ([sender isKindOfClass:[NSMenuItem class]]) {
+	NSMenuItem *menuItem = (NSMenuItem *)sender;
+	TkMenu *menuPtr = (TkMenu *)_tkMenu;
+	TkMenuEntry *mePtr = (TkMenuEntry *)[menuItem tag];
+	if (menuPtr && mePtr) {
+	    Tcl_Interp *interp = menuPtr->interp;
+	    Tcl_Preserve(interp);
+	    Tcl_Preserve(menuPtr);
+	    int result = TkInvokeMenu(interp, menuPtr, mePtr->index);
+	    if (result != TCL_OK && result != TCL_CONTINUE &&
+		    result != TCL_BREAK) {
+		Tcl_AddErrorInfo(interp, "\n    (menu invoke)");
+		Tcl_BackgroundException(interp, result);
+	    }
+	    Tcl_Release(menuPtr);
+	    Tcl_Release(interp);
 	}
-	Tcl_Release(menuPtr);
-	Tcl_Release(interp);
     }
-}
-- (void)tkMenuItemInvokeByKeyEquivalent:(NSMenuItem *)menuItem {
-    /* Ignore key equivalents for our menus, Tk handles them directly. */
 }
 @end
 
@@ -225,34 +232,43 @@ static int	ModifierCharWidth(Tk_Font tkfont);
     ((m) & NSFunctionKeyMask))) ? NO : YES)
 - (BOOL)menuHasKeyEquivalent:(NSMenu*)menu forEvent:(NSEvent*)event
 	target:(id*)target action:(SEL*)action {
-    if (_tkMenu) {
-	NSString *key = [event charactersIgnoringModifiers];
-	NSUInteger modifiers = [event modifierFlags];
-	NSArray *itemArray = [self itemArray];
-	NSUInteger i = 0, maxIndex = ((TkMenu*)_tkMenu)->numEntries + _tkOffset;
-	for (NSMenuItem *item in itemArray) {
-	    if (i++ >= _tkOffset && i <= maxIndex && [item isEnabled] &&
-		    [[item keyEquivalent] compare:key] == NSOrderedSame) {
-		NSUInteger keyEquivModifiers = [item keyEquivalentModifierMask];
-		if (keyEquivModifiersMatch(keyEquivModifiers, modifiers)) {
-		    *target = self;
-		    *action = @selector(tkMenuItemInvokeByKeyEquivalent:);
-		    return YES;
-		}
+    NSString *key = [event charactersIgnoringModifiers];
+    NSUInteger modifiers = [event modifierFlags] &
+	    NSDeviceIndependentModifierFlagsMask;
+    if (modifiers == (NSCommandKeyMask | NSShiftKeyMask) &&
+	    [key compare:@"?"] == NSOrderedSame) {
+	return NO;
+    }
+    NSArray *itemArray = [self itemArray];
+    for (NSMenuItem *item in itemArray) {
+	if ([item isEnabled] && [[item keyEquivalent] compare:key] ==
+		NSOrderedSame) {
+	    NSUInteger keyEquivModifiers = [item keyEquivalentModifierMask];
+	    if (keyEquivModifiersMatch(keyEquivModifiers, modifiers)) {
+		*target = [item target];
+		*action = [item action];
+		return YES;
 	    }
 	}
     }
     return NO;
 }
 - (void)menuWillOpen:(NSMenu *)menu {
-    //RecursivelyClearActiveMenu(_tkMenu);
-    GenerateMenuSelectEvent((TKMenu *)[self supermenu], [self itemInSupermenu]);
+    if (_tkMenu) {
+	//RecursivelyClearActiveMenu(_tkMenu);
+	GenerateMenuSelectEvent((TKMenu *)[self supermenu],
+		[self itemInSupermenu]);
+    }
 }
 - (void)menuDidClose:(NSMenu *)menu {
-    RecursivelyClearActiveMenu(_tkMenu);
+    if (_tkMenu) {
+	RecursivelyClearActiveMenu(_tkMenu);
+    }
 }
 - (void)menu:(NSMenu *)menu willHighlightItem:(NSMenuItem *)item {
-    GenerateMenuSelectEvent(self, item);
+    if (_tkMenu) {
+	GenerateMenuSelectEvent(self, item);
+    }
 }
 - (void)menuNeedsUpdate:(NSMenu*)menu {
     TkMenu *menuPtr = (TkMenu *)_tkMenu;
