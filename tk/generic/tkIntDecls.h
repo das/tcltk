@@ -794,7 +794,7 @@ EXTERN void		TkUnionRectWithRegion (XRectangle * rect,
 #define TkpCreateNativeBitmap_TCL_DECLARED
 /* 121 */
 EXTERN Pixmap		TkpCreateNativeBitmap (Display * display,
-				const char * source);
+				const void * source);
 #endif
 #endif /* AQUA */
 #ifdef MAC_OSX_TK /* AQUA */
@@ -1237,7 +1237,7 @@ typedef struct TkIntStubs {
 #endif /* WIN */
 #ifdef MAC_OSX_TK /* AQUA */
     void *reserved121; /* Dummy entry for stubs table backwards compatibility */
-    Pixmap (*tkpCreateNativeBitmap) (Display * display, const char * source); /* 121 */
+    Pixmap (*tkpCreateNativeBitmap) (Display * display, const void * source); /* 121 */
 #endif /* AQUA */
 #if !(defined(__WIN32__) || defined(MAC_OSX_TK)) /* X11 */
     void *reserved122;
