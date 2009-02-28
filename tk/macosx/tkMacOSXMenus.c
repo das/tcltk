@@ -15,13 +15,9 @@
  */
 
 #include "tkMacOSXPrivate.h"
+#include "tkMenu.h"
 
-#define EDIT_CUT		1
-#define EDIT_COPY		2
-#define EDIT_PASTE		3
-#define EDIT_CLEAR		4
-
-static void		GenerateEditEvent(int flag);
+static void		GenerateEditEvent(const char *name);
 static Tcl_Obj *	GetWidgetDemoPath(Tcl_Interp *interp);
 
 #pragma mark TKApplication(TKMenus)
@@ -31,6 +27,7 @@ static Tcl_Obj *	GetWidgetDemoPath(Tcl_Interp *interp);
     if (_defaultMainMenu) {
 	return;
     }
+    TkMenuInit();
     NSString *applicationName = [[NSBundle mainBundle]
 	    objectForInfoDictionaryKey:@"CFBundleName"];
     if (!applicationName) {
@@ -76,6 +73,11 @@ static Tcl_Obj *	GetWidgetDemoPath(Tcl_Interp *interp);
 	    nil]];
     TKMenu *editMenu = [TKMenu menuWithTitle:@"Edit" menuItems:
 	    [NSArray arrayWithObjects:
+	    [NSMenuItem itemWithTitle:@"Undo" action:@selector(undo:)
+		   target:nil keyEquivalent:@"z"],
+	    [NSMenuItem itemWithTitle:@"Redo" action:@selector(redo:)
+		   target:nil keyEquivalent:@"y"],
+	    [NSMenuItem separatorItem],
 	    [NSMenuItem itemWithTitle:@"Cut" action:@selector(cut:)
 		   target:nil keyEquivalent:@"x"],
 	    [NSMenuItem itemWithTitle:@"Copy" action:@selector(copy:)
@@ -125,11 +127,11 @@ static Tcl_Obj *	GetWidgetDemoPath(Tcl_Interp *interp);
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem {
     SEL action = [anItem action];
 
-    if (action == @selector(preferences:)) {
+    if (sel_isEqual(action, @selector(preferences:))) {
 	Tcl_CmdInfo dummy;
 	return (_eventInterp && Tcl_GetCommandInfo(_eventInterp,
 		"::tk::mac::ShowPreferences", &dummy));
-    } else if (action == @selector(tkDemo:)) {
+    } else if (sel_isEqual(action, @selector(tkDemo:))) {
 	BOOL haveDemo = NO;
 	if (_eventInterp) {
 	    Tcl_Obj *path = GetWidgetDemoPath(_eventInterp);
@@ -193,24 +195,27 @@ static Tcl_Obj *	GetWidgetDemoPath(Tcl_Interp *interp);
 	}
     }
 }
-- (void)performClose:(id)sender {
-    TkWindow *winPtr = TkMacOSXGetTkWindow([self keyWindow]);
-    if (winPtr) {
-	TkGenWMDestroyEvent((Tk_Window)winPtr);
+@end
+
+#pragma mark TKContentView(TKMenus)
+
+@implementation TKContentView(TKMenus)
+- (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem {
+    return YES;
+}
+#define EDIT_ACTION(a, e) \
+    - (void) a:(id)sender { \
+	if ([sender isKindOfClass:[NSMenuItem class]]) { \
+	    GenerateEditEvent(#e); \
+	} \
     }
-}
-- (void)cut:(id)sender {
-    GenerateEditEvent(EDIT_CUT);
-}
-- (void)copy:(id)sender {
-    GenerateEditEvent(EDIT_COPY);
-}
-- (void)paste:(id)sender {
-    GenerateEditEvent(EDIT_PASTE);
-}
-- (void)delete:(id)sender {
-    GenerateEditEvent(EDIT_CLEAR);
-}
+EDIT_ACTION(cut, Cut)
+EDIT_ACTION(copy, Copy)
+EDIT_ACTION(paste, Paste)
+EDIT_ACTION(delete, Clear)
+EDIT_ACTION(undo, Undo)
+EDIT_ACTION(redo, Redo)
+#undef EDIT_ACTION
 @end
 
 #pragma mark -
@@ -318,7 +323,7 @@ TkMacOSXInitMenus(
 
 static void
 GenerateEditEvent(
-    int flag)
+    const char *name)
 {
     XVirtualEvent event;
     int x, y;
@@ -347,21 +352,7 @@ GenerateEditEvent(
 	    &event.x_root, &event.y_root, &x, &y, &event.state);
     Tk_TopCoordsToWindow(tkwin, x, y, &event.x, &event.y);
     event.same_screen = true;
-
-    switch (flag) {
-    case EDIT_CUT:
-	event.name = Tk_GetUid("Cut");
-	break;
-    case EDIT_COPY:
-	event.name = Tk_GetUid("Copy");
-	break;
-    case EDIT_PASTE:
-	event.name = Tk_GetUid("Paste");
-	break;
-    case EDIT_CLEAR:
-	event.name = Tk_GetUid("Clear");
-	break;
-    }
+    event.name = Tk_GetUid(name);
     Tk_QueueWindowEvent((XEvent *) &event, TCL_QUEUE_TAIL);
 }
 

@@ -18,6 +18,7 @@
 #ifndef _TKMACINT
 #include "tkMacOSXInt.h"
 #endif
+#include <objc/runtime.h> /* for sel_isEqual() */
 
 #include "tkMacOSXDefault.h"
 
