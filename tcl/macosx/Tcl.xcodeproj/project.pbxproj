@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 45;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -137,7 +137,7 @@
 		F96D49A908F272C4004A47F5 /* tclMacOSXBundle.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D433908F272B5004A47F5 /* tclMacOSXBundle.c */; };
 		F96D49AD08F272C4004A47F5 /* tclMacOSXFCmd.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D433D08F272B5004A47F5 /* tclMacOSXFCmd.c */; };
 		F96D49AE08F272C4004A47F5 /* tclMacOSXNotify.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D433E08F272B5004A47F5 /* tclMacOSXNotify.c */; };
-		F96D4AC608F272C9004A47F5 /* tclLoadDyld.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D445B08F272B9004A47F5 /* tclLoadDyld.c */; };
+		F96D4AC608F272C9004A47F5 /* tclLoadDyld.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D445B08F272B9004A47F5 /* tclLoadDyld.c */; settings = {COMPILER_FLAGS = "-Wno-deprecated-declarations"; }; };
 		F96D4ACA08F272C9004A47F5 /* tclUnixChan.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D445F08F272B9004A47F5 /* tclUnixChan.c */; };
 		F96D4ACB08F272C9004A47F5 /* tclUnixEvent.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D446008F272B9004A47F5 /* tclUnixEvent.c */; };
 		F96D4ACC08F272C9004A47F5 /* tclUnixFCmd.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D446108F272B9004A47F5 /* tclUnixFCmd.c */; };
@@ -1902,7 +1902,7 @@
 				BuildIndependentTargetsInParallel = YES;
 			};
 			buildConfigurationList = F95CC8B509158F3100EA5ACE /* Build configuration list for PBXProject "Tcl" */;
-			compatibilityVersion = "Xcode 3.1";
+			compatibilityVersion = "Xcode 3.2";
 			hasScannedForEncodings = 1;
 			mainGroup = 08FB7794FE84155DC02AAC07 /* Tcl */;
 			projectDirPath = "";
@@ -1950,7 +1950,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "if [ \"${ACTION:-build}\" == \"build\" ]; then\nif [ -z \"${HOME}\" ]; then export HOME=\"$(echo ~)\"; fi\ncd \"${TARGET_TEMP_DIR}\"; rm -rf \"${DERIVED_FILE_DIR}\"; mkdir -p \"${DERIVED_FILE_DIR}\"\nprintf '%s%s%s%s%s' '\npackage require tcltest 2.2\nnamespace import tcltest::*\nconfigure -testdir [file normalize {' \"${TCL_SRCROOT}\" '/tests}]\nconfigure -tmpdir [file normalize {' \"${DERIVED_FILE_DIR}\" '}]\nconfigure -verbose [concat [configure -verbose] line]\n# following test only fails when testsuite is run from inside Xcode, so skip it\nconfigure -skip [concat [configure -skip] stack-3.1]\nrunAllTests\n' | \"${TEST_RIG}\"; TEST_RIG_RESULT=$?\n[ ${TEST_RIG_RESULT} -ne 0 ] && echo \"tcltest:0: error: tcltest exited abnormally with code ${TEST_RIG_RESULT}.\"\nexit ${TEST_RIG_RESULT}\nfi";
+			shellScript = "if [ \"${ACTION:-build}\" == \"build\" ]; then\nif [ -z \"${HOME}\" ]; then export HOME=\"$(echo ~)\"; fi\ncd \"${TARGET_TEMP_DIR}\"; rm -rf \"${DERIVED_FILE_DIR}\"; mkdir -p \"${DERIVED_FILE_DIR}\"\nprintf '%s%s%s%s%s' '\npackage require tcltest 2.2\nnamespace import tcltest::*\nconfigure -testdir [file normalize {' \"${TCL_SRCROOT}\" '/tests}]\nconfigure -tmpdir [file normalize {' \"${DERIVED_FILE_DIR}\" '}]\nconfigure -verbose [concat [configure -verbose] line]\nrunAllTests\n' | \"${TEST_RIG}\"; TEST_RIG_RESULT=$?\n[ ${TEST_RIG_RESULT} -ne 0 ] && echo \"tcltest:0: error: tcltest exited abnormally with code ${TEST_RIG_RESULT}.\"\nexit ${TEST_RIG_RESULT}\nfi";
 			showEnvVarsInLog = 0;
 		};
 		F97AF02F0B665DA900310EA2 /* ShellScript */ = {
@@ -2186,8 +2186,8 @@
 			baseConfigurationReference = F97AE82B0B65C69B00310EA2 /* Tcl-Release.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CFLAGS = "-arch i386 -arch x86_64 -arch ppc -arch ppc64 $(CFLAGS)";
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				CFLAGS = "-arch i386 -arch x86_64 -arch ppc $(CFLAGS)";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PREBINDING = NO;
 			};
 			name = ReleaseUniversal;
@@ -2222,8 +2222,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Tcl-Debug.xcconfig */;
 			buildSettings = {
+				ARCHS = (
+					"$(NATIVE_ARCH_32_BIT)",
+					"$(NATIVE_ARCH_64_BIT)",
+				);
 				CONFIGURE_ARGS = "$(CONFIGURE_ARGS) --enable-symbols=all";
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 			};
 			name = DebugMemCompile;
@@ -2232,9 +2238,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Tcl-Debug.xcconfig */;
 			buildSettings = {
+				ARCHS = (
+					"$(NATIVE_ARCH_32_BIT)",
+					"$(NATIVE_ARCH_64_BIT)",
+				);
+				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				GCC_GENERATE_TEST_COVERAGE_FILES = YES;
 				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(OTHER_LDFLAGS)",
 					"-lgcov",
@@ -2326,7 +2338,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Tcl-Debug.xcconfig */;
 			buildSettings = {
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				ARCHS = (
+					"$(NATIVE_ARCH_32_BIT)",
+					"$(NATIVE_ARCH_64_BIT)",
+				);
+				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 			};
 			name = Debug;
@@ -2335,7 +2353,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE82B0B65C69B00310EA2 /* Tcl-Release.xcconfig */;
 			buildSettings = {
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				ARCHS = "$(NATIVE_ARCH_32_BIT)";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PREBINDING = NO;
 			};
 			name = Release;
@@ -2344,7 +2363,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Tcl-Debug.xcconfig */;
 			buildSettings = {
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				ARCHS = (
+					"$(NATIVE_ARCH_32_BIT)",
+					"$(NATIVE_ARCH_64_BIT)",
+				);
+				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 			};
 			name = DebugNoFixZL;
@@ -2393,39 +2418,6 @@
 			};
 			name = ReleaseUniversal;
 		};
-		F97AED080B660A6C00310EA2 /* ReleaseUniversal10.4uSDK */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				PRODUCT_NAME = tests;
-				TCLTEST_OPTIONS = "";
-				TCL_LIBRARY = "$(TCL_SRCROOT)/library";
-				TEST_RIG = "$(OBJROOT)/$(CONFIGURATION)/tcltest";
-			};
-			name = ReleaseUniversal10.4uSDK;
-		};
-		F97AED0F0B660AA300310EA2 /* ReleasePPC10.3.9SDK */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				PRODUCT_NAME = tests;
-				TCLTEST_OPTIONS = "";
-				TCL_LIBRARY = "$(TCL_SRCROOT)/library";
-				TEST_RIG = "$(OBJROOT)/$(CONFIGURATION)/tcltest";
-			};
-			name = ReleasePPC10.3.9SDK;
-		};
-		F97AED160B660AF100310EA2 /* ReleasePPC10.2.8SDK */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				PRODUCT_NAME = tests;
-				TCLTEST_OPTIONS = "";
-				TCL_LIBRARY = "$(TCL_SRCROOT)/library";
-				TEST_RIG = "$(OBJROOT)/$(CONFIGURATION)/tcltest";
-			};
-			name = ReleasePPC10.2.8SDK;
-		};
 		F97AED1B0B660B2100310EA2 /* Debug64bit */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2459,7 +2451,7 @@
 				ARCHS = "$(NATIVE_ARCH_64_BIT)";
 				CONFIGURE_ARGS = "--enable-64bit $(CONFIGURE_ARGS)";
 				CPPFLAGS = "-arch $(NATIVE_ARCH_64_BIT) $(CPPFLAGS)";
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PREBINDING = NO;
 			};
 			name = Debug64bit;
@@ -2468,8 +2460,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Tcl-Debug.xcconfig */;
 			buildSettings = {
+				ARCHS = (
+					"$(NATIVE_ARCH_32_BIT)",
+					"$(NATIVE_ARCH_64_BIT)",
+				);
 				CONFIGURE_ARGS = "$(CONFIGURE_ARGS) --disable-corefoundation";
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 			};
 			name = DebugNoCF;
@@ -2504,8 +2502,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Tcl-Debug.xcconfig */;
 			buildSettings = {
+				ARCHS = (
+					"$(NATIVE_ARCH_32_BIT)",
+					"$(NATIVE_ARCH_64_BIT)",
+				);
 				CONFIGURE_ARGS = "$(CONFIGURE_ARGS) --disable-threads --disable-corefoundation";
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 			};
 			name = DebugNoCFUnthreaded;
@@ -2540,8 +2544,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Tcl-Debug.xcconfig */;
 			buildSettings = {
+				ARCHS = (
+					"$(NATIVE_ARCH_32_BIT)",
+					"$(NATIVE_ARCH_64_BIT)",
+				);
+				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				GCC_VERSION = 4.2;
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 			};
 			name = "Debug gcc42";
@@ -2584,9 +2594,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Tcl-Debug.xcconfig */;
 			buildSettings = {
+				ARCHS = (
+					"$(NATIVE_ARCH_32_BIT)",
+					"$(NATIVE_ARCH_64_BIT)",
+				);
 				CC = "$(DEVELOPER_DIR)/usr/bin/llvm-gcc-4.2";
+				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 			};
 			name = "Debug llvmgcc42";
@@ -2630,9 +2646,9 @@
 			baseConfigurationReference = F97AE82B0B65C69B00310EA2 /* Tcl-Release.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CFLAGS = "-arch i386 -arch x86_64 -arch ppc -arch ppc64 $(CFLAGS)";
+				CFLAGS = "-arch i386 -arch x86_64 -arch ppc $(CFLAGS)";
 				GCC_VERSION = 4.2;
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PREBINDING = NO;
 			};
 			name = "ReleaseUniversal gcc42";
@@ -2669,11 +2685,11 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CC = "$(DEVELOPER_DIR)/usr/bin/llvm-gcc-4.2";
-				CFLAGS = "-arch i386 -arch x86_64 -arch ppc -arch ppc64 $(CFLAGS)";
+				CFLAGS = "-arch i386 -arch x86_64 -arch ppc $(CFLAGS)";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_OPTIMIZATION_LEVEL = 4;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_CFLAGS = (
 					"$(OTHER_CFLAGS)",
 					"-emit-llvm",
@@ -2765,8 +2781,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Tcl-Debug.xcconfig */;
 			buildSettings = {
+				ARCHS = (
+					"$(NATIVE_ARCH_32_BIT)",
+					"$(NATIVE_ARCH_64_BIT)",
+				);
 				CONFIGURE_ARGS = "$(CONFIGURE_ARGS) --disable-threads";
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 			};
 			name = DebugUnthreaded;
@@ -2775,111 +2797,20 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Tcl-Debug.xcconfig */;
 			buildSettings = {
+				ARCHS = (
+					"$(NATIVE_ARCH_32_BIT)",
+					"$(NATIVE_ARCH_64_BIT)",
+				);
+				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					PURIFY,
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 			};
 			name = DebugLeaks;
-		};
-		F9DB62080B65ADA800A370FB /* ReleaseUniversal10.4uSDK */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = tclsh;
-				SKIP_INSTALL = NO;
-			};
-			name = ReleaseUniversal10.4uSDK;
-		};
-		F9DB62090B65ADA800A370FB /* ReleaseUniversal10.4uSDK */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = tcltest;
-			};
-			name = ReleaseUniversal10.4uSDK;
-		};
-		F9DB620A0B65ADA800A370FB /* ReleaseUniversal10.4uSDK */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = F97AE82B0B65C69B00310EA2 /* Tcl-Release.xcconfig */;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CFLAGS = "-arch i386 -arch x86_64 -arch ppc -arch ppc64 $(CFLAGS)";
-				CPPFLAGS = "-isysroot $(SDKROOT) $(CPPFLAGS)";
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				OTHER_LDFLAGS = (
-					"-Wl,-no_arch_warnings",
-					"$(OTHER_LDFLAGS)",
-				);
-				PREBINDING = NO;
-				SDKROOT = macosx10.4;
-			};
-			name = ReleaseUniversal10.4uSDK;
-		};
-		F9DB621F0B65AFDE00A370FB /* ReleasePPC10.3.9SDK */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				LDFLAGS = "-force_cpusubtype_ALL $(LDFLAGS)";
-				PRODUCT_NAME = tclsh;
-				SKIP_INSTALL = NO;
-			};
-			name = ReleasePPC10.3.9SDK;
-		};
-		F9DB62200B65AFDE00A370FB /* ReleasePPC10.3.9SDK */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = tcltest;
-			};
-			name = ReleasePPC10.3.9SDK;
-		};
-		F9DB62210B65AFDE00A370FB /* ReleasePPC10.3.9SDK */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = F97AE82B0B65C69B00310EA2 /* Tcl-Release.xcconfig */;
-			buildSettings = {
-				ARCHS = ppc;
-				CFLAGS = "$(PER_ARCH_CFLAGS_ppc) $(CFLAGS)";
-				CPPFLAGS = "-arch ppc -isysroot $(SDKROOT) $(CPPFLAGS)";
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				PREBINDING = YES;
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.3.9.sdk";
-			};
-			name = ReleasePPC10.3.9SDK;
-		};
-		F9DB62350B65B03A00A370FB /* ReleasePPC10.2.8SDK */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = tclsh;
-				SKIP_INSTALL = NO;
-			};
-			name = ReleasePPC10.2.8SDK;
-		};
-		F9DB62360B65B03A00A370FB /* ReleasePPC10.2.8SDK */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = tcltest;
-			};
-			name = ReleasePPC10.2.8SDK;
-		};
-		F9DB62370B65B03A00A370FB /* ReleasePPC10.2.8SDK */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = F97AE82B0B65C69B00310EA2 /* Tcl-Release.xcconfig */;
-			buildSettings = {
-				ARCHS = ppc;
-				CFLAGS = "$(PER_ARCH_CFLAGS_ppc) -fconstant-cfstrings $(CFLAGS)";
-				CPPFLAGS = "-arch ppc -D__CONSTANT_CFSTRINGS__ -DMAC_OS_X_VERSION_MIN_REQUIRED=1020 -nostdinc -isystem $(SDKROOT)/usr/include/gcc/darwin/$(GCC_VERSION) -isystem $(SDKROOT)/usr/include -F$(SDKROOT)/System/Library/Frameworks";
-				DEBUG_INFORMATION_FORMAT = stabs;
-				GCC = /usr/bin/gcc;
-				GCC_VERSION = 3.3;
-				LDFLAGS = "-L$(SDKROOT)/usr/lib/gcc/darwin/$(GCC_VERSION) -Wl,-syslibroot,$(SDKROOT)";
-				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				PREBINDING = YES;
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.2.8.sdk";
-				WARNING_CFLAGS = (
-					"$(WARNING_CFLAGS_GCC3)",
-					"-Wno-long-double",
-				);
-			};
-			name = ReleasePPC10.2.8SDK;
 		};
 		F9EEED960C2FEFD300396116 /* ReleaseUniversal10.5SDK */ = {
 			isa = XCBuildConfiguration;
@@ -2912,7 +2843,7 @@
 			baseConfigurationReference = F97AE82B0B65C69B00310EA2 /* Tcl-Release.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CFLAGS = "-arch i386 -arch x86_64 -arch ppc -arch ppc64 $(CFLAGS)";
+				CFLAGS = "-arch i386 -arch x86_64 -arch ppc $(CFLAGS)";
 				CPPFLAGS = "-isysroot $(SDKROOT) $(CPPFLAGS)";
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PREBINDING = NO;
@@ -2942,9 +2873,6 @@
 				F9988BB20D81586D00B6B03B /* ReleaseUniversal gcc42 */,
 				F9988BB60D81587400B6B03B /* ReleaseUniversal llvmgcc42 */,
 				F9EEED960C2FEFD300396116 /* ReleaseUniversal10.5SDK */,
-				F9DB62080B65ADA800A370FB /* ReleaseUniversal10.4uSDK */,
-				F9DB621F0B65AFDE00A370FB /* ReleasePPC10.3.9SDK */,
-				F9DB62350B65B03A00A370FB /* ReleasePPC10.2.8SDK */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -2968,9 +2896,6 @@
 				F9988BB30D81586D00B6B03B /* ReleaseUniversal gcc42 */,
 				F9988BB70D81587400B6B03B /* ReleaseUniversal llvmgcc42 */,
 				F9EEED970C2FEFD300396116 /* ReleaseUniversal10.5SDK */,
-				F9DB62090B65ADA800A370FB /* ReleaseUniversal10.4uSDK */,
-				F9DB62200B65AFDE00A370FB /* ReleasePPC10.3.9SDK */,
-				F9DB62360B65B03A00A370FB /* ReleasePPC10.2.8SDK */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -2994,9 +2919,6 @@
 				F9988BB10D81586D00B6B03B /* ReleaseUniversal gcc42 */,
 				F9988BB50D81587400B6B03B /* ReleaseUniversal llvmgcc42 */,
 				F9EEED990C2FEFD300396116 /* ReleaseUniversal10.5SDK */,
-				F9DB620A0B65ADA800A370FB /* ReleaseUniversal10.4uSDK */,
-				F9DB62210B65AFDE00A370FB /* ReleasePPC10.3.9SDK */,
-				F9DB62370B65B03A00A370FB /* ReleasePPC10.2.8SDK */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -3020,9 +2942,6 @@
 				F9988BB40D81586D00B6B03B /* ReleaseUniversal gcc42 */,
 				F9988BB80D81587400B6B03B /* ReleaseUniversal llvmgcc42 */,
 				F9EEED980C2FEFD300396116 /* ReleaseUniversal10.5SDK */,
-				F97AED080B660A6C00310EA2 /* ReleaseUniversal10.4uSDK */,
-				F97AED0F0B660AA300310EA2 /* ReleasePPC10.3.9SDK */,
-				F97AED160B660AF100310EA2 /* ReleasePPC10.2.8SDK */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
