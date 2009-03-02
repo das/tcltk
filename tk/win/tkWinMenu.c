@@ -1745,7 +1745,8 @@ DrawMenuEntryAccelerator(
  * DrawMenuEntryArrow --
  *
  *	This function draws the arrow bitmap on the right side of a menu
- *	entry. This function is currently unused.
+ *	entry. This function is only used when drawing the arrow for a
+ *	disabled cascade menu.
  *
  * Results:
  *	None.
