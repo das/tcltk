@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 45;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -148,7 +148,7 @@
 		F96D49A908F272C4004A47F5 /* tclMacOSXBundle.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D433908F272B5004A47F5 /* tclMacOSXBundle.c */; };
 		F96D49AD08F272C4004A47F5 /* tclMacOSXFCmd.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D433D08F272B5004A47F5 /* tclMacOSXFCmd.c */; };
 		F96D49AE08F272C4004A47F5 /* tclMacOSXNotify.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D433E08F272B5004A47F5 /* tclMacOSXNotify.c */; };
-		F96D4AC608F272C9004A47F5 /* tclLoadDyld.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D445B08F272B9004A47F5 /* tclLoadDyld.c */; };
+		F96D4AC608F272C9004A47F5 /* tclLoadDyld.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D445B08F272B9004A47F5 /* tclLoadDyld.c */; settings = {COMPILER_FLAGS = "-Wno-deprecated-declarations"; }; };
 		F96D4ACA08F272C9004A47F5 /* tclUnixChan.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D445F08F272B9004A47F5 /* tclUnixChan.c */; };
 		F96D4ACB08F272C9004A47F5 /* tclUnixEvent.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D446008F272B9004A47F5 /* tclUnixEvent.c */; };
 		F96D4ACC08F272C9004A47F5 /* tclUnixFCmd.c in Sources */ = {isa = PBXBuildFile; fileRef = F96D446108F272B9004A47F5 /* tclUnixFCmd.c */; };
@@ -1994,7 +1994,7 @@
 				BuildIndependentTargetsInParallel = YES;
 			};
 			buildConfigurationList = F95CC8B509158F3100EA5ACE /* Build configuration list for PBXProject "Tcl" */;
-			compatibilityVersion = "Xcode 3.1";
+			compatibilityVersion = "Xcode 3.2";
 			hasScannedForEncodings = 1;
 			mainGroup = 08FB7794FE84155DC02AAC07 /* Tcl */;
 			projectDirPath = "";
