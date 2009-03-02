@@ -523,7 +523,7 @@ TkpConfigureMenuEntry(
 	}
     }
     [menuItem setTitle:title];
-    if (!strcmp(Tcl_GetString(fontPtr), "menu") || gc->foreground != defaultFg
+    if (strcmp(Tcl_GetString(fontPtr), "menu") || gc->foreground != defaultFg
 	    || gc->background != defaultBg) {
 	attributes = TkMacOSXNSFontAttributesForFont(Tk_GetFontFromObj(
 		mePtr->menuPtr->tkwin, fontPtr));
