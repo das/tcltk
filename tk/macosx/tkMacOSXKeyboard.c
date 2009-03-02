@@ -364,7 +364,7 @@ XKeycodeToKeysym(
 
     newKeycode = keycode >> 16;
 
-    if ((keycode & 0xFFFF) == 0x10) {
+    if ((keycode & 0xFFFF) >= 0xF700) { /* NSEvent.h function key unicodes */
 	hPtr = Tcl_FindHashEntry(&vkeyTable, INT2PTR(newKeycode));
 	if (hPtr != NULL) {
 	    return (KeySym) Tcl_GetHashValue(hPtr);
