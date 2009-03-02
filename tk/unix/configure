@@ -9789,7 +9789,6 @@ cat >>confdefs.h <<\_ACEOF
 _ACEOF
 
     LIBS="$LIBS -framework Cocoa -framework Carbon -framework IOKit"
-    CFLAGS="$CFLAGS -fpascal-strings"
     EXTRA_CC_SWITCHES='-std=gnu99 -x objective-c -fobjc-gc'
     TK_WINDOWINGSYSTEM=AQUA
     if test -n "${enable_symbols}" -a "${enable_symbols}" != no; then
