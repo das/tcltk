@@ -202,8 +202,6 @@ TkpInit(
 		@"_NSCanWrapButtonTitles",
 		[NSNumber numberWithInt:-1],
 		@"NSStringDrawingTypesetterBehavior",
-		[NSNumber numberWithDouble:1],
-		@"NSIdleTimeBeforeLiveResizeCacheFlush",
 		nil]];
 	[TKApplication sharedApplication];
 	[NSApp _setup:interp];
