@@ -90,9 +90,6 @@ static void DrawCharsInContext(Display *display, Drawable drawable, GC gc,
 	Tk_Font tkfont, const char *source, int numBytes, int rangeStart,
 	int rangeLength, int x, int y, double angle);
 
-extern void CGContextSetShouldAntialiasFonts(CGContextRef c,
-	bool shouldAntialiasFonts);
-
 @interface NSFont(TKFont)
 - (NSFont *)bestMatchingFontForCharacters:(const UTF16Char *)characters
 	length:(NSUInteger)length attributes:(NSDictionary *)attributes
@@ -230,9 +227,10 @@ InitFont(
     TkFontMetrics *fmPtr;
     NSDictionary *nsAttributes;
     NSRect bounds;
-    int ascent, descent;
     static const UniChar ch[] = {'.', 'W', 0xc4, 0xc1, 0xc2, 0xc3, 0xc7};
 			    /* ., W, Auml, Aacute, Acirc, Atilde, Ccedilla */
+    NSFontRenderingMode renderingMode = NSFontDefaultRenderingMode;
+    int ascent, descent, dontAA;
     #define nCh (sizeof(ch) / sizeof(UniChar))
     CGGlyph glyphs[nCh];
     CGRect boundingRects[nCh];
@@ -244,8 +242,15 @@ InitFont(
     } else {
 	TkInitFontAttributes(faPtr);
     }
+    fontPtr->nsFont = nsFont;
+    dontAA = [nsFont isFixedPitch] && fontPtr->font.fa.size <= 10;
+    if (antialiasedTextEnabled >= 0 || dontAA) {
+	renderingMode = (antialiasedTextEnabled == 0 || dontAA) ?
+		NSFontIntegerAdvancementsRenderingMode :
+		NSFontAntialiasedRenderingMode;
+    }
+    nsFont = [nsFont screenFontWithRenderingMode:renderingMode];
     GetTkFontAttributesForNSFont(nsFont, faPtr);
-
     fmPtr = &fontPtr->font.fm;
     fmPtr->ascent = floor([nsFont ascender] + [nsFont leading] + 0.5);
     fmPtr->descent = floor(-[nsFont descender] + 0.5);
@@ -284,7 +289,6 @@ InitFont(
 	    [NSNumber numberWithInt:fmPtr->fixed ? 0 : 1],
 		NSLigatureAttributeName, nil];
     fontPtr->nsAttributes = TkMacOSXMakeUncollectableAndRetain(nsAttributes);
-    fontPtr->nsFont = nsFont;
     #undef nCh
 }
 
@@ -962,9 +966,10 @@ DrawCharsInContext(
     CGContextRef context;
     CGColorRef fg;
     NSMutableDictionary *attributes;
+    NSFont *nsFont;
     CGRect r = CGRectInfinite;
     CGAffineTransform t;
-    int h, dontAA;
+    int h;
 
     if (!TkMacOSXSetupDrawingContext(drawable, gc, 1, &drawingContext)) {
 	return;
@@ -974,6 +979,10 @@ DrawCharsInContext(
     attributes = [fontPtr->nsAttributes mutableCopy];
     [attributes setObject:(id)fg forKey:(id)kCTForegroundColorAttributeName];
     CFRelease(fg);
+    nsFont = [attributes objectForKey:NSFontAttributeName];
+    [nsFont setInContext:[NSGraphicsContext graphicsContextWithGraphicsPort:
+	    context flipped:NO]];
+    CGContextSetTextMatrix(context, CGAffineTransformIdentity);
 
     start = Tcl_NumUtfChars(source, rangeStart);
     len = Tcl_NumUtfChars(source, rangeStart + rangeLength);
@@ -1002,11 +1011,6 @@ DrawCharsInContext(
     CGContextConcatCTM(context, t);
     CGContextClipToRect(context, r);
     CGContextSetTextPosition(context, x, y);
-    dontAA = fontPtr->font.fm.fixed && fontPtr->font.fa.size <= 10;
-    if (antialiasedTextEnabled >= 0 || dontAA) {
-	CGContextSetShouldAntialiasFonts(context,
-		(antialiasedTextEnabled == 0 ? 0 : 1) && !dontAA);
-    }
     CTLineDraw(line, context);
     CFRelease(line);
     CFRelease(typesetter);

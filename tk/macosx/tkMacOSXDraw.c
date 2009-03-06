@@ -1569,7 +1569,6 @@ TkMacOSXSetupDrawingContext(
     }
     if (dc.context) {
 	CGContextSaveGState(dc.context);
-	CGContextSetTextMatrix(dc.context, CGAffineTransformIdentity);
 	CGContextSetTextDrawingMode(dc.context, kCGTextFill);
 	CGContextConcatCTM(dc.context, CGAffineTransformMake(1.0, 0.0, 0.0,
 		-1.0, 0.0, dc.portBounds.bottom - dc.portBounds.top));
