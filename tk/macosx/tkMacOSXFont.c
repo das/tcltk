@@ -227,10 +227,11 @@ InitFont(
     TkFontMetrics *fmPtr;
     NSDictionary *nsAttributes;
     NSRect bounds;
-    static const UniChar ch[] = {'.', 'W', 0xc4, 0xc1, 0xc2, 0xc3, 0xc7};
-			    /* ., W, Auml, Aacute, Acirc, Atilde, Ccedilla */
+    CGFloat kern = 0.0;
     NSFontRenderingMode renderingMode = NSFontDefaultRenderingMode;
     int ascent, descent, dontAA;
+    static const UniChar ch[] = {'.', 'W', ' ', 0xc4, 0xc1, 0xc2, 0xc3, 0xc7};
+			/* ., W, Space, Auml, Aacute, Acirc, Atilde, Ccedilla */
     #define nCh (sizeof(ch) / sizeof(UniChar))
     CGGlyph glyphs[nCh];
     CGRect boundingRects[nCh];
@@ -259,7 +260,8 @@ InitFont(
 
     /*
      * The ascent, descent and fixed fields are not correct for all fonts, as
-     * a workaround deduce that info from the metrics of some typical glyphs.
+     * a workaround deduce that info from the metrics of some typical glyphs,
+     * along with screenfont kerning (space advance difference to printer font)
      */
 
     bounds = [nsFont boundingRectForFont];
@@ -268,6 +270,8 @@ InitFont(
 		[nsFont advancementForGlyph:glyphs[1]].width;
 	bounds = NSRectFromCGRect(CTFontGetBoundingRectsForGlyphs((CTFontRef)
 		nsFont, kCTFontDefaultOrientation, ch, boundingRects, nCh));
+	kern = [nsFont advancementForGlyph:glyphs[2]].width -
+		[fontPtr->nsFont advancementForGlyph:glyphs[2]].width;
     }
     descent = floor(-bounds.origin.y + 0.5);
     ascent = floor(bounds.size.height + bounds.origin.y + 0.5);
@@ -277,7 +281,6 @@ InitFont(
     if (descent > fmPtr->descent) {
 	fmPtr->descent = descent;
     }
-
     nsAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
 	    nsFont, NSFontAttributeName,
 	    [NSNumber numberWithInt:faPtr->underline ?
@@ -287,7 +290,8 @@ InitFont(
 		NSUnderlineStyleSingle|NSUnderlinePatternSolid :
 		NSUnderlineStyleNone], NSStrikethroughStyleAttributeName,
 	    [NSNumber numberWithInt:fmPtr->fixed ? 0 : 1],
-		NSLigatureAttributeName, nil];
+		NSLigatureAttributeName,
+	    [NSNumber numberWithDouble:kern], NSKernAttributeName, nil];
     fontPtr->nsAttributes = TkMacOSXMakeUncollectableAndRetain(nsAttributes);
     #undef nCh
 }
