@@ -788,6 +788,12 @@ TkpMeasureCharsInContext(
     CFIndex index;
     double width, maxWidth;
 
+    if (rangeStart < 0 || rangeLength <= 0 ||
+	    rangeStart + rangeLength > numBytes ||
+	    (maxLength == 0 && !(flags & TK_AT_LEAST_ONE))) {
+	*lengthPtr = 0;
+	return 0;
+    }
     start = Tcl_NumUtfChars(source, rangeStart);
     len = Tcl_NumUtfChars(source, rangeStart + rangeLength);
     range = CFRangeMake(0, len);
@@ -845,7 +851,7 @@ TkpMeasureCharsInContext(
     CFRelease(typesetter);
     [attributedString release];
     [string release];
-    *lengthPtr = width - offset;
+    *lengthPtr = lround(width - offset);
     return (Tcl_UtfAtIndex(source, index) - source) - rangeStart;
 }
 
@@ -975,7 +981,9 @@ DrawCharsInContext(
     CGAffineTransform t;
     int h;
 
-    if (!TkMacOSXSetupDrawingContext(drawable, gc, 1, &drawingContext)) {
+    if (rangeStart < 0 || rangeLength <= 0 ||
+	    rangeStart + rangeLength > numBytes ||
+	    !TkMacOSXSetupDrawingContext(drawable, gc, 1, &drawingContext)) {
 	return;
     }
     context = drawingContext.context;
