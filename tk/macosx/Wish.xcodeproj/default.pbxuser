@@ -95,6 +95,11 @@
 				value = /Library/Tcl;
 			},
 			{
+				active = YES;
+				name = TK_SRCROOT;
+				value = "${TK_SRCROOT}";
+			},
+			{
 				active = NO;
 				name = DYLD_PRINT_LIBRARIES;
 			},
