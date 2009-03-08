@@ -1344,10 +1344,11 @@ TkAboutDlg(void)
     NSString *path = [[NSApp tkFrameworkBundle]
 	    pathForImageResource:@"Tk.tiff"];
 #ifdef TK_MAC_DEBUG
-    if (!path) {
-	// FIXME: fallback to absolute path specific to my box
-	path = @"/Volumes/Users/steffen/Development/TclTk/git/HEAD/tk/macosx/Tk.tiff";
-	TkMacOSXDbgMsg("Fallback to hardcoded path!");
+    if (!path && getenv("TK_SRCROOT")) {
+	// FIXME: fallback to TK_SRCROOT
+	path = [NSString stringWithFormat:@"%s/macosx/Tk.tiff",
+		getenv("TK_SRCROOT")];
+	TkMacOSXDbgMsg("Fallback to TK_SRCROOT!");
     }
 #endif
     if (path) {

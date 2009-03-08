@@ -243,12 +243,11 @@ FindCursorByName(
 	    NSString *path = [[NSApp tkFrameworkBundle]
 		    pathForImageResource:cursorNames[idx].id];
 #ifdef TK_MAC_DEBUG
-	    if (!path) {
-	    	// FIXME: fallback to absolute path specific to my box
-		path = [NSString stringWithFormat:
-			@"/Volumes/Users/steffen/Development/TclTk/git/HEAD/tk/win/rc/%@",
-			cursorNames[idx].id];
-		TkMacOSXDbgMsg("Fallback to hardcoded path!");
+	    if (!path && getenv("TK_SRCROOT")) {
+	    	// FIXME: fallback to TK_SRCROOT
+		path = [NSString stringWithFormat:@"%s/win/rc/%@",
+			getenv("TK_SRCROOT"), cursorNames[idx].id];
+		TkMacOSXDbgMsg("Fallback to TK_SRCROOT!");
 	    }
 #endif
 	    if (path) {
