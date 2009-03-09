@@ -167,8 +167,7 @@ XCopyArea(
 	}
 	TkMacOSXRestoreDrawingContext(&dc);
     } else if (TkMacOSXDrawableWindow(src)) {
-	NSView *view = srcDraw->toplevel ? srcDraw->toplevel->view :
-		srcDraw->view;
+	NSView *view = TkMacOSXDrawableView(srcDraw);
 	NSInteger gs = [[view window] gState];
 	/* // alternative using per-view gState:
 	NSInteger gs = [view gState];
@@ -1436,7 +1435,7 @@ TkScrollWindow(
     TkRegion damageRgn)		/* Region to accumulate damage in. */
 {
     MacDrawable *macDraw = (MacDrawable *) Tk_WindowId(tkwin);
-    NSView *view = macDraw->toplevel ? macDraw->toplevel->view : macDraw->view;
+    NSView *view = TkMacOSXDrawableView(macDraw);
     CGRect visRect, srcRect, dstRect;
     CGFloat boundsH;
     HIShapeRef dmgRgn, dstRgn;
@@ -1545,8 +1544,7 @@ TkMacOSXSetupDrawingContext(
 		r.origin.x + r.size.width + macDraw->xOff,
 		r.origin.y + r.size.height + macDraw->yOff);
     } else if (isWin) {
-	NSView *view = macDraw->toplevel ? macDraw->toplevel->view :
-		macDraw->view;
+	NSView *view = TkMacOSXDrawableView(macDraw);
 	if (view) {
 	    NSRect r;
 	    if ((dontDraw = ![view lockFocusIfCanDraw])) {
@@ -1711,8 +1709,7 @@ TkMacOSXGetClipRgn(
 	TkMacOSXUpdateClipRgn(macDraw->winPtr);
 #ifdef TK_MAC_DEBUG_DRAWING
 	TkMacOSXDbgMsg("%s", macDraw->winPtr->pathName);
-	NSView *view = macDraw->toplevel ? macDraw->toplevel->view :
-		macDraw->view;
+	NSView *view = TkMacOSXDrawableView(macDraw);
 	if ([view lockFocusIfCanDraw]) {
 	    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
 	    CGContextSaveGState(context);
