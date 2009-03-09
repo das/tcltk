@@ -49,9 +49,11 @@ static Tk_Window clipboardOwner = NULL;
     [string release];
 }
 - (void)tkProvidePasteboard:(TkDisplay *)dispPtr {
-    [self tkProvidePasteboard:dispPtr
-	    pasteboard:[NSPasteboard generalPasteboard]
-	    provideDataForType:NSStringPboardType];
+    if (dispPtr && dispPtr->clipboardActive) {
+	[self tkProvidePasteboard:dispPtr
+		pasteboard:[NSPasteboard generalPasteboard]
+		provideDataForType:NSStringPboardType];
+    }
 }
 - (void)pasteboard:(NSPasteboard *)sender provideDataForType:(NSString *)type {
     [self tkProvidePasteboard:TkGetDisplayList() pasteboard:sender
