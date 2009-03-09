@@ -85,7 +85,7 @@ Tk_ClassProcs tkpScrollbarProcs = {
     Tcl_Interp *interp;
     int result;
 
-    if (!scrollPtr || !scrollPtr->commandSize ||
+    if (!scrollPtr || !scrollPtr->command || !scrollPtr->commandSize ||
 	    hitPart == NSScrollerNoPart) {
 	return;
     }
@@ -557,8 +557,7 @@ TkpScrollbarPosition(
     NSView *view = TkMacOSXDrawableView(macWin);
 
     switch ([scroller testPart:NSMakePoint(macWin->xOff + x,
-	    [view bounds].size.height - (macWin->yOff + y +
-	    [scroller frame].size.height))]) {
+	    [view bounds].size.height - (macWin->yOff + y))]) {
     case NSScrollerDecrementLine:
 	return TOP_ARROW;
     case NSScrollerDecrementPage:
