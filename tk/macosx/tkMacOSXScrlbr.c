@@ -68,6 +68,11 @@ Tk_ClassProcs tkpScrollbarProcs = {
     sizeof(Tk_ClassProcs)	/* size */
 };
 
+/* From WebKit/WebKit/mac/WebCoreSupport/WebChromeClient.mm: */
+@interface NSWindow(TKScrlbr)
+- (NSRect)_growBoxRect;
+@end
+
 #pragma mark TKApplication(TKScrlbr)
 
 #define NSAppleAquaScrollBarVariantChanged @"AppleAquaScrollBarVariantChanged"
@@ -336,9 +341,21 @@ TkpDisplayScrollbar(
     frame = NSInsetRect(frame, scrollPtr->inset, scrollPtr->inset);
     frame.origin.y = [view bounds].size.height -
 	    (frame.origin.y + frame.size.height);
+    NSWindow *w = [view window];
+    if ([w showsResizeIndicator]) {
+	NSRect growBox = [view convertRect:[w _growBoxRect] fromView:nil];
+	if (NSIntersectsRect(growBox, frame)) {
+	    if (scrollPtr->vertical) {
+		CGFloat y = frame.origin.y;
+		frame.origin.y = growBox.origin.y + growBox.size.height;
+		frame.size.height -= frame.origin.y - y;
+ 	    } else {
+		frame.size.width = growBox.origin.x - frame.origin.x;
+	    }
+	}
+    }
     if (!NSEqualRects(frame, [scroller frame])) {
 	[scroller setFrame:frame];
-	frame = [scroller frame]; /* may have been changed by growbox adjust */
     }
     [scroller setEnabled:(knobProportion < 1.0 &&
 	    (scrollPtr->vertical ? frame.size.height : frame.size.width) >
