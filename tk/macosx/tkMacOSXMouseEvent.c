@@ -105,7 +105,7 @@ enum {
 
     /*
     MacDrawable *macWin = (MacDrawable *) window;
-    NSView *view = macWin->toplevel ? macWin->toplevel->view : macWin->view;
+    NSView *view = TkMacOSXDrawableView(macWin);
     local = [view convertPoint:local fromView:nil];
     local.y = NSHeight([view bounds]) - local.y;
     */

@@ -297,7 +297,7 @@ TkpDisplayScrollbar(
     Tk_Window tkwin = scrollPtr->tkwin;
     TkWindow *winPtr = (TkWindow *) tkwin;
     MacDrawable *macWin =  (MacDrawable *) winPtr->window;
-    NSView *view = macWin->toplevel ? macWin->toplevel->view : macWin->view;
+    NSView *view = TkMacOSXDrawableView(macWin);
     NSRect frame;
     double knobProportion = scrollPtr->lastFraction - scrollPtr->firstFraction;
 
@@ -537,7 +537,7 @@ TkpScrollbarPosition(
     NSScroller *scroller = ((MacScrollbar *) scrollPtr)->scroller;
     MacDrawable *macWin =  (MacDrawable *)
 	    ((TkWindow *) scrollPtr->tkwin)->window;
-    NSView *view = macWin->toplevel ? macWin->toplevel->view : macWin->view;
+    NSView *view = TkMacOSXDrawableView(macWin);
 
     switch ([scroller testPart:NSMakePoint(macWin->xOff + x,
 	    [view bounds].size.height - (macWin->yOff + y +

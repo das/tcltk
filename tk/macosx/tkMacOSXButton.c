@@ -259,7 +259,7 @@ DisplayNativeButton(
     Tk_Window tkwin = butPtr->tkwin;
     TkWindow *winPtr = (TkWindow *) tkwin;
     MacDrawable *macWin =  (MacDrawable *) winPtr->window;
-    NSView *view = macWin->toplevel ? macWin->toplevel->view : macWin->view;
+    NSView *view = TkMacOSXDrawableView(macWin);
     NSRect frame;
     NSCellStateValue state;
     int enabled;
