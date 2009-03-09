@@ -799,6 +799,10 @@ TkpMeasureCharsInContext(
     range = CFRangeMake(0, len);
     string = [[NSString alloc] initWithBytesNoCopy:(void*)source
 		length:numBytes encoding:NSUTF8StringEncoding freeWhenDone:NO];
+    if (!string) {
+	*lengthPtr = 0;
+	return rangeLength;
+    }
     attributedString = [[NSAttributedString alloc] initWithString:string
 	    attributes:fontPtr->nsAttributes];
     typesetter = CTTypesetterCreateWithAttributedStringAndOptions(
@@ -1001,6 +1005,9 @@ DrawCharsInContext(
     range = CFRangeMake(0, len);
     string = [[NSString alloc] initWithBytesNoCopy:(void*)source
 		length:numBytes encoding:NSUTF8StringEncoding freeWhenDone:NO];
+    if (!string) {
+	return;
+    }
     attributedString = [[NSAttributedString alloc] initWithString:string
 	    attributes:attributes];
     typesetter = CTTypesetterCreateWithAttributedStringAndOptions(
