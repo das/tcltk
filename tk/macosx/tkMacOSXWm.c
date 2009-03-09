@@ -1025,13 +1025,12 @@ WmSetAttribute(
 	break;
     case WMATT_TITLEPATH: {
 	const char *path = Tcl_FSGetNativePath(value);
-	NSString *filename = nil;
+	NSString *filename = @"";
 
 	if (path && *path) {
-	    filename = [[NSString alloc] initWithUTF8String:path];
+	    filename = [NSString stringWithUTF8String:path];
 	}
 	[macWindow setRepresentedFilename:filename];
-	[filename release];
 	break;
     }
     case WMATT_TOPMOST:
