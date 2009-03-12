@@ -1519,8 +1519,7 @@ TkMacOSXSetupDrawingContext(
 {
     MacDrawable *macDraw = ((MacDrawable*)d);
     int dontDraw = 0, isWin = 0;
-    TkMacOSXDrawingContext dc = {NULL, nil, NULL,
-	    {SHRT_MIN, SHRT_MIN, SHRT_MAX, SHRT_MAX}};
+    TkMacOSXDrawingContext dc = {};
 
     dc.clipRgn = TkMacOSXGetClipRgn(d);
     if (!dontDraw) {
@@ -1547,7 +1546,13 @@ TkMacOSXSetupDrawingContext(
 	NSView *view = TkMacOSXDrawableView(macDraw);
 	if (view) {
 	    NSRect r;
-	    if ((dontDraw = ![view lockFocusIfCanDraw])) {
+	    if (view != [NSView focusView]) {
+		dc.focusLocked = [view lockFocusIfCanDraw];
+		dontDraw = !dc.focusLocked;	    
+	    } else {
+		dontDraw = ![view canDraw];
+	    }
+	    if (dontDraw) {
 		goto end;
 	    }
 	    dc.view = view;
@@ -1566,7 +1571,9 @@ TkMacOSXSetupDrawingContext(
 		"no context to draw into !");
     }
     if (dc.context) {
-	CGContextSaveGState(dc.context);
+	if (!dc.focusLocked) {
+	    CGContextSaveGState(dc.context);
+	}
 	CGContextSetTextDrawingMode(dc.context, kCGTextFill);
 	CGContextConcatCTM(dc.context, CGAffineTransformMake(1.0, 0.0, 0.0,
 		-1.0, 0.0, dc.portBounds.bottom - dc.portBounds.top));
@@ -1667,9 +1674,10 @@ TkMacOSXRestoreDrawingContext(
 {
     if (dcPtr->context) {
 	CGContextSynchronize(dcPtr->context);
-	CGContextRestoreGState(dcPtr->context);
-	if (dcPtr->view) {
+	if (dcPtr->focusLocked) {
 	    [dcPtr->view unlockFocus];
+	} else {
+	    CGContextRestoreGState(dcPtr->context);
 	}
     }
     if (dcPtr->clipRgn) {
