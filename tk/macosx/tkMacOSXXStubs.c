@@ -144,7 +144,7 @@ TkpOpenDisplay(
     static NSRect maxBounds = {{0, 0}, {0, 0}};
     static char vendor[25] = "";
     NSArray *cgVers;
-    NSAutoreleasePool *pool = [NSAutoreleasePool new];
+    NSAutoreleasePool *pool;
 
     if (gMacDisplay != NULL) {
 	if (strcmp(gMacDisplay->display->display_name, display_name) == 0) {
@@ -168,6 +168,7 @@ TkpOpenDisplay(
     display->default_screen = 0;
     display->display_name   = (char *) macScreenName;
 
+    pool = [NSAutoreleasePool new];
     cgVers = [[[NSBundle bundleWithIdentifier:@"com.apple.CoreGraphics"]
 	    objectForInfoDictionaryKey:@"CFBundleShortVersionString"]
 	    componentsSeparatedByString:@"."];
