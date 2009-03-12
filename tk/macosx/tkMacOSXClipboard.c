@@ -175,6 +175,32 @@ XSetSelectionOwner(
 /*
  *----------------------------------------------------------------------
  *
+ * TkMacOSXSelDeadWindow --
+ *
+ *	This function is invoked just before a TkWindow is deleted. It
+ *	performs selection-related cleanup.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	clipboardOwner is cleared.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TkMacOSXSelDeadWindow(
+    TkWindow *winPtr)
+{
+    if (winPtr && winPtr == (TkWindow *)clipboardOwner) {
+	clipboardOwner = NULL;
+    }
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
  * TkSelUpdateClipboard --
  *
  *	This function is called to force the clipboard to be updated after new
