@@ -161,14 +161,20 @@ TkpDisplayMenuButton(
     Tk_Window tkwin = mbPtr->tkwin;
     TkWindow *winPtr = (TkWindow *) tkwin;
     MacDrawable *macWin =  (MacDrawable *) winPtr->window;
+    TkMacOSXDrawingContext dc;
     NSView *view = TkMacOSXDrawableView(macWin);
+    CGFloat viewHeight = [view bounds].size.height;
+    CGAffineTransform t = { .a = 1, .b = 0, .c = 0, .d = -1, .tx = 0,
+	    .ty = viewHeight};
     NSRect frame;
     int enabled;
 
     mbPtr->flags &= ~REDRAW_PENDING;
-    if (!tkwin || !Tk_IsMapped(tkwin)) {
+    if (!tkwin || !Tk_IsMapped(tkwin) || !view ||
+	    !TkMacOSXSetupDrawingContext((Drawable) macWin, NULL, 1, &dc)) {
 	return;
     }
+    CGContextConcatCTM(dc.context, t);
     Tk_Fill3DRectangle(tkwin, (Pixmap) macWin, mbPtr->normalBorder, 0, 0,
 	    Tk_Width(tkwin), Tk_Height(tkwin), 0, TK_RELIEF_FLAT);
     if ([button superview] != view) {
@@ -188,12 +194,12 @@ TkpDisplayMenuButton(
     frame.size.width -= boundsFix.shrinkW;
     frame = NSInsetRect(frame, boundsFix.inset, boundsFix.inset);
 #endif
-    frame.origin.y = [view bounds].size.height -
-	    (frame.origin.y + frame.size.height);
+    frame.origin.y = viewHeight - (frame.origin.y + frame.size.height);
     if (!NSEqualRects(frame, [button frame])) {
 	[button setFrame:frame];
     }
     [button displayRectIgnoringOpacity:[button bounds]];
+    TkMacOSXRestoreDrawingContext(&dc);
 #ifdef TK_MAC_DEBUG_MENUBUTTON
     TKLog(@"menubutton %s frame %@ width %d height %d",
 	    ((TkWindow *)mbPtr->tkwin)->pathName, NSStringFromRect(frame),

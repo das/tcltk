@@ -302,15 +302,21 @@ TkpDisplayScrollbar(
     Tk_Window tkwin = scrollPtr->tkwin;
     TkWindow *winPtr = (TkWindow *) tkwin;
     MacDrawable *macWin =  (MacDrawable *) winPtr->window;
+    TkMacOSXDrawingContext dc;
     NSView *view = TkMacOSXDrawableView(macWin);
+    CGFloat viewHeight = [view bounds].size.height;
+    CGAffineTransform t = { .a = 1, .b = 0, .c = 0, .d = -1, .tx = 0,
+	    .ty = viewHeight};
     NSRect frame;
     double knobProportion = scrollPtr->lastFraction - scrollPtr->firstFraction;
 
     scrollPtr->flags &= ~REDRAW_PENDING;
-    if (!scrollPtr->tkwin || !Tk_IsMapped(tkwin) || !view) {
+    if (!scrollPtr->tkwin || !Tk_IsMapped(tkwin) || !view ||
+	    !TkMacOSXSetupDrawingContext((Drawable) macWin, NULL, 1, &dc)) {
 	return;
     }
 
+    CGContextConcatCTM(dc.context, t);
     if (scrollPtr->highlightWidth != 0) {
 	GC fgGC, bgGC;
 
@@ -339,8 +345,7 @@ TkpDisplayScrollbar(
     frame = NSMakeRect(macWin->xOff, macWin->yOff, Tk_Width(tkwin),
 	    Tk_Height(tkwin));
     frame = NSInsetRect(frame, scrollPtr->inset, scrollPtr->inset);
-    frame.origin.y = [view bounds].size.height -
-	    (frame.origin.y + frame.size.height);
+    frame.origin.y = viewHeight - (frame.origin.y + frame.size.height);
     NSWindow *w = [view window];
     if ([w showsResizeIndicator]) {
 	NSRect growBox = [view convertRect:[w _growBoxRect] fromView:nil];
@@ -363,6 +368,7 @@ TkpDisplayScrollbar(
     [scroller setDoubleValue:scrollPtr->firstFraction / (1.0 - knobProportion)];
     [scroller setKnobProportion:knobProportion];
     [scroller displayRectIgnoringOpacity:[scroller bounds]];
+    TkMacOSXRestoreDrawingContext(&dc);
 #ifdef TK_MAC_DEBUG_SCROLLBAR
     TKLog(@"scroller %s frame %@ width %d height %d",
 	    ((TkWindow *)scrollPtr->tkwin)->pathName, NSStringFromRect(frame),

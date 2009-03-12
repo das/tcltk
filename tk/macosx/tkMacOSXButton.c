@@ -259,14 +259,20 @@ DisplayNativeButton(
     Tk_Window tkwin = butPtr->tkwin;
     TkWindow *winPtr = (TkWindow *) tkwin;
     MacDrawable *macWin =  (MacDrawable *) winPtr->window;
+    TkMacOSXDrawingContext dc;
     NSView *view = TkMacOSXDrawableView(macWin);
+    CGFloat viewHeight = [view bounds].size.height;
+    CGAffineTransform t = { .a = 1, .b = 0, .c = 0, .d = -1, .tx = 0,
+	    .ty = viewHeight};
     NSRect frame;
     NSCellStateValue state;
     int enabled;
 
-    if (!view) {
+    if (!view ||
+	    !TkMacOSXSetupDrawingContext((Drawable) macWin, NULL, 1, &dc)) {
 	return;
     }
+    CGContextConcatCTM(dc.context, t);
 
     /*
      * We cannot change the background color of the button itself, only the
@@ -322,12 +328,12 @@ DisplayNativeButton(
     frame = NSInsetRect(frame, boundsFix.inset + NATIVE_BUTTON_INSET,
 	    boundsFix.inset + NATIVE_BUTTON_INSET);
 #endif
-    frame.origin.y = [view bounds].size.height -
-	    (frame.origin.y + frame.size.height);
+    frame.origin.y = viewHeight - (frame.origin.y + frame.size.height);
     if (!NSEqualRects(frame, [button frame])) {
 	[button setFrame:frame];
     }
     [button displayRectIgnoringOpacity:[button bounds]];
+    TkMacOSXRestoreDrawingContext(&dc);
 #ifdef TK_MAC_DEBUG_BUTTON
     TKLog(@"button %s frame %@ width %d height %d",
 	    ((TkWindow *)butPtr->tkwin)->pathName, NSStringFromRect(frame),
