@@ -109,12 +109,13 @@ MODULE_SCOPE TkMacOSXEmbedHandler *tkMacOSXEmbedHandler;
     (((TkWindow *) (tkwin))->privatePtr->toplevel->flags & TK_HOST_EXISTS)
 
 /*
- * Defines use for the flags argument to TkGenWMConfigureEvent.
+ * Defines used for the flags argument to TkGenWMConfigureEvent.
  */
 
 #define TK_LOCATION_CHANGED	1
 #define TK_SIZE_CHANGED		2
 #define TK_BOTH_CHANGED		3
+#define TK_MACOSX_HANDLE_EVENT_IMMEDIATELY 1024
 
 /*
  * Defines for tkTextDisp.c

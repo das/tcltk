@@ -91,16 +91,11 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
 	    height = bounds.size.height - wmPtr->yInParent;
 	    flags |= TK_SIZE_CHANGED;
 	}
-	TkGenWMConfigureEvent((Tk_Window)winPtr, x, y, width, height, flags);
 	if (Tcl_GetServiceMode() != TCL_SERVICE_NONE) {
-	    while (Tcl_ServiceEvent(0)) {} /* propagate geometry changes immediately */
+	    /* propagate geometry changes immediately */
+	    flags |= TK_MACOSX_HANDLE_EVENT_IMMEDIATELY;
 	}
-	/*
-	if (wmPtr->attributes & kWindowResizableAttribute) {
-	    [w setShowsResizeIndicator:NO];
-	    [w setShowsResizeIndicator:YES];
-	}
-	*/
+	TkGenWMConfigureEvent((Tk_Window) winPtr, x, y, width, height, flags);
     }
 }
 - (void)windowExpanded:(NSNotification *)notification {
@@ -523,7 +518,11 @@ TkGenWMConfigureEvent(
     event.xconfigure.width = width;
     event.xconfigure.height = height;
 
-    Tk_QueueWindowEvent(&event, TCL_QUEUE_TAIL);
+    if (flags & TK_MACOSX_HANDLE_EVENT_IMMEDIATELY) {
+	Tk_HandleEvent(&event);
+    } else {
+	Tk_QueueWindowEvent(&event, TCL_QUEUE_TAIL);
+    }
 
     /*
      * Update window manager information.
