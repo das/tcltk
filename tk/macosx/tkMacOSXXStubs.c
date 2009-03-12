@@ -142,6 +142,9 @@ TkpOpenDisplay(
     Screen *screen;
     int fd = 0;
     static NSRect maxBounds = {{0, 0}, {0, 0}};
+    static char vendor[25] = "";
+    NSArray *cgVers;
+    NSAutoreleasePool *pool;
 
     if (gMacDisplay != NULL) {
 	if (strcmp(gMacDisplay->display->display_name, display_name) == 0) {
@@ -165,10 +168,22 @@ TkpOpenDisplay(
     display->default_screen = 0;
     display->display_name   = (char *) macScreenName;
 
-    Gestalt(gestaltQuickdrawVersion, (SInt32 *) &display->proto_minor_version);
-    display->proto_major_version = 10;
-    display->proto_minor_version -= gestaltMacOSXQD;
-    display->vendor = (char*) "Apple";
+    pool = [NSAutoreleasePool new];
+    cgVers = [[[NSBundle bundleWithIdentifier:@"com.apple.CoreGraphics"]
+	    objectForInfoDictionaryKey:@"CFBundleShortVersionString"]
+	    componentsSeparatedByString:@"."];
+    if ([cgVers count] >= 2) {
+	display->proto_major_version = [[cgVers objectAtIndex:1] integerValue];
+    }
+    if ([cgVers count] >= 3) {
+	display->proto_minor_version = [[cgVers objectAtIndex:2] integerValue];
+    }
+    if (!vendor[0]) {
+	snprintf(vendor, sizeof(vendor), "Apple AppKit %s %g",
+		([NSGarbageCollector defaultCollector] ? "GC" : "RR"),
+		NSAppKitVersionNumber);
+    }
+    display->vendor = vendor;
     Gestalt(gestaltSystemVersion, (SInt32 *) &display->release);
 
     /*
@@ -204,6 +219,7 @@ TkpOpenDisplay(
 
     bzero(gMacDisplay, sizeof(TkDisplay));
     gMacDisplay->display = display;
+    [pool drain];
     return gMacDisplay;
 }
 
@@ -750,12 +766,14 @@ TkGetServerInfo(
     Tk_Window tkwin)		/* Token for window; this selects a particular
 				 * display and server. */
 {
-    char buffer[8 + TCL_INTEGER_SPACE * 2];
-    char buffer2[TCL_INTEGER_SPACE];
+    char buffer[5 + TCL_INTEGER_SPACE * 2];
+    char buffer2[11 + TCL_INTEGER_SPACE];
 
-    sprintf(buffer, "QD%dR%x ", ProtocolVersion(Tk_Display(tkwin)),
+    snprintf(buffer, sizeof(buffer), "CG%d.%d ",
+	    ProtocolVersion(Tk_Display(tkwin)),
 	    ProtocolRevision(Tk_Display(tkwin)));
-    sprintf(buffer2, " %x", VendorRelease(Tk_Display(tkwin)));
+    snprintf(buffer2, sizeof(buffer2), " Mac OS X %x",
+	    VendorRelease(Tk_Display(tkwin)));
     Tcl_AppendResult(interp, buffer, ServerVendor(Tk_Display(tkwin)),
 	    buffer2, NULL);
 }
