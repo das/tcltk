@@ -92,6 +92,7 @@ static const struct {
 static int gNoTkMenus = 0;	/* This is used by Tk_MacOSXTurnOffMenus as
 				 * the flag that Tk is not to draw any
 				 * menus. */
+static int inPostMenu = 0;
 static unsigned long defaultBg = 0, defaultFg = 0;
 static SInt32 menuMarkColumnWidth = 0, menuIconTrailingEdgeMargin = 0;
 static SInt32 menuTextLeadingEdgeMargin = 0, menuTextTrailingEdgeMargin = 0;
@@ -305,7 +306,9 @@ static int	ModifierCharWidth(Tk_Font tkfont);
 #ifdef TK_MAC_DEBUG_NOTIFICATIONS
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
 #endif
-    TkMacOSXClearMenubarActive();
+    if (!inPostMenu) {
+	TkMacOSXClearMenubarActive();
+    }
 }
 - (void)tkSetMainMenu:(TKMenu *)menu {
     if (gNoTkMenus) {
@@ -628,6 +631,7 @@ TkpPostMenu(
 {
     NSWindow *win = [NSApp keyWindow];
     if (win) {
+	inPostMenu = 1;
 	int oldMode = Tcl_SetServiceMode(TCL_SERVICE_NONE);
 	NSView *view = [win contentView];
 	NSRect frame = NSMakeRect(x + 9, tkMacOSXZeroScreenHeight - y - 9, 1, 1);
@@ -641,6 +645,7 @@ TkpPostMenu(
 	[popUpButtonCell performClickWithFrame:frame inView:view];
 	[popUpButtonCell release];
 	Tcl_SetServiceMode(oldMode);
+	inPostMenu = 0;
 	return TCL_OK;
     } else {
 	return TCL_ERROR;
@@ -1238,9 +1243,9 @@ void
 TkMacOSXClearMenubarActive(void)
 {
     NSMenu *mainMenu = [NSApp mainMenu];
-    if ([mainMenu isKindOfClass:[TKMenu class]]) {
+    if (mainMenu && [mainMenu isKindOfClass:[TKMenu class]]) {
 	TkMenu *menuPtr = [(TKMenu *)mainMenu tkMenu];
-	if (menuPtr) {
+	if (menuPtr && menuPtr->numEntries && menuPtr->entries) {
 	    RecursivelyClearActiveMenu(menuPtr);
 	}
     }
