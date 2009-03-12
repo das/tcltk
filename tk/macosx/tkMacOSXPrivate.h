@@ -249,6 +249,7 @@ MODULE_SCOPE TkWindow*	TkMacOSXGetTkWindow(NSWindow *w);
 MODULE_SCOPE NSFont*	TkMacOSXNSFontForFont(Tk_Font tkfont);
 MODULE_SCOPE NSDictionary* TkMacOSXNSFontAttributesForFont(Tk_Font tkfont);
 MODULE_SCOPE NSModalSession TkMacOSXGetModalSession(void);
+MODULE_SCOPE void	TkMacOSXSelDeadWindow(TkWindow *winPtr);
 
 #pragma mark Private Objective-C Classes
 
