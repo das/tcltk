@@ -147,7 +147,7 @@ TkpMakeWindow(
 	winPtr->privatePtr = macWin;
 	macWin->visRgn = NULL;
 	macWin->aboveVisRgn = NULL;
-	macWin->drawRect = CGRectNull;
+	macWin->drawRgn = NULL;
 	macWin->referenceCount = 0;
 	macWin->flags = TK_CLIP_INVALID;
 	macWin->view = nil;
@@ -286,7 +286,7 @@ TkpUseWindow(
     macWin->size = CGSizeZero;
     macWin->visRgn = NULL;
     macWin->aboveVisRgn = NULL;
-    macWin->drawRect = CGRectNull;
+    macWin->drawRgn = NULL;
     macWin->referenceCount = 0;
     macWin->flags = TK_CLIP_INVALID;
     macWin->toplevel = macWin;

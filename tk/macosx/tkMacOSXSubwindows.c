@@ -84,6 +84,9 @@ XDestroyWindow(
 	if (macWin->aboveVisRgn) {
 	    CFRelease(macWin->aboveVisRgn);
 	}
+	if (macWin->drawRgn) {
+	    CFRelease(macWin->drawRgn);
+	}
 
 	if (macWin->toplevel->referenceCount == 0) {
 	    ckfree((char *) macWin->toplevel);
@@ -123,6 +126,9 @@ XDestroyWindow(
     }
     if (macWin->aboveVisRgn) {
 	CFRelease(macWin->aboveVisRgn);
+    }
+    if (macWin->drawRgn) {
+	CFRelease(macWin->drawRgn);
     }
     macWin->view = nil;
 
@@ -1110,6 +1116,10 @@ TkMacOSXInvalClipRgns(
 	CFRelease(macWin->aboveVisRgn);
 	macWin->aboveVisRgn = NULL;
     }
+    if (macWin->drawRgn) {
+	CFRelease(macWin->drawRgn);
+	macWin->drawRgn = NULL;
+    }
 
     /*
      * Invalidate clip regions for all children & their descendants, unless the
@@ -1296,7 +1306,7 @@ Tk_GetPixmap(
     macPix->yOff = 0;
     macPix->visRgn = NULL;
     macPix->aboveVisRgn = NULL;
-    macPix->drawRect = CGRectNull;
+    macPix->drawRgn = NULL;
     macPix->referenceCount = 0;
     macPix->toplevel = NULL;
     macPix->flags = TK_IS_PIXMAP | (depth == 1 ? TK_IS_BW_PIXMAP : 0);
