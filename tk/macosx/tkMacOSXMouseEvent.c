@@ -94,8 +94,8 @@ enum {
     }
 
     Window window = TkMacOSXGetXWindow(win);
-    TkDisplay *dispPtr = TkGetDisplayList();
-    Tk_Window tkwin = Tk_IdToWindow(dispPtr->display, window);
+    Tk_Window tkwin = window ? Tk_IdToWindow(TkGetDisplayList()->display,
+	    window) : NULL;
     if (!tkwin) {
 	tkwin = TkMacOSXGetCapture();
     }
