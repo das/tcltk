@@ -340,7 +340,7 @@ GenerateEditEvent(
 
     bzero(&event, sizeof(XVirtualEvent));
     event.type = VirtualEvent;
-    event.serial = Tk_Display(tkwin)->request;
+    event.serial = LastKnownRequestProcessed(Tk_Display(tkwin));
     event.send_event = false;
     event.display = Tk_Display(tkwin);
     event.event = Tk_WindowId(tkwin);

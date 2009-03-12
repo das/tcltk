@@ -186,7 +186,7 @@ XMapWindow(
 	 * We only need to send the MapNotify event for toplevel windows.
 	 */
 
-	event.xany.serial = display->request;
+	event.xany.serial = LastKnownRequestProcessed(display);
 	event.xany.send_event = False;
 	event.xany.display = display;
 
@@ -291,7 +291,7 @@ XUnmapWindow(
 	 * We only need to send the UnmapNotify event for toplevel windows.
 	 */
 
-	event.xany.serial = display->request;
+	event.xany.serial = LastKnownRequestProcessed(display);
 	event.xany.send_event = False;
 	event.xany.display = display;
 

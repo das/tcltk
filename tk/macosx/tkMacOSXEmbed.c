@@ -1089,7 +1089,7 @@ EmbedWindowDeleted(
 		XEvent event;
 
 		event.xany.serial =
-			Tk_Display(containerPtr->parentPtr)->request;
+			LastKnownRequestProcessed(Tk_Display(containerPtr->parentPtr));
 		event.xany.send_event = False;
 		event.xany.display = Tk_Display(containerPtr->parentPtr);
 
