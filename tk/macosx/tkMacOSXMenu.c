@@ -1132,9 +1132,6 @@ GenerateMenuSelectEvent(
 	} else {
 	    TkActivateMenuEntry(menuPtr, index);
 	    MenuSelectEvent(menuPtr);
-	    if (Tcl_GetServiceMode() != TCL_SERVICE_NONE) {
-		while (Tcl_ServiceEvent(0)) {}
-	    }
 	    return true;
 	}
     }
@@ -1179,7 +1176,11 @@ MenuSelectEvent(
 	    NULL, &event.state);
     event.same_screen = true;
     event.name = Tk_GetUid("MenuSelect");
-    Tk_QueueWindowEvent((XEvent *) &event, TCL_QUEUE_TAIL);
+    if (Tcl_GetServiceMode() != TCL_SERVICE_NONE) {
+	Tk_HandleEvent((XEvent *) &event);
+    } else {
+	Tk_QueueWindowEvent((XEvent *) &event, TCL_QUEUE_TAIL);
+    }
 }
 
 /*
