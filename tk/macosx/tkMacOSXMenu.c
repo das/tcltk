@@ -531,7 +531,7 @@ TkpConfigureMenuEntry(
 	attributes = TkMacOSXNSFontAttributesForFont(Tk_GetFontFromObj(
 		mePtr->menuPtr->tkwin, fontPtr));
 	if (gc->foreground != defaultFg || gc->background != defaultBg) {
-	    NSColor *color = TkMacOSXGetNSColor(gc->foreground != defaultFg ?
+	    NSColor *color = TkMacOSXGetNSColor(gc, gc->foreground != defaultFg ?
 		    gc->foreground : gc->background);
 	    attributes = [[attributes mutableCopy] autorelease];
 	    [(NSMutableDictionary *)attributes setObject:color

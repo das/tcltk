@@ -48,7 +48,7 @@ static int useThemedFrame = 0;
 static void ClipToGC(Drawable d, GC gc, HIShapeRef *clipRgnPtr);
 static CGImageRef CreateCGImageWithXImage(XImage *ximage);
 static CGContextRef GetCGContextForDrawable(Drawable d);
-static void DrawCGImage(Drawable d, CGContextRef context, CGImageRef image,
+static void DrawCGImage(Drawable d, GC gc, CGContextRef context, CGImageRef image,
 	unsigned long imageForeground, unsigned long imageBackground,
 	CGRect imageBounds, CGRect srcBounds, CGRect dstBounds);
 
@@ -153,7 +153,7 @@ XCopyArea(
 	    CGImageRef img = TkMacOSXCreateCGImageWithDrawable(src);
 
 	    if (img) {
-		DrawCGImage(dst, dc.context, img, gc->foreground,
+		DrawCGImage(dst, gc, dc.context, img, gc->foreground,
 			gc->background, CGRectMake(0, 0,
 			srcDraw->size.width, srcDraw->size.height),
 			CGRectMake(src_x, src_y, width, height),
@@ -269,7 +269,7 @@ XCopyPlane(
 			clipPtr->value.pixmap == src) {
 		    imageBackground = TRANSPARENT_PIXEL << 24;
 		}
-		DrawCGImage(dst, dc.context, img, gc->foreground,
+		DrawCGImage(dst, gc, dc.context, img, gc->foreground,
 			imageBackground, CGRectMake(0, 0,
 			srcDraw->size.width, srcDraw->size.height),
 			CGRectMake(src_x, src_y, width, height),
@@ -330,7 +330,7 @@ TkPutImage(
 	CGImageRef img = CreateCGImageWithXImage(image);
 
 	if (img) {
-	    DrawCGImage(d, dc.context, img, gc->foreground, gc->background,
+	    DrawCGImage(d, gc, dc.context, img, gc->foreground, gc->background,
 		    CGRectMake(0, 0, image->width, image->height),
 		    CGRectMake(src_x, src_y, width, height),
 		    CGRectMake(dest_x, dest_y, width, height));
@@ -666,6 +666,7 @@ GetCGContextForDrawable(
 void
 DrawCGImage(
     Drawable d,
+    GC gc,
     CGContextRef context,
     CGImageRef image,
     unsigned long imageForeground,
@@ -699,10 +700,10 @@ DrawCGImage(
 		CGContextSetRGBFillColor(context, 0.0, 0.0, 0.0, 1.0);
 	    } else {
 		if (imageBackground != TRANSPARENT_PIXEL << 24) {
-		    TkMacOSXSetColorInContext(imageBackground, context);
+		    TkMacOSXSetColorInContext(gc, imageBackground, context);
 		    CGContextFillRect(context, dstBounds);
 		}
-		TkMacOSXSetColorInContext(imageForeground, context);
+		TkMacOSXSetColorInContext(gc, imageForeground, context);
 	    }
 	}
 #ifdef TK_MAC_DEBUG_IMAGE_DRAWING
@@ -1605,7 +1606,7 @@ TkMacOSXSetupDrawingContext(
 	    bool shouldAntialias;
 	    double w = gc->line_width;
 
-	    TkMacOSXSetColorInContext(gc->foreground, dc.context);
+	    TkMacOSXSetColorInContext(gc, gc->foreground, dc.context);
 	    if (isWin) {
 		CGContextSetPatternPhase(dc.context, CGSizeMake(
 			dc.portBounds.size.width, dc.portBounds.size.height));

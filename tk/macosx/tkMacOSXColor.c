@@ -200,7 +200,7 @@ GetThemeFromPixelCode(
     ThemeTextColor *textColor,
     ThemeBackgroundKind *background)
 {
-    if (code >= MIN_PIXELCODE && code <= MAX_PIXELCODE && code != PIXEL_MAGIC) {
+    if (code >= MIN_PIXELCODE && code <= MAX_PIXELCODE) {
 	*brush = systemColorMap[code - MIN_PIXELCODE].brush;
 	*textColor = systemColorMap[code - MIN_PIXELCODE].textColor;
 	*background = systemColorMap[code - MIN_PIXELCODE].background;
@@ -209,7 +209,8 @@ GetThemeFromPixelCode(
 	*textColor = 0;
 	*background = 0;
     }
-    if (!*brush && !*textColor && !*background && code != PIXEL_MAGIC) {
+    if (!*brush && !*textColor && !*background && code != PIXEL_MAGIC &&
+	    code != TRANSPARENT_PIXEL) {
 	return false;
     } else {
 	return true;
@@ -247,19 +248,26 @@ GetThemeColor(
     /*} else if (textColor) {
 	err = ChkErr(GetThemeTextColor, textColor, 32, true, c);*/
     } else {
-	unsigned short red, green, blue;
-	CGFloat rgba[4];
+	CGFloat rgba[4] = {0, 0, 0, 1};
 
-	red	  = (pixel >> 16) & 0xff;
-	green	  = (pixel >>  8) & 0xff;
-	blue	  = (pixel	) & 0xff;
-	red	 |= red   << 8;
-	green	 |= green << 8;
-	blue	 |= blue  << 8;
-	rgba[0]	  = red	  / 65535.0;
-	rgba[1]	  = green / 65535.0;
-	rgba[2]	  = blue  / 65535.0;
-	rgba[3]	  = 1.0;
+	switch ((pixel >> 24) & 0xff) {
+	case PIXEL_MAGIC: {
+	    unsigned short red, green, blue;
+	    red		= (pixel >> 16) & 0xff;
+	    green	= (pixel >>  8) & 0xff;
+	    blue	= (pixel      ) & 0xff;
+	    red		|= red   << 8;
+	    green	|= green << 8;
+	    blue	|= blue  << 8;
+	    rgba[0]	= red	/ 65535.0;
+	    rgba[1]	= green / 65535.0;
+	    rgba[2]	= blue  / 65535.0;
+	    break;
+	    }
+	case TRANSPARENT_PIXEL:
+	    rgba[3]	= 0.0;
+	    break;
+	}
 
 	*c = CGColorCreateGenericRGB(rgba[0], rgba[1], rgba[2], rgba[3]);
 
@@ -310,6 +318,118 @@ TkSetMacColor(
 /*
  *----------------------------------------------------------------------
  *
+ * TkpInitGCCache, TkpFreeGCCache, GetCachedColor, SetCachedColor --
+ *
+ *	Maintain a per-GC cache of previously converted CGColorRefs
+ *
+ * Results:
+ *	None resp. retained CGColorRef for GetCachedColor()
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TkpInitGCCache(
+    GC gc)
+{
+    bzero(TkpGetGCCache(gc), sizeof(TkpGCCache));
+}
+
+void
+TkpFreeGCCache(
+    GC gc)
+{
+    TkpGCCache *gcCache = TkpGetGCCache(gc);
+
+    if (gcCache->cachedForegroundColor) {
+	CFRelease(gcCache->cachedForegroundColor);
+    }
+    if (gcCache->cachedBackgroundColor) {
+	CFRelease(gcCache->cachedBackgroundColor);
+    }
+}
+
+static CGColorRef
+GetCachedColor(
+    GC gc,
+    unsigned long pixel)
+{
+    TkpGCCache *gcCache = TkpGetGCCache(gc);
+    CGColorRef cgColor = NULL;
+
+    if (gcCache) {
+	if (gcCache->cachedForeground == pixel) {
+	    cgColor = gcCache->cachedForegroundColor;
+	} else if (gcCache->cachedBackground == pixel) {
+	    cgColor = gcCache->cachedBackgroundColor;
+	}
+	if (cgColor) {
+	    CFRetain(cgColor);
+	}
+    }
+    return cgColor;
+}
+
+static void
+SetCachedColor(
+    GC gc,
+    unsigned long pixel,
+    CGColorRef cgColor)
+{
+    TkpGCCache *gcCache = TkpGetGCCache(gc);
+
+    if (gcCache && cgColor) {
+	if (gc->foreground == pixel) {
+	    if (gcCache->cachedForegroundColor) {
+		CFRelease(gcCache->cachedForegroundColor);
+	    }
+	    gcCache->cachedForegroundColor = (CGColorRef) CFRetain(cgColor);
+	    gcCache->cachedForeground = pixel;
+	} else if (gc->background == pixel) {
+	    if (gcCache->cachedBackgroundColor) {
+		CFRelease(gcCache->cachedBackgroundColor);
+	    }
+	    gcCache->cachedBackgroundColor = (CGColorRef) CFRetain(cgColor);
+	    gcCache->cachedBackground = pixel;
+	}
+    }
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkMacOSXGetCGColor --
+ *
+ *	Creates a CGColorRef from a X style pixel value.
+ *
+ * Results:
+ *	Returns NULL if not a real pixel, CGColorRef otherwise.
+ *
+ * Side effects:
+ *	None
+ *
+ *----------------------------------------------------------------------
+ */
+
+CGColorRef
+TkMacOSXGetCGColor(
+    GC gc,
+    unsigned long pixel)		/* Pixel value to convert. */
+{
+    CGColorRef cgColor = GetCachedColor(gc, pixel);
+
+    if (!cgColor && TkSetMacColor(pixel, &cgColor)) {
+	SetCachedColor(gc, pixel, cgColor);
+    }
+    return cgColor;
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
  * TkMacOSXGetNSColor --
  *
  *	Creates an autoreleased NSColor from a X style pixel value.
@@ -325,12 +445,13 @@ TkSetMacColor(
 
 NSColor*
 TkMacOSXGetNSColor(
+    GC gc,
     unsigned long pixel)		/* Pixel value to convert. */
 {
-    CGColorRef cgColor;
+    CGColorRef cgColor = TkMacOSXGetCGColor(gc, pixel);
     NSColor *nsColor = nil;
 
-    if (TkSetMacColor(pixel, &cgColor)) {
+    if (cgColor) {
 	NSColorSpace *colorSpace = [[NSColorSpace alloc]
 		initWithCGColorSpace:CGColorGetColorSpace(cgColor)];
 	nsColor = [NSColor colorWithColorSpace:colorSpace
@@ -363,17 +484,18 @@ TkMacOSXGetNSColor(
 
 void
 TkMacOSXSetColorInContext(
+    GC gc,
     unsigned long pixel,
     CGContextRef context)
 {
     OSStatus err = -1;
-    CGColorRef c;
+    CGColorRef cgColor = GetCachedColor(gc, pixel);
     ThemeBrush brush;
     ThemeTextColor textColor;
     ThemeBackgroundKind background;
 
-    if (GetThemeFromPixelCode((pixel >> 24) & 0xff, &brush, &textColor,
-	    &background)) {
+    if (!cgColor && GetThemeFromPixelCode((pixel >> 24) & 0xff, &brush,
+	    &textColor, &background)) {
 	if (brush) {
 	    err = ChkErr(HIThemeSetFill, brush, NULL, context,
 		    kHIThemeOrientationNormal);
@@ -395,17 +517,18 @@ TkMacOSXSetColorInContext(
 	if (err == noErr) {
 	    return;
 	}
-	err = ChkErr(GetThemeColor, pixel, brush, textColor, background, &c);
+	err = ChkErr(GetThemeColor, pixel, brush, textColor, background,
+		&cgColor);
 	if (err == noErr) {
-	    CGContextSetFillColorWithColor(context, c);
-	    CGContextSetStrokeColorWithColor(context, c);
+	    SetCachedColor(gc, pixel, cgColor);
 	}
-	CGColorRelease(c);
-    } else if (((pixel >> 24) & 0xff) == TRANSPARENT_PIXEL) {
-	CGContextSetRGBFillColor(context, 0.0, 0.0, 0.0, 0.0);
-	CGContextSetRGBStrokeColor(context, 0.0, 0.0, 0.0, 0.0);
-    } else {
+    } else if (!cgColor) {
 	TkMacOSXDbgMsg("Ignored unknown pixel value 0x%lx", pixel);
+    }
+    if (cgColor) {
+	CGContextSetFillColorWithColor(context, cgColor);
+	CGContextSetStrokeColorWithColor(context, cgColor);
+	CGColorRelease(cgColor);
     }
 }
 

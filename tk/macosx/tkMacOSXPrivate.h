@@ -228,7 +228,7 @@ MODULE_SCOPE int	TkMacOSXSetupDrawingContext(Drawable d, GC gc,
 			    int useCG, TkMacOSXDrawingContext *dcPtr);
 MODULE_SCOPE void	TkMacOSXRestoreDrawingContext(
 			    TkMacOSXDrawingContext *dcPtr);
-MODULE_SCOPE void	TkMacOSXSetColorInContext(unsigned long pixel,
+MODULE_SCOPE void	TkMacOSXSetColorInContext(GC gc, unsigned long pixel,
 			    CGContextRef context);
 MODULE_SCOPE int	TkMacOSXMakeFullscreen(TkWindow *winPtr,
 			    NSWindow *window, int fullscreen,
@@ -244,7 +244,8 @@ MODULE_SCOPE NSImage*	TkMacOSXGetNSImageWithTkImage(Display *display,
 			    Tk_Image image, int width, int height);
 MODULE_SCOPE NSImage*	TkMacOSXGetNSImageWithBitmap(Display *display,
 			    Pixmap bitmap, GC gc, int width, int height);
-MODULE_SCOPE NSColor*	TkMacOSXGetNSColor(unsigned long pixel);
+MODULE_SCOPE CGColorRef	TkMacOSXGetCGColor(GC gc, unsigned long pixel);
+MODULE_SCOPE NSColor*	TkMacOSXGetNSColor(GC gc, unsigned long pixel);
 MODULE_SCOPE Tcl_Obj *	TkMacOSXGetStringObjFromCFString(CFStringRef str);
 MODULE_SCOPE TkWindow*	TkMacOSXGetTkWindow(NSWindow *w);
 MODULE_SCOPE NSFont*	TkMacOSXNSFontForFont(Tk_Font tkfont);

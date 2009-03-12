@@ -95,6 +95,21 @@ typedef struct {
 MODULE_SCOPE TkMacOSXEmbedHandler *tkMacOSXEmbedHandler;
 
 /*
+ * GC CGColorRef cache for tkMacOSXColor.c
+ */
+
+typedef struct {
+    unsigned long cachedForeground;
+    CGColorRef cachedForegroundColor;
+    unsigned long cachedBackground;
+    CGColorRef cachedBackgroundColor;
+} TkpGCCache;
+
+MODULE_SCOPE TkpGCCache *TkpGetGCCache(GC gc);
+MODULE_SCOPE void TkpInitGCCache(GC gc);
+MODULE_SCOPE void TkpFreeGCCache(GC gc);
+
+/*
  * Defines used for TkMacOSXInvalidateWindow
  */
 

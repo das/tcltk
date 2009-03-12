@@ -1014,7 +1014,7 @@ DrawCharsInContext(
 	return;
     }
     context = drawingContext.context;
-    TkSetMacColor(gc->foreground, &fg);
+    fg = TkMacOSXGetCGColor(gc, gc->foreground);
     attributes = [fontPtr->nsAttributes mutableCopy];
     [attributes setObject:(id)fg forKey:(id)kCTForegroundColorAttributeName];
     CFRelease(fg);
