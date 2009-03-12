@@ -792,6 +792,12 @@ ClearPort(
 @implementation TKContentView
 @end
 
+static Tk_RestrictAction ExposeRestrictProc(ClientData arg, XEvent *eventPtr)
+{
+    return (eventPtr->type == Expose && eventPtr->xany.serial == PTR2UINT(arg) ?
+	    TK_PROCESS_EVENT : TK_DEFER_EVENT);
+}
+
 @implementation TKContentView(TKWindowEvent)
 
 - (void)drawRect:(NSRect)rect {
@@ -831,12 +837,14 @@ ClearPort(
 - (void)generateExposeEvents:(HIMutableShapeRef)shape {
     NSWindow *w = [self window];
     TkWindow *winPtr = TkMacOSXGetTkWindow(w);
+    unsigned long serial;
     CGRect updateBounds;
 
     if (!winPtr) {
 	return;
     }
     HIShapeGetBounds(shape, &updateBounds);
+    serial = LastKnownRequestProcessed(Tk_Display(winPtr));
     if (winPtr->wmInfoPtr && winPtr->wmInfoPtr->flags & WM_TRANSPARENT) {
 #ifdef MAC_OSX_TK_TODO
 	ClearPort(TkMacOSXGetDrawablePort(winPtr->window), shape);
@@ -857,7 +865,11 @@ ClearPort(
 	 * immediately instead of at idle time.
 	 */
 
-	while (Tcl_ServiceEvent(0)) {}
+	ClientData oldArg;
+	Tk_RestrictProc *oldProc = Tk_RestrictEvents(ExposeRestrictProc,
+		UINT2PTR(serial), &oldArg);
+	while (Tcl_ServiceEvent(TCL_WINDOW_EVENTS)) {}
+	Tk_RestrictEvents(oldProc, oldArg, &oldArg);
 	while (Tcl_DoOneEvent(TCL_IDLE_EVENTS|TCL_DONT_WAIT)) {}
     }
 }
