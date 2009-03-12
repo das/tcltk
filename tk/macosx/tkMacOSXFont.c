@@ -1020,7 +1020,7 @@ DrawCharsInContext(
     x += macWin->xOff;
     y += macWin->yOff;
     r.origin.x = x + offset;
-    h = drawingContext.portBounds.bottom - drawingContext.portBounds.top;
+    h = drawingContext.portBounds.size.height;
     y = h - y;
     t = CGAffineTransformMake(1.0, 0.0, 0.0, -1.0, 0.0, h);
     if (angle != 0.0) {

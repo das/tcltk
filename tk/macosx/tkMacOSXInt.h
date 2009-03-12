@@ -46,7 +46,7 @@ struct TkWindowPrivate {
     CGSize size;
     HIShapeRef visRgn;		/* Visible region of window */
     HIShapeRef aboveVisRgn;	/* Visible region of window & its children */
-    CGRect drawRect;		/* Clipped drawing rect */
+    HIShapeRef drawRgn;		/* Clipped drawing region */
     int referenceCount;		/* Don't delete toplevel until children are
 				 * gone. */
     struct TkWindowPrivate *toplevel;
@@ -63,7 +63,7 @@ typedef struct TkWindowPrivate MacDrawable;
 #define TK_CLIP_INVALID		0x02
 #define TK_HOST_EXISTS		0x04
 #define TK_DRAWN_UNDER_MENU	0x08
-#define TK_CLIPPED_DRAW		0x10
+#define TK_FOCUSED_VIEW		0x10
 #define TK_IS_PIXMAP		0x20
 #define TK_IS_BW_PIXMAP		0x40
 

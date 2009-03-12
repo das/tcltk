@@ -197,7 +197,7 @@ XCopyArea(
 		}
 	    }
 	    NSCopyBits(gs, srcRect, NSMakePoint(dest_x,
-		    (dc.portBounds.bottom - dc.portBounds.top) - dest_y));
+		    dc.portBounds.size.height - dest_y));
 	    if (gc) {
 		[NSGraphicsContext restoreGraphicsState];
 	    }
@@ -1520,6 +1520,7 @@ TkMacOSXSetupDrawingContext(
     MacDrawable *macDraw = ((MacDrawable*)d);
     int dontDraw = 0, isWin = 0;
     TkMacOSXDrawingContext dc = {};
+    CGRect clipBounds;
 
     dc.clipRgn = TkMacOSXGetClipRgn(d);
     if (!dontDraw) {
@@ -1536,16 +1537,10 @@ TkMacOSXSetupDrawingContext(
 	isWin = (TkMacOSXDrawableWindow(d) != nil);
     }
     if (dc.context) {
-	CGRect r = CGContextGetClipBoundingBox(dc.context);
-
-	SetRect(&dc.portBounds, r.origin.x + macDraw->xOff,
-		r.origin.y + macDraw->yOff,
-		r.origin.x + r.size.width + macDraw->xOff,
-		r.origin.y + r.size.height + macDraw->yOff);
+	dc.portBounds = clipBounds = CGContextGetClipBoundingBox(dc.context);
     } else if (isWin) {
 	NSView *view = TkMacOSXDrawableView(macDraw);
 	if (view) {
-	    NSRect r;
 	    if (view != [NSView focusView]) {
 		dc.focusLocked = [view lockFocusIfCanDraw];
 		dontDraw = !dc.focusLocked;	    
@@ -1557,11 +1552,10 @@ TkMacOSXSetupDrawingContext(
 	    }
 	    dc.view = view;
 	    dc.context = [[NSGraphicsContext currentContext] graphicsPort];
-	    r = [view bounds];
-	    SetRect(&dc.portBounds, r.origin.x + macDraw->xOff,
-		    r.origin.y + macDraw->yOff,
-		    r.origin.x + r.size.width + macDraw->xOff,
-		    r.origin.y + r.size.height + macDraw->yOff);
+	    dc.portBounds = NSRectToCGRect([view bounds]);
+	    if (dc.clipRgn) {
+		clipBounds = CGContextGetClipBoundingBox(dc.context);
+	    }
 	} else {
 	    Tcl_Panic("TkMacOSXSetupDrawingContext(): "
 		    "no NSView to draw into !");
@@ -1571,12 +1565,15 @@ TkMacOSXSetupDrawingContext(
 		"no context to draw into !");
     }
     if (dc.context) {
+	CGAffineTransform t = { .a = 1, .b = 0, .c = 0, .d = -1, .tx = 0,
+		.ty = dc.portBounds.size.height};
+	dc.portBounds.origin.x += macDraw->xOff;
+	dc.portBounds.origin.y += macDraw->yOff;
 	if (!dc.focusLocked) {
 	    CGContextSaveGState(dc.context);
 	}
 	CGContextSetTextDrawingMode(dc.context, kCGTextFill);
-	CGContextConcatCTM(dc.context, CGAffineTransformMake(1.0, 0.0, 0.0,
-		-1.0, 0.0, dc.portBounds.bottom - dc.portBounds.top));
+	CGContextConcatCTM(dc.context, t);
 	if (dc.clipRgn) {
 #ifdef TK_MAC_DEBUG_DRAWING
 	    CGContextSaveGState(dc.context);
@@ -1585,8 +1582,13 @@ TkMacOSXSetupDrawingContext(
 	    CGContextEOFillPath(dc.context);
 	    CGContextRestoreGState(dc.context);
 #endif /* TK_MAC_DEBUG_DRAWING */
-	    ChkErr(HIShapeReplacePathInCGContext, dc.clipRgn, dc.context);
-	    CGContextEOClip(dc.context);
+	    CGRect r;
+	    if (!HIShapeIsRectangular(dc.clipRgn) || !CGRectContainsRect(
+		    *HIShapeGetBounds(dc.clipRgn, &r),
+		    CGRectApplyAffineTransform(clipBounds, t))) {
+		ChkErr(HIShapeReplacePathInCGContext, dc.clipRgn, dc.context);
+		CGContextEOClip(dc.context);
+	    }
 	}
 	if (gc) {
 	    static const CGLineCap cgCap[] = {
@@ -1606,8 +1608,7 @@ TkMacOSXSetupDrawingContext(
 	    TkMacOSXSetColorInContext(gc->foreground, dc.context);
 	    if (isWin) {
 		CGContextSetPatternPhase(dc.context, CGSizeMake(
-			dc.portBounds.right - dc.portBounds.left,
-			dc.portBounds.bottom - dc.portBounds.top));
+			dc.portBounds.size.width, dc.portBounds.size.height));
 	    }
 	    if(gc->function != GXcopy) {
 		TkMacOSXDbgMsg("Logical functions other than GXcopy are "
@@ -1711,7 +1712,6 @@ TkMacOSXGetClipRgn(
 {
     MacDrawable *macDraw = (MacDrawable *) drawable;
     HIShapeRef clipRgn = NULL;
-    CGRect r;
 
     if (macDraw->winPtr && macDraw->flags & TK_CLIP_INVALID) {
 	TkMacOSXUpdateClipRgn(macDraw->winPtr);
@@ -1732,20 +1732,10 @@ TkMacOSXGetClipRgn(
 #endif /* TK_MAC_DEBUG_DRAWING */
     }
 
-    if (macDraw->flags & TK_CLIPPED_DRAW) {
-	r = CGRectOffset(macDraw->drawRect, macDraw->xOff, macDraw->yOff);
-    }
-    if (macDraw->visRgn) {
-	if (macDraw->flags & TK_CLIPPED_DRAW) {
-	    HIShapeRef rgn = HIShapeCreateWithRect(&r);
-
-	    clipRgn = HIShapeCreateIntersection(macDraw->visRgn, rgn);
-	    CFRelease(rgn);
-	} else {
-	    clipRgn = HIShapeCreateCopy(macDraw->visRgn);
-	}
-    } else if (macDraw->flags & TK_CLIPPED_DRAW) {
-	clipRgn = HIShapeCreateWithRect(&r);
+    if (macDraw->drawRgn) {
+	clipRgn = HIShapeCreateCopy(macDraw->drawRgn);
+    } else if (macDraw->visRgn) {
+	clipRgn = HIShapeCreateCopy(macDraw->visRgn);
     }
 
     return clipRgn;
@@ -1780,7 +1770,7 @@ TkMacOSXSetUpClippingRgn(
  * TkpClipDrawableToRect --
  *
  *	Clip all drawing into the drawable d to the given rectangle.
- *	If width and height are negative, reset to no clipping.
+ *	If width or height are negative, reset to no clipping.
  *
  * Results:
  *	None.
@@ -1799,13 +1789,38 @@ TkpClipDrawableToRect(
     int width, int height)
 {
     MacDrawable *macDraw = (MacDrawable *) d;
+    NSView *view = TkMacOSXDrawableView(macDraw);
 
-    if (width < 0 && height < 0) {
-	macDraw->drawRect = CGRectNull;
-	macDraw->flags &= ~TK_CLIPPED_DRAW;
+    if (macDraw->drawRgn) {
+	CFRelease(macDraw->drawRgn);
+	macDraw->drawRgn = NULL;
+    }
+    if (width >= 0 && height >= 0) {
+	CGRect drawRect = CGRectMake(x + macDraw->xOff, y + macDraw->yOff,
+		width, height);
+	HIShapeRef drawRgn = HIShapeCreateWithRect(&drawRect);
+
+	if (macDraw->winPtr && macDraw->flags & TK_CLIP_INVALID) {
+	    TkMacOSXUpdateClipRgn(macDraw->winPtr);
+	}
+	if (macDraw->visRgn) {
+	    macDraw->drawRgn = HIShapeCreateIntersection(macDraw->visRgn,
+		    drawRgn);
+	    CFRelease(drawRgn);
+	} else {
+	    macDraw->drawRgn = drawRgn;
+	}
+	if (view && view != [NSView focusView] && [view lockFocusIfCanDraw]) {
+	    drawRect.origin.y = [view bounds].size.height -
+		    (drawRect.origin.y + drawRect.size.height);
+	    NSRectClip(NSRectFromCGRect(drawRect));
+	    macDraw->flags |= TK_FOCUSED_VIEW;
+	}
     } else {
-	macDraw->drawRect = CGRectMake(x, y, width, height);
-	macDraw->flags |= TK_CLIPPED_DRAW;
+	if (view && (macDraw->flags & TK_FOCUSED_VIEW)) {
+	    [view unlockFocus];
+	    macDraw->flags &= ~TK_FOCUSED_VIEW;
+	}
     }
 }
 
