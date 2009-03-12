@@ -620,7 +620,7 @@ TkGenWMDestroyEvent(
     event.xclient.message_type = Tk_InternAtom(tkwin, "WM_PROTOCOLS");
     event.xclient.format = 32;
     event.xclient.data.l[0] = Tk_InternAtom(tkwin, "WM_DELETE_WINDOW");
-    Tk_QueueWindowEvent(&event, TCL_QUEUE_TAIL);
+    Tk_HandleEvent(&event);
 }
 
 /*
