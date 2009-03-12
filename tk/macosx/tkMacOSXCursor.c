@@ -51,6 +51,7 @@ struct CursorName {
 static const struct CursorName cursorNames[] = {
     {"none",			NONE,	    nil},
     {"arrow",			SELECTOR,   @"arrowCursor"},
+    {"top_left_arrow",		SELECTOR,   @"arrowCursor"},
     {"copyarrow",		SELECTOR,   @"dragCopyCursor"},
     {"aliasarrow",		SELECTOR,   @"dragLinkCursor"},
     {"contextualmenuarrow",	SELECTOR,   @"contextualMenuCursor"},
@@ -157,7 +158,7 @@ static const struct CursorName cursorNames[] = {
     {"star",			IMAGEPATH, @"cursor7e.cur"},
     {"target",			IMAGEPATH, @"cursor80.cur"},
     {"tcross",			IMAGEPATH, @"cursor82.cur"},
-    {"top_left_arrow",		IMAGEPATH, @"cursor84.cur"},
+//    {"top_left_arrow",		IMAGEPATH, @"cursor84.cur"},
     {"top_left_corner",		IMAGEPATH, @"cursor86.cur"},
     {"top_right_corner",	IMAGEPATH, @"cursor88.cur"},
     {"top_side",		IMAGEPATH, @"cursor8a.cur"},
