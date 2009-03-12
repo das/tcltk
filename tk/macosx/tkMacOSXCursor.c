@@ -247,7 +247,6 @@ FindCursorByName(
 	    	// FIXME: fallback to TK_SRCROOT
 		path = [NSString stringWithFormat:@"%s/win/rc/%@",
 			getenv("TK_SRCROOT"), cursorNames[idx].id];
-		TkMacOSXDbgMsg("Fallback to TK_SRCROOT!");
 	    }
 #endif
 	    if (path) {
