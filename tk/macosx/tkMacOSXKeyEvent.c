@@ -210,7 +210,7 @@ XGrabKeyboard(
 	    if (modalSession) {
 		Tcl_Panic("XGrabKeyboard: already grabbed");
 	    }
-	    modalSession = [NSApp beginModalSessionForWindow:w];
+	    modalSession = [NSApp beginModalSessionForWindow:[w retain]];
 	}
     }
     return GrabSuccess;
@@ -237,11 +237,14 @@ XUngrabKeyboard(
     Display* display,
     Time time)
 {
-    keyboardGrabWinPtr = NULL;
     if (modalSession) {
+	NSWindow *w = keyboardGrabWinPtr ? TkMacOSXDrawableWindow(
+		((TkWindow *) keyboardGrabWinPtr)->window) : nil;
 	[NSApp endModalSession:modalSession];
+	[w release];
 	modalSession = NULL;
     }
+    keyboardGrabWinPtr = NULL;
 }
 
 /*
