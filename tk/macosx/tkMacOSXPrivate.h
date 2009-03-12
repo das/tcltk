@@ -239,6 +239,8 @@ MODULE_SCOPE NSWindow*	TkMacOSXDrawableWindow(Drawable drawable);
 MODULE_SCOPE NSView*	TkMacOSXDrawableView(MacDrawable *macWin);
 MODULE_SCOPE void	TkMacOSXWinCGBounds(TkWindow *winPtr, CGRect *bounds);
 MODULE_SCOPE HIShapeRef	TkMacOSXGetClipRgn(Drawable drawable);
+MODULE_SCOPE void	TkMacOSXInvalidateViewRegion(NSView *view,
+			    HIShapeRef rgn);
 MODULE_SCOPE CGImageRef	TkMacOSXCreateCGImageWithDrawable(Drawable drawable);
 MODULE_SCOPE NSImage*	TkMacOSXGetNSImageWithTkImage(Display *display,
 			    Tk_Image image, int width, int height);

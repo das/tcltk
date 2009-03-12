@@ -885,10 +885,9 @@ TkMacOSXVisableClipRgn(
 /*
  *----------------------------------------------------------------------
  *
- * TkMacOSXInvalidateWindow --
+ * TkMacOSXInvalidateViewRegion --
  *
- *	This function makes the window as invalid will generate damage for the
- *	window.
+ *	This function invalidates the given region of a view.
  *
  * Results:
  *	None.
@@ -921,25 +920,47 @@ InvalViewRect(int msg, HIShapeRef rgn, const CGRect *rect, void *ref) {
 }
 
 void
+TkMacOSXInvalidateViewRegion(
+    NSView *view,
+    HIShapeRef rgn)
+{
+    if (view && !HIShapeIsEmpty(rgn)) {
+	ChkErr(HIShapeEnumerate, rgn,
+		kHIShapeParseFromBottom|kHIShapeParseFromLeft,
+		InvalViewRect, view);
+    }
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkMacOSXInvalidateWindow --
+ *
+ *	This function invalidates a window and (optionally) its children.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	Damage is created.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
 TkMacOSXInvalidateWindow(
-    MacDrawable *macWin,	/* Make window that's causing damage. */
+    MacDrawable *macWin,	/* Window to be invalidated. */
     int flag)			/* Should be TK_WINDOW_ONLY or
 				 * TK_PARENT_WINDOW */
 {
-    HIShapeRef rgn;
-
 #ifdef TK_MAC_DEBUG_CLIP_REGIONS
     TkMacOSXDbgMsg("%s", winPtr->pathName);
 #endif
     if (macWin->flags & TK_CLIP_INVALID) {
 	TkMacOSXUpdateClipRgn(macWin->winPtr);
     }
-    rgn = (flag == TK_WINDOW_ONLY) ? macWin->visRgn : macWin->aboveVisRgn;
-    if (!HIShapeIsEmpty(rgn)) {
-	ChkErr(HIShapeEnumerate, rgn,
-		kHIShapeParseFromBottom|kHIShapeParseFromLeft,
-		InvalViewRect, TkMacOSXDrawableView(macWin));
-    }
+    TkMacOSXInvalidateViewRegion(TkMacOSXDrawableView(macWin),
+	    (flag == TK_WINDOW_ONLY) ? macWin->visRgn : macWin->aboveVisRgn);
 }
 
 /*
