@@ -1166,7 +1166,7 @@ MenuSelectEvent(
 
     bzero(&event, sizeof(XVirtualEvent));
     event.type = VirtualEvent;
-    event.serial = menuPtr->display->request;
+    event.serial = LastKnownRequestProcessed(menuPtr->display);
     event.send_event = false;
     event.display = menuPtr->display;
     Tk_MakeWindowExist(menuPtr->tkwin);

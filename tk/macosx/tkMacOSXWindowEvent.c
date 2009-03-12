@@ -308,7 +308,7 @@ GenerateUpdates(
     CFRelease(damageRgn);
     CFRelease(boundsRgn);
 
-    event.xany.serial = Tk_Display(winPtr)->request;
+    event.xany.serial = LastKnownRequestProcessed(Tk_Display(winPtr));
     event.xany.send_event = false;
     event.xany.window = Tk_WindowId(winPtr);
     event.xany.display = Tk_Display(winPtr);
@@ -451,7 +451,7 @@ TkMacOSXGenerateFocusEvent(
 	event.xany.type = FocusOut;
     }
 
-    event.xany.serial = Tk_Display(winPtr)->request;
+    event.xany.serial = LastKnownRequestProcessed(Tk_Display(winPtr));
     event.xany.send_event = False;
     event.xfocus.display = Tk_Display(winPtr);
     event.xfocus.window = winPtr->window;
@@ -497,7 +497,7 @@ TkGenWMConfigureEvent(
     }
 
     event.type = ConfigureNotify;
-    event.xconfigure.serial = Tk_Display(tkwin)->request;
+    event.xconfigure.serial = LastKnownRequestProcessed(Tk_Display(tkwin));
     event.xconfigure.send_event = False;
     event.xconfigure.display = Tk_Display(tkwin);
     event.xconfigure.event = Tk_WindowId(tkwin);
@@ -612,7 +612,7 @@ TkGenWMDestroyEvent(
 {
     XEvent event;
 
-    event.xany.serial = Tk_Display(tkwin)->request;
+    event.xany.serial = LastKnownRequestProcessed(Tk_Display(tkwin));
     event.xany.send_event = False;
     event.xany.display = Tk_Display(tkwin);
 
