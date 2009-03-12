@@ -262,7 +262,6 @@ TkpInit(
 		// FIXME: fallback to TK_SRCROOT
 		path = [NSString stringWithFormat:@"%s/macosx/Tk.icns",
 			getenv("TK_SRCROOT")];
-		TkMacOSXDbgMsg("Fallback to TK_SRCROOT!");
 	    }
 #endif
 	    if (path) {

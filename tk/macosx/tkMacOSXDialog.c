@@ -1348,7 +1348,6 @@ TkAboutDlg(void)
 	// FIXME: fallback to TK_SRCROOT
 	path = [NSString stringWithFormat:@"%s/macosx/Tk.tiff",
 		getenv("TK_SRCROOT")];
-	TkMacOSXDbgMsg("Fallback to TK_SRCROOT!");
     }
 #endif
     if (path) {
