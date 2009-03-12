@@ -1458,6 +1458,7 @@ TkScrollWindow(
 	dstRgn = HIShapeCreateWithRect(&dstRect);
 	ChkErr(HIShapeDifference, dmgRgn, dstRgn, (HIMutableShapeRef) dmgRgn);
 	CFRelease(dstRgn);
+	TkMacOSXInvalidateViewRegion(view, dmgRgn);
     } else {
 	dmgRgn = HIShapeCreateEmpty();
     }
