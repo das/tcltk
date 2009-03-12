@@ -644,7 +644,7 @@ GetCGContextForDrawable(
 	}
     }
 
-    return macDraw->context;
+    return (macDraw ? macDraw->context : NULL);
 }
 
 /*

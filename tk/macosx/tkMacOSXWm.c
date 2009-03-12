@@ -4425,12 +4425,8 @@ TkWmRestackToplevel(
 				 * NULL, then winPtr gets restacked above or
 				 * below *all* siblings. */
 {
-    WmInfo *wmPtr;
-
     NSWindow *macWindow;
     NSInteger otherMacWindowNumber;
-
-    wmPtr = winPtr->wmInfoPtr;
 
     /*
      * Get the mac window. Make sure it exists & is mapped.
@@ -6008,6 +6004,7 @@ ApplyWindowAttributeFlagChanges(
 		NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@""];
 		[toolbar setVisible:NO];
 		[macWindow setToolbar:toolbar];
+		[toolbar release];
 		NSCell *toolbarButtonCell = [[macWindow standardWindowButton:
 			NSWindowToolbarButton] cell];
 		[toolbarButtonCell setTarget:[macWindow contentView]];

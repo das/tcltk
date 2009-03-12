@@ -930,7 +930,6 @@ TkpComputeStandardMenuGeometry(
     Tk_GetPixelsFromObj(NULL, menuPtr->tkwin, menuPtr->activeBorderWidthPtr,
 	    &activeBorderWidth);
     x = y = borderWidth;
-    indicatorSpace = labelWidth = accelWidth = 0;
     windowHeight = maxWidth = lastColumnBreak = 0;
     maxIndicatorSpace = 0;
 
@@ -982,12 +981,11 @@ TkpComputeStandardMenuGeometry(
 		columnEntryPtr->entryFlags &= ~ENTRY_LAST_COLUMN;
 	    }
 	    x += maxIndicatorSpace + maxWidth + 2 * borderWidth;
-	    windowWidth = x;
 	    maxWidth = maxIndicatorSpace = 0;
 	    lastColumnBreak = i;
 	    y = borderWidth;
 	}
-	entryWidth = accelWidth = modifierWidth = indicatorSpace = 0;
+	accelWidth = modifierWidth = indicatorSpace = 0;
 	if (mePtr->type == SEPARATOR_ENTRY || mePtr->type == TEAROFF_ENTRY) {
 	    mePtr->height = menuSeparatorHeight;
 	} else {

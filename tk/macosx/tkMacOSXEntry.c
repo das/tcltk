@@ -123,13 +123,12 @@ TkpDrawEntryBorderAndFocus(
      */
 
     if (isSpinbox) {
-	ThemeButtonKind buttonKind;
 	int incDecWidth;
 
 	oldWidth = Tk_Width(tkwin);
 
-	buttonKind = ComputeIncDecParameters(Tk_Height(tkwin)
-		- 2 * MAC_OSX_FOCUS_WIDTH, &incDecWidth);
+	ComputeIncDecParameters(Tk_Height(tkwin) - 2 * MAC_OSX_FOCUS_WIDTH,
+		&incDecWidth);
 	Tk_Width(tkwin) -= incDecWidth + 1;
     }
 
