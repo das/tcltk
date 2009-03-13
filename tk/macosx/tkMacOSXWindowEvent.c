@@ -298,8 +298,10 @@ GenerateUpdates(
 	return 0;
     }
     HIShapeGetBounds(damageRgn, &damageBounds);
-    ChkErr(TkMacOSHIShapeUnion, boundsRgn, updateRgn, updateRgn);
-    HIShapeGetBounds(updateRgn, updateBounds);
+    if (!Tk_IsTopLevel(winPtr)) {
+	ChkErr(TkMacOSHIShapeUnion, boundsRgn, updateRgn, updateRgn);
+	HIShapeGetBounds(updateRgn, updateBounds);
+    }
     CFRelease(damageRgn);
     CFRelease(boundsRgn);
 
@@ -817,9 +819,11 @@ static Tk_RestrictAction ExposeRestrictProc(ClientData arg, XEvent *eventPtr)
 	    NSEraseRect(bounds);
 	}
     }
+    CGFloat height = [self bounds].size.height;
     HIMutableShapeRef drawShape = HIShapeCreateMutable();
     while (rectsBeingDrawnCount--) {
 	CGRect r = NSRectToCGRect(*rectsBeingDrawn++);
+	r.origin.y = height - r.origin.y;
 	HIShapeUnionWithRect(drawShape, &r);
     }
     if (CFRunLoopGetMain() == CFRunLoopGetCurrent()) {
