@@ -180,7 +180,6 @@ TkpCreateNativeBitmap(
  *
  *	Attemps to interpret the given name in order as:
  *	    - NSImage named image name
- *	    - NSImage path to image file
  *	    - NSImage url string
  *	    - 4-char OSType of IconServices icon
  *
@@ -205,9 +204,6 @@ TkpGetNativeAppBitmap(
     NSImage *image = [NSImage imageNamed:string];
 
     if (!image) {
-	image = [[[NSImage alloc] initWithContentsOfFile:string] autorelease];
-    }
-    if (!image) {
 	NSURL *url = [NSURL URLWithString:string];
 	if (url) {
 	    image = [[[NSImage alloc] initWithContentsOfURL:url] autorelease];
@@ -216,8 +212,20 @@ TkpGetNativeAppBitmap(
     if (image) {
 	TkMacOSXDrawingContext dc;
 	NSSize size = [image size];
+	int depth = 0;
 
-	pixmap = Tk_GetPixmap(display, None, size.width, size.height, 0);
+#ifdef MAC_OSX_TK_TODO
+	for (NSImageRep *r in [image representations]) {
+	    NSInteger bitsPerSample = [r bitsPerSample];
+	    if (bitsPerSample && bitsPerSample > depth) {
+		depth = bitsPerSample;
+	    };
+	}
+	if (depth == 1) {
+	    /* TODO: convert BW NSImage to CGImageMask */
+	}
+#endif
+	pixmap = Tk_GetPixmap(display, None, size.width, size.height, depth);
 	*width = size.width;
 	*height = size.height;
 	if (TkMacOSXSetupDrawingContext(pixmap, NULL, 1, &dc)) {
