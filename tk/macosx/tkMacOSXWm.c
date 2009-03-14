@@ -30,8 +30,119 @@
 */
 
 /*
+ * Window attributes and classes
+ */
+
+#define WM_NSMASK_SHIFT 36
+#define tkWindowDoesNotHideAttribute \
+	((UInt64) 1 << kHIWindowBitDoesNotHide)
+#define tkCanJoinAllSpacesAttribute \
+	((UInt64) NSWindowCollectionBehaviorCanJoinAllSpaces << 34)
+#define tkMoveToActiveSpaceAttribute \
+	((UInt64) NSWindowCollectionBehaviorMoveToActiveSpace << 34)
+#define tkNonactivatingPanelAttribute \
+	((UInt64) NSNonactivatingPanelMask << WM_NSMASK_SHIFT)
+#define tkHUDWindowAttribute \
+	((UInt64) NSHUDWindowMask << WM_NSMASK_SHIFT)
+#define tkAlwaysValidAttributes (kWindowNoUpdatesAttribute \
+	| kWindowNoActivatesAttribute	    | kWindowHideOnSuspendAttribute \
+	| kWindowHideOnFullScreenAttribute  | kWindowNoConstrainAttribute \
+	| kWindowNoShadowAttribute	    | kWindowLiveResizeAttribute \
+	| kWindowOpaqueForEventsAttribute   | kWindowIgnoreClicksAttribute \
+	| kWindowDoesNotCycleAttribute	    | tkWindowDoesNotHideAttribute \
+	| tkCanJoinAllSpacesAttribute	    | tkMoveToActiveSpaceAttribute \
+	| tkNonactivatingPanelAttribute	    | tkHUDWindowAttribute)
+
+static const struct {
+    const UInt64 validAttrs, defaultAttrs, forceOnAttrs, forceOffAttrs;
+    int flags; NSUInteger styleMask;
+} macClassAttrs[] = {
+    [kAlertWindowClass] = {
+	.defaultAttrs = kWindowDoesNotCycleAttribute, },
+    [kMovableAlertWindowClass] = {
+	.defaultAttrs = kWindowDoesNotCycleAttribute, },
+    [kModalWindowClass] = {
+	.defaultAttrs = kWindowDoesNotCycleAttribute, },
+    [kMovableModalWindowClass] = {
+	.validAttrs = kWindowCloseBoxAttribute | kWindowMetalAttribute |
+		kWindowFullZoomAttribute | kWindowResizableAttribute,
+	.defaultAttrs = kWindowDoesNotCycleAttribute, },
+    [kFloatingWindowClass] = {
+	.validAttrs = kWindowCloseBoxAttribute | kWindowCollapseBoxAttribute |
+		kWindowMetalAttribute | kWindowToolbarButtonAttribute |
+		kWindowNoTitleBarAttribute | kWindowFullZoomAttribute |
+		kWindowResizableAttribute | kWindowSideTitlebarAttribute,
+	.defaultAttrs = kWindowStandardFloatingAttributes |
+		kWindowHideOnSuspendAttribute | kWindowDoesNotCycleAttribute,
+	.forceOffAttrs = kWindowCollapseBoxAttribute,
+	.styleMask = NSUtilityWindowMask, },
+    [kDocumentWindowClass] = {
+	.validAttrs = kWindowCloseBoxAttribute | kWindowCollapseBoxAttribute |
+		kWindowMetalAttribute | kWindowToolbarButtonAttribute |
+		kWindowNoTitleBarAttribute |
+		kWindowUnifiedTitleAndToolbarAttribute |
+		kWindowInWindowMenuAttribute | kWindowFullZoomAttribute |
+		kWindowResizableAttribute,
+	.defaultAttrs = kWindowStandardDocumentAttributes |
+		kWindowLiveResizeAttribute | kWindowInWindowMenuAttribute, },
+    [kUtilityWindowClass] = {
+	.validAttrs = kWindowCloseBoxAttribute | kWindowCollapseBoxAttribute |
+		kWindowMetalAttribute | kWindowToolbarButtonAttribute |
+		kWindowNoTitleBarAttribute | kWindowFullZoomAttribute |
+		kWindowResizableAttribute | kWindowSideTitlebarAttribute,
+	.defaultAttrs = kWindowStandardFloatingAttributes |
+		kWindowHideOnFullScreenAttribute |
+		tkWindowDoesNotHideAttribute | tkNonactivatingPanelAttribute |
+		kWindowDoesNotCycleAttribute,
+	.forceOffAttrs = kWindowCollapseBoxAttribute,
+	.flags = WM_TOPMOST,
+	.styleMask = NSUtilityWindowMask, },
+    [kHelpWindowClass] = {
+	.defaultAttrs = kWindowHideOnSuspendAttribute,
+	.forceOnAttrs = kWindowNoTitleBarAttribute |
+		kWindowDoesNotCycleAttribute,
+	.flags = WM_TOPMOST, },
+    [kSheetWindowClass] = {
+	.validAttrs = kWindowResizableAttribute,
+	.forceOnAttrs = kWindowNoTitleBarAttribute |
+		kWindowDoesNotCycleAttribute,
+	.styleMask = NSDocModalWindowMask, },
+    [kToolbarWindowClass] = {
+	.defaultAttrs = kWindowHideOnSuspendAttribute,
+	.forceOnAttrs = kWindowNoTitleBarAttribute |
+		kWindowDoesNotCycleAttribute,
+	.styleMask = NSUtilityWindowMask, },
+    [kPlainWindowClass] = {
+	.defaultAttrs = kWindowDoesNotCycleAttribute,
+	.forceOnAttrs = kWindowNoTitleBarAttribute, },
+    [kOverlayWindowClass] = {
+	.forceOnAttrs = kWindowNoTitleBarAttribute |
+		kWindowDoesNotCycleAttribute,
+	.flags = WM_TOPMOST | WM_TRANSPARENT, },
+    [kSheetAlertWindowClass] = {
+	.forceOnAttrs = kWindowNoTitleBarAttribute |
+		kWindowDoesNotCycleAttribute,
+	.styleMask = NSDocModalWindowMask, },
+    [kAltPlainWindowClass] = {
+	.defaultAttrs = kWindowDoesNotCycleAttribute,
+	.forceOnAttrs = kWindowNoTitleBarAttribute, },
+    [kSimpleWindowClass] = {
+	.defaultAttrs = kWindowDoesNotCycleAttribute,
+	.forceOnAttrs = kWindowNoTitleBarAttribute, },
+    [kDrawerWindowClass] = {
+	.validAttrs = kWindowMetalAttribute | kWindowResizableAttribute,
+	.forceOnAttrs = kWindowNoTitleBarAttribute |
+		kWindowDoesNotCycleAttribute, },
+};
+
+#define ForceAttributes(attributes, class) \
+	((attributes) & (~macClassAttrs[(class)].forceOffAttrs | \
+	(macClassAttrs[(class)].forceOnAttrs & ~kWindowResizableAttribute)))
+
+/*
  * Data for [wm attributes] command:
  */
+
 typedef enum {
     WMATT_ALPHA, WMATT_FULLSCREEN, WMATT_MODIFIED, WMATT_NOTIFY,
     WMATT_TITLEPATH, WMATT_TOPMOST, WMATT_TRANSPARENT,
@@ -82,8 +193,8 @@ static int windowHashInit = false;
  * Forward declarations for procedures defined in this file:
  */
 
-static void		InitialWindowBounds(TkWindow *winPtr,
-			    NSWindow *macWindow, Rect *geometry);
+static NSRect		InitialWindowBounds(TkWindow *winPtr,
+			    NSWindow *macWindow);
 static int		ParseGeometry(Tcl_Interp *interp, char *string,
 			    TkWindow *winPtr);
 static void		TopLevelEventProc(ClientData clientData,
@@ -192,20 +303,43 @@ static int		WmWithdrawCmd(Tk_Window tkwin, TkWindow *winPtr,
 static void		WmUpdateGeom(WmInfo *wmPtr, TkWindow *winPtr);
 static int		WmWinStyle(Tcl_Interp *interp, TkWindow *winPtr,
 			    int objc, Tcl_Obj *const objv[]);
-static void		ApplyWindowClassAttributeChanges(TkWindow *winPtr,
-			    NSWindow *macWindow, WindowClass oldClass,
-			    WindowAttributes oldAttributes, int create);
+static void		ApplyWindowAttributeFlagChanges(TkWindow *winPtr,
+			    NSWindow *macWindow, UInt64 oldAttributes,
+			    int oldFlags, int create, int initial);
 static void		ApplyMasterOverrideChanges(TkWindow *winPtr,
 			    NSWindow *macWindow);
-#ifdef MAC_OSX_TK_TODO
-static WindowGroupRef	WmGetWindowGroup(TkWindow *winPtr);
-#endif
 static void		GetMinSize(TkWindow *winPtr, int *minWidthPtr,
 			    int *minHeightPtr);
 static void		GetMaxSize(TkWindow *winPtr, int *maxWidthPtr,
 			    int *maxHeightPtr);
 static void		RemapWindows(TkWindow *winPtr,
 			    MacDrawable *parentWin);
+
+#pragma mark TKWindow(TKWm)
+
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 1060
+@interface NSWindow(TkWm)
+- (void)setCanCycle:(BOOL)canCycleFlag;
+@end
+#endif
+
+@interface NSDrawerWindow : NSWindow
+{
+    id _i1, _i2;
+}
+@end
+
+@implementation TKWindow
+@end
+
+@implementation TKWindow(TKWm)
+- (BOOL)canBecomeKeyWindow {
+    TkWindow *winPtr = TkMacOSXGetTkWindow(self);
+
+    return (winPtr && winPtr->wmInfoPtr && (winPtr->wmInfoPtr->attributes &
+	    kWindowNoActivatesAttribute)) ? NO : YES;
+}
+@end
 
 #pragma mark TKApplication(TKWm)
 
@@ -252,48 +386,6 @@ static void		RemapWindows(TkWindow *winPtr,
 
 #pragma mark -
 
-/*
- *----------------------------------------------------------------------
- *
- * FrontWindowOfLevelAndClass --
- *
- *	Find frontmost window of a given level and optionally class.
- *
- * Results:
- *	NSWindow*.
- *
- * Side effects:
- *	None.
- *
- *----------------------------------------------------------------------
- */
-
-static NSWindow*
-FrontWindowOfLevelAndClass(
-    CGWindowLevel level,
-    Class class)
-{
-    NSWindow *win = nil;
-    NSInteger windowCount;
-    NSInteger *windowNumbers;
-
-    NSCountWindows(&windowCount);
-    if (windowCount) {
-	windowNumbers = (NSInteger *) ckalloc(windowCount * sizeof(NSInteger));
-	NSWindowList(windowCount, windowNumbers);
-	for (NSInteger index = 0; index < windowCount; index++) {
-	    NSWindow *w = [NSApp windowWithWindowNumber:windowNumbers[index]];
-	    if (w && [w level] == level && (!class || [w class] == class)) {
-		win = w;
-		break;
-	    }
-	}
-	ckfree((char *) windowNumbers);
-    }
-
-    return win;
-}
-
 /*
  *----------------------------------------------------------------------
  *
@@ -409,8 +501,7 @@ TkWmNewWindow(
     wmPtr->clientMachine = NULL;
     wmPtr->flags = WM_NEVER_MAPPED;
     wmPtr->macClass = kDocumentWindowClass;
-    wmPtr->attributes = kWindowStandardDocumentAttributes
-	    | kWindowLiveResizeAttribute;
+    wmPtr->attributes = macClassAttrs[kDocumentWindowClass].defaultAttrs;
     wmPtr->scrollWinPtr = NULL;
     wmPtr->menuPtr = NULL;
     wmPtr->window = nil;
@@ -632,48 +723,11 @@ TkWmDeadWindow(
      * own their portPtr's.
      */
 
-    if (wmPtr->window && !Tk_IsEmbedded(winPtr) ) {
-#ifdef MAC_OSX_TK_TODO
-	WindowGroupRef group;
-
-	if (GetWindowProperty(winRef, 'Tk  ', 'TsGp', sizeof(group), NULL,
-		&group) == noErr) {
-	    TkDisplay *dispPtr = TkGetDisplayList();
-	    ItemCount i = CountWindowGroupContents(group,
-		    kWindowGroupContentsReturnWindows);
-	    WindowRef macWin;
-	    WindowGroupRef newGroup;
-	    Window window;
-
-	    while (i > 0) {
-		ChkErr(GetIndexedWindow, group, i--, 0, &macWin);
-		if (!macWin) {
-		    continue;
-		}
-
-		window = TkMacOSXGetXWindow(macWin);
-		newGroup = NULL;
-		if (window != None) {
-		    TkWindow *winPtr = (TkWindow *)
-			    Tk_IdToWindow(dispPtr->display, window);
-
-		    if (winPtr && winPtr->wmInfoPtr) {
-			newGroup = GetWindowGroupOfClass(
-				winPtr->wmInfoPtr->macClass);
-		    }
-		}
-		if (!newGroup) {
-		    newGroup =
-			    GetWindowGroupOfClass(kDocumentWindowClass);
-		}
-		ChkErr(SetWindowGroup, macWin, newGroup);
-	    }
-	    ChkErr(SetWindowGroupOwner, group, NULL);
-	    ChkErr(ReleaseWindowGroup, group);
-	}
-#endif
-	[wmPtr->window close];
-	TkMacOSXUnregisterMacWindow(wmPtr->window);
+    NSWindow *window = wmPtr->window;
+    if (window && !Tk_IsEmbedded(winPtr) ) {
+	[[window parentWindow] removeChildWindow:window];
+	[window close];
+	TkMacOSXUnregisterMacWindow(window);
 	if (winPtr->window) {
 	    ((MacDrawable *)winPtr->window)->view = nil;
 	}
@@ -1038,18 +1092,15 @@ WmSetAttribute(
 	    return TCL_ERROR;
 	}
 	if (boolean != ((wmPtr->flags & WM_TOPMOST) != 0)) {
-	    CGWindowLevel level;
+	    int oldFlags = wmPtr->flags;
 
 	    if (boolean) {
 		wmPtr->flags |= WM_TOPMOST;
-		level = kCGUtilityWindowLevel;
 	    } else {
 		wmPtr->flags &= ~WM_TOPMOST;
-		level = ([macWindow isKindOfClass:[NSPanel class]]) &&
-			[macWindow isFloatingPanel] ? NSFloatingWindowLevel :
-			NSNormalWindowLevel;
 	    }
-	    [macWindow setLevel:level];
+	    ApplyWindowAttributeFlagChanges(winPtr, macWindow,
+		    wmPtr->attributes, oldFlags, 1, 0);
 	}
 	break;
     case WMATT_TRANSPARENT:
@@ -1057,7 +1108,8 @@ WmSetAttribute(
 	    return TCL_ERROR;
 	}
 	if (boolean != ((wmPtr->flags & WM_TRANSPARENT) != 0)) {
-	    WindowAttributes oldAttributes = wmPtr->attributes;
+	    UInt64 oldAttributes = wmPtr->attributes;
+	    int oldFlags = wmPtr->flags;
 
 	    if (boolean) {
 		wmPtr->flags |= WM_TRANSPARENT;
@@ -1066,14 +1118,12 @@ WmSetAttribute(
 		wmPtr->flags &= ~WM_TRANSPARENT;
 		wmPtr->attributes &= ~kWindowNoShadowAttribute;
 	    }
+	    ApplyWindowAttributeFlagChanges(winPtr, macWindow, oldAttributes,
+		    oldFlags, 1, 0);
+	    [macWindow setBackgroundColor:boolean ? [NSColor clearColor] : nil];
 	    [macWindow setOpaque:!boolean];
-	    ApplyWindowClassAttributeChanges(winPtr, macWindow,
-		    wmPtr->macClass, oldAttributes, 1);
-#ifdef MAC_OSX_TK_TODO
-	    ChkErr(ReshapeCustomWindow, macWindow);
 	    TkMacOSXInvalidateWindow((MacDrawable *) winPtr->window,
 		    TK_PARENT_WINDOW);
-#endif
 	    }
 	break;
     case _WMATT_LAST_ATTRIBUTE:
@@ -2663,7 +2713,8 @@ WmResizableCmd(
 {
     register WmInfo *wmPtr = winPtr->wmInfoPtr;
     int width, height;
-    WindowAttributes oldAttributes = wmPtr->attributes;
+    UInt64 oldAttributes = wmPtr->attributes;
+    int oldFlags = wmPtr->flags;
 
     if ((objc != 3) && (objc != 5)) {
 	Tcl_WrongNumArgs(interp, 2, objv, "window ?width height?");
@@ -2707,8 +2758,7 @@ WmResizableCmd(
 		wmPtr->scrollWinPtr->instanceData);
     }
     WmUpdateGeom(wmPtr, winPtr);
-    ApplyWindowClassAttributeChanges(winPtr, NULL, wmPtr->macClass,
-	    oldAttributes, 1);
+    ApplyWindowAttributeFlagChanges(winPtr, NULL, oldAttributes, oldFlags, 1,0);
     return TCL_OK;
 }
 
@@ -4567,7 +4617,7 @@ TkGetPointerCoords(
  *	monitor of the Mac.
  *
  * Results:
- *	The bounds are returned in geometry.
+ *	Window bounds.
  *
  * Side effects:
  *	None.
@@ -4575,37 +4625,29 @@ TkGetPointerCoords(
  *----------------------------------------------------------------------
  */
 
-static void
+static NSRect
 InitialWindowBounds(
     TkWindow *winPtr,		/* Window to get initial bounds for. */
-    NSWindow *macWindow,
-    Rect *geometry)		/* On return the initial bounds. */
+    NSWindow *macWindow)
 {
     WmInfo *wmPtr = winPtr->wmInfoPtr;
 
     if (!(wmPtr->sizeHintsFlags & (USPosition | PPosition))) {
-	NSWindow *parent = FrontWindowOfLevelAndClass([macWindow level],
-		[macWindow class]);
+	static NSPoint cascadePoint = { .x = 0, .y = 0 };
+	NSRect frame = [macWindow frame];
 
-	if (parent && parent != macWindow) {
-	    NSRect frame = [parent frame];
-
-	    [macWindow cascadeTopLeftFromPoint:NSMakePoint(
-		    frame.origin.x, frame.origin.y + frame.size.height)];
-	    frame = [macWindow frame];
-	    wmPtr->x = frame.origin.x;
-	    wmPtr->y = tkMacOSXZeroScreenHeight -
-		    (frame.origin.y + frame.size.height);
-	} else {
-	    wmPtr->x = 5;
-	    wmPtr->y = tkMacOSXZeroScreenTop + 5;
-	}
+	frame.origin.x = 5;
+	frame.origin.y = tkMacOSXZeroScreenHeight -
+		(tkMacOSXZeroScreenTop + 5 + frame.size.height);
+	[macWindow setFrame:frame display:NO];
+	cascadePoint = [macWindow cascadeTopLeftFromPoint:cascadePoint];
+	frame = [macWindow frame];
+	wmPtr->x = frame.origin.x;
+	wmPtr->y = tkMacOSXZeroScreenHeight - (frame.origin.y +
+		frame.size.height);
     }
-
-    geometry->left = wmPtr->x;
-    geometry->top = wmPtr->y;
-    geometry->right = wmPtr->x + winPtr->changes.width;
-    geometry->bottom = wmPtr->y + winPtr->changes.height;
+    return NSMakeRect(wmPtr->x, wmPtr->y, winPtr->changes.width,
+	    winPtr->changes.height);
 }
 
 /*
@@ -5059,7 +5101,7 @@ WmWinStyle(
 {
     struct StrIntMap {
 	const char *strValue;
-	UInt32 intValue;
+	UInt64 intValue;
     };
     static const struct StrIntMap classMap[] = {
 	{ "alert",	    kAlertWindowClass		},
@@ -5111,14 +5153,19 @@ WmWinStyle(
 	{ "liveResize",		kWindowLiveResizeAttribute		     },
 	{ "ignoreClicks",	kWindowIgnoreClicksAttribute		     },
 	{ "noConstrain",	kWindowNoConstrainAttribute		     },
-	{ NULL,			0					     }
+	{ "doesNotHide",	tkWindowDoesNotHideAttribute		     },
+	{ "canJoinAllSpaces",	tkCanJoinAllSpacesAttribute		     },
+	{ "moveToActiveSpace",	tkMoveToActiveSpaceAttribute		     },
+	{ "nonActivating",	tkNonactivatingPanelAttribute		     },
+	{ "hud",		tkHUDWindowAttribute			     },
+	{ NULL }
     };
     int index, i;
     WmInfo *wmPtr = winPtr->wmInfoPtr;
 
     if (objc == 3) {
 	Tcl_Obj *attributeList, *newResult = NULL;
-	WindowAttributes attributes;
+	UInt64 attributes;
 
 	for (i = 0; classMap[i].strValue != NULL; i++) {
 	    if (wmPtr->macClass == classMap[i].intValue) {
@@ -5134,7 +5181,7 @@ WmWinStyle(
 	attributes = wmPtr->attributes;
 
 	for (i = 0; compositeAttrMap[i].strValue != NULL; i++) {
-	    UInt32 intValue = compositeAttrMap[i].intValue;
+	    UInt64 intValue = compositeAttrMap[i].intValue;
 
 	    if (intValue && (attributes & intValue) == intValue) {
 		Tcl_ListObjAppendElement(interp, attributeList,
@@ -5152,42 +5199,50 @@ WmWinStyle(
 	}
 	Tcl_ListObjAppendElement(interp, newResult, attributeList);
 	Tcl_SetObjResult(interp, newResult);
-    } else if (objc == 5) {
+    } else {
 	int attrObjc;
 	Tcl_Obj **attrObjv = NULL;
-	WindowClass oldClass = wmPtr->macClass;
-	WindowAttributes oldAttributes = wmPtr->attributes;
+	WindowClass macClass;
+	UInt64 oldAttributes = wmPtr->attributes;
+	int oldFlags = wmPtr->flags;
 
 	if (Tcl_GetIndexFromObjStruct(interp, objv[3], classMap,
 		sizeof(struct StrIntMap), "class", 0, &index) != TCL_OK) {
 	    goto badClassAttrs;
 	}
-	wmPtr->macClass = classMap[index].intValue;
-	if (Tcl_ListObjGetElements(interp, objv[4], &attrObjc, &attrObjv)
-		!= TCL_OK) {
-	    goto badClassAttrs;
-	}
-	wmPtr->attributes = kWindowNoAttributes;
-	for (i = 0; i < attrObjc; i++) {
-	    if (Tcl_GetIndexFromObjStruct(interp, attrObjv[i],
-		    compositeAttrMap, sizeof(struct StrIntMap),
-		    "attribute", 0, &index) == TCL_OK) {
-		wmPtr->attributes |= compositeAttrMap[index].intValue;
-	    } else if (Tcl_GetIndexFromObjStruct(interp, attrObjv[i],
-		    attrMap, sizeof(struct StrIntMap),
-		    "attribute", 0, &index) == TCL_OK) {
-		Tcl_ResetResult(interp);
-		wmPtr->attributes |= attrMap[index].intValue;
-	    } else {
+	macClass = classMap[index].intValue;
+	if (objc == 5) {
+	    if (Tcl_ListObjGetElements(interp, objv[4], &attrObjc, &attrObjv)
+		    != TCL_OK) {
 		goto badClassAttrs;
 	    }
+	    wmPtr->attributes = kWindowNoAttributes;
+	    for (i = 0; i < attrObjc; i++) {
+		if (Tcl_GetIndexFromObjStruct(interp, attrObjv[i],
+			compositeAttrMap, sizeof(struct StrIntMap),
+			"attribute", 0, &index) == TCL_OK) {
+		    wmPtr->attributes |= compositeAttrMap[index].intValue;
+		} else if (Tcl_GetIndexFromObjStruct(interp, attrObjv[i],
+			attrMap, sizeof(struct StrIntMap),
+			"attribute", 0, &index) == TCL_OK) {
+		    Tcl_ResetResult(interp);
+		    wmPtr->attributes |= attrMap[index].intValue;
+		} else {
+		    goto badClassAttrs;
+		}
+	    }
+	} else {
+	    wmPtr->attributes = macClassAttrs[macClass].defaultAttrs;
 	}
-	ApplyWindowClassAttributeChanges(winPtr, NULL, oldClass, oldAttributes,
-		0);
+	wmPtr->attributes &= (tkAlwaysValidAttributes |
+		macClassAttrs[macClass].validAttrs);
+	wmPtr->flags |= macClassAttrs[macClass].flags;
+	wmPtr->macClass = macClass;
+	ApplyWindowAttributeFlagChanges(winPtr, NULL, oldAttributes, oldFlags,
+		0, 1);
 	return TCL_OK;
 
     badClassAttrs:
-	wmPtr->macClass = oldClass;
 	wmPtr->attributes = oldAttributes;
 	return TCL_ERROR;
     }
@@ -5255,9 +5310,6 @@ TkMacOSXMakeRealWindowExist(
 {
     WmInfo *wmPtr = winPtr->wmInfoPtr;
     MacDrawable *macWin;
-    Rect geometry;
-    NSRect structureRect;
-    short structureW, structureH;
 
     if (TkMacOSXHostToplevelExists(winPtr)) {
 	return;
@@ -5295,62 +5347,30 @@ TkMacOSXMakeRealWindowExist(
 	 */
     }
 
-    if (wmPtr->master != None || winPtr->atts.override_redirect) {
-	ApplyMasterOverrideChanges(winPtr, NULL);
-    }
     WindowClass macClass = wmPtr->macClass;
-    WindowAttributes attributes = wmPtr->attributes;
-    NSUInteger styleMask = NSBorderlessWindowMask;
-    CGWindowLevel level = NSNormalWindowLevel;
-    switch (macClass) {
-    case kDocumentWindowClass:
-	attributes |= kWindowInWindowMenuAttribute;
-	attributes &= ~kWindowSideTitlebarAttribute;
-	break;
-    case kUtilityWindowClass:
-	wmPtr->flags |= WM_TOPMOST;
-	level = kCGUtilityWindowLevel;
-    case kFloatingWindowClass:
-	attributes &= ~kWindowInWindowMenuAttribute;
-	styleMask |= NSUtilityWindowMask;
-	break;
-    case kAlertWindowClass:
-    case kMovableAlertWindowClass:
-    case kModalWindowClass:
-    case kDrawerWindowClass:
-    case kSheetAlertWindowClass:
-	attributes &= ~kWindowResizableAttribute;
-    case kSheetWindowClass:
-	attributes &= ~kWindowCloseBoxAttribute;
-    case kMovableModalWindowClass:
-	attributes &= ~(kWindowCollapseBoxAttribute | kWindowMetalAttribute |
-		kWindowSideTitlebarAttribute | kWindowNoTitleBarAttribute |
-		kWindowInWindowMenuAttribute);
-	break;
-    case kToolbarWindowClass:
-	styleMask |= NSUtilityWindowMask;
-    case kPlainWindowClass:
-    case kAltPlainWindowClass:
-    case kSimpleWindowClass:
-    case kHelpWindowClass:
-    case kOverlayWindowClass:
-    default:
-	attributes |= kWindowNoTitleBarAttribute;
-	attributes &= ~(kWindowCloseBoxAttribute |
-		kWindowCollapseBoxAttribute | kWindowResizableAttribute |
-		kWindowMetalAttribute | kWindowSideTitlebarAttribute |
-		kWindowInWindowMenuAttribute);
-	break;
-    }
-    styleMask |=
+    wmPtr->flags |= macClassAttrs[macClass].flags;
+    wmPtr->attributes &= (tkAlwaysValidAttributes |
+	    macClassAttrs[macClass].validAttrs);
+    UInt64 attributes = (wmPtr->attributes &
+	    ~macClassAttrs[macClass].forceOffAttrs) |
+	    macClassAttrs[macClass].forceOnAttrs;
+    NSUInteger styleMask = macClassAttrs[macClass].styleMask |
 	((attributes & kWindowNoTitleBarAttribute) ? 0 : NSTitledWindowMask) |
 	((attributes & kWindowCloseBoxAttribute) ? NSClosableWindowMask : 0) |
-	((attributes & kWindowCollapseBoxAttribute) ? NSMiniaturizableWindowMask : 0) |
+	((attributes & kWindowCollapseBoxAttribute) ?
+		NSMiniaturizableWindowMask : 0) |
 	((attributes & kWindowResizableAttribute) ? NSResizableWindowMask : 0) |
-	((attributes & kWindowMetalAttribute) ? NSTexturedBackgroundWindowMask : 0) |
-	((attributes & kWindowSideTitlebarAttribute) ? 1 << 9 : 0);
-    NSWindow *window = [[((styleMask & NSUtilityWindowMask) ? [NSPanel class] :
-	    [NSWindow class]) alloc] initWithContentRect:NSZeroRect
+	((attributes & kWindowMetalAttribute) ?
+		NSTexturedBackgroundWindowMask : 0) |
+	((attributes & kWindowUnifiedTitleAndToolbarAttribute) ?
+		NSUnifiedTitleAndToolbarWindowMask : 0) |
+	((attributes & kWindowSideTitlebarAttribute) ? 1 << 9 : 0) |
+	(attributes >> WM_NSMASK_SHIFT);
+    Class winClass = (macClass == kDrawerWindowClass ? [NSDrawerWindow class] :
+	    (styleMask & (NSUtilityWindowMask|NSDocModalWindowMask|
+	    NSNonactivatingPanelMask|NSHUDWindowMask)) ? [NSPanel class] :
+	    [TKWindow class]);
+    NSWindow *window = [[winClass alloc] initWithContentRect:NSZeroRect
 	    styleMask:styleMask backing:NSBackingStoreBuffered defer:YES];
     if (!window) {
 	Tcl_Panic("couldn't allocate new Mac window");
@@ -5367,30 +5387,21 @@ TkMacOSXMakeRealWindowExist(
     if (styleMask & NSUtilityWindowMask) {
 	[(NSPanel*)window setFloatingPanel:YES];
     }
-    if (level != NSNormalWindowLevel) {
-	[window setLevel:level];
-    }
     [window setDocumentEdited:NO];
-    wmPtr->attributes = attributes;
-    ApplyWindowClassAttributeChanges(winPtr, window, 0, 0, 0);
-    [window windowRef];
     wmPtr->window = window;
     macWin->view = contentView;
+    MacOSXApplyWindowAttributes(winPtr, window);
+    if (wmPtr->master != None || winPtr->atts.override_redirect) {
+	ApplyMasterOverrideChanges(winPtr, window);
+    }
 
-    structureRect = [window frameRectForContentRect:NSZeroRect];
-    wmPtr->xInParent = -structureRect.origin.x;
-    wmPtr->yInParent = structureRect.origin.y + structureRect.size.height;
-    structureW = structureRect.size.width;
-    structureH = structureRect.size.height;
-    wmPtr->parentWidth = winPtr->changes.width + structureW;
-    wmPtr->parentHeight = winPtr->changes.height + structureH;
-    InitialWindowBounds(winPtr, window, &geometry);
-    geometry.right +=  structureW;
-    geometry.bottom += structureH;
-    [window setFrame:NSMakeRect(geometry.left,
-	    tkMacOSXZeroScreenHeight - geometry.bottom,
-	    geometry.right - geometry.left, geometry.bottom - geometry.top)
-	    display:NO];
+    NSRect structureRect = [window frameRectForContentRect:NSZeroRect];
+    NSRect geometry = InitialWindowBounds(winPtr, window);
+    geometry.size.width +=  structureRect.size.width;
+    geometry.size.height += structureRect.size.height;
+    geometry.origin.y = tkMacOSXZeroScreenHeight - (geometry.origin.y +
+	    geometry.size.height);
+    [window setFrame:geometry display:NO];
 
     TkMacOSXRegisterOffScreenWindow((Window) macWin, window);
     macWin->flags |= TK_HOST_EXISTS;
@@ -5939,9 +5950,33 @@ TkWmStackorderToplevel(
 /*
  *----------------------------------------------------------------------
  *
- * ApplyWindowClassAttributeChanges --
+ * MacOSXApplyWindowAttributes --
  *
- *	This procedure applies carbon window class and attribute changes.
+ *	This procedure applies all window attributes to the NSWindow.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+MacOSXApplyWindowAttributes(
+    TkWindow *winPtr,
+    NSWindow *macWindow)
+{
+    ApplyWindowAttributeFlagChanges(winPtr, macWindow, 0, 0, 0, 1);
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * ApplyWindowAttributeFlagChanges --
+ *
+ *	This procedure applies window attribute and flag changes.
  *
  * Results:
  *	None.
@@ -5953,19 +5988,20 @@ TkWmStackorderToplevel(
  */
 
 static void
-ApplyWindowClassAttributeChanges(
+ApplyWindowAttributeFlagChanges(
     TkWindow *winPtr,
     NSWindow *macWindow,
-    WindowClass oldClass,
-    WindowAttributes oldAttributes,
-    int create)
+    UInt64 oldAttributes,
+    int oldFlags,
+    int create,
+    int initial)
 {
     WmInfo *wmPtr = winPtr->wmInfoPtr;
-    WindowAttributes newAttributes = wmPtr->attributes |
-	    kWindowAsyncDragAttribute;
+    UInt64 newAttributes = ForceAttributes(wmPtr->attributes, wmPtr->macClass);
+    UInt64 changedAttributes = newAttributes ^ ForceAttributes(oldAttributes,
+	    wmPtr->macClass);
 
-    if (wmPtr->macClass != oldClass || newAttributes != oldAttributes) {
-
+    if (changedAttributes || wmPtr->flags != oldFlags || initial) {
 	if (!macWindow) {
 	    if (winPtr->window == None) {
 		if (create) {
@@ -5983,16 +6019,79 @@ ApplyWindowClassAttributeChanges(
 	    }
 	    macWindow = TkMacOSXDrawableWindow(winPtr->window);
 	}
-	if (newAttributes != oldAttributes) {
+	if ((changedAttributes & kWindowResizableAttribute) || initial) {
 	    [macWindow setShowsResizeIndicator:
-		    (newAttributes & kWindowResizableAttribute)];
+		    !!(newAttributes & kWindowResizableAttribute)];
+	}
+	if ((changedAttributes & kWindowToolbarButtonAttribute) || initial) {
+	    [macWindow setShowsToolbarButton:
+		    !!(newAttributes & kWindowToolbarButtonAttribute)];
+	}
+	if ((changedAttributes & kWindowNoShadowAttribute) || initial) {
 	    [macWindow setHasShadow:
 		    !(newAttributes & kWindowNoShadowAttribute)];
+	}
+	if ((changedAttributes & kWindowHideOnSuspendAttribute) || initial) {
+	    [macWindow setHidesOnDeactivate:
+		    !!(newAttributes & kWindowHideOnSuspendAttribute)];
+	}
+	if ((changedAttributes & kWindowInWindowMenuAttribute) || initial) {
 	    [macWindow setExcludedFromWindowsMenu:
 		    !(newAttributes & kWindowInWindowMenuAttribute)];
-	    [macWindow setIgnoresMouseEvents:
-		    (newAttributes & kWindowIgnoreClicksAttribute)];
 	}
+	if ((changedAttributes & kWindowIgnoreClicksAttribute) || initial) {
+	    [macWindow setIgnoresMouseEvents:
+		    !!(newAttributes & kWindowIgnoreClicksAttribute)];
+	}
+	if ((changedAttributes & tkWindowDoesNotHideAttribute) || initial) {
+	    [macWindow setCanHide:
+		    !(newAttributes & tkWindowDoesNotHideAttribute)];
+	}
+	if ((changedAttributes & (kWindowDoesNotCycleAttribute |
+		tkCanJoinAllSpacesAttribute | tkMoveToActiveSpaceAttribute)) ||
+		initial) {
+	    NSWindowCollectionBehavior b = NSWindowCollectionBehaviorDefault;
+	    if (newAttributes & tkCanJoinAllSpacesAttribute) {
+		b |= NSWindowCollectionBehaviorCanJoinAllSpaces;
+	    } else if (newAttributes & tkMoveToActiveSpaceAttribute) {
+		b |= NSWindowCollectionBehaviorMoveToActiveSpace;
+	    }
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1060
+	    if (newAttributes & kWindowDoesNotCycleAttribute) {
+		b |= NSWindowCollectionBehaviorIgnoresCycle;
+	    } else {
+		b |= NSWindowCollectionBehaviorParticipatesInCycle;
+	    }
+#endif
+	    [macWindow setCollectionBehavior:b];
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 1060
+	    if (((changedAttributes & kWindowDoesNotCycleAttribute) || initial)
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1060
+		    && tkMacOSXMacOSXVersion < 1060
+#endif
+	    ) {
+		[macWindow setCanCycle:
+			!(newAttributes & kWindowDoesNotCycleAttribute)];
+	    }
+#endif
+	}
+	if ((wmPtr->flags & WM_TOPMOST) != (oldFlags & WM_TOPMOST)) {
+	    [macWindow setLevel:(wmPtr->flags & WM_TOPMOST) ?
+		    kCGUtilityWindowLevel : ([macWindow isKindOfClass:
+		    [NSPanel class]] && [macWindow isFloatingPanel] ?
+		    kCGFloatingWindowLevel : kCGNormalWindowLevel)];
+	}
+
+	/*
+	 * The change of window class/attributes might have changed the window
+	 * structure widths:
+	 */
+
+	NSRect structureRect = [macWindow frameRectForContentRect:NSZeroRect];
+	wmPtr->xInParent = -structureRect.origin.x;
+	wmPtr->yInParent = structureRect.origin.y + structureRect.size.height;
+	wmPtr->parentWidth = winPtr->changes.width + structureRect.size.width;
+	wmPtr->parentHeight = winPtr->changes.height + structureRect.size.height;
     }
 }
 
@@ -6018,25 +6117,25 @@ ApplyMasterOverrideChanges(
     NSWindow *macWindow)
 {
     WmInfo *wmPtr = winPtr->wmInfoPtr;
-    WindowClass oldClass = wmPtr->macClass;
-    WindowAttributes oldAttributes = wmPtr->attributes;
+    UInt64 oldAttributes = wmPtr->attributes;
+    int oldFlags = wmPtr->flags;
 
     /*
      * FIX: We need an UpdateWrapper equivalent to make this 100% correct
      */
 
     if (winPtr->atts.override_redirect) {
-	if (oldClass == kDocumentWindowClass) {
+	if (wmPtr->macClass == kDocumentWindowClass) {
 	    wmPtr->macClass = kSimpleWindowClass;
-	    wmPtr->attributes = kWindowNoAttributes;
+	    wmPtr->attributes = macClassAttrs[kSimpleWindowClass].defaultAttrs;
 	}
 	wmPtr->attributes |= kWindowNoActivatesAttribute;
     } else {
-	if (oldClass == kSimpleWindowClass &&
+	if (wmPtr->macClass == kSimpleWindowClass &&
 		oldAttributes == kWindowNoActivatesAttribute) {
 	    wmPtr->macClass = kDocumentWindowClass;
-	    wmPtr->attributes = kWindowStandardDocumentAttributes
-		    | kWindowLiveResizeAttribute;
+	    wmPtr->attributes =
+		    macClassAttrs[kDocumentWindowClass].defaultAttrs;
 	}
 	wmPtr->attributes &= ~kWindowNoActivatesAttribute;
     }
@@ -6045,77 +6144,37 @@ ApplyMasterOverrideChanges(
 	macWindow = TkMacOSXDrawableWindow(winPtr->window);
     }
     if (macWindow) {
-	ApplyWindowClassAttributeChanges(winPtr, macWindow, oldClass,
-		oldAttributes, 0);
-
 	if (winPtr->atts.override_redirect && wmPtr->master != None) {
 	    wmPtr->flags |= WM_TOPMOST;
 	} else {
 	    wmPtr->flags &= ~WM_TOPMOST;
 	}
-#ifdef MAC_OSX_TK_TODO
-	WindowGroupRef group = WmGetWindowGroup(winPtr);
-	if (group && group != GetWindowGroup(macWindow)) {
-	    ChkErr(SetWindowGroup, macWindow, group);
-	}
-#endif
-    }
-}
+	NSWindow *parentWindow = [macWindow parentWindow];
+	if (wmPtr->master != None) {
+	    TkDisplay *dispPtr = TkGetDisplayList();
+	    TkWindow *masterWinPtr = (TkWindow *)
+		    Tk_IdToWindow(dispPtr->display, wmPtr->master);
 
-#ifdef MAC_OSX_TK_TODO
-/*
- *----------------------------------------------------------------------
- *
- * WmGetWindowGroup --
- *
- *	Gets the window group a toplevel should be placed in.
- *
- * Results:
- *	A WindowGroupRef.
- *
- * Side effects:
- *	A transient window group for the master (if any) may be created.
- *
- *----------------------------------------------------------------------
- */
+	    if (masterWinPtr && masterWinPtr->window != None &&
+		    TkMacOSXHostToplevelExists(masterWinPtr)) {
+		NSWindow *masterMacWin =
+			TkMacOSXDrawableWindow(masterWinPtr->window);
 
-static WindowGroupRef
-WmGetWindowGroup(
-    TkWindow *winPtr)
-{
-    WmInfo *wmPtr = winPtr->wmInfoPtr;
-    WindowGroupRef group = NULL;
-
-    if (wmPtr->flags & WM_TOPMOST) {
-	group = GetWindowGroupOfClass(kUtilityWindowClass);
-    } else if (wmPtr->master != None) {
-	TkDisplay *dispPtr = TkGetDisplayList();
-	TkWindow *masterWinPtr = (TkWindow *)
-		Tk_IdToWindow(dispPtr->display, wmPtr->master);
-
-	if (masterWinPtr && masterWinPtr->window != None &&
-		TkMacOSXHostToplevelExists(masterWinPtr)) {
-	    NSWindow *masterMacWin = TkMacOSXDrawableWindow(masterWinPtr->window);
-
-	    if (masterMacWin && GetWindowProperty(masterMacWin, 'Tk  ', 'TsGp',
-		    sizeof(group), NULL, &group) != noErr) {
-		ChkErr(CreateWindowGroup, 0, &group);
-		if (group) {
-		    ChkErr(SetWindowGroupParent, group,
-			    GetWindowGroup(masterMacWin));
-		    ChkErr(SetWindowGroupOwner, group, masterMacWin);
-		    ChkErr(SetWindowProperty, masterMacWin, 'Tk  ', 'TsGp',
-			    sizeof(group), &group);
+		if (masterMacWin && masterMacWin != parentWindow) {
+		    if (parentWindow) {
+			[parentWindow removeChildWindow:macWindow];
+		    }
+		    [masterMacWin addChildWindow:macWindow
+			    ordered:NSWindowAbove];
 		}
 	    }
+	} else if (parentWindow) {
+	    [parentWindow removeChildWindow:macWindow];
 	}
+	ApplyWindowAttributeFlagChanges(winPtr, macWindow, oldAttributes,
+		oldFlags, 0, 0);
     }
-    if (!group) {
-	group = GetWindowGroupOfClass(wmPtr->macClass);
-    }
-    return group;
 }
-#endif
 
 /*
  *----------------------------------------------------------------------
@@ -6172,8 +6231,9 @@ TkMacOSXMakeFullscreen(
 		    wmPtr->configY = wmPtr->y;
 		    wmPtr->configAttributes = wmPtr->attributes;
 		    wmPtr->attributes &= ~kWindowResizableAttribute;
-		    ApplyWindowClassAttributeChanges(winPtr, window,
-			    wmPtr->macClass, wmPtr->configAttributes, 0);
+		    ApplyWindowClassAttributeFlagChanges(winPtr, window,
+			    wmPtr->macClass, wmPtr->configAttributes,
+			    wmPtr->flags, 0);
 		}
 		wmPtr->flags |= WM_SYNC_PENDING;
 		ChkErr(SetWindowBounds, window, kWindowContentRgn,
@@ -6186,15 +6246,15 @@ TkMacOSXMakeFullscreen(
 	wmPtr->flags &= ~WM_FULLSCREEN;
     }
     if (wasFullscreen && !(wmPtr->flags & WM_FULLSCREEN)) {
-	WindowAttributes oldAttributes = wmPtr->attributes;
+	UInt64 oldAttributes = wmPtr->attributes;
 	Rect bounds = {wmPtr->configY, wmPtr->configX,
 		wmPtr->configY + wmPtr->yInParent + wmPtr->configHeight,
 		wmPtr->configX + wmPtr->xInParent + wmPtr->configWidth};
 
 	wmPtr->attributes |= wmPtr->configAttributes &
 		kWindowResizableAttribute;
-	ApplyWindowClassAttributeChanges(winPtr, window, wmPtr->macClass,
-		oldAttributes, 0);
+	ApplyWindowClassAttributeFlagChanges(winPtr, window, wmPtr->macClass,
+		oldAttributes, wmPtr->flags, 0);
 	wmPtr->flags |= WM_SYNC_PENDING;
 	ChkErr(SetWindowBounds, window, kWindowStructureRgn, &bounds);
 	wmPtr->flags &= ~WM_SYNC_PENDING;

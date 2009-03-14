@@ -192,7 +192,7 @@ typedef struct TkWmInfo {
      * Macintosh information.
      */
     WindowClass macClass;
-    WindowAttributes attributes, configAttributes;
+    UInt64 attributes, configAttributes;
     TkWindow *scrollWinPtr;	/* Ptr to scrollbar handling grow widget. */
     TkMenu *menuPtr;
     NSWindow *window;
