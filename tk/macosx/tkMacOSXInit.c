@@ -32,6 +32,7 @@ static char tkLibPath[PATH_MAX + 1] = "";
 static char scriptPath[PATH_MAX + 1] = "";
 
 int tkMacOSXGCEnabled = 0;
+long tkMacOSXMacOSXVersion = 0;
 
 #pragma mark TKApplication(TKInit)
 
@@ -154,7 +155,6 @@ TkpInit(
 	CFBundleRef bundleRef;
 	CFURLRef bundleUrl = NULL;
 	struct utsname name;
-	long osVersion = 0;
 	struct stat st;
 
 	initialized = 1;
@@ -168,9 +168,10 @@ TkpInit(
 	#endif
 
 	if (!uname(&name)) {
-	    osVersion = strtol(name.release, NULL, 10) - 4;
+	    tkMacOSXMacOSXVersion = (strtol(name.release, NULL, 10) + 96) * 10;
 	}
-	if (osVersion && osVersion < (MAC_OS_X_VERSION_MIN_REQUIRED-1000)/10) {
+	if (tkMacOSXMacOSXVersion &&
+		tkMacOSXMacOSXVersion < MAC_OS_X_VERSION_MIN_REQUIRED) {
 	    Tcl_Panic("Mac OS X 10.%d or later required !",
 		    (MAC_OS_X_VERSION_MIN_REQUIRED-1000)/10);
 	}

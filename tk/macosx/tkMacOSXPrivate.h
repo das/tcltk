@@ -177,6 +177,7 @@ typedef struct TkMacOSXDrawingContext {
 MODULE_SCOPE CGFloat tkMacOSXZeroScreenHeight;
 MODULE_SCOPE CGFloat tkMacOSXZeroScreenTop;
 MODULE_SCOPE int tkMacOSXGCEnabled;
+MODULE_SCOPE long tkMacOSXMacOSXVersion;
 
 /*
  * Prototypes for TkMacOSXRegion.c.
@@ -254,6 +255,8 @@ MODULE_SCOPE NSFont*	TkMacOSXNSFontForFont(Tk_Font tkfont);
 MODULE_SCOPE NSDictionary* TkMacOSXNSFontAttributesForFont(Tk_Font tkfont);
 MODULE_SCOPE NSModalSession TkMacOSXGetModalSession(void);
 MODULE_SCOPE void	TkMacOSXSelDeadWindow(TkWindow *winPtr);
+MODULE_SCOPE void	MacOSXApplyWindowAttributes(TkWindow *winPtr,
+			    NSWindow *macWindow);
 
 #pragma mark Private Objective-C Classes
 
@@ -307,6 +310,10 @@ VISIBILITY_HIDDEN
     id _savedSubviews;
     BOOL _subviewsSetAside;
 }
+@end
+
+VISIBILITY_HIDDEN
+@interface TKWindow : NSWindow
 @end
 
 #pragma mark NSMenu & NSMenuItem Utilities
