@@ -74,6 +74,7 @@ static const struct {
 		kWindowResizableAttribute | kWindowSideTitlebarAttribute,
 	.defaultAttrs = kWindowStandardFloatingAttributes |
 		kWindowHideOnSuspendAttribute | kWindowDoesNotCycleAttribute,
+	.forceOnAttrs = kWindowResizableAttribute,
 	.forceOffAttrs = kWindowCollapseBoxAttribute,
 	.styleMask = NSUtilityWindowMask, },
     [kDocumentWindowClass] = {
@@ -83,6 +84,7 @@ static const struct {
 		kWindowUnifiedTitleAndToolbarAttribute |
 		kWindowInWindowMenuAttribute | kWindowFullZoomAttribute |
 		kWindowResizableAttribute,
+	.forceOnAttrs = kWindowResizableAttribute,
 	.defaultAttrs = kWindowStandardDocumentAttributes |
 		kWindowLiveResizeAttribute | kWindowInWindowMenuAttribute, },
     [kUtilityWindowClass] = {
@@ -94,6 +96,7 @@ static const struct {
 		kWindowHideOnFullScreenAttribute |
 		tkWindowDoesNotHideAttribute | tkNonactivatingPanelAttribute |
 		kWindowDoesNotCycleAttribute,
+	.forceOnAttrs = kWindowResizableAttribute,
 	.forceOffAttrs = kWindowCollapseBoxAttribute,
 	.flags = WM_TOPMOST,
 	.styleMask = NSUtilityWindowMask, },
@@ -6027,9 +6030,13 @@ ApplyWindowAttributeFlagChanges(
 	    [[macWindow standardWindowButton:NSWindowMiniaturizeButton]
 		    setEnabled:!!(newAttributes & kWindowCollapseBoxAttribute)];
 	}
-	if ((changedAttributes & kWindowResizableAttribute) || initial) {
+	if ((changedAttributes & (kWindowResizableAttribute |
+		kWindowFullZoomAttribute)) || initial) {
 	    [macWindow setShowsResizeIndicator:
 		    !!(newAttributes & kWindowResizableAttribute)];
+	    [[macWindow standardWindowButton:NSWindowZoomButton]
+		    setEnabled:(newAttributes & kWindowResizableAttribute) &&
+		    (newAttributes & kWindowFullZoomAttribute)];
 	}
 	if ((changedAttributes & kWindowToolbarButtonAttribute) || initial) {
 	    [macWindow setShowsToolbarButton:
