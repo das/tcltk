@@ -720,47 +720,6 @@ Tk_MacOSXIsAppInFront(void)
 
     return (isFrontProcess == true);
 }
-
-#ifdef MAC_OSX_TK_TODO
-/*
- *----------------------------------------------------------------------
- *
- * ClearPort --
- *
- *	Clear (i.e. fill with transparent color) the given port.
- *
- * Results:
- *	None.
- *
- * Side effects:
- *	None.
- *
- *----------------------------------------------------------------------
- */
-
-static void
-ClearPort(
-    CGrafPtr port,
-    HIShapeRef updateRgn)
-{
-    CGContextRef context;
-    Rect bounds;
-    CGRect rect;
-
-    GetPortBounds(port, &bounds);
-    QDBeginCGContext(port, &context);
-    SyncCGContextOriginWithPort(context, port);
-    CGContextConcatCTM(context, CGAffineTransformMake(1.0, 0.0, 0.0, -1.0, 0.0,
-	    bounds.bottom - bounds.top));
-    if (updateRgn) {
-	ChkErr(HIShapeReplacePathInCGContext, updateRgn, context);
-	CGContextEOClip(context);
-    }
-    rect = CGRectMake(0, 0, bounds.right, bounds.bottom);
-    CGContextClearRect(context, rect);
-    QDEndCGContext(port, &context);
-}
-#endif
 
 #pragma mark TKContentView
 
@@ -813,7 +772,7 @@ static Tk_RestrictAction ExposeRestrictProc(ClientData arg, XEvent *eventPtr)
 	    NSCompositeSourceOver);
 #endif
     NSWindow *w = [self window];
-    if ([w showsResizeIndicator]) {
+    if ([self isOpaque] && [w showsResizeIndicator]) {
 	NSRect bounds = [self convertRect:[w _growBoxRect] fromView:nil];
 	if ([self needsToDrawRect:bounds]) {
 	    NSEraseRect(bounds);
@@ -849,11 +808,6 @@ static Tk_RestrictAction ExposeRestrictProc(ClientData arg, XEvent *eventPtr)
     }
     HIShapeGetBounds(shape, &updateBounds);
     serial = LastKnownRequestProcessed(Tk_Display(winPtr));
-    if (winPtr->wmInfoPtr && winPtr->wmInfoPtr->flags & WM_TRANSPARENT) {
-#ifdef MAC_OSX_TK_TODO
-	ClearPort(TkMacOSXGetDrawablePort(winPtr->window), shape);
-#endif
-    }
     if (GenerateUpdates(shape, &updateBounds, winPtr) &&
 	    ![[NSRunLoop currentRunLoop] currentMode] &&
 	    Tcl_GetServiceMode() != TCL_SERVICE_NONE) {
@@ -890,7 +844,10 @@ static Tk_RestrictAction ExposeRestrictProc(ClientData arg, XEvent *eventPtr)
 }
 #endif
 - (BOOL)isOpaque {
-    return YES;
+    NSWindow *w = [self window];
+
+    return (w && (([w styleMask] & NSTexturedBackgroundWindowMask) ||
+	    ![w isOpaque]) ? NO : YES);
 }
 
 - (BOOL)wantsDefaultClipping {
