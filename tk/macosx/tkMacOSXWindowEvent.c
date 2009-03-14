@@ -823,7 +823,7 @@ static Tk_RestrictAction ExposeRestrictProc(ClientData arg, XEvent *eventPtr)
     HIMutableShapeRef drawShape = HIShapeCreateMutable();
     while (rectsBeingDrawnCount--) {
 	CGRect r = NSRectToCGRect(*rectsBeingDrawn++);
-	r.origin.y = height - r.origin.y;
+	r.origin.y = height - (r.origin.y + r.size.height);
 	HIShapeUnionWithRect(drawShape, &r);
     }
     if (CFRunLoopGetMain() == CFRunLoopGetCurrent()) {
