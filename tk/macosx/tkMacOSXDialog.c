@@ -1341,15 +1341,7 @@ void
 TkAboutDlg(void)
 {
     NSImage *image;
-    NSString *path = [[NSApp tkFrameworkBundle]
-	    pathForImageResource:@"Tk.tiff"];
-#ifdef TK_MAC_DEBUG
-    if (!path && getenv("TK_SRCROOT")) {
-	// FIXME: fallback to TK_SRCROOT
-	path = [NSString stringWithFormat:@"%s/macosx/Tk.tiff",
-		getenv("TK_SRCROOT")];
-    }
-#endif
+    NSString *path = [NSApp tkFrameworkImagePath:@"Tk.tiff"];
     if (path) {
 	image = [[[NSImage alloc] initWithContentsOfFile:path] autorelease];
     } else {

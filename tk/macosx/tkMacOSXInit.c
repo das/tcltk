@@ -110,17 +110,73 @@ static void keyboardChanged(CFNotificationCenterRef center, void *observer, CFSt
     [self _setupScrollBarNotifications];
     [self _setupApplicationNotifications];
 }
-- (NSBundle *)tkFrameworkBundle {
+- (NSString *)tkFrameworkImagePath:(NSString*)image {
+    NSString *path = nil;
     if (tkLibPath[0] != '\0') {
-	return [NSBundle bundleWithPath:[NSString stringWithFormat:@"%s/../..",
-		tkLibPath]];
-    } else {
-	return nil;
+	path = [[NSBundle bundleWithPath:[[NSString stringWithUTF8String:
+		tkLibPath] stringByAppendingString:@"/../.."]]
+		pathForImageResource:image];
     }
+    if (!path) {
+	const char *tk_library = Tcl_GetVar2(_eventInterp, "tk_library", NULL,
+		TCL_GLOBAL_ONLY);
+	if (tk_library) {
+	    NSFileManager *fm = [NSFileManager defaultManager];
+	    path = [[NSString stringWithUTF8String:tk_library]
+		    stringByAppendingFormat:@"/%@", image];
+	    if (![fm isReadableFileAtPath:path]) {
+		path = [[NSString stringWithUTF8String:tk_library]
+			stringByAppendingFormat:@"/../macosx/%@", image];
+		if (![fm isReadableFileAtPath:path]) {
+		    path = nil;
+		}
+	    }
+	}
+    }
+#ifdef TK_MAC_DEBUG
+    if (!path && getenv("TK_SRCROOT")) {
+	path = [[NSString stringWithUTF8String:getenv("TK_SRCROOT")]
+		stringByAppendingFormat:@"/macosx/%@", image];
+	if (![[NSFileManager defaultManager] isReadableFileAtPath:path]) {
+	    path = nil;
+	}
+    }
+#endif
+    return path;
 }
 @end
 
 #pragma mark -
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * DoWindowActivate --
+ *
+ *	Idle handler that sets the application icon to the generic Tk icon.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+static void
+SetApplicationIcon(
+    ClientData clientData)
+{
+    NSString *path = [NSApp tkFrameworkImagePath:@"Tk.icns"];
+    if (path) {
+	NSImage *image = [[NSImage alloc] initWithContentsOfFile:path];
+	if (image) {
+	    [NSApp setApplicationIconImage:image];
+	    [image release];
+	}
+    }
+}
 
 /*
  *----------------------------------------------------------------------
@@ -255,25 +311,11 @@ TkpInit(
 		    kProcessTransformToForegroundApplication);
 
 	    /*
-	     * Set application to generic Tk icon.
+	     * Set application icon to generic Tk icon, do it at idle time
+	     * instead of now to ensure tk_library is setup.
 	     */
 
-	    NSString *path = [[NSApp tkFrameworkBundle]
-		    pathForImageResource:@"Tk.icns"];
-#ifdef TK_MAC_DEBUG
-	    if (!path && getenv("TK_SRCROOT")) {
-		// FIXME: fallback to TK_SRCROOT
-		path = [NSString stringWithFormat:@"%s/macosx/Tk.icns",
-			getenv("TK_SRCROOT")];
-	    }
-#endif
-	    if (path) {
-		NSImage *image = [[NSImage alloc] initWithContentsOfFile:path];
-		if (image) {
-		    [NSApp setApplicationIconImage:image];
-		    [image release];
-		}
-	    }
+	    Tcl_DoWhenIdle(SetApplicationIcon, NULL);
 	}
 
 	[NSApp _setupEventLoop];
