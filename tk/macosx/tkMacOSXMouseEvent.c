@@ -530,64 +530,6 @@ GenerateButtonEvent(
     return true;
 }
 
-#ifdef MAC_OSX_TK_TODO
-/*
- *----------------------------------------------------------------------
- *
- * GenerateToolbarButtonEvent --
- *
- *	Generates a "ToolbarButton" virtual event. This can be used to manage
- *	disappearing toolbars.
- *
- * Results:
- *	None.
- *
- * Side effects:
- *	Places a virtual event on the event queue.
- *
- *----------------------------------------------------------------------
- */
-
-static int
-GenerateToolbarButtonEvent(
-    MouseEventData *medPtr)
-{
-    Tk_Window rootwin, tkwin = NULL;
-    TkDisplay *dispPtr;
-    TkWindow *winPtr;
-    XVirtualEvent event;
-
-    dispPtr = TkGetDisplayList();
-    rootwin = Tk_IdToWindow(dispPtr->display, medPtr->window);
-    if (rootwin) {
-	tkwin = Tk_TopCoordsToWindow(rootwin,
-		medPtr->local.h, medPtr->local.v, &event.x, &event.y);
-    }
-    if (!tkwin) {
-	return true;
-    }
-    winPtr = (TkWindow *) tkwin;
-
-    bzero(&event, sizeof(XVirtualEvent));
-    event.type = VirtualEvent;
-    event.serial = LastKnownRequestProcessed(winPtr->display);
-    event.send_event = false;
-    event.display = winPtr->display;
-    event.event = winPtr->window;
-    event.root = XRootWindow(winPtr->display, 0);
-    event.subwindow = None;
-    event.time = TkpGetMS();
-    event.x_root = medPtr->global.h;
-    event.y_root = medPtr->global.v;
-    event.state = medPtr->state;
-    event.same_screen = true;
-    event.name = Tk_GetUid("ToolbarButton");
-
-    Tk_QueueWindowEvent((XEvent *) &event, TCL_QUEUE_TAIL);
-    return true;
-}
-#endif
-
 /*
  * Local Variables:
  * mode: c
