@@ -832,6 +832,32 @@ static Tk_RestrictAction ExposeRestrictProc(ClientData arg, XEvent *eventPtr)
     }
 }
 
+- (void)tkToolbarButton:(id)sender {
+#ifdef TK_MAC_DEBUG_EVENTS
+    TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd);
+#endif
+    XVirtualEvent event;
+    int x, y;
+    TkWindow *winPtr = TkMacOSXGetTkWindow([self window]);
+    Tk_Window tkwin = (Tk_Window) winPtr;
+
+    bzero(&event, sizeof(XVirtualEvent));
+    event.type = VirtualEvent;
+    event.serial = LastKnownRequestProcessed(Tk_Display(tkwin));
+    event.send_event = false;
+    event.display = Tk_Display(tkwin);
+    event.event = Tk_WindowId(tkwin);
+    event.root = XRootWindow(Tk_Display(tkwin), 0);
+    event.subwindow = None;
+    event.time = TkpGetMS();
+    XQueryPointer(NULL, winPtr->window, NULL, NULL,
+	    &event.x_root, &event.y_root, &x, &y, &event.state);
+    Tk_TopCoordsToWindow(tkwin, x, y, &event.x, &event.y);
+    event.same_screen = true;
+    event.name = Tk_GetUid("ToolbarButton");
+    Tk_QueueWindowEvent((XEvent *) &event, TCL_QUEUE_TAIL);
+}
+
 #ifdef TK_MAC_DEBUG_DRAWING
 - (void)setFrameSize:(NSSize)newSize {
     TKLog(@"-[%@(%p) %s%@]", [self class], self, _cmd, NSStringFromSize(newSize));

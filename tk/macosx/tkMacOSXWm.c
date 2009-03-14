@@ -6026,6 +6026,16 @@ ApplyWindowAttributeFlagChanges(
 	if ((changedAttributes & kWindowToolbarButtonAttribute) || initial) {
 	    [macWindow setShowsToolbarButton:
 		    !!(newAttributes & kWindowToolbarButtonAttribute)];
+	    if ((newAttributes & kWindowToolbarButtonAttribute) &&
+		    ![macWindow toolbar]) {
+		NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@""];
+		[toolbar setVisible:NO];
+		[macWindow setToolbar:toolbar];
+		NSCell *toolbarButtonCell = [[macWindow standardWindowButton:
+			NSWindowToolbarButton] cell];
+		[toolbarButtonCell setTarget:[macWindow contentView]];
+		[toolbarButtonCell setAction:@selector(tkToolbarButton:)];
+	    }
 	}
 	if ((changedAttributes & kWindowNoShadowAttribute) || initial) {
 	    [macWindow setHasShadow:
