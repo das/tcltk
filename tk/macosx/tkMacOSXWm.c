@@ -6019,6 +6019,14 @@ ApplyWindowAttributeFlagChanges(
 	    }
 	    macWindow = TkMacOSXDrawableWindow(winPtr->window);
 	}
+	if ((changedAttributes & kWindowCloseBoxAttribute) || initial) {
+	    [[macWindow standardWindowButton:NSWindowCloseButton]
+		    setEnabled:!!(newAttributes & kWindowCloseBoxAttribute)];
+	}
+	if ((changedAttributes & kWindowCollapseBoxAttribute) || initial) {
+	    [[macWindow standardWindowButton:NSWindowMiniaturizeButton]
+		    setEnabled:!!(newAttributes & kWindowCollapseBoxAttribute)];
+	}
 	if ((changedAttributes & kWindowResizableAttribute) || initial) {
 	    [macWindow setShowsResizeIndicator:
 		    !!(newAttributes & kWindowResizableAttribute)];
