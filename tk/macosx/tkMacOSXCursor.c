@@ -15,15 +15,20 @@
  */
 
 #include "tkMacOSXPrivate.h"
+#include "tkMacOSXCursors.h"
+#include "tkMacOSXXCursors.h"
 
 /*
- * There are three different ways to set the cursor on the Mac.
+ * Mac Cursor Types.
  */
 
 #define NONE		-1	/* Hidden cursor */
 #define SELECTOR	1	/* NSCursor class method */
 #define IMAGENAMED	2	/* Named NSImage */
 #define IMAGEPATH	3	/* Path to NSImage */
+#define IMAGEBITMAP	4	/* Pointer to 16x16 cursor bitmap data */
+
+#define pix		16	/* Pixel width & height of cursor bitmap data */
 
 /*
  * The following data structure contains the system specific data necessary to
@@ -44,132 +49,138 @@ typedef struct {
 struct CursorName {
     const char *name;
     const int kind;
-    NSString *id;
+    id id1, id2;
     NSPoint hotspot;
 };
 
+#define MacCursorData(n)	((id)tkMacOSXCursors[TK_MAC_CURSOR_##n])
+#define MacXCursorData(n)	((id)tkMacOSXXCursors[TK_MAC_XCURSOR_##n])
+
 static const struct CursorName cursorNames[] = {
     {"none",			NONE,	    nil},
-    {"arrow",			SELECTOR,   @"arrowCursor"},
-    {"top_left_arrow",		SELECTOR,   @"arrowCursor"},
-    {"copyarrow",		SELECTOR,   @"dragCopyCursor"},
-    {"aliasarrow",		SELECTOR,   @"dragLinkCursor"},
-    {"contextualmenuarrow",	SELECTOR,   @"contextualMenuCursor"},
-    {"ibeam",			SELECTOR,   @"IBeamCursor"},
-    {"text",			SELECTOR,   @"IBeamCursor"},
-    {"xterm",			SELECTOR,   @"IBeamCursor"},
-    {"cross",			SELECTOR,   @"crosshairCursor"},
-    {"crosshair",		SELECTOR,   @"crosshairCursor"},
-    {"cross-hair",		SELECTOR,   @"crosshairCursor"},
-//    {"plus",			kThemePlusCursor},
-    {"closedhand",		SELECTOR,   @"closedHandCursor"},
-    {"fist",			SELECTOR,   @"closedHandCursor"},
-    {"openhand",		SELECTOR,   @"openHandCursor"},
-    {"hand",			SELECTOR,   @"openHandCursor"},
-    {"pointinghand",		SELECTOR,   @"pointingHandCursor"},
-    {"resizeleft",		SELECTOR,   @"resizeLeftCursor"},
-    {"resizeright",		SELECTOR,   @"resizeRightCursor"},
-    {"resizeleftright",		SELECTOR,   @"resizeLeftRightCursor"},
-    {"resizeup",		SELECTOR,   @"resizeUpCursor"},
-    {"resizedown",		SELECTOR,   @"resizeDownCursor"},
-    {"resizeupdown",		SELECTOR,   @"resizeUpDownCursor"},
-    {"notallowed",		SELECTOR,   @"operationNotAllowedCursor"},
-    {"poof",			SELECTOR,   @"disappearingItemCursor"},
-//    {"watch",			kThemeWatchCursor},
-//    {"countinguphand",	kThemeCountingUpHandCursor},
-//    {"countingdownhand",	kThemeCountingDownHandCursor},
-//    {"countingupanddownhand",	kThemeCountingUpAndDownHandCursor},*/
-    {"spinning",		IMAGENAMED, @"NSWaitCursor", {8, -8}},
-    {"wait",			IMAGENAMED, @"NSWaitCursor", {8, -8}},
-    {"resizebottomleft",	IMAGENAMED, @"NSTruthBottomLeftResizeCursor", {4, -12}},
-    {"resizetopleft",		IMAGENAMED, @"NSTruthTopLeftResizeCursor", {4, -4}},
-    {"resizebottomright",	IMAGENAMED, @"NSTruthBottomRightResizeCursor", {12, -12}},
-    {"resizetopright",		IMAGENAMED, @"NSTruthTopRightResizeCursor", {12, -4}},
-    {"bucket",			IMAGEPATH, @"bucket.cur", {13, 12}},
-    {"cancel",			IMAGEPATH, @"cancel.cur", {8, 5}},
-    {"resize",			IMAGEPATH, @"resize.cur", {8, 8}},
-    {"eyedrop",			IMAGEPATH, @"eyedrop.cur", {15, 0}},
-    {"eyedrop-full",		IMAGEPATH, @"eyedrop-full.cur", {15, 0}},
-    {"zoom-in",			IMAGEPATH, @"zoom-in.cur", {7, 7}},
-    {"zoom-out",		IMAGEPATH, @"zoom-out.cur", {7, 7}},
-    {"X_cursor",		IMAGEPATH, @"cursor00.cur"},
-//    {"arrow",			IMAGEPATH, @"cursor02.cur"},
-    {"based_arrow_down",	IMAGEPATH, @"cursor04.cur"},
-    {"based_arrow_up",		IMAGEPATH, @"cursor06.cur"},
-    {"boat",			IMAGEPATH, @"cursor08.cur"},
-    {"bogosity",		IMAGEPATH, @"cursor0a.cur"},
-    {"bottom_left_corner",	IMAGEPATH, @"cursor0c.cur"},
-    {"bottom_right_corner",	IMAGEPATH, @"cursor0e.cur"},
-    {"bottom_side",		IMAGEPATH, @"cursor10.cur"},
-    {"bottom_tee",		IMAGEPATH, @"cursor12.cur"},
-    {"box_spiral",		IMAGEPATH, @"cursor14.cur"},
-    {"center_ptr",		IMAGEPATH, @"cursor16.cur"},
-    {"circle",			IMAGEPATH, @"cursor18.cur"},
-    {"clock",			IMAGEPATH, @"cursor1a.cur"},
-    {"coffee_mug",		IMAGEPATH, @"cursor1c.cur"},
-    {"cross",			IMAGEPATH, @"cursor1e.cur"},
-    {"cross_reverse",		IMAGEPATH, @"cursor20.cur"},
-    {"crosshair",		IMAGEPATH, @"cursor22.cur"},
-    {"diamond_cross",		IMAGEPATH, @"cursor24.cur"},
-    {"dot",			IMAGEPATH, @"cursor26.cur"},
-    {"dotbox",			IMAGEPATH, @"cursor28.cur"},
-    {"double_arrow",		IMAGEPATH, @"cursor2a.cur"},
-    {"draft_large",		IMAGEPATH, @"cursor2c.cur"},
-    {"draft_small",		IMAGEPATH, @"cursor2e.cur"},
-    {"draped_box",		IMAGEPATH, @"cursor30.cur"},
-    {"exchange",		IMAGEPATH, @"cursor32.cur"},
-    {"fleur",			IMAGEPATH, @"cursor34.cur"},
-    {"gobbler",			IMAGEPATH, @"cursor36.cur"},
-    {"gumby",			IMAGEPATH, @"cursor38.cur"},
-    {"hand1",			IMAGEPATH, @"cursor3a.cur"},
-    {"hand2",			IMAGEPATH, @"cursor3c.cur"},
-    {"heart",			IMAGEPATH, @"cursor3e.cur"},
-    {"icon",			IMAGEPATH, @"cursor40.cur"},
-    {"iron_cross",		IMAGEPATH, @"cursor42.cur"},
-    {"left_ptr",		IMAGEPATH, @"cursor44.cur"},
-    {"left_side",		IMAGEPATH, @"cursor46.cur"},
-    {"left_tee",		IMAGEPATH, @"cursor48.cur"},
-    {"leftbutton",		IMAGEPATH, @"cursor4a.cur"},
-    {"ll_angle",		IMAGEPATH, @"cursor4c.cur"},
-    {"lr_angle",		IMAGEPATH, @"cursor4e.cur"},
-    {"man",			IMAGEPATH, @"cursor50.cur"},
-    {"middlebutton",		IMAGEPATH, @"cursor52.cur"},
-    {"mouse",			IMAGEPATH, @"cursor54.cur"},
-    {"pencil",			IMAGEPATH, @"cursor56.cur"},
-    {"pirate",			IMAGEPATH, @"cursor58.cur"},
-    {"plus",			IMAGEPATH, @"cursor5a.cur"},
-    {"question_arrow",		IMAGEPATH, @"cursor5c.cur"},
-    {"right_ptr",		IMAGEPATH, @"cursor5e.cur"},
-    {"right_side",		IMAGEPATH, @"cursor60.cur"},
-    {"right_tee",		IMAGEPATH, @"cursor62.cur"},
-    {"rightbutton",		IMAGEPATH, @"cursor64.cur"},
-    {"rtl_logo",		IMAGEPATH, @"cursor66.cur"},
-    {"sailboat",		IMAGEPATH, @"cursor68.cur"},
-    {"sb_down_arrow",		IMAGEPATH, @"cursor6a.cur"},
-    {"sb_h_double_arrow",	IMAGEPATH, @"cursor6c.cur"},
-    {"sb_left_arrow",		IMAGEPATH, @"cursor6e.cur"},
-    {"sb_right_arrow",		IMAGEPATH, @"cursor70.cur"},
-    {"sb_up_arrow",		IMAGEPATH, @"cursor72.cur"},
-    {"sb_v_double_arrow",	IMAGEPATH, @"cursor74.cur"},
-    {"shuttle",			IMAGEPATH, @"cursor76.cur"},
-    {"sizing",			IMAGEPATH, @"cursor78.cur"},
-    {"spider",			IMAGEPATH, @"cursor7a.cur"},
-    {"spraycan",		IMAGEPATH, @"cursor7c.cur"},
-    {"star",			IMAGEPATH, @"cursor7e.cur"},
-    {"target",			IMAGEPATH, @"cursor80.cur"},
-    {"tcross",			IMAGEPATH, @"cursor82.cur"},
-//    {"top_left_arrow",	IMAGEPATH, @"cursor84.cur"},
-    {"top_left_corner",		IMAGEPATH, @"cursor86.cur"},
-    {"top_right_corner",	IMAGEPATH, @"cursor88.cur"},
-    {"top_side",		IMAGEPATH, @"cursor8a.cur"},
-    {"top_tee",			IMAGEPATH, @"cursor8c.cur"},
-    {"trek",			IMAGEPATH, @"cursor8e.cur"},
-    {"ul_angle",		IMAGEPATH, @"cursor90.cur"},
-    {"umbrella",		IMAGEPATH, @"cursor92.cur"},
-    {"ur_angle",		IMAGEPATH, @"cursor94.cur"},
-    {"watch",			IMAGEPATH, @"cursor96.cur"},
-//    {"xterm",			IMAGEPATH, @"cursor98.cur"},
-//    {"none",			IMAGEPATH, @"cursor9a.cur"},
+    {"arrow",			SELECTOR,    @"arrowCursor"},
+    {"top_left_arrow",		SELECTOR,    @"arrowCursor"},
+    {"left_ptr",		SELECTOR,    @"arrowCursor"},
+    {"copyarrow",		SELECTOR,    @"dragCopyCursor", @"_copyDragCursor"},
+    {"aliasarrow",		SELECTOR,    @"dragLinkCursor", @"_linkDragCursor"},
+    {"contextualmenuarrow",	SELECTOR,    @"contextualMenuCursor"},
+    {"movearrow",		SELECTOR,    @"_moveCursor"},
+    {"ibeam",			SELECTOR,    @"IBeamCursor"},
+    {"text",			SELECTOR,    @"IBeamCursor"},
+    {"xterm",			SELECTOR,    @"IBeamCursor"},
+    {"cross",			SELECTOR,    @"crosshairCursor"},
+    {"crosshair",		SELECTOR,    @"crosshairCursor"},
+    {"cross-hair",		SELECTOR,    @"crosshairCursor"},
+    {"tcross",			SELECTOR,    @"crosshairCursor"},
+    {"hand",			SELECTOR,    @"openHandCursor"},
+    {"openhand",		SELECTOR,    @"openHandCursor"},
+    {"closedhand",		SELECTOR,    @"closedHandCursor"},
+    {"fist",			SELECTOR,    @"closedHandCursor"},
+    {"pointinghand",		SELECTOR,    @"pointingHandCursor"},
+    {"resize",			SELECTOR,    @"arrowCursor"},
+    {"resizeleft",		SELECTOR,    @"resizeLeftCursor"},
+    {"resizeright",		SELECTOR,    @"resizeRightCursor"},
+    {"resizeleftright",		SELECTOR,    @"resizeLeftRightCursor"},
+    {"resizeup",		SELECTOR,    @"resizeUpCursor"},
+    {"resizedown",		SELECTOR,    @"resizeDownCursor"},
+    {"resizeupdown",		SELECTOR,    @"resizeUpDownCursor"},
+    {"resizebottomleft",	SELECTOR,    @"_bottomLeftResizeCursor"},
+    {"resizetopleft",		SELECTOR,    @"_topLeftResizeCursor"},
+    {"resizebottomright",	SELECTOR,    @"_bottomRightResizeCursor"},
+    {"resizetopright",		SELECTOR,    @"_topRightResizeCursor"},
+    {"notallowed",		SELECTOR,    @"operationNotAllowedCursor"},
+    {"poof",			SELECTOR,    @"disappearingItemCursor"},
+    {"wait",			SELECTOR,    @"busyButClickableCursor"},
+    {"spinning",		SELECTOR,    @"busyButClickableCursor"},
+    {"countinguphand",		SELECTOR,    @"busyButClickableCursor"},
+    {"countingdownhand",	SELECTOR,    @"busyButClickableCursor"},
+    {"countingupanddownhand",	SELECTOR,    @"busyButClickableCursor"},
+    {"help",			IMAGENAMED,  @"NSHelpCursor", nil, {8, 8}},
+//  {"hand",			IMAGEBITMAP, MacCursorData(hand)},
+    {"bucket",			IMAGEBITMAP, MacCursorData(bucket)},
+    {"cancel",			IMAGEBITMAP, MacCursorData(cancel)},
+//  {"resize",			IMAGEBITMAP, MacCursorData(resize)},
+    {"eyedrop",			IMAGEBITMAP, MacCursorData(eyedrop)},
+    {"eyedrop-full",		IMAGEBITMAP, MacCursorData(eyedrop_full)},
+    {"zoom-in",			IMAGEBITMAP, MacCursorData(zoom_in)},
+    {"zoom-out",		IMAGEBITMAP, MacCursorData(zoom_out)},
+    {"X_cursor",		IMAGEBITMAP, MacXCursorData(X_cursor)},
+//  {"arrow",			IMAGEBITMAP, MacXCursorData(arrow)},
+    {"based_arrow_down",	IMAGEBITMAP, MacXCursorData(based_arrow_down)},
+    {"based_arrow_up",		IMAGEBITMAP, MacXCursorData(based_arrow_up)},
+    {"boat",			IMAGEBITMAP, MacXCursorData(boat)},
+    {"bogosity",		IMAGEBITMAP, MacXCursorData(bogosity)},
+    {"bottom_left_corner",	IMAGEBITMAP, MacXCursorData(bottom_left_corner)},
+    {"bottom_right_corner",	IMAGEBITMAP, MacXCursorData(bottom_right_corner)},
+    {"bottom_side",		IMAGEBITMAP, MacXCursorData(bottom_side)},
+    {"bottom_tee",		IMAGEBITMAP, MacXCursorData(bottom_tee)},
+    {"box_spiral",		IMAGEBITMAP, MacXCursorData(box_spiral)},
+    {"center_ptr",		IMAGEBITMAP, MacXCursorData(center_ptr)},
+    {"circle",			IMAGEBITMAP, MacXCursorData(circle)},
+    {"clock",			IMAGEBITMAP, MacXCursorData(clock)},
+    {"coffee_mug",		IMAGEBITMAP, MacXCursorData(coffee_mug)},
+//  {"cross",			IMAGEBITMAP, MacXCursorData(cross)},
+    {"cross_reverse",		IMAGEBITMAP, MacXCursorData(cross_reverse)},
+//  {"crosshair",		IMAGEBITMAP, MacXCursorData(crosshair)},
+    {"diamond_cross",		IMAGEBITMAP, MacXCursorData(diamond_cross)},
+    {"dot",			IMAGEBITMAP, MacXCursorData(dot)},
+    {"dotbox",			IMAGEBITMAP, MacXCursorData(dotbox)},
+    {"double_arrow",		IMAGEBITMAP, MacXCursorData(double_arrow)},
+    {"draft_large",		IMAGEBITMAP, MacXCursorData(draft_large)},
+    {"draft_small",		IMAGEBITMAP, MacXCursorData(draft_small)},
+    {"draped_box",		IMAGEBITMAP, MacXCursorData(draped_box)},
+    {"exchange",		IMAGEBITMAP, MacXCursorData(exchange)},
+    {"fleur",			IMAGEBITMAP, MacXCursorData(fleur)},
+    {"gobbler",			IMAGEBITMAP, MacXCursorData(gobbler)},
+    {"gumby",			IMAGEBITMAP, MacXCursorData(gumby)},
+    {"hand1",			IMAGEBITMAP, MacXCursorData(hand1)},
+    {"hand2",			IMAGEBITMAP, MacXCursorData(hand2)},
+    {"heart",			IMAGEBITMAP, MacXCursorData(heart)},
+    {"icon",			IMAGEBITMAP, MacXCursorData(icon)},
+    {"iron_cross",		IMAGEBITMAP, MacXCursorData(iron_cross)},
+//  {"left_ptr",		IMAGEBITMAP, MacXCursorData(left_ptr)},
+    {"left_side",		IMAGEBITMAP, MacXCursorData(left_side)},
+    {"left_tee",		IMAGEBITMAP, MacXCursorData(left_tee)},
+    {"leftbutton",		IMAGEBITMAP, MacXCursorData(leftbutton)},
+    {"ll_angle",		IMAGEBITMAP, MacXCursorData(ll_angle)},
+    {"lr_angle",		IMAGEBITMAP, MacXCursorData(lr_angle)},
+    {"man",			IMAGEBITMAP, MacXCursorData(man)},
+    {"middlebutton",		IMAGEBITMAP, MacXCursorData(middlebutton)},
+    {"mouse",			IMAGEBITMAP, MacXCursorData(mouse)},
+    {"pencil",			IMAGEBITMAP, MacXCursorData(pencil)},
+    {"pirate",			IMAGEBITMAP, MacXCursorData(pirate)},
+    {"plus",			IMAGEBITMAP, MacXCursorData(plus)},
+    {"question_arrow",		IMAGEBITMAP, MacXCursorData(question_arrow)},
+    {"right_ptr",		IMAGEBITMAP, MacXCursorData(right_ptr)},
+    {"right_side",		IMAGEBITMAP, MacXCursorData(right_side)},
+    {"right_tee",		IMAGEBITMAP, MacXCursorData(right_tee)},
+    {"rightbutton",		IMAGEBITMAP, MacXCursorData(rightbutton)},
+    {"rtl_logo",		IMAGEBITMAP, MacXCursorData(rtl_logo)},
+    {"sailboat",		IMAGEBITMAP, MacXCursorData(sailboat)},
+    {"sb_down_arrow",		IMAGEBITMAP, MacXCursorData(sb_down_arrow)},
+    {"sb_h_double_arrow",	IMAGEBITMAP, MacXCursorData(sb_h_double_arrow)},
+    {"sb_left_arrow",		IMAGEBITMAP, MacXCursorData(sb_left_arrow)},
+    {"sb_right_arrow",		IMAGEBITMAP, MacXCursorData(sb_right_arrow)},
+    {"sb_up_arrow",		IMAGEBITMAP, MacXCursorData(sb_up_arrow)},
+    {"sb_v_double_arrow",	IMAGEBITMAP, MacXCursorData(sb_v_double_arrow)},
+    {"shuttle",			IMAGEBITMAP, MacXCursorData(shuttle)},
+    {"sizing",			IMAGEBITMAP, MacXCursorData(sizing)},
+    {"spider",			IMAGEBITMAP, MacXCursorData(spider)},
+    {"spraycan",		IMAGEBITMAP, MacXCursorData(spraycan)},
+    {"star",			IMAGEBITMAP, MacXCursorData(star)},
+    {"target",			IMAGEBITMAP, MacXCursorData(target)},
+//  {"tcross",			IMAGEBITMAP, MacXCursorData(tcross)},
+//  {"top_left_arrow",		IMAGEBITMAP, MacXCursorData(top_left_arrow)},
+    {"top_left_corner",		IMAGEBITMAP, MacXCursorData(top_left_corner)},
+    {"top_right_corner",	IMAGEBITMAP, MacXCursorData(top_right_corner)},
+    {"top_side",		IMAGEBITMAP, MacXCursorData(top_side)},
+    {"top_tee",			IMAGEBITMAP, MacXCursorData(top_tee)},
+    {"trek",			IMAGEBITMAP, MacXCursorData(trek)},
+    {"ul_angle",		IMAGEBITMAP, MacXCursorData(ul_angle)},
+    {"umbrella",		IMAGEBITMAP, MacXCursorData(umbrella)},
+    {"ur_angle",		IMAGEBITMAP, MacXCursorData(ur_angle)},
+    {"watch",			IMAGEBITMAP, MacXCursorData(watch)},
+//  {"xterm",			IMAGEBITMAP, MacXCursorData(xterm)},
     {NULL}
 };
 
@@ -218,52 +229,125 @@ FindCursorByName(
     TkMacOSXCursor *macCursorPtr,
     const char *name)
 {
-    Tcl_Obj *strPtr = Tcl_NewStringObj(name, -1);
-    int idx, result;
+    NSString *path = nil;
     NSImage *image = nil;
+    NSPoint hotSpot = NSZeroPoint;
+    int haveHotSpot = 0, result = TCL_ERROR;
+    NSCursor *macCursor = nil;
 
-    macCursorPtr->macCursor = nil;
-    macCursorPtr->type = 0;
+    if (name[0] == '@') {
+	/*
+	 * System cursor of type @filename
+	 */
 
-    result = Tcl_GetIndexFromObjStruct(NULL, strPtr, cursorNames,
-		sizeof(struct CursorName), NULL, TCL_EXACT, &idx);
-    Tcl_DecrRefCount(strPtr);
-    if (result == TCL_OK) {
-	NSCursor *macCursor = nil;
+	macCursorPtr->type = IMAGEPATH;
+	path = [NSString stringWithUTF8String:&name[1]];
+    } else {
+	Tcl_Obj *strPtr = Tcl_NewStringObj(name, -1);
+	int idx;
 
-	macCursorPtr->type = cursorNames[idx].kind;
-	switch (cursorNames[idx].kind) {
-	case SELECTOR:
-	    macCursor = [[NSCursor performSelector:
-		    NSSelectorFromString(cursorNames[idx].id)] retain];
-	    break;
-	case IMAGENAMED:
-	    image = [NSImage imageNamed:cursorNames[idx].id];
-	    break;
-	case IMAGEPATH: {
-	    NSString *path = [[NSApp tkFrameworkBundle]
-		    pathForImageResource:cursorNames[idx].id];
-#ifdef TK_MAC_DEBUG
-	    if (!path && getenv("TK_SRCROOT")) {
-	    	// FIXME: fallback to TK_SRCROOT
-		path = [NSString stringWithFormat:@"%s/win/rc/%@",
-			getenv("TK_SRCROOT"), cursorNames[idx].id];
+	result = Tcl_GetIndexFromObjStruct(NULL, strPtr, cursorNames,
+		    sizeof(struct CursorName), NULL, TCL_EXACT, &idx);
+	Tcl_DecrRefCount(strPtr);
+	if (result == TCL_OK) {
+	    macCursorPtr->type = cursorNames[idx].kind;
+	    switch (cursorNames[idx].kind) {
+	    case SELECTOR: {
+		SEL selector = NSSelectorFromString(cursorNames[idx].id1);
+		if ([NSCursor respondsToSelector:selector]) {
+		    macCursor = [[NSCursor performSelector:selector] retain];
+		} else if (cursorNames[idx].id2) {
+		    selector = NSSelectorFromString(cursorNames[idx].id2);
+		    if ([NSCursor respondsToSelector:selector]) {
+			macCursor = [[NSCursor performSelector:selector] retain];
+		    }
+		}
+		break;
 	    }
-#endif
-	    if (path) {
-		image = [[[NSImage alloc] initWithContentsOfFile:path]
-			autorelease];
+	    case IMAGENAMED:
+		image = [[NSImage imageNamed:cursorNames[idx].id1] retain];
+		hotSpot = cursorNames[idx].hotspot;
+		haveHotSpot = 1;
+		break;
+	    case IMAGEPATH:
+		path = [NSApp tkFrameworkImagePath:cursorNames[idx].id1];
+		break;
+	    case IMAGEBITMAP: {
+		unsigned char *bitmap = (unsigned char *)(cursorNames[idx].id1);
+		NSBitmapImageRep *bitmapImageRep = NULL;
+		CGImageRef img = NULL, mask = NULL, maskedImg = NULL;
+		static const CGFloat decodeWB[] = {1, 0};
+		CGColorSpaceRef colorspace = CGColorSpaceCreateWithName(
+			kCGColorSpaceGenericGray);
+		CGDataProviderRef provider = CGDataProviderCreateWithData(NULL,
+			bitmap, pix*pix/8, NULL);
+		if (provider) {
+		    img = CGImageCreate(pix, pix, 1, 1, pix/8, colorspace,
+			    kCGBitmapByteOrderDefault, provider, decodeWB, 0,
+			    kCGRenderingIntentDefault);
+		    CFRelease(provider);
+		}
+		provider = CGDataProviderCreateWithData(NULL, bitmap + 
+			pix*pix/8, pix*pix/8, NULL);
+		if (provider) {
+		    mask = CGImageMaskCreate(pix, pix, 1, 1, pix/8, provider,
+			    decodeWB, 0);
+		    CFRelease(provider);
+		}
+		if (img && mask) {
+		    maskedImg = CGImageCreateWithMask(img, mask);
+		}
+		if (maskedImg) {
+		    bitmapImageRep = [[NSBitmapImageRep alloc]
+			    initWithCGImage:maskedImg];
+		    CFRelease(maskedImg);
+		}
+		if (mask) { CFRelease(mask); }
+		if (img)  { CFRelease(img); }
+		if (colorspace) { CFRelease(colorspace); }
+		if (bitmapImageRep) {
+		    image = [[NSImage alloc] initWithSize:NSMakeSize(pix, pix)];
+		    [image addRepresentation:bitmapImageRep];
+		    [bitmapImageRep release];
+		}
+		uint16_t *hotSpotData = (uint16_t*)(bitmap + 2*pix*pix/8);
+		hotSpot.y = CFSwapInt16BigToHost(*hotSpotData++);
+		hotSpot.x = CFSwapInt16BigToHost(*hotSpotData);
+		haveHotSpot = 1;
+		break;
 	    }
-	    break;
+	    }
 	}
-	}
-	if (image) {
-	    // FIXME: read hotspot info from .cur files
-	    macCursor = [[NSCursor alloc] initWithImage:image
-		    hotSpot:cursorNames[idx].hotspot];
-	}
-	macCursorPtr->macCursor = TkMacOSXMakeUncollectable(macCursor);
     }
+    if (path) {
+	image = [[[NSImage alloc] initWithContentsOfFile:path] autorelease];
+    }
+    if (!image && !macCursor && result != TCL_OK) {
+	macCursorPtr->type = IMAGENAMED;
+	image = [[NSImage imageNamed:[NSString stringWithUTF8String:name]]
+		retain];
+	haveHotSpot = 0;
+    }
+    if (image) {
+	if (!haveHotSpot && [[path pathExtension] isEqualToString:@"cur"]) {
+	    NSData *data = [NSData dataWithContentsOfFile:path];
+	    if ([data length] > 14) {
+		uint16_t *hotSpotData = (uint16_t*)((char*) [data bytes] + 10);
+		hotSpot.x = CFSwapInt16LittleToHost(*hotSpotData++);
+		hotSpot.y = CFSwapInt16LittleToHost(*hotSpotData);
+		haveHotSpot = 1;
+	    }
+	}
+	if (!haveHotSpot) {
+	    NSSize size = [image size];
+	    hotSpot.x = size.width * 0.5;
+	    hotSpot.y = size.height * 0.5;
+	}
+	hotSpot.y = -hotSpot.y;
+	macCursor = [[NSCursor alloc] initWithImage:image hotSpot:hotSpot];
+	[image release];
+    }
+    macCursorPtr->macCursor = TkMacOSXMakeUncollectable(macCursor);
 }
 
 /*
@@ -289,35 +373,32 @@ TkGetCursorByName(
     Tk_Uid string)		/* Description of cursor. See manual entry
 				 * for details on legal syntax. */
 {
-    TkMacOSXCursor *macCursorPtr;
+    TkMacOSXCursor *macCursorPtr = NULL;
+    const char **argv = NULL;
+    int argc;
 
-    macCursorPtr = (TkMacOSXCursor *) ckalloc(sizeof(TkMacOSXCursor));
-    macCursorPtr->info.cursor = (Tk_Cursor) macCursorPtr;
+    /*
+     * All cursor names are valid lists of one element (for
+     * TkX11-compatibility), even unadorned system cursor names.
+     */
 
-    FindCursorByName(macCursorPtr, string);
-
-    if (macCursorPtr->macCursor == nil && macCursorPtr->type != NONE) {
-	const char **argv;
-	int argc;
-
-	/*
-	 * The user may be trying to specify an XCursor with fore & back
-	 * colors. We don't want this to be an error, so pick off the
-	 * first word, and try again.
-	 */
-
-	if (Tcl_SplitList(interp, string, &argc, &argv) == TCL_OK ) {
-	    if (argc > 1) {
-		FindCursorByName(macCursorPtr, argv[0]);
-	    }
-	    ckfree((char *) argv);
+    if (Tcl_SplitList(interp, string, &argc, &argv) == TCL_OK) {
+	if (argc) {
+	    macCursorPtr = (TkMacOSXCursor *) ckalloc(sizeof(TkMacOSXCursor));
+	    macCursorPtr->info.cursor = (Tk_Cursor) macCursorPtr;
+	    macCursorPtr->macCursor = nil;
+	    macCursorPtr->type = 0;
+	    FindCursorByName(macCursorPtr, argv[0]);
 	}
+	ckfree((char *) argv);
     }
-
-    if (macCursorPtr->macCursor == nil && macCursorPtr->type != NONE) {
-	ckfree((char *)macCursorPtr);
+    if (!macCursorPtr || (!macCursorPtr->macCursor &&
+	    macCursorPtr->type != NONE)) {
 	Tcl_AppendResult(interp, "bad cursor spec \"", string, "\"", NULL);
-	return NULL;
+	if (macCursorPtr) {
+	    ckfree((char *)macCursorPtr);
+	    macCursorPtr = NULL;
+	}
     }
     return (TkCursor *) macCursorPtr;
 }
@@ -421,6 +502,8 @@ TkMacOSXInstallCursor(
 	case SELECTOR:
 	case IMAGENAMED:
 	case IMAGEPATH:
+	case IMAGEBITMAP:
+	default:
 	    [macCursorPtr->macCursor set];
 	    break;
 	}

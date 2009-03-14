@@ -274,7 +274,7 @@ VISIBILITY_HIDDEN
 }
 @end
 @interface TKApplication(TKInit)
-- (NSBundle *)tkFrameworkBundle;
+- (NSString *)tkFrameworkImagePath:(NSString*)image;
 @end
 @interface TKApplication(TKEvent)
 - (NSEvent *)tkProcessEvent:(NSEvent *)theEvent;
