@@ -6185,7 +6185,6 @@ TkMacOSXMakeFullscreen(
     int fullscreen,
     Tcl_Interp *interp)
 {
-#ifdef MAC_OSX_TK_TODO
     WmInfo *wmPtr = winPtr->wmInfoPtr;
     int result = TCL_OK, wasFullscreen = (wmPtr->flags & WM_FULLSCREEN);
 
@@ -6208,22 +6207,19 @@ TkMacOSXMakeFullscreen(
 	    result = TCL_ERROR;
 	    wmPtr->flags &= ~WM_FULLSCREEN;
 	} else {
-	    Rect bounds, screenBounds = {0, 0, screenHeight, screenWidth};
+	    NSRect bounds = [window contentRectForFrameRect:[window frame]];
+	    NSRect screenBounds = NSMakeRect(0, 0, screenWidth, screenHeight);
 
-	    ChkErr(GetWindowBounds, window, kWindowContentRgn, &bounds);
-	    if (!EqualRect(&bounds, &screenBounds)) {
-		if (!wasFullscreen) {
-		    wmPtr->configX = wmPtr->x;
-		    wmPtr->configY = wmPtr->y;
-		    wmPtr->configAttributes = wmPtr->attributes;
-		    wmPtr->attributes &= ~kWindowResizableAttribute;
-		    ApplyWindowClassAttributeFlagChanges(winPtr, window,
-			    wmPtr->macClass, wmPtr->configAttributes,
-			    wmPtr->flags, 0);
-		}
+	    if (!NSEqualRects(bounds, screenBounds) && !wasFullscreen) {
+		wmPtr->configX = wmPtr->x;
+		wmPtr->configY = wmPtr->y;
+		wmPtr->configAttributes = wmPtr->attributes;
+		wmPtr->attributes &= ~kWindowResizableAttribute;
+		ApplyWindowAttributeFlagChanges(winPtr, window,
+			wmPtr->configAttributes, wmPtr->flags, 1, 0);
 		wmPtr->flags |= WM_SYNC_PENDING;
-		ChkErr(SetWindowBounds, window, kWindowContentRgn,
-			&screenBounds);
+		[window setFrame:[window frameRectForContentRect:
+			screenBounds] display:YES];
 		wmPtr->flags &= ~WM_SYNC_PENDING;
 	    }
 	    wmPtr->flags |= WM_FULLSCREEN;
@@ -6231,24 +6227,23 @@ TkMacOSXMakeFullscreen(
     } else {
 	wmPtr->flags &= ~WM_FULLSCREEN;
     }
+    TkMacOSXEnterExitFullscreen(winPtr, [window isKeyWindow]);
     if (wasFullscreen && !(wmPtr->flags & WM_FULLSCREEN)) {
 	UInt64 oldAttributes = wmPtr->attributes;
-	Rect bounds = {wmPtr->configY, wmPtr->configX,
-		wmPtr->configY + wmPtr->yInParent + wmPtr->configHeight,
-		wmPtr->configX + wmPtr->xInParent + wmPtr->configWidth};
+	NSRect bounds = NSMakeRect(wmPtr->configX, tkMacOSXZeroScreenHeight -
+		(wmPtr->configY + wmPtr->yInParent + wmPtr->configHeight),
+		wmPtr->xInParent + wmPtr->configWidth,
+		wmPtr->yInParent + wmPtr->configHeight);
 
 	wmPtr->attributes |= wmPtr->configAttributes &
 		kWindowResizableAttribute;
-	ApplyWindowClassAttributeFlagChanges(winPtr, window, wmPtr->macClass,
-		oldAttributes, wmPtr->flags, 0);
+	ApplyWindowAttributeFlagChanges(winPtr, window, oldAttributes,
+		wmPtr->flags, 1, 0);
 	wmPtr->flags |= WM_SYNC_PENDING;
-	ChkErr(SetWindowBounds, window, kWindowStructureRgn, &bounds);
+	[window setFrame:[window frameRectForContentRect:bounds] display:YES];
 	wmPtr->flags &= ~WM_SYNC_PENDING;
     }
-    TkMacOSXEnterExitFullscreen(winPtr, IsWindowActive(window));
     return result;
-#endif
-    return TCL_OK;
 }
 
 /*
@@ -6273,11 +6268,12 @@ TkMacOSXEnterExitFullscreen(
     int active)
 {
     WmInfo *wmPtr = winPtr->wmInfoPtr;
+    NSWindow *window = TkMacOSXDrawableWindow(winPtr->window);
     SystemUIMode mode;
     SystemUIOptions options;
 
     GetSystemUIMode(&mode, &options);
-    if (wmPtr && wmPtr->flags & WM_FULLSCREEN && active) {
+    if (window && wmPtr && (wmPtr->flags & WM_FULLSCREEN) && active) {
 	static SystemUIMode fullscreenMode = 0;
 	static SystemUIOptions fullscreenOptions = 0;
 
@@ -6286,6 +6282,11 @@ TkMacOSXEnterExitFullscreen(
 	}
 	if (mode != fullscreenMode) {
 	    ChkErr(SetSystemUIMode, fullscreenMode, fullscreenOptions);
+	    wmPtr->flags |= WM_SYNC_PENDING;
+	    [window setFrame:[window frameRectForContentRect:NSMakeRect(0, 0,
+		    WidthOfScreen(Tk_Screen(winPtr)),
+		    HeightOfScreen(Tk_Screen(winPtr)))] display:YES];
+	    wmPtr->flags &= ~WM_SYNC_PENDING;
 	}
     } else {
 	if (mode != kUIModeNormal) {
