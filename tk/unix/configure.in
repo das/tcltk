@@ -755,5 +755,6 @@ AC_SUBST(REZ_FLAGS)
 AC_CONFIG_FILES([
     Makefile:../unix/Makefile.in
     tkConfig.sh:../unix/tkConfig.sh.in
+    tk.pc:../unix/tk.pc.in
 ])
 AC_OUTPUT
