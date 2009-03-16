@@ -4,21 +4,21 @@ TkAqua Cocoa/64bit Port
 Features yet to be implemented, in order of importance:
 
 TODO for parity with Carbon TkAqua:
-- transient windows (stay in front of & move with parent window)
-- window resize limits (max/min & increments)
 - native file, alert & color picker dialogs
-- transparent windows
-- fullscreen windows
 
 TODO features that are not in Carbon TkAqua yet either:
 - native scale widget
 - custom menu drawing (for tk menus with very fancy config options that native
   menus do not support)
+- support for sheets & drawers
 - transparent window resize corner
 - stippled drawing
+- native bitmap creation for iconForFile, icon of specified size etc
+- command to access native about dialog
+- script enabling of cocoa button metrics
 
-Known Bugs:
-- CoreText measuring bug seen in narrowed widget demo main window
+Known Issues:
+- still appear to need the call to [NSWindow windowRef] in XMapWindow()
+  even though all WindowRef usage has been removed
 
-
--- das 28/02/2009
+-- das 16/03/2009
