@@ -344,50 +344,94 @@ static void		RemapWindows(TkWindow *winPtr,
 }
 @end
 
-#pragma mark TKApplication(TKWm)
+#pragma mark -
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * SetWindowSizeLimits --
+ *
+ *	Sets NSWindow size limits
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
 
-@implementation TKApplication(TKWm)
-- (NSRect)windowWillUseStandardFrame:(NSWindow *)window defaultFrame:(NSRect)newFrame {
-    TkWindow *winPtr = TkMacOSXGetTkWindow(window);
-    WmInfo *wmPtr;
-    int maxWidth, maxHeight;
-    NSRect frame;
+static void
+SetWindowSizeLimits(
+    TkWindow *winPtr)
+{
+    NSWindow *macWindow = TkMacOSXDrawableWindow(winPtr->window);
+    WmInfo *wmPtr = winPtr->wmInfoPtr;
+    int minWidth, minHeight, maxWidth, maxHeight, base;
 
-    if (!winPtr || !winPtr->wmInfoPtr) {
-	return newFrame;
+    if (!macWindow) {
+	return;
     }
-    frame = [window frame];
-    wmPtr = winPtr->wmInfoPtr;
-    if ((wmPtr->flags & WM_WIDTH_NOT_RESIZABLE) &&
-	    (wmPtr->flags & WM_HEIGHT_NOT_RESIZABLE)) {
-	return frame;
-    }
+    GetMinSize(winPtr, &minWidth, &minHeight);
     GetMaxSize(winPtr, &maxWidth, &maxHeight);
-    if (wmPtr->gridWin != NULL) {
-	int base = winPtr->reqWidth - (wmPtr->reqGridWidth * wmPtr->widthInc);
-
+    if (wmPtr->gridWin) {
+	base = winPtr->reqWidth - (wmPtr->reqGridWidth * wmPtr->widthInc);
 	if (base < 0) {
 	    base = 0;
 	}
+	minWidth = base + (minWidth * wmPtr->widthInc);
 	maxWidth = base + (maxWidth * wmPtr->widthInc);
 	base = winPtr->reqHeight - (wmPtr->reqGridHeight * wmPtr->heightInc);
 	if (base < 0) {
 	    base = 0;
 	}
+	minHeight = base + (minHeight * wmPtr->heightInc);
 	maxHeight = base + (maxHeight * wmPtr->heightInc);
     }
-    frame = [window contentRectForFrameRect:frame];
-    if (!(wmPtr->flags & WM_WIDTH_NOT_RESIZABLE)) {
-	frame.size.width = maxWidth;
+    if (wmPtr->flags & WM_WIDTH_NOT_RESIZABLE) {
+	minWidth = maxWidth = wmPtr->configWidth;
     }
-    if (!(wmPtr->flags & WM_HEIGHT_NOT_RESIZABLE)) {
-	frame.size.height = maxHeight;
+    if (wmPtr->flags & WM_HEIGHT_NOT_RESIZABLE) {
+	minHeight = maxHeight = wmPtr->configHeight;
     }
-    return [window frameRectForContentRect:frame];
+    if (wmPtr->gridWin) {
+	[macWindow setResizeIncrements:NSMakeSize(wmPtr->widthInc,
+		wmPtr->heightInc)];
+    } else if (wmPtr->sizeHintsFlags & PAspect && wmPtr->minAspect.x ==
+	    wmPtr->maxAspect.x && wmPtr->minAspect.y == wmPtr->maxAspect.y) {
+	NSSize aspect = NSMakeSize(wmPtr->minAspect.x, wmPtr->minAspect.y);
+	CGFloat ratio = aspect.width/aspect.height;
+	[macWindow setContentAspectRatio:aspect];
+	if ((CGFloat)minWidth/(CGFloat)minHeight > ratio) {
+	    minHeight = lround(minWidth / ratio);
+	} else {
+	    minWidth = lround(minHeight * ratio);
+	}
+	if ((CGFloat)maxWidth/(CGFloat)maxHeight > ratio) {
+	    maxWidth = lround(maxHeight * ratio);
+	} else {
+	    maxHeight = lround(maxWidth / ratio);
+	}
+	if ((CGFloat)wmPtr->configWidth/(CGFloat)wmPtr->configHeight > ratio) {
+	    wmPtr->configWidth = lround(wmPtr->configHeight * ratio);
+	    if (wmPtr->configWidth < minWidth) {
+		wmPtr->configWidth = minWidth;
+		wmPtr->configHeight = minHeight;
+	    }
+	} else {
+	    wmPtr->configHeight = lround(wmPtr->configWidth / ratio);
+	    if (wmPtr->configHeight < minHeight) {
+		wmPtr->configWidth = minWidth;
+		wmPtr->configHeight = minHeight;
+	    }
+	}
+    } else {
+	[macWindow setResizeIncrements:NSMakeSize(1.0, 1.0)];
+    }
+    [macWindow setContentMinSize:NSMakeSize(minWidth, minHeight)];
+    [macWindow setContentMaxSize:NSMakeSize(maxWidth, maxHeight)];
 }
-@end
-
-#pragma mark -
 
 /*
  *----------------------------------------------------------------------
@@ -559,8 +603,6 @@ TkWmMapWindow(
     WmInfo *wmPtr = winPtr->wmInfoPtr;
 
     if (wmPtr->flags & WM_NEVER_MAPPED) {
-	wmPtr->flags &= ~WM_NEVER_MAPPED;
-
 	/*
 	 * Create the underlying Mac window for this Tk window.
 	 */
@@ -568,6 +610,8 @@ TkWmMapWindow(
 	if (!TkMacOSXHostToplevelExists(winPtr)) {
 	    TkMacOSXMakeRealWindowExist(winPtr);
 	}
+
+	wmPtr->flags &= ~WM_NEVER_MAPPED;
 
 	/*
 	 * Generate configure event when we first map the window.
@@ -3689,9 +3733,10 @@ UpdateGeometryInfo(
 	    TkMacOSXDbgMsg("Moving to %d %d, resizing to %d x %d", x, y,
 		    width, height);
 	}
+	SetWindowSizeLimits(winPtr);
 	wmPtr->flags |= WM_SYNC_PENDING;
 	XMoveResizeWindow(winPtr->display, winPtr->window, x, y,
-		(unsigned) width, (unsigned) height);
+		wmPtr->configWidth, wmPtr->configHeight);
 	wmPtr->flags &= ~WM_SYNC_PENDING;
     } else if ((width != wmPtr->configWidth)
 	    || (height != wmPtr->configHeight)) {
@@ -3700,10 +3745,13 @@ UpdateGeometryInfo(
 	if (wmTracing) {
 	    TkMacOSXDbgMsg("Resizing to %d x %d\n", width, height);
 	}
+	SetWindowSizeLimits(winPtr);
 	wmPtr->flags |= WM_SYNC_PENDING;
-	XResizeWindow(winPtr->display, winPtr->window, (unsigned) width,
-		(unsigned) height);
+	XResizeWindow(winPtr->display, winPtr->window, wmPtr->configWidth,
+		wmPtr->configHeight);
 	wmPtr->flags &= ~WM_SYNC_PENDING;
+    } else {
+	SetWindowSizeLimits(winPtr);
     }
 }
 
@@ -4637,12 +4685,8 @@ InitialWindowBounds(
 
     if (!(wmPtr->sizeHintsFlags & (USPosition | PPosition))) {
 	static NSPoint cascadePoint = { .x = 0, .y = 0 };
-	NSRect frame = [macWindow frame];
+	NSRect frame;
 
-	frame.origin.x = 5;
-	frame.origin.y = tkMacOSXZeroScreenHeight -
-		(tkMacOSXZeroScreenTop + 5 + frame.size.height);
-	[macWindow setFrame:frame display:NO];
 	cascadePoint = [macWindow cascadeTopLeftFromPoint:cascadePoint];
 	frame = [macWindow frame];
 	wmPtr->x = frame.origin.x;
@@ -4717,103 +4761,6 @@ TkMacOSXGrowToplevel(
     void *whichWindow,
     Point start)
 {
-#ifdef MAC_OSX_TK_TODO
-    Point where = start;
-    TkDisplay *dispPtr;
-    Rect portRect;
-    CGrafPtr destPort = GetWindowPort(whichWindow);
-
-    QDGlobalToLocalPoint(destPort, &where);
-    GetPortBounds(destPort, &portRect);
-    if (where.h > (portRect.right - 16) &&
-	    where.v > (portRect.bottom - 16)) {
-	Window window;
-	TkWindow *winPtr;
-	WmInfo *wmPtr;
-	int minWidth, minHeight, maxWidth, maxHeight;
-	Rect limits, bounds, *maxBounds;
-	Boolean resizeResult;
-
-	window = TkMacOSXGetXWindow(whichWindow);
-	dispPtr = TkGetDisplayList();
-	winPtr = (TkWindow *) Tk_IdToWindow(dispPtr->display, window);
-	wmPtr = winPtr->wmInfoPtr;
-	maxBounds = (Rect*)(dispPtr->display->screens->ext_data);
-
-	if ((wmPtr->flags & WM_WIDTH_NOT_RESIZABLE) &&
-		(wmPtr->flags & WM_HEIGHT_NOT_RESIZABLE)) {
-	    return false;
-	}
-	GetMinSize(winPtr, &minWidth, &minHeight);
-	GetMaxSize(winPtr, &maxWidth, &maxHeight);
-	if (wmPtr->gridWin != NULL) {
-	    int base = winPtr->reqWidth - (wmPtr->reqGridWidth
-		    * wmPtr->widthInc);
-
-	    if (base < 0) {
-		base = 0;
-	    }
-	    limits.left	 = base + (minWidth * wmPtr->widthInc);
-	    limits.right = base + (maxWidth * wmPtr->widthInc);
-	    base = winPtr->reqHeight - (wmPtr->reqGridHeight
-		    * wmPtr->heightInc);
-	    if (base < 0) {
-		base = 0;
-	    }
-	    limits.top	  = base + (minHeight * wmPtr->heightInc);
-	    limits.bottom = base + (maxHeight * wmPtr->heightInc);
-	} else {
-	    limits.left = minWidth;
-	    limits.right = maxWidth;
-	    limits.top = minHeight;
-	    limits.bottom = maxHeight;
-	}
-	if (wmPtr->flags & WM_WIDTH_NOT_RESIZABLE) {
-	    limits.left = limits.right = winPtr->changes.width;
-	}
-	if (wmPtr->flags & WM_HEIGHT_NOT_RESIZABLE) {
-	    limits.top = limits.bottom = winPtr->changes.height;
-	}
-	if (PtInRect(start, maxBounds)) {
-	    Rect strBounds, strWidths, limitBounds;
-
-	    ChkErr(GetWindowBounds, whichWindow, kWindowStructureRgn,
-		    &strBounds);
-	    ChkErr(GetWindowStructureWidths, whichWindow, &strWidths);
-
-	    limitBounds.left = limits.left + (strBounds.left + strWidths.left);
-	    limitBounds.right = limits.right +
-		    (strBounds.left + strWidths.left + strWidths.right);
-	    limitBounds.top = limits.top + (strBounds.top + strWidths.top);
-	    limitBounds.bottom = limits.bottom +
-		    (strBounds.top + strWidths.top + strWidths.bottom);
-	    if (limitBounds.left < maxBounds->left) {
-		limitBounds.left = maxBounds->left;
-	    }
-	    if (limitBounds.right > maxBounds->right) {
-		limitBounds.right = maxBounds->right;
-	    }
-	    if (limitBounds.top < maxBounds->top) {
-		limitBounds.top = maxBounds->top;
-	    }
-	    if (limitBounds.bottom > maxBounds->bottom) {
-		limitBounds.bottom = maxBounds->bottom;
-	    }
-	    limits.left = limitBounds.left - (strBounds.left + strWidths.left);
-	    limits.right = limitBounds.right -
-		    (strBounds.left + strWidths.left + strWidths.right);
-	    limits.top = limitBounds.top - (strBounds.top + strWidths.top);
-	    limits.bottom = limitBounds.bottom -
-		    (strBounds.top + strWidths.top + strWidths.bottom);
-	}
-	TkMacOSXTrackingLoop(1);
-	resizeResult = ResizeWindow(whichWindow, start, &limits, &bounds);
-	TkMacOSXTrackingLoop(0);
-	if (resizeResult) {
-	    return true;
-	}
-    }
-#endif
     return false;
 }
 
@@ -5351,9 +5298,11 @@ TkMacOSXMakeRealWindowExist(
     }
 
     WindowClass macClass = wmPtr->macClass;
-    wmPtr->flags |= macClassAttrs[macClass].flags;
     wmPtr->attributes &= (tkAlwaysValidAttributes |
 	    macClassAttrs[macClass].validAttrs);
+    wmPtr->flags |= macClassAttrs[macClass].flags |
+	    ((wmPtr->attributes & kWindowResizableAttribute) ? 0 :
+	    WM_WIDTH_NOT_RESIZABLE|WM_HEIGHT_NOT_RESIZABLE);
     UInt64 attributes = (wmPtr->attributes &
 	    ~macClassAttrs[macClass].forceOffAttrs) |
 	    macClassAttrs[macClass].forceOnAttrs;
@@ -5373,7 +5322,12 @@ TkMacOSXMakeRealWindowExist(
 	    (styleMask & (NSUtilityWindowMask|NSDocModalWindowMask|
 	    NSNonactivatingPanelMask|NSHUDWindowMask)) ? [NSPanel class] :
 	    [TKWindow class]);
-    NSWindow *window = [[winClass alloc] initWithContentRect:NSZeroRect
+    NSRect structureRect = [winClass frameRectForContentRect:NSZeroRect
+	    styleMask:styleMask];
+    NSRect contentRect = NSMakeRect(5 - structureRect.origin.x,
+	    tkMacOSXZeroScreenHeight - (tkMacOSXZeroScreenTop + 5 +
+	    structureRect.origin.y + structureRect.size.height + 200), 200, 200);
+    NSWindow *window = [[winClass alloc] initWithContentRect:contentRect
 	    styleMask:styleMask backing:NSBackingStoreBuffered defer:YES];
     if (!window) {
 	Tcl_Panic("couldn't allocate new Mac window");
@@ -5398,7 +5352,6 @@ TkMacOSXMakeRealWindowExist(
 	ApplyMasterOverrideChanges(winPtr, window);
     }
 
-    NSRect structureRect = [window frameRectForContentRect:NSZeroRect];
     NSRect geometry = InitialWindowBounds(winPtr, window);
     geometry.size.width +=  structureRect.size.width;
     geometry.size.height += structureRect.size.height;
@@ -6037,6 +5990,14 @@ ApplyWindowAttributeFlagChanges(
 	    [[macWindow standardWindowButton:NSWindowZoomButton]
 		    setEnabled:(newAttributes & kWindowResizableAttribute) &&
 		    (newAttributes & kWindowFullZoomAttribute)];
+	    if (newAttributes & kWindowResizableAttribute) {
+		wmPtr->flags &= ~(WM_WIDTH_NOT_RESIZABLE |
+			WM_HEIGHT_NOT_RESIZABLE);
+	    } else {
+		wmPtr->flags |= (WM_WIDTH_NOT_RESIZABLE |
+			WM_HEIGHT_NOT_RESIZABLE);
+	    }
+	    WmUpdateGeom(wmPtr, winPtr);
 	}
 	if ((changedAttributes & kWindowToolbarButtonAttribute) || initial) {
 	    [macWindow setShowsToolbarButton:
