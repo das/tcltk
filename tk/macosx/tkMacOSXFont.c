@@ -77,6 +77,8 @@ static const struct SystemFontMapEntry systemFontMap[] = {
 #undef ThemeFont
 
 static int antialiasedTextEnabled = -1;
+static NSCharacterSet *whitespaceCharacterSet = nil;
+static NSCharacterSet *lineendingCharacterSet = nil;
 
 static void GetTkFontAttributesForNSFont(NSFont *nsFont,
 	TkFontAttributes *faPtr);
@@ -356,6 +358,7 @@ TkpFontPkgInit(
     const struct SystemFontMapEntry *systemFont = systemFontMap;
     NSFont *nsFont;
     TkFontAttributes fa;
+    NSMutableCharacterSet *cs;
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
 
     /* force this for now */
@@ -392,6 +395,14 @@ TkpFontPkgInit(
 	fa.slant = TK_FS_ROMAN;
     }
     CreateNamedSystemFont(interp, tkwin, "TkFixedFont", &fa);
+    if (!whitespaceCharacterSet) {
+	whitespaceCharacterSet = [[NSCharacterSet
+		whitespaceAndNewlineCharacterSet] retain];
+	cs = [whitespaceCharacterSet mutableCopy];
+	[cs removeCharactersInString:@" "];
+	lineendingCharacterSet = [cs copy];
+	[cs release];
+    }
     [pool drain];
 }
 
@@ -778,15 +789,16 @@ TkpMeasureCharsInContext(
 				 * terminating character. */
 {
     const MacFont *fontPtr = (const MacFont *) tkfont;
-    CFIndex start, len;
-    CFRange range;
     NSString *string;
     NSAttributedString *attributedString;
     CTTypesetterRef typesetter;
+    CFIndex start, len;
+    CFRange range = {0, 0};
     CTLineRef line;
-    CGFloat offset;
+    CGFloat offset = 0;
     CFIndex index;
-    double width, maxWidth;
+    double width;
+    int length, fit;
 
     if (rangeStart < 0 || rangeLength <= 0 ||
 	    rangeStart + rangeLength > numBytes ||
@@ -794,69 +806,99 @@ TkpMeasureCharsInContext(
 	*lengthPtr = 0;
 	return 0;
     }
-    start = Tcl_NumUtfChars(source, rangeStart);
-    len = Tcl_NumUtfChars(source, rangeStart + rangeLength);
-    range = CFRangeMake(0, len);
+#if 0
+    /* Back-compatibility with ATSUI renderer, appears not to be needed */
+    if (rangeStart == 0 && maxLength == 1 && (flags & TK_ISOLATE_END) &&
+	    !(flags & TK_AT_LEAST_ONE)) {
+	length = 0;
+	fit = 0;
+	goto done;
+    }
+#endif
+    if (maxLength > 32767) {
+	maxLength = 32767;
+    }
     string = [[NSString alloc] initWithBytesNoCopy:(void*)source
 		length:numBytes encoding:NSUTF8StringEncoding freeWhenDone:NO];
     if (!string) {
-	*lengthPtr = 0;
-	return rangeLength;
+	length = 0;
+	fit = rangeLength;
+	goto done;
     }
     attributedString = [[NSAttributedString alloc] initWithString:string
 	    attributes:fontPtr->nsAttributes];
-    typesetter = CTTypesetterCreateWithAttributedStringAndOptions(
-	    (CFAttributedStringRef)attributedString, (CFDictionaryRef)
-	    [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:0]
-	    forKey:(id)kCTTypesetterOptionDisableBidiProcessing]);
-    line = CTTypesetterCreateLine(typesetter, range);
-    offset = CTLineGetOffsetForStringIndex(line, start, NULL);
-
+    typesetter = CTTypesetterCreateWithAttributedString(
+	    (CFAttributedStringRef)attributedString);
+    start = Tcl_NumUtfChars(source, rangeStart);
+    len = Tcl_NumUtfChars(source, rangeStart + rangeLength);
+    if (start > 0) {
+	range.length = start;
+	line = CTTypesetterCreateLine(typesetter, range);
+	offset = CTLineGetTypographicBounds(line, NULL, NULL, NULL);
+	CFRelease(line);
+    }
     if (maxLength < 0) {
-	width = CTLineGetTypographicBounds(line, NULL, NULL, NULL);
 	index = len;
+	range.length = len;
+	line = CTTypesetterCreateLine(typesetter, range);
+	width = CTLineGetTypographicBounds(line, NULL, NULL, NULL);
+	CFRelease(line);
     } else {
-	CTLineRef bkLine;
+	double maxWidth = maxLength + offset;
+	NSCharacterSet *cs;
 
-	if (maxLength > 32767) {
-	    maxLength = 32767;
-	}
-	maxWidth = maxLength + offset;
 	index = start;
 	if (flags & TK_WHOLE_WORDS) {
 	    index = CTTypesetterSuggestLineBreak(typesetter, 0, maxWidth);
 	    if (index <= start && (flags & TK_AT_LEAST_ONE)) {
 		flags &= ~TK_WHOLE_WORDS;
-	    } else {
-		unichar c = [string characterAtIndex:index - 1];
-		while (index > start && c == ' ') {
-		    c = [string characterAtIndex:--index - 1];
-		}
 	    }
 	}
 	if (index <= start && !(flags & TK_WHOLE_WORDS)) {
 	    index = CTTypesetterSuggestClusterBreak(typesetter, 0, maxWidth);
 	}
+	cs = (index < len || (flags & TK_WHOLE_WORDS)) ?
+		whitespaceCharacterSet : lineendingCharacterSet;
+	while (index > start &&
+		[cs characterIsMember:[string characterAtIndex:(index - 1)]]) {
+	    index--;
+	}
 	if (index <= start && (flags & TK_AT_LEAST_ONE)) {
 	    index = start + 1;
 	}
-	range.length = index;
-	bkLine = CTTypesetterCreateLine(typesetter, range);
-	width = CTLineGetTypographicBounds(bkLine, NULL, NULL, NULL);
-	CFRelease(bkLine);
+	if (index > 0) {
+	    range.length = index;
+	    line = CTTypesetterCreateLine(typesetter, range);
+	    width = CTLineGetTypographicBounds(line, NULL, NULL, NULL);
+	    CFRelease(line);
+	} else {
+	    width = 0;
+	}
 	if (width < maxWidth && (flags & TK_PARTIAL_OK) && index < len) {
 	    range.length = ++index;
-	    bkLine = CTTypesetterCreateLine(typesetter, range);
-	    width = CTLineGetTypographicBounds(bkLine, NULL, NULL, NULL);
-	    CFRelease(bkLine);
+	    line = CTTypesetterCreateLine(typesetter, range);
+	    width = CTLineGetTypographicBounds(line, NULL, NULL, NULL);
+	    CFRelease(line);
 	}
     }
-    CFRelease(line);
     CFRelease(typesetter);
     [attributedString release];
     [string release];
-    *lengthPtr = lround(width - offset);
-    return (Tcl_UtfAtIndex(source, index) - source) - rangeStart;
+    length = lround(width - offset);
+    fit = (Tcl_UtfAtIndex(source, index) - source) - rangeStart;
+done:
+#ifdef TK_MAC_DEBUG_FONTS
+    TkMacOSXDbgMsg("measure: source=\"%s\" range=\"%.*s\" maxLength=%d "
+	    "flags='%s%s%s%s' -> width=%d bytesFit=%d\n", source, rangeLength,
+	    source+rangeStart, maxLength,
+	    flags & TK_PARTIAL_OK   ? "partialOk "  : "",
+	    flags & TK_WHOLE_WORDS  ? "wholeWords " : "",
+	    flags & TK_AT_LEAST_ONE ? "atLeastOne " : "",
+	    flags & TK_ISOLATE_END  ? "isolateEnd " : "",
+	    length, fit);
+#endif
+    *lengthPtr = length;
+    return fit;
 }
 
 /*
@@ -991,26 +1033,28 @@ DrawCharsInContext(
     double angle)
 {
     const MacFont *fontPtr = (const MacFont *) tkfont;
-    CFIndex start, len;
-    CFRange range;
     NSString *string;
+    NSMutableDictionary *attributes;
     NSAttributedString *attributedString;
     CTTypesetterRef typesetter;
+    CFIndex start, len;
     CTLineRef line;
-    CGFloat offset;
     MacDrawable *macWin = (MacDrawable *) drawable;
     TkMacOSXDrawingContext drawingContext;
     CGContextRef context;
     CGColorRef fg;
-    NSMutableDictionary *attributes;
     NSFont *nsFont;
-    CGRect r = CGRectInfinite;
     CGAffineTransform t;
     int h;
 
     if (rangeStart < 0 || rangeLength <= 0 ||
 	    rangeStart + rangeLength > numBytes ||
 	    !TkMacOSXSetupDrawingContext(drawable, gc, 1, &drawingContext)) {
+	return;
+    }
+    string = [[NSString alloc] initWithBytesNoCopy:(void*)source
+		length:numBytes encoding:NSUTF8StringEncoding freeWhenDone:NO];
+    if (!string) {
 	return;
     }
     context = drawingContext.context;
@@ -1022,27 +1066,12 @@ DrawCharsInContext(
     [nsFont setInContext:[NSGraphicsContext graphicsContextWithGraphicsPort:
 	    context flipped:NO]];
     CGContextSetTextMatrix(context, CGAffineTransformIdentity);
-
-    start = Tcl_NumUtfChars(source, rangeStart);
-    len = Tcl_NumUtfChars(source, rangeStart + rangeLength);
-    range = CFRangeMake(0, len);
-    string = [[NSString alloc] initWithBytesNoCopy:(void*)source
-		length:numBytes encoding:NSUTF8StringEncoding freeWhenDone:NO];
-    if (!string) {
-	return;
-    }
     attributedString = [[NSAttributedString alloc] initWithString:string
 	    attributes:attributes];
-    typesetter = CTTypesetterCreateWithAttributedStringAndOptions(
-	    (CFAttributedStringRef)attributedString, (CFDictionaryRef)
-	    [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:0]
-	    forKey:(id)kCTTypesetterOptionDisableBidiProcessing]);
-    line = CTTypesetterCreateLine(typesetter, range);
-    offset = CTLineGetOffsetForStringIndex(line, start, NULL);
-
+    typesetter = CTTypesetterCreateWithAttributedString(
+	    (CFAttributedStringRef)attributedString);
     x += macWin->xOff;
     y += macWin->yOff;
-    r.origin.x = x + offset;
     h = drawingContext.portBounds.size.height;
     y = h - y;
     t = CGAffineTransformMake(1.0, 0.0, 0.0, -1.0, 0.0, h);
@@ -1051,8 +1080,18 @@ DrawCharsInContext(
 		CGAffineTransformTranslate(t, x, y), angle*PI/180.0), -x, -y);
     }
     CGContextConcatCTM(context, t);
-    CGContextClipToRect(context, r);
     CGContextSetTextPosition(context, x, y);
+    start = Tcl_NumUtfChars(source, rangeStart);
+    len = Tcl_NumUtfChars(source, rangeStart + rangeLength);
+    if (start > 0) {
+	CGRect clipRect = CGRectInfinite, startBounds;
+	line = CTTypesetterCreateLine(typesetter, CFRangeMake(0, start));
+	startBounds = CTLineGetImageBounds(line, context);
+	CFRelease(line);
+	clipRect.origin.x = startBounds.origin.x + startBounds.size.width;
+	CGContextClipToRect(context, clipRect);
+    }
+    line = CTTypesetterCreateLine(typesetter, CFRangeMake(0, len));
     CTLineDraw(line, context);
     CFRelease(line);
     CFRelease(typesetter);
