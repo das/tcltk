@@ -158,7 +158,7 @@ static const struct CursorName cursorNames[] = {
     {"star",			IMAGEPATH, @"cursor7e.cur"},
     {"target",			IMAGEPATH, @"cursor80.cur"},
     {"tcross",			IMAGEPATH, @"cursor82.cur"},
-//    {"top_left_arrow",		IMAGEPATH, @"cursor84.cur"},
+//    {"top_left_arrow",	IMAGEPATH, @"cursor84.cur"},
     {"top_left_corner",		IMAGEPATH, @"cursor86.cur"},
     {"top_right_corner",	IMAGEPATH, @"cursor88.cur"},
     {"top_side",		IMAGEPATH, @"cursor8a.cur"},
@@ -170,7 +170,7 @@ static const struct CursorName cursorNames[] = {
     {"watch",			IMAGEPATH, @"cursor96.cur"},
 //    {"xterm",			IMAGEPATH, @"cursor98.cur"},
 //    {"none",			IMAGEPATH, @"cursor9a.cur"},
-    {NULL,			0}
+    {NULL}
 };
 
 /*

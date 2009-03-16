@@ -1449,6 +1449,12 @@ TkScrollWindow(
 	dstRect = CGRectIntersection(CGRectOffset(srcRect, dx, -dy), visRect);
 	srcRect = CGRectIntersection(srcRect, visRect);
 	if (!CGRectIsEmpty(srcRect) && !CGRectIsEmpty(dstRect)) {
+	    /*
+	    CGRect sRect = CGRectIntersection(CGRectOffset(dstRect, -dx, dy),
+		    srcRect);
+	    NSCopyBits(0, NSRectFromCGRect(sRect),
+		    NSPointFromCGPoint(CGRectOffset(sRect, dx, -dy).origin));
+	    */
 	    [view scrollRect:NSRectFromCGRect(srcRect) by:NSMakeSize(dx, -dy)];
 	}
 	srcRect.origin.y = boundsH - srcRect.size.height - srcRect.origin.y;
@@ -1545,7 +1551,7 @@ TkMacOSXSetupDrawingContext(
 	if (view) {
 	    if (view != [NSView focusView]) {
 		dc.focusLocked = [view lockFocusIfCanDraw];
-		dontDraw = !dc.focusLocked;	    
+		dontDraw = !dc.focusLocked;
 	    } else {
 		dontDraw = ![view canDraw];
 	    }

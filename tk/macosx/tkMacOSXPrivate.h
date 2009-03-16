@@ -112,21 +112,11 @@
 	} \
 	err;})
 
-/*
- * Macro to check emptyness of shared QD tmp region before use in debug builds.
- */
-#define TkMacOSXCheckTmpQdRgnEmpty() \
-    do { \
-	if (!EmptyRgn(tkMacOSXtmpQdRgn)) { \
-	    Tcl_Panic("tkMacOSXtmpQdRgn nonempty"); \
-	} \
-    } while(0)
 #else /* TK_MAC_DEBUG */
 #define TKLog(f, ...)
 #define TkMacOSXDbgMsg(m, ...)
 #define TkMacOSXDbgOSErr(f, err)
 #define ChkErr(f, ...) ({f(__VA_ARGS__);})
-#define TkMacOSXCheckTmpQdRgnEmpty()
 #endif /* TK_MAC_DEBUG */
 
 /*
@@ -139,7 +129,6 @@
 	symbol = TkMacOSXGetNamedSymbol(STRINGIFY(module), \
 		STRINGIFY(symbol)); \
     }
-
 
 /*
  * Macros for GC
@@ -342,6 +331,11 @@ VISIBILITY_HIDDEN
 + (id)itemWithTitle:(NSString *)title action:(SEL)action
 	target:(id)target keyEquivalent:(NSString *)keyEquivalent
 	keyEquivalentModifierMask:(NSUInteger)keyEquivalentModifierMask;
+@end
+
+/* From WebKit/WebKit/mac/WebCoreSupport/WebChromeClient.mm: */
+@interface NSWindow(TKGrowBoxRect)
+- (NSRect)_growBoxRect;
 @end
 
 #endif /* _TKMACPRIV */

@@ -120,7 +120,7 @@ GetBitmapForIcon(
     pixmap = Tk_GetPixmap(display, None, builtInIconSize, builtInIconSize, 0);
     if (TkMacOSXSetupDrawingContext(pixmap, NULL, 1, &dc)) {
 	if (dc.context) {
-	    const CGAffineTransform t = { .a= 1, .b = 0, .c = 0, .d = -1,
+	    const CGAffineTransform t = { .a = 1, .b = 0, .c = 0, .d = -1,
 		    .tx = 0, .ty = builtInIconSize };
 	    const CGRect r = { .origin = { .x = 0, .y = 0 }, .size = {
 		    .width = builtInIconSize, .height = builtInIconSize } };
@@ -222,7 +222,7 @@ TkpGetNativeAppBitmap(
 	*height = size.height;
 	if (TkMacOSXSetupDrawingContext(pixmap, NULL, 1, &dc)) {
 	    if (dc.context) {
-		CGAffineTransform t = { .a= 1, .b = 0, .c = 0, .d = -1,
+		CGAffineTransform t = { .a = 1, .b = 0, .c = 0, .d = -1,
 			.tx = 0, .ty = size.height};
 
 		CGContextConcatCTM(dc.context, t);

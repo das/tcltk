@@ -84,7 +84,7 @@ static const struct {
     ACCEL(Help,		NSHelpFunctionKey),
     ACCEL(Power,	0x233d),
     ACCEL(Eject,	0xf804),
-    { NULL}
+    {NULL}
 };
 #undef ACCEL
 #undef sl
@@ -1171,16 +1171,15 @@ MenuSelectEvent(
     event.serial = LastKnownRequestProcessed(menuPtr->display);
     event.send_event = false;
     event.display = menuPtr->display;
-    Tk_MakeWindowExist(menuPtr->tkwin);
     event.event = Tk_WindowId(menuPtr->tkwin);
     event.root = XRootWindow(menuPtr->display, 0);
     event.subwindow = None;
     event.time = TkpGetMS();
-
     XQueryPointer(NULL, None, NULL, NULL, &event.x_root, &event.y_root, NULL,
 	    NULL, &event.state);
     event.same_screen = true;
     event.name = Tk_GetUid("MenuSelect");
+    Tk_MakeWindowExist(menuPtr->tkwin);
     if (Tcl_GetServiceMode() != TCL_SERVICE_NONE) {
 	Tk_HandleEvent((XEvent *) &event);
     } else {

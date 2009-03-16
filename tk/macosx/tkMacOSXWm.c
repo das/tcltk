@@ -1214,7 +1214,8 @@ WmGetAttribute(
 	result = Tcl_NewBooleanObj(tkMacOSXWmAttrNotifyVal);
 	break;
     case WMATT_TITLEPATH:
-	result = Tcl_NewStringObj([[macWindow representedFilename] UTF8String], -1);
+	result = Tcl_NewStringObj([[macWindow representedFilename] UTF8String],
+		-1);
 	break;
     case WMATT_TOPMOST:
 	result = Tcl_NewBooleanObj(wmPtr->flags & WM_TOPMOST);
@@ -3170,7 +3171,7 @@ WmTransientCmd(
     register WmInfo *wmPtr = winPtr->wmInfoPtr;
     Tk_Window master;
     WmInfo *wmPtr2;
-    char *argv3;
+    char *masterWindowName;
     int length;
 
     if ((objc != 3) && (objc != 4)) {
@@ -3218,13 +3219,13 @@ WmTransientCmd(
 	    return TCL_ERROR;
 	}
 
-	argv3 = Tcl_GetStringFromObj(objv[3], &length);
 	wmPtr->master = Tk_WindowId(master);
+	masterWindowName = Tcl_GetStringFromObj(objv[3], &length);
 	if (wmPtr->masterWindowName != NULL) {
 	    ckfree(wmPtr->masterWindowName);
 	}
 	wmPtr->masterWindowName = ckalloc((unsigned) length+1);
-	strcpy(wmPtr->masterWindowName, argv3);
+	strcpy(wmPtr->masterWindowName, masterWindowName);
     }
     ApplyMasterOverrideChanges(winPtr, NULL);
     return TCL_OK;
@@ -5054,30 +5055,30 @@ WmWinStyle(
 	UInt64 intValue;
     };
     static const struct StrIntMap classMap[] = {
-	{ "alert",	    kAlertWindowClass		},
-	{ "moveableAlert",  kMovableAlertWindowClass	},
-	{ "modal",	    kModalWindowClass		},
-	{ "moveableModal",  kMovableModalWindowClass	},
-	{ "floating",	    kFloatingWindowClass	},
-	{ "document",	    kDocumentWindowClass	},
-	{ "utility",	    kUtilityWindowClass		},
-	{ "help",	    kHelpWindowClass		},
-	{ "sheet",	    kSheetWindowClass		},
-	{ "toolbar",	    kToolbarWindowClass		},
-	{ "plain",	    kPlainWindowClass		},
-	{ "overlay",	    kOverlayWindowClass		},
-	{ "sheetAlert",	    kSheetAlertWindowClass	},
-	{ "altPlain",	    kAltPlainWindowClass	},
-	{ "simple",	    kSimpleWindowClass		},
-	{ "drawer",	    kDrawerWindowClass		},
-	{ NULL,		    0				}
+	{ "alert",		kAlertWindowClass			     },
+	{ "moveableAlert",	kMovableAlertWindowClass		     },
+	{ "modal",		kModalWindowClass			     },
+	{ "moveableModal",	kMovableModalWindowClass		     },
+	{ "floating",		kFloatingWindowClass			     },
+	{ "document",		kDocumentWindowClass			     },
+	{ "utility",		kUtilityWindowClass			     },
+	{ "help",		kHelpWindowClass			     },
+	{ "sheet",		kSheetWindowClass			     },
+	{ "toolbar",		kToolbarWindowClass			     },
+	{ "plain",		kPlainWindowClass			     },
+	{ "overlay",		kOverlayWindowClass			     },
+	{ "sheetAlert",		kSheetAlertWindowClass			     },
+	{ "altPlain",		kAltPlainWindowClass			     },
+	{ "simple",		kSimpleWindowClass			     },
+	{ "drawer",		kDrawerWindowClass			     },
+	{ NULL }
     };
     static const struct StrIntMap compositeAttrMap[] = {
-	{ "none",		kWindowNoAttributes			},
-	{ "standardDocument",	kWindowStandardDocumentAttributes	},
-	{ "standardFloating",	kWindowStandardFloatingAttributes	},
-	{ "fullZoom",		kWindowFullZoomAttribute		},
-	{ NULL,			0					}
+	{ "none",		kWindowNoAttributes			     },
+	{ "standardDocument",	kWindowStandardDocumentAttributes	     },
+	{ "standardFloating",	kWindowStandardFloatingAttributes	     },
+	{ "fullZoom",		kWindowFullZoomAttribute		     },
+	{ NULL }
     };
     static const struct StrIntMap attrMap[] = {
 	{ "closeBox",		kWindowCloseBoxAttribute		     },

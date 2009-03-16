@@ -337,7 +337,6 @@ GenerateEditEvent(
     if (tkwin == NULL) {
 	return;
     }
-
     bzero(&event, sizeof(XVirtualEvent));
     event.type = VirtualEvent;
     event.serial = LastKnownRequestProcessed(Tk_Display(tkwin));
@@ -347,7 +346,6 @@ GenerateEditEvent(
     event.root = XRootWindow(Tk_Display(tkwin), 0);
     event.subwindow = None;
     event.time = TkpGetMS();
-
     XQueryPointer(NULL, winPtr->window, NULL, NULL,
 	    &event.x_root, &event.y_root, &x, &y, &event.state);
     Tk_TopCoordsToWindow(tkwin, x, y, &event.x, &event.y);
