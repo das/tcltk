@@ -35,11 +35,6 @@ static void		UpdateOffsets(TkWindow *winPtr, int deltaX,
 			    int deltaY);
 static void		NotifyVisibility(TkWindow *winPtr, XEvent *eventPtr);
 
-/* From WebKit/WebKit/mac/WebCoreSupport/WebChromeClient.mm: */
-@interface NSWindow(TKSubwindows)
-- (NSRect)_growBoxRect;
-@end
-
 
 /*
  *----------------------------------------------------------------------
@@ -351,7 +346,6 @@ XResizeWindow(
 
 	if (w) {
 	    NSRect r = [w contentRectForFrameRect:[w frame]];
-
 	    r.origin.y += r.size.height - height;
 	    r.size.width = width;
 	    r.size.height = height;
@@ -398,7 +392,6 @@ XMoveResizeWindow(
 		    tkMacOSXZeroScreenHeight - (y +
 		    macWin->winPtr->wmInfoPtr->yInParent + height),
 		    width, height);
-
 	    [w setFrame:[w frameRectForContentRect:r] display:YES];
 	}
     } else {

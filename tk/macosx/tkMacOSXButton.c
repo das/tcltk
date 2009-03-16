@@ -265,8 +265,8 @@ DisplayNativeButton(
     CGAffineTransform t = { .a = 1, .b = 0, .c = 0, .d = -1, .tx = 0,
 	    .ty = viewHeight};
     NSRect frame;
-    NSCellStateValue state;
     int enabled;
+    NSCellStateValue state;
 
     if (!view ||
 	    !TkMacOSXSetupDrawingContext((Drawable) macWin, NULL, 1, &dc)) {
@@ -287,7 +287,6 @@ DisplayNativeButton(
     Tk_Fill3DRectangle(tkwin, (Pixmap) macWin, butPtr->type == TYPE_BUTTON ?
 	    butPtr->highlightBorder : butPtr->normalBorder, 0, 0,
 	    Tk_Width(tkwin), Tk_Height(tkwin), 0, TK_RELIEF_FLAT);
-
     if ([button superview] != view) {
 	[view addSubview:button];
     }

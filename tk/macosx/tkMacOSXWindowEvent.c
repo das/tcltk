@@ -432,8 +432,7 @@ TkMacOSXGenerateFocusEvent(
      */
 
     if (winPtr->wmInfoPtr && (winPtr->wmInfoPtr->macClass == kHelpWindowClass ||
-	    winPtr->wmInfoPtr->attributes &
-		    kWindowNoActivatesAttribute)) {
+	    winPtr->wmInfoPtr->attributes & kWindowNoActivatesAttribute)) {
 	return false;
     }
 
@@ -731,9 +730,8 @@ Tk_MacOSXIsAppInFront(void)
  * during the normal AppKit drawing cycle, we supress drawing of all subviews
  * (using a technique adapted from WebKit's WebHTMLView) and instead send
  * Expose events about the subviews that would be redrawn.
- * Our Expose event handling then draws the subviews manually via their
- * -displayRectIgnoringOpacity:. Window flushing is suspended until all Expose
- * events for a given draw have been handled.
+ * Tk Expose event handling and drawing handlers then draw the subviews
+ * manually via their -displayRectIgnoringOpacity:
  */
 
 @interface TKContentView(TKWindowEvent)
@@ -743,11 +741,6 @@ Tk_MacOSXIsAppInFront(void)
 - (BOOL)wantsDefaultClipping;
 - (BOOL)acceptsFirstResponder;
 - (void)keyDown:(NSEvent *)theEvent;
-@end
-
-/* From WebKit/WebKit/mac/WebCoreSupport/WebChromeClient.mm: */
-@interface NSWindow(TKSubwindows)
-- (NSRect)_growBoxRect;
 @end
 
 @implementation TKContentView
@@ -798,8 +791,7 @@ static Tk_RestrictAction ExposeRestrictProc(ClientData arg, XEvent *eventPtr)
 }
 
 - (void)generateExposeEvents:(HIMutableShapeRef)shape {
-    NSWindow *w = [self window];
-    TkWindow *winPtr = TkMacOSXGetTkWindow(w);
+    TkWindow *winPtr = TkMacOSXGetTkWindow([self window]);
     unsigned long serial;
     CGRect updateBounds;
 

@@ -68,11 +68,6 @@ Tk_ClassProcs tkpScrollbarProcs = {
     sizeof(Tk_ClassProcs)	/* size */
 };
 
-/* From WebKit/WebKit/mac/WebCoreSupport/WebChromeClient.mm: */
-@interface NSWindow(TKScrlbr)
-- (NSRect)_growBoxRect;
-@end
-
 #pragma mark TKApplication(TKScrlbr)
 
 #define NSAppleAquaScrollBarVariantChanged @"AppleAquaScrollBarVariantChanged"
@@ -315,7 +310,6 @@ TkpDisplayScrollbar(
 	    !TkMacOSXSetupDrawingContext((Drawable) macWin, NULL, 1, &dc)) {
 	return;
     }
-
     CGContextConcatCTM(dc.context, t);
     if (scrollPtr->highlightWidth != 0) {
 	GC fgGC, bgGC;
@@ -338,7 +332,6 @@ TkpDisplayScrollbar(
 	    scrollPtr->inset, scrollPtr->inset,
 	    Tk_Width(tkwin) - 2*scrollPtr->inset,
 	    Tk_Height(tkwin) - 2*scrollPtr->inset, 0, TK_RELIEF_FLAT);
-
     if ([scroller superview] != view) {
 	[view addSubview:scroller];
     }
