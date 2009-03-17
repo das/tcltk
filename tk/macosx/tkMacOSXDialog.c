@@ -62,20 +62,86 @@ typedef struct NavHandlerUserData {
     WindowModality origModality;
 } NavHandlerUserData;
 
+#endif
+
+static const char *const alertOptionStrings[] = {
+    "-default", "-detail", "-icon", "-message", "-parent", "-title",
+    "-type", "-command", NULL
+};
+enum alertOptions {
+    ALERT_DEFAULT, ALERT_DETAIL, ALERT_ICON, ALERT_MESSAGE, ALERT_PARENT,
+    ALERT_TITLE, ALERT_TYPE, ALERT_COMMAND,
+};
+typedef struct {
+    Tcl_Interp *interp;
+    Tcl_Obj *cmdObj;
+    int typeIndex;
+} AlertCallbackInfo;
+static const char *const alertTypeStrings[] = {
+    "abortretryignore", "ok", "okcancel", "retrycancel", "yesno",
+    "yesnocancel", NULL
+};
+enum alertTypeOptions {
+    TYPE_ABORTRETRYIGNORE, TYPE_OK, TYPE_OKCANCEL, TYPE_RETRYCANCEL,
+    TYPE_YESNO, TYPE_YESNOCANCEL
+};
+static const char *const alertIconStrings[] = {
+    "error", "info", "question", "warning", NULL
+};
+enum alertIconOptions {
+    ICON_ERROR, ICON_INFO, ICON_QUESTION, ICON_WARNING
+};
+static const char *const alertButtonStrings[] = {
+    "abort", "retry", "ignore", "ok", "cancel", "yes", "no", NULL
+};
+
+static const NSString *const alertButtonNames[][3] = {
+    [TYPE_ABORTRETRYIGNORE] =   {@"Abort", @"Retry", @"Ignore"},
+    [TYPE_OK] =			{@"OK"},
+    [TYPE_OKCANCEL] =		{@"OK", @"Cancel"},
+    [TYPE_RETRYCANCEL] =	{@"Retry", @"Cancel"},
+    [TYPE_YESNO] =		{@"Yes", @"No"},
+    [TYPE_YESNOCANCEL] =	{@"Yes", @"No", @"Cancel"},
+};
+static const NSAlertStyle alertStyles[] = {
+    [ICON_ERROR] =		NSWarningAlertStyle,
+    [ICON_INFO] =		NSInformationalAlertStyle,
+    [ICON_QUESTION] =		NSWarningAlertStyle,
+    [ICON_WARNING] =		NSCriticalAlertStyle,
+};
+
 /*
- * The following structure is used in the tk_messageBox implementation.
+ * Need to map from 'alertButtonStrings' and its corresponding integer,
+ * index to the native button index, which is 1, 2, 3, from right to left.
+ * This is necessary to do for each separate '-type' of button sets.
  */
 
-typedef struct {
-    int buttonIndex;
-    WindowRef dialogWindow, origUnavailWindow;
-    WindowModality origModality;
-    EventHandlerRef handlerRef;
-} AlertHandlerUserData;
+static const short alertButtonIndexAndTypeToNativeButtonIndex[][7] = {
+			    /*  abort retry ignore ok   cancel yes   no */
+    [TYPE_ABORTRETRYIGNORE] =   {1,    2,    3,    0,    0,    0,    0},
+    [TYPE_OK] =			{0,    0,    0,    1,    0,    0,    0},
+    [TYPE_OKCANCEL] =		{0,    0,    0,    1,    2,    0,    0},
+    [TYPE_RETRYCANCEL] =	{0,    1,    0,    0,    2,    0,    0},
+    [TYPE_YESNO] =		{0,    0,    0,    0,    0,    1,    2},
+    [TYPE_YESNOCANCEL] =	{0,    0,    0,    0,    3,    1,    2},
+};
 
+/*
+ * Need also the inverse mapping, from NSAlertFirstButtonReturn etc to the
+ * descriptive button text string index.
+ */
 
-static OSStatus		AlertHandler(EventHandlerCallRef callRef,
-			    EventRef eventRef, void *userData);
+static const short alertNativeButtonIndexAndTypeToButtonIndex[][3] = {
+    [TYPE_ABORTRETRYIGNORE] =   {0, 1, 2},
+    [TYPE_OK] =			{3, 0, 0},
+    [TYPE_OKCANCEL] =		{3, 4, 0},
+    [TYPE_RETRYCANCEL] =	{1, 4, 0},
+    [TYPE_YESNO] =		{5, 6, 0},
+    [TYPE_YESNOCANCEL] =	{5, 6, 4},
+};
+
+#ifdef MAC_OSX_TK_TODO
+
 static Boolean		MatchOneType(StringPtr fileNamePtr, OSType fileType,
 			    OpenFileData *myofdPtr, FileFilter *filterPtr);
 static pascal Boolean	OpenFileFilterProc(AEDesc* theItem, void* info,
@@ -108,6 +174,49 @@ static int fileDlgInited = 0;
 
 static NavObjectFilterUPP openFileFilterUPP;
 static NavEventUPP openFileEventUPP;
+
+#endif
+
+#pragma mark TKApplication(TKDialog)
+
+@implementation TKApplication(TKDialog)
+- (void)tkAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode
+	contextInfo:(void *)contextInfo {
+    AlertCallbackInfo *callbackInfo = contextInfo;
+
+    if (returnCode != NSAlertErrorReturn) {
+	Tcl_Obj *resultObj = Tcl_NewStringObj(alertButtonStrings[
+		alertNativeButtonIndexAndTypeToButtonIndex[callbackInfo->
+		typeIndex][returnCode - NSAlertFirstButtonReturn]], -1);
+	if (callbackInfo->cmdObj) {
+	    Tcl_Obj **objv, **tmpv;
+	    int objc, result = Tcl_ListObjGetElements(callbackInfo->interp,
+		    callbackInfo->cmdObj, &objc, &objv);
+	    if (result == TCL_OK && objc) {
+		tmpv = (Tcl_Obj **) ckalloc(sizeof(Tcl_Obj *) * (objc + 2));
+		memcpy(tmpv, objv, sizeof(Tcl_Obj *) * objc);
+		tmpv[objc] = resultObj;
+		TkBackgroundEvalObjv(callbackInfo->interp, objc + 1, tmpv,
+			TCL_EVAL_GLOBAL);
+		ckfree((char *)tmpv);
+	    }
+	} else {
+	    Tcl_SetObjResult(callbackInfo->interp, resultObj);
+	}
+    }
+    if ([alert window] == [NSApp modalWindow]) {
+	[NSApp stopModalWithCode:returnCode];
+    }
+    if (callbackInfo->cmdObj) {
+	Tcl_DecrRefCount(callbackInfo->cmdObj);
+	ckfree((char*) callbackInfo);
+    }
+}
+@end
+
+#pragma mark -
+
+#ifdef MAC_OSX_TK_TODO
 
 /*
  *----------------------------------------------------------------------
@@ -1378,7 +1487,6 @@ TkAboutDlg(void)
 	    nil];
     [NSApp orderFrontStandardAboutPanelWithOptions:options];
 }
-#ifdef MAC_OSX_TK_TODO
 
 /*
  *----------------------------------------------------------------------
@@ -1435,103 +1543,30 @@ Tk_MessageBoxObjCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     Tk_Window tkwin = clientData;
-    AlertStdCFStringAlertParamRec paramCFStringRec;
-    AlertType alertType;
-    DialogRef dialogRef;
-    CFStringRef messageTextCF = NULL, finemessageTextCF = NULL;
-    OSStatus err;
-    SInt16 itemHit;
-    Boolean haveDefaultOption = false, haveParentOption = false;
     char *str;
-    int index, defaultButtonIndex;
-    int defaultNativeButtonIndex; /* 1, 2, 3: right to left */
-    int typeIndex, i, indexDefaultOption = 0, result = TCL_ERROR;
+    int i, result = TCL_ERROR, haveParentOption = 0;
+    int index, typeIndex, iconIndex, indexDefaultOption = 0;
+    int defaultNativeButtonIndex = 1; /* 1, 2, 3: right to left */
+    Tcl_Obj *cmdObj = NULL;
+    AlertCallbackInfo callbackInfoStruct, *callbackInfo = &callbackInfoStruct;
+    NSString *message, *title;
+    NSWindow *parent;
+    NSArray *buttons;
+    NSAlert *alert = [NSAlert new];
+    NSInteger returnCode = NSAlertErrorReturn;
 
-    static const char *const movableAlertStrings[] = {
-	"-default", "-detail", "-icon", "-message", "-parent", "-title",
-	"-type", NULL
-    };
-    static const char *const movableTypeStrings[] = {
-	"abortretryignore", "ok", "okcancel", "retrycancel", "yesno",
-	"yesnocancel", NULL
-    };
-    static const char *const movableButtonStrings[] = {
-	"abort", "retry", "ignore", "ok", "cancel", "yes", "no", NULL
-    };
-    static const char *const movableIconStrings[] = {
-	"error", "info", "question", "warning", NULL
-    };
-    enum movableAlertOptions {
-	ALERT_DEFAULT, ALERT_DETAIL, ALERT_ICON, ALERT_MESSAGE, ALERT_PARENT,
-	ALERT_TITLE, ALERT_TYPE
-    };
-    enum movableTypeOptions {
-	TYPE_ABORTRETRYIGNORE, TYPE_OK, TYPE_OKCANCEL, TYPE_RETRYCANCEL,
-	TYPE_YESNO, TYPE_YESNOCANCEL
-    };
-    enum movableButtonOptions {
-	TEXT_ABORT, TEXT_RETRY, TEXT_IGNORE, TEXT_OK, TEXT_CANCEL, TEXT_YES,
-	TEXT_NO
-    };
-    enum movableIconOptions {
-	ICON_ERROR, ICON_INFO, ICON_QUESTION, ICON_WARNING
-    };
-
-    /*
-     * Need to map from 'movableButtonStrings' and its corresponding integer,
-     * index to the native button index, which is 1, 2, 3, from right to left.
-     * This is necessary to do for each separate '-type' of button sets.
-     */
-
-    short buttonIndexAndTypeToNativeButtonIndex[][7] = {
-    /*	abort retry ignore ok	cancel yes   no */
-	{1,    2,    3,	   0,	 0,    0,    0},	/* abortretryignore */
-	{0,    0,    0,	   1,	 0,    0,    0},	/* ok */
-	{0,    0,    0,	   1,	 2,    0,    0},	/* okcancel */
-	{0,    1,    0,	   0,	 2,    0,    0},	/* retrycancel */
-	{0,    0,    0,	   0,	 0,    1,    2},	/* yesno */
-	{0,    0,    0,	   0,	 3,    1,    2},	/* yesnocancel */
-    };
-
-    /*
-     * Need also the inverse mapping, from native button (1, 2, 3) to the
-     * descriptive button text string index.
-     */
-
-    short nativeButtonIndexAndTypeToButtonIndex[][4] = {
-	{-1, 0, 1, 2},	/* abortretryignore */
-	{-1, 3, 0, 0},	/* ok */
-	{-1, 3, 4, 0},	/* okcancel */
-	{-1, 1, 4, 0},	/* retrycancel */
-	{-1, 5, 6, 0},	/* yesno */
-	{-1, 5, 6, 4},	/* yesnocancel */
-    };
-
-    alertType = kAlertPlainAlert;
+    iconIndex = ICON_INFO;
     typeIndex = TYPE_OK;
-
-    ChkErr(GetStandardAlertDefaultParams, &paramCFStringRec,
-	    kStdCFStringAlertVersionOne);
-    paramCFStringRec.movable = true;
-    paramCFStringRec.helpButton = false;
-    paramCFStringRec.defaultButton = kAlertStdAlertOKButton;
-    paramCFStringRec.cancelButton = kAlertStdAlertCancelButton;
-
     for (i = 1; i < objc; i += 2) {
-	int iconIndex;
-	char *string;
-
-	if (Tcl_GetIndexFromObj(interp, objv[i], movableAlertStrings, "option",
+	if (Tcl_GetIndexFromObj(interp, objv[i], alertOptionStrings, "option",
 		TCL_EXACT, &index) != TCL_OK) {
 	    goto end;
 	}
 	if (i + 1 == objc) {
-	    string = Tcl_GetString(objv[i]);
-	    Tcl_AppendResult(interp, "value for \"", string, "\" missing",
-		    NULL);
+	    str = Tcl_GetString(objv[i]);
+	    Tcl_AppendResult(interp, "value for \"", str, "\" missing", NULL);
 	    goto end;
 	}
-
 	switch (index) {
 	case ALERT_DEFAULT:
 	    /*
@@ -1539,111 +1574,65 @@ Tk_MessageBoxObjCmd(
 	     * know the '-type' as well.
 	     */
 
-	    haveDefaultOption = true;
 	    indexDefaultOption = i;
 	    break;
 
 	case ALERT_DETAIL:
-	    str = Tcl_GetString(objv[i + 1]);
-	    if (finemessageTextCF) {
-		CFRelease(finemessageTextCF);
-	    }
-	    finemessageTextCF = CFStringCreateWithCString(NULL, str,
-		    kCFStringEncodingUTF8);
+	    message = [[NSString alloc] initWithUTF8String:
+		    Tcl_GetString(objv[i + 1])];
+	    [alert setInformativeText:message];
+	    [message release];
 	    break;
 
 	case ALERT_ICON:
-	    if (Tcl_GetIndexFromObj(interp, objv[i + 1], movableIconStrings,
+	    if (Tcl_GetIndexFromObj(interp, objv[i + 1], alertIconStrings,
 		    "value", TCL_EXACT, &iconIndex) != TCL_OK) {
 		goto end;
-	    }
-	    switch (iconIndex) {
-	    case ICON_ERROR:
-		alertType = kAlertStopAlert;
-		break;
-	    case ICON_INFO:
-		alertType = kAlertNoteAlert;
-		break;
-	    case ICON_QUESTION:
-		alertType = kAlertCautionAlert;
-		break;
-	    case ICON_WARNING:
-		alertType = kAlertCautionAlert;
-		break;
 	    }
 	    break;
 
 	case ALERT_MESSAGE:
-	    str = Tcl_GetString(objv[i + 1]);
-	    if (messageTextCF) {
-		CFRelease(messageTextCF);
-	    }
-	    messageTextCF = CFStringCreateWithCString(NULL, str,
-		    kCFStringEncodingUTF8);
+	    message = [[NSString alloc] initWithUTF8String:
+		    Tcl_GetString(objv[i + 1])];
+	    [alert setMessageText:message];
+	    [message release];
 	    break;
 
 	case ALERT_PARENT:
 	    str = Tcl_GetString(objv[i + 1]);
 	    tkwin = Tk_NameToWindow(interp, str, tkwin);
-	    if (tkwin == NULL) {
+	    if (!tkwin) {
 		goto end;
 	    }
-	    if (((TkWindow *) tkwin)->window != None &&
-		    TkMacOSXHostToplevelExists(tkwin)) {
-		haveParentOption = true;
-	    }
+	    haveParentOption = 1;
 	    break;
 
 	case ALERT_TITLE:
-	    /* TODO: message box title missing? */
+	    title = [[NSString alloc] initWithUTF8String:
+		    Tcl_GetString(objv[i + 1])];
+	    [[alert window] setTitle:title];
+	    [title release];
 	    break;
 
 	case ALERT_TYPE:
-	    if (Tcl_GetIndexFromObj(interp, objv[i + 1], movableTypeStrings,
+	    if (Tcl_GetIndexFromObj(interp, objv[i + 1], alertTypeStrings,
 		    "value", TCL_EXACT, &typeIndex) != TCL_OK) {
 		goto end;
 	    }
-	    switch (typeIndex) {
-	    case TYPE_ABORTRETRYIGNORE:
-		paramCFStringRec.defaultText = CFSTR("Abort");
-		paramCFStringRec.cancelText = CFSTR("Retry");
-		paramCFStringRec.otherText = CFSTR("Ignore");
-		paramCFStringRec.cancelButton = kAlertStdAlertOtherButton;
-		break;
-	    case TYPE_OK:
-		paramCFStringRec.defaultText = CFSTR("OK");
-		break;
-	    case TYPE_OKCANCEL:
-		paramCFStringRec.defaultText = CFSTR("OK");
-		paramCFStringRec.cancelText = CFSTR("Cancel");
-		break;
-	    case TYPE_RETRYCANCEL:
-		paramCFStringRec.defaultText = CFSTR("Retry");
-		paramCFStringRec.cancelText = CFSTR("Cancel");
-		break;
-	    case TYPE_YESNO:
-		paramCFStringRec.defaultText = CFSTR("Yes");
-		paramCFStringRec.cancelText = CFSTR("No");
-		break;
-	    case TYPE_YESNOCANCEL:
-		paramCFStringRec.defaultText = CFSTR("Yes");
-		paramCFStringRec.cancelText = CFSTR("No");
-		paramCFStringRec.otherText = CFSTR("Cancel");
-		paramCFStringRec.cancelButton = kAlertStdAlertOtherButton;
-		break;
-	    }
+	    break;
+	case ALERT_COMMAND:
+	    cmdObj = objv[i+1];
 	    break;
 	}
     }
-
-    if (haveDefaultOption) {
+    if (indexDefaultOption) {
 	/*
 	 * Any '-default' option needs to know the '-type' option, which is why
 	 * we do this here.
 	 */
 
 	if (Tcl_GetIndexFromObj(interp, objv[indexDefaultOption + 1],
-		movableButtonStrings, "value", TCL_EXACT, &defaultButtonIndex)
+		alertButtonStrings, "value", TCL_EXACT, &index)
 		!= TCL_OK) {
 	    goto end;
 	}
@@ -1653,138 +1642,56 @@ Tk_MessageBoxObjCmd(
 	 */
 
 	defaultNativeButtonIndex =
-	buttonIndexAndTypeToNativeButtonIndex[typeIndex][defaultButtonIndex];
-	if (defaultNativeButtonIndex == 0) {
+		alertButtonIndexAndTypeToNativeButtonIndex[typeIndex][index];
+	if (!defaultNativeButtonIndex) {
 	    Tcl_SetObjResult(interp,
 		    Tcl_NewStringObj("Illegal default option", -1));
 	    goto end;
 	}
-	paramCFStringRec.defaultButton = defaultNativeButtonIndex;
-	if (paramCFStringRec.cancelButton == defaultNativeButtonIndex) {
-	    paramCFStringRec.cancelButton = 0;
+    }
+    [alert setAlertStyle:alertStyles[iconIndex]];
+    i = 0;
+    while (i < 3 && alertButtonNames[typeIndex][i]) {
+	[alert addButtonWithTitle:(NSString*)alertButtonNames[typeIndex][i++]];
+    }
+    buttons = [alert buttons];
+    for (NSButton *b in buttons) {
+	NSString *ke = [b keyEquivalent];
+	if (([ke isEqualToString:@"\r"] || [ke isEqualToString:@"\033"]) &&
+		![b keyEquivalentModifierMask]) {
+	    [b setKeyEquivalent:@""];
 	}
     }
-    ChkErr(SetThemeCursor, kThemeArrowCursor);
-
-    if (haveParentOption) {
-	AlertHandlerUserData data;
-	static EventHandlerUPP handler = NULL;
-	WindowRef windowRef;
-	const EventTypeSpec kEvents[] = {
-	    {kEventClassCommand, kEventProcessCommand}
-	};
-
-	bzero(&data, sizeof(data));
-	if (!handler) {
-	    handler = NewEventHandlerUPP(AlertHandler);
+    [[buttons objectAtIndex:[buttons count]-1] setKeyEquivalent:@"\033"];
+    [[buttons objectAtIndex:defaultNativeButtonIndex-1] setKeyEquivalent:@"\r"];
+    if (cmdObj) {
+	callbackInfo = (AlertCallbackInfo *) ckalloc(sizeof(AlertCallbackInfo));
+	if (Tcl_IsShared(cmdObj)) {
+	    cmdObj = Tcl_DuplicateObj(cmdObj);
 	}
-	windowRef = TkMacOSXDrawableWindow(Tk_WindowId(tkwin));
-	if (!windowRef) {
-	    goto end;
-	}
-	err = ChkErr(CreateStandardSheet, alertType, messageTextCF,
-		finemessageTextCF, &paramCFStringRec, NULL, &dialogRef);
-	if(err != noErr) {
-	    goto end;
-	}
-	data.dialogWindow = GetDialogWindow(dialogRef);
-	err = ChkErr(ShowSheetWindow, data.dialogWindow, windowRef);
-	if(err != noErr) {
-	    DisposeDialog(dialogRef);
-	    goto end;
-	}
-	ChkErr(GetWindowModality, data.dialogWindow, &data.origModality,
-		&data.origUnavailWindow);
-	ChkErr(SetWindowModality, data.dialogWindow, kWindowModalityAppModal,
-		NULL);
-	ChkErr(InstallEventHandler, GetWindowEventTarget(data.dialogWindow),
-		handler, GetEventTypeCount(kEvents), kEvents, &data,
-		&data.handlerRef);
-	TkMacOSXTrackingLoop(1);
-	ChkErr(RunAppModalLoopForWindow, data.dialogWindow);
-	TkMacOSXTrackingLoop(0);
-	itemHit = data.buttonIndex;
+	Tcl_IncrRefCount(cmdObj);
+    }
+    callbackInfo->cmdObj = cmdObj;
+    callbackInfo->interp = interp;
+    callbackInfo->typeIndex = typeIndex;
+    parent = TkMacOSXDrawableWindow(((TkWindow *) tkwin)->window);
+    if (haveParentOption && parent && ![parent attachedSheet]) {
+	[alert beginSheetModalForWindow:parent modalDelegate:NSApp
+		didEndSelector:@selector(tkAlertDidEnd:returnCode:contextInfo:)
+		contextInfo:callbackInfo];
+	returnCode = cmdObj ? NSAlertOtherReturn :
+		[NSApp runModalForWindow:[alert window]];
     } else {
-	err = ChkErr(CreateStandardAlert, alertType, messageTextCF,
-		finemessageTextCF, &paramCFStringRec, &dialogRef);
-	if(err != noErr) {
-	    goto end;
-	}
-	TkMacOSXTrackingLoop(1);
-	err = ChkErr(RunStandardAlert, dialogRef, NULL, &itemHit);
-	TkMacOSXTrackingLoop(0);
-	if (err != noErr) {
-	    goto end;
-	}
+	returnCode = [alert runModal];
+	[NSApp tkAlertDidEnd:alert returnCode:returnCode
+		contextInfo:callbackInfo];
     }
-    if (err == noErr) {
-	/*
-	 * Map 'itemHit' (1, 2, 3) to descriptive text string.
-	 */
-
-	int ind = nativeButtonIndexAndTypeToButtonIndex[typeIndex][itemHit];
-
-	Tcl_SetObjResult(interp, Tcl_NewStringObj(movableButtonStrings[ind],
-		-1));
-	result = TCL_OK;
-    }
-
-  end:
-    if (finemessageTextCF) {
-	CFRelease(finemessageTextCF);
-    }
-    if (messageTextCF) {
-	CFRelease(messageTextCF);
-    }
+    result = (returnCode != NSAlertErrorReturn) ? TCL_OK : TCL_ERROR;
+end:
+    [alert release];
     return result;
 }
-
-/*
- *----------------------------------------------------------------------
- *
- * AlertHandler --
- *
- *	Carbon event handler for the Standard Sheet dialog.
- *
- * Results:
- *	OSStatus if event handled or not.
- *
- * Side effects:
- *	May set userData.
- *
- *----------------------------------------------------------------------
- */
-
-OSStatus
-AlertHandler(
-    EventHandlerCallRef callRef,
-    EventRef eventRef,
-    void *userData)
-{
-    AlertHandlerUserData *data = userData;
-    HICommand cmd;
-
-    ChkErr(GetEventParameter,eventRef, kEventParamDirectObject, typeHICommand,
-	    NULL, sizeof(cmd), NULL, &cmd);
-    switch (cmd.commandID) {
-    case kHICommandOK:
-	data->buttonIndex = 1;
-	break;
-    case kHICommandCancel:
-	data->buttonIndex = 2;
-	break;
-    case kHICommandOther:
-	data->buttonIndex = 3;
-	break;
-    }
-    if (data->buttonIndex) {
-	ChkErr(QuitAppModalLoopForWindow, data->dialogWindow);
-	ChkErr(RemoveEventHandler, data->handlerRef);
-	ChkErr(SetWindowModality, data->dialogWindow,
-		data->origModality, data->origUnavailWindow);
-    }
-    return eventNotHandledErr;
-}
+#ifdef MAC_OSX_TK_TODO
 
 /*
  *----------------------------------------------------------------------
