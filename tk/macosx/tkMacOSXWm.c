@@ -5345,9 +5345,6 @@ TkMacOSXMakeRealWindowExist(
     wmPtr->window = window;
     macWin->view = contentView;
     MacOSXApplyWindowAttributes(winPtr, window);
-    if (wmPtr->master != None || winPtr->atts.override_redirect) {
-	ApplyMasterOverrideChanges(winPtr, window);
-    }
 
     NSRect geometry = InitialWindowBounds(winPtr, window);
     geometry.size.width +=  structureRect.size.width;
@@ -5921,7 +5918,11 @@ MacOSXApplyWindowAttributes(
     TkWindow *winPtr,
     NSWindow *macWindow)
 {
+    WmInfo *wmPtr = winPtr->wmInfoPtr;
     ApplyWindowAttributeFlagChanges(winPtr, macWindow, 0, 0, 0, 1);
+    if (wmPtr->master != None || winPtr->atts.override_redirect) {
+	ApplyMasterOverrideChanges(winPtr, macWindow);
+    }
 }
 
 /*
@@ -6144,12 +6145,16 @@ ApplyMasterOverrideChanges(
 		NSWindow *masterMacWin =
 			TkMacOSXDrawableWindow(masterWinPtr->window);
 
-		if (masterMacWin && masterMacWin != parentWindow) {
+		if (masterMacWin && masterMacWin != parentWindow &&
+			(winPtr->flags & TK_MAPPED)) {
 		    if (parentWindow) {
 			[parentWindow removeChildWindow:macWindow];
 		    }
 		    [masterMacWin addChildWindow:macWindow
 			    ordered:NSWindowAbove];
+		    if (wmPtr->flags & WM_TOPMOST) {
+			[macWindow setLevel:kCGUtilityWindowLevel];
+		    }
 		}
 	    }
 	} else if (parentWindow) {
