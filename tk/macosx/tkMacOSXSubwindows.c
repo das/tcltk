@@ -286,6 +286,7 @@ XUnmapWindow(
 	    NSWindow *win = TkMacOSXDrawableWindow(window);
 
 	    if ([win isVisible]) {
+		[[win parentWindow] removeChildWindow:win];
 		[win orderOut:NSApp];
 	    }
 	}
