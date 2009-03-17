@@ -350,6 +350,7 @@ TkpDisplayScrollbar(
  	    } else {
 		frame.size.width = growBox.origin.x - frame.origin.x;
 	    }
+	    TkMacOSXSetScrollbarGrow(winPtr, true);
 	}
     }
     if (!NSEqualRects(frame, [scroller frame])) {
