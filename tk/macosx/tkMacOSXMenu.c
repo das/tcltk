@@ -182,7 +182,7 @@ static int	ModifierCharWidth(Tk_Font tkfont);
     }
     [super insertItem:newItem atIndex:index];
 }
-- (NSMenuItem *)tkNewMenuItem:(TkMenuEntry *)mePtr {
+- (NSMenuItem *)newTkMenuItem:(TkMenuEntry *)mePtr {
     NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:@""
 	action:@selector(tkMenuItemInvoke:) keyEquivalent:@""];
     [menuItem setTarget:self];
@@ -456,7 +456,7 @@ TkpMenuNewEntry(
     if (mePtr->type == SEPARATOR_ENTRY || mePtr->type == TEAROFF_ENTRY) {
 	menuItem = [[NSMenuItem separatorItem] retain];
     } else {
-	menuItem = [menu tkNewMenuItem:mePtr];
+	menuItem = [menu newTkMenuItem:mePtr];
     }
     mePtr->platformEntryData = (TkMenuPlatformEntryData)
 	    TkMacOSXMakeUncollectable(menuItem);
