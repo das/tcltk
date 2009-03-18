@@ -1035,7 +1035,7 @@ TkBackgroundEvalObjv(
     }
     if (r == TCL_ERROR) {
         Tcl_AddErrorInfo(interp, "\n    (background event handler)");
-        Tcl_BackgroundError(interp);
+        Tcl_BackgroundException(interp, r);
     }
 
     Tcl_Release(interp);
