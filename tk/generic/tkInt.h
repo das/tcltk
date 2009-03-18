@@ -1205,6 +1205,8 @@ MODULE_SCOPE void	TkUnderlineCharsInContext(Display *display,
 			    int firstByte, int lastByte);
 MODULE_SCOPE void	TkpGetFontAttrsForChar(Tk_Window tkwin, Tk_Font tkfont,
 			    Tcl_UniChar c, struct TkFontAttributes *faPtr);
+MODULE_SCOPE int	TkBackgroundEvalObjv(Tcl_Interp *interp,
+			    int objc, Tcl_Obj *const *objv, int flags);
 
 /*
  * Unsupported commands.
