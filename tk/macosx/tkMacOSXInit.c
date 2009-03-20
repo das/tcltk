@@ -380,6 +380,8 @@ TkpInit(
     
     Tcl_CreateObjCommand(interp, "::tk::mac::standardAboutPanel",
 	    TkMacOSXStandardAboutPanelObjCmd, NULL, NULL);
+    Tcl_CreateObjCommand(interp, "::tk::mac::iconBitmap",
+	    TkMacOSXIconBitmapObjCmd, NULL, NULL);
 
     return TCL_OK;
 }
