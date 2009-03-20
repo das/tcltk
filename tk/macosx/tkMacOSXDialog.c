@@ -17,59 +17,44 @@
 #include "tkMacOSXPrivate.h"
 #include "tkFileFilter.h"
 
-#ifdef MAC_OSX_TK_TODO
-
-#ifndef StrLength
-#define StrLength(s)	(*((unsigned char *) (s)))
-#endif
-#ifndef StrBody
-#define StrBody(s)	((char *) (s) + 1)
-#endif
-
-#define OPEN_POPUP_ITEM 10
-
-#define SAVE_FILE	0
-#define OPEN_FILE	1
-#define CHOOSE_FOLDER	2
-
-#define MATCHED		0
-#define UNMATCHED	1
-
-#define TK_DEFAULT_ABOUT 128
-
-/*
- * The following structures are used in the GetFileName() function. They store
- * information about the file dialog and the file filters.
- */
-
-typedef struct _OpenFileData {
-    FileFilterList fl;          /* List of file filters.                   */
-    SInt16 curType;             /* The filetype currently being listed.    */
-    short initialType;          /* Type to use initially                   */
-    short popupItem;            /* Item number of the popup in the dialog. */
-    short usePopup;             /* True if we show the popup menu (this    */
-                                /* is an open operation and the            */
-                                /* -filetypes option is set).              */
-} OpenFileData;
-
-typedef struct NavHandlerUserData {
-    OpenFileData *ofdPtr;
-    NavReplyRecord reply;
-    OSStatus err;
-    CFStringRef saveNameRef;
-    int sheet;
-    WindowRef dialogWindow, origUnavailWindow;
-    WindowModality origModality;
-} NavHandlerUserData;
-
-#endif
-
 static const char *colorOptionStrings[] = {
     "-initialcolor", "-parent", "-title", NULL
 };
 enum colorOptions {
     COLOR_INITIAL, COLOR_PARENT, COLOR_TITLE
 };
+
+static const char *openOptionStrings[] = {
+    "-defaultextension", "-filetypes", "-initialdir", "-initialfile",
+    "-message", "-multiple", "-parent", "-title", "-typevariable",
+    "-command", NULL
+};
+enum openOptions {
+    OPEN_DEFAULT, OPEN_FILETYPES, OPEN_INITDIR, OPEN_INITFILE,
+    OPEN_MESSAGE, OPEN_MULTIPLE, OPEN_PARENT, OPEN_TITLE,
+    OPEN_TYPEVARIABLE, OPEN_COMMAND,
+};
+static const char *saveOptionStrings[] = {
+    "-defaultextension", "-filetypes", "-initialdir", "-initialfile",
+    "-message", "-parent", "-title", "-typevariable", "-command", NULL
+};
+enum saveOptions {
+    SAVE_DEFAULT, SAVE_FILETYPES, SAVE_INITDIR, SAVE_INITFILE,
+    SAVE_MESSAGE, SAVE_PARENT, SAVE_TITLE, SAVE_TYPEVARIABLE, SAVE_COMMAND,
+};
+static const char *chooseOptionStrings[] = {
+    "-initialdir", "-message", "-mustexist", "-parent", "-title", "-command",
+    NULL
+};
+enum chooseOptions {
+    CHOOSE_INITDIR, CHOOSE_MESSAGE, CHOOSE_MUSTEXIST, CHOOSE_PARENT,
+    CHOOSE_TITLE, CHOOSE_COMMAND,
+};
+typedef struct {
+    Tcl_Interp *interp;
+    Tcl_Obj *cmdObj;
+    int multiple;
+} FilePanelCallbackInfo;
 
 static const char *alertOptionStrings[] = {
     "-default", "-detail", "-icon", "-message", "-parent", "-title",
@@ -147,43 +132,6 @@ static const short alertNativeButtonIndexAndTypeToButtonIndex[][3] = {
     [TYPE_YESNOCANCEL] =	{5, 6, 4},
 };
 
-#ifdef MAC_OSX_TK_TODO
-
-static Boolean		MatchOneType(StringPtr fileNamePtr, OSType fileType,
-			    OpenFileData *myofdPtr, FileFilter *filterPtr);
-static pascal Boolean	OpenFileFilterProc(AEDesc* theItem, void* info,
-			    NavCallBackUserData callBackUD,
-			    NavFilterModes filterMode);
-static pascal void	OpenEventProc(NavEventCallbackMessage callBackSelector,
-			    NavCBRecPtr callBackParms,
-			    NavCallBackUserData callBackUD);
-static void		InitFileDialogs(void);
-static int		NavServicesGetFile(Tcl_Interp *interp,
-			    OpenFileData *ofd, AEDesc *initialDescPtr,
-			    char *initialFile, AEDescList *selectDescPtr,
-			    CFStringRef title, CFStringRef message,
-			    const char *initialType, int multiple, int isOpen,
-			    Tk_Window parent);
-static int		HandleInitialDirectory(Tcl_Interp *interp,
-			    char *initialFile, char *initialDir, FSRef *dirRef,
-			    AEDescList *selectDescPtr, AEDesc *dirDescPtr);
-
-/*
- * Have we initialized the file dialog subsystem
- */
-
-static int fileDlgInited = 0;
-
-/*
- * Filter and hook functions used by the tk_getOpenFile and tk_getSaveFile
- * commands.
- */
-
-static NavObjectFilterUPP openFileFilterUPP;
-static NavEventUPP openFileEventUPP;
-
-#endif
-
 #pragma mark TKApplication(TKDialog)
 
 @interface NSColorPanel(TKDialog)
@@ -191,6 +139,47 @@ static NavEventUPP openFileEventUPP;
 @end
 
 @implementation TKApplication(TKDialog)
+- (void)tkFilePanelDidEnd:(NSSavePanel *)panel returnCode:(NSInteger)returnCode
+	contextInfo:(void *)contextInfo {
+    FilePanelCallbackInfo *callbackInfo = contextInfo;
+
+    if (returnCode == NSFileHandlingPanelOKButton) {
+	Tcl_Obj *resultObj;
+	if (callbackInfo->multiple) {
+	    resultObj = Tcl_NewListObj(0, NULL);
+	    for (NSString *name in [(NSOpenPanel*)panel filenames]) {
+		Tcl_ListObjAppendElement(callbackInfo->interp, resultObj,
+			Tcl_NewStringObj([name UTF8String], -1));
+	    }
+	} else {
+	    resultObj = Tcl_NewStringObj([[panel filename] UTF8String], -1);
+	}
+	if (callbackInfo->cmdObj) {
+	    Tcl_Obj **objv, **tmpv;
+	    int objc, result = Tcl_ListObjGetElements(callbackInfo->interp,
+		    callbackInfo->cmdObj, &objc, &objv);
+	    if (result == TCL_OK && objc) {
+		tmpv = (Tcl_Obj **) ckalloc(sizeof(Tcl_Obj *) * (objc + 2));
+		memcpy(tmpv, objv, sizeof(Tcl_Obj *) * objc);
+		tmpv[objc] = resultObj;
+		TkBackgroundEvalObjv(callbackInfo->interp, objc + 1, tmpv,
+			TCL_EVAL_GLOBAL);
+		ckfree((char *)tmpv);
+	    }
+	} else {
+	    Tcl_SetObjResult(callbackInfo->interp, resultObj);
+	}
+    } else if (returnCode == NSFileHandlingPanelCancelButton) {
+	Tcl_ResetResult(callbackInfo->interp);
+    }
+    if (panel == [NSApp modalWindow]) {
+	[NSApp stopModalWithCode:returnCode];
+    }
+    if (callbackInfo->cmdObj) {
+	Tcl_DecrRefCount(callbackInfo->cmdObj);
+	ckfree((char*) callbackInfo);
+    }
+}
 - (void)tkAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode
 	contextInfo:(void *)contextInfo {
     AlertCallbackInfo *callbackInfo = contextInfo;
@@ -337,7 +326,6 @@ Tk_ChooseColorObjCmd(
 end:
     return result;
 }
-#ifdef MAC_OSX_TK_TODO
 
 /*
  *----------------------------------------------------------------------
@@ -362,83 +350,59 @@ Tk_GetOpenFileObjCmd(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
-    int i, result = TCL_ERROR, multiple = 0;
-    OpenFileData ofd;
-    Tk_Window parent = NULL;
-    CFStringRef message = NULL, title = NULL;
-    AEDesc initialDesc = {typeNull, NULL};
-    FSRef dirRef;
-    AEDesc *initialPtr = NULL;
-    AEDescList selectDesc = {typeNull, NULL};
-    char *initialFile = NULL, *initialDir = NULL;
-    Tcl_Obj *typeVariablePtr = NULL;
-    const char *initialtype = NULL;
-    static const char *const openOptionStrings[] = {
-	"-defaultextension", "-filetypes", "-initialdir", "-initialfile",
-	"-message", "-multiple", "-parent", "-title", "-typevariable", NULL
-    };
-    enum openOptions {
-	OPEN_DEFAULT, OPEN_FILETYPES, OPEN_INITDIR, OPEN_INITFILE,
-	OPEN_MESSAGE, OPEN_MULTIPLE, OPEN_PARENT, OPEN_TITLE,
-	OPEN_TYPEVARIABLE,
-    };
+    Tk_Window tkwin = clientData;
+    char *str;
+    int i, result = TCL_ERROR, haveParentOption = 0;
+    int index, len, multiple = 0;
+    FileFilterList fl;
+    Tcl_Obj *cmdObj = NULL, *typeVariablePtr = NULL;
+    FilePanelCallbackInfo callbackInfoStruct;
+    FilePanelCallbackInfo *callbackInfo = &callbackInfoStruct;
+    NSString *directory = nil, *filename = nil;
+    NSString *message, *title, *type;
+    NSWindow *parent;
+    NSMutableArray *fileTypes = nil;
+    NSOpenPanel *panel = [NSOpenPanel openPanel];
+    NSInteger returnCode = NSAlertErrorReturn;
 
-    if (!fileDlgInited) {
-	InitFileDialogs();
-    }
-    TkInitFileFilters(&ofd.fl);
-    ofd.curType = 0;
-    ofd.initialType = -1;
-    ofd.popupItem = OPEN_POPUP_ITEM;
-    ofd.usePopup = 1;
-
+    TkInitFileFilters(&fl);
     for (i = 1; i < objc; i += 2) {
-	char *choice;
-	int index, choiceLen;
-	char *string;
-	Tcl_Obj *types;
-
 	if (Tcl_GetIndexFromObj(interp, objv[i], openOptionStrings, "option",
 		TCL_EXACT, &index) != TCL_OK) {
 	    goto end;
 	}
 	if (i + 1 == objc) {
-	    string = Tcl_GetString(objv[i]);
-	    Tcl_AppendResult(interp, "value for \"", string, "\" missing",
-		    NULL);
+	    str = Tcl_GetString(objv[i]);
+	    Tcl_AppendResult(interp, "value for \"", str, "\" missing", NULL);
 	    goto end;
 	}
-
 	switch (index) {
 	case OPEN_DEFAULT:
 	    break;
 	case OPEN_FILETYPES:
-	    types = objv[i + 1];
-	    if (TkGetFileFilters(interp, &ofd.fl, types, 0) != TCL_OK) {
+	    if (TkGetFileFilters(interp, &fl, objv[i + 1], 0) != TCL_OK) {
 		goto end;
 	    }
 	    break;
 	case OPEN_INITDIR:
-	    initialDir = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
-	    /* empty strings should be like no selection given */
-	    if (choiceLen == 0) {
-		initialDir = NULL;
+	    str = Tcl_GetStringFromObj(objv[i + 1], &len);
+	    if (len) {
+		directory = [[[NSString alloc] initWithUTF8String:str]
+			autorelease];
 	    }
 	    break;
 	case OPEN_INITFILE:
-	    initialFile = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
-	    /* empty strings should be like no selection given */
-	    if (choiceLen == 0) {
-		initialFile = NULL;
+	    str = Tcl_GetStringFromObj(objv[i + 1], &len);
+	    if (len) {
+		filename = [[[NSString alloc] initWithUTF8String:str]
+			autorelease];
 	    }
 	    break;
 	case OPEN_MESSAGE:
-	    choice = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
-	    if (message) {
-		CFRelease(message);
-	    }
-	    message = CFStringCreateWithBytes(NULL, (unsigned char *) choice,
-		    choiceLen, kCFStringEncodingUTF8, false);
+	    message = [[NSString alloc] initWithUTF8String:
+		    Tcl_GetString(objv[i + 1])];
+	    [panel setMessage:message];
+	    [message release];
 	    break;
 	case OPEN_MULTIPLE:
 	    if (Tcl_GetBooleanFromObj(interp, objv[i + 1],
@@ -447,64 +411,92 @@ Tk_GetOpenFileObjCmd(
 	    }
 	    break;
 	case OPEN_PARENT:
-	    choice = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
-	    parent = Tk_NameToWindow(interp, choice, clientData);
-	    if (parent == NULL) {
+	    str = Tcl_GetStringFromObj(objv[i + 1], &len);
+	    tkwin = Tk_NameToWindow(interp, str, tkwin);
+	    if (!tkwin) {
 		goto end;
 	    }
+	    haveParentOption = 1;
 	    break;
 	case OPEN_TITLE:
-	    choice = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
-	    if (title) {
-		CFRelease(title);
-	    }
-	    title = CFStringCreateWithBytes(NULL, (unsigned char *) choice,
-		    choiceLen, kCFStringEncodingUTF8, false);
+	    title = [[NSString alloc] initWithUTF8String:
+		    Tcl_GetString(objv[i + 1])];
+	    [panel setTitle:title];
+	    [title release];
 	    break;
 	case OPEN_TYPEVARIABLE:
 	    typeVariablePtr = objv[i + 1];
 	    break;
+	case OPEN_COMMAND:
+	    cmdObj = objv[i+1];
+	    break;
 	}
     }
-
-    if (HandleInitialDirectory(interp, initialFile, initialDir, &dirRef,
-	    &selectDesc, &initialDesc) != TCL_OK) {
-	goto end;
-    }
-    if (initialDesc.descriptorType == typeFSRef) {
-	initialPtr = &initialDesc;
-    }
-    if (typeVariablePtr) {
-	initialtype = Tcl_GetVar(interp, Tcl_GetString(typeVariablePtr), 0);
-    }
-    result = NavServicesGetFile(interp, &ofd, initialPtr, NULL, &selectDesc,
-	    title, message, initialtype, multiple, OPEN_FILE, parent);
-
-    if (typeVariablePtr) {
-	FileFilter *filterPtr = ofd.fl.filters;
-	int i = ofd.curType;
-
-	while (filterPtr && i-- > 0) {
-	    filterPtr = filterPtr->next;
+    if (fl.filters) {
+	fileTypes = [[NSMutableArray array] autorelease];
+	for (FileFilter *filterPtr = fl.filters; filterPtr;
+		filterPtr = filterPtr->next) {
+	    for (FileFilterClause *clausePtr = filterPtr->clauses; clausePtr;
+		    clausePtr = clausePtr->next) {
+		for (GlobPattern *globPtr = clausePtr->patterns; globPtr;
+			globPtr = globPtr->next) {
+		    str = globPtr->pattern;
+		    while (*str && (*str == '*' || *str == '.')) {
+			str++;
+		    }
+		    if (*str) {
+			type = [[NSString alloc] initWithUTF8String:str];
+			if (![fileTypes containsObject:type]) {
+			    [fileTypes addObject:type];
+			}
+			[type release];
+		    }
+		}
+		for (MacFileType *mfPtr = clausePtr->macTypes; mfPtr;
+			mfPtr = mfPtr->next) {
+		    if (mfPtr->type) {
+			type = NSFileTypeForHFSTypeCode(mfPtr->type);
+			if (![fileTypes containsObject:type]) {
+			    [fileTypes addObject:type];
+			}
+		    }
+		}
+	    }
 	}
-	Tcl_SetVar(interp, Tcl_GetString(typeVariablePtr), filterPtr ?
-		filterPtr->name : "", 0);
     }
-
-  end:
-    TkFreeFileFilters(&ofd.fl);
-    if (initialDesc.dataHandle) {
-	ChkErr(AEDisposeDesc, &initialDesc);
+    [panel setAllowsMultipleSelection:multiple];
+    if (cmdObj) {
+	callbackInfo = (FilePanelCallbackInfo *)
+		ckalloc(sizeof(FilePanelCallbackInfo));
+	if (Tcl_IsShared(cmdObj)) {
+	    cmdObj = Tcl_DuplicateObj(cmdObj);
+	}
+	Tcl_IncrRefCount(cmdObj);
     }
-    if (selectDesc.dataHandle) {
-	ChkErr(AEDisposeDesc, &selectDesc);
+    callbackInfo->cmdObj = cmdObj;
+    callbackInfo->interp = interp;
+    callbackInfo->multiple = multiple;
+    parent = TkMacOSXDrawableWindow(((TkWindow *) tkwin)->window);
+    if (haveParentOption && parent && ![parent attachedSheet]) {
+	[panel beginSheetForDirectory:directory file:filename types:fileTypes
+		modalForWindow:parent modalDelegate:NSApp didEndSelector:
+		@selector(tkFilePanelDidEnd:returnCode:contextInfo:)
+		contextInfo:callbackInfo];
+	returnCode = cmdObj ? NSAlertOtherReturn :
+		[NSApp runModalForWindow:panel];
+    } else {
+	returnCode = [panel runModalForDirectory:directory file:filename
+		types:fileTypes];
+	[NSApp tkFilePanelDidEnd:panel returnCode:returnCode
+		contextInfo:callbackInfo];
     }
-    if (title) {
-	CFRelease(title);
+    result = (returnCode != NSAlertErrorReturn) ? TCL_OK : TCL_ERROR;
+    if (typeVariablePtr && result == TCL_OK) {
+	Tcl_SetVar(interp, Tcl_GetString(typeVariablePtr), "", 0);
     }
-    if (message) {
-	CFRelease(message);
-    }
+end:
+    TkFreeFileFilters(&fl);
+    [panel release];
     return result;
 }
 
@@ -513,7 +505,8 @@ Tk_GetOpenFileObjCmd(
  *
  * Tk_GetSaveFileObjCmd --
  *
- *	Same as Tk_GetOpenFileCmd but opens a "save file" dialog box instead.
+ *	This procedure implements the "save file" dialog box for the Mac
+ *	platform. See the user documentation for details on what it does.
  *
  * Results:
  *	A standard Tcl result.
@@ -530,112 +523,146 @@ Tk_GetSaveFileObjCmd(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
-    int i, result = TCL_ERROR;
-    char *initialFile = NULL;
-    Tk_Window parent = NULL;
-    AEDesc initialDesc = {typeNull, NULL};
-    AEDesc *initialPtr = NULL;
-    FSRef dirRef;
-    CFStringRef title = NULL, message = NULL;
-    OpenFileData ofd;
-    static const char *const saveOptionStrings[] = {
-	"-defaultextension", "-filetypes", "-initialdir", "-initialfile",
-	"-message", "-parent", "-title", "-typevariable", NULL
-    };
-    enum saveOptions {
-	SAVE_DEFAULT, SAVE_FILETYPES, SAVE_INITDIR, SAVE_INITFILE,
-	SAVE_MESSAGE, SAVE_PARENT, SAVE_TITLE, SAVE_TYPEVARIABLE,
-    };
+    Tk_Window tkwin = clientData;
+    char *str;
+    int i, result = TCL_ERROR, haveParentOption = 0;
+    int index, len;
+    FileFilterList fl;
+    Tcl_Obj *cmdObj = NULL;
+    FilePanelCallbackInfo callbackInfoStruct;
+    FilePanelCallbackInfo *callbackInfo = &callbackInfoStruct;
+    NSString *directory = nil, *filename = nil, *defaultType = nil;
+    NSString *message, *title, *type;
+    NSWindow *parent;
+    NSMutableArray *fileTypes = nil;
+    NSSavePanel *panel = [NSSavePanel savePanel];
+    NSInteger returnCode = NSAlertErrorReturn;
 
-    if (!fileDlgInited) {
-	InitFileDialogs();
-    }
-
-    TkInitFileFilters(&ofd.fl);
-    ofd.curType = 0;
-    ofd.usePopup = 0;
-
+    TkInitFileFilters(&fl);
     for (i = 1; i < objc; i += 2) {
-	char *choice, *string;
-	int index, choiceLen;
-	Tcl_Obj *types;
-
 	if (Tcl_GetIndexFromObj(interp, objv[i], saveOptionStrings, "option",
 		TCL_EXACT, &index) != TCL_OK) {
 	    goto end;
 	}
 	if (i + 1 == objc) {
-	    string = Tcl_GetString(objv[i]);
-	    Tcl_AppendResult(interp, "value for \"", string, "\" missing",
+	    str = Tcl_GetString(objv[i]);
+	    Tcl_AppendResult(interp, "value for \"", str, "\" missing",
 		    NULL);
 	    goto end;
 	}
 	switch (index) {
 	case SAVE_DEFAULT:
+	    str = Tcl_GetStringFromObj(objv[i + 1], &len);
+	    while (*str && (*str == '*' || *str == '.')) {
+		str++;
+	    }
+	    if (*str) {
+		defaultType = [[[NSString alloc] initWithUTF8String:str]
+			autorelease];
+	    }
 	    break;
 	case SAVE_FILETYPES:
-	    types = objv[i + 1];
-	    if (TkGetFileFilters(interp, &ofd.fl, types, 0) != TCL_OK) {
+	    if (TkGetFileFilters(interp, &fl, objv[i + 1], 0) != TCL_OK) {
 		goto end;
 	    }
 	    break;
 	case SAVE_INITDIR:
-	    choice = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
-	    /* empty strings should be like no selection given */
-	    if (choiceLen && HandleInitialDirectory(interp, NULL, choice,
-		    &dirRef, NULL, &initialDesc) != TCL_OK) {
-		goto end;
+	    str = Tcl_GetStringFromObj(objv[i + 1], &len);
+	    if (len) {
+		directory = [[[NSString alloc] initWithUTF8String:str]
+			autorelease];
 	    }
 	    break;
 	case SAVE_INITFILE:
-	    initialFile = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
-	    /* empty strings should be like no selection given */
-	    if (choiceLen == 0) {
-		initialFile = NULL;
+	    str = Tcl_GetStringFromObj(objv[i + 1], &len);
+	    if (len) {
+		filename = [[[NSString alloc] initWithUTF8String:str]
+			autorelease];
 	    }
 	    break;
 	case SAVE_MESSAGE:
-	    choice = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
-	    if (message) {
-		CFRelease(message);
-	    }
-	    message = CFStringCreateWithBytes(NULL, (unsigned char *) choice,
-		    choiceLen, kCFStringEncodingUTF8, false);
+	    message = [[NSString alloc] initWithUTF8String:
+		    Tcl_GetString(objv[i + 1])];
+	    [panel setMessage:message];
+	    [message release];
 	    break;
 	case SAVE_PARENT:
-	    choice = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
-	    parent = Tk_NameToWindow(interp, choice, (Tk_Window) clientData);
-	    if (parent == NULL) {
+	    str = Tcl_GetStringFromObj(objv[i + 1], &len);
+	    tkwin = Tk_NameToWindow(interp, str, tkwin);
+	    if (!tkwin) {
 		goto end;
 	    }
+	    haveParentOption = 1;
 	    break;
 	case SAVE_TITLE:
-	    choice = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
-	    if (title) {
-		CFRelease(title);
-	    }
-	    title = CFStringCreateWithBytes(NULL, (unsigned char *) choice,
-		    choiceLen, kCFStringEncodingUTF8, false);
+	    title = [[NSString alloc] initWithUTF8String:
+		    Tcl_GetString(objv[i + 1])];
+	    [panel setTitle:title];
+	    [title release];
+	    break;
+	case SAVE_TYPEVARIABLE:
+	    break;
+	case SAVE_COMMAND:
+	    cmdObj = objv[i+1];
 	    break;
 	}
     }
-
-    if (initialDesc.descriptorType == typeFSRef) {
-	initialPtr = &initialDesc;
+    if (fl.filters || defaultType) {
+	fileTypes = [[NSMutableArray array] autorelease];
+	[fileTypes addObject:defaultType ? defaultType : (id)kUTTypeContent];
+	for (FileFilter *filterPtr = fl.filters; filterPtr;
+		filterPtr = filterPtr->next) {
+	    for (FileFilterClause *clausePtr = filterPtr->clauses; clausePtr;
+		    clausePtr = clausePtr->next) {
+		for (GlobPattern *globPtr = clausePtr->patterns; globPtr;
+			globPtr = globPtr->next) {
+		    str = globPtr->pattern;
+		    while (*str && (*str == '*' || *str == '.')) {
+			str++;
+		    }
+		    if (*str) {
+			type = [[NSString alloc] initWithUTF8String:str];
+			if (![fileTypes containsObject:type]) {
+			    [fileTypes addObject:type];
+			}
+			[type release];
+		    }
+		}
+	    }
+	}
+	[panel setAllowedFileTypes:fileTypes];
+	[panel setAllowsOtherFileTypes:YES];
     }
-    result = NavServicesGetFile(interp, &ofd, initialPtr, initialFile, NULL,
-	    title, message, NULL, false, SAVE_FILE, parent);
-    TkFreeFileFilters(&ofd.fl);
-  end:
-    if (initialDesc.dataHandle) {
-	ChkErr(AEDisposeDesc, &initialDesc);
+    [panel setCanSelectHiddenExtension:YES];
+    [panel setExtensionHidden:NO];
+    if (cmdObj) {
+	callbackInfo = (FilePanelCallbackInfo *)
+		ckalloc(sizeof(FilePanelCallbackInfo));
+	if (Tcl_IsShared(cmdObj)) {
+	    cmdObj = Tcl_DuplicateObj(cmdObj);
+	}
+	Tcl_IncrRefCount(cmdObj);
     }
-    if (title) {
-	CFRelease(title);
+    callbackInfo->cmdObj = cmdObj;
+    callbackInfo->interp = interp;
+    callbackInfo->multiple = 0;
+    parent = TkMacOSXDrawableWindow(((TkWindow *) tkwin)->window);
+    if (haveParentOption && parent && ![parent attachedSheet]) {
+	[panel beginSheetForDirectory:directory file:filename
+		modalForWindow:parent modalDelegate:NSApp didEndSelector:
+		@selector(tkFilePanelDidEnd:returnCode:contextInfo:)
+		contextInfo:callbackInfo];
+	returnCode = cmdObj ? NSAlertOtherReturn :
+		[NSApp runModalForWindow:panel];
+    } else {
+	returnCode = [panel runModalForDirectory:directory file:filename];
+	[NSApp tkFilePanelDidEnd:panel returnCode:returnCode
+		contextInfo:callbackInfo];
     }
-    if (message) {
-	CFRelease(message);
-    }
+    result = (returnCode != NSAlertErrorReturn) ? TCL_OK : TCL_ERROR;
+end:
+    TkFreeFileFilters(&fl);
+    [panel release];
     return result;
 }
 
@@ -664,771 +691,101 @@ Tk_ChooseDirectoryObjCmd(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
-    int i, result = TCL_ERROR;
-    Tk_Window parent = NULL;
-    AEDesc initialDesc = {typeNull, NULL}, *initialPtr = NULL;
-    FSRef dirRef;
-    CFStringRef message = NULL, title = NULL;
-    OpenFileData ofd;
-    static const char *const chooseOptionStrings[] = {
-	"-initialdir", "-message", "-mustexist", "-parent", "-title", NULL
-    };
-    enum chooseOptions {
-	CHOOSE_INITDIR, CHOOSE_MESSAGE, CHOOSE_MUSTEXIST, CHOOSE_PARENT,
-	CHOOSE_TITLE
-    };
-
-    if (!fileDlgInited) {
-	InitFileDialogs();
-    }
+    Tk_Window tkwin = clientData;
+    char *str;
+    int i, result = TCL_ERROR, haveParentOption = 0;
+    int index, len, mustexist = 0;
+    Tcl_Obj *cmdObj = NULL;
+    FilePanelCallbackInfo callbackInfoStruct;
+    FilePanelCallbackInfo *callbackInfo = &callbackInfoStruct;
+    NSString *directory = nil, *filename = nil;
+    NSString *message, *title;
+    NSWindow *parent;
+    NSOpenPanel *panel = [NSOpenPanel openPanel];
+    NSInteger returnCode = NSAlertErrorReturn;
 
     for (i = 1; i < objc; i += 2) {
-	char *string, *choice;
-	int index, choiceLen;
-
 	if (Tcl_GetIndexFromObj(interp, objv[i], chooseOptionStrings, "option",
 		TCL_EXACT, &index) != TCL_OK) {
 	    goto end;
 	}
 	if (i + 1 == objc) {
-	    string = Tcl_GetString(objv[i]);
-	    Tcl_AppendResult(interp, "value for \"", string, "\" missing",
-		    NULL);
+	    str = Tcl_GetString(objv[i]);
+	    Tcl_AppendResult(interp, "value for \"", str, "\" missing", NULL);
 	    goto end;
 	}
 	switch (index) {
 	case CHOOSE_INITDIR:
-	    choice = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
-	    if (choiceLen && HandleInitialDirectory(interp, NULL, choice,
-		    &dirRef, NULL, &initialDesc) != TCL_OK) {
-		goto end;
+	    str = Tcl_GetStringFromObj(objv[i + 1], &len);
+	    if (len) {
+		directory = [[[NSString alloc] initWithUTF8String:str]
+			autorelease];
 	    }
 	    break;
 	case CHOOSE_MESSAGE:
-	    choice = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
-	    if (message) {
-		CFRelease(message);
-	    }
-	    message = CFStringCreateWithBytes(NULL, (unsigned char *) choice,
-		    choiceLen, kCFStringEncodingUTF8, false);
+	    message = [[NSString alloc] initWithUTF8String:
+		    Tcl_GetString(objv[i + 1])];
+	    [panel setMessage:message];
+	    [message release];
 	    break;
-	case CHOOSE_PARENT:
-	    choice = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
-	    parent = Tk_NameToWindow(interp, choice, clientData);
-	    if (parent == NULL) {
+	case CHOOSE_MUSTEXIST:
+	    if (Tcl_GetBooleanFromObj(interp, objv[i + 1],
+		    &mustexist) != TCL_OK) {
 		goto end;
 	    }
 	    break;
+	case CHOOSE_PARENT:
+	    str = Tcl_GetStringFromObj(objv[i + 1], &len);
+	    tkwin = Tk_NameToWindow(interp, str, tkwin);
+	    if (!tkwin) {
+		goto end;
+	    }
+	    haveParentOption = 1;
+	    break;
 	case CHOOSE_TITLE:
-	    choice = Tcl_GetStringFromObj(objv[i + 1], &choiceLen);
-	    if (title) {
-		CFRelease(title);
-	    }
-	    title = CFStringCreateWithBytes(NULL, (unsigned char *) choice,
-		    choiceLen, kCFStringEncodingUTF8, false);
+	    title = [[NSString alloc] initWithUTF8String:
+		    Tcl_GetString(objv[i + 1])];
+	    [panel setTitle:title];
+	    [title release];
+	    break;
+	case CHOOSE_COMMAND:
+	    cmdObj = objv[i+1];
 	    break;
 	}
     }
-
-    TkInitFileFilters(&ofd.fl);
-    ofd.usePopup = 0;
-    if (initialDesc.descriptorType == typeFSRef) {
-	initialPtr = &initialDesc;
-    }
-    result = NavServicesGetFile(interp, &ofd, initialPtr, NULL, NULL, title,
-	    message, NULL, false, CHOOSE_FOLDER, parent);
-    TkFreeFileFilters(&ofd.fl);
-  end:
-    if (initialDesc.dataHandle) {
-	ChkErr(AEDisposeDesc, &initialDesc);
-    }
-    if (title) {
-	CFRelease(title);
-    }
-    if (message) {
-	CFRelease(message);
-    }
-    return result;
-}
-
-/*
- *----------------------------------------------------------------------
- *
- * HandleInitialDirectory --
- *
- *	Helper for -initialdir setup.
- *
- * Results:
- *	Tcl result.
- *
- * Side effects:
- *	None.
- *
- *----------------------------------------------------------------------
- */
-
-int
-HandleInitialDirectory(
-    Tcl_Interp *interp,
-    char *initialFile,
-    char *initialDir,
-    FSRef *dirRef,
-    AEDescList *selectDescPtr,
-    AEDesc *dirDescPtr)
-{
-    Tcl_DString ds;
-    OSStatus err;
-    Boolean isDirectory;
-    char *dirName = NULL;
-    int result = TCL_ERROR;
-
-    if (initialDir) {
-	dirName = Tcl_TranslateFileName(interp, initialDir, &ds);
-	if (dirName == NULL) {
-	    goto end;
+    [panel setPrompt:@"Choose"];
+    [panel setCanChooseFiles:NO];
+    [panel setCanChooseDirectories:YES];
+    [panel setCanCreateDirectories:!mustexist];
+    if (cmdObj) {
+	callbackInfo = (FilePanelCallbackInfo *)
+		ckalloc(sizeof(FilePanelCallbackInfo));
+	if (Tcl_IsShared(cmdObj)) {
+	    cmdObj = Tcl_DuplicateObj(cmdObj);
 	}
-	err = ChkErr(FSPathMakeRef, (unsigned char *) dirName, dirRef,
-		&isDirectory);
-	if (err != noErr) {
-	    Tcl_AppendResult(interp, "bad directory \"", initialDir, "\"",
-		    NULL);
-	    goto end;
-	}
-	if (!isDirectory) {
-	    Tcl_AppendResult(interp, "-intialdir \"", initialDir, "\""
-		    " is a file, not a directory.", NULL);
-	    goto end;
-	}
-	ChkErr(AECreateDesc, typeFSRef, dirRef, sizeof(*dirRef), dirDescPtr);
+	Tcl_IncrRefCount(cmdObj);
     }
-
-    if (initialFile && selectDescPtr) {
-	FSRef fileRef;
-	AEDesc fileDesc;
-	char *namePtr;
-
-	if (initialDir) {
-	    Tcl_DStringAppend(&ds, "/", 1);
-	    Tcl_DStringAppend(&ds, initialFile, -1);
-	    namePtr = Tcl_DStringValue(&ds);
-	} else {
-	    namePtr = initialFile;
-	}
-
-	ChkErr(AECreateList, NULL, 0, false, selectDescPtr);
-
-	err = ChkErr(FSPathMakeRef, (unsigned char *) namePtr, &fileRef,
-		&isDirectory);
-	if (err != noErr) {
-	    Tcl_AppendResult(interp, "bad initialfile \"", initialFile,
-		    "\" file does not exist.", NULL);
-	    goto end;
-	}
-	ChkErr(AECreateDesc, typeFSRef, &fileRef, sizeof(fileRef), &fileDesc);
-	ChkErr(AEPutDesc, selectDescPtr, 1, &fileDesc);
-	ChkErr(AEDisposeDesc, &fileDesc);
-    }
-    result = TCL_OK;
-  end:
-    if (dirName) {
-	Tcl_DStringFree(&ds);
-    }
-    return result;
-}
-
-/*
- *----------------------------------------------------------------------
- *
- * InitFileDialogs --
- *
- *	Initialize file dialog subsystem.
- *
- * Results:
- *	None.
- *
- * Side effects:
- *	None.
- *
- *----------------------------------------------------------------------
- */
-
-void
-InitFileDialogs(void)
-{
-    fileDlgInited = 1;
-    openFileFilterUPP = NewNavObjectFilterUPP(OpenFileFilterProc);
-    openFileEventUPP = NewNavEventUPP(OpenEventProc);
-}
-
-/*
- *----------------------------------------------------------------------
- *
- * NavServicesGetFile --
- *
- *	Common wrapper for NavServices API.
- *
- * Results:
- *	Tcl result.
- *
- * Side effects:
- *	None.
- *
- *----------------------------------------------------------------------
- */
-
-int
-NavServicesGetFile(
-    Tcl_Interp *interp,
-    OpenFileData *ofdPtr,
-    AEDesc *initialDescPtr,
-    char *initialFile,
-    AEDescList *selectDescPtr,
-    CFStringRef title,
-    CFStringRef message,
-    const char *initialtype,
-    int multiple,
-    int isOpen,
-    Tk_Window parent)
-{
-    NavHandlerUserData data;
-    NavDialogCreationOptions options;
-    NavDialogRef dialogRef = NULL;
-    CFStringRef *menuItemNames = NULL;
-    OSStatus err;
-    Tcl_Obj *theResult = NULL;
-    int result = TCL_ERROR;
-
-    bzero(&data, sizeof(data));
-    err = NavGetDefaultDialogCreationOptions(&options);
-    if (err != noErr) {
-	return result;
-    }
-    options.optionFlags = kNavDontAutoTranslate | kNavDontAddTranslateItems
-	    | kNavSupportPackages | kNavAllFilesInPopup;
-    if (multiple) {
-	options.optionFlags |= kNavAllowMultipleFiles;
-    }
-    options.modality = kWindowModalityAppModal;
-    if (parent && ((TkWindow *) parent)->window != None &&
-	    TkMacOSXHostToplevelExists(parent)) {
-	options.parentWindow = TkMacOSXDrawableWindow(Tk_WindowId(parent));
-    }
-
-    /*
-     * Now process the selection list. We have to use the popupExtension
-     * to fill the menu.
-     */
-
-    if (ofdPtr && ofdPtr->usePopup) {
-	FileFilter *filterPtr = ofdPtr->fl.filters;
-
-	if (filterPtr == NULL) {
-	    ofdPtr->usePopup = 0;
-	}
-    }
-    if (ofdPtr && ofdPtr->usePopup) {
-	FileFilter *filterPtr;
-	int index = 0;
-	ofdPtr->curType = 0;
-
-	menuItemNames = (CFStringRef *)
-		ckalloc(ofdPtr->fl.numFilters * sizeof(CFStringRef));
-
-	for (filterPtr = ofdPtr->fl.filters; filterPtr != NULL;
-		filterPtr = filterPtr->next, index++) {
-	    menuItemNames[index] = CFStringCreateWithCString(NULL,
-		    filterPtr->name, kCFStringEncodingUTF8);
-	    if (initialtype && strcmp(filterPtr->name, initialtype) == 0) {
-		ofdPtr->initialType = index;
-	    }
-	}
-	options.popupExtension = CFArrayCreate(NULL,
-		(const void **) menuItemNames, ofdPtr->fl.numFilters, NULL);
+    callbackInfo->cmdObj = cmdObj;
+    callbackInfo->interp = interp;
+    callbackInfo->multiple = 0;
+    parent = TkMacOSXDrawableWindow(((TkWindow *) tkwin)->window);
+    if (haveParentOption && parent && ![parent attachedSheet]) {
+	[panel beginSheetForDirectory:directory file:filename
+		modalForWindow:parent modalDelegate:NSApp didEndSelector:
+		@selector(tkFilePanelDidEnd:returnCode:contextInfo:)
+		contextInfo:callbackInfo];
+	returnCode = cmdObj ? NSAlertOtherReturn :
+		[NSApp runModalForWindow:panel];
     } else {
-	options.optionFlags |= kNavNoTypePopup;
-	options.popupExtension = NULL;
+	returnCode = [panel runModalForDirectory:directory file:filename];
+	[NSApp tkFilePanelDidEnd:panel returnCode:returnCode
+		contextInfo:callbackInfo];
     }
-    options.clientName = CFSTR("Wish");
-    options.message = message;
-    options.windowTitle = title;
-    if (initialFile) {
-	options.saveFileName = CFStringCreateWithCString(NULL, initialFile,
-		kCFStringEncodingUTF8);
-    } else {
-	options.saveFileName = NULL;
-    }
-    if (isOpen == OPEN_FILE) {
-	data.ofdPtr = ofdPtr;
-	err = ChkErr(NavCreateGetFileDialog, &options, NULL,
-		openFileEventUPP, NULL, openFileFilterUPP, &data, &dialogRef);
-    } else if (isOpen == SAVE_FILE) {
-	err = ChkErr(NavCreatePutFileDialog, &options, 'TEXT', 'WIsH',
-		openFileEventUPP, &data, &dialogRef);
-    } else if (isOpen == CHOOSE_FOLDER) {
-	err = ChkErr(NavCreateChooseFolderDialog, &options,
-		openFileEventUPP, openFileFilterUPP, &data, &dialogRef);
-    }
-    if (err == noErr && dialogRef) {
-	if (initialDescPtr) {
-	    ChkErr(NavCustomControl, dialogRef, kNavCtlSetLocation,
-		initialDescPtr);
-	}
-	if (selectDescPtr && selectDescPtr->descriptorType != typeNull) {
-	    ChkErr(NavCustomControl, dialogRef, kNavCtlSetSelection,
-		    selectDescPtr);
-	}
-	TkMacOSXTrackingLoop(1);
-	err = ChkErr(NavDialogRun, dialogRef);
-	if (err == noErr) {
-	    if (data.sheet) {
-		data.dialogWindow = NavDialogGetWindow(dialogRef);
-		ChkErr(GetWindowModality, data.dialogWindow,
-			&data.origModality, &data.origUnavailWindow);
-		ChkErr(SetWindowModality, data.dialogWindow,
-			kWindowModalityAppModal, NULL);
-		ChkErr(RunAppModalLoopForWindow, data.dialogWindow);
-	    }
-	    err = data.err;
-	}
-	TkMacOSXTrackingLoop(0);
-    }
-
-    /*
-     * Most commands assume that the file dialogs return a single item, not a
-     * list. So only build a list if multiple is true...
-     */
-
-    if (err == noErr) {
-	if (multiple) {
-	    theResult = Tcl_NewListObj(0, NULL);
-	} else {
-	    theResult = Tcl_NewObj();
-	}
-	if (!theResult) {
-	    err = memFullErr;
-	}
-    }
-    if (err == noErr && data.reply.validRecord) {
-	AEDesc resultDesc;
-	long count, i;
-	FSRef fsRef;
-	char pathPtr[PATH_MAX + 1];
-	char saveName[PATH_MAX + 1];
-
-	err = ChkErr(AECountItems, &data.reply.selection, &count);
-	if (err != noErr) {
-	    /*
-	     * There was an error when counting the items? Treat as if no
-	     * items were chosen.
-	     */
-
-	    goto installResult;
-	}
-
-	/*
-	 * Process the chosen files. This will be one unless -multiple was
-	 * specified.
-	 */
-
-	for (i = 1; i <= count; i++) {
-	    /*
-	     * Get the name of the selected file.
-	     */
-
-	    err = ChkErr(AEGetNthDesc, &data.reply.selection, i,
-		    typeFSRef, NULL, &resultDesc);
-	    if (err != noErr) {
-		continue;
-	    }
-	    err = ChkErr(AEGetDescData, &resultDesc, &fsRef, sizeof(fsRef));
-	    if (err != noErr) {
-		goto nextFilename;
-	    }
-	    err = ChkErr(FSRefMakePath, &fsRef, (unsigned char *) pathPtr,
-		    PATH_MAX + 1);
-	    if (err != noErr) {
-		goto nextFilename;
-	    }
-
-	    /*
-	     * If we're saving the file, we're creating a new filename and
-	     * must therefore check whether it is a legal filename (not
-	     * exceeding path length limits, etc.)
-	     */
-
-	    if (isOpen == SAVE_FILE) {
-		if (!data.saveNameRef) {
-		    TkMacOSXDbgMsg("NavDialogGetSaveFileName failed");
-		    goto nextFilename;
-		}
-
-		if (!CFStringGetCString(data.saveNameRef, saveName,
-			PATH_MAX + 1, kCFStringEncodingUTF8)) {
-		    TkMacOSXDbgMsg("CFStringGetCString failed");
-		    goto nextFilename;
-		}
-
-		if (strlen(pathPtr) + strlen(saveName) >= PATH_MAX) {
-		    TkMacOSXDbgMsg("Path name too long");
-		    goto nextFilename;
-		}
-
-		strcat(pathPtr, "/");
-		strcat(pathPtr, saveName);
-	    }
-
-	    /*
-	     * Got a valid file name; put it in the result object.
-	     */
-
-	    if (multiple) {
-		Tcl_ListObjAppendElement(interp, theResult,
-			Tcl_NewStringObj(pathPtr, -1));
-	    } else {
-		Tcl_SetStringObj(theResult, pathPtr, -1);
-	    }
-
-	nextFilename:
-	    ChkErr(AEDisposeDesc, &resultDesc);
-	}
-
-    installResult:
-	Tcl_SetObjResult(interp, theResult);
-	result = TCL_OK;
-    } else if (err == userCanceledErr) {
-	Tcl_ResetResult(interp);
-	result = TCL_OK;
-    }
-
-    /*
-     * Clean up any allocated memory.
-     */
-
-    if (data.reply.validRecord) {
-	ChkErr(NavDisposeReply, &data.reply);
-    }
-    if (data.saveNameRef) {
-	CFRelease(data.saveNameRef);
-    }
-    if (options.saveFileName) {
-	CFRelease(options.saveFileName);
-    }
-    if (options.clientName) {
-	CFRelease(options.clientName);
-    }
-    if (menuItemNames) {
-	int i;
-
-	for (i = 0; i < ofdPtr->fl.numFilters; i++) {
-	    CFRelease(menuItemNames[i]);
-	}
-	ckfree((void *) menuItemNames);
-    }
-    if (options.popupExtension) {
-	CFRelease(options.popupExtension);
-    }
+    result = (returnCode != NSAlertErrorReturn) ? TCL_OK : TCL_ERROR;
+end:
+    [panel release];
     return result;
 }
-
-/*
- *----------------------------------------------------------------------
- *
- * OpenEventProc --
- *
- *	NavServices event handling callback.
- *
- * Results:
- *	None.
- *
- * Side effects:
- *	None.
- *
- *----------------------------------------------------------------------
- */
-
-pascal void
-OpenEventProc(
-    NavEventCallbackMessage callBackSelector,
-    NavCBRecPtr callBackParams,
-    NavCallBackUserData callBackUD)
-{
-    NavHandlerUserData *data = (NavHandlerUserData*) callBackUD;
-    OpenFileData *ofd = data->ofdPtr;
-
-    switch (callBackSelector) {
-	case kNavCBStart:
-	    if (ofd && ofd->initialType >= 0) {
-		/* Select initial filter */
-		FileFilter *filterPtr = ofd->fl.filters;
-		int i = ofd->initialType;
-
-		while (filterPtr && i-- > 0) {
-		    filterPtr = filterPtr->next;
-		}
-		if (filterPtr) {
-		    NavMenuItemSpec selectItem;
-
-		    selectItem.version = kNavMenuItemSpecVersion;
-		    selectItem.menuCreator = 0;
-		    selectItem.menuType = ofd->initialType;
-		    selectItem.menuItemName[0] = strlen(filterPtr->name);
-		    strncpy((char *) &selectItem.menuItemName[1],
-			    filterPtr->name, 255);
-		    ChkErr(NavCustomControl, callBackParams->context,
-			    kNavCtlSelectCustomType, &selectItem);
-		}
-	    }
-	    break;
-	case kNavCBPopupMenuSelect:
-	    ofd->curType = ((NavMenuItemSpec *)
-		    callBackParams->eventData.eventDataParms.param)->menuType;
-	    break;
-	case kNavCBAccept:
-	case kNavCBCancel:
-	    if (data->sheet) {
-		ChkErr(QuitAppModalLoopForWindow, data->dialogWindow);
-		ChkErr(SetWindowModality, data->dialogWindow,
-			data->origModality, data->origUnavailWindow);
-	    }
-	    break;
-	case kNavCBUserAction:
-	    if (data->reply.validRecord) {
-		ChkErr(NavDisposeReply, &data->reply);
-		data->reply.validRecord = 0;
-	    }
-	    data->err = NavDialogGetReply(callBackParams->context,
-		    &data->reply);
-	    if (callBackParams->userAction == kNavUserActionSaveAs) {
-		data->saveNameRef = NavDialogGetSaveFileName(
-			callBackParams->context);
-		if (data->saveNameRef) {
-		    CFRetain(data->saveNameRef);
-		}
-	    }
-	    break;
-	case kNavCBTerminate:
-	    NavDialogDispose(callBackParams->context);
-	    break;
-	case kNavCBEvent:
-	    TkMacOSXRunTclEventLoop();
-	    break;
-    }
-}
-
-/*
- *----------------------------------------------------------------------
- *
- * OpenFileFilterProc --
- *
- *	NavServices file filter callback.
- *
- * Results:
- *	Whether to use the file in question.
- *
- * Side effects:
- *	None.
- *
- *----------------------------------------------------------------------
- */
-
-pascal Boolean
-OpenFileFilterProc(
-    AEDesc *theItem,
-    void *info,
-    NavCallBackUserData callBackUD,
-    NavFilterModes filterMode)
-{
-    OpenFileData *ofdPtr = ((NavHandlerUserData *) callBackUD)->ofdPtr;
-    int result = MATCHED;
-
-    if (ofdPtr && ofdPtr->usePopup && ofdPtr->fl.numFilters > 0 &&
-	    ((theItem->descriptorType == typeFSS)
-	    || (theItem->descriptorType == typeFSRef))) {
-	NavFileOrFolderInfo *theInfo = info;
-	char fileName[256];
-	OSType fileType;
-	StringPtr fileNamePtr = NULL;
-	Tcl_DString fileNameDString;
-	int i;
-	FileFilter *filterPtr;
-
-	if (!theInfo->isFolder) {
-	    fileType = theInfo->fileAndFolder.fileInfo.finderInfo.fdType;
-	    Tcl_DStringInit(&fileNameDString);
-
-	    if (theItem->descriptorType == typeFSS) {
-		int len;
-
-		fileNamePtr = ((FSSpec *) *theItem->dataHandle)->name;
-		len = fileNamePtr[0];
-		strncpy(fileName, (char *) fileNamePtr + 1, len);
-		fileName[len] = '\0';
-		fileNamePtr = (unsigned char *) fileName;
-	    } else if ((theItem->descriptorType == typeFSRef)) {
-		OSStatus err;
-		FSRef *theRef = (FSRef *) *theItem->dataHandle;
-		HFSUniStr255 uniFileName;
-
-		err = ChkErr(FSGetCatalogInfo, theRef, kFSCatInfoNone,
-			NULL, &uniFileName, NULL, NULL);
-
-		if (err == noErr) {
-		    Tcl_UniCharToUtfDString((Tcl_UniChar *)uniFileName.unicode,
-			    uniFileName.length, &fileNameDString);
-		    fileNamePtr = (unsigned char *)
-			    Tcl_DStringValue(&fileNameDString);
-		}
-	    }
-	    if (ofdPtr->usePopup) {
-		i = ofdPtr->curType;
-		for (filterPtr = ofdPtr->fl.filters; filterPtr && i>0; i--) {
-		    filterPtr = filterPtr->next;
-		}
-		if (filterPtr) {
-		    result = MatchOneType(fileNamePtr, fileType, ofdPtr,
-			    filterPtr);
-		} else {
-		    result = UNMATCHED;
-		}
-	    } else {
-		/*
-		 * We are not using the popup menu. In this case, the file is
-		 * considered matched if it matches any of the file filters.
-		 */
-
-		result = UNMATCHED;
-		for (filterPtr = ofdPtr->fl.filters; filterPtr;
-			filterPtr = filterPtr->next) {
-		    if (MatchOneType(fileNamePtr, fileType, ofdPtr,
-			    filterPtr) == MATCHED) {
-			result = MATCHED;
-			break;
-		    }
-		}
-	    }
-	    Tcl_DStringFree(&fileNameDString);
-	}
-    }
-    return (result == MATCHED);
-}
-
-/*
- *----------------------------------------------------------------------
- *
- * MatchOneType --
- *
- *	Match a file with one file type in the list of file types.
- *
- * Results:
- *	Returns MATCHED if the file matches with the file type; returns
- *	UNMATCHED otherwise.
- *
- * Side effects:
- *	None
- *
- *----------------------------------------------------------------------
- */
-
-Boolean
-MatchOneType(
-    StringPtr fileNamePtr,	/* Name of the file */
-    OSType fileType,		/* Type of the file, 0 means there was no
-				 * specified type. */
-    OpenFileData *ofdPtr,	/* Information about this file dialog */
-    FileFilter *filterPtr)	/* Match the file described by pb against this
-				 * filter */
-{
-    FileFilterClause *clausePtr;
-
-    /*
-     * A file matches with a file type if it matches with at least one clause
-     * of the type.
-     *
-     * If the clause has both glob patterns and ostypes, the file must match
-     * with at least one pattern AND at least one ostype.
-     *
-     * If the clause has glob patterns only, the file must match with at least
-     * one pattern.
-     *
-     * If the clause has mac types only, the file must match with at least one
-     * mac type.
-     *
-     * If the clause has neither glob patterns nor mac types, it's considered
-     * an error.
-     */
-
-    for (clausePtr = filterPtr->clauses; clausePtr;
-	    clausePtr = clausePtr->next) {
-	int macMatched = 0;
-	int globMatched = 0;
-	GlobPattern *globPtr;
-	MacFileType *mfPtr;
-
-	if (clausePtr->patterns == NULL) {
-	    globMatched = 1;
-	}
-	if (clausePtr->macTypes == NULL) {
-	    macMatched = 1;
-	}
-
-	for (globPtr = clausePtr->patterns; globPtr;
-		globPtr = globPtr->next) {
-	    char *q, *ext;
-
-	    if (fileNamePtr == NULL) {
-		continue;
-	    }
-	    ext = globPtr->pattern;
-
-	    if (ext[0] == '\0') {
-		/*
-		 * We don't want any extensions: OK if the filename doesn't
-		 * have "." in it
-		 */
-
-		for (q = (char*) fileNamePtr; *q; q++) {
-		    if (*q == '.') {
-			goto glob_unmatched;
-		    }
-		}
-		goto glob_matched;
-	    }
-
-	    if (Tcl_StringMatch((char*) fileNamePtr, ext)) {
-		goto glob_matched;
-	    }
-	glob_unmatched:
-	    continue;
-
-	glob_matched:
-	    globMatched = 1;
-	    break;
-	}
-
-	for (mfPtr = clausePtr->macTypes; mfPtr; mfPtr = mfPtr->next) {
-	    if (fileType == mfPtr->type) {
-		macMatched = 1;
-		break;
-	    }
-	}
-
-	/*
-	 * On Mac OS X, it is not uncommon for files to have NO file type. But
-	 * folks with Tcl code on Classic MacOS pretty much assume that a
-	 * generic file will have type TEXT. So if we were strict about
-	 * matching types when the source file had NO type set, they would
-	 * have to add another rule always with no fileType. To avoid that, we
-	 * pass the macMatch side of the test if no fileType is set.
-	 */
-
-	if (globMatched && (macMatched || (fileType == 0))) {
-	    return MATCHED;
-	}
-    }
-
-    return UNMATCHED;
-}
-#endif
 
 /*
  *----------------------------------------------------------------------
