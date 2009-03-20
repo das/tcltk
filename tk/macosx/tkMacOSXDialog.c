@@ -64,6 +64,13 @@ typedef struct NavHandlerUserData {
 
 #endif
 
+static const char *colorOptionStrings[] = {
+    "-initialcolor", "-parent", "-title", NULL
+};
+enum colorOptions {
+    COLOR_INITIAL, COLOR_PARENT, COLOR_TITLE
+};
+
 static const char *alertOptionStrings[] = {
     "-default", "-detail", "-icon", "-message", "-parent", "-title",
     "-type", "-command", NULL
@@ -179,6 +186,10 @@ static NavEventUPP openFileEventUPP;
 
 #pragma mark TKApplication(TKDialog)
 
+@interface NSColorPanel(TKDialog)
+- (void)_setUseModalAppearance:(BOOL)flag;
+@end
+
 @implementation TKApplication(TKDialog)
 - (void)tkAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode
 	contextInfo:(void *)contextInfo {
@@ -215,8 +226,6 @@ static NavEventUPP openFileEventUPP;
 @end
 
 #pragma mark -
-
-#ifdef MAC_OSX_TK_TODO
 
 /*
  *----------------------------------------------------------------------
@@ -242,32 +251,19 @@ Tk_ChooseColorObjCmd(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
-    OSStatus err;
     int result = TCL_ERROR;
     Tk_Window parent, tkwin = clientData;
-    const char *title;
-    int i, srcRead, dstWrote;
-    CMProfileRef prof;
-    NColorPickerInfo cpinfo;
-    static RGBColor color = {0xffff, 0xffff, 0xffff};
-    static const char *const optionStrings[] = {
-	"-initialcolor", "-parent", "-title", NULL
-    };
-    enum options {
-	COLOR_INITIAL, COLOR_PARENT, COLOR_TITLE
-    };
-
-    title = "Choose a color:";
-    bzero(&cpinfo, sizeof(cpinfo));
-    cpinfo.theColor.color.rgb.red   = color.red;
-    cpinfo.theColor.color.rgb.green = color.green;
-    cpinfo.theColor.color.rgb.blue  = color.blue;
+    const char *title = NULL;
+    int i;
+    NSColor *color = nil, *initialColor = nil;
+    NSColorPanel *colorPanel;
+    NSInteger returnCode, numberOfComponents = 0;
 
     for (i = 1; i < objc; i += 2) {
 	int index;
 	const char *option, *value;
 
-	if (Tcl_GetIndexFromObj(interp, objv[i], optionStrings, "option",
+	if (Tcl_GetIndexFromObj(interp, objv[i], colorOptionStrings, "option",
 		TCL_EXACT, &index) != TCL_OK) {
 	    goto end;
 	}
@@ -279,7 +275,7 @@ Tk_ChooseColorObjCmd(
 	}
 	value = Tcl_GetString(objv[i + 1]);
 
-	switch ((enum options) index) {
+	switch (index) {
 	    case COLOR_INITIAL: {
 		XColor *colorPtr;
 
@@ -287,9 +283,7 @@ Tk_ChooseColorObjCmd(
 		if (colorPtr == NULL) {
 		    goto end;
 		}
-		cpinfo.theColor.color.rgb.red   = colorPtr->red;
-		cpinfo.theColor.color.rgb.green = colorPtr->green;
-		cpinfo.theColor.color.rgb.blue  = colorPtr->blue;
+		initialColor = TkMacOSXGetNSColor(NULL, colorPtr->pixel);
 		Tk_FreeColor(colorPtr);
 		break;
 	    }
@@ -306,38 +300,44 @@ Tk_ChooseColorObjCmd(
 	    }
 	}
     }
-
-    ChkErr(CMGetDefaultProfileBySpace, cmRGBData, &prof);
-    cpinfo.theColor.profile = prof;
-    cpinfo.dstProfile = prof;
-    cpinfo.flags = kColorPickerDialogIsMoveable | kColorPickerDialogIsModal;
-    cpinfo.placeWhere = kCenterOnMainScreen;
-    /* Currently, this does not actually change the colorpicker title */
-    Tcl_UtfToExternal(NULL, TkMacOSXCarbonEncoding, title, -1, 0, NULL,
-	    StrBody(cpinfo.prompt), 255, &srcRead, &dstWrote, NULL);
-    StrLength(cpinfo.prompt) = (unsigned char) dstWrote;
-
-    TkMacOSXTrackingLoop(1);
-    err = ChkErr(NPickColor, &cpinfo);
-    TkMacOSXTrackingLoop(0);
-    ChkErr(CMCloseProfile, prof);
-    if ((err == noErr) && (cpinfo.newColorChosen != 0)) {
+    colorPanel = [NSColorPanel sharedColorPanel];
+    [colorPanel orderOut:NSApp];
+    [colorPanel setContinuous:NO];
+    [colorPanel setBecomesKeyOnlyIfNeeded:NO];
+    [colorPanel setShowsAlpha: NO];
+    [colorPanel _setUseModalAppearance:YES];
+    if (title) {
+	NSString *s = [[NSString alloc] initWithUTF8String:title];
+	[colorPanel setTitle:s];
+	[s release];
+    }
+    if (initialColor) {
+	[colorPanel setColor:initialColor];
+    }
+    returnCode = [NSApp runModalForWindow:colorPanel];
+    if (returnCode == NSOKButton) {
+	color = [[colorPanel color] colorUsingColorSpace:
+		[NSColorSpace genericRGBColorSpace]];
+	numberOfComponents = [color numberOfComponents];
+    }
+    if (color && numberOfComponents >= 3 && numberOfComponents <= 4) {
+	CGFloat components[4];
 	char colorstr[8];
 
-	color.red   = cpinfo.theColor.color.rgb.red;
-	color.green = cpinfo.theColor.color.rgb.green;
-	color.blue  = cpinfo.theColor.color.rgb.blue;
-	snprintf(colorstr, 8, "#%02x%02x%02x", color.red >> 8,
-		color.green >> 8, color.blue >> 8);
+	[color getComponents:components];
+	snprintf(colorstr, 8, "#%02x%02x%02x",
+		(short)(components[0] * 255),
+		(short)(components[1] * 255),
+		(short)(components[2] * 255));
 	Tcl_SetObjResult(interp, Tcl_NewStringObj(colorstr, 7));
     } else {
 	Tcl_ResetResult(interp);
     }
     result = TCL_OK;
-
-  end:
+end:
     return result;
 }
+#ifdef MAC_OSX_TK_TODO
 
 /*
  *----------------------------------------------------------------------
