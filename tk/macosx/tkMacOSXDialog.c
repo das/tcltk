@@ -811,7 +811,7 @@ TkAboutDlg(void)
     if (path) {
 	image = [[[NSImage alloc] initWithContentsOfFile:path] autorelease];
     } else {
-	image = [NSImage imageNamed:@"NSApplicationIcon"];
+	image = [NSApp applicationIconImage];
     }
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
@@ -1006,6 +1006,7 @@ Tk_MessageBoxObjCmd(
 	    goto end;
 	}
     }
+    [alert setIcon:[NSApp applicationIconImage]];
     [alert setAlertStyle:alertStyles[iconIndex]];
     i = 0;
     while (i < 3 && alertButtonNames[typeIndex][i]) {
