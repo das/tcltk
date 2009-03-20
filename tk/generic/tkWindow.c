@@ -187,11 +187,9 @@ static TkCmd commands[] = {
 
 #if defined(__WIN32__) || defined(MAC_OSX_TK)
     {"tk_chooseColor",	NULL,		Tk_ChooseColorObjCmd,	NULL, 0, 1},
-#ifdef MAC_OSX_TK_TODO
     {"tk_chooseDirectory", NULL,	Tk_ChooseDirectoryObjCmd,NULL, 0,1},
     {"tk_getOpenFile",	NULL,		Tk_GetOpenFileObjCmd,	NULL, 0, 1},
     {"tk_getSaveFile",	NULL,		Tk_GetSaveFileObjCmd,	NULL, 0, 1},
-#endif
     {"tk_messageBox",	NULL,		Tk_MessageBoxObjCmd,	NULL, 0, 1},
 #endif
 
