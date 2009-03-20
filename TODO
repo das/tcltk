@@ -3,22 +3,20 @@ TkAqua Cocoa/64bit Port
 
 Features yet to be implemented, in order of importance:
 
-TODO for parity with Carbon TkAqua:
-- native file, alert & color picker dialogs
-
 TODO features that are not in Carbon TkAqua yet either:
+- script enabling of cocoa button metrics
+- native bitmap creation for iconForFile, icon of specified size etc
+- localized button names in native dialogs
 - native scale widget
+- modeless color picker
 - custom menu drawing (for tk menus with very fancy config options that native
   menus do not support)
 - support for sheets & drawers
 - transparent window resize corner
 - stippled drawing
-- native bitmap creation for iconForFile, icon of specified size etc
-- command to access native about dialog
-- script enabling of cocoa button metrics
 
 Known Issues:
 - still appear to need the call to [NSWindow windowRef] in XMapWindow()
   even though all WindowRef usage has been removed
 
--- das 16/03/2009
+-- das 20/03/2009
