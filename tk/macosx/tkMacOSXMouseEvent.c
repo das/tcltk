@@ -44,14 +44,18 @@ enum {
 #endif
     id		    win;
     NSEventType	    type = [theEvent type];
+#if 0
     NSTrackingArea  *trackingArea = nil;
     NSInteger eventNumber, clickCount, buttonNumber;
+#endif
 
     switch (type) {
     case NSMouseEntered:
     case NSMouseExited:
     case NSCursorUpdate:
+#if 0
 	trackingArea = [theEvent trackingArea];
+#endif
 	/* fall through */
     case NSLeftMouseDown:
     case NSLeftMouseUp:
@@ -65,11 +69,13 @@ enum {
     case NSOtherMouseDragged:
 
     case NSMouseMoved:
+#if 0
 	eventNumber = [theEvent eventNumber];
 	if (!trackingArea) {
 	    clickCount = [theEvent clickCount];
 	    buttonNumber = [theEvent buttonNumber];
 	}
+#endif
 
     case NSTabletPoint:
     case NSTabletProximity:
