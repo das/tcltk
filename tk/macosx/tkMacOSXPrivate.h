@@ -252,6 +252,9 @@ MODULE_SCOPE void	TkMacOSXApplyWindowAttributes(TkWindow *winPtr,
 MODULE_SCOPE int	TkMacOSXStandardAboutPanelObjCmd(ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *const objv[]);
+MODULE_SCOPE int	TkMacOSXIconBitmapObjCmd(ClientData clientData,
+			    Tcl_Interp *interp, int objc,
+			    Tcl_Obj *const objv[]);
 
 #pragma mark Private Objective-C Classes
 
