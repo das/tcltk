@@ -1898,42 +1898,7 @@ TkMacOSXMakeStippleMap(
     Drawable drawable,		/* Window to apply stipple. */
     Drawable stipple)		/* The stipple pattern. */
 {
-    BitMapPtr bitmapPtr = NULL;
-#ifdef MAC_OSX_TK_TODO
-    CGrafPtr stipplePort;
-    const BitMap *stippleBitmap;
-    Rect portRect;
-    int width, height, stippleHeight, stippleWidth, i, j;
-    Rect bounds;
-
-    GetPortBounds(TkMacOSXGetDrawablePort(drawable), &portRect);
-    width = portRect.right - portRect.left;
-    height = portRect.bottom - portRect.top;
-    bitmapPtr = (BitMap *) ckalloc(sizeof(BitMap));
-    bitmapPtr->bounds.top = bitmapPtr->bounds.left = 0;
-    bitmapPtr->bounds.right = (short) width;
-    bitmapPtr->bounds.bottom = (short) height;
-    bitmapPtr->rowBytes = (width / 8) + 1;
-    bitmapPtr->baseAddr = ckalloc(height * bitmapPtr->rowBytes);
-
-    stipplePort = TkMacOSXGetDrawablePort(stipple);
-    stippleBitmap = GetPortBitMapForCopyBits(stipplePort);
-    GetPortBounds(stipplePort, &portRect);
-    stippleWidth = portRect.right - portRect.left;
-    stippleHeight = portRect.bottom - portRect.top;
-
-    for (i = 0; i < height; i += stippleHeight) {
-	for (j = 0; j < width; j += stippleWidth) {
-	    bounds.left = j;
-	    bounds.top = i;
-	    bounds.right = j + stippleWidth;
-	    bounds.bottom = i + stippleHeight;
-	    CopyBits(stippleBitmap, bitmapPtr, &portRect, &bounds, srcCopy,
-		    NULL);
-	}
-    }
-#endif
-    return bitmapPtr;
+    return NULL;
 }
 
 /*

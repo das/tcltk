@@ -5355,13 +5355,6 @@ TkMacOSXMakeRealWindowExist(
 
     TkMacOSXRegisterOffScreenWindow((Window) macWin, window);
     macWin->flags |= TK_HOST_EXISTS;
-
-#ifdef TK_MAC_DEBUG_WINDOWS
-    TkMacOSXInitNamedDebugSymbol(HIToolbox, void, DebugPrintWindow, WindowRef);
-    if (DebugPrintWindow) {
-	DebugPrintWindow(newWindow);
-    }
-#endif /* TK_MAC_DEBUG_WINDOWS */
 }
 
 /*
