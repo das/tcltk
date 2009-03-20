@@ -4,8 +4,6 @@ TkAqua Cocoa/64bit Port
 Features yet to be implemented, in order of importance:
 
 TODO features that are not in Carbon TkAqua yet either:
-- script enabling of cocoa button metrics
-- native bitmap creation for iconForFile, icon of specified size etc
 - localized button names in native dialogs
 - native scale widget
 - modeless color picker
