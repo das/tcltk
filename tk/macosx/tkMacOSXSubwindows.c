@@ -89,33 +89,6 @@ XDestroyWindow(
 	ckfree((char *) macWin);
 	return;
     }
-
-#ifdef MAC_OSX_TK_TODO
-    /*
-     * We are relying on the Activate Mac OS event to pass the focus away from
-     * a window that is getting Destroyed to the Front non-floating window. BUT
-     * we don't get activate events when a floating window is destroyed, since
-     * the front non-floating window doesn't in fact get activated... So maybe
-     * we can check here and if we are destroying a floating window, we can
-     * pass the focus back to the front non-floating window...
-     */
-
-    if (macWin->grafPtr != NULL) {
-	TkWindow *focusPtr = TkGetFocusWin(macWin->winPtr);
-
-	if (focusPtr == NULL
-		|| (focusPtr->mainPtr->winPtr == macWin->winPtr)) {
-	    NSWindow *wRef = TkMacOSXDrawableWindow(window);
-	    if (TkpIsWindowFloating (winRef)) {
-		Window window = TkMacOSXGetXWindow(ActiveNonFloatingWindow());
-
-		if (window != None) {
-		    TkMacOSXGenerateFocusEvent(macWin->winPtr, 1);
-		}
-	    }
-	}
-    }
-#endif
     if (macWin->visRgn) {
 	CFRelease(macWin->visRgn);
     }
