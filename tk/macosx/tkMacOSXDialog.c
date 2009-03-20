@@ -1383,6 +1383,37 @@ TkAboutDlg(void)
 /*
  *----------------------------------------------------------------------
  *
+ * TkMacOSXStandardAboutPanelObjCmd --
+ *
+ *	Implements the ::tk::mac::standardAboutPanel command.
+ *
+ * Results:
+ *	A standard Tcl result.
+ *
+ * Side effects:
+ *	none
+ *
+ *----------------------------------------------------------------------
+ */
+
+int
+TkMacOSXStandardAboutPanelObjCmd(
+    ClientData clientData,	/* Main window associated with interpreter. */
+    Tcl_Interp *interp,		/* Current interpreter. */
+    int objc,			/* Number of arguments. */
+    Tcl_Obj *const objv[])	/* Argument objects. */
+{
+    if (objc > 1) {
+	Tcl_WrongNumArgs(interp, 1, objv, NULL);
+	return TCL_ERROR;
+    }
+    [NSApp orderFrontStandardAboutPanelWithOptions:nil];
+    return TCL_OK;
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
  * Tk_MessageBoxObjCmd --
  *
  *	Implements the tk_messageBox in native Mac OS X style.
