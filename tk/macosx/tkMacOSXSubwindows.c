@@ -182,7 +182,7 @@ XMapWindow(
 
 	    [win makeKeyAndOrderFront:NSApp];
 	    [win windowRef];
-	    MacOSXApplyWindowAttributes(macWin->winPtr, win);
+	    TkMacOSXApplyWindowAttributes(macWin->winPtr, win);
 	}
 	TkMacOSXInvalClipRgns((Tk_Window) macWin->winPtr);
 

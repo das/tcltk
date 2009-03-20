@@ -5344,7 +5344,7 @@ TkMacOSXMakeRealWindowExist(
     [window setDocumentEdited:NO];
     wmPtr->window = window;
     macWin->view = contentView;
-    MacOSXApplyWindowAttributes(winPtr, window);
+    TkMacOSXApplyWindowAttributes(winPtr, window);
 
     NSRect geometry = InitialWindowBounds(winPtr, window);
     geometry.size.width +=  structureRect.size.width;
@@ -5900,7 +5900,7 @@ TkWmStackorderToplevel(
 /*
  *----------------------------------------------------------------------
  *
- * MacOSXApplyWindowAttributes --
+ * TkMacOSXApplyWindowAttributes --
  *
  *	This procedure applies all window attributes to the NSWindow.
  *
@@ -5914,7 +5914,7 @@ TkWmStackorderToplevel(
  */
 
 void
-MacOSXApplyWindowAttributes(
+TkMacOSXApplyWindowAttributes(
     TkWindow *winPtr,
     NSWindow *macWindow)
 {
