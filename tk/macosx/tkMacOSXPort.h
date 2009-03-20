@@ -143,7 +143,6 @@
 
 #define TkFreeWindowId(dispPtr,w)
 #define TkInitXId(dispPtr)
-#define TkpButtonSetDefaults(specPtr) {}
 #define TkpCmapStressed(tkwin,colormap) (0)
 #define TkpFreeColor(tkColPtr)
 #define TkSetPixmapColormap(p,c) {}

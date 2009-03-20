@@ -102,6 +102,13 @@ TkMacOSXInitCGDrawing(
 		(char *) &useThemedFrame, TCL_LINK_BOOLEAN) != TCL_OK) {
 	    Tcl_ResetResult(interp);
 	}
+#if TK_MAC_BUTTON_USE_COMPATIBILITY_METRICS
+	if (Tcl_LinkVar(interp, "::tk::mac::useCompatibilityMetrics",
+		(char *) &tkMacOSXUseCompatibilityMetrics, TCL_LINK_BOOLEAN)
+		!= TCL_OK) {
+	    Tcl_ResetResult(interp);
+	}
+#endif
     }
     return TCL_OK;
 }
