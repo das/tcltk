@@ -42,7 +42,9 @@ static void TkMacOSXEventsCheckProc(ClientData clientData, int flags);
 
 @implementation NSWindow(TKNotify)
 - (id)tkDisplayIfNeeded {
-    [self displayIfNeeded];
+    if (![self isAutodisplay]) {
+	[self displayIfNeeded];
+    }
     return nil;
 }
 @end
