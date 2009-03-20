@@ -863,7 +863,7 @@ TkAboutDlg(void)
 
 int
 TkMacOSXStandardAboutPanelObjCmd(
-    ClientData clientData,	/* Main window associated with interpreter. */
+    ClientData clientData,	/* Unused. */
     Tcl_Interp *interp,		/* Current interpreter. */
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */

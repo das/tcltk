@@ -37,13 +37,12 @@ typedef struct MacButton {
 
 #if TK_MAC_BUTTON_USE_COMPATIBILITY_METRICS
 
+int tkMacOSXUseCompatibilityMetrics = 1;
+
 /*
  * Use the following heuristic conversion constants to make NSButton-based
  * widget metrics match up with the old Carbon control buttons (for the
  * default Lucida Grande 13 font).
- * TODO: provide a scriptable way to turn this off and use the raw NSButton
- *       metrics (will also need dynamic adjustment of the default padding,
- *       c.f. tkMacOSXDefault.h).
  */
 
 #define NATIVE_BUTTON_INSET 2
@@ -227,6 +226,50 @@ TkpComputeButtonGeometry(
 	break;
     }
 }
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkpButtonSetDefaults --
+ *
+ *	This procedure is invoked before option tables are created for
+ *	buttons. It modifies some of the default values to match the current
+ *	values defined for this platform.
+ *
+ * Results:
+ *	Some of the default values in *specPtr are modified.
+ *
+ * Side effects:
+ *	Updates some of.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TkpButtonSetDefaults(
+    Tk_OptionSpec *specPtr)	/* Points to an array of option specs,
+				 * terminated by one with type
+				 * TK_OPTION_END. */
+{
+#if TK_MAC_BUTTON_USE_COMPATIBILITY_METRICS
+    if (!tkMacOSXUseCompatibilityMetrics) {
+	while (specPtr->type != TK_CONFIG_END) {
+	    switch (specPtr->internalOffset) {
+	    case Tk_Offset(TkButton, highlightWidth):
+		specPtr->defValue = DEF_BUTTON_HIGHLIGHT_WIDTH_NOCM;
+		break;
+	    case Tk_Offset(TkButton, padX):
+		specPtr->defValue = DEF_BUTTON_PADX_NOCM;
+		break;
+	    case Tk_Offset(TkButton, padY):
+		specPtr->defValue = DEF_BUTTON_PADY_NOCM;
+		break;
+	    }
+	    specPtr++;
+	}
+    }
+#endif
+}
 
 #pragma mark -
 #pragma mark Native Buttons:
@@ -321,11 +364,13 @@ DisplayNativeButton(
     frame = NSMakeRect(macWin->xOff, macWin->yOff, Tk_Width(tkwin),
 	    Tk_Height(tkwin));
 #if TK_MAC_BUTTON_USE_COMPATIBILITY_METRICS
-    BoundsFix boundsFix = boundsFixes[macButtonPtr->fix];
-    frame = NSOffsetRect(frame, boundsFix.offsetX, boundsFix.offsetY);
-    frame.size.height -= boundsFix.shrinkH + NATIVE_BUTTON_EXTRA_H;
-    frame = NSInsetRect(frame, boundsFix.inset + NATIVE_BUTTON_INSET,
-	    boundsFix.inset + NATIVE_BUTTON_INSET);
+    if (tkMacOSXUseCompatibilityMetrics) {
+	BoundsFix boundsFix = boundsFixes[macButtonPtr->fix];
+	frame = NSOffsetRect(frame, boundsFix.offsetX, boundsFix.offsetY);
+	frame.size.height -= boundsFix.shrinkH + NATIVE_BUTTON_EXTRA_H;
+	frame = NSInsetRect(frame, boundsFix.inset + NATIVE_BUTTON_INSET,
+		boundsFix.inset + NATIVE_BUTTON_INSET);
+    }
 #endif
     frame.origin.y = viewHeight - (frame.origin.y + frame.size.height);
     if (!NSEqualRects(frame, [button frame])) {
@@ -409,10 +454,13 @@ ComputeNativeButtonGeometry(
 	    showsStateBy = butPtr->selectImage || butPtr->tristateImage ?
 		    NSContentsCellMask : 0;
 #if TK_MAC_BUTTON_USE_COMPATIBILITY_METRICS
-	    border = butPtr->borderWidth > 1 ? butPtr->borderWidth - 1 : 1;
-#else
-	    border = butPtr->borderWidth;
+	    if (tkMacOSXUseCompatibilityMetrics) {
+		border = butPtr->borderWidth > 1 ? butPtr->borderWidth - 1 : 1;
+	    } else
 #endif
+	    {
+		border = butPtr->borderWidth;
+	    }
 	}
 	break;
     }
@@ -558,16 +606,20 @@ ComputeNativeButtonGeometry(
 	    titleRect = [cell titleRectForBounds:bounds];
 #endif
 #if TK_MAC_BUTTON_USE_COMPATIBILITY_METRICS
-	    bounds.size.height += 3;
+	    if (tkMacOSXUseCompatibilityMetrics) {
+		bounds.size.height += 3;
+	    }
 #endif
 	}
     }
     width = lround(bounds.size.width);
     height = lround(bounds.size.height);
 #if TK_MAC_BUTTON_USE_COMPATIBILITY_METRICS
-    macButtonPtr->fix = fixForTypeStyle(type, style);
-    width -= boundsFixes[macButtonPtr->fix].trimW;
-    height -= boundsFixes[macButtonPtr->fix].trimH;
+    if (tkMacOSXUseCompatibilityMetrics) {
+	macButtonPtr->fix = fixForTypeStyle(type, style);
+	width -= boundsFixes[macButtonPtr->fix].trimW;
+	height -= boundsFixes[macButtonPtr->fix].trimH;
+    }
 #endif
 
     if (haveImage || haveCompound) {
@@ -598,8 +650,10 @@ ComputeNativeButtonGeometry(
 	height += 2*border;
     }
 #if TK_MAC_BUTTON_USE_COMPATIBILITY_METRICS
-    width += 2*NATIVE_BUTTON_INSET;
-    height += 2*NATIVE_BUTTON_INSET + NATIVE_BUTTON_EXTRA_H;
+    if (tkMacOSXUseCompatibilityMetrics) {
+	width += 2*NATIVE_BUTTON_INSET;
+	height += 2*NATIVE_BUTTON_INSET + NATIVE_BUTTON_EXTRA_H;
+    }
 #endif
     Tk_GeometryRequest(butPtr->tkwin, width, height);
     Tk_SetInternalBorder(butPtr->tkwin, butPtr->inset);

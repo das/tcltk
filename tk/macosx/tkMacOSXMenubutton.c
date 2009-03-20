@@ -189,10 +189,12 @@ TkpDisplayMenuButton(
 	    Tk_Height(tkwin));
     frame = NSInsetRect(frame, mbPtr->inset, mbPtr->inset);
 #if TK_MAC_BUTTON_USE_COMPATIBILITY_METRICS
-    BoundsFix boundsFix = boundsFixes[macButtonPtr->fix];
-    frame = NSOffsetRect(frame, boundsFix.offsetX, boundsFix.offsetY);
-    frame.size.width -= boundsFix.shrinkW;
-    frame = NSInsetRect(frame, boundsFix.inset, boundsFix.inset);
+    if (tkMacOSXUseCompatibilityMetrics) {
+	BoundsFix boundsFix = boundsFixes[macButtonPtr->fix];
+	frame = NSOffsetRect(frame, boundsFix.offsetX, boundsFix.offsetY);
+	frame.size.width -= boundsFix.shrinkW;
+	frame = NSInsetRect(frame, boundsFix.inset, boundsFix.inset);
+    }
 #endif
     frame.origin.y = viewHeight - (frame.origin.y + frame.size.height);
     if (!NSEqualRects(frame, [button frame])) {
@@ -344,7 +346,7 @@ TkpComputeMenuButtonGeometry(
 	    bounds.size.height = height + 8;
 	}
 #if TK_MAC_BUTTON_USE_COMPATIBILITY_METRICS
-	if (!mbPtr->indicatorOn) {
+	if (!mbPtr->indicatorOn && tkMacOSXUseCompatibilityMetrics) {
 	    bounds.size.width -= 16;
 	}
 #endif
@@ -368,16 +370,20 @@ TkpComputeMenuButtonGeometry(
 	    titleRect = [cell titleRectForBounds:bounds];
 #endif
 #if TK_MAC_BUTTON_USE_COMPATIBILITY_METRICS
-	    bounds.size.height += 3;
+	    if (tkMacOSXUseCompatibilityMetrics) {
+		bounds.size.height += 3;
+	    }
 #endif
 	}
     }
     width = lround(bounds.size.width);
     height = lround(bounds.size.height);
 #if TK_MAC_BUTTON_USE_COMPATIBILITY_METRICS
-    macButtonPtr->fix = fixForStyle(style);
-    width -= boundsFixes[macButtonPtr->fix].trimW;
-    height -= boundsFixes[macButtonPtr->fix].trimH;
+    if (tkMacOSXUseCompatibilityMetrics) {
+	macButtonPtr->fix = fixForStyle(style);
+	width -= boundsFixes[macButtonPtr->fix].trimW;
+	height -= boundsFixes[macButtonPtr->fix].trimH;
+    }
 #endif
 
     if (haveImage || haveCompound) {
