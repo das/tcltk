@@ -12,7 +12,7 @@
  * The library is free for all purposes without any express
  * guarantee it works.
  *
- * Tom St Denis, tomstdenis@iahu.ca, http://math.libtomcrypt.org
+ * Tom St Denis, tomstdenis@gmail.com, http://math.libtomcrypt.com
  */
 
 /*
@@ -27,7 +27,6 @@ int mp_montgomery_calc_normalization (mp_int * a, mp_int * b)
 
   /* how many bits of last digit does b use */
   bits = mp_count_bits (b) % DIGIT_BIT;
-
 
   if (b->used > 1) {
      if ((res = mp_2expt (a, (b->used - 1) * DIGIT_BIT + bits - 1)) != MP_OKAY) {
@@ -54,3 +53,7 @@ int mp_montgomery_calc_normalization (mp_int * a, mp_int * b)
   return MP_OKAY;
 }
 #endif
+
+/* $Source$ */
+/* $Revision$ */
+/* $Date$ */

@@ -12,12 +12,11 @@
  * The library is free for all purposes without any express
  * guarantee it works.
  *
- * Tom St Denis, tomstdenis@iahu.ca, http://math.libtomcrypt.org
+ * Tom St Denis, tomstdenis@gmail.com, http://math.libtomcrypt.com
  */
 
 /* determines the setup value */
-int 
-mp_reduce_2k_setup(mp_int *a, mp_digit *d)
+int mp_reduce_2k_setup(mp_int *a, mp_digit *d)
 {
    int res, p;
    mp_int tmp;
@@ -42,3 +41,7 @@ mp_reduce_2k_setup(mp_int *a, mp_digit *d)
    return MP_OKAY;
 }
 #endif
+
+/* $Source$ */
+/* $Revision$ */
+/* $Date$ */

@@ -12,14 +12,15 @@
  * The library is free for all purposes without any express
  * guarantee it works.
  *
- * Tom St Denis, tomstdenis@iahu.ca, http://math.libtomcrypt.org
+ * Tom St Denis, tomstdenis@gmail.com, http://math.libtomcrypt.com
  */
 
 /* multiplication using the Toom-Cook 3-way algorithm 
  *
- * Much more complicated than Karatsuba but has a lower asymptotic running time of 
- * O(N**1.464).  This algorithm is only particularly useful on VERY large
- * inputs (we're talking 1000s of digits here...).
+ * Much more complicated than Karatsuba but has a lower 
+ * asymptotic running time of O(N**1.464).  This algorithm is 
+ * only particularly useful on VERY large inputs 
+ * (we're talking 1000s of digits here...).
 */
 int mp_toom_mul(mp_int *a, mp_int *b, mp_int *c)
 {
@@ -277,3 +278,7 @@ ERR:
 }     
      
 #endif
+
+/* $Source$ */
+/* $Revision$ */
+/* $Date$ */

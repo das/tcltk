@@ -12,7 +12,7 @@
  * The library is free for all purposes without any express
  * guarantee it works.
  *
- * Tom St Denis, tomstdenis@iahu.ca, http://math.libtomcrypt.org
+ * Tom St Denis, tomstdenis@gmail.com, http://math.libtomcrypt.com
  */
 
 /* determines if mp_reduce_2k can be used */
@@ -22,9 +22,9 @@ int mp_reduce_is_2k(mp_int *a)
    mp_digit iz;
    
    if (a->used == 0) {
-      return 0;
+      return MP_NO;
    } else if (a->used == 1) {
-      return 1;
+      return MP_YES;
    } else if (a->used > 1) {
       iy = mp_count_bits(a);
       iz = 1;
@@ -33,7 +33,7 @@ int mp_reduce_is_2k(mp_int *a)
       /* Test every bit from the second digit up, must be 1 */
       for (ix = DIGIT_BIT; ix < iy; ix++) {
           if ((a->dp[iw] & iz) == 0) {
-             return 0;
+             return MP_NO;
           }
           iz <<= 1;
           if (iz > (mp_digit)MP_MASK) {
@@ -42,7 +42,11 @@ int mp_reduce_is_2k(mp_int *a)
           }
       }
    }
-   return 1;
+   return MP_YES;
 }
 
 #endif
+
+/* $Source$ */
+/* $Revision$ */
+/* $Date$ */

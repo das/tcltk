@@ -12,12 +12,11 @@
  * The library is free for all purposes without any express
  * guarantee it works.
  *
- * Tom St Denis, tomstdenis@iahu.ca, http://math.libtomcrypt.org
+ * Tom St Denis, tomstdenis@gmail.com, http://math.libtomcrypt.com
  */
 
 /* low level squaring, b = a*a, HAC pp.596-597, Algorithm 14.16 */
-int
-s_mp_sqr (mp_int * a, mp_int * b)
+int s_mp_sqr (mp_int * a, mp_int * b)
 {
   mp_int  t;
   int     res, ix, iy, pa;
@@ -79,3 +78,7 @@ s_mp_sqr (mp_int * a, mp_int * b)
   return MP_OKAY;
 }
 #endif
+
+/* $Source$ */
+/* $Revision$ */
+/* $Date$ */

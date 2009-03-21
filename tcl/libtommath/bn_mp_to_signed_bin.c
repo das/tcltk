@@ -12,12 +12,11 @@
  * The library is free for all purposes without any express
  * guarantee it works.
  *
- * Tom St Denis, tomstdenis@iahu.ca, http://math.libtomcrypt.org
+ * Tom St Denis, tomstdenis@gmail.com, http://math.libtomcrypt.com
  */
 
 /* store in signed [big endian] format */
-int
-mp_to_signed_bin (mp_int * a, unsigned char *b)
+int mp_to_signed_bin (mp_int * a, unsigned char *b)
 {
   int     res;
 
@@ -28,3 +27,7 @@ mp_to_signed_bin (mp_int * a, unsigned char *b)
   return MP_OKAY;
 }
 #endif
+
+/* $Source$ */
+/* $Revision$ */
+/* $Date$ */

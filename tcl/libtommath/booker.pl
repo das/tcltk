@@ -89,6 +89,9 @@ while (<IN>) {
       
       $inline = 0;
       while (<SRC>) {
+      next if ($_ =~ /\$Source/);
+      next if ($_ =~ /\$Revision/);
+      next if ($_ =~ /\$Date/);
          $text[$line++] = $_;
          ++$inline;
          chomp($_);
@@ -218,7 +221,7 @@ while (<IN>) {
                      $str = "chapter eight";
                   } elsif ($a == 9) {
                      $str = "chapter nine";
-                  } elsif ($a == 2) {
+                  } elsif ($a == 10) {
                      $str = "chapter ten";
                   }
                } else {

@@ -12,20 +12,20 @@
  * The library is free for all purposes without any express
  * guarantee it works.
  *
- * Tom St Denis, tomstdenis@iahu.ca, http://math.libtomcrypt.org
+ * Tom St Denis, tomstdenis@gmail.com, http://math.libtomcrypt.com
  */
-
 #ifdef MP_LOW_MEM
    #define TAB_SIZE 32
 #else
    #define TAB_SIZE 256
 #endif
 
-int s_mp_exptmod (mp_int * G, mp_int * X, mp_int * P, mp_int * Y)
+int s_mp_exptmod (mp_int * G, mp_int * X, mp_int * P, mp_int * Y, int redmode)
 {
   mp_int  M[TAB_SIZE], res, mu;
   mp_digit buf;
   int     err, bitbuf, bitcpy, bitcnt, mode, digidx, x, y, winsize;
+  int (*redux)(mp_int*,mp_int*,mp_int*);
 
   /* find window size */
   x = mp_count_bits (X);
@@ -72,9 +72,18 @@ int s_mp_exptmod (mp_int * G, mp_int * X, mp_int * P, mp_int * Y)
   if ((err = mp_init (&mu)) != MP_OKAY) {
     goto LBL_M;
   }
-  if ((err = mp_reduce_setup (&mu, P)) != MP_OKAY) {
-    goto LBL_MU;
-  }
+  
+  if (redmode == 0) {
+     if ((err = mp_reduce_setup (&mu, P)) != MP_OKAY) {
+        goto LBL_MU;
+     }
+     redux = mp_reduce;
+  } else {
+     if ((err = mp_reduce_2k_setup_l (P, &mu)) != MP_OKAY) {
+        goto LBL_MU;
+     }
+     redux = mp_reduce_2k_l;
+  }    
 
   /* create M table
    *
@@ -96,11 +105,14 @@ int s_mp_exptmod (mp_int * G, mp_int * X, mp_int * P, mp_int * Y)
   }
 
   for (x = 0; x < (winsize - 1); x++) {
+    /* square it */
     if ((err = mp_sqr (&M[1 << (winsize - 1)], 
                        &M[1 << (winsize - 1)])) != MP_OKAY) {
       goto LBL_MU;
     }
-    if ((err = mp_reduce (&M[1 << (winsize - 1)], P, &mu)) != MP_OKAY) {
+
+    /* reduce modulo P */
+    if ((err = redux (&M[1 << (winsize - 1)], P, &mu)) != MP_OKAY) {
       goto LBL_MU;
     }
   }
@@ -112,7 +124,7 @@ int s_mp_exptmod (mp_int * G, mp_int * X, mp_int * P, mp_int * Y)
     if ((err = mp_mul (&M[x - 1], &M[1], &M[x])) != MP_OKAY) {
       goto LBL_MU;
     }
-    if ((err = mp_reduce (&M[x], P, &mu)) != MP_OKAY) {
+    if ((err = redux (&M[x], P, &mu)) != MP_OKAY) {
       goto LBL_MU;
     }
   }
@@ -161,7 +173,7 @@ int s_mp_exptmod (mp_int * G, mp_int * X, mp_int * P, mp_int * Y)
       if ((err = mp_sqr (&res, &res)) != MP_OKAY) {
         goto LBL_RES;
       }
-      if ((err = mp_reduce (&res, P, &mu)) != MP_OKAY) {
+      if ((err = redux (&res, P, &mu)) != MP_OKAY) {
         goto LBL_RES;
       }
       continue;
@@ -178,7 +190,7 @@ int s_mp_exptmod (mp_int * G, mp_int * X, mp_int * P, mp_int * Y)
         if ((err = mp_sqr (&res, &res)) != MP_OKAY) {
           goto LBL_RES;
         }
-        if ((err = mp_reduce (&res, P, &mu)) != MP_OKAY) {
+        if ((err = redux (&res, P, &mu)) != MP_OKAY) {
           goto LBL_RES;
         }
       }
@@ -187,7 +199,7 @@ int s_mp_exptmod (mp_int * G, mp_int * X, mp_int * P, mp_int * Y)
       if ((err = mp_mul (&res, &M[bitbuf], &res)) != MP_OKAY) {
         goto LBL_RES;
       }
-      if ((err = mp_reduce (&res, P, &mu)) != MP_OKAY) {
+      if ((err = redux (&res, P, &mu)) != MP_OKAY) {
         goto LBL_RES;
       }
 
@@ -205,7 +217,7 @@ int s_mp_exptmod (mp_int * G, mp_int * X, mp_int * P, mp_int * Y)
       if ((err = mp_sqr (&res, &res)) != MP_OKAY) {
         goto LBL_RES;
       }
-      if ((err = mp_reduce (&res, P, &mu)) != MP_OKAY) {
+      if ((err = redux (&res, P, &mu)) != MP_OKAY) {
         goto LBL_RES;
       }
 
@@ -215,7 +227,7 @@ int s_mp_exptmod (mp_int * G, mp_int * X, mp_int * P, mp_int * Y)
         if ((err = mp_mul (&res, &M[1], &res)) != MP_OKAY) {
           goto LBL_RES;
         }
-        if ((err = mp_reduce (&res, P, &mu)) != MP_OKAY) {
+        if ((err = redux (&res, P, &mu)) != MP_OKAY) {
           goto LBL_RES;
         }
       }
@@ -234,3 +246,7 @@ LBL_M:
   return err;
 }
 #endif
+
+/* $Source$ */
+/* $Revision$ */
+/* $Date$ */
