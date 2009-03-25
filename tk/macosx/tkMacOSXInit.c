@@ -221,17 +221,17 @@ TkpInit(
 	 * Initialize/check OS version variable for runtime checks.
 	 */
 
-	#if MAC_OS_X_VERSION_MIN_REQUIRED < 1050
-	#error Mac OS X 10.5 required
-	#endif
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 1050
+#   error Mac OS X 10.5 required
+#endif
 
 	if (!uname(&name)) {
-	    tkMacOSXMacOSXVersion = (strtol(name.release, NULL, 10) + 96) * 10;
+	    tkMacOSXMacOSXVersion = (strtod(name.release, NULL) + 96) * 10;
 	}
 	if (tkMacOSXMacOSXVersion &&
-		tkMacOSXMacOSXVersion < MAC_OS_X_VERSION_MIN_REQUIRED) {
+		tkMacOSXMacOSXVersion/10 < MAC_OS_X_VERSION_MIN_REQUIRED/10) {
 	    Tcl_Panic("Mac OS X 10.%d or later required !",
-		    (MAC_OS_X_VERSION_MIN_REQUIRED-1000)/10);
+		    (MAC_OS_X_VERSION_MIN_REQUIRED/10)-100);
 	}
 
 #ifdef TK_FRAMEWORK
