@@ -131,6 +131,8 @@ static Tcl_NRPostProc	TEOV_RestoreVarFrame;
 static Tcl_NRPostProc	TEOV_RunLeaveTraces;
 static Tcl_NRPostProc	TEOV_Exception;
 static Tcl_NRPostProc	TEOV_Error;
+static Tcl_NRPostProc	TEOV_NotFoundCallback;
+
 static Tcl_NRPostProc	TEOEx_ListCallback;
 static Tcl_NRPostProc	TEOEx_ByteCodeCallback;
 
@@ -4058,7 +4060,12 @@ TclNREvalObjv(
      * finishes the source command and not just the target.
      */
 
-    TclNRAddCallback(interp, NRCommand, NULL, NULL, NULL, NULL);
+    if (iPtr->evalFlags & TCL_EVAL_REDIRECT) {
+	TclNRAddCallback(interp, NRCommand, NULL, INT2PTR(1), NULL, NULL);
+	iPtr->evalFlags &= ~TCL_EVAL_REDIRECT;
+    } else {
+	TclNRAddCallback(interp, NRCommand, NULL, NULL, NULL, NULL);
+    }
     cmdPtrPtr = (Command **) &(TOP_CB(interp)->data[0]);
 
     TclNRSpliceDeferred(interp);
@@ -4110,9 +4117,7 @@ TclNREvalObjv(
 
     cmdPtr = TEOV_LookupCmdFromObj(interp, objv[0], lookupNsPtr);
     if (!cmdPtr) {
-    notFound:
-	result = TEOV_NotFound(interp, objc, objv, lookupNsPtr);
-	return result;
+	return TEOV_NotFound(interp, objc, objv, lookupNsPtr);
     }
 
     iPtr->cmdCount++;
@@ -4133,7 +4138,7 @@ TclNREvalObjv(
 
 	result = TEOV_RunEnterTraces(interp, &cmdPtr, objc, objv, lookupNsPtr);
 	if (!cmdPtr) {
-	    goto notFound;
+	    return TEOV_NotFound(interp, objc, objv, lookupNsPtr);
 	}
 	if (result != TCL_OK) {
 	    return result;
@@ -4482,7 +4487,6 @@ TEOV_NotFound(
     int i, newObjc, handlerObjc;
     Tcl_Obj **newObjv, **handlerObjv;
     CallFrame *varFramePtr = iPtr->varFramePtr;
-    int result = TCL_OK;
     Namespace *currNsPtr = NULL;/* Used to check for and invoke any registered
 				 * unknown command handler for the current
 				 * namespace (TIP 181). */
@@ -4543,28 +4547,54 @@ TEOV_NotFound(
     if (cmdPtr == NULL) {
 	Tcl_AppendResult(interp, "invalid command name \"",
 		TclGetString(objv[0]), "\"", NULL);
-	result = TCL_ERROR;
-    } else {
-	if (lookupNsPtr) {
-	    savedNsPtr = varFramePtr->nsPtr;
-	    varFramePtr->nsPtr = lookupNsPtr;
+	/*
+	 * Release any resources we locked and allocated during the handler call.
+	 */
+	
+	for (i = 0; i < handlerObjc; ++i) {
+	    Tcl_DecrRefCount(newObjv[i]);
 	}
-	result = Tcl_EvalObjv(interp, newObjc, newObjv, TCL_EVAL_NOERR);
-	if (savedNsPtr) {
-	    varFramePtr->nsPtr = savedNsPtr;
-	}
+	TclStackFree(interp, newObjv);
+	return TCL_ERROR;
+    }
+    
+    if (lookupNsPtr) {
+	savedNsPtr = varFramePtr->nsPtr;
+	varFramePtr->nsPtr = lookupNsPtr;
+    }
+    TclNRDeferCallback(interp, TEOV_NotFoundCallback, INT2PTR(handlerObjc), newObjv, savedNsPtr, NULL);
+    iPtr->evalFlags |= TCL_EVAL_REDIRECT;
+    return TclNREvalObjv(interp, newObjc, newObjv, TCL_EVAL_NOERR, NULL);
+}
+
+static int
+TEOV_NotFoundCallback(
+    ClientData data[],
+    Tcl_Interp *interp,
+    int result)
+{
+    Interp *iPtr = (Interp *) interp;
+    int objc = PTR2INT(data[0]);
+    Tcl_Obj **objv = data[1];
+    Namespace *savedNsPtr = data[2];
+    
+    int i;
+    
+    if (savedNsPtr) {
+	iPtr->varFramePtr->nsPtr = savedNsPtr;
     }
 
     /*
      * Release any resources we locked and allocated during the handler call.
      */
 
-    for (i = 0; i < handlerObjc; ++i) {
-	Tcl_DecrRefCount(newObjv[i]);
+    for (i = 0; i < objc; ++i) {
+	Tcl_DecrRefCount(objv[i]);
     }
-    TclStackFree(interp, newObjv);
+    TclStackFree(interp, objv);
+
     return result;
-}
+}    
 
 static int
 TEOV_RunEnterTraces(
@@ -7988,8 +8018,9 @@ TclNRTailcallObjCmd(
 {
     Interp *iPtr = (Interp *) interp;
     TEOV_callback *tailcallPtr;
-    Tcl_Obj *listPtr;
-    Namespace *nsPtr = iPtr->varFramePtr->nsPtr;
+    Tcl_Obj *listPtr, *nsObjPtr;
+    Tcl_Namespace *nsPtr = (Tcl_Namespace *) iPtr->varFramePtr->nsPtr;
+    Tcl_Namespace *ns1Ptr;
     
     if (objc < 2) {
 	Tcl_WrongNumArgs(interp, 1, objv, "command ?arg ...?");
@@ -8004,10 +8035,16 @@ TclNRTailcallObjCmd(
 	return TCL_ERROR;
     }
 
-    nsPtr->activationCount++;
     listPtr = Tcl_NewListObj(objc-1, objv+1);
     Tcl_IncrRefCount(listPtr);
 
+    nsObjPtr = Tcl_NewStringObj(nsPtr->fullName, -1);
+    if ((TCL_OK != TclGetNamespaceFromObj(interp, nsObjPtr, &ns1Ptr))
+	    || (nsPtr != ns1Ptr)) {
+	Tcl_Panic("Tailcall failed to find the proper namespace");
+    }
+    Tcl_IncrRefCount(nsObjPtr);
+    
     /*
      * Add two callbacks: first the one to actually evaluate the tailcalled
      * command, then the one that signals TEBC to stash the first at its
@@ -8017,7 +8054,7 @@ TclNRTailcallObjCmd(
      * TclNRAddCallBack macro to build the callback)
      */
 
-    TclNRAddCallback(interp, NRTailcallEval, listPtr, nsPtr, NULL, NULL);
+    TclNRAddCallback(interp, NRTailcallEval, listPtr, nsObjPtr, NULL, NULL);
     tailcallPtr = TOP_CB(interp);
     TOP_CB(interp) = tailcallPtr->nextPtr;
 
@@ -8033,27 +8070,19 @@ NRTailcallEval(
 {
     Interp *iPtr = (Interp *) interp;
     Tcl_Obj *listPtr = data[0];
-    Namespace *nsPtr = data[1];
-    int omit = PTR2INT(data[2]);
+    Tcl_Obj *nsObjPtr = data[1];
+    Tcl_Namespace *nsPtr;
     int objc;
     Tcl_Obj **objv;
 
-    TclNRDeferCallback(interp, TailcallCleanup, listPtr, NULL, NULL, NULL);
-    if (!omit && (result == TCL_OK)) {
-	iPtr->lookupNsPtr = nsPtr;
-	ListObjGetElements(listPtr, objc, objv);
-	result = TclNREvalObjv(interp, objc, objv, 0, NULL);
-    }
-
-    nsPtr->activationCount--;
-    if ((nsPtr->flags & NS_DYING)
-	    && (nsPtr->activationCount - (nsPtr == iPtr->globalNsPtr) == 0)) {
-	/*
-	 * FIXME NRE tailcall: is this the proper way to manage this? This is
-	 * like what CallFrames do.
-	 */
-
-	Tcl_DeleteNamespace((Tcl_Namespace *) nsPtr);
+    TclNRDeferCallback(interp, TailcallCleanup, listPtr, nsObjPtr, NULL, NULL);
+    if (result == TCL_OK) {
+	result = TclGetNamespaceFromObj(interp, nsObjPtr, &nsPtr);
+	if (result == TCL_OK) {
+	    iPtr->lookupNsPtr = (Namespace *) nsPtr;
+	    ListObjGetElements(listPtr, objc, objv);
+	    result = TclNREvalObjv(interp, objc, objv, 0, NULL);
+	}
     }
     return result;
 }
@@ -8065,8 +8094,19 @@ TailcallCleanup(
     int result)
 {
     Tcl_DecrRefCount((Tcl_Obj *) data[0]);
+    Tcl_DecrRefCount((Tcl_Obj *) data[1]);
     return result;
 }
+
+void
+TclClearTailcall(
+    Tcl_Interp *interp,
+    TEOV_callback *tailcallPtr)
+{
+    TailcallCleanup(tailcallPtr->data, interp, TCL_OK);
+    TCLNR_FREE(interp, tailcallPtr);
+}
+
 
 void
 Tcl_NRAddCallback(
