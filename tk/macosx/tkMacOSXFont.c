@@ -1175,53 +1175,12 @@ TkMacOSXIsCharacterMissing(
     return 0;
 }
 
-#ifdef MAC_OSX_TK_TODO
 /*
  *----------------------------------------------------------------------
  *
- * TkMacOSXFMFontInfoForFont --
+ * TkMacOSXFontDescriptionForNSFontAndNSFontAttributes --
  *
- *	Retrieve FontManager/ATSUI font information for a Tk font.
- *
- * Results:
- *	None.
- *
- * Side effects:
- *	None.
- *
- *----------------------------------------------------------------------
- */
-
-MODULE_SCOPE void
-TkMacOSXFMFontInfoForFont(
-    Tk_Font tkfont,
-    FMFontFamily *fontFamilyPtr,
-    FMFontStyle *fontStylePtr,
-    FMFontSize *fontSizePtr,
-    ATSUStyle *fontATSUStylePtr)
-{
-    const MacFont * fontPtr = (MacFont *) tkfont;
-
-    if (fontFamilyPtr) {
-	*fontFamilyPtr = fontPtr->qdFont;
-    }
-    if (fontStylePtr) {
-	*fontStylePtr = fontPtr->qdStyle;
-    }
-    if (fontSizePtr) {
-	*fontSizePtr = fontPtr->qdSize;
-    }
-    if (fontATSUStylePtr) {
-	*fontATSUStylePtr = fontPtr->atsuStyle;
-    }
-}
-
-/*
- *----------------------------------------------------------------------
- *
- * TkMacOSXFontDescriptionForFMFontInfo --
- *
- *	Get text description of a font specified by FontManager info.
+ *	Get text description of a font specified by NSFont and attributes.
  *
  * Results:
  *	List object or NULL.
@@ -1233,46 +1192,40 @@ TkMacOSXFMFontInfoForFont(
  */
 
 MODULE_SCOPE Tcl_Obj *
-TkMacOSXFontDescriptionForFMFontInfo(
-    FMFontFamily fontFamily,
-    FMFontStyle fontStyle,
-    FMFontSize fontSize,
-    FMFont fontID)
+TkMacOSXFontDescriptionForNSFontAndNSFontAttributes(
+    NSFont *nsFont,
+    NSDictionary *nsAttributes)
 {
     Tcl_Obj *objv[6];
     int i = 0;
+    const char *familyName = [[nsFont familyName] UTF8String];
 
-    if (fontFamily != kInvalidFontFamily && fontStyle != -1) {
-	const char *familyName = FamilyNameForFamilyID(fontFamily);
-
-	if (familyName) {
-	    objv[i++] = Tcl_NewStringObj(familyName, -1);
-	    objv[i++] = Tcl_NewIntObj(fontSize);
+    if (nsFont && familyName) {
+	NSFontTraitMask traits = [[NSFontManager sharedFontManager]
+		traitsOfFont:nsFont];
+	id underline = [nsAttributes objectForKey:
+		NSUnderlineStyleAttributeName];
+	id strikethrough = [nsAttributes objectForKey:
+		NSStrikethroughStyleAttributeName];
+	objv[i++] = Tcl_NewStringObj(familyName, -1);
+	objv[i++] = Tcl_NewIntObj([nsFont pointSize]);
 #define S(s) Tcl_NewStringObj(STRINGIFY(s),(int)(sizeof(STRINGIFY(s))-1))
-	    objv[i++] = (fontStyle & bold)	? S(bold)   : S(normal);
-	    objv[i++] = (fontStyle & italic)	? S(italic) : S(roman);
-	    if (fontStyle & underline) objv[i++] = S(underline);
-	    /*if (fontStyle & overstrike) objv[i++] = S(overstrike);*/
+	objv[i++] = (traits & NSBoldFontMask)	? S(bold)   : S(normal);
+	objv[i++] = (traits & NSItalicFontMask)	? S(italic) : S(roman);
+	if ([underline respondsToSelector:@selector(intValue)] &&
+		([underline intValue] & (NSUnderlineStyleSingle |
+		NSUnderlineStyleThick | NSUnderlineStyleDouble))) {
+	    objv[i++] = S(underline);
+	}
+	if ([strikethrough respondsToSelector:@selector(intValue)] &&
+		([strikethrough intValue] & (NSUnderlineStyleSingle |
+		NSUnderlineStyleThick | NSUnderlineStyleDouble))) {
+	    objv[i++] = S(overstrike);
+	}
 #undef S
-	}
-    } else if (fontID != kInvalidFont) {
-	CFStringRef fontName = NULL;
-	Tcl_Obj *fontNameObj = NULL;
-
-	ChkErr(ATSFontGetName, FMGetATSFontRefFromFont(fontID),
-		kATSOptionFlagsDefault, &fontName);
-	if (fontName) {
-	    fontNameObj = TkMacOSXGetStringObjFromCFString(fontName);
-	    CFRelease(fontName);
-	}
-	if (fontNameObj) {
-	    objv[i++] = fontNameObj;
-	    objv[i++] = Tcl_NewIntObj(fontSize);
-	}
     }
     return i ? Tcl_NewListObj(i, objv) : NULL;
 }
-#endif
 
 /*
  *----------------------------------------------------------------------
