@@ -1109,6 +1109,17 @@ FileHandlerEventProc(
 	mask = filePtr->readyMask & filePtr->mask;
 	filePtr->readyMask = 0;
 	if (mask != 0) {
+	    LOCK_NOTIFIER_TSD;
+	    if (mask & TCL_READABLE) {
+		FD_CLR(filePtr->fd, &(tsdPtr->readyMasks.readable));
+	    }
+	    if (mask & TCL_WRITABLE) {
+		FD_CLR(filePtr->fd, &(tsdPtr->readyMasks.writable));
+	    }
+	    if (mask & TCL_EXCEPTION) {
+		FD_CLR(filePtr->fd, &(tsdPtr->readyMasks.exceptional));
+	    }
+	    UNLOCK_NOTIFIER_TSD;
 	    filePtr->proc(filePtr->clientData, mask);
 	}
 	break;
