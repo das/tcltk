@@ -134,8 +134,10 @@ TkMacOSXFlushWindows(void)
 	windowNumbers = (NSInteger *) ckalloc(windowCount * sizeof(NSInteger));
 	NSWindowList(windowCount, windowNumbers);
 	for (NSInteger index = 0; index < windowCount; index++) {
-	    [[NSApp windowWithWindowNumber:windowNumbers[index]]
-		    flushWindowIfNeeded];
+	    NSWindow *w = [NSApp windowWithWindowNumber:windowNumbers[index]];
+	    if (TkMacOSXGetXWindow(w)) {
+		[w flushWindow];
+	    }
 	}
 	ckfree((char*) windowNumbers);
     }
