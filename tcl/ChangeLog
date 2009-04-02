@@ -1,3 +1,21 @@
+2009-03-30  Don Porter  <dgp@users.sourceforge.net>
+
+	* doc/Alloc.3:  Size argument is "unsigned int".  [Bug 2556263]
+
+2009-03-27  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclPathObj.c (TclPathPart):   TclPathPart() was computing
+	* tests/fileName.test:  the wrong results for both [file dirname] and
+	[file tail] on "path" arguments with the PATHFLAGS != 0 intrep and
+	with an empty string for the "joined-on" part.  [Bug 2710920]
+
+2009-03-25  Jan Nijtmans  <nijtmans@users.sf.net>
+
+	* doc/tclsh.1            bring doc and tools in line with http://wiki.tcl.tk/812
+	* tools/installData.tcl
+	* tools/str2c
+	* tools/tcltk-man2html.tcl
+
 2009-03-25  Donal K. Fellows  <dkf@users.sf.net>
 
 	* doc/coroutine.n: [Bug 2152285]: Added basic documentation for the
@@ -3266,7 +3284,7 @@
 	new (underscored) form of environment variable names, but make it the
 	encouraged form as well. [Bug 1914604]
 
-2006-06-17  Kevin Kenny	 <kennykb@acm.org>
+2008-06-17  Kevin Kenny	 <kennykb@acm.org>
 
 	* generic/tclClock.c (ConvertLocalToUTC):
 	* tests/clock.test (clock-63.1): Fixed a bug where the internal
