@@ -10872,7 +10872,7 @@ _ACEOF
     EXTRA_CC_SWITCHES="$EXTRA_CC_SWITCHES"' -DTK_FRAMEWORK_VERSION=\"$(VERSION)\"'
 else
     if test $tk_aqua = yes; then
-        EXTRA_INSTALL_BINARIES="$EXTRA_INSTALL_BINARIES"' && echo "Installing Images to $(LIB_INSTALL_DIR)" && mkdir -p "$(LIB_INSTALL_DIR)" && for i in Tk.tiff Tk.icns; do $(INSTALL_DATA) "$(MAC_OSX_DIR)/$$i" "$(LIB_INSTALL_DIR)"; done'
+        EXTRA_INSTALL_BINARIES='@echo "Installing Images to $(LIB_INSTALL_DIR)" && mkdir -p "$(LIB_INSTALL_DIR)" && for i in Tk.tiff Tk.icns; do $(INSTALL_DATA) "$(MAC_OSX_DIR)/$$i" "$(LIB_INSTALL_DIR)"; done'
     fi
     # libdir must be a fully qualified path and not ${exec_prefix}/lib
     eval libdir="$libdir"
@@ -10979,7 +10979,7 @@ TK_SHARED_BUILD=${SHARED_BUILD}
 
 
 
-                    ac_config_files="$ac_config_files Makefile:../unix/Makefile.in tkConfig.sh:../unix/tkConfig.sh.in tk.pc:../unix/tk.pc.in"
+                              ac_config_files="$ac_config_files Makefile:../unix/Makefile.in tkConfig.sh:../unix/tkConfig.sh.in tk.pc:../unix/tk.pc.in"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
