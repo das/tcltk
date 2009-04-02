@@ -2437,9 +2437,9 @@ TkpDrawMenuEntry(
     int adjustedHeight = height - 2 * padY;
     TkWinDrawable memWinDraw;
     TkWinDCState dcState;
-    HBITMAP oldBitmap;
+    HBITMAP oldBitmap = NULL;
     Drawable d;
-    HDC memDc, menuDc;
+    HDC memDc = NULL, menuDc = NULL;
 
     /*
      * If the menu entry includes an image then draw the entry into a
@@ -2557,7 +2557,7 @@ TkpDrawMenuEntry(
 		    fmPtr, adjustedX, adjustedY, width, adjustedHeight);
 	}
     }
-    
+
     /*
      * Copy the entry contents from the temporary bitmap to the menu.
      */
