@@ -1,3 +1,20 @@
+2009-03-30  Don Porter  <dgp@users.sourceforge.net>
+
+	* doc/Alloc.3:  Size argument is "unsigned int".  [Bug 2556263]
+
+	* generic/tclStringObj.c:       Added protections from invalid memory
+	* generic/tclTestObj.c:         accesses when we append (some part of)
+	* tests/stringObj.test:         a Tcl_Obj to itself.  Added the
+	appendself and appendself2 subcommands to the [teststringobj] testing
+	command and added tests to the test suite.  [Bug 2603158]
+
+2009-03-27  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclPathObj.c (TclPathPart):	TclPathPart() was computing
+	* tests/fileName.test:	the wrong results for both [file dirname] and
+	[file tail] on "path" arguments with the PATHFLAGS != 0 intrep and
+	with an empty string for the "joined-on" part.  [Bug 2710920]
+
 2009-03-20  Don Porter  <dgp@users.sourceforge.net>
 
 	* generic/tclStringObj.c:       Test stringObj-6.9 checks that
@@ -737,7 +754,7 @@
 	the new (underscored) form of environment variable names, but make
 	it the encouraged form as well. See [Bug 1914604].
 
-2006-06-17  Kevin Kenny  <kennykb@acm.org>
+2008-06-17  Kevin Kenny  <kennykb@acm.org>
 
 	* generic/tclClock.c (ConvertLocalToUTC):
 	* tests/clock.test (clock-63.1): Fixed a bug where the
