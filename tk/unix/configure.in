@@ -670,7 +670,7 @@ if test "$FRAMEWORK_BUILD" = "1" ; then
     EXTRA_CC_SWITCHES="$EXTRA_CC_SWITCHES"' -DTK_FRAMEWORK_VERSION=\"$(VERSION)\"'
 else
     if test $tk_aqua = yes; then
-        EXTRA_INSTALL_BINARIES="$EXTRA_INSTALL_BINARIES"' && echo "Installing Images to $(LIB_INSTALL_DIR)" && mkdir -p "$(LIB_INSTALL_DIR)" && for i in Tk.tiff Tk.icns; do $(INSTALL_DATA) "$(MAC_OSX_DIR)/$$i" "$(LIB_INSTALL_DIR)"; done'
+        EXTRA_INSTALL_BINARIES='@echo "Installing Images to $(LIB_INSTALL_DIR)" && mkdir -p "$(LIB_INSTALL_DIR)" && for i in Tk.tiff Tk.icns; do $(INSTALL_DATA) "$(MAC_OSX_DIR)/$$i" "$(LIB_INSTALL_DIR)"; done'
     fi
     # libdir must be a fully qualified path and not ${exec_prefix}/lib
     eval libdir="$libdir"
