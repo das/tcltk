@@ -339,7 +339,8 @@ static void		RemapWindows(TkWindow *winPtr,
 - (BOOL)canBecomeKeyWindow {
     TkWindow *winPtr = TkMacOSXGetTkWindow(self);
 
-    return (winPtr && winPtr->wmInfoPtr && (winPtr->wmInfoPtr->attributes &
+    return (winPtr && winPtr->wmInfoPtr && (winPtr->wmInfoPtr->macClass ==
+	    kHelpWindowClass || winPtr->wmInfoPtr->attributes &
 	    kWindowNoActivatesAttribute)) ? NO : YES;
 }
 @end
