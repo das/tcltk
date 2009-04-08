@@ -139,6 +139,7 @@ static int	ModifierCharWidth(Tk_Font tkfont);
     if (self) {
 	_tkMenu = NULL;
 	_tkOffset = 0;
+	_tkItemCount = 0;
 	_tkSpecial = 0;
 	[self setDelegate:self];
     }
@@ -159,6 +160,7 @@ static int	ModifierCharWidth(Tk_Font tkfont);
     NSAssert(_tkMenu == nil, @"Cannot copy tkMenu");
     copy->_tkMenu = _tkMenu;
     copy->_tkOffset = _tkOffset;
+    copy->_tkItemCount = _tkItemCount;
     copy->_tkSpecial = _tkSpecial;
     return copy;
 }
@@ -170,17 +172,28 @@ static int	ModifierCharWidth(Tk_Font tkfont);
 }
 - (void)insertItem:(NSMenuItem *)newItem atTkIndex:(NSInteger)index {
     [super insertItem:newItem atIndex:index + _tkOffset];
+    _tkItemCount++;
 }
 - (void)insertItem:(NSMenuItem *)newItem atIndex:(NSInteger)index {
     if (_tkMenu && index >= 0) {
 	if ((NSUInteger)index <= _tkOffset) {
 	    _tkOffset++;
 	} else {
-	    NSAssert((NSUInteger)index >= ((TkMenu*)_tkMenu)->numEntries +
-		    _tkOffset, @"Cannot insert in the middle of Tk menu");
+	    NSAssert((NSUInteger)index >= _tkItemCount + _tkOffset,
+		    @"Cannot insert in the middle of Tk menu");
 	}
     }
     [super insertItem:newItem atIndex:index];
+}
+- (void)removeItemAtIndex:(NSInteger)index {
+    if (_tkMenu && index >= 0) {
+	if ((NSUInteger)index < _tkOffset) {
+	    _tkOffset--;
+	} else if ((NSUInteger)index < _tkItemCount + _tkOffset) {
+	    _tkItemCount--;
+	}
+    }
+    [super removeItemAtIndex:index];
 }
 - (NSMenuItem *)newTkMenuItem:(TkMenuEntry *)mePtr {
     NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:@""
@@ -517,9 +530,9 @@ TkpConfigureMenuEntry(
     [menuItem setImage:image];
     if ((!image || mePtr->compound != COMPOUND_NONE) && mePtr->labelPtr &&
 	    mePtr->labelLength) {
-	title = [[[NSString alloc] initWithBytesNoCopy:
-		Tcl_GetString(mePtr->labelPtr) length:mePtr->labelLength
-		encoding:NSUTF8StringEncoding freeWhenDone:NO] autorelease];
+	title = [[[NSString alloc] initWithBytes:Tcl_GetString(mePtr->labelPtr)
+		length:mePtr->labelLength encoding:NSUTF8StringEncoding]
+		autorelease];
 	if ([title hasSuffix:@"..."]) {
 	    title = [NSString stringWithFormat:@"%@%C",
 		    [title substringToIndex:[title length] - 3], 0x2026];
@@ -598,8 +611,12 @@ TkpDestroyMenuEntry(
     TkMenuEntry *mePtr)
 {
     if (mePtr->platformEntryData && mePtr->menuPtr->platformData) {
-	[(NSMenu *) mePtr->menuPtr->platformData
-		removeItem:(NSMenuItem *)mePtr->platformEntryData ];
+	TKMenu *menu = (TKMenu *) mePtr->menuPtr->platformData;
+	NSMenuItem *menuItem = (NSMenuItem *)mePtr->platformEntryData;
+	NSInteger index = [menu indexOfItem:menuItem];
+	if (index > -1) {
+	    [menu removeItemAtIndex:index];
+	}
     }
     TkMacOSXMakeCollectableAndRelease(mePtr->platformEntryData);
 }

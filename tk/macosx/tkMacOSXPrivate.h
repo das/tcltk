@@ -266,7 +266,7 @@ VISIBILITY_HIDDEN
 @interface TKMenu : NSMenu {
 @private
     void *_tkMenu;
-    NSUInteger _tkOffset, _tkSpecial;
+    NSUInteger _tkOffset, _tkItemCount, _tkSpecial;
 }
 - (void)setSpecial:(NSUInteger)special;
 - (BOOL)isSpecial:(NSUInteger)special;
