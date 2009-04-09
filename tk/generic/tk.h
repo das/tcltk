@@ -18,9 +18,11 @@
 #ifndef _TK
 #define _TK
 
+#ifndef _TCL
 #include <tcl.h>
 #if (TCL_MAJOR_VERSION != 8) || (TCL_MINOR_VERSION != 4)
 #	error Tk 8.4 must be compiled with tcl.h from Tcl 8.4
+#endif
 #endif
 
 /*
