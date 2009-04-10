@@ -68,10 +68,7 @@ proc ::tk::ConsoleInit {} {
 	    -command {wm withdraw .}
     AmpMenuArgs .menubar.file add command -label [mc "&Clear Console"] \
 	    -command {.console delete 1.0 "promptEnd linestart"}
-    if {[tk windowingsystem] eq "aqua"} {
-	AmpMenuArgs .menubar.file add command \
-		-label [mc &Quit] -command {exit} -accel "Cmd-Q"
-    } else {
+    if {[tk windowingsystem] ne "aqua"} {
 	AmpMenuArgs .menubar.file add command -label [mc E&xit] -command {exit}
     }
 
