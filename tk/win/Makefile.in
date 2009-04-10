@@ -515,7 +515,7 @@ install-libraries: libraries
 	    $(INSTALL_DATA) $$i $(INCLUDE_INSTALL_DIR)/X11; \
 	    done;
 	@echo "Installing library files to $(SCRIPT_INSTALL_DIR)";
-	@for i in $(ROOT_DIR)/library/*.tcl $(GENERIC_DIR)/prolog.ps \
+	@for i in $(ROOT_DIR)/library/*.tcl \
 	        $(ROOT_DIR)/library/tclIndex $(UNIX_DIR)/tkAppInit.c; \
 	    do \
 	    $(INSTALL_DATA) $$i $(SCRIPT_INSTALL_DIR); \
