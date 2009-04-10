@@ -709,8 +709,8 @@ Tcl_WaitForEvent(
 
 	    if (timePtr->sec != 0 || timePtr->usec != 0) {
 		vTime = *timePtr;
+		tclScaleTimeProcPtr(&vTime, tclTimeClientData);
 		timePtr = &vTime;
-		tclScaleTimeProcPtr(timePtr, tclTimeClientData);
 	    }
 #ifndef TCL_THREADS
 	    timeout.tv_sec = timePtr->sec;
