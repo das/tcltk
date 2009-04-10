@@ -1,7 +1,61 @@
 2009-04-10  Don Porter  <dgp@users.sourceforge.net>
 
+	*** 8.5.7 TAGGED FOR RELEASE ***
+
+	* changes:	Update for 8.5.7 release.
+
+	* generic/tcl.h:	Bump to 8.5.7 for release.
+	* library/init.tcl:
+	* tools/tcl.wse.in:
+	* unix/configure.in:
+	* unix/tcl.spec:
+	* win/configure.in:
+	* README:
+
+	* unix/configure:	autoconf-2.59
+	* win/configure:
+
+	* generic/tclStringObj.c (UpdateStringOfString):  Fix bug detected
+	by compiler warning about undefined "dst".
+
 	* tests/httpd:		Backport new tests for http 2.7.3.
 	* tests/http.tcl:
+
+2008-04-10  Daniel Steffen  <das@users.sourceforge.net>
+
+	* unix/tclUnixChan.c:		TclUnixWaitForFile(): use FD_* macros
+	* macosx/tclMacOSXNotify.c:	to manipulate select masks (Cassoff).
+					[Bug 1960647]
+
+	* unix/tclLoadDyld.c:		use RTLD_GLOBAL instead of RTLD_LOCAL.
+					[Bug 1961211]
+
+	* macosx/tclMacOSXNotify.c:	revise CoreFoundation notifier to allow
+					embedding into applications that
+					already have a CFRunLoop running and
+					want to run the tcl event loop via
+					Tcl_ServiceModeHook(TCL_SERVICE_ALL).
+
+	* macosx/tclMacOSXNotify.c:	add CFRunLoop based Tcl_Sleep() and 
+	* unix/tclUnixChan.c:		TclUnixWaitForFile() implementations
+	* unix/tclUnixEvent.c:		and disable select() based ones in
+					CoreFoundation builds.
+
+	* unix/tclUnixNotify.c:		simplify, sync with tclMacOSXNotify.c.
+
+	* generic/tclInt.decls: 	add TclMacOSXNotifierAddRunLoopMode()
+	* generic/tclIntPlatDecls.h:	internal API, regen.
+	* generic/tclStubInit.c:
+
+	* unix/configure.in (Darwin):	use Darwin SUSv3 extensions if
+					available; remove /Network locations
+					from default tcl package search path
+					(NFS mounted locations and thus slow).
+	* unix/configure:		autoconf-2.59
+	* unix/tclConfig.h.in:		autoheader-2.59
+
+	* macosx/tclMacOSXBundle.c:	on Mac OS X 10.4 and later, replace
+					deprecated NSModule API by dlfcn API.
 
 2008-04-09  Kevin B. Kenny  <kennykb@acm.org>
 
