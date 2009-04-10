@@ -1,3 +1,47 @@
+2009-04-10  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* library/http/http.tcl:     Improved HTTP/1.1 support and added
+	* library/http/pkgIndex.tcl: specific HTTP/1.1 testing to ensure
+	* tests/http11.test:         we handle chunked+gzip for the various
+	* tests/httpd11.test:        modes (normal, -channel and -handler)
+	* makefiles:                 package version set to 2.8.0
+
+2008-04-10  Daniel Steffen  <das@users.sourceforge.net>
+
+	* unix/tclUnixChan.c:		TclUnixWaitForFile(): use FD_* macros
+	* macosx/tclMacOSXNotify.c:	to manipulate select masks (Cassoff).
+					[Bug 1960647]
+
+	* unix/tclLoadDyld.c:		use RTLD_GLOBAL instead of RTLD_LOCAL.
+					[Bug 1961211]
+
+	* macosx/tclMacOSXNotify.c:	revise CoreFoundation notifier to allow
+					embedding into applications that
+					already have a CFRunLoop running and
+					want to run the tcl event loop via
+					Tcl_ServiceModeHook(TCL_SERVICE_ALL).
+
+	* macosx/tclMacOSXNotify.c:	add CFRunLoop based Tcl_Sleep() and 
+	* unix/tclUnixChan.c:		TclUnixWaitForFile() implementations
+	* unix/tclUnixEvent.c:		and disable select() based ones in
+					CoreFoundation builds.
+
+	* unix/tclUnixNotify.c:		simplify, sync with tclMacOSXNotify.c.
+
+	* generic/tclInt.decls: 	add TclMacOSXNotifierAddRunLoopMode()
+	* generic/tclIntPlatDecls.h:	internal API, regen.
+	* generic/tclStubInit.c:
+
+	* unix/configure.in (Darwin):	use Darwin SUSv3 extensions if
+					available; remove /Network locations
+					from default tcl package search path
+					(NFS mounted locations and thus slow).
+	* unix/configure:		autoconf-2.59
+	* unix/tclConfig.h.in:		autoheader-2.59
+
+	* macosx/tclMacOSXBundle.c:	on Mac OS X 10.4 and later, replace
+					deprecated NSModule API by dlfcn API.
+
 2009-04-10  Donal K. Fellows  <dkf@users.sf.net>
 
 	* doc/StringObj.3: [Bug 2089279]: Corrected example so that it works
