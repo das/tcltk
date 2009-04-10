@@ -1,3 +1,47 @@
+2008-04-10  Joe English  <jenglish@users.sourceforge.net
+
+	* library/palette.tcl(tk_setPalette): Don't set 
+	*selectColor: #b03060; this makes radio- and checkbuttons
+	look wrong post-TIP#109.
+
+2008-04-10  Daniel Steffen  <das@users.sourceforge.net>
+
+	* unix/configure.in (Darwin):	use Darwin SUSv3 extensions if
+					available.
+	* unix/configure:		autoconf-2.59
+	* unix/tkConfig.h.in:		autoheader-2.59
+
+	* library/demos/filebox.tcl: only show "Motif Style Dialog" checkbutton
+	on X11 windowingsystem.
+
+	* library/demos/widget: GOOBE: use ttk::cursor
+
+	* library/demos/knightstour.tcl: fix knightstour demo not running from
+	interactive wish.
+
+	* library/console.tcl (::tk::ConsoleInit): remove redundant TkAqua
+	Quit menu item.
+
+	* generic/tkPointer.c (Tk_UpdatePointer): use all 5 buttons.
+
+	* generic/tkMenu.c (PostProcessEntry): delay call to
+	TkpConfigureMenuEntry() until all menu entry attributes are setup.
+
+	* library/menu.tcl (::tk::MbPost): fix error thrown in y position
+	computation with indicatoron.
+
+	* generic/tkMenubutton.c: s/DEF_BUTTON_JUSTIFY/DEF_MENUBUTTON_JUSTIFY/
+
+	* generic/tkUtil.c (TkBackgroundEvalObjv): use Tcl_BackgroundException.
+
+	* generic/tkBind.c (HandleEventGenerate): ensure window exists before
+	generating an event for it (fixes testsuite crash).
+
+	* generic/tkTextBTree.c (TkBTreeDeleteIndexRange): add bounds check
+	to startEnd array access (fixes testsuite crash).
+
+	* tests/unixFont.test: only use xlsfonts with X11 windowingsystem.
+
 2009-04-10  Donal K. Fellows  <dkf@users.sf.net>
 
 	* library/tk.tcl: [Bug 2116837]: Add event definitions to handle the
