@@ -369,7 +369,7 @@ switch -exact -- [tk windowingsystem] {
 	event add <<Undo>> <Control-Key-z> <Control-Lock-Key-Z>
 	event add <<Redo>> <Control-Key-Z> <Control-Lock-Key-z>
 	event add <<ContextMenu>> <Button-3>
-	if {$tcl_platform(os) eq "Darwin"} {
+	if {[info exists tcl_platform(os)] && $tcl_platform(os) eq "Darwin"} {
 	    event add <<ContextMenu>> <Button-2>
 	}
 
