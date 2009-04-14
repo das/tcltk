@@ -6,8 +6,8 @@
  *	constructed and donated by Grant Neufeld. (gneufeld@ccs.carleton.ca)
  *
  * Copyright (c) 1995-1996 Sun Microsystems, Inc.
- * Copyright (c) 2008-2009 Daniel A. Steffen <das@users.sourceforge.net>
  * Copyright 2008-2009, Apple Inc.
+ * Copyright (c) 2008-2009 Daniel A. Steffen <das@users.sourceforge.net>
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.

@@ -4,9 +4,8 @@
  *	This file defines the routines for both creating and handling Window
  *	Manager class events for Tk.
  *
- * Copyright 2001, Apple Computer, Inc.
+ * Copyright 2001-2009, Apple Inc.
  * Copyright (c) 2005-2009 Daniel A. Steffen <das@users.sourceforge.net>
- * Copyright 2008-2009, Apple Inc.
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
