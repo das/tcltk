@@ -4,9 +4,8 @@
  *	Contains the Mac implementation of the common dialog boxes.
  *
  * Copyright (c) 1996-1997 Sun Microsystems, Inc.
- * Copyright 2001, Apple Computer, Inc.
+ * Copyright 2001-2009, Apple Inc.
  * Copyright (c) 2006-2009 Daniel A. Steffen <das@users.sourceforge.net>
- * Copyright 2008-2009, Apple Inc.
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -826,17 +825,15 @@ TkAboutDlg(void)
 	    @"Tcl " TCL_VERSION " & Tk " TK_VERSION, @"ApplicationVersion",
 	    @TK_PATCH_LEVEL, @"Version",
 	    image, @"ApplicationIcon",
-	    [NSString stringWithFormat:@"Copyright %1$C 1996-%2$@.", 0xA9,
+	    [NSString stringWithFormat:@"Copyright %1$C 1987-%2$@.", 0xA9,
 	    year], @"Copyright",
 	    [[[NSAttributedString alloc] initWithString:
 	    [NSString stringWithFormat:
-	    @"%1$C 2002-%2$@ Tcl Core Team." "\n\n"
+	    @"%1$C 1987-%2$@ Tcl Core Team." "\n\n"
 	     "%1$C 2002-%2$@ Daniel A. Steffen." "\n\n"
-	     "Daniel A. Steffen" "\n"
-	     "%1$C 2008-2009 Apple Inc." "\n\n"
-	     "Jim Ingham & Ian Reid" "\n"
-	     "%1$C 2001-2002 Apple Computer, Inc." "\n\n"
-	     "Jim Ingham & Ray Johnson" "\n"
+	     "%1$C 2001-2009 Apple Inc." "\n\n"
+	     "%1$C 2001-2002 Jim Ingham & Ian Reid" "\n\n"
+	     "%1$C 1998-2000 Jim Ingham & Ray Johnson" "\n\n"
 	     "%1$C 1998-2000 Scriptics Inc." "\n"
 	     "%1$C 1996-1997 Sun Microsystems Inc.", 0xA9, year] attributes:
 	    [NSDictionary dictionaryWithObject:style
