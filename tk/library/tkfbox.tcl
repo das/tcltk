@@ -1133,7 +1133,7 @@ proc ::tk::dialog::file::Done {w {selectFilePath ""}} {
 	    && [info exists data(-filetypes)] && [llength $data(-filetypes)]
 	    && [info exists data(filterType)] && $data(filterType) ne ""
 	} then {
-	    upvar 3 $data(-typevariable) initialTypeName
+	    upvar 4 $data(-typevariable) initialTypeName
 	    set initialTypeName [lindex $data(filterType) 0]
 	}
     }
