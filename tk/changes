@@ -6576,7 +6576,7 @@ in screen distances, reducing precision loss (ferrieux)
 
 --- Released 8.5.6, December 23, 2008 --- See ChangeLog for details ---
 
-2009-01-07 (bug fix)[1847002] Win: prevent grab bypass (thoyts(
+2009-01-07 (bug fix)[1847002] Win: prevent grab bypass (thoyts)
 
 2009-01-11 (bug fix) crash on XCreateIC failure (staplin)
 
@@ -6602,4 +6602,4 @@ in screen distances, reducing precision loss (ferrieux)
 
 2009-04-10 (bug fix)[2116837] std virtual events with Caps Lock (fellows)
 
---- Released 8.5.7, April 10, 2009 --- See ChangeLog for details ---
+--- Released 8.5.7, April 15, 2009 --- See ChangeLog for details ---
