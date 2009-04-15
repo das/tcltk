@@ -864,7 +864,7 @@ proc ::tk::MotifFDialog_ActivateSEnt {w} {
     # Return selected filter
     if {[info exists data(-typevariable)] && $data(-typevariable) ne ""
 	    && [info exists data(-filetypes)] && $data(-filetypes) ne ""} {
-	upvar 1 $data(-typevariable) initialTypeName
+	upvar 2 $data(-typevariable) initialTypeName
 	set initialTypeName [lindex $data(-filetypes) $data(fileType) 0]
     }
 
