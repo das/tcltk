@@ -518,6 +518,41 @@ declare 157 generic {
 	    CONST char **argv)
 }
 
+# Next group of functions exposed due to [Bug 2768945]. Numbers are chosen so
+# as to match 8.6 branch/HEAD.
+declare 169 generic {
+    int TkStateParseProc(ClientData clientData, Tcl_Interp *interp,
+	    Tk_Window tkwin, const char *value, char *widgRec, int offset)
+}
+declare 170 generic {
+    char *TkStatePrintProc(ClientData clientData, Tk_Window tkwin,
+	    char *widgRec, int offset, Tcl_FreeProc **freeProcPtr)
+}
+declare 171 generic {
+    int TkCanvasDashParseProc(ClientData clientData, Tcl_Interp *interp,
+	    Tk_Window tkwin, const char *value, char *widgRec, int offset)
+}
+declare 172 generic {
+    char *TkCanvasDashPrintProc(ClientData clientData, Tk_Window tkwin,
+	    char *widgRec, int offset, Tcl_FreeProc **freeProcPtr)
+}
+declare 173 generic {
+    int TkOffsetParseProc(ClientData clientData, Tcl_Interp *interp,
+	    Tk_Window tkwin, const char *value, char *widgRec, int offset)
+}
+declare 174 generic {
+    char *TkOffsetPrintProc(ClientData clientData, Tk_Window tkwin,
+	    char *widgRec, int offset, Tcl_FreeProc **freeProcPtr)
+}
+declare 175 generic {
+    int TkPixelParseProc(ClientData clientData, Tcl_Interp *interp,
+	    Tk_Window tkwin, const char *value, char *widgRec, int offset)
+}
+declare 176 generic {
+    char *TkPixelPrintProc(ClientData clientData, Tk_Window tkwin,
+	    char *widgRec, int offset, Tcl_FreeProc **freeProcPtr)
+}
+
 ##############################################################################
 
 # Define the platform specific internal Tcl interface. These functions are
