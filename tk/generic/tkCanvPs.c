@@ -1440,7 +1440,6 @@ Tk_PostscriptPhoto(
     int alphaOffset, alphaPitch, alphaIncr;
 
     if (psInfoPtr->prepass) {
-	codeIncluded = 0;
 	return TCL_OK;
     }
 
