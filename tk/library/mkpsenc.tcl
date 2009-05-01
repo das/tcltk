@@ -1310,9 +1310,9 @@ namespace eval ::tk {
 	% upper-left corner of the text's bounding box. Remember that angle
 	% for rotating, and x and y for positioning are still on the stack.
 	translate
+	rotate
 	lineLength xoffset mul
 	strings length 1 sub spacing mul height add yoffset mul translate
-	rotate
 	% Now use the baseline and justification information to translate so
 	% that the origin is at the baseline and positioning point for the
 	% first line of text.
