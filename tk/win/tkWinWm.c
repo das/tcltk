@@ -2353,7 +2353,7 @@ UpdateWrapper(
      */
 
     if (wmPtr->hMenu != NULL) {
-	wmPtr->flags = WM_SYNC_PENDING;
+	wmPtr->flags |= WM_SYNC_PENDING;
 	SetMenu(wmPtr->wrapper, wmPtr->hMenu);
 	wmPtr->flags &= ~WM_SYNC_PENDING;
     }
