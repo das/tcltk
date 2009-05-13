@@ -3235,6 +3235,20 @@ ParseFontNameObj(
 	if (result == TCL_OK) {
 	    return TCL_OK;
 	}
+
+	/*
+	 * If the string failed to parse but was considered to be a XLFD
+	 * then it may be a "-option value" string with a hyphenated family
+	 * name as per bug 2791352
+	 */
+
+	if (Tcl_ListObjGetElements(interp, objPtr, &objc, &objv) != TCL_OK) {
+	    return TCL_ERROR;
+	}
+
+	if (ConfigAttributesObj(interp, tkwin, objc, objv, faPtr) == TCL_OK) {
+	    return TCL_OK;
+	}
     }
 
     /*
