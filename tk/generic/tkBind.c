@@ -3325,7 +3325,6 @@ HandleEventGenerate(
     event.xany.serial = NextRequest(Tk_Display(tkwin));
     event.xany.send_event = False;
     if (windowName[0]) {
-	Tk_MakeWindowExist(tkwin);
 	event.xany.window = Tk_WindowId(tkwin);
     } else {
 	event.xany.window =
