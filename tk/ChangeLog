@@ -1,3 +1,76 @@
+2009-05-14  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* generic/tkButton.c: [Bug 1923684]: backported checkbutton fix
+	for confused state when -offvalue equals -tristatevalue
+
+2009-05-14  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* doc/ttk_image.n:  Backported support for the Vista theme.
+	* doc/ttk_style.n:  This requires the vsapi element engine,
+	* doc/ttk_vsapi.n:  the hover state and the theme script
+	* doc/ttk_widget.n: definition.
+	* generic/ttk/ttkState.c:
+	* generic/ttk/ttkTheme.h:
+	* generic/ttk/ttkWidget.c:
+	* library/ttk/ttk.tcl:
+	* library/ttk/vistaTheme.tcl:
+	* library/ttk/xpTheme.tcl:
+	* tests/ttk/vsapi.test:
+	* win/ttkWinXPTheme.c:
+
+2009-05-13  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* generic/tkFont.c: [Bug 2791352]: backported fix and tests for
+	* tests/font.test:  mis-parsing of certain font descriptions.
+
+2009-05-03  Donal K. Fellows  <dkf@users.sf.net>
+
+	* win/tkWinWm.c (UpdateWrapper): [Bug 2785744]: Manipulate flag bit
+	correctly so that menubar updates can't smash other attributes.
+
+2009-04-30  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* win/tkWinWm.c: [Patch 2504402]: Backported change to create
+	wm icons as device independent bitmaps. (cjmcdonald)
+
+2009-04-30  Donal K. Fellows  <dkf@users.sf.net>
+
+	* win/tkWinPixmap.c (Tk_GetPixmap): [Bug 2080533]: Added patch that
+	allows Tk to keep working even when the graphics card is stressed.
+
+2009-04-28  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* unix/tcl.m4, unix/configure (SC_CONFIG_CFLAGS): harden the check
+	to add _r to CC on AIX with threads.
+
+2009-04-27  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tkInt.decls: [Bug 2768945]: Expose (as "private") a set of
+	functions needed for easily building canvas items that work like
+	existing standard ones.
+
+2009-04-24  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* win/tkWinDialog.c (ChooseDirectoryValidateProc): no need to set
+	cwd on selchange. Prevents delete of selected folder in dialog.
+
+2009-04-24  Stuart Cassoff <stwo@users.sf.net>
+
+	* unix/Makefile.in:	Removed stray @ from Makefile.in test target.
+	[Bug 2764263], Don't chmod+x square demo. [Bug 1945073],
+	Adjustable demo install location. [Patch 2764272]
+
+2009-04-24  Stuart Cassoff <stwo@users.sf.net>
+
+	* unix/Makefile.in:	Don't chmod/exec installManPage.
+				[Patch 2769530]
+
+2009-04-23  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* win/tkWinDialog.c (Tk_ChooseDirectoryObjCmd): enable the new
+	style choosedir that has a "New Folder" button, with
+	::tk::winChooseDirFlags override for new behavior. [Bug 2779910]
+
 2009-04-15  Don Porter  <dgp@users.sourceforge.net>
 
 	*** 8.5.7 TAGGED FOR RELEASE ***

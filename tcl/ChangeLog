@@ -1,3 +1,41 @@
+2009-05-07  Miguel Sofer  <msofer@users.sf.net>
+
+	* generic/tclObj.c (Tcl_GetCommandFromObj): fix for bug [2785893],
+	insure that a command in a deleted namespace cannot be found
+	through a cached name.
+	
+2009-05-06  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclCmdMZ.c:   Improve overflow error message from
+	[string repeat].  [Bug 2582327]
+
+2009-04-28  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* unix/tcl.m4, unix/configure (SC_CONFIG_CFLAGS): harden the check
+	to add _r to CC on AIX with threads.
+
+2009-04-27  Alexandre Ferrieux  <ferrieux@users.sourceforge.net>
+
+	* generic/tclInt.h:   Backport fix for [Bug 1028264]: WSACleanup() too early.
+	* generic/tclEvent.c: The fix introduces "late exit handlers"
+	* win/tclWinSock.c:   for similar late process-wide cleanups.
+
+2009-04-27  Alexandre Ferrieux  <ferrieux@users.sourceforge.net>
+
+	* win/tclWinSock.c: Backport fix for [Bug 2446662]: resync Win
+	behavior on RST with that of unix (EOF).
+
+2009-04-27  Donal K. Fellows  <dkf@users.sf.net>
+
+	* doc/concat.n (EXAMPLES): [Bug 2780680]: Rewrote so that the spacing
+	of result messages is correct. (The exact way they were wrong was
+	different when rendered through groff or as HTML, but it was still
+	wrong both ways.)
+
+2009-04-24  Stuart Cassoff <stwo@users.sf.net>
+
+	* unix/Makefile.in: [Patch 2769530]: Don't chmod/exec installManPage.
+
 2009-04-15  Don Porter  <dgp@users.sourceforge.net>
 
 	*** 8.5.7 TAGGED FOR RELEASE ***
