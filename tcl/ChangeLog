@@ -1,3 +1,104 @@
+2009-05-14  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tclOOInfo.c (InfoObjectNsCmd): Added introspection mechanism
+	for finding out what an object's namespace is. Experience suggests
+	that it is just too useful to be able to do without it.
+
+2009-05-12  Donal K. Fellows  <dkf@users.sf.net>
+
+	* doc/vwait.n: Added more words to make it clear just how bad it is to
+	nest [vwait]s.
+
+	* compat/mkstemp.c: Add more headers to make this file build on IRIX
+	6.5. Thanks to Larry McVoy for this.
+
+2009-05-08  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tclOO.c (TclNRNewObjectInstance):  [Bug 2414858]: Add a
+	* generic/tclBasic.c (TclPushTailcallPoint): marker to the stack of
+	NRE callbacks at the right point so that tailcall works correctly in a
+	constructor.
+
+	* tests/exec.test (cat): [Bug 2788468]: Adjust the scripted version of
+	cat so that it does not perform transformations on the data it is
+	working with, making it more like the standard Unix 'cat' program.
+
+2009-05-07  Miguel Sofer  <msofer@users.sf.net>
+
+	* generic/tclObj.c (Tcl_GetCommandFromObj): [Bug 2785893]: Ensure that
+	a command in a deleted namespace can't be found through a cached name.
+
+	* generic/tclBasic.c:    Let coroutines start with a much smaller
+	* generic/tclCompile.h:  stack: 200 words (previously was 2000, the
+	* generic/tclExecute.c:  same as interps).
+
+2009-05-07  Donal K. Fellows  <dkf@users.sf.net>
+
+	* tests/env.test (printenvScript, env-4.3, env-4.5): [Bug 1513659]:
+	* tests/exec.test (exec-2.6): These tests had subtle dependencies on
+	being on platforms that were either ISO 8859-1 or UTF-8. Stabilized
+	the results by forcing the encoding.
+
+2009-05-06  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclCmdMZ.c:	[Bug 2582327]: Improve overflow error message
+	from [string repeat].
+
+	* tests/interp.test: interp-20.50 test for Bug 2486550.
+
+2009-05-04  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tclOO.c (InitFoundation, AllocObject, AllocClass):
+	* generic/tclOODefineCmds.c (InitDefineContext): Make sure that when
+	support namespaces are deleted, nothing bad can subsequently happen.
+	Issue spotted by Don Porter.
+
+2009-05-03  Donal K. Fellows  <dkf@users.sf.net>
+
+	* doc/Tcl.n: [Bug 2538432]: Clarified exact treatment of ${arr(idx)}
+	form of variable substitution. This is not a change of behavior, just
+	an improved description of the current situation.
+
+2009-04-30  Miguel Sofer  <msofer@users.sf.net>
+
+	* generic/tclBasic.c (TclObjInvoke): [Bug 2486550]: Make sure that a
+	null objProc is not used, use Tcl_NRCallObjProc instead.
+
+2009-05-01  Jan Nijtmans <nijtmans@users.sf.net>
+
+	* win/configure.in   Fix 64-bit detection for zlib on Win64
+	* win/configure      (regenerated)
+
+2009-04-28  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* unix/tcl.m4, unix/configure (SC_CONFIG_CFLAGS): harden the check to
+	add _r to CC on AIX with threads.
+
+2009-04-27  Donal K. Fellows  <dkf@users.sf.net>
+
+	* doc/concat.n (EXAMPLES): [Bug 2780680]: Rewrote so that the spacing
+	of result messages is correct. (The exact way they were wrong was
+	different when rendered through groff or as HTML, but it was still
+	wrong both ways.)
+
+2009-04-27  Jan Nijtmans <nijtmans@users.sf.net>
+
+	* generic/tclIndexObj.c:  Reset internal INTERP_ALTERNATE_WRONG_ARGS
+	* generic/tclIOCmd.c      flag inside the Tcl_WrongNumArgs function,
+	                          so the caller no longer has to do the reset.
+
+2009-04-24  Stuart Cassoff <stwo@users.sf.net>
+
+	* unix/Makefile.in: [Patch 2769530]: Don't chmod/exec installManPage.
+
+2009-04-19  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* library/http/http.tcl: [Bug 2715421]: Removed spurious newline added
+	* tests/http11.test:     after POST and added tests to detect excess
+	* tests/httpd11.tcl:     bytes being POSTed.
+	* library/http/pkgIndex.tcl:
+	* makefiles:             package version now 2.8.1
+
 2009-04-15  Donal K. Fellows  <dkf@users.sf.net>
 
 	* doc/chan.n, doc/close.n: Tidy up documentation of TIP #332.
@@ -6,7 +107,7 @@
 
 	* library/tzdata/Asia/Karachi: Updated rules for Pakistan Summer
 				       Time (Olson's tzdata2009f)
-	
+
 2009-04-11  Donal K. Fellows  <dkf@users.sf.net>
 
 	* generic/tclOOMethod.c (InvokeForwardMethod): Clarify the resolution
@@ -38,7 +139,7 @@
 					want to run the tcl event loop via
 					Tcl_ServiceModeHook(TCL_SERVICE_ALL).
 
-	* macosx/tclMacOSXNotify.c:	add CFRunLoop based Tcl_Sleep() and 
+	* macosx/tclMacOSXNotify.c:	add CFRunLoop based Tcl_Sleep() and
 	* unix/tclUnixChan.c:		TclUnixWaitForFile() implementations
 	* unix/tclUnixEvent.c:		and disable select() based ones in
 					CoreFoundation builds.
@@ -73,7 +174,7 @@
 
 	* tools/tclZIC.tcl: Always emit files with Unix line termination.
 	* library/tzdata: Olson's tzdata2009e
-	
+
 2009-04-09  Don Porter  <dgp@users.sourceforge.net>
 
 	* library/http/http.tcl:	[Bug 26245326]: Handle incomplete
@@ -92,7 +193,7 @@
 2009-04-08  Don Porter  <dgp@users.sourceforge.net>
 
 	* library/tcltest/tcltest.tcl:  [Bug 2570363]: Converted [eval]s (some
-	* library/tcltest/pkgIndex.tcl: unsafe!) to {*} in tcltest package. 
+	* library/tcltest/pkgIndex.tcl: unsafe!) to {*} in tcltest package.
 	* unix/Makefile.in:     => tcltest 2.3.1
 	* win/Makefile.in:
 

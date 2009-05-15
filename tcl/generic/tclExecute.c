@@ -788,16 +788,16 @@ InitByteCodeExecution(
  *----------------------------------------------------------------------
  */
 
-#define TCL_STACK_INITIAL_SIZE 2000
-
 ExecEnv *
 TclCreateExecEnv(
-    Tcl_Interp *interp)		/* Interpreter for which the execution
+    Tcl_Interp *interp,		/* Interpreter for which the execution
 				 * environment is being created. */
+    int size)                   /* the initial stack size, in number of words
+				 * [sizeof(Tcl_Obj*)] */ 
 {
     ExecEnv *eePtr = (ExecEnv *) ckalloc(sizeof(ExecEnv));
     ExecStack *esPtr = (ExecStack *) ckalloc(sizeof(ExecStack)
-	    + (size_t) (TCL_STACK_INITIAL_SIZE-1) * sizeof(Tcl_Obj *));
+	    + (size_t) (size-1) * sizeof(Tcl_Obj *));
 
     eePtr->execStackPtr = esPtr;
     TclNewBooleanObj(eePtr->constants[0], 0);
@@ -813,7 +813,7 @@ TclCreateExecEnv(
     esPtr->prevPtr = NULL;
     esPtr->nextPtr = NULL;
     esPtr->markerPtr = NULL;
-    esPtr->endPtr = &esPtr->stackWords[TCL_STACK_INITIAL_SIZE-1];
+    esPtr->endPtr = &esPtr->stackWords[size-1];
     esPtr->tosPtr = &esPtr->stackWords[-1];
 
     Tcl_MutexLock(&execMutex);
@@ -826,7 +826,6 @@ TclCreateExecEnv(
 
     return eePtr;
 }
-#undef TCL_STACK_INITIAL_SIZE
 
 /*
  *----------------------------------------------------------------------
@@ -2440,6 +2439,7 @@ TclExecuteByteCode(
 	}
 
 	if (appendLen < 0) {
+	    /* TODO: convert panic to error ? */
 	    Tcl_Panic("max size for a Tcl value (%d bytes) exceeded", INT_MAX);
 	}
 
@@ -2468,6 +2468,7 @@ TclExecuteByteCode(
 	if (!onlyb) {
 	    bytes = TclGetStringFromObj(objResultPtr, &length);
 	    if (length + appendLen < 0) {
+		/* TODO: convert panic to error ? */
 		Tcl_Panic("max size for a Tcl value (%d bytes) exceeded",
 			INT_MAX);
 	    }
@@ -2504,6 +2505,7 @@ TclExecuteByteCode(
 	} else {
 	    bytes = (char *) Tcl_GetByteArrayFromObj(objResultPtr, &length);
 	    if (length + appendLen < 0) {
+		/* TODO: convert panic to error ? */
 		Tcl_Panic("max size for a Tcl value (%d bytes) exceeded",
 			INT_MAX);
 	    }

@@ -107,13 +107,15 @@ AppendSystemError(
     Tcl_Obj *resultPtr = Tcl_GetObjResult(interp);
 
     length = FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM
+	    | FORMAT_MESSAGE_IGNORE_INSERTS
 	    | FORMAT_MESSAGE_ALLOCATE_BUFFER, NULL, error,
 	    MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (WCHAR *) &wMsgPtr,
 	    0, NULL);
     if (length == 0) {
 	char *msgPtr;
 
-	length = FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM
+	length = FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM 
+		| FORMAT_MESSAGE_IGNORE_INSERTS
 		| FORMAT_MESSAGE_ALLOCATE_BUFFER, NULL, error,
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (char *) &msgPtr,
 		0, NULL);
