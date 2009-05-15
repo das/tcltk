@@ -839,9 +839,9 @@ Win32ErrorObj(
     TCHAR  sBuffer[30];
     Tcl_Obj* errPtr = NULL;
 
-    FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-	    NULL, (DWORD)hrError, LANG_NEUTRAL,
-	    (LPTSTR)&lpBuffer, 0, NULL);
+    FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM
+	    | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, (DWORD)hrError,
+	    LANG_NEUTRAL, (LPTSTR)&lpBuffer, 0, NULL);
 
     if (lpBuffer == NULL) {
 	lpBuffer = sBuffer;

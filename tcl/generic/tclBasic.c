@@ -31,6 +31,11 @@
 #include <assert.h>
 #endif
 
+
+#define INTERP_STACK_INITIAL_SIZE 2000
+#define CORO_STACK_INITIAL_SIZE    200
+
+
 /*
  * Determine whether we're using IEEE floating point
  */
@@ -608,7 +613,7 @@ Tcl_CreateInterp(void)
      * variable).
      */
 
-    iPtr->execEnvPtr = TclCreateExecEnv(interp);
+    iPtr->execEnvPtr = TclCreateExecEnv(interp, INTERP_STACK_INITIAL_SIZE);
 
     /*
      * TIP #219, Tcl Channel Reflection API support.
@@ -4195,6 +4200,14 @@ TclNREvalObjv(
     return TCL_OK;
 }
 
+void
+TclPushTailcallPoint(
+    Tcl_Interp *interp)
+{
+    TclNRAddCallback(interp, NRCommand, NULL, NULL, NULL, NULL);
+    ((Interp *) interp)->numLevels++;
+}
+
 int
 TclNRRunCallbacks(
     Tcl_Interp *interp,
@@ -6421,7 +6434,12 @@ TclObjInvoke(
      */
 
     iPtr->cmdCount++;
-    result = cmdPtr->objProc(cmdPtr->objClientData, interp, objc, objv);
+    if (cmdPtr->objProc != NULL) {
+	result = cmdPtr->objProc(cmdPtr->objClientData, interp, objc, objv);
+    } else {
+	result = Tcl_NRCallObjProc(interp, cmdPtr->nreProc,
+		cmdPtr->objClientData, objc, objv);
+    }
 
     /*
      * If an error occurred, record information about what was being executed
@@ -8474,7 +8492,7 @@ TclNRCoroutineObjCmd(
     }
 
     corPtr = (CoroutineData *) ckalloc(sizeof(CoroutineData));
-    corPtr->eePtr = TclCreateExecEnv(interp);
+    corPtr->eePtr = TclCreateExecEnv(interp, CORO_STACK_INITIAL_SIZE);
     corPtr->callerEEPtr = iPtr->execEnvPtr;
     corPtr->eePtr->corPtr = corPtr;
     corPtr->stackLevel = NULL;
