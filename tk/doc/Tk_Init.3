@@ -35,7 +35,7 @@ and creates a new Tk application, including its main window.
 If the initialization is successful \fBTk_Init\fR returns
 \fBTCL_OK\fR;  if there is an error it returns \fBTCL_ERROR\fR.
 \fBTk_Init\fR also leaves a result or error message
-in \fIinterp->result\fR.
+in interpreter \fIinterp\fR's result.
 .PP
 If there is a variable \fBargv\fR in \fIinterp\fR, \fBTk_Init\fR
 treats the contents of this variable as a list of options for the

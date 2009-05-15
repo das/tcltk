@@ -211,7 +211,7 @@ describe the bitmap.
 \fBTk_DefineBitmap\fR normally returns \fBTCL_OK\fR; if an error occurs
 (e.g. a bitmap named \fInameId\fR has already been defined) then
 \fBTCL_ERROR\fR is returned and an error message is left in
-\fIinterp->result\fR.
+interpreter \fIinterp\fR's result.
 Note:  \fBTk_DefineBitmap\fR expects the memory pointed to by
 \fIsource\fR to be static:  \fBTk_DefineBitmap\fR does not make
 a private copy of this memory, but uses the bytes pointed to
