@@ -834,7 +834,7 @@ TkAboutDlg(void)
 	     "%1$C 2001-2009 Apple Inc." "\n\n"
 	     "%1$C 2001-2002 Jim Ingham & Ian Reid" "\n\n"
 	     "%1$C 1998-2000 Jim Ingham & Ray Johnson" "\n\n"
-	     "%1$C 1998-2000 Scriptics Inc." "\n"
+	     "%1$C 1998-2000 Scriptics Inc." "\n\n"
 	     "%1$C 1996-1997 Sun Microsystems Inc.", 0xA9, year] attributes:
 	    [NSDictionary dictionaryWithObject:style
 	    forKey:NSParagraphStyleAttributeName]] autorelease], @"Credits",
