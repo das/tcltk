@@ -59,8 +59,7 @@ in the style.
 .PP
 In addition to the standard 
 \fBcget\fR, \fBconfigure\fR, \fBidentify\fR, \fBinstate\fR, and \fBstate\fR 
-commands, checkbuttons support the following additional
-widget commands:
+commands, buttons support the following additional widget commands:
 .TP
 \fIpathName \fBinvoke\fR
 Invokes the command associated with the button.

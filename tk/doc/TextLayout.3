@@ -125,7 +125,7 @@ Specifies the width and height, in pixels, of the rectangular area to
 compare for intersection against the text layout.
 .AP Tcl_Interp *interp out
 Postscript code that will print the text layout is appended to
-\fIinterp->result\fR.
+the result of interpreter \fIinterp\fR.
 .BE
 .SH DESCRIPTION
 .PP
@@ -233,7 +233,7 @@ array of strings that represent the individual lines in \fIlayout\fR.  It
 is the responsibility of the caller to take the Postscript array of
 strings and add some Postscript function operate on the array to render
 each of the lines.  The code that represents the Postscript array of
-strings is appended to \fIinterp->result\fR.
+strings is appended to interpreter \fIinterp\fR's result.
 .SH "DISPLAY MODEL"
 .PP
 When measuring a text layout, space characters that occur at the end of a

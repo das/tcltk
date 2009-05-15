@@ -320,6 +320,14 @@ static const TkIntStubs tkIntStubs = {
     TkTextChanged, /* 166 */
     TkBTreeNumLines, /* 167 */
     TkTextInsertDisplayProc, /* 168 */
+    TkStateParseProc, /* 169 */
+    TkStatePrintProc, /* 170 */
+    TkCanvasDashParseProc, /* 171 */
+    TkCanvasDashPrintProc, /* 172 */
+    TkOffsetParseProc, /* 173 */
+    TkOffsetPrintProc, /* 174 */
+    TkPixelParseProc, /* 175 */
+    TkPixelPrintProc, /* 176 */
 };
 
 static const TkIntPlatStubs tkIntPlatStubs = {
