@@ -60,8 +60,8 @@ are used to create new windows for
 use in Tk-based applications.  Each of the procedures returns a token
 that can be used to manipulate the window in other calls to the Tk
 library.  If the window could not be created successfully, then NULL
-is returned and \fIinterp->result\fR is modified to hold an error
-message.
+is returned and the result of interpreter \fIinterp\fR is modified to
+hold an error message.
 .PP
 Tk supports two different kinds of windows:  internal
 windows and top-level windows.
