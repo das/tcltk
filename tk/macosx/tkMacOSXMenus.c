@@ -422,7 +422,7 @@ GenerateEditEvent(
     NSMenuItem *i = [[self alloc] initWithTitle:title action:action
 	    keyEquivalent:keyEquivalent];
     [i setTarget:target];
-    return i;
+    return [i autorelease];
 }
 + (id)itemWithTitle:(NSString *)title action:(SEL)action
 	keyEquivalent:(NSString *)keyEquivalent
