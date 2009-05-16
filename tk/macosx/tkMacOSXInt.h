@@ -20,6 +20,10 @@
 #include "tkInt.h"
 #endif
 
+#if !__OBJC__
+#error Objective-C compiler required
+#endif
+
 #define TextStyle MacTextStyle
 #include <ApplicationServices/ApplicationServices.h>
 #include <Cocoa/Cocoa.h>

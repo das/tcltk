@@ -18,8 +18,8 @@
 #ifndef _TKMACINT
 #include "tkMacOSXInt.h"
 #endif
-#include <objc/runtime.h> /* for sel_isEqual() */
 
+#include <objc/runtime.h> /* for sel_isEqual() */
 #include "tkMacOSXDefault.h"
 
 /* Macros for Mac OS X API availability checking */
