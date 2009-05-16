@@ -432,7 +432,7 @@ Tk_GetOpenFileObjCmd(
 	}
     }
     if (fl.filters) {
-	fileTypes = [[NSMutableArray array] autorelease];
+	fileTypes = [NSMutableArray array];
 	for (FileFilter *filterPtr = fl.filters; filterPtr;
 		filterPtr = filterPtr->next) {
 	    for (FileFilterClause *clausePtr = filterPtr->clauses; clausePtr;
@@ -495,7 +495,6 @@ Tk_GetOpenFileObjCmd(
     }
 end:
     TkFreeFileFilters(&fl);
-    [panel release];
     return result;
 }
 
@@ -607,7 +606,7 @@ Tk_GetSaveFileObjCmd(
 	}
     }
     if (fl.filters || defaultType) {
-	fileTypes = [[NSMutableArray array] autorelease];
+	fileTypes = [NSMutableArray array];
 	[fileTypes addObject:defaultType ? defaultType : (id)kUTTypeContent];
 	for (FileFilter *filterPtr = fl.filters; filterPtr;
 		filterPtr = filterPtr->next) {
@@ -661,7 +660,6 @@ Tk_GetSaveFileObjCmd(
     result = (returnCode != NSAlertErrorReturn) ? TCL_OK : TCL_ERROR;
 end:
     TkFreeFileFilters(&fl);
-    [panel release];
     return result;
 }
 
@@ -782,7 +780,6 @@ Tk_ChooseDirectoryObjCmd(
     }
     result = (returnCode != NSAlertErrorReturn) ? TCL_OK : TCL_ERROR;
 end:
-    [panel release];
     return result;
 }
 
