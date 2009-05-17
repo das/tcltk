@@ -119,8 +119,9 @@ metrics to get more native-looking spacing by setting:
 	set tk::mac::useCompatibilityMetrics 0
 
 - TkAqua provides access to native OS X images via the Tk native bitmap facility
-(including any image file readable by NSImage). A native bitmap names is
+(including any image file readable by NSImage). A native bitmap name is
 interpreted as follows (in order):
+    - predefined builtin 32x32 icon name (stop, caution, document, etc)
     - name defined by [tk::mac::iconBitmap]
     - NSImage named image name
     - NSImage url string
@@ -144,9 +145,9 @@ Support for the latter two was added with the Cocoa-based Tk 8.6b2.
 
 - The standard Tk dialog commands [tk_getOpenFile], [tk_chooseDirectory],
 [tk_getSaveFile] and [tk_messageBox] all take an additional optional -command
-parameter on TkAqua; if it is present, when the dialog closes, the given command
-prefix is evaluated at the global level with the dialog command's result
-appended and the dialog command itself returns an emtpy result. If the -parent
+parameter on TkAqua. If it is present, the given command prefix is evaluated at
+the global level when the dialog closes, with the dialog command's result
+appended (the dialog command itself returning an emtpy result). If the -parent
 option is also present, the dialog is configured as a modeless (window-modal)
 sheet attached to the parent window and the dialog command returns immediately.
 Support for -command was added with the Cocoa-based Tk 8.6b2.
