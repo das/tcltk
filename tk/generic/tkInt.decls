@@ -780,7 +780,7 @@ declare 12 aqua {
 #}
 
 declare 14 aqua {
-    int TkMacOSXDoHLEvent(EventRecord *theEvent)
+    int TkMacOSXDoHLEvent(void *theEvent)
 }
 
 # removed duplicate from tkPlat table(tk.decls)
@@ -792,7 +792,7 @@ declare 16 aqua {
     Window TkMacOSXGetXWindow(void *macWinPtr)
 }
 declare 17 aqua {
-    int TkMacOSXGrowToplevel(void *whichWindow, Point start)
+    int TkMacOSXGrowToplevel(void *whichWindow, XPoint start)
 }
 declare 18 aqua {
     void TkMacOSXHandleMenuSelect(short theMenu, unsigned short theItem,
@@ -818,7 +818,7 @@ declare 23 aqua {
     void TkMacOSXMakeRealWindowExist(TkWindow *winPtr)
 }
 declare 24 aqua {
-    BitMapPtr TkMacOSXMakeStippleMap(Drawable d1, Drawable d2)
+    void *TkMacOSXMakeStippleMap(Drawable d1, Drawable d2)
 }
 declare 25 aqua {
     void TkMacOSXMenuClick(void)
@@ -854,13 +854,13 @@ declare 35 aqua {
     TkRegion TkMacOSXVisableClipRgn(TkWindow *winPtr)
 }
 declare 36 aqua {
-    void TkMacOSXWinBounds(TkWindow *winPtr, Rect *geometry)
+    void TkMacOSXWinBounds(TkWindow *winPtr, void *geometry)
 }
 declare 37 aqua {
     void TkMacOSXWindowOffset(void *wRef, int *xOffset, int *yOffset)
 }
 declare 38 aqua {
-    int TkSetMacColor(unsigned long pixel, CGColorRef *macColor)
+    int TkSetMacColor(unsigned long pixel, void *macColor)
 }
 declare 39 aqua {
     void TkSetWMName(TkWindow *winPtr, Tk_Uid titleUid)

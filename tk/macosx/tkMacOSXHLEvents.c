@@ -149,9 +149,9 @@ TkMacOSXInitAppleEvents(
 
 int
 TkMacOSXDoHLEvent(
-    EventRecord *theEvent)
+    void *theEvent)
 {
-    return AEProcessAppleEvent(theEvent);
+    return AEProcessAppleEvent((EventRecord *)theEvent);
 }
 
 /*

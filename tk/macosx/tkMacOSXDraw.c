@@ -1899,7 +1899,7 @@ ClipToGC(
  *----------------------------------------------------------------------
  */
 
-BitMapPtr
+void *
 TkMacOSXMakeStippleMap(
     Drawable drawable,		/* Window to apply stipple. */
     Drawable stipple)		/* The stipple pattern. */

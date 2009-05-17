@@ -4756,7 +4756,7 @@ TkMacOSXResizable(
 int
 TkMacOSXGrowToplevel(
     void *whichWindow,
-    Point start)
+    XPoint start)
 {
     return false;
 }
