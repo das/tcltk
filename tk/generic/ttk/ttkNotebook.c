@@ -456,25 +456,28 @@ static int NotebookSize(void *clientData, int *widthPtr, int *heightPtr)
 static void SqueezeTabs(
     Notebook *nb, int needed, int available, int minTabWidth)
 {
-    int nTabs = Ttk_NumberSlaves(nb->notebook.mgr),
-	difference = available - needed,
-	delta = difference / nTabs,
-	remainder = difference % nTabs;
-    int slack = 0;
-    int i;
+    int nTabs = Ttk_NumberSlaves(nb->notebook.mgr);
 
-    if (remainder < 0) { remainder += nTabs; --delta; }
-
-    for (i = 0; i < nTabs; ++i) {
-	Tab *tab = Ttk_SlaveData(nb->notebook.mgr,i);
-	int adj = delta + (i < remainder) + slack;
-
-	if (tab->width + adj >= minTabWidth) {
-	    tab->width += adj;
+    if (nTabs > 0) {
+	int difference = available - needed,
+	    delta = difference / nTabs,
+	    remainder = difference % nTabs,
 	    slack = 0;
-	} else {
-	    slack = adj - (minTabWidth - tab->width);
-	    tab->width = minTabWidth;
+	int i;
+
+	if (remainder < 0) { remainder += nTabs; --delta; }
+
+	for (i = 0; i < nTabs; ++i) {
+	    Tab *tab = Ttk_SlaveData(nb->notebook.mgr,i);
+	    int adj = delta + (i < remainder) + slack;
+
+	    if (tab->width + adj >= minTabWidth) {
+		tab->width += adj;
+		slack = 0;
+	    } else {
+		slack = adj - (minTabWidth - tab->width);
+		tab->width = minTabWidth;
+	    }
 	}
     }
 }
