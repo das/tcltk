@@ -108,6 +108,89 @@ Setting the global variable '::tk::mac::antialiasedtext' allows to control text
 antialiasing from Tcl: a value of 1 enables AA, 0 disables AA and -1 restores
 the default behaviour of respecting the OS settings.
 
+- Scrollbars: There are two scrollbar variants in Aqua, normal & small. The
+normal scrollbar has a small dimension of 15, the small variant 11.
+Access to the small variant was added in Tk 8.4.2.
+
+- The default metrics of native buttons, radiobuttons, checkboxes and
+menubuttons in the Cocoa-based Tk 8.6b2 and later preserve compatibility with
+the older Carbon-based implementation, you can turn off the compatibility
+metrics to get more native-looking spacing by setting:
+	set tk::mac::useCompatibilityMetrics 0
+
+- TkAqua provides access to native OS X images via the Tk native bitmap facility
+(including any image file readable by NSImage). A native bitmap names is
+interpreted as follows (in order):
+    - name defined by [tk::mac::iconBitmap]
+    - NSImage named image name
+    - NSImage url string
+    - 4-char OSType of IconServices icon
+the syntax of [tk::mac::iconBitmap] is as follows:
+	tk::mac::iconBitmap name width height -kind value
+where -kind is one of
+    -file	    icon of file at given path
+    -fileType	    icon of given file type
+    -osType	    icon of given 4-char OSType file type
+    -systemType	    icon for given IconServices 4-char OSType
+    -namedImage	    named NSImage for given name
+    -imageFile	    image at given path
+This support was added with the Cocoa-based Tk 8.6b2.
+
+- TkAqua cursor names are interpred as follows (in order):
+    - standard or platform-specific Tk cursor name (c.f. cursors.n)
+    - @path to any image file readable by NSImage
+    - NSImage named image name
+Support for the latter two was added with the Cocoa-based Tk 8.6b2.
+
+- The standard Tk dialog commands [tk_getOpenFile], [tk_chooseDirectory],
+[tk_getSaveFile] and [tk_messageBox] all take an additional optional -command
+parameter on TkAqua; if it is present, when the dialog closes, the given command
+prefix is evaluated at the global level with the dialog command's result
+appended and the dialog command itself returns an emtpy result. If the -parent
+option is also present, the dialog is configured as a modeless (window-modal)
+sheet attached to the parent window and the dialog command returns immediately.
+Support for -command was added with the Cocoa-based Tk 8.6b2.
+
+- The TkAqua-specific [tk::mac::standardAboutPanel] command brings the standard
+Cocoa about panel to the front, with all its information filled in from your
+application bundle files (i.e. standard about panel with no options specified).
+See Apple Technote TN2179 and the AppKit documentation for -[NSApplication
+orderFrontStandardAboutPanelWithOptions:] for details on the Info.plist keys and
+app bundle files used by the about panel.
+This support was added with the Cocoa-based Tk 8.6b2.
+
+- TkAqua has three special menu names that give access to the standard
+Application, Window and Help menus, see menu.n for details.
+Support for the Window menu was added with the Cocoa-based Tk 8.6b2.
+
+- The TkAqua-specific command [tk::unsupported::MacWindowStyle style] is used to
+get and set Mac OS X-specific toplevel window class and attributes. Note that
+the window class and many attributes have to be set before the window is first
+mapped for the change to have any effect.
+The command has the following syntax:
+	tk::unsupported::MacWindowStyle style window ?class? ?attributes?
+The 2 argument form returns a list of the current class and attributes for the
+given window. The 3 argument form sets the class for the given window using the
+default attributes for that class. The 4 argument form sets the class and the
+list of attributes for the given window.
+Window class names:
+    document, modal, floating, utility, toolbar, simple, help, overlay
+Window attribute names:
+    standardDocument, standardFloating, resizable, fullZoom, horizontalZoom,
+    verticalZoom, closeBox, collapseBox, toolbarButton, sideTitlebar,
+    noTitleBar, unifiedTitleAndToolbar, metal, hud, noShadow, doesNotCycle,
+    noActivates, hideOnSuspend, inWindowMenu, ignoreClicks, doesNotHide,
+    canJoinAllSpaces, moveToActiveSpace, nonActivating
+Note that not all attributes are valid for all window classes.
+Support for the 3 argument form was added with the Cocoa-based Tk 8.6b2, at the
+same time support for some legacy Carbon-specific classes and attributes was
+removed (they are still accepted by the command but no longer have any effect).
+
+- The Cocoa-based TkAqua can be distinguished from the older Carbon-based
+version via the [winfo server .] command, example output on Mac OS X 10.5.7:
+    Cocoa-based:	CG409.3 Apple AppKit GC 949.46 Mac OS X 1057
+    Carbon-based:	QD10R30 Apple 1057
+
 - If you want to use Remote Debugging with Xcode, you need to set the
 environment variable XCNOSTDIN to 1 in the Executable editor for Wish. That will
 cause us to force closing stdin & stdout.  Otherwise, given how Xcode launches
