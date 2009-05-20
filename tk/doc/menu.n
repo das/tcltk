@@ -245,6 +245,11 @@ Macintosh, that menu's contents make up the first items of the
 Application menu whenever the window containing the menubar is in front.
 After all of the Tk-defined items, the menu will have a separator,
 followed by all standard Application menu items.
+Such a .apple menu must be present in a menu when that menu is first
+configured as a toplevel's menubar, otherwise a default application menu
+(hidden from Tk) will be inserted into the menubar at that time and
+subsequent addition of a .apple menu will no longer result in it
+becoming the Application menu.
 .PP
 When Tk sees a .menubar.window menu on the Macintosh, the menu's
 contents are inserted into the standard Window menu of the user's
