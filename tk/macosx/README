@@ -162,7 +162,13 @@ This support was added with the Cocoa-based Tk 8.5.7.
 
 - TkAqua has three special menu names that give access to the standard
 Application, Window and Help menus, see menu.n for details.
-Support for the Window menu was added with the Cocoa-based Tk 8.5.7.
+By default, the platform-specific standard Help menu item "YourApp Help" peforms
+the default Cocoa action of showing the Help Book configured in the
+application's Info.plist (or displaying an alert if no Help Book is set). This
+action can be customized by defining a procedure named [tk::mac::ShowHelp], if
+present, this procedure is invoked instead by the standard Help menu item.
+Support for the Window menu and [tk::mac::ShowHelp] was added with the
+Cocoa-based Tk 8.5.7.
 
 - The TkAqua-specific command [tk::unsupported::MacWindowStyle style] is used to
 get and set Mac OS X-specific toplevel window class and attributes. Note that
