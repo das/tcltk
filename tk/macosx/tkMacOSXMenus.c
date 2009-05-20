@@ -165,6 +165,20 @@ static Tcl_Obj *	GetWidgetDemoPath(Tcl_Interp *interp);
 	Tcl_ResetResult(_eventInterp);
     }
 }
+- (void)showHelp:(id)sender {
+    Tcl_CmdInfo dummy;
+    if (!_eventInterp || !Tcl_GetCommandInfo(_eventInterp,
+	    "::tk::mac::ShowHelp", &dummy)) {
+	[super showHelp:sender];
+    } else {
+	int code = Tcl_EvalEx(_eventInterp, "::tk::mac::ShowHelp", -1,
+		TCL_EVAL_GLOBAL);
+	if (code != TCL_OK) {
+	    Tcl_BackgroundException(_eventInterp, code);
+	}
+	Tcl_ResetResult(_eventInterp);
+    }
+}
 - (void)tkSource:(id)sender {
     if (_eventInterp) {
 	if (Tcl_EvalEx(_eventInterp, "tk_getOpenFile -filetypes {"
