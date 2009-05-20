@@ -32,6 +32,10 @@ static Tcl_Obj *	GetWidgetDemoPath(Tcl_Interp *interp);
     if (!applicationName) {
 	applicationName = [[NSProcessInfo processInfo] processName];
     }
+    NSString *aboutName = (applicationName &&
+	    ![applicationName isEqualToString:@"Wish"] &&
+	    ![applicationName hasPrefix:@"tclsh"]) ?
+	    applicationName : @"Tcl & Tk";
     _servicesMenu = [NSMenu menuWithTitle:@"Services"];
     _defaultApplicationMenuItems = [[NSArray arrayWithObjects:
 	    [NSMenuItem separatorItem],
@@ -58,8 +62,9 @@ static Tcl_Obj *	GetWidgetDemoPath(Tcl_Interp *interp);
     _defaultApplicationMenu = [TKMenu menuWithTitle:applicationName
 	    menuItems:_defaultApplicationMenuItems];
     [_defaultApplicationMenu insertItem:
-	    [NSMenuItem itemWithTitle:@"About Tcl & Tk"
-		   action:@selector(orderFrontStandardAboutPanel:)] atIndex:0];
+	    [NSMenuItem itemWithTitle:
+		    [NSString stringWithFormat:@"About %@", aboutName]
+		    action:@selector(orderFrontStandardAboutPanel:)] atIndex:0];
     TKMenu *fileMenu = [TKMenu menuWithTitle:@"File" menuItems:
 	    [NSArray arrayWithObjects:
 	    [NSMenuItem itemWithTitle:
