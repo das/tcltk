@@ -5777,7 +5777,7 @@ TclNREvalObjEx(
     if ((objPtr->typePtr == &tclListType) &&	   /* is a list... */
 	    ((objPtr->bytes == NULL ||		   /* ...without a string rep */
 		    listRepPtr->canonicalFlag))) { /* ...or that is canonical */
-	Tcl_Obj *listPtr = objPtr;
+	Tcl_Obj *listPtr;
 	CmdFrame *eoFramePtr = NULL;
 	int objc;
 	Tcl_Obj **objv;

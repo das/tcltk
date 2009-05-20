@@ -3612,7 +3612,7 @@ TagSearchScanExpr(
 			    NULL);
 		    return TCL_ERROR;
 		}
-		*tag++ = '\0';
+		*tag = '\0';
 		expr->uids[expr->index++] =
 			Tk_GetUid(searchPtr->rewritebuffer);
 		looking_for_tag = 0;

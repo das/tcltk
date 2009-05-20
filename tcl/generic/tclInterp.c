@@ -700,7 +700,7 @@ Tcl_InterpObjCmd(
 	    if (i < objc) {
 		resultObjPtr = objv[i];
 		Tcl_IncrRefCount(resultObjPtr); /* Tcl_CancelEval removes this ref. */
-		i++;
+		/*i++;*/ /* dead code */
 	    } else {
 		resultObjPtr = NULL;
 	    }

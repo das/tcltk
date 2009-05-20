@@ -1213,8 +1213,8 @@ Tcl_UntraceCommand(
     }
 
     if (hasExecTraces) {
-	for (tracePtr = cmdPtr->tracePtr, prevPtr = NULL; tracePtr != NULL ;
-		prevPtr = tracePtr, tracePtr = tracePtr->nextPtr) {
+	for (tracePtr = cmdPtr->tracePtr; tracePtr != NULL;
+		tracePtr = tracePtr->nextPtr) {
 	    if (tracePtr->flags & TCL_TRACE_ANY_EXEC) {
 		return;
 	    }

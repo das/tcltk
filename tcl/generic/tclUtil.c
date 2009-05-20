@@ -2328,7 +2328,7 @@ Tcl_PrintDouble(
 		    c = *++p;
 		}
 	    }
-	    *dst++ = '\0';
+	    *dst = '\0';
 	}
     } else {
 	/*

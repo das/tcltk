@@ -110,6 +110,10 @@ typedef struct {
 static Tcl_ThreadCreateType NewThreadProc(ClientData clientData);
 #endif /* TCL_THREADS */
 
+#ifdef PURIFY
+int tclSleepAtExit = 0;
+#endif
+
 /*
  * Prototypes for functions referenced only in this file:
  */
@@ -905,6 +909,16 @@ Tcl_Exit(
 	 */
 
 	Tcl_Finalize();
+#ifdef PURIFY
+	if (tclSleepAtExit) {
+	    int t = 100000;
+
+	    do {
+		fprintf(stderr, "Exited, sleeping forever...\n");
+		t = sleep(t);
+	    } while (t);
+	}
+#endif
 	TclpExit(status);
 	Tcl_Panic("OS exit failed!");
     }
@@ -981,6 +995,12 @@ TclInitSubsystems(void)
 	    TclInitEncodingSubsystem();	/* Process wide encoding init. */
 	    TclpSetInterfaces();
     	    TclInitNamespaceSubsystem();/* Register ns obj type (mutexed). */
+#ifdef PURIFY
+	    if (getenv("TCL_SLEEP_AT_EXIT")) {
+		tclSleepAtExit = 1;
+		unsetenv("TCL_SLEEP_AT_EXIT");
+	    }
+#endif
 	}
 	TclpInitUnlock();
     }

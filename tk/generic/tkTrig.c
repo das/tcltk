@@ -1319,12 +1319,12 @@ TkMakeRawCurve(
 	    if (xPoints != NULL) {
 		Tk_CanvasDrawableCoords(canvas, control[6], control[7],
 			&xPoints->x, &xPoints->y);
-		xPoints += 1;
+		/*xPoints += 1;*/ /* dead code */
 	    }
 	    if (dblPoints != NULL) {
 		dblPoints[0] = control[6];
 		dblPoints[1] = control[7];
-		dblPoints += 2;
+		/*dblPoints += 2;*/ /* dead code */
 	    }
 	    outputPoints += 1;
 	} else {
@@ -1334,11 +1334,11 @@ TkMakeRawCurve(
 
 	    if (xPoints != NULL) {
 		TkBezierScreenPoints(canvas, control, numSteps, xPoints);
-		xPoints += numSteps;
+		/*xPoints += numSteps;*/ /* dead code */
 	    }
 	    if (dblPoints != NULL) {
 		TkBezierPoints(control, numSteps, dblPoints);
-		dblPoints += 2*numSteps;
+		/*dblPoints += 2*numSteps;*/ /* dead code */
 	    }
 	    outputPoints += numSteps;
 	}

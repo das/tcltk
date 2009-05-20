@@ -628,7 +628,7 @@ ComputeTextBbox(
     TextItem *textPtr)		/* Item whose bbox is to be recomputed. */
 {
     Tk_CanvasTextInfo *textInfoPtr;
-    int leftX, topY, width, height, fudge, i;
+    int /*leftX, topY,*/ width, height, fudge, i;
     Tk_State state = textPtr->header.state;
     double x[4], y[4], dx[4], dy[4], sinA, cosA, tmp;
 
@@ -650,8 +650,8 @@ ComputeTextBbox(
      * bounding box for the text item.
      */
 
-    leftX = ROUND(textPtr->x);
-    topY = ROUND(textPtr->y);
+    /*leftX = ROUND(textPtr->x);*/ /* dead code */
+    /*topY = ROUND(textPtr->y);*/ /* dead code */
     for (i=0 ; i<4 ; i++) {
 	dx[i] = dy[i] = 0.0;
     }
@@ -664,7 +664,7 @@ ComputeTextBbox(
     case TK_ANCHOR_W:
     case TK_ANCHOR_CENTER:
     case TK_ANCHOR_E:
-	topY -= height / 2;
+	/*topY -= height / 2;*/ /* dead code */
 	for (i=0 ; i<4 ; i++) {
 	    dy[i] = -height / 2;
 	}
@@ -673,7 +673,7 @@ ComputeTextBbox(
     case TK_ANCHOR_SW:
     case TK_ANCHOR_S:
     case TK_ANCHOR_SE:
-	topY -= height;
+	/*topY -= height;*/ /* dead code */
 	for (i=0 ; i<4 ; i++) {
 	    dy[i] = -height;
 	}
@@ -688,7 +688,7 @@ ComputeTextBbox(
     case TK_ANCHOR_N:
     case TK_ANCHOR_CENTER:
     case TK_ANCHOR_S:
-	leftX -= width / 2;
+	/*leftX -= width / 2;*/ /* dead code */
 	for (i=0 ; i<4 ; i++) {
 	    dx[i] = -width / 2;
 	}
@@ -697,7 +697,7 @@ ComputeTextBbox(
     case TK_ANCHOR_NE:
     case TK_ANCHOR_E:
     case TK_ANCHOR_SE:
-	leftX -= width;
+	/*leftX -= width;*/ /* dead code */
 	for (i=0 ; i<4 ; i++) {
 	    dx[i] = -width;
 	}

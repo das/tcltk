@@ -2315,11 +2315,11 @@ static int TreeviewIdentifyCommand(
 
 	    switch (region) {
 		case REGION_NOTHING:
-		    layout = tv->core.layout;
+		    /*layout = tv->core.layout;*/ /* dead code */
 		    return TCL_OK; /* @@@ NYI */
 		case REGION_HEADING:
 		case REGION_SEPARATOR:
-		    layout = tv->tree.headingLayout;
+		    /*layout = tv->tree.headingLayout;*/ /* dead code */
 		    return TCL_OK; /* @@@ NYI */
 		case REGION_TREE:
 		    layout = tv->tree.itemLayout;

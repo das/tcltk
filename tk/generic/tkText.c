@@ -1920,9 +1920,8 @@ DestroyText(
 		ewPtr->body.ew.clients = loop->next;
 		TkTextWinFreeClient(hPtr, loop);
 	    } else {
-		TkTextEmbWindowClient *client = ewPtr->body.ew.clients;
+		TkTextEmbWindowClient *client = loop->next;
 
-		client = loop->next;
 		while (client != NULL) {
 		    if (client->textPtr == textPtr) {
 			loop->next = client->next;

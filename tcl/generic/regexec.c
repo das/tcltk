@@ -758,12 +758,11 @@ altdissect(
     chr *end)			/* end of same */
 {
     struct dfa *d;
-    int i;
 
     assert(t != NULL);
     assert(t->op == '|');
 
-    for (i = 0; t != NULL; t = t->right, i++) {
+    do {
 	MDEBUG(("trying %dth\n", i));
 	assert(t->left != NULL && t->left->cnfa.nstates > 0);
 	d = newdfa(v, &t->left->cnfa, &v->g->cmap, &v->dfa1);
@@ -776,7 +775,8 @@ altdissect(
 	    return dissect(v, t->left, begin, end);
 	}
 	freedfa(d);
-    }
+	t = t->right;
+    } while (t);
     return REG_ASSERT;		/* none of them matched?!? */
 }
 

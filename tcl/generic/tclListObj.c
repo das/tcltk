@@ -1330,7 +1330,7 @@ TclLsetFlat(
 	if (TclGetIntForIndexM(interp, *indexArray, elemCount - 1, &index)
 		!= TCL_OK)  {
 	    /* ...the index we're trying to use isn't an index at all. */
-	    indexArray++;
+	    /*indexArray++;*/ /* dead code */
 	    break;
 	}
 	indexArray++;
