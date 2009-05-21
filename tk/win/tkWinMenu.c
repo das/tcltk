@@ -1981,14 +1981,15 @@ TkWinMenuKeyObjCmd(
 	    virtualKey = XKeysymToKeycode(winPtr->display, keySym);
 	    scanCode = MapVirtualKey(virtualKey, 0);
 	    if (0 != scanCode) {
+		XKeyEvent xkey = eventPtr->xkey;
 		CallWindowProc(DefWindowProc, Tk_GetHWND(Tk_WindowId(tkwin)),
 			WM_SYSKEYDOWN, virtualKey,
 			(int) ((scanCode << 16) | (1 << 29)));
-		if (eventPtr->xkey.nbytes > 0) {
-		    for (i = 0; i < eventPtr->xkey.nbytes; i++) {
+		if (xkey.nbytes > 0) {
+		    for (i = 0; i < xkey.nbytes; i++) {
 			CallWindowProc(DefWindowProc,
 				Tk_GetHWND(Tk_WindowId(tkwin)), WM_SYSCHAR,
-				eventPtr->xkey.trans_chars[i],
+				xkey.trans_chars[i],
 				(int) ((scanCode << 16) | (1 << 29)));
 		    }
 		}
