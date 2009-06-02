@@ -8283,10 +8283,20 @@ ActivateWindow(
      */
 
     if (winPtr) {
+	Window window;
 	if (TkGrabState(winPtr) != TK_GRAB_EXCLUDED) {
-	    SetFocus(Tk_GetHWND(winPtr->window));
+	    window = winPtr->window;
 	} else {
-	    SetFocus(Tk_GetHWND(winPtr->dispPtr->grabWinPtr->window));
+	    window = winPtr->dispPtr->grabWinPtr->window;
+	}
+
+	/*
+	 * Ensure the window was not destroyed while we were postponing
+	 * the activation [Bug 2799589]
+	 */
+
+	if (window) {
+	    SetFocus(Tk_GetHWND(window));
 	}
     }
 
