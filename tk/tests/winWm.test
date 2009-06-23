@@ -370,7 +370,7 @@ test winWm-8.2 {Tk_WmCmd procedure, "iconphoto" option} win {
     image delete blank16 blank32
 } {}
 
-test winWm-9.0 "Bug #2799589 - delayed activation of destroyed window" -setup {
+test winWm-9.0 "Bug #2799589 - delayed activation of destroyed window" -constraints win -setup {
     proc winwm90click {w} {
         if {![winfo ismapped $w]} { update }
         event generate $w <Enter>
