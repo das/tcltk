@@ -1,3 +1,17 @@
+2009-06-23  Jan Nijtmans  <nijtmans@users.sf.net>
+
+	* generic/tkCanvUtil.c fix [Bug #220935] canvas dash update problem
+
+2009-06-02  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* win/tkWinWm.c:   [Bug 2799589] Backported fix for crash on
+	* tests/winWm.test: delayed window activation.
+
+2009-05-21  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* win/tkWinMenu.c: [Bug 2794778]: Backported fix for keyboard
+	traversal of the menus on Windows.
+
 2009-05-14  Pat Thoyts  <patthoyts@users.sourceforge.net>
 
 	* generic/tkButton.c: [Bug 1923684]: backported checkbutton fix
