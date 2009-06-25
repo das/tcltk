@@ -1820,10 +1820,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F95CC8B009158F3100EA5ACE /* Build configuration list for PBXNativeTarget "tcltest" */;
 			buildPhases = (
-				F9A5C5F508F651A2008AE941 /* ShellScript */,
+				F9A5C5F508F651A2008AE941 /* Configure Tcl */,
 				8DD76FAB0486AB0100D96B5E /* Sources */,
 				8DD76FAD0486AB0100D96B5E /* Frameworks */,
-				F95FA74C0B32CE190072E431 /* ShellScript */,
+				F95FA74C0B32CE190072E431 /* Build dltest */,
 			);
 			buildRules = (
 			);
@@ -1839,7 +1839,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F97258A80A86873D00096C78 /* Build configuration list for PBXNativeTarget "tests" */;
 			buildPhases = (
-				F97258A40A86873C00096C78 /* ShellScript */,
+				F97258A40A86873C00096C78 /* Run Testsuite */,
 			);
 			buildRules = (
 			);
@@ -1854,7 +1854,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F95CC8AB09158F3100EA5ACE /* Build configuration list for PBXNativeTarget "Tcl" */;
 			buildPhases = (
-				F97AF02F0B665DA900310EA2 /* ShellScript */,
+				F97AF02F0B665DA900310EA2 /* Build Tcl */,
 			);
 			buildRules = (
 			);
@@ -1888,7 +1888,7 @@
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		F95FA74C0B32CE190072E431 /* ShellScript */ = {
+		F95FA74C0B32CE190072E431 /* Build dltest */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1903,6 +1903,7 @@
 				"$(TCL_SRCROOT)/unix/dltest/pkge.c",
 				"$(TCL_SRCROOT)/unix/dltest/pkgua.c",
 			);
+			name = "Build dltest";
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/tcl/dltest.marker",
 			);
@@ -1911,13 +1912,14 @@
 			shellScript = "## dltest build script phase\n\nrm -f \"${DERIVED_FILE_DIR}/tcl/dltest.marker\"\nmake -C \"${DERIVED_FILE_DIR}/tcl\" dltest.marker\nln -fsh \"${DERIVED_FILE_DIR}/tcl/dltest\" \"${CONFIGURATION_BUILD_DIR}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F97258A40A86873C00096C78 /* ShellScript */ = {
+		F97258A40A86873C00096C78 /* Run Testsuite */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Run Testsuite";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1925,7 +1927,7 @@
 			shellScript = "if [ \"${ACTION:-build}\" == \"build\" ]; then\nif [ -z \"${HOME}\" ]; then export HOME=\"$(echo ~)\"; fi\ncd \"${TARGET_TEMP_DIR}\"; rm -rf \"${DERIVED_FILE_DIR}\"; mkdir -p \"${DERIVED_FILE_DIR}\"\nprintf '%s%s%s%s%s' '\npackage require tcltest 2.2\nnamespace import tcltest::*\nconfigure -testdir [file normalize {' \"${TCL_SRCROOT}\" '/tests}]\nconfigure -tmpdir [file normalize {' \"${DERIVED_FILE_DIR}\" '}]\nconfigure -verbose [concat [configure -verbose] line]\nrunAllTests\n' | \"${TEST_RIG}\"; TEST_RIG_RESULT=$?\n[ ${TEST_RIG_RESULT} -ne 0 ] && echo \"tcltest:0: error: tcltest exited abnormally with code ${TEST_RIG_RESULT}.\"\nexit ${TEST_RIG_RESULT}\nfi";
 			showEnvVarsInLog = 0;
 		};
-		F97AF02F0B665DA900310EA2 /* ShellScript */ = {
+		F97AF02F0B665DA900310EA2 /* Build Tcl */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1933,15 +1935,16 @@
 			inputPaths = (
 				"${TARGET_TEMP_DIR}/.none",
 			);
+			name = "Build Tcl";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${EXECUTABLE_NAME}",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "if [ -e \"${TARGET_BUILD_DIR}/tclsh\" ]; then\n    mv -f \"${TARGET_BUILD_DIR}/tclsh\" \"${TARGET_BUILD_DIR}/tclsh${VERSION}\"\nfi\ngnumake -C \"${TCL_SRCROOT}/macosx\" -j \"$(sysctl -n hw.activecpu)\" \"$(echo \"${ACTION}\" | sed -e s/build// -e s/clean/distclean/ -e s/..\\*/\\&-/)${MAKE_TARGET}\" CFLAGS_WARNING=\"${WARNING_CFLAGS}\" CFLAGS_OPTIMIZE=\"-O${GCC_OPTIMIZATION_LEVEL}\" SYMROOT=\"${BUILT_PRODUCTS_DIR}\" OBJ_DIR=\"${OBJECT_FILE_DIR}\" INSTALL_ROOT=\"${DSTROOT}\" PREFIX=\"${PREFIX}\" BINDIR=\"${BINDIR}\" LIBDIR=\"${FRAMEWORK_INSTALL_PATH}\" MANDIR=\"${MANDIR}\" EXTRA_CONFIGURE_ARGS=\"${CONFIGURE_ARGS}\" ${EXTRA_MAKE_FLAGS}\nresult=$?\nif [ -e \"${TARGET_BUILD_DIR}/tclsh${VERSION}\" ]; then\n    mv -f \"${TARGET_BUILD_DIR}/tclsh${VERSION}\" \"${TARGET_BUILD_DIR}/tclsh\"\nfi\nif [ -e \"${BUILT_PRODUCTS_DIR}/tcltest\" ]; then\n\trm -f \"${BUILT_PRODUCTS_DIR}/tcltest\"\nfi\necho \"Done\"\nrm -f \"${SCRIPT_INPUT_FILE_0}\"\nexit ${result}\n";
+			shellScript = "if [ -e \"${TARGET_BUILD_DIR}/tclsh\" ]; then\n    mv -f \"${TARGET_BUILD_DIR}/tclsh\" \"${TARGET_BUILD_DIR}/tclsh${VERSION}\"\nfi\nexport CC=$(xcrun -find ${GCC} || echo ${GCC}); export LD=${CC}\ngnumake -C \"${TCL_SRCROOT}/macosx\" -j \"$(sysctl -n hw.activecpu)\" \"$(echo \"${ACTION}\" | sed -e s/build// -e s/clean/distclean/ -e s/..\\*/\\&-/)${MAKE_TARGET}\" CFLAGS_WARNING=\"${WARNING_CFLAGS}\" CFLAGS_OPTIMIZE=\"-O${GCC_OPTIMIZATION_LEVEL}\" SYMROOT=\"${BUILT_PRODUCTS_DIR}\" OBJ_DIR=\"${OBJECT_FILE_DIR}\" INSTALL_ROOT=\"${DSTROOT}\" PREFIX=\"${PREFIX}\" BINDIR=\"${BINDIR}\" LIBDIR=\"${FRAMEWORK_INSTALL_PATH}\" MANDIR=\"${MANDIR}\" EXTRA_CONFIGURE_ARGS=\"${CONFIGURE_ARGS}\" ${EXTRA_MAKE_FLAGS}\nresult=$?\nif [ -e \"${TARGET_BUILD_DIR}/tclsh${VERSION}\" ]; then\n    mv -f \"${TARGET_BUILD_DIR}/tclsh${VERSION}\" \"${TARGET_BUILD_DIR}/tclsh\"\nfi\nif [ -e \"${BUILT_PRODUCTS_DIR}/tcltest\" ]; then\n\trm -f \"${BUILT_PRODUCTS_DIR}/tcltest\"\nfi\necho \"Done\"\nrm -f \"${SCRIPT_INPUT_FILE_0}\"\nexit ${result}\n";
 			showEnvVarsInLog = 0;
 		};
-		F9A5C5F508F651A2008AE941 /* ShellScript */ = {
+		F9A5C5F508F651A2008AE941 /* Configure Tcl */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1955,12 +1958,13 @@
 				"$(TCL_SRCROOT)/unix/Makefile.in",
 				"$(TCL_SRCROOT)/unix/dltest/Makefile.in",
 			);
+			name = "Configure Tcl";
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/tcl/tclConfig.sh",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "## tcl configure shell script phase\n\ncd \"${TCL_SRCROOT}\"/macosx &&\nif [ configure.ac -nt configure -o ../unix/configure.in -nt configure -o ../unix/tcl.m4 -nt configure -o ../unix/aclocal.m4 -nt configure ]; then\n    echo \"Running autoconf & autoheader in tcl/macosx\"\n    rm -rf autom4te.cache\n    ${AUTOCONF:-${DEVELOPER_DIR}/usr/bin/autoconf} && ${AUTOHEADER:-${DEVELOPER_DIR}/usr/bin/autoheader} || exit $?\n    rm -rf autom4te.cache\nfi\n\ncd \"${DERIVED_FILE_DIR}\" && mkdir -p tcl && cd tcl &&\nif [ \"${TCL_SRCROOT}\"/macosx/configure -nt config.status ]; then\n    echo \"Configuring Tcl\"\n    \"${TCL_SRCROOT}\"/macosx/configure --cache-file=../config.cache --prefix=${PREFIX} --bindir=${BINDIR} --libdir=${LIBDIR} --mandir=${MANDIR} --includedir=${INCLUDEDIR} --disable-shared ${CONFIGURE_ARGS}\nelse\n    ./config.status\nfi\n";
+			shellScript = "## tcl configure shell script phase\n\ncd \"${TCL_SRCROOT}\"/macosx &&\nif [ configure.ac -nt configure -o ../unix/configure.in -nt configure -o ../unix/tcl.m4 -nt configure -o ../unix/aclocal.m4 -nt configure ]; then\n    echo \"Running autoconf & autoheader in tcl/macosx\"\n    rm -rf autom4te.cache\n    ${AUTOCONF:-${DEVELOPER_DIR}/usr/bin/autoconf} && ${AUTOHEADER:-${DEVELOPER_DIR}/usr/bin/autoheader} || exit $?\n    rm -rf autom4te.cache\nfi\n\ncd \"${DERIVED_FILE_DIR}\" && mkdir -p tcl && cd tcl &&\nif [ \"${TCL_SRCROOT}\"/macosx/configure -nt config.status ]; then\n    echo \"Configuring Tcl\"\n    CC=$(xcrun -find ${GCC} || echo ${GCC})\n    \"${TCL_SRCROOT}\"/macosx/configure --cache-file=../config.cache --prefix=${PREFIX} --bindir=${BINDIR} --libdir=${LIBDIR} --mandir=${MANDIR} --includedir=${INCLUDEDIR} --disable-shared CC=${CC} LD=${CC} ${CONFIGURE_ARGS}\nelse\n    ./config.status\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -2205,8 +2209,8 @@
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Tcl-Debug.xcconfig */;
 			buildSettings = {
 				ARCHS = (
-					"$(NATIVE_ARCH_32_BIT)",
 					"$(NATIVE_ARCH_64_BIT)",
+					"$(NATIVE_ARCH_32_BIT)",
 				);
 				CONFIGURE_ARGS = "$(CONFIGURE_ARGS) --enable-symbols=all";
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
@@ -2221,8 +2225,8 @@
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Tcl-Debug.xcconfig */;
 			buildSettings = {
 				ARCHS = (
-					"$(NATIVE_ARCH_32_BIT)",
 					"$(NATIVE_ARCH_64_BIT)",
+					"$(NATIVE_ARCH_32_BIT)",
 				);
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				GCC_GENERATE_TEST_COVERAGE_FILES = YES;
@@ -2321,8 +2325,8 @@
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Tcl-Debug.xcconfig */;
 			buildSettings = {
 				ARCHS = (
-					"$(NATIVE_ARCH_32_BIT)",
 					"$(NATIVE_ARCH_64_BIT)",
+					"$(NATIVE_ARCH_32_BIT)",
 				);
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
@@ -2336,8 +2340,8 @@
 			baseConfigurationReference = F97AE82B0B65C69B00310EA2 /* Tcl-Release.xcconfig */;
 			buildSettings = {
 				ARCHS = (
-					"$(NATIVE_ARCH_32_BIT)",
 					"$(NATIVE_ARCH_64_BIT)",
+					"$(NATIVE_ARCH_32_BIT)",
 				);
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
@@ -2351,8 +2355,8 @@
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Tcl-Debug.xcconfig */;
 			buildSettings = {
 				ARCHS = (
-					"$(NATIVE_ARCH_32_BIT)",
 					"$(NATIVE_ARCH_64_BIT)",
+					"$(NATIVE_ARCH_32_BIT)",
 				);
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
@@ -2448,8 +2452,8 @@
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Tcl-Debug.xcconfig */;
 			buildSettings = {
 				ARCHS = (
-					"$(NATIVE_ARCH_32_BIT)",
 					"$(NATIVE_ARCH_64_BIT)",
+					"$(NATIVE_ARCH_32_BIT)",
 				);
 				CONFIGURE_ARGS = "$(CONFIGURE_ARGS) --disable-corefoundation";
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
@@ -2490,8 +2494,8 @@
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Tcl-Debug.xcconfig */;
 			buildSettings = {
 				ARCHS = (
-					"$(NATIVE_ARCH_32_BIT)",
 					"$(NATIVE_ARCH_64_BIT)",
+					"$(NATIVE_ARCH_32_BIT)",
 				);
 				CONFIGURE_ARGS = "$(CONFIGURE_ARGS) --disable-threads --disable-corefoundation";
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
@@ -2527,31 +2531,31 @@
 			};
 			name = DebugNoCFUnthreaded;
 		};
-		F9988AB10D814C6500B6B03B /* Debug gcc42 */ = {
+		F9988AB10D814C6500B6B03B /* Debug gcc40 */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Tcl-Debug.xcconfig */;
 			buildSettings = {
 				ARCHS = (
-					"$(NATIVE_ARCH_32_BIT)",
 					"$(NATIVE_ARCH_64_BIT)",
+					"$(NATIVE_ARCH_32_BIT)",
 				);
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
-				GCC_VERSION = 4.2;
+				GCC_VERSION = 4.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 			};
-			name = "Debug gcc42";
+			name = "Debug gcc40";
 		};
-		F9988AB20D814C6500B6B03B /* Debug gcc42 */ = {
+		F9988AB20D814C6500B6B03B /* Debug gcc40 */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = tclsh;
 				SKIP_INSTALL = NO;
 			};
-			name = "Debug gcc42";
+			name = "Debug gcc40";
 		};
-		F9988AB30D814C6500B6B03B /* Debug gcc42 */ = {
+		F9988AB30D814C6500B6B03B /* Debug gcc40 */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CONFIGURE_ARGS = "tcl_cv_cc_visibility_hidden=no $(CONFIGURE_ARGS)";
@@ -2564,9 +2568,9 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				PRODUCT_NAME = tcltest;
 			};
-			name = "Debug gcc42";
+			name = "Debug gcc40";
 		};
-		F9988AB40D814C6500B6B03B /* Debug gcc42 */ = {
+		F9988AB40D814C6500B6B03B /* Debug gcc40 */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
@@ -2575,34 +2579,34 @@
 				TCL_LIBRARY = "$(TCL_SRCROOT)/library";
 				TEST_RIG = "$(OBJROOT)/$(CONFIGURATION)/tcltest";
 			};
-			name = "Debug gcc42";
+			name = "Debug gcc40";
 		};
-		F9988AB50D814C7500B6B03B /* Debug llvmgcc42 */ = {
+		F9988AB50D814C7500B6B03B /* Debug llvm-gcc */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Tcl-Debug.xcconfig */;
 			buildSettings = {
 				ARCHS = (
-					"$(NATIVE_ARCH_32_BIT)",
 					"$(NATIVE_ARCH_64_BIT)",
+					"$(NATIVE_ARCH_32_BIT)",
 				);
-				CC = "$(DEVELOPER_DIR)/usr/bin/llvm-gcc-4.2";
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
+				GCC = "llvm-gcc";
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 			};
-			name = "Debug llvmgcc42";
+			name = "Debug llvm-gcc";
 		};
-		F9988AB60D814C7500B6B03B /* Debug llvmgcc42 */ = {
+		F9988AB60D814C7500B6B03B /* Debug llvm-gcc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = tclsh;
 				SKIP_INSTALL = NO;
 			};
-			name = "Debug llvmgcc42";
+			name = "Debug llvm-gcc";
 		};
-		F9988AB70D814C7500B6B03B /* Debug llvmgcc42 */ = {
+		F9988AB70D814C7500B6B03B /* Debug llvm-gcc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CONFIGURE_ARGS = "tcl_cv_cc_visibility_hidden=no $(CONFIGURE_ARGS)";
@@ -2615,9 +2619,9 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				PRODUCT_NAME = tcltest;
 			};
-			name = "Debug llvmgcc42";
+			name = "Debug llvm-gcc";
 		};
-		F9988AB80D814C7500B6B03B /* Debug llvmgcc42 */ = {
+		F9988AB80D814C7500B6B03B /* Debug llvm-gcc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
@@ -2626,36 +2630,36 @@
 				TCL_LIBRARY = "$(TCL_SRCROOT)/library";
 				TEST_RIG = "$(OBJROOT)/$(CONFIGURATION)/tcltest";
 			};
-			name = "Debug llvmgcc42";
+			name = "Debug llvm-gcc";
 		};
-		F9988BB10D81586D00B6B03B /* ReleaseUniversal gcc42 */ = {
+		F9988BB10D81586D00B6B03B /* ReleaseUniversal gcc40 */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE82B0B65C69B00310EA2 /* Tcl-Release.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CFLAGS = "-arch i386 -arch x86_64 -arch ppc $(CFLAGS)";
-				GCC_VERSION = 4.2;
+				GCC_VERSION = 4.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PREBINDING = NO;
 			};
-			name = "ReleaseUniversal gcc42";
+			name = "ReleaseUniversal gcc40";
 		};
-		F9988BB20D81586D00B6B03B /* ReleaseUniversal gcc42 */ = {
+		F9988BB20D81586D00B6B03B /* ReleaseUniversal gcc40 */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = tclsh;
 				SKIP_INSTALL = NO;
 			};
-			name = "ReleaseUniversal gcc42";
+			name = "ReleaseUniversal gcc40";
 		};
-		F9988BB30D81586D00B6B03B /* ReleaseUniversal gcc42 */ = {
+		F9988BB30D81586D00B6B03B /* ReleaseUniversal gcc40 */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = tcltest;
 			};
-			name = "ReleaseUniversal gcc42";
+			name = "ReleaseUniversal gcc40";
 		};
-		F9988BB40D81586D00B6B03B /* ReleaseUniversal gcc42 */ = {
+		F9988BB40D81586D00B6B03B /* ReleaseUniversal gcc40 */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
@@ -2664,44 +2668,39 @@
 				TCL_LIBRARY = "$(TCL_SRCROOT)/library";
 				TEST_RIG = "$(OBJROOT)/$(CONFIGURATION)/tcltest";
 			};
-			name = "ReleaseUniversal gcc42";
+			name = "ReleaseUniversal gcc40";
 		};
-		F9988BB50D81587400B6B03B /* ReleaseUniversal llvmgcc42 */ = {
+		F9988BB50D81587400B6B03B /* ReleaseUniversal llvm-gcc */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F97AE82B0B65C69B00310EA2 /* Tcl-Release.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CC = "$(DEVELOPER_DIR)/usr/bin/llvm-gcc-4.2";
 				CFLAGS = "-arch i386 -arch x86_64 -arch ppc $(CFLAGS)";
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC = "llvm-gcc";
 				GCC_OPTIMIZATION_LEVEL = 4;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
-				OTHER_CFLAGS = (
-					"$(OTHER_CFLAGS)",
-					"-emit-llvm",
-				);
 				PREBINDING = NO;
-				TCL_CONFIGURE_ARGS = "$(TCL_CONFIGURE_ARGS) --disable-dtrace";
 			};
-			name = "ReleaseUniversal llvmgcc42";
+			name = "ReleaseUniversal llvm-gcc";
 		};
-		F9988BB60D81587400B6B03B /* ReleaseUniversal llvmgcc42 */ = {
+		F9988BB60D81587400B6B03B /* ReleaseUniversal llvm-gcc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = tclsh;
 				SKIP_INSTALL = NO;
 			};
-			name = "ReleaseUniversal llvmgcc42";
+			name = "ReleaseUniversal llvm-gcc";
 		};
-		F9988BB70D81587400B6B03B /* ReleaseUniversal llvmgcc42 */ = {
+		F9988BB70D81587400B6B03B /* ReleaseUniversal llvm-gcc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = tcltest;
 			};
-			name = "ReleaseUniversal llvmgcc42";
+			name = "ReleaseUniversal llvm-gcc";
 		};
-		F9988BB80D81587400B6B03B /* ReleaseUniversal llvmgcc42 */ = {
+		F9988BB80D81587400B6B03B /* ReleaseUniversal llvm-gcc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
@@ -2710,7 +2709,7 @@
 				TCL_LIBRARY = "$(TCL_SRCROOT)/library";
 				TEST_RIG = "$(OBJROOT)/$(CONFIGURATION)/tcltest";
 			};
-			name = "ReleaseUniversal llvmgcc42";
+			name = "ReleaseUniversal llvm-gcc";
 		};
 		F99EE73B0BE835310060D4AF /* DebugUnthreaded */ = {
 			isa = XCBuildConfiguration;
@@ -2769,8 +2768,8 @@
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Tcl-Debug.xcconfig */;
 			buildSettings = {
 				ARCHS = (
-					"$(NATIVE_ARCH_32_BIT)",
 					"$(NATIVE_ARCH_64_BIT)",
+					"$(NATIVE_ARCH_32_BIT)",
 				);
 				CONFIGURE_ARGS = "$(CONFIGURE_ARGS) --disable-threads";
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
@@ -2785,8 +2784,8 @@
 			baseConfigurationReference = F97AE8330B65C87F00310EA2 /* Tcl-Debug.xcconfig */;
 			buildSettings = {
 				ARCHS = (
-					"$(NATIVE_ARCH_32_BIT)",
 					"$(NATIVE_ARCH_64_BIT)",
+					"$(NATIVE_ARCH_32_BIT)",
 				);
 				CPPFLAGS = "-arch $(CURRENT_ARCH) $(CPPFLAGS)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2845,8 +2844,8 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F95CC8AC09158F3100EA5ACE /* Debug */,
-				F9988AB20D814C6500B6B03B /* Debug gcc42 */,
-				F9988AB60D814C7500B6B03B /* Debug llvmgcc42 */,
+				F9988AB60D814C7500B6B03B /* Debug llvm-gcc */,
+				F9988AB20D814C6500B6B03B /* Debug gcc40 */,
 				F95CC8AE09158F3100EA5ACE /* DebugNoFixAndContinue */,
 				F99EE73B0BE835310060D4AF /* DebugUnthreaded */,
 				F98751300DE7B57E00B1C9EC /* DebugNoCF */,
@@ -2857,8 +2856,8 @@
 				F97AED1B0B660B2100310EA2 /* Debug64bit */,
 				F95CC8AD09158F3100EA5ACE /* Release */,
 				F91BCC4F093152310042A6BF /* ReleaseUniversal */,
-				F9988BB20D81586D00B6B03B /* ReleaseUniversal gcc42 */,
-				F9988BB60D81587400B6B03B /* ReleaseUniversal llvmgcc42 */,
+				F9988BB60D81587400B6B03B /* ReleaseUniversal llvm-gcc */,
+				F9988BB20D81586D00B6B03B /* ReleaseUniversal gcc40 */,
 				F9EEED960C2FEFD300396116 /* ReleaseUniversal10.5SDK */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -2868,8 +2867,8 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F95CC8B109158F3100EA5ACE /* Debug */,
-				F9988AB30D814C6500B6B03B /* Debug gcc42 */,
-				F9988AB70D814C7500B6B03B /* Debug llvmgcc42 */,
+				F9988AB70D814C7500B6B03B /* Debug llvm-gcc */,
+				F9988AB30D814C6500B6B03B /* Debug gcc40 */,
 				F95CC8B309158F3100EA5ACE /* DebugNoFixAndContinue */,
 				F99EE73D0BE835310060D4AF /* DebugUnthreaded */,
 				F98751310DE7B57E00B1C9EC /* DebugNoCF */,
@@ -2880,8 +2879,8 @@
 				F97AED1C0B660B2100310EA2 /* Debug64bit */,
 				F95CC8B209158F3100EA5ACE /* Release */,
 				F91BCC50093152310042A6BF /* ReleaseUniversal */,
-				F9988BB30D81586D00B6B03B /* ReleaseUniversal gcc42 */,
-				F9988BB70D81587400B6B03B /* ReleaseUniversal llvmgcc42 */,
+				F9988BB70D81587400B6B03B /* ReleaseUniversal llvm-gcc */,
+				F9988BB30D81586D00B6B03B /* ReleaseUniversal gcc40 */,
 				F9EEED970C2FEFD300396116 /* ReleaseUniversal10.5SDK */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -2891,8 +2890,8 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F95CC8B609158F3100EA5ACE /* Debug */,
-				F9988AB10D814C6500B6B03B /* Debug gcc42 */,
-				F9988AB50D814C7500B6B03B /* Debug llvmgcc42 */,
+				F9988AB50D814C7500B6B03B /* Debug llvm-gcc */,
+				F9988AB10D814C6500B6B03B /* Debug gcc40 */,
 				F95CC8B809158F3100EA5ACE /* DebugNoFixAndContinue */,
 				F99EE7410BE835310060D4AF /* DebugUnthreaded */,
 				F987512F0DE7B57E00B1C9EC /* DebugNoCF */,
@@ -2903,8 +2902,8 @@
 				F97AED1E0B660B2100310EA2 /* Debug64bit */,
 				F95CC8B709158F3100EA5ACE /* Release */,
 				F91BCC51093152310042A6BF /* ReleaseUniversal */,
-				F9988BB10D81586D00B6B03B /* ReleaseUniversal gcc42 */,
-				F9988BB50D81587400B6B03B /* ReleaseUniversal llvmgcc42 */,
+				F9988BB50D81587400B6B03B /* ReleaseUniversal llvm-gcc */,
+				F9988BB10D81586D00B6B03B /* ReleaseUniversal gcc40 */,
 				F9EEED990C2FEFD300396116 /* ReleaseUniversal10.5SDK */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -2914,8 +2913,8 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F97258A90A86873D00096C78 /* Debug */,
-				F9988AB40D814C6500B6B03B /* Debug gcc42 */,
-				F9988AB80D814C7500B6B03B /* Debug llvmgcc42 */,
+				F9988AB80D814C7500B6B03B /* Debug llvm-gcc */,
+				F9988AB40D814C6500B6B03B /* Debug gcc40 */,
 				F97258AB0A86873D00096C78 /* DebugNoFixAndContinue */,
 				F99EE73F0BE835310060D4AF /* DebugUnthreaded */,
 				F98751320DE7B57E00B1C9EC /* DebugNoCF */,
@@ -2926,8 +2925,8 @@
 				F97AED1D0B660B2100310EA2 /* Debug64bit */,
 				F97258AA0A86873D00096C78 /* Release */,
 				F97258AC0A86873D00096C78 /* ReleaseUniversal */,
-				F9988BB40D81586D00B6B03B /* ReleaseUniversal gcc42 */,
-				F9988BB80D81587400B6B03B /* ReleaseUniversal llvmgcc42 */,
+				F9988BB80D81587400B6B03B /* ReleaseUniversal llvm-gcc */,
+				F9988BB40D81586D00B6B03B /* ReleaseUniversal gcc40 */,
 				F9EEED980C2FEFD300396116 /* ReleaseUniversal10.5SDK */,
 			);
 			defaultConfigurationIsVisible = 0;
