@@ -238,9 +238,10 @@ These have the following targets:
 The following build configurations are available:
 	Debug:			    debug build for the active architecture,
 				    with Fix & Continue enabled.
-	Debug gcc42:		    use gcc 4.2 compiler.
-	Debug gcc42 nogc:	    disable Objective-C garbage collection.
-	Debug llvmgcc42:	    use llvm-gcc 4.2 compiler.
+	Debug clang:		    use clang compiler.
+	Debug llvm-gcc:		    use llvm-gcc compiler.
+	Debug gcc40:		    use gcc 4.0 compiler.
+	DebugNoGC:		    disable Objective-C garbage collection.
 	DebugNoFixAndContinue:      disable Fix & Continue.
 	DebugUnthreaded:	    disable threading.
 	DebugNoCF:		    disable corefoundation (X11 only).
@@ -252,8 +253,9 @@ The following build configurations are available:
 				    building on a 64bit capable processor).
 	Release:		    release build for the active architecture.
 	ReleaseUniversal:	    32/64-bit universal build.
-	ReleaseUniversal gcc42:     use gcc 4.2 compiler.
-	ReleaseUniversal llvmgcc42: use llvm-gcc 4.2 compiler.
+	ReleaseUniversal clang:	    use clang compiler.
+	ReleaseUniversal llvm-gcc:  use llvm-gcc compiler.
+	ReleaseUniversal gcc40:	    use gcc 4.0 compiler.
 	ReleaseUniversal10.5SDK:    build against the 10.5 SDK (with 10.5
 				    deployment target).
 	Note that the non-SDK configurations have their deployment target set to

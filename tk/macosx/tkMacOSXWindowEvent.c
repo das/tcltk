@@ -197,7 +197,7 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
     observe(NSWindowDidOrderOnScreenNotification, windowBecameVisible:);
     observe(NSWindowDidOrderOffScreenNotification, windowUnmapped:);
 #endif
-#undef observe(n, s)
+#undef observe
 }
 @end
 

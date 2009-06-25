@@ -81,7 +81,7 @@ static void keyboardChanged(CFNotificationCenterRef center, void *observer, CFSt
     observe(NSApplicationDidHideNotification, applicationShowHide:);
     observe(NSApplicationDidChangeScreenParametersNotification, displayChanged:);
     observe(NSTextInputContextKeyboardSelectionDidChangeNotification, keyboardChanged:);
-#undef observe(n, s)
+#undef observe
 #if MAC_OS_X_VERSION_MIN_REQUIRED < 1060
     CFNotificationCenterAddObserver(CFNotificationCenterGetDistributedCenter(), NULL, &keyboardChanged, kTISNotifySelectedKeyboardInputSourceChanged, NULL, CFNotificationSuspensionBehaviorCoalesce);
 #endif
