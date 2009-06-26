@@ -342,7 +342,7 @@ TkMacOSXProcessMouseEvent(
 	}
 	break;
     }
-    case inGrow:
+    case inGrow: {
 	/*
 	 * Generally the content region is the domain of Tk sub-windows.
 	 * However, one exception is the grow region. A button down in this
@@ -350,10 +350,12 @@ TkMacOSXProcessMouseEvent(
 	 * Tk may not get button down events in this area!
 	 */
 
-	if (TkMacOSXGrowToplevel(medPtr->whichWin, where) == true) {
+	XPoint p = {where.h, where.v};
+	if (TkMacOSXGrowToplevel(medPtr->whichWin, p) == true) {
 	    statusPtr->stopProcessing = 1;
 	    return true;
 	}
+    }
     case inContent:
 	return GenerateButtonEvent(medPtr);
     }
