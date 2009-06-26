@@ -1,6 +1,7 @@
 tcl/macosx/configure
 tcl/unix/tclConfig.h.in~
 tk/macosx/configure
+tk/carbon/configure
 tk/unix/tkConfig.h.in~
 tk/doc/man.macros
 build*/
