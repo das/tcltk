@@ -284,6 +284,12 @@ LD_SEARCH_FLAGS	= @LD_SEARCH_FLAGS@
 # support for embedded libraries on Darwin / Mac OS X
 DYLIB_INSTALL_DIR	= ${LIB_RUNTIME_DIR}
 
+# support for building the Aqua resource file
+TK_RSRC_FILE		= @TK_RSRC_FILE@
+WISH_RSRC_FILE		= @WISH_RSRC_FILE@
+REZ			= @REZ@
+REZ_SWITCHES = @REZ_FLAGS@ -i $(GENERIC_DIR) -i $(TCL_GENERIC_DIR)
+
 # support for Xft:
 XFT_CFLAGS		= @XFT_CFLAGS@
 XFT_LIBS		= @XFT_LIBS@
@@ -529,6 +535,12 @@ AQUA_SRCS = \
 
 SRCS = $(GENERIC_SRCS) $(@TK_WINDOWINGSYSTEM@_SRCS) @PLAT_SRCS@
 
+AQUA_RESOURCES = \
+	$(MAC_OSX_DIR)/tkAboutDlg.r $(MAC_OSX_DIR)/tkMacOSXCursors.r \
+	$(MAC_OSX_DIR)/tkMacOSXXCursors.r
+
+AQUA_WISH_RESOURCES = $(MAC_OSX_DIR)/tkMacOSXAETE.r
+
 AQUA_HDRS = $(MAC_OSX_DIR)/tkMacOSX.h $(GENERIC_DIR)/tkIntXlibDecls.h
 
 AQUA_XLIB_HDRS = $(XLIB_DIR)/X11/*.h $(XLIB_DIR)/xbytes.h
@@ -577,6 +589,17 @@ ${LIB_FILE}: ${OBJS} ${STUB_LIB_FILE} @LIB_RSRC_FILE@
 ${STUB_LIB_FILE}: ${STUB_LIB_OBJS}
 	rm -f $@
 	@MAKE_STUB_LIB@
+
+# Build Aqua resource files
+${TK_RSRC_FILE}: $(AQUA_RESOURCES)
+	rm -f $@
+	if test "$(REZ)" != ""; then \
+	    $(REZ) -o $@ $(REZ_SWITCHES) $(AQUA_RESOURCES); fi
+
+${WISH_RSRC_FILE}: $(AQUA_WISH_RESOURCES)
+	rm -f $@
+	if test "$(REZ)" != ""; then \
+	    $(REZ) -o $@ $(REZ_SWITCHES) $(AQUA_WISH_RESOURCES); fi
 
 # Make target which outputs the list of the .o contained in the Tk lib
 # usefull to build a single big shared library containing Tcl/Tk and other
