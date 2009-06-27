@@ -552,6 +552,22 @@ declare 176 generic {
     char *TkPixelPrintProc(ClientData clientData, Tk_Window tkwin,
 	    char *widgRec, int offset, Tcl_FreeProc **freeProcPtr)
 }
+declare 177 generic {
+    int TkOrientParseProc(ClientData clientData, Tcl_Interp *interp,
+	    Tk_Window tkwin, CONST char *value, char *widgRec, int offset)
+}
+declare 178 generic {
+    char *TkOrientPrintProc(ClientData clientData, Tk_Window tkwin,
+	    char *widgRec, int offset, Tcl_FreeProc **freeProcPtr)
+}
+declare 179 generic {
+    int TkSmoothParseProc(ClientData clientData, Tcl_Interp *interp,
+	    Tk_Window tkwin, CONST char *value, char *widgRec, int offset)
+}
+declare 180 generic {
+    char *TkSmoothPrintProc(ClientData clientData, Tk_Window tkwin,
+	    char *widgRec, int offset, Tcl_FreeProc **freeProcPtr)
+}
 
 ##############################################################################
 
