@@ -1,5 +1,5 @@
 //
-// Wish-Debug.xcconfig --
+// Tk-Debug.xcconfig --
 //
 //	This file contains the Xcode build settings for all Debug
 //	project configurations in Wish.xcodeproj.
@@ -12,7 +12,7 @@
 // RCS: @(#) $Id$
 //
 
-#include "Wish-Common.xcconfig"
+#include "Tk-Common.xcconfig"
 
 DEBUG_INFORMATION_FORMAT = dwarf
 DEPLOYMENT_POSTPROCESSING = NO

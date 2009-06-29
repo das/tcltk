@@ -39,8 +39,7 @@ extern "C" {
  * unix/configure.in	(2 LOC Major, 2 LOC minor, 1 LOC patch)
  * win/configure.in	(as above)
  * README		(sections 0 and 1)
- * macosx/Wish.xcode/project.pbxproj (not patchlevel) 1 LOC
- * macosx/Wish-Common.xcconfig (not patchlevel) 1 LOC
+ * macosx/Tk-Common.xcconfig (not patchlevel) 1 LOC
  * win/README		(not patchlevel)
  * unix/README		(not patchlevel)
  * unix/tk.spec		(1 LOC patch)
