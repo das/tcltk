@@ -283,7 +283,7 @@ GetThemeColor(
 int
 TkSetMacColor(
     unsigned long pixel,		/* Pixel value to convert. */
-    RGBColor *macColor)			/* Mac color struct to modify. */
+    void *macColor)			/* Mac color struct to modify. */
 {
     OSStatus err = -1;
     ThemeBrush brush;
