@@ -334,6 +334,10 @@ TkIntStubs tkIntStubs = {
     TkOffsetPrintProc, /* 174 */
     TkPixelParseProc, /* 175 */
     TkPixelPrintProc, /* 176 */
+    TkOrientParseProc, /* 177 */
+    TkOrientPrintProc, /* 178 */
+    TkSmoothParseProc, /* 179 */
+    TkSmoothPrintProc, /* 180 */
 };
 
 TkIntPlatStubs tkIntPlatStubs = {

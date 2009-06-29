@@ -1029,6 +1029,36 @@ EXTERN char *		TkPixelPrintProc (ClientData clientData,
 				Tk_Window tkwin, char * widgRec, int offset, 
 				Tcl_FreeProc ** freeProcPtr);
 #endif
+#ifndef TkOrientParseProc_TCL_DECLARED
+#define TkOrientParseProc_TCL_DECLARED
+/* 177 */
+EXTERN int		TkOrientParseProc (ClientData clientData, 
+				Tcl_Interp * interp, Tk_Window tkwin, 
+				CONST char * value, char * widgRec, 
+				int offset);
+#endif
+#ifndef TkOrientPrintProc_TCL_DECLARED
+#define TkOrientPrintProc_TCL_DECLARED
+/* 178 */
+EXTERN char *		TkOrientPrintProc (ClientData clientData, 
+				Tk_Window tkwin, char * widgRec, int offset, 
+				Tcl_FreeProc ** freeProcPtr);
+#endif
+#ifndef TkSmoothParseProc_TCL_DECLARED
+#define TkSmoothParseProc_TCL_DECLARED
+/* 179 */
+EXTERN int		TkSmoothParseProc (ClientData clientData, 
+				Tcl_Interp * interp, Tk_Window tkwin, 
+				CONST char * value, char * widgRec, 
+				int offset);
+#endif
+#ifndef TkSmoothPrintProc_TCL_DECLARED
+#define TkSmoothPrintProc_TCL_DECLARED
+/* 180 */
+EXTERN char *		TkSmoothPrintProc (ClientData clientData, 
+				Tk_Window tkwin, char * widgRec, int offset, 
+				Tcl_FreeProc ** freeProcPtr);
+#endif
 
 typedef struct TkIntStubs {
     int magic;
@@ -1310,6 +1340,10 @@ typedef struct TkIntStubs {
     char * (*tkOffsetPrintProc) (ClientData clientData, Tk_Window tkwin, char * widgRec, int offset, Tcl_FreeProc ** freeProcPtr); /* 174 */
     int (*tkPixelParseProc) (ClientData clientData, Tcl_Interp * interp, Tk_Window tkwin, const char * value, char * widgRec, int offset); /* 175 */
     char * (*tkPixelPrintProc) (ClientData clientData, Tk_Window tkwin, char * widgRec, int offset, Tcl_FreeProc ** freeProcPtr); /* 176 */
+    int (*tkOrientParseProc) (ClientData clientData, Tcl_Interp * interp, Tk_Window tkwin, CONST char * value, char * widgRec, int offset); /* 177 */
+    char * (*tkOrientPrintProc) (ClientData clientData, Tk_Window tkwin, char * widgRec, int offset, Tcl_FreeProc ** freeProcPtr); /* 178 */
+    int (*tkSmoothParseProc) (ClientData clientData, Tcl_Interp * interp, Tk_Window tkwin, CONST char * value, char * widgRec, int offset); /* 179 */
+    char * (*tkSmoothPrintProc) (ClientData clientData, Tk_Window tkwin, char * widgRec, int offset, Tcl_FreeProc ** freeProcPtr); /* 180 */
 } TkIntStubs;
 
 #ifdef __cplusplus
@@ -2028,6 +2062,22 @@ extern TkIntStubs *tkIntStubsPtr;
 #ifndef TkPixelPrintProc
 #define TkPixelPrintProc \
 	(tkIntStubsPtr->tkPixelPrintProc) /* 176 */
+#endif
+#ifndef TkOrientParseProc
+#define TkOrientParseProc \
+	(tkIntStubsPtr->tkOrientParseProc) /* 177 */
+#endif
+#ifndef TkOrientPrintProc
+#define TkOrientPrintProc \
+	(tkIntStubsPtr->tkOrientPrintProc) /* 178 */
+#endif
+#ifndef TkSmoothParseProc
+#define TkSmoothParseProc \
+	(tkIntStubsPtr->tkSmoothParseProc) /* 179 */
+#endif
+#ifndef TkSmoothPrintProc
+#define TkSmoothPrintProc \
+	(tkIntStubsPtr->tkSmoothPrintProc) /* 180 */
 #endif
 
 #endif /* defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS) */
