@@ -103,6 +103,14 @@ typedef struct {
 MODULE_SCOPE TkMacOSXEmbedHandler *tkMacOSXEmbedHandler;
 
 /*
+ * Defines for zero-sized GC cache
+ */
+
+typedef struct {} TkpGCCache;
+#define TkpInitGCCache(gc)
+#define TkpFreeGCCache(gc)
+
+/*
  * Defines used for TkMacOSXInvalidateWindow
  */
 
