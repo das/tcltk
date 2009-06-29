@@ -574,7 +574,7 @@ declare 169 generic {
 	    Tk_Window tkwin, const char *value, char *widgRec, int offset)
 }
 declare 170 generic {
-    const char *TkStatePrintProc(ClientData clientData, Tk_Window tkwin,
+    CONST86 char *TkStatePrintProc(ClientData clientData, Tk_Window tkwin,
 	    char *widgRec, int offset, Tcl_FreeProc **freeProcPtr)
 }
 declare 171 generic {
@@ -582,7 +582,7 @@ declare 171 generic {
 	    Tk_Window tkwin, const char *value, char *widgRec, int offset)
 }
 declare 172 generic {
-    const char *TkCanvasDashPrintProc(ClientData clientData, Tk_Window tkwin,
+    CONST86 char *TkCanvasDashPrintProc(ClientData clientData, Tk_Window tkwin,
 	    char *widgRec, int offset, Tcl_FreeProc **freeProcPtr)
 }
 declare 173 generic {
@@ -590,7 +590,7 @@ declare 173 generic {
 	    Tk_Window tkwin, const char *value, char *widgRec, int offset)
 }
 declare 174 generic {
-    const char *TkOffsetPrintProc(ClientData clientData, Tk_Window tkwin,
+    CONST86 char *TkOffsetPrintProc(ClientData clientData, Tk_Window tkwin,
 	    char *widgRec, int offset, Tcl_FreeProc **freeProcPtr)
 }
 declare 175 generic {
@@ -598,7 +598,7 @@ declare 175 generic {
 	    Tk_Window tkwin, const char *value, char *widgRec, int offset)
 }
 declare 176 generic {
-    const char *TkPixelPrintProc(ClientData clientData, Tk_Window tkwin,
+    CONST86 char *TkPixelPrintProc(ClientData clientData, Tk_Window tkwin,
 	    char *widgRec, int offset, Tcl_FreeProc **freeProcPtr)
 }
 declare 177 generic {
@@ -606,7 +606,15 @@ declare 177 generic {
 	    Tk_Window tkwin, const char *value, char *widgRec, int offset)
 }
 declare 178 generic {
-    const char *TkOrientPrintProc(ClientData clientData, Tk_Window tkwin,
+    CONST86 char *TkOrientPrintProc(ClientData clientData, Tk_Window tkwin,
+	    char *widgRec, int offset, Tcl_FreeProc **freeProcPtr)
+}
+declare 179 generic {
+    int TkSmoothParseProc(ClientData clientData, Tcl_Interp *interp,
+	    Tk_Window tkwin, const char *value, char *widgRec, int offset)
+}
+declare 180 generic {
+    CONST86 char *TkSmoothPrintProc(ClientData clientData, Tk_Window tkwin,
 	    char *widgRec, int offset, Tcl_FreeProc **freeProcPtr)
 }
 
