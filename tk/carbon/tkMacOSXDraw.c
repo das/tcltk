@@ -1500,7 +1500,7 @@ TkScrollWindow(
 void
 TkMacOSXSetUpGraphicsPort(
     GC gc,			/* GC to apply to current port. */
-    GWorldPtr destPort)
+    void *destPort)
 {
     CGrafPtr savePort;
     Boolean portChanged;
@@ -1992,7 +1992,7 @@ NoQDClip(
  *----------------------------------------------------------------------
  */
 
-BitMapPtr
+void *
 TkMacOSXMakeStippleMap(
     Drawable drawable,		/* Window to apply stipple. */
     Drawable stipple)		/* The stipple pattern. */
