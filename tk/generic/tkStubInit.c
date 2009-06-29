@@ -330,6 +330,8 @@ static const TkIntStubs tkIntStubs = {
     TkPixelPrintProc, /* 176 */
     TkOrientParseProc, /* 177 */
     TkOrientPrintProc, /* 178 */
+    TkSmoothParseProc, /* 179 */
+    TkSmoothPrintProc, /* 180 */
 };
 
 static const TkIntPlatStubs tkIntPlatStubs = {
