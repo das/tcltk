@@ -419,7 +419,12 @@ Tk_Grab(
     }
 
     Tk_MakeWindowExist(tkwin);
-    if (!grabGlobal) {
+#ifndef MAC_OSX_TK
+    if (!grabGlobal)
+#else
+    if (0)
+#endif
+    {
 	Window dummy1, dummy2;
 	int dummy3, dummy4, dummy5, dummy6;
 	unsigned int state;

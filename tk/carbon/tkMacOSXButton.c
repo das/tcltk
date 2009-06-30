@@ -191,7 +191,7 @@ TkpDisplayButton(
     Boolean portChanged;
     Pixmap pixmap;
     int width, height, fullWidth, fullHeight, textXOffset, textYOffset;
-    int borderWidth, wasUsingControl;
+    int borderWidth = 0, wasUsingControl;
     int haveImage = 0, haveText = 0, imageWidth = 0, imageHeight = 0;
     int imageXOffset = 0, imageYOffset = 0; /* image information that will
 					     * be used to restrict disabled

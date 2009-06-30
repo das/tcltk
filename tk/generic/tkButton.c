@@ -1800,9 +1800,15 @@ ButtonSelectImageProc(
 {
     register TkButton *butPtr = clientData;
 
+#ifdef MAC_OSX_TK
+    if (butPtr->tkwin != NULL) {
+	TkpComputeButtonGeometry(butPtr);
+    }
+#else
     /*
      * Don't recompute geometry: it's controlled by the primary image.
      */
+#endif
 
     if ((butPtr->flags & SELECTED) && (butPtr->tkwin != NULL)
 	    && Tk_IsMapped(butPtr->tkwin)
@@ -1841,9 +1847,15 @@ ButtonTristateImageProc(
 {
     register TkButton *butPtr = clientData;
 
+#ifdef MAC_OSX_TK
+    if (butPtr->tkwin != NULL) {
+	TkpComputeButtonGeometry(butPtr);
+    }
+#else
     /*
      * Don't recompute geometry: it's controlled by the primary image.
      */
+#endif
 
     if ((butPtr->flags & TRISTATED) && (butPtr->tkwin != NULL)
 	    && Tk_IsMapped(butPtr->tkwin)

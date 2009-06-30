@@ -117,6 +117,11 @@ proc ::tk::ConsoleInit {} {
     AmpMenuArgs .menubar.edit add command -label [mc "&Decrease Font Size"] \
         -accel "$mod+-" -command {event generate .console <<Console_FontSizeDecr>>}
 
+    if {[tk windowingsystem] eq "aqua"} {
+	.menubar add cascade -label [mc Window] -menu [menu .menubar.window]
+	.menubar add cascade -label [mc Help] -menu [menu .menubar.help]
+    }
+
     . configure -menu .menubar
 
     # See if we can find a better font than the TkFixedFont
