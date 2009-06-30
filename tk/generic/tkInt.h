@@ -982,6 +982,20 @@ MODULE_SCOPE Tcl_HashTable	tkPredefBitmapTable;
 #endif
 
 /*
+ * Macros for clang static analyzer
+ */
+
+#if defined(PURIFY) && defined(__clang__) && !defined(CLANG_ASSERT)
+#include <assert.h>
+#define CLANG_ASSERT(x) assert(x)
+#define Tcl_PanicEx Tcl_Panic
+#undef Tcl_Panic
+#define Tcl_Panic(f, ...) Tcl_PanicEx(f,##__VA_ARGS__); CLANG_ASSERT(0)
+#elif !defined(CLANG_ASSERT)
+#define CLANG_ASSERT(x)
+#endif
+
+/*
  * The following magic value is stored in the "send_event" field of FocusIn
  * and FocusOut events. This allows us to separate "real" events coming from
  * the server from those that we generated.

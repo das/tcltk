@@ -337,7 +337,11 @@ TkImgPhotoGet(
     }
     XFree((char *) visInfoPtr);
 
-    sprintf(buf, ((mono) ? "%d": "%d/%d/%d"), nRed, nGreen, nBlue);
+    if (mono) {
+	sprintf(buf, "%d", nRed);
+    } else {
+	sprintf(buf, "%d/%d/%d", nRed, nGreen, nBlue);
+    }
     instancePtr->defaultPalette = Tk_GetUid(buf);
 
     /*
