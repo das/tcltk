@@ -134,7 +134,7 @@ static const short alertNativeButtonIndexAndTypeToButtonIndex[][3] = {
 #pragma mark TKApplication(TKDialog)
 
 @interface NSColorPanel(TKDialog)
-- (void)_setUseModalAppearance:(BOOL)flag;
+- (void) _setUseModalAppearance: (BOOL) flag;
 @end
 
 @implementation TKApplication(TKDialog)

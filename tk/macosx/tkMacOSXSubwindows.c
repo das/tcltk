@@ -1344,7 +1344,7 @@ Tk_FreePixmap(
 
 /*
  * Local Variables:
- * mode: c
+ * mode: objc
  * c-basic-offset: 4
  * fill-column: 79
  * coding: utf-8
