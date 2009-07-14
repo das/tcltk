@@ -122,7 +122,8 @@ static int	KeycodeToUnicode(UniChar * uniChars, int maxChars,
 #pragma mark TKApplication(TKKeyboard)
 
 @implementation TKApplication(TKKeyboard)
-- (void)keyboardChanged:(NSNotification *)notification {
+- (void) keyboardChanged: (NSNotification *) notification
+{
 #ifdef TK_MAC_DEBUG_NOTIFICATIONS
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, notification);
 #endif
@@ -906,7 +907,7 @@ TkpInitKeymapInfo(
 
 /*
  * Local Variables:
- * mode: c
+ * mode: objc
  * c-basic-offset: 4
  * fill-column: 79
  * coding: utf-8

@@ -1,3 +1,132 @@
+2009-07-14  Kevin B. Kenny  <kennykb@acm.org>
+
+	* generic/tclInt.h (TclNRSwitchObjCmd):
+	* generic/tclBasic.c (builtInCmds):
+	* generic/tclCmdMZ.c (Tcl_SwitchObjCmd):
+	* tests/switch.test (switch-15.1):
+	Make non-bytecoded [switch] command aware of NRE. [Bug 2821401]
+	
+2009-07-13  Andreas Kupries  <andreask@activestate.com>
+
+	* generic/tclCompile.c (TclInitCompileEnv, EnterCmdWordIndex,
+	TclCleanupByteCode, TclCompileScript):
+	* generic/tclExecute.c (TclCompileObj, TclExecuteByteCode): 
+	* tclCompile.h (ExtCmdLoc): 
+	* tclInt.h (ExtIndex, CFWordBC, CmdFrame):
+	* tclBasic.c (DeleteInterpProc, TclArgumentBCEnter,
+	TclArgumentBCRelease, TclArgumentGet, SAVE_CONTEXT,
+	RESTORE_CONTEXT, NRCoroutineExitCallback, TclNRCoroutineObjCmd):
+	* generic/tclCmdAH.c (TclNRForObjCmd, TclNRForIterCallback,
+	ForNextCallback):
+	* generic/tclCmdMZ.c (TclNRWhileObjCmd):
+
+	Extended the bytecode compiler initialization to recognize the
+	compilation of whole files (NRE enabled 'source' command) and
+	switch to the counting of absolute lines in that case.
+
+	Further extended the bytecode compiler to track the start line in
+	the generated information, and modified the bytecode execution to
+	recompile an object if the location as per the calling context
+	doesn't match the location saved in the bytecode. This part could
+	be optimized more by using more memory to keep all possibilities
+	which occur around, or by just adjusting the location information
+	instead of a total recompile.
+
+	Reworked the handling of literal command arguments in bytecode to
+	be saved (compiler) and used (execution) per command (See the
+	TCL_INVOKE_STK* instructions), and not per the whole bytecode.
+	This, and the previous change remove the problems with location
+	data caused by literal sharing (across whole files, but also proc
+	bodies). Simplified the associated datastructures (ExtIndex is
+	gone, as is the function EnterCmdWordIndex).
+
+	The last change causes the hashtable 'lineLABCPtr' to be state
+	which has to be kept per coroutine, like the CmdFrame stack.
+	Reworked the coroutine support code to create, delete and switch
+	the information as needed. Further reworked the tailcall command
+	as well, it has to pop its own arguments when run in a bytecode
+	context to keep a proper stack in 'lineLABCPtr'.
+
+	Fixed the mishandling of line information in the NRE-enabled 'for'
+	and 'while' commands introduced when both were made to share their
+	iteration callbacks without taking into account that the loop body
+	is found in different words of the command. Introduced a separate
+	data structure to hold all the callback information, as we went
+	over the limit of 4 direct client-data values for NRE callbacks.
+
+	The above fixes [Bug 1605269].
+
+2009-07-12  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tclCmdMZ.c (StringIndexCmd, StringEqualCmd, StringCmpCmd):
+	* generic/tclExecute.c (TclExecuteByteCode): [Bug 2637173]: Factor out
+	* generic/tclInt.h (TclIsPureByteArray):     the code to determine if
+	* generic/tclUtil.c (TclStringMatchObj):     it is safe to work with
+	byte arrays directly, so that we get the check correct _once_.
+
+	* generic/tclOOCall.c (TclOOGetCallContext): [Bug 1895546]: Changed
+	* generic/tclOO.c (TclOOObjectCmdCore):	     the way that the cache is
+	managed so that when itcl does cunning things, those cunning things
+	can be cached properly.
+
+2009-07-11  Donal K. Fellows  <dkf@users.sf.net>
+
+	* doc/vwait.n: Substantially increased the discussion of issues and
+	work-arounds relating to nested vwaits, following discussion on the
+	tcl-core mailing list on the topic.
+
+2009-07-10  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* tests/zlib.test:   ZlibTransformClose may be called with a NULL
+	* generic/tclZlib.c: interpreter during finalization and
+	Tcl_SetChannelError requires a list. Added some tests to ensure
+	error propagation from the zlib library to the interp.
+
+2009-07-09  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* tests/zlib.test: [Bug 2818131]: Added tests and fixed a typo that
+	broke [zlib push] for deflate format.
+
+2009-07-09  Donal K. Fellows  <dkf@users.sf.net>
+
+	* compat/mkstemp.c (mkstemp): [Bug 2819227]: Use rand() for random
+	numbers as it is more portable.
+
+2009-07-05  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tclZlib.c (ZlibTransformWatch): Correct the handling of
+	events so that channel transforms work with things like an asynch
+	[chan copy]. Problem reported by Pat Thoyts.
+
+2009-07-01  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* win/tclWinInt.h:   [Bug 2806622]: Handle the GetUserName API call
+	* win/tclWin32Dll.c: via the tclWinProcs indirection structure. This
+	* win/tclWinInit.c:  fixes a problem obtaining the username when the
+	USERNAME environment variable is unset.
+
+2009-06-30  Daniel Steffen  <das@users.sourceforge.net>
+
+	* generic/tclInt.h:		Add assert macros for clang static
+	* generic/tclPanic.c:		analyzer and redefine Tcl_Panic to
+	* generic/tclStubInit.c:	assert after panic in clang PURIFY
+					builds.
+
+	* generic/tclCmdIL.c:		Add clang assert for false positive
+					from static analyzer.
+
+2009-06-26  Daniel Steffen  <das@users.sourceforge.net>
+
+	* macosx/Tcl-Common.xcconfig:	 Update projects for Xcode 3.1 and
+	* macosx/Tcl.xcode/*:		 3.2, standardize on gcc 4.2, remove
+	* macosx/Tcl.xcodeproj/*:	 obsolete configurations and pre-Xcode
+	* macosx/Tcl.pbproj/* (removed): project.
+
+	* macosx/README:		 Update project docs, cleanup.
+
+	* unix/Makefile.in:		 Update dist target for project
+					 changes.
+
 2009-06-24  Donal K. Fellows  <dkf@users.sf.net>
 
 	* tests/oo.test (oo-19.1): [Bug 2811598]: Make more resilient.

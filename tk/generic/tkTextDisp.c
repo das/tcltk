@@ -6721,10 +6721,10 @@ DlineXOfIndex(
 				 * coordinate. */
 {
     register TkTextDispChunk *chunkPtr = dlPtr->chunkPtr;
-    int x;
+    int x = 0;
 
     if (byteIndex == 0 || chunkPtr == NULL) {
-	return 0;
+	return x;
     }
 
     /*
