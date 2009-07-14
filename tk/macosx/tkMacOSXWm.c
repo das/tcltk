@@ -321,7 +321,7 @@ static void		RemapWindows(TkWindow *winPtr,
 
 #if MAC_OS_X_VERSION_MIN_REQUIRED < 1060
 @interface NSWindow(TkWm)
-- (void)setCanCycle:(BOOL)canCycleFlag;
+- (void) setCanCycle: (BOOL) canCycleFlag;
 @end
 #endif
 
@@ -335,7 +335,8 @@ static void		RemapWindows(TkWindow *winPtr,
 @end
 
 @implementation TKWindow(TKWm)
-- (BOOL)canBecomeKeyWindow {
+- (BOOL) canBecomeKeyWindow
+{
     TkWindow *winPtr = TkMacOSXGetTkWindow(self);
 
     return (winPtr && winPtr->wmInfoPtr && (winPtr->wmInfoPtr->macClass ==
@@ -6491,7 +6492,7 @@ RemapWindows(
 
 /*
  * Local Variables:
- * mode: c
+ * mode: objc
  * c-basic-offset: 4
  * fill-column: 79
  * coding: utf-8

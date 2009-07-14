@@ -1435,6 +1435,7 @@ Tk_RestoreSavedOptions(
 	if (specPtr->internalOffset >= 0) {
 	    register char *ptr = (char *) &savePtr->items[i].internalForm;
 
+	    CLANG_ASSERT(internalPtr);
 	    switch (specPtr->type) {
 	    case TK_OPTION_BOOLEAN:
 		*((int *) internalPtr) = *((int *) ptr);
