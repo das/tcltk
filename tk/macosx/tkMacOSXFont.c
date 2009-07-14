@@ -93,9 +93,9 @@ static void DrawCharsInContext(Display *display, Drawable drawable, GC gc,
 	int rangeLength, int x, int y, double angle);
 
 @interface NSFont(TKFont)
-- (NSFont *)bestMatchingFontForCharacters:(const UTF16Char *)characters
-	length:(NSUInteger)length attributes:(NSDictionary *)attributes
-	actualCoveredLength:(NSUInteger *)coveredLength;
+- (NSFont *) bestMatchingFontForCharacters: (const UTF16Char *) characters
+	length: (NSUInteger) length attributes: (NSDictionary *) attributes
+	actualCoveredLength: (NSUInteger *) coveredLength;
 @end
 
 #pragma mark -
@@ -1278,7 +1278,7 @@ TkMacOSXUseAntialiasedText(
 
 /*
  * Local Variables:
- * mode: c
+ * mode: objc
  * c-basic-offset: 4
  * fill-column: 79
  * coding: utf-8
