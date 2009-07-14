@@ -982,6 +982,20 @@ MODULE_SCOPE Tcl_HashTable	tkPredefBitmapTable;
 #endif
 
 /*
+ * Macros for clang static analyzer
+ */
+
+#if defined(PURIFY) && defined(__clang__) && !defined(CLANG_ASSERT)
+#include <assert.h>
+#define CLANG_ASSERT(x) assert(x)
+#define TclPanic Tcl_Panic
+#undef Tcl_Panic
+#define Tcl_Panic(f, ...) do { TclPanic(f,##__VA_ARGS__); CLANG_ASSERT(0); } while(0)
+#elif !defined(CLANG_ASSERT)
+#define CLANG_ASSERT(x)
+#endif
+
+/*
  * The following magic value is stored in the "send_event" field of FocusIn
  * and FocusOut events. This allows us to separate "real" events coming from
  * the server from those that we generated.
@@ -1221,7 +1235,7 @@ MODULE_SCOPE int	TkBackgroundEvalObjv(Tcl_Interp *interp,
 			    int objc, Tcl_Obj *const *objv, int flags);
 MODULE_SCOPE void	TkSendVirtualEvent(Tk_Window tgtWin, const char *eventName);
 MODULE_SCOPE Tcl_Command TkMakeEnsemble(Tcl_Interp *interp,
-			    const char *namespace, const char *name,
+			    const char *nsname, const char *name,
 			    ClientData clientData, const TkEnsemble *map);
 MODULE_SCOPE int	TkInitTkCmd(Tcl_Interp *interp,
 			    ClientData clientData);

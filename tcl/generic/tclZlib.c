@@ -83,6 +83,7 @@ typedef struct {
  */
 
 typedef struct {
+    Tcl_Channel chan;		/* Reference to the channel itself. */
     Tcl_Channel parent;		/* The underlying source and sink of bytes. */
     int flags;			/* General flag bits, see below... */
     int mode;			/* Either the value TCL_ZLIB_STREAM_DEFLATE
@@ -100,6 +101,7 @@ typedef struct {
 				 * decompressing a gzip stream. */
     GzipHeader outHeader;	/* Header to write to an output stream, when
 				 * compressing a gzip stream. */
+    Tcl_TimerToken timer;	/* Timer used for keeping events fresh. */
 } ZlibChannelData;
 
 /*
@@ -122,29 +124,38 @@ typedef struct {
 #define DEFAULT_BUFFER_SIZE	4096
 
 /*
+ * Time to wait (in milliseconds) before flushing the channel when reading
+ * data through the transform.
+ */
+
+#define TRANSFORM_FLUSH_DELAY	5
+
+/*
  * Prototypes for private procedures defined later in this file:
  */
 
-static int		ChanClose(ClientData instanceData,
+static int		ZlibTransformClose(ClientData instanceData,
 			    Tcl_Interp *interp);
-static int		ChanInput(ClientData instanceData, char *buf,
+static int		ZlibTransformInput(ClientData instanceData, char *buf,
 			    int toRead, int *errorCodePtr);
-static int		ChanOutput(ClientData instanceData, const char *buf,
-			    int toWrite, int*errorCodePtr);
-static int		ChanSetOption(ClientData instanceData,
+static int		ZlibTransformOutput(ClientData instanceData,
+			    const char *buf, int toWrite, int*errorCodePtr);
+static int		ZlibTransformSetOption(ClientData instanceData,
 			    Tcl_Interp *interp, const char *optionName,
 			    const char *value);
-static int		ChanGetOption(ClientData instanceData,
+static int		ZlibTransformGetOption(ClientData instanceData,
 			    Tcl_Interp *interp, const char *optionName,
 			    Tcl_DString *dsPtr);
-static void		ChanWatch(ClientData instanceData, int mask);
-static int		ChanGetHandle(ClientData instanceData, int direction,
-			    ClientData *handlePtr);
-static int		ChanBlockMode(ClientData instanceData, int mode);
-#if 0 /* unused */
-static int		ChanHandler(ClientData instanceData,
+static void		ZlibTransformWatch(ClientData instanceData, int mask);
+static int		ZlibTransformGetHandle(ClientData instanceData,
+			    int direction, ClientData *handlePtr);
+static int		ZlibTransformBlockMode(ClientData instanceData,
+			    int mode);
+static int		ZlibTransformHandler(ClientData instanceData,
 			    int interestMask);
-#endif
+static void		ZlibTransformTimerSetup(ZlibChannelData *cd);
+static void		ZlibTransformTimerKill(ZlibChannelData *cd);
+static void		ZlibTransformTimerRun(ClientData clientData);
 static void		ConvertError(Tcl_Interp *interp, int code);
 static void		ExtractHeader(gz_header *headerPtr, Tcl_Obj *dictObj);
 static int		GenerateHeader(Tcl_Interp *interp, Tcl_Obj *dictObj,
@@ -155,51 +166,9 @@ static int		ZlibStreamCmd(ClientData cd, Tcl_Interp *interp,
 			    int objc, Tcl_Obj *const objv[]);
 static void		ZlibStreamCmdDelete(ClientData cd);
 static void		ZlibStreamCleanup(ZlibStreamHandle *zshPtr);
-static Tcl_Channel	ZlibStackChannel(Tcl_Interp *interp, int mode,
-			    int format, int level, Tcl_Channel channel,
-			    Tcl_Obj *gzipHeaderDictPtr);
-
-#ifdef _WIN32
-#   ifndef STATIC_BUILD
-
-/*
- * zlib 1.2.3 on Windows has a bug that the functions deflateSetHeader and
- * inflateGetHeader are not exported from the dll. Hopefully, this bug
- * will be fixed in zlib 1.2.4 and higher. It is already reported to the
- * zlib people. The functions deflateSetHeader and inflateGetHeader here
- * are just copied from the zlib 1.2.3 source. This is dangerous, but works.
- * In practice, the only fields used from the internal state are "wrap" and
- * "head", which are rather at the beginning of the structure. As long as the
- * offsets of those fields don't change, this code will continue to work.
- */
-#define deflateSetHeader dsetheader
-#define inflateGetHeader igetheader
-static int
-deflateSetHeader(
-    z_streamp strm,
-    gz_headerp head)
-{
-    struct internal_state *state;
-    if (strm == Z_NULL) return Z_STREAM_ERROR;
-    state = (struct internal_state *) strm->state;
-    if ((state == Z_NULL) || (state->wrap != 2)) return Z_STREAM_ERROR;
-    state->gzhead = head;
-    return Z_OK;
-}
-static int inflateGetHeader(
-    z_streamp strm,
-    gz_headerp head)
-{
-    struct inflate_state *state;
-    if (strm == Z_NULL) return Z_STREAM_ERROR;
-    state = (struct inflate_state *) strm->state;
-    if ((state == Z_NULL) || ((state->wrap & 2) == 0)) return Z_STREAM_ERROR;
-    state->head = head;
-    head->done = 0;
-    return Z_OK;
-}
-#   endif /* !STATIC_BUILD */
-#endif /* _WIN32 */
+static Tcl_Channel	ZlibStackChannelTransform(Tcl_Interp *interp,
+			    int mode, int format, int level,
+			    Tcl_Channel channel, Tcl_Obj *gzipHeaderDictPtr);
 
 /*
  * Type of zlib-based compressing and decompressing channels.
@@ -208,21 +177,65 @@ static int inflateGetHeader(
 static const Tcl_ChannelType zlibChannelType = {
     "zlib",
     TCL_CHANNEL_VERSION_3,
-    ChanClose,
-    ChanInput,
-    ChanOutput,
+    ZlibTransformClose,
+    ZlibTransformInput,
+    ZlibTransformOutput,
     NULL,			/* seekProc */
-    ChanSetOption,
-    ChanGetOption,
-    ChanWatch,
-    ChanGetHandle,
+    ZlibTransformSetOption,
+    ZlibTransformGetOption,
+    ZlibTransformWatch,
+    ZlibTransformGetHandle,
     NULL,			/* close2Proc */
-    ChanBlockMode,
+    ZlibTransformBlockMode,
     NULL,			/* flushProc */
-    NULL /*ChanHandler*/,
+    ZlibTransformHandler,
     NULL			/* wideSeekProc */
 };
+
+/*
+ * zlib 1.2.3 on Windows has a bug that the functions deflateSetHeader and
+ * inflateGetHeader are not exported from the dll. Hopefully, this bug will be
+ * fixed in zlib 1.2.4 and higher. It is already reported to the zlib people.
+ * The functions deflateSetHeader and inflateGetHeader here are just copied
+ * from the zlib 1.2.3 source. This is dangerous, but works. In practice, the
+ * only fields used from the internal state are "wrap" and "head", which are
+ * rather at the beginning of the structure. As long as the offsets of those
+ * fields don't change, this code will continue to work.
+ */
 
+#if defined(_WIN32) && !defined(STATIC_BUILD)
+#define deflateSetHeader dsetheader
+#define inflateGetHeader igetheader
+
+static int
+deflateSetHeader(
+    z_streamp strm,
+    gz_headerp head)
+{
+    struct internal_state *state;
+
+    if (strm == Z_NULL) return Z_STREAM_ERROR;
+    state = (struct internal_state *) strm->state;
+    if ((state == Z_NULL) || (state->wrap != 2)) return Z_STREAM_ERROR;
+    state->gzhead = head;
+    return Z_OK;
+}
+
+static int inflateGetHeader(
+    z_streamp strm,
+    gz_headerp head)
+{
+    struct inflate_state *state;
+
+    if (strm == Z_NULL) return Z_STREAM_ERROR;
+    state = (struct inflate_state *) strm->state;
+    if ((state == Z_NULL) || ((state->wrap & 2) == 0)) return Z_STREAM_ERROR;
+    state->head = head;
+    head->done = 0;
+    return Z_OK;
+}
+#endif /* _WIN32 && !STATIC_BUILD */
+
 /*
  *----------------------------------------------------------------------
  *
@@ -277,7 +290,7 @@ ConvertError(
 	Tcl_SetErrorCode(interp, "TCL", "ZLIB", codeStr, codeStr2, NULL);
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -398,7 +411,7 @@ GenerateHeader(
     Tcl_FreeEncoding(latin1enc);
     return result;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -489,7 +502,7 @@ ExtractHeader(
 	Tcl_FreeEncoding(latin1enc);
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -680,7 +693,7 @@ Tcl_ZlibStreamInit(
     ckfree((char *) zshPtr);
     return TCL_ERROR;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -707,7 +720,7 @@ ZlibStreamCmdDelete(
     zshPtr->cmd = NULL;
     ZlibStreamCleanup(zshPtr);
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -745,7 +758,7 @@ Tcl_ZlibStreamClose(
     }
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -787,7 +800,7 @@ ZlibStreamCleanup(
 
     ckfree((char *) zshPtr);
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -856,7 +869,7 @@ Tcl_ZlibStreamReset(
 
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -890,7 +903,7 @@ Tcl_ZlibStreamGetCommandName(
     Tcl_GetCommandFullName(zshPtr->interp, zshPtr->cmd, objPtr);
     return objPtr;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -918,7 +931,7 @@ Tcl_ZlibStreamEof(
 
     return zshPtr->streamEnd;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -938,7 +951,7 @@ Tcl_ZlibStreamChecksum(
 
     return zshPtr->stream.adler;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1046,7 +1059,7 @@ Tcl_ZlibStreamPut(
 
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1255,7 +1268,7 @@ Tcl_ZlibStreamGet(
     }
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1410,7 +1423,7 @@ Tcl_ZlibDeflate(
     ConvertError(interp, e);
     return TCL_ERROR;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1597,7 +1610,7 @@ Tcl_ZlibInflate(
     }
     return TCL_ERROR;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1626,7 +1639,7 @@ Tcl_ZlibAdler32(
 {
     return adler32(adler, (Bytef *) buf, (unsigned) len);
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -1927,7 +1940,7 @@ TclZlibCmd(
 	switch ((enum zlibFormats) format) {
 	case f_deflate:
 	    mode = TCL_ZLIB_STREAM_DEFLATE;
-	    format = TCL_ZLIB_FORMAT_GZIP;
+	    format = TCL_ZLIB_FORMAT_RAW;
 	    break;
 	case f_inflate:
 	    mode = TCL_ZLIB_STREAM_INFLATE;
@@ -2033,7 +2046,7 @@ TclZlibCmd(
 	    }
 	}
 
-	if (ZlibStackChannel(interp, mode, format, level, chan,
+	if (ZlibStackChannelTransform(interp, mode, format, level, chan,
 		headerObj) == NULL) {
 	    return TCL_ERROR;
 	}
@@ -2054,7 +2067,7 @@ TclZlibCmd(
     Tcl_AppendResult(interp, "buffer size must be 32 to 65536", NULL);
     return TCL_ERROR;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -2276,7 +2289,7 @@ ZlibStreamCmd(
 
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *	Set of functions to support channel stacking.
@@ -2284,13 +2297,14 @@ ZlibStreamCmd(
  */
 
 static int
-ChanClose(
+ZlibTransformClose(
     ClientData instanceData,
     Tcl_Interp *interp)
 {
     ZlibChannelData *cd = instanceData;
     int e, result = TCL_OK;
 
+    ZlibTransformTimerKill(cd);
     if (cd->mode == TCL_ZLIB_STREAM_DEFLATE) {
 	cd->outStream.avail_in = 0;
 	do {
@@ -2308,11 +2322,16 @@ ChanClose(
 	    if (cd->outStream.avail_out != (unsigned) cd->outAllocated) {
 		if (Tcl_WriteRaw(cd->parent, cd->outBuffer,
 			cd->outAllocated - cd->outStream.avail_out) < 0) {
-		    /* TODO: is this the right way to do errors on close? */
+		    /* TODO: is this the right way to do errors on close?
+		     * Note: when close is called from FinalizeIOSubsystem
+		     * then interp may be NULL
+		     */
 		    if (!TclInThreadExit()) {
-			Tcl_AppendResult(interp,
+			if (interp) {
+			    Tcl_AppendResult(interp,
 				"error while finalizing file: ",
 				Tcl_PosixError(interp), NULL);
+			}
 		    }
 		    result = TCL_ERROR;
 		    break;
@@ -2336,7 +2355,7 @@ ChanClose(
 }
 
 static int
-ChanInput(
+ZlibTransformInput(
     ClientData instanceData,
     char *buf,
     int toRead,
@@ -2363,8 +2382,11 @@ ChanInput(
 	    return toRead - cd->inStream.avail_out;
 	}
 	if (e != Z_OK) {
-	    Tcl_SetChannelError(cd->parent,
-		    Tcl_NewStringObj(cd->inStream.msg, -1));
+	    Tcl_Obj *errObj = Tcl_NewListObj(0, NULL);
+	    Tcl_ListObjAppendElement(NULL, errObj,
+		Tcl_NewStringObj(cd->inStream.msg, -1));
+	    Tcl_SetChannelError(cd->parent, errObj);
+	    *errorCodePtr = EINVAL;
 	    return -1;
 	}
 
@@ -2396,7 +2418,7 @@ ChanInput(
 }
 
 static int
-ChanOutput(
+ZlibTransformOutput(
     ClientData instanceData,
     const char *buf,
     int toWrite,
@@ -2440,7 +2462,7 @@ ChanOutput(
 }
 
 static int
-ChanSetOption(			/* not used */
+ZlibTransformSetOption(			/* not used */
     ClientData instanceData,
     Tcl_Interp *interp,
     const char *optionName,
@@ -2502,7 +2524,7 @@ ChanSetOption(			/* not used */
 }
 
 static int
-ChanGetOption(
+ZlibTransformGetOption(
     ClientData instanceData,
     Tcl_Interp *interp,
     const char *optionName,
@@ -2578,15 +2600,28 @@ ChanGetOption(
 }
 
 static void
-ChanWatch(
+ZlibTransformWatch(
     ClientData instanceData,
     int mask)
 {
-    return;
+    ZlibChannelData *cd = instanceData;
+    Tcl_DriverWatchProc *watchProc;
+
+    /*
+     * This code is based on the code in tclIORTrans.c
+     */
+
+    watchProc = Tcl_ChannelWatchProc(Tcl_GetChannelType(cd->parent));
+    watchProc(Tcl_GetChannelInstanceData(cd->parent), mask);
+    if (!(mask & TCL_READABLE) || (cd->inStream.avail_in==(uInt)cd->inAllocated)) {
+	ZlibTransformTimerKill(cd);
+    } else {
+	ZlibTransformTimerSetup(cd);
+    }
 }
 
 static int
-ChanGetHandle(
+ZlibTransformGetHandle(
     ClientData instanceData,
     int direction,
     ClientData *handlePtr)
@@ -2597,7 +2632,7 @@ ChanGetHandle(
 }
 
 static int
-ChanBlockMode(
+ZlibTransformBlockMode(
     ClientData instanceData,
     int mode)
 {
@@ -2611,24 +2646,51 @@ ChanBlockMode(
     return TCL_OK;
 }
 
-#if 0 /* unused */
 static int
-ChanHandler(
+ZlibTransformHandler(
     ClientData instanceData,
     int interestMask)
 {
-    /*
-     * We don't handle this here. Assume it came from the underlying channel.
-     */
+    ZlibChannelData *cd = instanceData;
 
+    ZlibTransformTimerKill(cd);
     return interestMask;
 }
-#endif
 
+static void
+ZlibTransformTimerSetup(
+    ZlibChannelData *cd)
+{
+    if (cd->timer == NULL) {
+	cd->timer = Tcl_CreateTimerHandler(TRANSFORM_FLUSH_DELAY,
+		ZlibTransformTimerRun, cd);
+    }
+}
+
+static void
+ZlibTransformTimerKill(
+    ZlibChannelData *cd)
+{
+    if (cd->timer != NULL) {
+	Tcl_DeleteTimerHandler(cd->timer);
+	cd->timer = NULL;
+    }
+}
+
+static void
+ZlibTransformTimerRun(
+    ClientData clientData)
+{
+    ZlibChannelData *cd = clientData;
+
+    cd->timer = NULL;
+    Tcl_NotifyChannel(cd->chan, TCL_READABLE);
+}
+
 /*
  *----------------------------------------------------------------------
  *
- * ZlibStackChannel --
+ * ZlibStackChannelTransform --
  *
  *	Stacks either compression or decompression onto a channel.
  *
@@ -2639,7 +2701,7 @@ ChanHandler(
  */
 
 static Tcl_Channel
-ZlibStackChannel(
+ZlibStackChannelTransform(
     Tcl_Interp *interp,		/* Where to write error messages. */
     int mode,			/* Whether this is a compressing transform
 				 * (TCL_ZLIB_STREAM_DEFLATE) or a
@@ -2745,6 +2807,7 @@ ZlibStackChannel(
     if (chan == NULL) {
 	goto error;
     }
+    cd->chan = chan;
     cd->parent = Tcl_GetStackedChannel(chan);
     Tcl_SetObjResult(interp, Tcl_NewStringObj(Tcl_GetChannelName(chan), -1));
     return chan;
@@ -2761,7 +2824,7 @@ ZlibStackChannel(
     ckfree((char *) cd);
     return NULL;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *	Finally, the TclZlibInit function. Used to install the zlib API.
@@ -2787,7 +2850,7 @@ TclZlibInit(
     Tcl_CreateObjCommand(interp, "zlib", TclZlibCmd, 0, 0);
     return TCL_OK;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *	Stubs used when a suitable zlib installation was not found during
@@ -2904,7 +2967,7 @@ Tcl_ZlibAdler32(
     return 0;
 }
 #endif /* HAVE_ZLIB */
-
+
 /*
  * Local Variables:
  * mode: c
