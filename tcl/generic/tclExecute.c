@@ -1517,6 +1517,91 @@ TclCompileObj(
 	}
 
 	/*
+	 * #280.
+	 * Literal sharing fix. This part of the fix is not required by 8.4
+	 * nor 8.5, because they eval-direct any literals, so just saving the
+	 * argument locations per command in bytecode is enough, embedded
+	 * 'eval' commands, etc. get the correct information.
+	 *
+	 * But in 8.6 all the embedded script are compiled, and the resulting
+	 * bytecode stored in the literal. Now the shared literal has bytecode
+	 * with location data for _one_ particular location this literal is
+	 * found at. If we get executed from a different location the bytecode
+	 * has to be recompiled to get the correct locations. Not doing this
+	 * will execute the saved bytecode with data for a different location,
+	 * causing 'info frame' to point to the wrong place in the sources.
+	 *
+	 * Future optimizations ...
+	 * (1) Save the location data (ExtCmdLoc) keyed by start line. In that
+	 *     case we recompile once per location of the literal, but not
+	 *     continously, because the moment we have all locations we do not
+	 *     need to recompile any longer.
+	 *
+	 * (2) Alternative: Do not recompile, tell the execution engine the
+	 *     offset between saved starting line and actual one. Then modify
+	 *     the users to adjust the locations they have by this offset.
+	 *
+	 * (3) Alternative 2: Do not fully recompile, adjust just the location
+	 *     information.
+	 */
+
+	{
+	    Tcl_HashEntry *hePtr = Tcl_FindHashEntry(iPtr->lineBCPtr,
+						     (char *) codePtr);
+	    if (hePtr) {
+		ExtCmdLoc *eclPtr = Tcl_GetHashValue(hePtr);
+		int redo = 0;
+
+		if (invoker) {
+		    CmdFrame *ctxPtr = (CmdFrame *) 
+			TclStackAlloc(interp, sizeof(CmdFrame));
+		    *ctxPtr = *invoker;
+
+		    if (invoker->type == TCL_LOCATION_BC) {
+			/*
+			 * Note: Type BC => ctx.data.eval.path    is not used.
+			 *			ctx.data.tebc.codePtr is used instead.
+			 */
+
+			TclGetSrcInfoForPc(ctxPtr);
+			if (ctxPtr->type == TCL_LOCATION_SOURCE) {
+			    /*
+			     * The reference made by 'TclGetSrcInfoForPc' is dead.
+			     */
+			    Tcl_DecrRefCount(ctxPtr->data.eval.path);
+			    ctxPtr->data.eval.path = NULL;
+			}
+		    }
+
+		    if (word < ctxPtr->nline) {
+			/*
+			 * Note: We do not care if the line[word] is -1. This
+			 * is a difference and requires a recompile (location
+			 * changed from absolute to relative, literal is used
+			 * fixed and through variable)
+			 *
+			 * Example:
+			 * test info-32.0 using literal of info-24.8
+			 *     (dict with ... vs           set body ...).
+			 */
+			redo = 
+			    ((eclPtr->type == TCL_LOCATION_SOURCE) &&
+			     (eclPtr->start != ctxPtr->line[word])) ||
+			    ((eclPtr->type == TCL_LOCATION_BC)     &&
+			     (ctxPtr->type == TCL_LOCATION_SOURCE))
+			    ;
+		    }
+
+		    TclStackFree(interp, ctxPtr);
+		}
+
+		if (redo) {
+		    goto recompileObj;
+		}
+	    }
+	}
+
+	/*
 	 * Increment the code's ref count while it is being executed. If
 	 * afterwards no references to it remain, free the code.
 	 */
@@ -1940,13 +2025,11 @@ TclExecuteByteCode(
 	bcFramePtr->nextPtr = iPtr->cmdFramePtr;
 	bcFramePtr->nline = 0;
 	bcFramePtr->line = NULL;
-
+	bcFramePtr->litarg = NULL;
 	bcFramePtr->data.tebc.codePtr = codePtr;
 	bcFramePtr->data.tebc.pc = NULL;
 	bcFramePtr->cmd.str.cmd = NULL;
 	bcFramePtr->cmd.str.len = 0;
-
-	TclArgumentBCEnter((Tcl_Interp*) iPtr,codePtr,bcFramePtr);
 
 	if (iPtr->execEnvPtr->rewind) {
 	    result = TCL_ERROR;
@@ -1961,6 +2044,8 @@ TclExecuteByteCode(
 
 	NRE_ASSERT(iPtr->cmdFramePtr == bcFramePtr);
 	iPtr->cmdFramePtr = bcFramePtr->nextPtr;
+
+	TclArgumentBCRelease((Tcl_Interp*) iPtr, bcFramePtr);
 
 	/*
 	 * If the CallFrame is marked as tailcalling, keep tailcalling
@@ -2760,6 +2845,9 @@ TclExecuteByteCode(
 
 	    instructionCount = 1;
 
+	    TclArgumentBCEnter((Tcl_Interp*) iPtr, objv, objc,
+			       codePtr, bcFramePtr, pc - codePtr->codeStart);
+
 	    DECACHE_STACK_INFO();
 
 	    result = TclNREvalObjv(interp, objc, objv,
@@ -2772,6 +2860,8 @@ TclExecuteByteCode(
 		pc += pcAdjustment;
 		goto nonRecursiveCallStart;
 	    }
+
+	    TclArgumentBCRelease((Tcl_Interp*) iPtr, bcFramePtr);
 
 	    iPtr->cmdFramePtr = iPtr->cmdFramePtr->nextPtr;
 	    NRE_ASSERT(iPtr->cmdFramePtr == bcFramePtr->nextPtr);
@@ -4516,8 +4606,8 @@ TclExecuteByteCode(
 	     */
 
 	    iResult = s1len = s2len = 0;
-	} else if ((valuePtr->typePtr == &tclByteArrayType)
-		&& (value2Ptr->typePtr == &tclByteArrayType)) {
+	} else if (TclIsPureByteArray(valuePtr)
+		&& TclIsPureByteArray(value2Ptr)) {
 	    s1 = (char *) Tcl_GetByteArrayFromObj(valuePtr, &s1len);
 	    s2 = (char *) Tcl_GetByteArrayFromObj(value2Ptr, &s2len);
 	    iResult = memcmp(s1, s2,
@@ -4635,7 +4725,7 @@ TclExecuteByteCode(
 	}
 
 	if ((index >= 0) && (index < length)) {
-	    if (valuePtr->typePtr == &tclByteArrayType) {
+	    if (TclIsPureByteArray(valuePtr)) {
 		objResultPtr = Tcl_NewByteArrayObj(
 			Tcl_GetByteArrayFromObj(valuePtr, &length)+index, 1);
 	    } else if (valuePtr->bytes && length == valuePtr->length) {
@@ -4687,7 +4777,7 @@ TclExecuteByteCode(
 	    ustring2 = Tcl_GetUnicodeFromObj(value2Ptr, &length2);
 	    match = TclUniCharMatch(ustring1, length1, ustring2, length2,
 		    nocase);
-	} else if ((valuePtr->typePtr == &tclByteArrayType) && !nocase) {
+	} else if (TclIsPureByteArray(valuePtr) && !nocase) {
 	    unsigned char *string1, *string2;
 	    int length1, length2;
 
@@ -7793,8 +7883,6 @@ TclExecuteByteCode(
 	    Tcl_Panic("TclExecuteByteCode execution failure: end stack top < start stack top");
 	}
     }
-
-    TclArgumentBCRelease((Tcl_Interp*) iPtr,codePtr);
 
     oldBottomPtr = bottomPtr->prevBottomPtr;
     iPtr->cmdFramePtr = bcFramePtr->nextPtr;

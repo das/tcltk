@@ -37,7 +37,8 @@ enum {
 };
 
 @implementation TKApplication(TKMouseEvent)
-- (NSEvent *)tkProcessMouseEvent:(NSEvent *)theEvent {
+- (NSEvent *) tkProcessMouseEvent: (NSEvent *) theEvent
+{
 #ifdef TK_MAC_DEBUG_EVENTS
     TKLog(@"-[%@(%p) %s] %@", [self class], self, _cmd, theEvent);
 #endif
@@ -89,6 +90,7 @@ enum {
     }
 
     NSPoint global, local = [theEvent locationInWindow];
+
     if (win) {
 	global = [win convertBaseToScreen:local];
 	local.y = [win frame].size.height - local.y;
@@ -128,23 +130,23 @@ enum {
     UInt32 buttons;
     OSStatus err = GetEventParameter(eventRef, kEventParamMouseChord,
 	    typeUInt32, NULL, sizeof(UInt32), NULL, &buttons);
+
     if (err == noErr) {
 	state |= (buttons & ((1<<5) - 1)) << 8;
-    } else {
-	if (button < 5) {
-	    switch (type) {
-	    case NSLeftMouseDown:
-	    case NSRightMouseDown:
-	    case NSLeftMouseDragged:
-	    case NSRightMouseDragged:
-	    case NSOtherMouseDown:
-		state |= 1 << (button + 8);
-		break;
-	    default:
-		break;
-	    }
+    } else if (button < 5) {
+	switch (type) {
+	case NSLeftMouseDown:
+	case NSRightMouseDown:
+	case NSLeftMouseDragged:
+	case NSRightMouseDragged:
+	case NSOtherMouseDown:
+	    state |= 1 << (button + 8);
+	    break;
+	default:
+	    break;
 	}
     }
+
     NSUInteger modifiers = [theEvent modifierFlags];
 
     if (modifiers & NSAlphaShiftKeyMask) {
@@ -537,7 +539,7 @@ GenerateButtonEvent(
 
 /*
  * Local Variables:
- * mode: c
+ * mode: objc
  * c-basic-offset: 4
  * fill-column: 79
  * coding: utf-8
