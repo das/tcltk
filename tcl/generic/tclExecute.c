@@ -1730,8 +1730,6 @@ TclExecuteByteCode(
     bcFramePtr->cmd.str.cmd = NULL;
     bcFramePtr->cmd.str.len = 0;
 
-    TclArgumentBCEnter((Tcl_Interp*) iPtr,codePtr,bcFramePtr);
-
 #ifdef TCL_COMPILE_DEBUG
     if (tclTraceExec >= 2) {
 	PrintByteCodeInfo(codePtr);
@@ -2322,10 +2320,16 @@ TclExecuteByteCode(
 
 	    bcFramePtr->data.tebc.pc = (char *) pc;
 	    iPtr->cmdFramePtr = bcFramePtr;
+	    TclArgumentBCEnter((Tcl_Interp*) iPtr, objv, objc,
+			       codePtr, bcFramePtr,
+			       pc - codePtr->codeStart);
 	    DECACHE_STACK_INFO();
 	    result = TclEvalObjvInternal(interp, objc, objv,
 		    /* call from TEBC */(char *) -1, -1, 0);
 	    CACHE_STACK_INFO();
+	    TclArgumentBCRelease((Tcl_Interp*) iPtr, objv, objc,
+				 codePtr,
+				 pc - codePtr->codeStart);
 	    iPtr->cmdFramePtr = iPtr->cmdFramePtr->nextPtr;
 
 	    if (result == TCL_OK) {
@@ -5752,7 +5756,7 @@ TclExecuteByteCode(
 		    goto overflow;
 		}
 #if (LONG_MAX == 0x7fffffff)
-		if (l2 - 2 < MaxBase32Size
+		if (l2 - 2 < (long)MaxBase32Size
 			&& l1 <=  MaxBase32[l2 - 2]
 			&& l1 >= -MaxBase32[l2 - 2]) {
 		    /*
@@ -5797,8 +5801,8 @@ TclExecuteByteCode(
 		    TRACE(("%s\n", O2S(valuePtr)));
 		    NEXT_INST_F(1, 1, 0);
 		}
-		if (l1 - 3 >= 0 && l1 - 2 < Exp32IndexSize
-			&& l2 - 2 < Exp32ValueSize + MaxBase32Size) {
+		if (l1 - 3 >= 0 && l1 - 2 < (long)Exp32IndexSize
+			&& l2 - 2 < (long)(Exp32ValueSize + MaxBase32Size)) {
 
 		    unsigned short base = Exp32Index[l1 - 3]
 			    + (unsigned short) (l2 - 2 - MaxBase32Size);
@@ -5819,8 +5823,8 @@ TclExecuteByteCode(
 			NEXT_INST_F(1, 1, 0);
 		    }
 		}
-		if (-l1 - 3 >= 0 && -l1 - 2 < Exp32IndexSize
-			&& l2 - 2 < Exp32ValueSize + MaxBase32Size) {
+		if (-l1 - 3 >= 0 && -l1 - 2 < (long)Exp32IndexSize
+			&& l2 - 2 < (long)(Exp32ValueSize + MaxBase32Size)) {
 		    unsigned short base = Exp32Index[-l1 - 3]
 			    + (unsigned short) (l2 - 2 - MaxBase32Size);
 		    if (base < Exp32Index[-l1 - 2]) {
@@ -5855,7 +5859,7 @@ TclExecuteByteCode(
 	    } else {
 		goto overflow;
 	    }
-	    if (l2 - 2 < MaxBase64Size
+	    if (l2 - 2 < (long)MaxBase64Size
 		    && w1 <=  MaxBase64[l2 - 2]
 		    && w1 >= -MaxBase64[l2 - 2]) {
 		/*
@@ -5947,8 +5951,8 @@ TclExecuteByteCode(
 	     * Handle cases of powers > 16 that still fit in a 64-bit word by
 	     * doing table lookup.
 	     */
-	    if (w1 - 3 >= 0 && w1 - 2 < Exp64IndexSize
-		    && l2 - 2 < Exp64ValueSize + MaxBase64Size) {
+	    if (w1 - 3 >= 0 && w1 - 2 < (long)Exp64IndexSize
+		    && l2 - 2 < (long)(Exp64ValueSize + MaxBase64Size)) {
 		unsigned short base = Exp64Index[w1 - 3]
 			+ (unsigned short) (l2 - 2 - MaxBase64Size);
 
@@ -5970,8 +5974,8 @@ TclExecuteByteCode(
 		}
 	    }
 
-	    if (-w1 - 3 >= 0 && -w1 - 2 < Exp64IndexSize
-		    && l2 - 2 < Exp64ValueSize + MaxBase64Size) {
+	    if (-w1 - 3 >= 0 && -w1 - 2 < (long)Exp64IndexSize
+		    && l2 - 2 < (long)(Exp64ValueSize + MaxBase64Size)) {
 		unsigned short base = Exp64Index[-w1 - 3]
 			+ (unsigned short) (l2 - 2 - MaxBase64Size);
 
@@ -7400,8 +7404,6 @@ TclExecuteByteCode(
 	    Tcl_Panic("TclExecuteByteCode execution failure: end stack top < start stack top");
 	}
     }
-
-    TclArgumentBCRelease((Tcl_Interp*) iPtr,codePtr);
 
     /*
      * Restore the stack to the state it had previous to this bytecode.
