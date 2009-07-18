@@ -1504,6 +1504,7 @@ SelCvtFromX32(
 	    Tcl_DStringAppendElement(dsPtr, buf);
 	}
     }
+    Tcl_DStringAppend(dsPtr, " ", 1);
 }
 
 static void
@@ -1528,6 +1529,7 @@ SelCvtFromX8(
 	sprintf(buf, "0x%x", (unsigned char) *propPtr);
 	Tcl_DStringAppendElement(dsPtr, buf);
     }
+    Tcl_DStringAppend(dsPtr, " ", 1);
 }
 
 /*
