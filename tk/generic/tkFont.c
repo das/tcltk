@@ -2896,10 +2896,11 @@ Tk_IntersectTextLayout(
 
     result = 0;
     for (i = 0; i < layoutPtr->numChunks; i++) {
-	if (chunkPtr->start[0] == '\n') {
+	if ((chunkPtr->start[0] == '\n') || (chunkPtr->numBytes==0)) {
 	    /*
-	     * Newline characters are not counted when computing area
-	     * intersection (but tab characters would still be considered).
+	     * Newline characters and empty chunks are not counted when
+	     * computing area intersection (but tab characters would still be
+	     * considered).
 	     */
 
 	    chunkPtr++;
