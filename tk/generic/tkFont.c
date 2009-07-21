@@ -2469,11 +2469,11 @@ TkUnderlineAngledTextLayout(
 	    XDrawLines(display, drawable, gc, points, 2, CoordModeOrigin);
 	} else {
 	    points[2].x = x + ROUND16(xx*cosA + dy*sinA + width*cosA
-		    - fontPtr->underlineHeight*sinA);
+		    + fontPtr->underlineHeight*sinA);
 	    points[2].y = y + ROUND16(dy*cosA - xx*sinA - width*sinA
 		    + fontPtr->underlineHeight*cosA);
 	    points[3].x = x + ROUND16(xx*cosA + dy*sinA
-		    - fontPtr->underlineHeight*sinA);
+		    + fontPtr->underlineHeight*sinA);
 	    points[3].y = y + ROUND16(dy*cosA - xx*sinA
 		    + fontPtr->underlineHeight*cosA);
 	    points[4].x = points[0].x;
