@@ -3325,7 +3325,6 @@ HandleEventGenerate(
     event.xany.serial = NextRequest(Tk_Display(tkwin));
     event.xany.send_event = False;
     if (windowName[0]) {
-	Tk_MakeWindowExist(tkwin);
 	event.xany.window = Tk_WindowId(tkwin);
     } else {
 	event.xany.window =
@@ -4614,12 +4613,14 @@ TkKeysymToString(
  *	evaluate it. It's used in situations where the execution of a command
  *	may cause the original command string to be reallocated.
  *
+ *	OBSOLETE! NOT USED ANYWHERE IN TK! ONLY FOR STUB TABLE!
+ *
  * Results:
  *	Returns the result of evaluating script, including both a standard Tcl
  *	completion code and a string in the interp's result.
  *
  * Side effects:
- *	None.
+ *	Any; depends on script.
  *
  *----------------------------------------------------------------------
  */
