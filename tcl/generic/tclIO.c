@@ -220,6 +220,10 @@ static Tcl_ObjType tclChannelType = {
     ((ChannelState *) (objPtr)->internalRep.otherValuePtr)
 #define SET_CHANNELSTATE(objPtr, storePtr) \
     ((objPtr)->internalRep.otherValuePtr = (void *) (storePtr))
+#define GET_CHANNELINTERP(objPtr) \
+    ((Interp *) (objPtr)->internalRep.twoPtrValue.ptr2)
+#define SET_CHANNELINTERP(objPtr, storePtr) \
+    ((objPtr)->internalRep.twoPtrValue.ptr2 = (void *) (storePtr))
 
 #define BUSY_STATE(st,fl) \
      ((((st)->csPtrR) && ((fl) & TCL_READABLE)) || \
@@ -2002,6 +2006,14 @@ Tcl_GetChannelHandle(
     int result;
 
     chanPtr = ((Channel *) chan)->state->bottomChanPtr;
+    if (!chanPtr->typePtr->getHandleProc) {
+	Tcl_Obj* err;
+	TclNewLiteralStringObj(err, "channel \"");
+	Tcl_AppendToObj(err, Tcl_GetChannelName(chan), -1);
+	Tcl_AppendToObj(err, "\" does not support OS handles", -1);
+	Tcl_SetChannelError (chan,err);
+	return TCL_ERROR;
+    }
     result = (chanPtr->typePtr->getHandleProc)(chanPtr->instanceData,
 	    direction, &handle);
     if (handlePtr) {
@@ -10612,8 +10624,11 @@ DupChannelIntRep(
     register Tcl_Obj *copyPtr)	/* Object with internal rep to set. Must not
 				 * currently have an internal rep.*/
 {
-    ChannelState *statePtr = GET_CHANNELSTATE(srcPtr);
+    ChannelState *statePtr  = GET_CHANNELSTATE(srcPtr);
+    Interp       *interpPtr = GET_CHANNELINTERP(srcPtr);
+
     SET_CHANNELSTATE(copyPtr, statePtr);
+    SET_CHANNELINTERP(copyPtr, interpPtr);
     Tcl_Preserve((ClientData) statePtr);
     copyPtr->typePtr = &tclChannelType;
 }
@@ -10641,15 +10656,21 @@ SetChannelFromAny(
     register Tcl_Obj *objPtr)	/* The object to convert. */
 {
     ChannelState *statePtr;
+    Interp       *interpPtr;
 
     if (objPtr->typePtr == &tclChannelType) {
 	/*
 	 * The channel is valid until any call to DetachChannel occurs.
 	 * Ensure consistency checks are done.
 	 */
-	statePtr = GET_CHANNELSTATE(objPtr);
+	statePtr  = GET_CHANNELSTATE(objPtr);
+	interpPtr = GET_CHANNELINTERP(objPtr);
 	if (statePtr->flags & (CHANNEL_TAINTED|CHANNEL_CLOSED)) {
 	    ResetFlag(statePtr, CHANNEL_TAINTED);
+	    Tcl_Release((ClientData) statePtr);
+	    UpdateStringOfChannel(objPtr);
+	    objPtr->typePtr = NULL;
+	} else if (interpPtr != (Interp*) interp) {
 	    Tcl_Release((ClientData) statePtr);
 	    UpdateStringOfChannel(objPtr);
 	    objPtr->typePtr = NULL;
@@ -10675,6 +10696,7 @@ SetChannelFromAny(
 	statePtr = ((Channel *)chan)->state;
 	Tcl_Preserve((ClientData) statePtr);
 	SET_CHANNELSTATE(objPtr, statePtr);
+	SET_CHANNELINTERP(objPtr, interp);
 	objPtr->typePtr = &tclChannelType;
     }
     return TCL_OK;
