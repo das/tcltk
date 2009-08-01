@@ -2335,9 +2335,7 @@ WmIconphotoCmd(
     Tk_PhotoHandle photo;
     Tk_PhotoImageBlock block;
     int i, size = 0, width, height, index = 0, x, y, isDefault = 0;
-    long R, G, B, A;
-    long *iconPropertyData;
-    unsigned char *pixelByte;
+    unsigned int *iconPropertyData;
 
     if (objc < 4) {
 	Tcl_WrongNumArgs(interp, 2, objv,
@@ -2380,11 +2378,12 @@ WmIconphotoCmd(
      * memory space.
      */
 
-    iconPropertyData = (long *) Tcl_AttemptAlloc(sizeof(long)*size);
+    iconPropertyData = (unsigned int *)
+	    Tcl_AttemptAlloc(sizeof(unsigned int) * size);
     if (iconPropertyData == NULL) {
 	return TCL_ERROR;
     }
-    memset(iconPropertyData, 0, sizeof(long)*size);
+    memset(iconPropertyData, 0, sizeof(unsigned int) * size);
 
     for (i = 3 + isDefault; i < objc; i++) {
 	photo = Tk_FindPhoto(interp, Tcl_GetString(objv[i]));
@@ -2408,31 +2407,27 @@ WmIconphotoCmd(
 	 *
 	 * This is an array of 32bit packed CARDINAL ARGB with high byte being
 	 * A, low byte being B. The first two cardinals are width, height.
-	 * Data is in rows, left to right and top to bottom.
+	 * Data is in rows, left to right and top to bottom. The data will be
+	 * endian-swapped going to the server if necessary. [Bug 2830420]
 	 */
 
 	/*
 	 * Encode the image data in the iconPropertyData array.
 	 */
 
-	iconPropertyData[index++] = width;
-	iconPropertyData[index++] = height;
+	iconPropertyData[index++] = (unsigned) width;
+	iconPropertyData[index++] = (unsigned) height;
 	for (y = 0; y < height; y++) {
 	    for (x = 0; x < width; x++) {
-		R = *(block.pixelPtr + x*block.pixelSize +
-			y*block.pitch + block.offset[0]);
-		G = *(block.pixelPtr + x*block.pixelSize +
-			y*block.pitch + block.offset[1]);
-		B = *(block.pixelPtr + x*block.pixelSize +
-			y*block.pitch + block.offset[2]);
-		A = *(block.pixelPtr + x*block.pixelSize +
-			y*block.pitch + block.offset[3]);
-		pixelByte = (unsigned char *) &iconPropertyData[index];
-		pixelByte[3] = A;
-		pixelByte[2] = R;
-		pixelByte[1] = G;
-		pixelByte[0] = B;
-		index++;
+		register unsigned char *pixelPtr =
+			block.pixelPtr + x*block.pixelSize + y*block.pitch;
+		register unsigned int R, G, B, A;
+
+		R = pixelPtr[block.offset[0]];
+		G = pixelPtr[block.offset[1]];
+		B = pixelPtr[block.offset[2]];
+		A = pixelPtr[block.offset[3]];
+		iconPropertyData[index++] = A<<24 | R<<16 | G<<8 | B<<0;
 	    }
 	}
     }
