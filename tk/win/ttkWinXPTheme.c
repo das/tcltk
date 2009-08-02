@@ -27,7 +27,11 @@ int TtkXPTheme_Init(Tcl_Interp *interp, HWND hwnd) { return TCL_OK; }
 
 #include <windows.h>
 #include <uxtheme.h>
-#include <tmschema.h>
+#if defined(_MSC_VER) && (NTDDI_VERSION >= NTDDI_LONGHORN)
+#   include <vssym32.h>
+#else
+#   include <tmschema.h>
+#endif
 
 #include <tkWinInt.h>
 
