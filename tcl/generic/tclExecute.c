@@ -241,249 +241,6 @@ VarHashCreateVar(
 #endif
 
 /*
- * Timing macros
- */
-
-//#define USE_VM_TIMING		1
-//#define HAVE_CHUD		1
-
-#ifdef USE_VM_TIMING
-
-#if defined(__ppc__) || defined(__ppc64__)
-#define clickT		uint64_t
-#ifdef __APPLE__BLAH
-#include <ppc_intrinsics.h>
-#ifdef __ppc64__
-#define GetClicks()	((clickT)__mftb())
-#else
-#define GetClicks()	((clickT)__mftb() | ((clickT)__mftbu() << 32))
-#endif
-#else
-#ifdef __ppc64__
-#define GetClicks() \
-	({ uint64_t t; __asm__ volatile ("mftb %0" : "=r" (t)); (clickT) t; })
-#else
-#define GetClicks() \
-	({ uint32_t l, u; __asm__ volatile ("mftb %0\nmftbu %1" : "=r" (l), "=r" (u)); (clickT) l | ((clickT) u << 32); })
-#endif
-#endif
-#elif defined(__i386__)
-#define clickT		uint64_t
-#define GetClicks() \
-	({ uint32_t l, u; __asm__ volatile ("rdtsc" : "=a" (l), "=d" (u)); (clickT) l | ((clickT) u << 32); })
-#elif defined(__x86_64__)
-#define clickT		uint64_t
-#define GetClicks() \
-	({ uint64_t t; __asm__ volatile ("rdtsc" : "=A" (t)); (clickT) t; })
-#else
-#define GetClicks()	TclpGetWideClicks()
-#define clickT		Tcl_WideInt
-#endif
-
-typedef struct SampleData_ {
-	unsigned long clicks;
-	unsigned short inst;
-	short type; /* 0: start, 1: end, 2: child start, 3: child end */
-	int count;
-} SampleData;
-
-#ifdef HAVE_CHUD
-#include <CHUD/CHUD.h>
-#define RecordSample(d) (!chudRecordUserSample(0, NULL, NULL, &(d), sizeof(d)))
-#else
-#define RecordSample(d)
-#endif
-
-#define TIMING_START_INST(i) {\
-	end_clicks = GetClicks();\
-	currInst = (i);\
-	if (start_clicks) {\
-	    sample.inst = currInst;\
-	    sample.clicks = end_clicks - start_clicks;\
-	    sample.count = instructionCount;\
-	    sample.type = 0;\
-	} else {\
-	    sample.inst = LAST_INST_OPCODE+3;\
-	    sample.clicks = 0;\
-	    sample.count = instructionCount;\
-	    sample.type = -1;\
-	}\
-	timing = RecordSample(sample);\
-	start_clicks = GetClicks();\
-	}
-#define TIMING_END_INST() {\
-	end_clicks = GetClicks();\
-	if (timing) {\
-	    sample.inst = currInst;\
-	    sample.clicks = end_clicks - start_clicks;\
-	    sample.count = instructionCount;\
-	    sample.type = 1;\
-	    timing = 0;\
-	    RecordSample(sample);\
-	    start_clicks = GetClicks();\
-	}\
-	}
-#define TIMING_START_CHILD() {\
-	end_clicks = GetClicks();\
-	if (timing) {\
-	    sample.inst = currInst;\
-	    sample.clicks = end_clicks - start_clicks;\
-	    sample.count = instructionCount;\
-	    sample.type = 2;\
-	    RecordSample(sample);\
-	    start_clicks = GetClicks();\
-	}\
-	}
-#define TIMING_END_CHILD() {\
-	end_clicks = GetClicks();\
-	if (timing) {\
-	    sample.inst = currInst;\
-	    sample.clicks = end_clicks - start_clicks;\
-	    sample.count = instructionCount;\
-	    sample.type = 3;\
-	    RecordSample(sample);\
-	    start_clicks = GetClicks();\
-	}\
-	}
-#define TIMING_LOCAL_VARIABLES() \
-	register clickT start_clicks_l = 0, start_clicks_u = 0;\
-	register clickT end_clicks_l = 0, end_clicks_u = 0;\
-	register int timing = 0;\
-	SampleData sample = {0, 0, 0};\
-	unsigned short currInst = LAST_INST_OPCODE+3;
-#define TIMING_GLOBAL_VARIABLES() \
-	static double overhead_cycles = 0.0, overhead_clicks = 0.0;
-#define TIMING_INITIALIZE() if (1) {\
-	TIMING_LOCAL_VARIABLES();\
-	int instructionCount = 0;\
-	chud_device_t dev;\
-	int nS = 5000, np;\
-	unsigned char p = 0; register unsigned char *pc = &p;\
-	chudInitialize();\
-	chudResetSamplingFacility();\
-	chudAcquireSamplingFacility(CHUD_NONBLOCKING);\
-	chudSetSamplingDevice(chudUserDev);\
-	chudSetRecordCallstacks(0);\
-	chudSetRecordFinalSample(0);\
-	chudSetMaxSampleLimit(500000);\
-	chudSetTargetPID(getpid());\
-	chudSetSampleOnlyTargetPID(1);\
-	chudMarkPID(getpid(), 1);\
-	np = chudProcessorCount();\
-	for (dev = chudCPU1Dev; dev < chudCPU1Dev + np; dev++) {\
-	    chudSetMarkFilter(dev, chudCountMarkedEvents);\
-	    chudSetPrivilegeFilter(dev, PMC_1, chudCountUserEvents);\
-	    chudSetPMCMode(dev, PMC_1, chudCounter);\
-	    chudSetPMCEvent(dev, PMC_1, 1);\
-	}\
-	chudStartPMCs();\
-	do { TIMING_START_INST(*pc); TIMING_END_INST(); } while (--nS);\
-	chudStopPMCs();\
-	for (dev = chudCPU1Dev; dev < chudCPU1Dev + np; dev++) {\
-	    int n = chudGetSampleCount(dev), i = 0;\
-	    while (i < n) {\
-		int cc; double *cycles; SampleData *data; size_t ds;\
-		cycles = chudGetSamplePMCCounts(dev, i, &cc);\
-		data = chudGetSampleAuxData(dev, i, &ds);\
-		if (cc && cycles && ds == sizeof(SampleData) && data && data->type == 1) {\
-		    overhead_cycles += *cycles; overhead_clicks += data->clicks;\
-		    nS++;\
-		}\
-		++i;\
-	    }\
-	}\
-	overhead_cycles /= nS; overhead_clicks /= nS;\
-	fprintf(stderr, "Overhead: %10.2f cycles %10.2f clicks %6d samples\n",\
-		overhead_cycles, overhead_clicks, nS);\
-	chudClearPMCs();\
-	chudStartPMCs();\
-	} else {\
-	chudInitialize();\
-	chudMarkPID(getpid(), 1);\
-	chudAcquireRemoteAccess();\
-	chudClearPMCs();\
-	chudStartRemotePerfMonitor("Tcl VM");\
-	}
-#define TIMING_FINALIZE() if (1) {\
-	chud_device_t dev;\
-	unsigned long tS = 0; int np; unsigned short j = 0;\
-	struct { double cycles, clicks; long n;} t[LAST_INST_OPCODE+3];\
-	chudStopPMCs();\
-	/*fprintf(stderr, "Analyzing ");*/\
-	bzero(t, sizeof(t));\
-	np = chudProcessorCount();\
-	for (dev = chudCPU1Dev; dev < chudCPU1Dev + np; dev++) {\
-	    int n = chudGetSampleCount(dev), i = 0; tS += n;\
-	    int indent = 0;\
-	    while (i < n) {\
-		int cc; double *cycles; SampleData *data; size_t ds;\
-		cycles = chudGetSamplePMCCounts(dev, i, &cc);\
-		data = chudGetSampleAuxData(dev, i, &ds);\
-		if (data && cycles) {\
-		    if (data->type == 3) indent -= 4;\
-		    fprintf(stderr, "%*stype %2hd, inst %3hu, count %3d, clicks %6lu, cycles %10.0f\n",\
-		    	indent, "", data->type, data->inst, data->count, data->clicks,\
-		    	data->type >= 0 ? *cycles - overhead_cycles : 0.0);\
-		    if (data->type == 2) indent += 4;\
-		} else {\
-		    fprintf(stderr, "bad sample!\n");\
-		}\
-		if (cc && cycles && ds == sizeof(SampleData) && data && data->type >= 0) {\
-		    switch (data->type) {\
-			case 0: j = LAST_INST_OPCODE+1; break;\
-			case 1: case 2: j = data->inst; break;\
-			case 3: j = LAST_INST_OPCODE+2; break;\
-		    }\
-		    t[j].cycles += *cycles - overhead_cycles;\
-		    t[j].clicks += data->clicks - overhead_clicks;\
-		    t[j].n++;\
-		}\
-		if (!(++i & 0x3ff)) { /*fprintf(stderr, ".");*/}\
-	    }\
-	}\
-	fprintf(stderr, "\nAnalyzed %lu samples:\n", tS);\
-	chudSetTargetPID(0);\
-	chudMarkPID(getpid(), 0);\
-	chudResetSamplingFacility();\
-	chudReleaseSamplingFacility(0);\
-	chudCleanup();\
-	for (j = 0; j <= LAST_INST_OPCODE + 2; j++) {\
-	    unsigned long n = t[j].n;\
-	    if (n) {\
-		const char *instName =  j <= LAST_INST_OPCODE ? tclInstructionTable[j].name :\
-			(j == LAST_INST_OPCODE+1 ? "Dispatch" : "TEOvI");\
-		fprintf(stderr, "%-20s Total:    %10.2f cycles %10.2f clicks %6lu samples\n",\
-			instName, t[j].cycles, t[j].clicks, n);\
-		fprintf(stderr, "%-20s Average:  %10.2f cycles %10.2f clicks\n",\
-			instName, t[j].cycles/n, t[j].clicks/n);\
-		fprintf(stderr, "%-20s Time:     %10.2f ns     %10.2f ns\n", instName,\
-			chudConvertTime(t[j].cycles, chudCPUCycles, chudNanoSeconds)/n,\
-			chudConvertTime(t[j].clicks, chudTimeBaseTicks, chudNanoSeconds)/n);\
-	    }\
-	}\
-	} else {\
-	chudStopRemotePerfMonitor();\
-	chudReleaseRemoteAccess();\
-	chudCleanup();\
-	}
-
-
-TIMING_GLOBAL_VARIABLES();
-
-#else /* USE_VM_TIMING */
-
-#define TIMING_START_INST(i)
-#define TIMING_END_INST()
-#define TIMING_START_CHILD()
-#define TIMING_END_CHILD()
-#define TIMING_LOCAL_VARIABLES()
-#define TIMING_GLOBAL_VARIABLES
-#define TIMING_INITIALIZE()
-#define TIMING_FINALIZE()
-
-#endif /* USE_VM_TIMING */
-
-/*
  * Macros to construct the instruction switch resp. jumptable.
  */
 
@@ -713,7 +470,6 @@ TIMING_GLOBAL_VARIABLES();
  */
 
 #define NEXT_INST_F(pcAdjustment, nCleanup, resultHandling) \
-    TIMING_END_INST();\
     if (nCleanup == 0) {\
 	if (resultHandling != 0) {\
 	    if ((resultHandling) > 0) {\
@@ -744,7 +500,6 @@ TIMING_GLOBAL_VARIABLES();
     NEXT_INST();
 
 #define NEXT_INST_V(pcAdjustment, nCleanup, resultHandling) \
-    TIMING_END_INST();\
     pc += (pcAdjustment);\
     cleanup = (nCleanup);\
     if (resultHandling) {\
@@ -1220,7 +975,6 @@ InitByteCodeExecution(
 	MaxBaseWide[i-2] = w;
     }
 #endif
-    TIMING_INITIALIZE();
 }
 
 /*
@@ -1359,7 +1113,6 @@ TclDeleteExecEnv(
 void
 TclFinalizeExecution(void)
 {
-    TIMING_FINALIZE();
     Tcl_MutexLock(&execMutex);
     execInitialized = 0;
     Tcl_MutexUnlock(&execMutex);
@@ -2334,8 +2087,6 @@ TclExecuteByteCode(
     };
 #endif
 
-    TIMING_LOCAL_VARIABLES();
-
     /*
      * The execution uses a unified stack: first the catch stack, immediately
      * above it a CmdFrame, then the execution stack.
@@ -2394,7 +2145,6 @@ TclExecuteByteCode(
     NEXT_INST_DISPATCH() {
     CASE(INST_SYNTAX):
     CASE(INST_RETURN_IMM): {
-	TIMING_START_INST(*pc);
 	int code = TclGetInt4AtPtr(pc+1);
 	int level = TclGetUInt4AtPtr(pc+5);
 
@@ -2419,7 +2169,6 @@ TclExecuteByteCode(
     }
 
     CASE(INST_RETURN_STK):
-	TIMING_START_INST(*pc);
 	TRACE(("=> "));
 	objResultPtr = POP_OBJECT();
 	result = Tcl_SetReturnOptions(interp, OBJ_AT_TOS);
@@ -2436,7 +2185,6 @@ TclExecuteByteCode(
 	}
 
     CASE(INST_DONE):
-	TIMING_START_INST(*pc);
 	if (tosPtr > initTosPtr) {
 	    /*
 	     * Set the interpreter's object result to point to the topmost
@@ -2461,7 +2209,6 @@ TclExecuteByteCode(
 
     CASE(INST_PUSH1):
     instPush1Peephole:
-	TIMING_START_INST(*pc);
 	PUSH_OBJECT(codePtr->objArrayPtr[TclGetUInt1AtPtr(pc+1)]);
 	TRACE_WITH_OBJ(("%u => ", TclGetInt1AtPtr(pc+1)), OBJ_AT_TOS);
 	pc += 2;
@@ -2471,7 +2218,6 @@ TclExecuteByteCode(
 	 */
 
 	if (*pc == INST_PUSH1) {
-	    TIMING_END_INST();
 	    TCL_DTRACE_INST_NEXT();
 	    goto instPush1Peephole;
 	}
@@ -2479,7 +2225,6 @@ TclExecuteByteCode(
 	NEXT_INST_F(0, 0, 0);
 
     CASE(INST_PUSH4):
-	TIMING_START_INST(*pc);
 	objResultPtr = codePtr->objArrayPtr[TclGetUInt4AtPtr(pc+1)];
 	TRACE_WITH_OBJ(("%u => ", TclGetUInt4AtPtr(pc+1)), objResultPtr);
 	NEXT_INST_F(5, 0, 1);
@@ -2487,7 +2232,6 @@ TclExecuteByteCode(
     CASE(INST_POP): {
 	Tcl_Obj *valuePtr;
 
-	TIMING_START_INST(*pc);
 	TRACE_WITH_OBJ(("=> discarding "), OBJ_AT_TOS);
 	valuePtr = POP_OBJECT();
 	TclDecrRefCount(valuePtr);
@@ -2501,7 +2245,6 @@ TclExecuteByteCode(
 	pc++;
 #if !TCL_COMPILE_DEBUG
 	if (*pc == INST_START_CMD) {
-	    TIMING_END_INST();
 	    TCL_DTRACE_INST_NEXT();
 	    goto instStartCmdPeephole;
 	}
@@ -2513,7 +2256,6 @@ TclExecuteByteCode(
 #if !TCL_COMPILE_DEBUG
     instStartCmdPeephole:
 #endif
-	TIMING_START_INST(*pc);
 	/*
 	 * Remark that if the interpreter is marked for deletion its
 	 * compileEpoch is modified, so that the epoch check also verifies
@@ -2552,7 +2294,6 @@ TclExecuteByteCode(
 	}
 
     CASE(INST_DUP):
-	TIMING_START_INST(*pc);
 	objResultPtr = OBJ_AT_TOS;
 	TRACE_WITH_OBJ(("=> "), objResultPtr);
 	NEXT_INST_F(1, 0, 1);
@@ -2560,7 +2301,6 @@ TclExecuteByteCode(
     CASE(INST_OVER): {
 	int opnd;
 
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt4AtPtr(pc+1);
 	objResultPtr = OBJ_AT_DEPTH(opnd);
 	TRACE_WITH_OBJ(("=> "), objResultPtr);
@@ -2571,7 +2311,6 @@ TclExecuteByteCode(
 	int opnd;
 	Tcl_Obj **a, **b;
 
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt4AtPtr(pc+1);
 	a = tosPtr-(opnd-1);
 	b = tosPtr;
@@ -2590,7 +2329,6 @@ TclExecuteByteCode(
 	Tcl_Obj **currPtr;
 	int onlyb = 1;
 
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt1AtPtr(pc+1);
 
 	/*
@@ -2732,7 +2470,6 @@ TclExecuteByteCode(
 
 	Tcl_Obj *objPtr;
 
-	TIMING_START_INST(*pc);
 	TclNewObj(objPtr);
 	objPtr->internalRep.twoPtrValue.ptr1 = (void *) CURR_DEPTH;
 	objPtr->internalRep.twoPtrValue.ptr2 = (void *) expandNestList;
@@ -2745,7 +2482,6 @@ TclExecuteByteCode(
 	Tcl_Obj **objv, *valuePtr;
 	ptrdiff_t moved;
 
-	TIMING_START_INST(*pc);
 	/*
 	 * Make sure that the element at stackTop is a list; if not, just
 	 * leave with an error. Note that the element from the expand list
@@ -2806,7 +2542,6 @@ TclExecuteByteCode(
 	int objc, pcAdjustment;
 
     CASE(INST_INVOKE_EXPANDED):
-	TIMING_START_INST(*pc);
 	{
 	    Tcl_Obj *objPtr = expandNestList;
 
@@ -2829,13 +2564,11 @@ TclExecuteByteCode(
 	}
 
     CASE(INST_INVOKE_STK4):
-	TIMING_START_INST(*pc);
 	objc = TclGetUInt4AtPtr(pc+1);
 	pcAdjustment = 5;
 	goto doInvocation;
 
     CASE(INST_INVOKE_STK1):
-	TIMING_START_INST(*pc);
 	objc = TclGetUInt1AtPtr(pc+1);
 	pcAdjustment = 2;
 
@@ -2880,10 +2613,8 @@ TclExecuteByteCode(
 	    bcFramePtr->data.tebc.pc = (char *) pc;
 	    iPtr->cmdFramePtr = bcFramePtr;
 	    DECACHE_STACK_INFO();
-	    TIMING_START_CHILD();
 	    result = TclEvalObjvInternal(interp, objc, objv,
 		    /* call from TEBC */(char *) -1, -1, 0);
-	    TIMING_END_CHILD();
 	    CACHE_STACK_INFO();
 	    iPtr->cmdFramePtr = iPtr->cmdFramePtr->nextPtr;
 
@@ -2940,7 +2671,6 @@ TclExecuteByteCode(
 	int opnd, numArgs;
 	Tcl_Obj *objPtr;
 
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt1AtPtr(pc+1);
 	if ((opnd < 0) || (opnd > LAST_BUILTIN_FUNC)) {
 	    TRACE(("UNRECOGNIZED BUILTIN FUNC CODE %d\n", opnd));
@@ -2988,7 +2718,6 @@ TclExecuteByteCode(
 
 	Tcl_Obj *tmpPtr, *objPtr;
 
-	TIMING_START_INST(*pc);
 	/*
 	 * Number of arguments. The function name is the 0-th argument.
 	 */
@@ -3024,8 +2753,7 @@ TclExecuteByteCode(
 #endif
     }
 
-    CASE(INST_EVAL_STK):
-	TIMING_START_INST(*pc); {
+    CASE(INST_EVAL_STK): {
 	/*
 	 * Note to maintainers: it is important that INST_EVAL_STK pop its
 	 * argument from the stack before jumping to checkForCatch! DO NOT
@@ -3077,7 +2805,6 @@ TclExecuteByteCode(
     CASE(INST_EXPR_STK): {
 	Tcl_Obj *objPtr, *valuePtr;
 
-	TIMING_START_INST(*pc);
 	objPtr = OBJ_AT_TOS;
 	DECACHE_STACK_INFO();
 	/*Tcl_ResetResult(interp);*/
@@ -3110,7 +2837,6 @@ TclExecuteByteCode(
 
     CASE(INST_LOAD_SCALAR1):
     instLoadScalar1:
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt1AtPtr(pc+1);
 	varPtr = &(compiledLocals[opnd]);
 	while (TclIsVarLink(varPtr)) {
@@ -3133,7 +2859,6 @@ TclExecuteByteCode(
 	goto doCallPtrGetVar;
 
     CASE(INST_LOAD_SCALAR4):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt4AtPtr(pc+1);
 	varPtr = &(compiledLocals[opnd]);
 	while (TclIsVarLink(varPtr)) {
@@ -3156,13 +2881,11 @@ TclExecuteByteCode(
 	goto doCallPtrGetVar;
 
     CASE(INST_LOAD_ARRAY4):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt4AtPtr(pc+1);
 	pcAdjustment = 5;
 	goto doLoadArray;
 
     CASE(INST_LOAD_ARRAY1):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt1AtPtr(pc+1);
 	pcAdjustment = 2;
 
@@ -3198,7 +2921,6 @@ TclExecuteByteCode(
 	goto doCallPtrGetVar;
 
     CASE(INST_LOAD_ARRAY_STK):
-	TIMING_START_INST(*pc);
 	cleanup = 2;
 	part2Ptr = OBJ_AT_TOS;		/* element name */
 	objPtr = OBJ_UNDER_TOS;		/* array name */
@@ -3207,7 +2929,6 @@ TclExecuteByteCode(
 
     CASE(INST_LOAD_STK):
     CASE(INST_LOAD_SCALAR_STK):
-	TIMING_START_INST(*pc);
 	cleanup = 1;
 	part2Ptr = NULL;
 	objPtr = OBJ_AT_TOS;		/* variable name */
@@ -3278,13 +2999,11 @@ TclExecuteByteCode(
 	Tcl_Obj *objPtr, *valuePtr;
 
     CASE(INST_STORE_ARRAY4):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt4AtPtr(pc+1);
 	pcAdjustment = 5;
 	goto doStoreArrayDirect;
 
     CASE(INST_STORE_ARRAY1):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt1AtPtr(pc+1);
 	pcAdjustment = 2;
 
@@ -3312,13 +3031,11 @@ TclExecuteByteCode(
 	goto doStoreArrayDirectFailed;
 
     CASE(INST_STORE_SCALAR4):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt4AtPtr(pc+1);
 	pcAdjustment = 5;
 	goto doStoreScalarDirect;
 
     CASE(INST_STORE_SCALAR1):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt1AtPtr(pc+1);
 	pcAdjustment = 2;
 
@@ -3359,7 +3076,6 @@ TclExecuteByteCode(
 	goto doStoreScalar;
 
     CASE(INST_LAPPEND_STK):
-	TIMING_START_INST(*pc);
 	valuePtr = OBJ_AT_TOS; /* value to append */
 	part2Ptr = NULL;
 	storeFlags = (TCL_LEAVE_ERR_MSG | TCL_APPEND_VALUE
@@ -3367,7 +3083,6 @@ TclExecuteByteCode(
 	goto doStoreStk;
 
     CASE(INST_LAPPEND_ARRAY_STK):
-	TIMING_START_INST(*pc);
 	valuePtr = OBJ_AT_TOS; /* value to append */
 	part2Ptr = OBJ_UNDER_TOS;
 	storeFlags = (TCL_LEAVE_ERR_MSG | TCL_APPEND_VALUE
@@ -3375,21 +3090,18 @@ TclExecuteByteCode(
 	goto doStoreStk;
 
     CASE(INST_APPEND_STK):
-	TIMING_START_INST(*pc);
 	valuePtr = OBJ_AT_TOS; /* value to append */
 	part2Ptr = NULL;
 	storeFlags = (TCL_LEAVE_ERR_MSG | TCL_APPEND_VALUE);
 	goto doStoreStk;
 
     CASE(INST_APPEND_ARRAY_STK):
-	TIMING_START_INST(*pc);
 	valuePtr = OBJ_AT_TOS; /* value to append */
 	part2Ptr = OBJ_UNDER_TOS;
 	storeFlags = (TCL_LEAVE_ERR_MSG | TCL_APPEND_VALUE);
 	goto doStoreStk;
 
     CASE(INST_STORE_ARRAY_STK):
-	TIMING_START_INST(*pc);
 	valuePtr = OBJ_AT_TOS;
 	part2Ptr = OBJ_UNDER_TOS;
 	storeFlags = TCL_LEAVE_ERR_MSG;
@@ -3397,7 +3109,6 @@ TclExecuteByteCode(
 
     CASE(INST_STORE_STK):
     CASE(INST_STORE_SCALAR_STK):
-	TIMING_START_INST(*pc);
 	valuePtr = OBJ_AT_TOS;
 	part2Ptr = NULL;
 	storeFlags = TCL_LEAVE_ERR_MSG;
@@ -3427,7 +3138,6 @@ TclExecuteByteCode(
 	}
 
     CASE(INST_LAPPEND_ARRAY4):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt4AtPtr(pc+1);
 	pcAdjustment = 5;
 	storeFlags = (TCL_LEAVE_ERR_MSG | TCL_APPEND_VALUE
@@ -3435,7 +3145,6 @@ TclExecuteByteCode(
 	goto doStoreArray;
 
     CASE(INST_LAPPEND_ARRAY1):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt1AtPtr(pc+1);
 	pcAdjustment = 2;
 	storeFlags = (TCL_LEAVE_ERR_MSG | TCL_APPEND_VALUE
@@ -3443,14 +3152,12 @@ TclExecuteByteCode(
 	goto doStoreArray;
 
     CASE(INST_APPEND_ARRAY4):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt4AtPtr(pc+1);
 	pcAdjustment = 5;
 	storeFlags = (TCL_LEAVE_ERR_MSG | TCL_APPEND_VALUE);
 	goto doStoreArray;
 
     CASE(INST_APPEND_ARRAY1):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt1AtPtr(pc+1);
 	pcAdjustment = 2;
 	storeFlags = (TCL_LEAVE_ERR_MSG | TCL_APPEND_VALUE);
@@ -3480,7 +3187,6 @@ TclExecuteByteCode(
 	}
 
     CASE(INST_LAPPEND_SCALAR4):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt4AtPtr(pc+1);
 	pcAdjustment = 5;
 	storeFlags = (TCL_LEAVE_ERR_MSG | TCL_APPEND_VALUE
@@ -3488,7 +3194,6 @@ TclExecuteByteCode(
 	goto doStoreScalar;
 
     CASE(INST_LAPPEND_SCALAR1):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt1AtPtr(pc+1);
 	pcAdjustment = 2;
 	storeFlags = (TCL_LEAVE_ERR_MSG | TCL_APPEND_VALUE
@@ -3496,14 +3201,12 @@ TclExecuteByteCode(
 	goto doStoreScalar;
 
     CASE(INST_APPEND_SCALAR4):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt4AtPtr(pc+1);
 	pcAdjustment = 5;
 	storeFlags = (TCL_LEAVE_ERR_MSG | TCL_APPEND_VALUE);
 	goto doStoreScalar;
 
     CASE(INST_APPEND_SCALAR1):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt1AtPtr(pc+1);
 	pcAdjustment = 2;
 	storeFlags = (TCL_LEAVE_ERR_MSG | TCL_APPEND_VALUE);
@@ -3571,7 +3274,6 @@ TclExecuteByteCode(
     CASE(INST_INCR_ARRAY_STK):
     CASE(INST_INCR_SCALAR_STK):
     CASE(INST_INCR_STK):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt1AtPtr(pc+1);
 	incrPtr = POP_OBJECT();
 	switch (*pc) {
@@ -3589,7 +3291,6 @@ TclExecuteByteCode(
     CASE(INST_INCR_ARRAY_STK_IMM):
     CASE(INST_INCR_SCALAR_STK_IMM):
     CASE(INST_INCR_STK_IMM):
-	TIMING_START_INST(*pc);
 	i = TclGetInt1AtPtr(pc+1);
 	incrPtr = Tcl_NewIntObj(i);
 	Tcl_IncrRefCount(incrPtr);
@@ -3624,7 +3325,6 @@ TclExecuteByteCode(
 	}
 
     CASE(INST_INCR_ARRAY1_IMM):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt1AtPtr(pc+1);
 	i = TclGetInt1AtPtr(pc+2);
 	incrPtr = Tcl_NewIntObj(i);
@@ -3652,7 +3352,6 @@ TclExecuteByteCode(
 	}
 
     CASE(INST_INCR_SCALAR1_IMM):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt1AtPtr(pc+1);
 	i = TclGetInt1AtPtr(pc+2);
 	pcAdjustment = 3;
@@ -3842,8 +3541,7 @@ TclExecuteByteCode(
 	Tcl_Obj *part1Ptr, *part2Ptr;
 	Var *varPtr, *arrayPtr;
 
-    CASE(INST_EXIST_SCALAR):
-	TIMING_START_INST(*pc); {
+    CASE(INST_EXIST_SCALAR): {
 
 	int opnd = TclGetUInt4AtPtr(pc+1);
 
@@ -3872,8 +3570,7 @@ TclExecuteByteCode(
 	NEXT_INST_F(5, 0, 1);
     }
 
-    CASE(INST_EXIST_ARRAY):
-	TIMING_START_INST(*pc); {
+    CASE(INST_EXIST_ARRAY): {
 	int opnd = TclGetUInt4AtPtr(pc+1);
 
 	part2Ptr = OBJ_AT_TOS;
@@ -3909,7 +3606,6 @@ TclExecuteByteCode(
     }
 
     CASE(INST_EXIST_ARRAY_STK):
-	TIMING_START_INST(*pc);
 	cleanup = 2;
 	part2Ptr = OBJ_AT_TOS;		/* element name */
 	part1Ptr = OBJ_UNDER_TOS;	/* array name */
@@ -3917,7 +3613,6 @@ TclExecuteByteCode(
 	goto doExistStk;
 
     CASE(INST_EXIST_STK):
-	TIMING_START_INST(*pc);
 	cleanup = 1;
 	part2Ptr = NULL;
 	part1Ptr = OBJ_AT_TOS;		/* variable name */
@@ -3952,7 +3647,6 @@ TclExecuteByteCode(
 	int opnd;
 	Var *varPtr, *otherPtr;
 
-	TIMING_START_INST(*pc);
 	TRACE_WITH_OBJ(("upvar "), OBJ_UNDER_TOS);
 
 	{
@@ -3980,7 +3674,6 @@ TclExecuteByteCode(
 	}
 
     CASE(INST_VARIABLE):
-	TIMING_START_INST(*pc);
 	TRACE(("variable "));
 	otherPtr = TclObjLookupVarEx(interp, OBJ_AT_TOS, NULL,
 		(TCL_NAMESPACE_ONLY | TCL_LEAVE_ERR_MSG), "access",
@@ -3998,7 +3691,6 @@ TclExecuteByteCode(
 	goto checkForCatch;
 
     CASE(INST_NSUPVAR):
-	TIMING_START_INST(*pc);
 	TRACE_WITH_OBJ(("nsupvar "), OBJ_UNDER_TOS);
 
 	{
@@ -4074,8 +3766,7 @@ TclExecuteByteCode(
 	NEXT_INST_F(5, 1, 0);
     }
 
-    CASE(INST_JUMP1):
-	TIMING_START_INST(*pc); {
+    CASE(INST_JUMP1): {
 	int opnd = TclGetInt1AtPtr(pc+1);
 
 	TRACE(("%d => new pc %u\n", opnd,
@@ -4083,8 +3774,7 @@ TclExecuteByteCode(
 	NEXT_INST_F(opnd, 0, 0);
     }
 
-    CASE(INST_JUMP4):
-	TIMING_START_INST(*pc); {
+    CASE(INST_JUMP4): {
 	int opnd = TclGetInt4AtPtr(pc+1);
 
 	TRACE(("%d => new pc %u\n", opnd,
@@ -4099,25 +3789,21 @@ TclExecuteByteCode(
 	/* TODO: consider rewrite so we don't compute the offset we're not
 	 * going to take. */
     CASE(INST_JUMP_FALSE4):
-	TIMING_START_INST(*pc);
 	jmpOffset[0] = TclGetInt4AtPtr(pc+1);	/* FALSE offset */
 	jmpOffset[1] = 5;			/* TRUE offset*/
 	goto doCondJump;
 
     CASE(INST_JUMP_TRUE4):
-	TIMING_START_INST(*pc);
 	jmpOffset[0] = 5;
 	jmpOffset[1] = TclGetInt4AtPtr(pc+1);
 	goto doCondJump;
 
     CASE(INST_JUMP_FALSE1):
-	TIMING_START_INST(*pc);
 	jmpOffset[0] = TclGetInt1AtPtr(pc+1);
 	jmpOffset[1] = 2;
 	goto doCondJump;
 
     CASE(INST_JUMP_TRUE1):
-	TIMING_START_INST(*pc);
 	jmpOffset[0] = 2;
 	jmpOffset[1] = TclGetInt1AtPtr(pc+1);
 
@@ -4161,7 +3847,6 @@ TclExecuteByteCode(
 	JumptableInfo *jtPtr;
 	int opnd;
 
-	TIMING_START_INST(*pc);
 	/*
 	 * Jump to location looked up in a hashtable; fall through to next
 	 * instr if lookup fails.
@@ -4189,8 +3874,7 @@ TclExecuteByteCode(
      */
 
     CASE(INST_LOR):
-    CASE(INST_LAND):
-	TIMING_START_INST(*pc); {
+    CASE(INST_LAND): {
 	/*
 	 * Operands must be boolean or numeric. No int->double conversions are
 	 * performed.
@@ -4239,7 +3923,6 @@ TclExecuteByteCode(
 
 	int opnd;
 
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt4AtPtr(pc+1);
 	objResultPtr = Tcl_NewListObj(opnd, &OBJ_AT_DEPTH(opnd-1));
 	TRACE_WITH_OBJ(("%u => ", opnd), objResultPtr);
@@ -4250,7 +3933,6 @@ TclExecuteByteCode(
 	Tcl_Obj *valuePtr;
 	int length;
 
-	TIMING_START_INST(*pc);
 	valuePtr = OBJ_AT_TOS;
 
 	result = TclListObjLength(interp, valuePtr, &length);
@@ -4274,7 +3956,6 @@ TclExecuteByteCode(
 	Tcl_Obj **listv;
 	Tcl_Obj *valuePtr, *value2Ptr;
 
-	TIMING_START_INST(*pc);
 	/*
 	 * Pop the two operands.
 	 */
@@ -4315,7 +3996,6 @@ TclExecuteByteCode(
     CASE(INST_LIST_INDEX_IMM):
 	/*** lindex with objc==3 and index in bytecode stream ***/
 
-	TIMING_START_INST(*pc);
 	pcAdjustment = 5;
 
 	/*
@@ -4370,7 +4050,6 @@ TclExecuteByteCode(
 
 	int numIdx, opnd;
 
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt4AtPtr(pc+1);
 	numIdx = opnd-1;
 
@@ -4407,7 +4086,6 @@ TclExecuteByteCode(
 	int numIdx,opnd;
 	Tcl_Obj *valuePtr, *value2Ptr;
 
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt4AtPtr(pc + 1);
 	numIdx = opnd - 2;
 
@@ -4459,7 +4137,6 @@ TclExecuteByteCode(
 
 	Tcl_Obj *objPtr, *valuePtr, *value2Ptr;
 
-	TIMING_START_INST(*pc);
 	/*
 	 * Get the old value of variable, and remove the stack ref. This is
 	 * safe because the variable still references the object; the ref
@@ -4508,7 +4185,6 @@ TclExecuteByteCode(
 	int listc, fromIdx, toIdx;
 	Tcl_Obj **listv, *valuePtr;
 
-	TIMING_START_INST(*pc);
 	/*
 	 * Pop the list and get the indices.
 	 */
@@ -4594,7 +4270,6 @@ TclExecuteByteCode(
 	char *s1;
 	const char *s2;
 
-	TIMING_START_INST(*pc);
 	value2Ptr = OBJ_AT_TOS;
 	valuePtr = OBJ_UNDER_TOS;
 
@@ -4671,7 +4346,6 @@ TclExecuteByteCode(
 	int iResult;
 	Tcl_Obj *valuePtr, *value2Ptr;
 
-	TIMING_START_INST(*pc);
 	value2Ptr = OBJ_AT_TOS;
 	valuePtr = OBJ_UNDER_TOS;
 
@@ -4737,7 +4411,6 @@ TclExecuteByteCode(
 	int s1len, s2len, iResult;
 	Tcl_Obj *valuePtr, *value2Ptr;
 
-	TIMING_START_INST(*pc);
     stringCompare:
 	value2Ptr = OBJ_AT_TOS;
 	valuePtr = OBJ_UNDER_TOS;
@@ -4842,7 +4515,6 @@ TclExecuteByteCode(
 	int length;
 	Tcl_Obj *valuePtr;
 
-	TIMING_START_INST(*pc);
 	valuePtr = OBJ_AT_TOS;
 
 	if (valuePtr->typePtr == &tclByteArrayType) {
@@ -4864,7 +4536,6 @@ TclExecuteByteCode(
 	char *bytes;
 	Tcl_Obj *valuePtr, *value2Ptr;
 
-	TIMING_START_INST(*pc);
 	bytes = NULL; /* lint */
 	value2Ptr = OBJ_AT_TOS;
 	valuePtr = OBJ_UNDER_TOS;
@@ -4925,7 +4596,6 @@ TclExecuteByteCode(
 	int nocase, match;
 	Tcl_Obj *valuePtr, *value2Ptr;
 
-	TIMING_START_INST(*pc);
 	nocase = TclGetInt1AtPtr(pc+1);
 	valuePtr = OBJ_AT_TOS;		/* String */
 	value2Ptr = OBJ_UNDER_TOS;	/* Pattern */
@@ -4967,8 +4637,7 @@ TclExecuteByteCode(
 	NEXT_INST_F(2, 2, 1);
     }
 
-    CASE(INST_REGEXP):
-	TIMING_START_INST(*pc); {
+    CASE(INST_REGEXP): {
 	int cflags, match;
 	Tcl_Obj *valuePtr, *value2Ptr;
 	Tcl_RegExp regExpr;
@@ -5006,8 +4675,7 @@ TclExecuteByteCode(
     CASE(INST_LT):
     CASE(INST_GT):
     CASE(INST_LE):
-    CASE(INST_GE):
-	TIMING_START_INST(*pc); {
+    CASE(INST_GE): {
 	Tcl_Obj *valuePtr = OBJ_UNDER_TOS;
 	Tcl_Obj *value2Ptr = OBJ_AT_TOS;
 	ClientData ptr1, ptr2;
@@ -5321,8 +4989,7 @@ TclExecuteByteCode(
 
     CASE(INST_MOD):
     CASE(INST_LSHIFT):
-    CASE(INST_RSHIFT):
-	TIMING_START_INST(*pc); {
+    CASE(INST_RSHIFT): {
 	Tcl_Obj *value2Ptr = OBJ_AT_TOS;
 	Tcl_Obj *valuePtr = OBJ_UNDER_TOS;
 	ClientData ptr1, ptr2;
@@ -5781,8 +5448,7 @@ TclExecuteByteCode(
 
     CASE(INST_BITOR):
     CASE(INST_BITXOR):
-    CASE(INST_BITAND):
-	TIMING_START_INST(*pc); {
+    CASE(INST_BITAND): {
 	ClientData ptr1, ptr2;
 	int type1, type2;
 	Tcl_Obj *value2Ptr = OBJ_AT_TOS;
@@ -6028,8 +5694,7 @@ TclExecuteByteCode(
     CASE(INST_ADD):
     CASE(INST_SUB):
     CASE(INST_DIV):
-    CASE(INST_MULT):
-	TIMING_START_INST(*pc); {
+    CASE(INST_MULT): {
 	ClientData ptr1, ptr2;
 	int type1, type2;
 	Tcl_Obj *value2Ptr = OBJ_AT_TOS;
@@ -6771,8 +6436,7 @@ TclExecuteByteCode(
 	}
     }
 
-    CASE(INST_LNOT):
-	TIMING_START_INST(*pc); {
+    CASE(INST_LNOT): {
 	int b;
 	Tcl_Obj *valuePtr = OBJ_AT_TOS;
 
@@ -6790,8 +6454,7 @@ TclExecuteByteCode(
 	NEXT_INST_F(1, 1, 1);
     }
 
-    CASE(INST_BITNOT):
-	TIMING_START_INST(*pc); {
+    CASE(INST_BITNOT): {
 	mp_int big;
 	ClientData ptr;
 	int type;
@@ -6844,8 +6507,7 @@ TclExecuteByteCode(
 	NEXT_INST_F(1, 0, 0);
     }
 
-    CASE(INST_UMINUS):
-	TIMING_START_INST(*pc); {
+    CASE(INST_UMINUS): {
 	ClientData ptr;
 	int type;
 	Tcl_Obj *valuePtr = OBJ_AT_TOS;
@@ -6938,8 +6600,7 @@ TclExecuteByteCode(
     }
 
     CASE(INST_UPLUS):
-    CASE(INST_TRY_CVT_TO_NUMERIC):
-	TIMING_START_INST(*pc); {
+    CASE(INST_TRY_CVT_TO_NUMERIC): {
 	/*
 	 * Try to convert the topmost stack object to numeric object. This is
 	 * done in order to support [expr]'s policy of interpreting operands
@@ -7025,7 +6686,6 @@ TclExecuteByteCode(
     }
 
     CASE(INST_BREAK):
-	TIMING_START_INST(*pc);
 	/*
 	DECACHE_STACK_INFO();
 	Tcl_ResetResult(interp);
@@ -7036,7 +6696,6 @@ TclExecuteByteCode(
 	goto processExceptionReturn;
 
     CASE(INST_CONTINUE):
-	TIMING_START_INST(*pc);
 	/*
 	DECACHE_STACK_INFO();
 	Tcl_ResetResult(interp);
@@ -7057,7 +6716,6 @@ TclExecuteByteCode(
 	Var *iterVarPtr;
 	Tcl_Obj *oldValuePtr;
 
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt4AtPtr(pc+1);
 	infoPtr = (ForeachInfo *) codePtr->auxDataArrayPtr[opnd].clientData;
 	iterTmpIndex = infoPtr->loopCtTemp;
@@ -7080,7 +6738,6 @@ TclExecuteByteCode(
 	 */
 
 	pc += 5;
-	TIMING_END_INST();
 	TCL_DTRACE_INST_NEXT();
 #else
 	NEXT_INST_F(5, 0, 0);
@@ -7101,7 +6758,6 @@ TclExecuteByteCode(
 	int varIndex, valIndex, continueLoop, j;
 	long i;
 
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt4AtPtr(pc+1);
 	infoPtr = (ForeachInfo *) codePtr->auxDataArrayPtr[opnd].clientData;
 	numLists = infoPtr->numLists;
@@ -7220,7 +6876,6 @@ TclExecuteByteCode(
     }
 
     CASE(INST_BEGIN_CATCH4):
-	TIMING_START_INST(*pc);
 	/*
 	 * Record start of the catch command with exception range index equal
 	 * to the operand. Push the current stack depth onto the special catch
@@ -7234,7 +6889,6 @@ TclExecuteByteCode(
 	NEXT_INST_F(5, 0, 0);
 
     CASE(INST_END_CATCH):
-	TIMING_START_INST(*pc);
 	catchTop--;
 	Tcl_ResetResult(interp);
 	result = TCL_OK;
@@ -7242,7 +6896,6 @@ TclExecuteByteCode(
 	NEXT_INST_F(1, 0, 0);
 
     CASE(INST_PUSH_RESULT):
-	TIMING_START_INST(*pc);
 	objResultPtr = Tcl_GetObjResult(interp);
 	TRACE_WITH_OBJ(("=> "), objResultPtr);
 
@@ -7260,13 +6913,11 @@ TclExecuteByteCode(
 	NEXT_INST_F(1, 0, -1);
 
     CASE(INST_PUSH_RETURN_CODE):
-	TIMING_START_INST(*pc);
 	TclNewIntObj(objResultPtr, result);
 	TRACE(("=> %u\n", result));
 	NEXT_INST_F(1, 0, 1);
 
     CASE(INST_PUSH_RETURN_OPTIONS):
-	TIMING_START_INST(*pc);
 	objResultPtr = Tcl_GetReturnOptions(interp, result);
 	TRACE_WITH_OBJ(("=> "), objResultPtr);
 	NEXT_INST_F(1, 0, 1);
@@ -7278,7 +6929,6 @@ TclExecuteByteCode(
 	Var *varPtr;
 
     CASE(INST_DICT_GET):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt4AtPtr(pc+1);
 	TRACE(("%u => ", opnd));
 	dictPtr = OBJ_AT_DEPTH(opnd);
@@ -7315,7 +6965,6 @@ TclExecuteByteCode(
     CASE(INST_DICT_SET):
     CASE(INST_DICT_UNSET):
     CASE(INST_DICT_INCR_IMM):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt4AtPtr(pc+1);
 	opnd2 = TclGetUInt4AtPtr(pc+5);
 
@@ -7425,7 +7074,6 @@ TclExecuteByteCode(
 
     CASE(INST_DICT_APPEND):
     CASE(INST_DICT_LAPPEND):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt4AtPtr(pc+1);
 
 	varPtr = &(compiledLocals[opnd]);
@@ -7549,7 +7197,6 @@ TclExecuteByteCode(
 	Tcl_DictSearch *searchPtr;
 
     CASE(INST_DICT_FIRST):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt4AtPtr(pc+1);
 	TRACE(("%u => ", opnd));
 	dictPtr = POP_OBJECT();
@@ -7577,7 +7224,6 @@ TclExecuteByteCode(
 	goto pushDictIteratorResult;
 
     CASE(INST_DICT_NEXT):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt4AtPtr(pc+1);
 	TRACE(("%u => ", opnd));
 	statePtr = compiledLocals[opnd].value.objPtr;
@@ -7602,7 +7248,6 @@ TclExecuteByteCode(
 	NEXT_INST_F(5, 0, 1);
 
     CASE(INST_DICT_DONE):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt4AtPtr(pc+1);
 	TRACE(("%u => ", opnd));
 	statePtr = compiledLocals[opnd].value.objPtr;
@@ -7644,7 +7289,6 @@ TclExecuteByteCode(
 	Var *varPtr;
 
     CASE(INST_DICT_UPDATE_START):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt4AtPtr(pc+1);
 	opnd2 = TclGetUInt4AtPtr(pc+5);
 	varPtr = &(compiledLocals[opnd]);
@@ -7700,7 +7344,6 @@ TclExecuteByteCode(
 	NEXT_INST_F(9, 0, 0);
 
     CASE(INST_DICT_UPDATE_END):
-	TIMING_START_INST(*pc);
 	opnd = TclGetUInt4AtPtr(pc+1);
 	opnd2 = TclGetUInt4AtPtr(pc+5);
 	varPtr = &(compiledLocals[opnd]);
@@ -8026,7 +7669,6 @@ TclExecuteByteCode(
 	 */
 
     abnormalReturn:
-	TIMING_END_INST();
 	TCL_DTRACE_INST_LAST();
 	while (tosPtr > initTosPtr) {
 	    Tcl_Obj *objPtr = POP_OBJECT();
