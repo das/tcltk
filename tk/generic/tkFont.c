@@ -2469,11 +2469,11 @@ TkUnderlineAngledTextLayout(
 	    XDrawLines(display, drawable, gc, points, 2, CoordModeOrigin);
 	} else {
 	    points[2].x = x + ROUND16(xx*cosA + dy*sinA + width*cosA
-		    - fontPtr->underlineHeight*sinA);
+		    + fontPtr->underlineHeight*sinA);
 	    points[2].y = y + ROUND16(dy*cosA - xx*sinA - width*sinA
 		    + fontPtr->underlineHeight*cosA);
 	    points[3].x = x + ROUND16(xx*cosA + dy*sinA
-		    - fontPtr->underlineHeight*sinA);
+		    + fontPtr->underlineHeight*sinA);
 	    points[3].y = y + ROUND16(dy*cosA - xx*sinA
 		    + fontPtr->underlineHeight*cosA);
 	    points[4].x = points[0].x;
@@ -2896,10 +2896,11 @@ Tk_IntersectTextLayout(
 
     result = 0;
     for (i = 0; i < layoutPtr->numChunks; i++) {
-	if (chunkPtr->start[0] == '\n') {
+	if ((chunkPtr->start[0] == '\n') || (chunkPtr->numBytes==0)) {
 	    /*
-	     * Newline characters are not counted when computing area
-	     * intersection (but tab characters would still be considered).
+	     * Newline characters and empty chunks are not counted when
+	     * computing area intersection (but tab characters would still be
+	     * considered).
 	     */
 
 	    chunkPtr++;
