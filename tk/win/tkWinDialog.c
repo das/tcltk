@@ -1812,7 +1812,9 @@ Tk_ChooseDirectoryObjCmd(
     objPtr = Tcl_GetVar2Ex(interp, "::tk::winChooseDirFlags", NULL,
 	    TCL_GLOBAL_ONLY);
     if (objPtr != NULL) {
-	Tcl_GetIntFromObj(NULL, objPtr, &(bInfo.ulFlags));
+	int flags;
+	Tcl_GetIntFromObj(NULL, objPtr, &flags);
+	bInfo.ulFlags = flags;
     }
 
     /*
@@ -1975,7 +1977,7 @@ ChooseDirectoryValidateProc(
 
     case BFFM_SELCHANGED:
 	/*
-	 * Set the status window to the currently selected path. And enable
+	 * Set the status window to the currently selected path and enable
 	 * the OK button if a file system folder, otherwise disable the OK
 	 * button for things like server names. Perhaps a new switch
 	 * -enablenonfolders can be used to allow non folders to be selected.
@@ -1987,7 +1989,6 @@ ChooseDirectoryValidateProc(
 	    SendMessage(hwnd, BFFM_SETSTATUSTEXT, 0, (LPARAM) selDir);
 	    // enable the OK button
 	    SendMessage(hwnd, BFFM_ENABLEOK, 0, (LPARAM) 1);
-	    SetCurrentDirectory(selDir);
 	} else {
 	    // disable the OK button
 	    SendMessage(hwnd, BFFM_ENABLEOK, 0, (LPARAM) 0);

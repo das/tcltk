@@ -1163,17 +1163,17 @@ TkMakeEnsemble(
 void
 TkSendVirtualEvent(Tk_Window target, const char *eventName)
 {
-    XEvent event;
+    union {XEvent general; XVirtualEvent virtual;} event;
 
     memset(&event, 0, sizeof(event));
-    event.xany.type = VirtualEvent;
-    event.xany.serial = NextRequest(Tk_Display(target));
-    event.xany.send_event = False;
-    event.xany.window = Tk_WindowId(target);
-    event.xany.display = Tk_Display(target);
-    ((XVirtualEvent *) &event)->name = Tk_GetUid(eventName);
+    event.general.xany.type = VirtualEvent;
+    event.general.xany.serial = NextRequest(Tk_Display(target));
+    event.general.xany.send_event = False;
+    event.general.xany.window = Tk_WindowId(target);
+    event.general.xany.display = Tk_Display(target);
+    event.virtual.name = Tk_GetUid(eventName);
 
-    Tk_QueueWindowEvent(&event, TCL_QUEUE_TAIL);
+    Tk_QueueWindowEvent(&event.general, TCL_QUEUE_TAIL);
 }
 /*
  * Local Variables:

@@ -1133,30 +1133,47 @@ TclObjBeingDeleted(
  *----------------------------------------------------------------------
  */
 
+#define SetDuplicateObj(dupPtr, objPtr)					\
+    {									\
+	const Tcl_ObjType *typePtr = (objPtr)->typePtr;			\
+	const char *bytes = (objPtr)->bytes;				\
+	if (bytes) {							\
+	    TclInitStringRep((dupPtr), bytes, (objPtr)->length);	\
+	} else {							\
+	    (dupPtr)->bytes = NULL;					\
+	}								\
+	if (typePtr) {							\
+	    if (typePtr->dupIntRepProc) {				\
+		typePtr->dupIntRepProc((objPtr), (dupPtr));		\
+	    } else {							\
+		(dupPtr)->internalRep = (objPtr)->internalRep;		\
+		(dupPtr)->typePtr = typePtr;				\
+	    }								\
+	}								\
+    }
+
 Tcl_Obj *
 Tcl_DuplicateObj(
-    register Tcl_Obj *objPtr)		/* The object to duplicate. */
+    Tcl_Obj *objPtr)		/* The object to duplicate. */
 {
-    register const Tcl_ObjType *typePtr = objPtr->typePtr;
-    register Tcl_Obj *dupPtr;
+    Tcl_Obj *dupPtr;
 
     TclNewObj(dupPtr);
-
-    if (objPtr->bytes == NULL) {
-	dupPtr->bytes = NULL;
-    } else if (objPtr->bytes != tclEmptyStringRep) {
-	TclInitStringRep(dupPtr, objPtr->bytes, objPtr->length);
-    }
-
-    if (typePtr != NULL) {
-	if (typePtr->dupIntRepProc == NULL) {
-	    dupPtr->internalRep = objPtr->internalRep;
-	    dupPtr->typePtr = typePtr;
-	} else {
-	    typePtr->dupIntRepProc(objPtr, dupPtr);
-	}
-    }
+    SetDuplicateObj(dupPtr, objPtr);
     return dupPtr;
+}
+
+void
+TclSetDuplicateObj(
+    Tcl_Obj *dupPtr,
+    Tcl_Obj *objPtr)
+{
+    if (Tcl_IsShared(dupPtr)) {
+	Tcl_Panic("%s called with shared object", "TclSetDuplicateObj");
+    }
+    TclInvalidateStringRep(dupPtr);
+    TclFreeIntRep(dupPtr);
+    SetDuplicateObj(dupPtr, objPtr);
 }
 
 /*
@@ -3957,6 +3974,44 @@ SetCmdNameFromAny(
 	objPtr->internalRep.twoPtrValue.ptr1 = NULL;
 	objPtr->internalRep.twoPtrValue.ptr2 = NULL;
 	objPtr->typePtr = &tclCmdNameType;
+    }
+    return TCL_OK;
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * Tcl_RepresentationCmd --
+ *
+ *	Implementation of the "tcl::unsupported::representation" command.
+ *
+ * Results:
+ *	Reports the current representation (Tcl_Obj type) of its argument. 
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+int
+Tcl_RepresentationCmd(
+    ClientData clientData,
+    Tcl_Interp *interp,
+    int objc,
+    Tcl_Obj *const objv[])
+{
+    if (objc != 2) {
+	Tcl_WrongNumArgs(interp, 1, objv, "value");
+	return TCL_ERROR;
+    }
+
+    if (objv[1]->typePtr == NULL) {
+	Tcl_AppendResult(interp, "value has no internal representation set",
+		NULL);
+    } else {
+	Tcl_AppendResult(interp, "value has internal representation of ",
+		objv[1]->typePtr->name, " currently", NULL);
     }
     return TCL_OK;
 }
