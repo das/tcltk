@@ -2549,13 +2549,6 @@ EXTERN int		Tcl_AppInit (Tcl_Interp *interp);
 #undef TCL_STORAGE_CLASS
 #define TCL_STORAGE_CLASS DLLIMPORT
 
-#if defined(PURIFY) && defined(__GNUC__)
-#include <assert.h>
-#define Tcl_Panic_f Tcl_Panic
-#undef Tcl_Panic
-#define Tcl_Panic(f, ...) Tcl_Panic_f(f,##__VA_ARGS__); assert(0)
-#endif
-
 #endif /* RC_INVOKED */
 
 /*

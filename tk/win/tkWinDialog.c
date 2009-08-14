@@ -1812,7 +1812,9 @@ Tk_ChooseDirectoryObjCmd(
     objPtr = Tcl_GetVar2Ex(interp, "::tk::winChooseDirFlags", NULL,
 	    TCL_GLOBAL_ONLY);
     if (objPtr != NULL) {
-	Tcl_GetIntFromObj(NULL, objPtr, &(bInfo.ulFlags));
+	int flags;
+	Tcl_GetIntFromObj(NULL, objPtr, &flags);
+	bInfo.ulFlags = flags;
     }
 
     /*
