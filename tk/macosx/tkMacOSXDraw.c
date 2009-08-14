@@ -174,7 +174,8 @@ XCopyArea(
 	TkMacOSXRestoreDrawingContext(&dc);
     } else if (TkMacOSXDrawableWindow(src)) {
 	NSView *view = TkMacOSXDrawableView(srcDraw);
-	NSInteger gs = [[view window] gState];
+	NSWindow *w = [view window];
+	NSInteger gs = [w windowNumber] > 0 ? [w gState] : 0;
 	/* // alternative using per-view gState:
 	NSInteger gs = [view gState];
 	if (!gs) {
