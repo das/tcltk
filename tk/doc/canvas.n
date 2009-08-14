@@ -1541,7 +1541,7 @@ Where arrowheads are drawn the cap style is ignored.
 \fB\-joinstyle \fIstyle\fR
 Specifies the ways in which joints are to be drawn at the vertices
 of the line.
-\fIStyle\fR may have any of the forms accepted by \fBTk_GetCapStyle\fR
+\fIStyle\fR may have any of the forms accepted by \fBTk_GetJoinStyle\fR
 (\fBbevel\fR, \fBmiter\fR, or \fBround\fR).
 If this option is not specified then it defaults to \fBround\fR.
 If the line only contains two points then this option is
@@ -1660,7 +1660,7 @@ The following extra options are supported for polygons:
 \fB\-joinstyle \fIstyle\fR
 Specifies the ways in which joints are to be drawn at the vertices
 of the outline.
-\fIStyle\fR may have any of the forms accepted by \fBTk_GetCapStyle\fR
+\fIStyle\fR may have any of the forms accepted by \fBTk_GetJoinStyle\fR
 (\fBbevel\fR, \fBmiter\fR, or \fBround\fR).
 If this option is not specified then it defaults to \fBround\fR.
 .TP
