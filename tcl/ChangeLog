@@ -1,3 +1,52 @@
+2009-08-06  Andreas Kupries  <andreask@activestate.com>
+
+	* doc/refchan.n [Bug 2827000]: Extended the implementation of
+	* generic/tclIORChan.c: reflective channels (TIP 219, method
+	* tests/ioCmd.test: 'read'), enabling handlers to signal EAGAIN to
+	indicate 'no data, but not at EOF either', and other system
+	errors. Updated documentation, extended testsuite (New test cases
+	iocmd*-23.{9,10}).
+
+2009-08-02  Donal K. Fellows  <dkf@users.sf.net>
+
+	* unix/tclUnixFCmd.c (GetOwnerAttribute, SetOwnerAttribute)
+	(GetGroupAttribute, SetGroupAttribute): [Bug 1942222]: Stop calling
+	* unix/tclUnixFile.c (TclpGetUserHome): endpwent() and endgrent();
+	they've been unnecessary for ages.
+
+2009-07-31  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclStringObj.c:       [Bug 2830354]: Corrected failure to
+	* tests/format.test:            grow buffer when format spec request
+	large width floating point values.  Thanks to Clemens Misch.
+
+2009-07-24  Andreas Kupries  <andreask@activestate.com>
+
+	* generic/tclIO.c (Tcl_GetChannelHandle): [Bug 2826248]: Do not crash
+	* generic/tclPipe.c (FileForRedirect): for getHandleProc == NULL, this
+	is allowed. Provide a nice error message in the bypass area. Updated
+	caller to check the bypass for a mesage. Bug reported by Andy
+	Sonnenburg <andy22286@users.sourceforge.net>. Backported from CVS
+	head.
+
+2009-07-23  Joe Mistachkin  <joe@mistachkin.com>
+
+	* generic/tclNotify.c: [Bug 2820349]: Ensure that queued events are
+	freed once processed.
+
+2009-07-21  Kevin B. Kenny  <kennykb@acm.org>
+
+	* library/tzdata/Asia/Dhaka: 
+	* library/tzdata/Indian/Mauritius: Olson's tzdata2009k.
+	
+2009-07-20  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tclCmdMZ.c (StringIsCmd): Reorganize so that [string is] is
+	more efficient when parsing things that are correct, at a cost of
+	making the empty string test slightly more costly. With this, the cost
+	of doing [string is integer -strict $x] matches [catch {expr {$x+0}}]
+	in the successful case, and greatly outstrips it in the failing case.
+
 2009-07-16  Don Porter  <dgp@users.sourceforge.net>
 
 	* generic/tclCmdIL.c:	Removed unused variables.
@@ -7,39 +56,39 @@
 
 	* generic/tclScan.c:	Typo in ACCEPT_NAN configuration.
 
-	* generic/tclStrToD.c:	Set floating point control register on
-	MIPS systems so that the gradual underflow expected by Tcl is
-	in effect.  [Bug 2819200]
+	* generic/tclStrToD.c:	[Bug 2819200]: Set floating point control
+	register on MIPS systems so that the gradual underflow expected by Tcl
+	is in effect.  
 
 2009-07-14  Andreas Kupries  <andreask@activestate.com>
 
 	* generic/tclBasic.c (DeleteInterpProc,TclArgumentBCEnter,
-	TclArgumentBCRelease, TclArgumentGet):
+	(TclArgumentBCRelease, TclArgumentGet):
 	* generic/tclCompile.c (EnterCmdWordIndex, TclCleanupByteCode,
-	TclInitCompileEnv, TclCompileScript):
+	(TclInitCompileEnv, TclCompileScript):
 	* generic/tclCompile.h (ExtCmdLoc): 
 	* generic/tclExecute.c (TclExecuteByteCode):
 	* generic/tclInt.h (ExtIndex, CFWordBC):
 	* tests/info.test (info-39.0):
 
 	Backport of some changes made to the Tcl head, to handle literal
-	sharing better. The code here is much simpler (trimmed down)
-	compared to the head as the 8.5 branch is not bytecode compiling
-	whole files, and doesn't compile eval'd code either.
+	sharing better. The code here is much simpler (trimmed down) compared
+	to the head as the 8.5 branch is not bytecode compiling whole files,
+	and doesn't compile eval'd code either.
 	
-	Reworked the handling of literal command arguments in bytecode to
-	be saved (compiler) and used (execution) per command (See the
-	TCL_INVOKE_STK* instructions), and not per the whole bytecode.
-	This removes the problems with location data caused by literal
-	sharing in proc bodies. Simplified the associated datastructures
-	(ExtIndex is gone, as is the function EnterCmdWordIndex).
+	Reworked the handling of literal command arguments in bytecode to be
+	saved (compiler) and used (execution) per command (see the
+	TCL_INVOKE_STK* instructions), and not per the whole bytecode.  This
+	removes the problems with location data caused by literal sharing in
+	proc bodies. Simplified the associated datastructures (ExtIndex is
+	gone, as is the function EnterCmdWordIndex).
 
 2009-07-01  Pat Thoyts  <patthoyts@users.sourceforge.net>
 
-	* win/tclWinInt.h:   Handle the GetUserName API call via the
-	* win/tclWin32Dll.c: tclWinProcs indirection structure. This
-	* win/tclWinInit.c:  fixes a problem obtaining the username when
-	the USERNAME environment variable is unset [Bug 2806622]
+	* win/tclWinInt.h:   [Bug 2806622]: Handle the GetUserName API call
+	* win/tclWin32Dll.c: via the tclWinProcs indirection structure. This
+	* win/tclWinInit.c:  fixes a problem obtaining the username when the
+	USERNAME environment variable is unset.
 
 2009-06-15  Don Porter  <dgp@users.sourceforge.net>
 
