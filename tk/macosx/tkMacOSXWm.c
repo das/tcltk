@@ -5342,6 +5342,14 @@ TkMacOSXMakeRealWindowExist(
     if (styleMask & NSUtilityWindowMask) {
 	[(NSPanel*)window setFloatingPanel:YES];
     }
+    if ((styleMask & (NSTexturedBackgroundWindowMask|NSHUDWindowMask)) &&
+	    !(styleMask & NSDocModalWindowMask)) {
+        /*
+	 * Workaround for [Bug 2824538]: Texured windows are draggable
+	 *                               from opaque content.
+	 */
+	[window setMovableByWindowBackground:NO];
+    }
     [window setDocumentEdited:NO];
     wmPtr->window = window;
     macWin->view = contentView;
