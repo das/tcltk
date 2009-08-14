@@ -745,7 +745,7 @@ RenderObject(
     HPEN pen,
     WinDrawFunc func)
 {
-    RECT rect;
+    RECT rect = {0,0,0,0};
     HPEN oldPen;
     HBRUSH oldBrush;
     POINT *winPoints = ConvertPoints(points, npoints, mode, &rect);
