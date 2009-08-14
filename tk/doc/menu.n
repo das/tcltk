@@ -1,4 +1,3 @@
-'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 1990-1994 The Regents of the University of California.
 '\" Copyright (c) 1994-1997 Sun Microsystems, Inc.
@@ -49,7 +48,7 @@ to invoke whenever the menu is torn off.  The actual command will
 consist of the value of this option, followed by a space, followed
 by the name of the menu window, followed by a space, followed by
 the name of the name of the torn off menu window.  For example, if
-the option's is
+the option's value is
 .QW "\fBa b\fR"
 and menu \fB.x.y\fR is torn off to
 create a new menu \fB.x.tearoff1\fR, then the command
@@ -232,24 +231,36 @@ to system restrictions.
 .SS "SPECIAL MENUS IN MENUBARS"
 .PP
 Certain menus in a menubar will be treated specially.  On the Macintosh,
-access to the special Application and Help menus is provided. On Windows,
-access to the Windows System menu in each window is provided. On X Windows,
-a special right-justified help menu is provided. In all cases, these
-menus must be created with the command name of the menubar menu concatenated
-with the special name. So for a menubar named .menubar, on the Macintosh,
-the special menus would be .menubar.apple and .menubar.help; on Windows,
-the special menu would be .menubar.system; on X Windows, the help
-menu would be .menubar.help.
+access to the special Application, Window and Help menus is provided. On
+Windows, access to the Windows System menu in each window is provided.
+On X Windows, a special right-justified help menu is provided. In all
+cases, these menus must be created with the command name of the menubar
+menu concatenated with the special name. So for a menubar named
+\.menubar, on the Macintosh, the special menus would be .menubar.apple,
+\.menubar.window and .menubar.help; on Windows, the special menu would be
+\.menubar.system; on X Windows, the help menu would be .menubar.help.
 .PP
-When Tk sees a .menubar.apple menu on the Macintosh, that menu's contents
-make up the first items of the Application menu whenever the window
-containing the menubar is in front.
+When Tk sees a .menubar.apple menu as the first menu in a menubar on the
+Macintosh, that menu's contents make up the first items of the
+Application menu whenever the window containing the menubar is in front.
 After all of the Tk-defined items, the menu will have a separator,
 followed by all standard Application menu items.
+Such a .apple menu must be present in a menu when that menu is first
+configured as a toplevel's menubar, otherwise a default application menu
+(hidden from Tk) will be inserted into the menubar at that time and
+subsequent addition of a .apple menu will no longer result in it
+becoming the Application menu.
 .PP
-When Tk sees a Help menu on the Macintosh, the menu's contents are
-appended to the standard Help menu on the right of the user's menubar
-whenever the window's menubar is in front. The first items in the menu
+When Tk sees a .menubar.window menu on the Macintosh, the menu's
+contents are inserted into the standard Window menu of the user's
+menubar whenever the window's menubar is in front. The first items in
+the menu are provided by Mac OS X, and the names of the current
+toplevels are automatically appended after all the Tk-defined items and
+a separator.
+.PP
+When Tk sees a .menubar.help menu on the Macintosh, the menu's contents
+are appended to the standard Help menu of the user's menubar whenever
+the window's menubar is in front. The first items in the menu
 are provided by Mac OS X.
 .PP
 When Tk sees a System menu on Windows, its items are appended to the 
@@ -637,7 +648,7 @@ window of the topmost pixel in the entry specified by \fIindex\fR.
 The default bindings support four different ways of using menus:
 .TP
 \fBPulldown Menus in Menubar\fR
-This is the most command case. You create a menu widget that will become the
+This is the most common case. You create a menu widget that will become the
 menu bar. You then add cascade entries to this menu, specifying the
 pull down menus you wish to use in your menu bar. You then create all
 of the pulldowns. Once you have done this, specify the menu using the
@@ -743,3 +754,6 @@ entries.
 bind(n), menubutton(n), ttk::menubutton(n), toplevel(n)
 .SH KEYWORDS
 menu, widget
+'\" Local Variables:
+'\" mode: nroff
+'\" End:

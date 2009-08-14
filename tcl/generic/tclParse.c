@@ -12,7 +12,6 @@
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * RCS: @(#) $Id$
  */
 
 #include "tclInt.h"
@@ -435,7 +434,7 @@ Tcl_ParseCommand(
 	    }
 
 	    if (isLiteral) {
-		int elemCount = 0, code = TCL_OK;
+		int elemCount = 0, code = TCL_OK, nakedbs = 0;
 		const char *nextElem, *listEnd, *elemStart;
 
 		/*
@@ -457,21 +456,37 @@ Tcl_ParseCommand(
 		 */
 
 		while (nextElem < listEnd) {
+		    int size, brace;
+
 		    code = TclFindElement(NULL, nextElem, listEnd - nextElem,
-			    &elemStart, &nextElem, NULL, NULL);
-		    if (code != TCL_OK) break;
+			    &elemStart, &nextElem, &size, &brace);
+		    if (code != TCL_OK) {
+			break;
+		    }
+		    if (!brace) {
+			const char *s;
+
+			for(s=elemStart;size>0;s++,size--) {
+			    if ((*s)=='\\') {
+				nakedbs=1;
+				break;
+			    }
+			}
+		    }
 		    if (elemStart < listEnd) {
 			elemCount++;
 		    }
 		}
 
-		if (code != TCL_OK) {
+		if ((code != TCL_OK) || nakedbs) {
 		    /*
-		     * Some list element could not be parsed. This means the
-		     * literal string was not in fact a valid list. Defer the
-		     * handling of this to compile/eval time, where code is
-		     * already in place to report the "attempt to expand a
-		     * non-list" error.
+		     * Some  list element  could not  be parsed,  or contained
+		     * naked  backslashes. This means  the literal  string was
+		     * not  in fact  a  valid nor  canonical  list. Defer  the
+		     * handling of  this to  compile/eval time, where  code is
+		     * already  in place to  report the  "attempt to  expand a
+		     * non-list" error or expand lists that require
+		     * substitution.
 		     */
 
 		    tokenPtr->type = TCL_TOKEN_EXPAND_WORD;
@@ -878,21 +893,21 @@ TclParseBackslash(
 	 */
 
 	if (isdigit(UCHAR(*p)) && (UCHAR(*p) < '8')) {	/* INTL: digit */
-	    result = (unsigned char)(*p - '0');
+	    result = UCHAR(*p - '0');
 	    p++;
 	    if ((numBytes == 2) || !isdigit(UCHAR(*p))	/* INTL: digit */
 		    || (UCHAR(*p) >= '8')) {
 		break;
 	    }
 	    count = 3;
-	    result = (unsigned char)((result << 3) + (*p - '0'));
+	    result = UCHAR((result << 3) + (*p - '0'));
 	    p++;
 	    if ((numBytes == 3) || !isdigit(UCHAR(*p))	/* INTL: digit */
 		    || (UCHAR(*p) >= '8')) {
 		break;
 	    }
 	    count = 4;
-	    result = (unsigned char)((result << 3) + (*p - '0'));
+	    result = UCHAR((result << 3) + (*p - '0'));
 	    break;
 	}
 
@@ -2165,21 +2180,17 @@ TclSubstTokens(
 	    break;
 
 	case TCL_TOKEN_COMMAND: {
-	    Interp *iPtr = (Interp *) interp;
-
-	    TclResetCancellation(interp, 0);
-
-	    iPtr->numLevels++;
-	    code = TclInterpReady(interp);
-	    if (code == TCL_OK) {
-		code = Tcl_Canceled(interp, TCL_LEAVE_ERR_MSG);
-	    }
-	    if (code == TCL_OK) {
-		/* TIP #280: Transfer line information to nested command */
+  	    Interp *iPtr = (Interp *) interp;
+	    
+	    /* TIP #280: Transfer line information to nested command */
+ 	    iPtr->numLevels++;
+  	    code = TclInterpReady(interp);
+  	    if (code == TCL_OK) {
 		code = TclEvalEx(interp, tokenPtr->start+1, tokenPtr->size-2,
 			0, line);
 	    }
 	    iPtr->numLevels--;
+	    TclResetCancellation(interp, 0);
 	    appendObj = Tcl_GetObjResult(interp);
 	    break;
 	}

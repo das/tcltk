@@ -223,9 +223,9 @@ static int		GetDefaultOptions(Tcl_Interp *interp,
 static ElArray *	NewArray(int numEls);
 static void		OptionThreadExitProc(ClientData clientData);
 static void		OptionInit(TkMainInfo *mainPtr);
-static int		ParsePriority(Tcl_Interp *interp, char *string);
+static int		ParsePriority(Tcl_Interp *interp, const char *string);
 static int		ReadOptionFile(Tcl_Interp *interp, Tk_Window tkwin,
-			    char *fileName, int priority);
+			    const char *fileName, int priority);
 static void		SetupStacks(TkWindow *winPtr, int leaf);
 
 /*
@@ -621,7 +621,7 @@ Tk_OptionObjCmd(
     ThreadSpecificData *tsdPtr =
 	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
-    static const char *optionCmds[] = {
+    static const char *const optionCmds[] = {
 	"add", "clear", "get", "readfile", NULL
     };
 
@@ -855,7 +855,7 @@ TkOptionClassChanged(
 static int
 ParsePriority(
     Tcl_Interp *interp,		/* Interpreter to use for error reporting. */
-    char *string)		/* Describes a priority level, either
+    const char *string)		/* Describes a priority level, either
 				 * symbolically or numerically. */
 {
     int priority, c;
@@ -1067,7 +1067,7 @@ ReadOptionFile(
     Tcl_Interp *interp,		/* Interpreter to use for reporting results. */
     Tk_Window tkwin,		/* Token for window: options are entered for
 				 * this window's main window. */
-    char *fileName,		/* Name of file containing options. */
+    const char *fileName,		/* Name of file containing options. */
     int priority)		/* Priority level to use for options in this
 				 * file, such as TK_USER_DEFAULT_PRIO or
 				 * TK_INTERACTIVE_PRIO. Must be between 0 and
@@ -1188,16 +1188,12 @@ ExtendArray(
      */
 
     if (arrayPtr->numUsed >= arrayPtr->arraySize) {
-	register ElArray *newPtr;
+	register int newSize = 2*arrayPtr->arraySize;
 
-	newPtr = (ElArray *) ckalloc(EL_ARRAY_SIZE(2*arrayPtr->arraySize));
-	newPtr->arraySize = 2*arrayPtr->arraySize;
-	newPtr->numUsed = arrayPtr->numUsed;
-	newPtr->nextToUse = &newPtr->els[newPtr->numUsed];
-	memcpy(newPtr->els, arrayPtr->els,
-		arrayPtr->arraySize * sizeof(Element));
-	ckfree((char *) arrayPtr);
-	arrayPtr = newPtr;
+	arrayPtr = (ElArray *)
+		ckrealloc((char *) arrayPtr, EL_ARRAY_SIZE(newSize));
+	arrayPtr->arraySize = newSize;
+	arrayPtr->nextToUse = &arrayPtr->els[arrayPtr->numUsed];
     }
 
     *arrayPtr->nextToUse = *elPtr;

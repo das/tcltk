@@ -76,7 +76,7 @@ static Tcl_HashEntry *	BogusCreate(Tcl_HashTable *tablePtr, const char *key,
 			    int *newPtr);
 static void		RebuildTable(Tcl_HashTable *tablePtr);
 
-Tcl_HashKeyType tclArrayHashKeyType = {
+const Tcl_HashKeyType tclArrayHashKeyType = {
     TCL_HASH_KEY_TYPE_VERSION,		/* version */
     TCL_HASH_KEY_RANDOMIZE_HASH,	/* flags */
     HashArrayKey,			/* hashKeyProc */
@@ -85,7 +85,7 @@ Tcl_HashKeyType tclArrayHashKeyType = {
     NULL				/* freeEntryProc */
 };
 
-Tcl_HashKeyType tclOneWordHashKeyType = {
+const Tcl_HashKeyType tclOneWordHashKeyType = {
     TCL_HASH_KEY_TYPE_VERSION,		/* version */
     0,					/* flags */
     NULL, /* HashOneWordKey, */		/* hashProc */
@@ -94,7 +94,7 @@ Tcl_HashKeyType tclOneWordHashKeyType = {
     NULL  /* FreeOneWordKey, */		/* freeEntryProc */
 };
 
-Tcl_HashKeyType tclStringHashKeyType = {
+const Tcl_HashKeyType tclStringHashKeyType = {
     TCL_HASH_KEY_TYPE_VERSION,		/* version */
     0,					/* flags */
     HashStringKey,			/* hashKeyProc */
@@ -138,7 +138,7 @@ Tcl_InitHashTable(
      * extended version by a macro.
      */
 
-    Tcl_InitCustomHashTable(tablePtr, keyType, (Tcl_HashKeyType *) -1);
+    Tcl_InitCustomHashTable(tablePtr, keyType, (const Tcl_HashKeyType *) -1);
 }
 
 /*
@@ -169,7 +169,7 @@ Tcl_InitCustomHashTable(
 				 * TCL_STRING_KEYS, TCL_ONE_WORD_KEYS,
 				 * TCL_CUSTOM_TYPE_KEYS, TCL_CUSTOM_PTR_KEYS,
 				 * or an integer >= 2. */
-    Tcl_HashKeyType *typePtr) /* Pointer to structure which defines the
+    const Tcl_HashKeyType *typePtr) /* Pointer to structure which defines the
 				 * behaviour of this table. */
 {
 #if (TCL_SMALL_HASH_TABLE != 4)
@@ -283,13 +283,13 @@ Tcl_CreateHashEntry(
     if (typePtr->hashKeyProc) {
 	hash = typePtr->hashKeyProc(tablePtr, (void *) key);
 	if (typePtr->flags & TCL_HASH_KEY_RANDOMIZE_HASH) {
-	    index = RANDOM_INDEX (tablePtr, hash);
+	    index = RANDOM_INDEX(tablePtr, hash);
 	} else {
 	    index = hash & tablePtr->mask;
 	}
     } else {
 	hash = PTR2UINT(key);
-	index = RANDOM_INDEX (tablePtr, hash);
+	index = RANDOM_INDEX(tablePtr, hash);
     }
 
     /*
@@ -298,6 +298,7 @@ Tcl_CreateHashEntry(
 
     if (typePtr->compareKeysProc) {
 	Tcl_CompareHashKeysProc *compareKeysProc = typePtr->compareKeysProc;
+
 	for (hPtr = tablePtr->buckets[index]; hPtr != NULL;
 		hPtr = hPtr->nextPtr) {
 #if TCL_HASH_KEY_STORE_HASH
@@ -441,7 +442,7 @@ Tcl_DeleteHashEntry(
 
     tablePtr->numEntries--;
     if (typePtr->freeEntryProc) {
-	typePtr->freeEntryProc (entryPtr);
+	typePtr->freeEntryProc(entryPtr);
     } else {
 	ckfree((char *) entryPtr);
     }
@@ -492,7 +493,7 @@ Tcl_DeleteHashTable(
 	while (hPtr != NULL) {
 	    nextPtr = hPtr->nextPtr;
 	    if (typePtr->freeEntryProc) {
-		typePtr->freeEntryProc (hPtr);
+		typePtr->freeEntryProc(hPtr);
 	    } else {
 		ckfree((char *) hPtr);
 	    }
@@ -614,7 +615,7 @@ Tcl_NextHashEntry(
  *----------------------------------------------------------------------
  */
 
-const char *
+char *
 Tcl_HashStats(
     Tcl_HashTable *tablePtr)	/* Table for which to produce stats. */
 {
@@ -623,18 +624,6 @@ Tcl_HashStats(
     double average, tmp;
     register Tcl_HashEntry *hPtr;
     char *result, *p;
-    const Tcl_HashKeyType *typePtr;
-
-    if (tablePtr->keyType == TCL_STRING_KEYS) {
-	typePtr = &tclStringHashKeyType;
-    } else if (tablePtr->keyType == TCL_ONE_WORD_KEYS) {
-	typePtr = &tclOneWordHashKeyType;
-    } else if (tablePtr->keyType == TCL_CUSTOM_TYPE_KEYS
-	    || tablePtr->keyType == TCL_CUSTOM_PTR_KEYS) {
-	typePtr = tablePtr->typePtr;
-    } else {
-	typePtr = &tclArrayHashKeyType;
-    }
 
     /*
      * Compute a histogram of bucket usage.
@@ -665,11 +654,7 @@ Tcl_HashStats(
      * Print out the histogram and a few other pieces of information.
      */
 
-    if (typePtr->flags & TCL_HASH_KEY_SYSTEM_HASH) {
-	result = (char *) TclpSysAlloc((unsigned) (NUM_COUNTERS*60) + 300, 0);
-    } else {
-	result = (char *) ckalloc((unsigned) (NUM_COUNTERS*60) + 300);
-    }
+    result = (char *) ckalloc((unsigned) (NUM_COUNTERS*60) + 300);
     sprintf(result, "%d entries in table, %d buckets\n",
 	    tablePtr->numEntries, tablePtr->numBuckets);
     p = result + strlen(result);
@@ -1045,7 +1030,7 @@ RebuildTable(
 #if TCL_HASH_KEY_STORE_HASH
 	    if (typePtr->hashKeyProc == NULL
 		    || typePtr->flags & TCL_HASH_KEY_RANDOMIZE_HASH) {
-		index = RANDOM_INDEX (tablePtr, hPtr->hash);
+		index = RANDOM_INDEX(tablePtr, hPtr->hash);
 	    } else {
 		index = PTR2UINT(hPtr->hash) & tablePtr->mask;
 	    }
@@ -1059,12 +1044,12 @@ RebuildTable(
 
 		hash = typePtr->hashKeyProc(tablePtr, key);
 		if (typePtr->flags & TCL_HASH_KEY_RANDOMIZE_HASH) {
-		    index = RANDOM_INDEX (tablePtr, hash);
+		    index = RANDOM_INDEX(tablePtr, hash);
 		} else {
 		    index = hash & tablePtr->mask;
 		}
 	    } else {
-		index = RANDOM_INDEX (tablePtr, key);
+		index = RANDOM_INDEX(tablePtr, key);
 	    }
 
 	    hPtr->bucketPtr = &(tablePtr->buckets[index]);

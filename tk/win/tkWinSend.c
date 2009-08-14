@@ -68,7 +68,9 @@ static void		CmdDeleteProc(ClientData clientData);
 static void		InterpDeleteProc(ClientData clientData,
 			    Tcl_Interp *interp);
 #endif
+#ifdef TK_SEND_ENABLED_ON_WINDOWS
 static void		RevokeObjectRegistration(RegisteredInterp *riPtr);
+#endif
 static HRESULT		BuildMoniker(const char *name, LPMONIKER *pmk);
 #ifdef TK_SEND_ENABLED_ON_WINDOWS
 static HRESULT		RegisterInterp(const char *name,
@@ -88,7 +90,7 @@ static Tcl_EventProc	SendEventProc;
 #else
 #define TRACE 1 ? ((void)0) : SendTrace
 #endif
-
+
 /*
  *--------------------------------------------------------------
  *
@@ -189,7 +191,7 @@ Tk_SetAppName(
     return (const char *) riPtr->name;
 #endif /* TK_SEND_ENABLED_ON_WINDOWS */
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -295,7 +297,7 @@ TkGetInterpNames(
     return result;
 #endif /* TK_SEND_ENABLED_ON_WINDOWS */
 }
-
+
 /*
  *--------------------------------------------------------------
  *
@@ -324,7 +326,7 @@ Tk_SendObjCmd(
     enum {
 	SEND_ASYNC, SEND_DISPLAYOF, SEND_LAST
     };
-    static const char *sendOptions[] = {
+    static const char *const sendOptions[] = {
 	"-async",   "-displayof",   "--",  NULL
     };
     int result = TCL_OK;
@@ -365,9 +367,8 @@ Tk_SendObjCmd(
      */
 
     if (displayPtr) {
-	Tcl_SetStringObj(Tcl_GetObjResult(interp),
-		"option not implemented: \"displayof\" is not available "
-		"for this platform.", -1);
+	Tcl_SetResult(interp, "option not implemented: \"displayof\" is "
+		"not available for this platform.", TCL_STATIC);
 	result = TCL_ERROR;
     }
 
@@ -377,6 +378,7 @@ Tk_SendObjCmd(
     /* FIX ME: we need to check for local interp */
     if (result == TCL_OK) {
 	LPDISPATCH pdisp;
+
 	result = FindInterpreterObject(interp, Tcl_GetString(objv[i]), &pdisp);
 	if (result == TCL_OK) {
 	    i++;
@@ -387,7 +389,7 @@ Tk_SendObjCmd(
 
     return result;
 }
-
+
 /*
  *--------------------------------------------------------------
  *
@@ -456,7 +458,7 @@ FindInterpreterObject(
     }
     return result;
 }
-
+
 /*
  *--------------------------------------------------------------
  *
@@ -511,8 +513,7 @@ CmdDeleteProc(
 
     ckfree(clientData);
 }
-#endif
-
+
 /*
  *--------------------------------------------------------------
  *
@@ -556,7 +557,8 @@ RevokeObjectRegistration(
 	riPtr->name = NULL;
     }
 }
-
+#endif
+
 /*
  * ----------------------------------------------------------------------
  *
@@ -583,7 +585,7 @@ InterpDeleteProc(
     CoUninitialize();
 }
 #endif
-
+
 /*
  * ----------------------------------------------------------------------
  *
@@ -626,7 +628,7 @@ BuildMoniker(
     }
     return hr;
 }
-
+
 /*
  * ----------------------------------------------------------------------
  *
@@ -704,7 +706,7 @@ RegisterInterp(
     return hr;
 }
 #endif
-
+
 /*
  * ----------------------------------------------------------------------
  *
@@ -789,7 +791,7 @@ Send(
 
 	if (ei.bstrSource != NULL) {
 	    int len;
-	    char *szErrorInfo;
+	    const char *szErrorInfo;
 
 	    opError = Tcl_NewUnicodeObj(ei.bstrSource, -1);
 	    Tcl_ListObjIndex(interp, opError, 0, &opErrorCode);
@@ -812,7 +814,7 @@ Send(
 
     return (SUCCEEDED(hr) ? TCL_OK : TCL_ERROR);
 }
-
+
 /*
  * ----------------------------------------------------------------------
  *
@@ -837,9 +839,9 @@ Win32ErrorObj(
     TCHAR  sBuffer[30];
     Tcl_Obj* errPtr = NULL;
 
-    FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-	    NULL, (DWORD)hrError, LANG_NEUTRAL,
-	    (LPTSTR)&lpBuffer, 0, NULL);
+    FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM
+	    | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, (DWORD)hrError,
+	    LANG_NEUTRAL, (LPTSTR)&lpBuffer, 0, NULL);
 
     if (lpBuffer == NULL) {
 	lpBuffer = sBuffer;
@@ -862,7 +864,7 @@ Win32ErrorObj(
 
     return errPtr;
 }
-
+
 /*
  * ----------------------------------------------------------------------
  *
@@ -926,7 +928,7 @@ SetExcepInfo(
 	}
     }
 }
-
+
 /*
  * ----------------------------------------------------------------------
  *
@@ -970,7 +972,7 @@ TkWinSend_QueueCommand(
 
     return 0;
 }
-
+
 /*
  * ----------------------------------------------------------------------
  *
@@ -1007,7 +1009,7 @@ SendEventProc(
 
     return 1; /* 1 to indicate the event has been handled */
 }
-
+
 /*
  * ----------------------------------------------------------------------
  *
@@ -1038,7 +1040,7 @@ SendTrace(
     OutputDebugString(buffer);
     va_end(args);
 }
-
+
 /*
  * Local Variables:
  * mode: c

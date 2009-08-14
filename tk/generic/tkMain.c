@@ -19,7 +19,6 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
-#include "tclInt.h"
 #include "tkInt.h"
 #ifdef NO_STDLIB_H
 #   include "../compat/stdlib.h"
@@ -255,7 +254,7 @@ Tk_MainEx(
      * Invoke application-specific initialization.
      */
 
-    if ((*appInitProc)(interp) != TCL_OK) {
+    if (appInitProc(interp) != TCL_OK) {
 	TkpDisplayWarning(Tcl_GetStringResult(interp),
 		"Application initialization failed");
     }

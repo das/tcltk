@@ -22,7 +22,7 @@
  * is used together with the "enum direction" declaration in tkMenubutton.h.
  */
 
-static char *directionStrings[] = {
+static const char *const directionStrings[] = {
     "above", "below", "flush", "left", "right", NULL
 };
 
@@ -31,7 +31,7 @@ static char *directionStrings[] = {
  * used together with the "enum state" declaration in tkMenubutton.h.
  */
 
-static char *stateStrings[] = {
+static const char *const stateStrings[] = {
     "active", "disabled", "normal", NULL
 };
 
@@ -40,7 +40,7 @@ static char *stateStrings[] = {
  * is used with the "enum compound" declaration in tkMenuButton.h
  */
 
-static char *compoundStrings[] = {
+static const char *const compoundStrings[] = {
     "bottom", "center", "left", "none", "right", "top", NULL
 };
 
@@ -108,7 +108,7 @@ static const Tk_OptionSpec optionSpecs[] = {
 	DEF_MENUBUTTON_INDICATOR, -1, Tk_Offset(TkMenuButton, indicatorOn),
 	0, 0, 0},
     {TK_OPTION_JUSTIFY, "-justify", "justify", "Justify",
-	DEF_BUTTON_JUSTIFY, -1, Tk_Offset(TkMenuButton, justify), 0, 0, 0},
+	DEF_MENUBUTTON_JUSTIFY, -1, Tk_Offset(TkMenuButton, justify), 0, 0, 0},
     {TK_OPTION_STRING, "-menu", "menu", "Menu",
 	DEF_MENUBUTTON_MENU, -1, Tk_Offset(TkMenuButton, menuName),
 	TK_OPTION_NULL_OK, 0, 0},
@@ -153,7 +153,7 @@ static const Tk_OptionSpec optionSpecs[] = {
  * dispatch the scale widget command.
  */
 
-static const char *commandNames[] = {
+static const char *const commandNames[] = {
     "cget", "configure", NULL
 };
 
@@ -212,7 +212,7 @@ Tk_MenubuttonObjCmd(
     Tk_Window tkwin;
 
     if (objc < 2) {
-	Tcl_WrongNumArgs(interp, 1, objv, "pathName ?options?");
+	Tcl_WrongNumArgs(interp, 1, objv, "pathName ?-option value ...?");
 	return TCL_ERROR;
     }
 
@@ -308,7 +308,7 @@ Tk_MenubuttonObjCmd(
 	return TCL_ERROR;
     }
 
-    Tcl_SetStringObj(Tcl_GetObjResult(interp), Tk_PathName(mbPtr->tkwin), -1);
+    Tcl_SetObjResult(interp, TkNewWindowObj(mbPtr->tkwin));
     return TCL_OK;
 }
 
@@ -342,7 +342,7 @@ MenuButtonWidgetObjCmd(
     Tcl_Obj *objPtr;
 
     if (objc < 2) {
-	Tcl_WrongNumArgs(interp, 1, objv, "option ?arg arg ...?");
+	Tcl_WrongNumArgs(interp, 1, objv, "option ?arg ...?");
 	return TCL_ERROR;
     }
     result = Tcl_GetIndexFromObj(interp, objv[1], commandNames, "option", 0,
@@ -363,9 +363,8 @@ MenuButtonWidgetObjCmd(
 		mbPtr->optionTable, objv[2], mbPtr->tkwin);
 	if (objPtr == NULL) {
 	    goto error;
-	} else {
-	    Tcl_SetObjResult(interp, objPtr);
 	}
+	Tcl_SetObjResult(interp, objPtr);
 	break;
 
     case COMMAND_CONFIGURE:
@@ -375,9 +374,8 @@ MenuButtonWidgetObjCmd(
 		    mbPtr->tkwin);
 	    if (objPtr == NULL) {
 		goto error;
-	    } else {
-		Tcl_SetObjResult(interp, objPtr);
 	    }
+	    Tcl_SetObjResult(interp, objPtr);
 	} else {
 	    result = ConfigureMenuButton(interp, mbPtr, objc-2, objv+2);
 	}

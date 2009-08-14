@@ -134,7 +134,7 @@ SquareObjCmd(
     Tk_OptionTable optionTable;
 
     if (objc < 2) {
-	Tcl_WrongNumArgs(interp, 1, objv, "pathName ?options?");
+	Tcl_WrongNumArgs(interp, 1, objv, "pathName ?-option value ...?");
 	return TCL_ERROR;
     }
 
@@ -224,7 +224,7 @@ SquareWidgetObjCmd(
 {
     Square *squarePtr = clientData;
     int result = TCL_OK;
-    static const char *squareOptions[] = {"cget", "configure", NULL};
+    static const char *const squareOptions[] = {"cget", "configure", NULL};
     enum {
 	SQUARE_CGET, SQUARE_CONFIGURE
     };

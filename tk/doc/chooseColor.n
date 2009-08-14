@@ -1,4 +1,3 @@
-'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 1996 Sun Microsystems, Inc.
 '\"
@@ -45,4 +44,7 @@ string.
 button .b \-bg [tk_chooseColor \-initialcolor gray \-title "Choose color"]
 .CE
 .SH KEYWORDS
-color selection dialog
+color, color selection, dialog
+'\" Local Variables:
+'\" mode: nroff
+'\" End:

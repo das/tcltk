@@ -61,8 +61,8 @@ typedef struct TImageInstance {
  */
 
 static int		ImageCreate(Tcl_Interp *interp,
-			    char *name, int argc, Tcl_Obj *const objv[],
-			    Tk_ImageType *typePtr, Tk_ImageMaster master,
+			    const char *name, int argc, Tcl_Obj *const objv[],
+			    const Tk_ImageType *typePtr, Tk_ImageMaster master,
 			    ClientData *clientDataPtr);
 static ClientData	ImageGet(Tk_Window tkwin, ClientData clientData);
 static void		ImageDisplay(ClientData clientData,
@@ -620,7 +620,7 @@ TestobjconfigObjCmd(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
-    static const char *options[] = {
+    static const char *const options[] = {
 	"alltypes", "chain1", "chain2", "configerror", "delete", "info",
 	"internal", "new", "notenoughparams", "twowindows", NULL
     };
@@ -699,7 +699,7 @@ TestobjconfigObjCmd(
 	    Tcl_Obj *customPtr;
 	} TypesRecord;
 	TypesRecord *recordPtr;
-	static char *stringTable[] = {
+	static const char *const stringTable[] = {
 	    "one", "two", "three", "four", NULL
 	};
 	static const Tk_OptionSpec typesSpecs[] = {
@@ -972,7 +972,7 @@ TestobjconfigObjCmd(
 	    char *custom;
 	} InternalRecord;
 	InternalRecord *recordPtr;
-	static char *internalStringTable[] = {
+	static const char *const internalStringTable[] = {
 	    "one", "two", "three", "four", NULL
 	};
 	static const Tk_OptionSpec internalSpecs[] = {
@@ -1107,7 +1107,7 @@ TestobjconfigObjCmd(
 	};
 
 	if (objc < 3) {
-	    Tcl_WrongNumArgs(interp, 1, objv, "new name ?options?");
+	    Tcl_WrongNumArgs(interp, 1, objv, "new name ?-option value ...?");
 	    return TCL_ERROR;
 	}
 
@@ -1252,7 +1252,7 @@ TrivialConfigObjCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     int result = TCL_OK;
-    static const char *options[] = {
+    static const char *const options[] = {
 	"cget", "configure", "csave", NULL
     };
     enum {
@@ -1314,7 +1314,7 @@ TrivialConfigObjCmd(
 		    headerPtr->optionTable, objc - 2, objv + 2,
 		    tkwin, NULL, &mask);
 	    if (result == TCL_OK) {
-		Tcl_SetIntObj(Tcl_GetObjResult(interp), mask);
+		Tcl_SetObjResult(interp, Tcl_NewIntObj(mask));
 	    }
 	}
 	break;
@@ -1324,7 +1324,7 @@ TrivialConfigObjCmd(
 		tkwin, &saved, &mask);
 	Tk_FreeSavedOptions(&saved);
 	if (result == TCL_OK) {
-	    Tcl_SetIntObj(Tcl_GetObjResult(interp), mask);
+	    Tcl_SetObjResult(interp, Tcl_NewIntObj(mask));
 	}
 	break;
     }
@@ -1434,7 +1434,7 @@ TestfontObjCmd(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
-    static const char *options[] = {"counts", "subfonts", NULL};
+    static const char *const options[] = {"counts", "subfonts", NULL};
     enum option {COUNTS, SUBFONTS};
     int index;
     Tk_Window tkwin;
@@ -1491,18 +1491,18 @@ static int
 ImageCreate(
     Tcl_Interp *interp,		/* Interpreter for application containing
 				 * image. */
-    char *name,			/* Name to use for image. */
+    const char *name,			/* Name to use for image. */
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[],	/* Argument strings for options (doesn't
 				 * include image name or type). */
-    Tk_ImageType *typePtr,	/* Pointer to our type record (not used). */
+    const Tk_ImageType *typePtr,	/* Pointer to our type record (not used). */
     Tk_ImageMaster master,	/* Token for image, to be used by us in later
 				 * callbacks. */
     ClientData *clientDataPtr)	/* Store manager's token for image here; it
 				 * will be returned in later callbacks. */
 {
     TImageMaster *timPtr;
-    char *varName;
+    const char *varName;
     int i;
 
     varName = "log";
@@ -1565,7 +1565,7 @@ ImageCmd(
 
     if (argc < 2) {
 	Tcl_AppendResult(interp, "wrong # args: should be \"",
-		argv[0], "option ?arg arg ...?", NULL);
+		argv[0], "option ?arg ...?", NULL);
 	return TCL_ERROR;
     }
     if (strcmp(argv[1], "changed") == 0) {

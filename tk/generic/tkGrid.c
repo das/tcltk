@@ -300,7 +300,7 @@ static int		SetSlaveColumn(Tcl_Interp *interp, Gridder *slavePtr,
 static int		SetSlaveRow(Tcl_Interp *interp, Gridder *slavePtr,
 			    int row, int numRows);
 static void		StickyToString(int flags, char *result);
-static int		StringToSticky(char *string);
+static int		StringToSticky(const char *string);
 static void		Unlink(Gridder *gridPtr);
 
 static const Tk_GeomMgr gridMgrType = {
@@ -334,7 +334,7 @@ Tk_GridObjCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     Tk_Window tkwin = clientData;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"anchor", "bbox", "columnconfigure", "configure",
 	"forget", "info", "location", "propagate", "remove",
 	"rowconfigure", "size",	"slaves", NULL
@@ -347,7 +347,7 @@ Tk_GridObjCmd(
     int index;
 
     if (objc >= 2) {
-	char *argv1 = Tcl_GetString(objv[1]);
+	const char *argv1 = Tcl_GetString(objv[1]);
 
 	if ((argv1[0] == '.') || (argv1[0] == REL_SKIP) ||
     		(argv1[0] == REL_VERT)) {
@@ -629,7 +629,7 @@ GridForgetRemoveCommand(
     Tk_Window slave;
     Gridder *slavePtr;
     int i;
-    char *string = Tcl_GetString(objv[1]);
+    const char *string = Tcl_GetString(objv[1]);
     char c = string[0];
 
     for (i = 2; i < objc; i++) {
@@ -930,8 +930,8 @@ GridRowColumnConfigureCommand(
     Tcl_Obj **lObjv;		/* array of indices */
     int ok;			/* temporary TCL result code */
     int i, j, first, last;
-    char *string;
-    static const char *optionStrings[] = {
+    const char *string;
+    static const char *const optionStrings[] = {
 	"-minsize", "-pad", "-uniform", "-weight", NULL
     };
     enum options {
@@ -941,7 +941,7 @@ GridRowColumnConfigureCommand(
     Tcl_Obj *listCopy;
 
     if (((objc % 2 != 0) && (objc > 6)) || (objc < 4)) {
-	Tcl_WrongNumArgs(interp, 2, objv, "master index ?-option value...?");
+	Tcl_WrongNumArgs(interp, 2, objv, "master index ?-option value ...?");
 	return TCL_ERROR;
     }
 
@@ -1306,14 +1306,14 @@ GridSlavesCommand(
     Gridder *slavePtr;
     int i, value, index;
     int row = -1, column = -1;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"-column", "-row", NULL
     };
     enum options { SLAVES_COLUMN, SLAVES_ROW };
     Tcl_Obj *res;
 
     if ((objc < 3) || ((objc % 2) == 0)) {
-	Tcl_WrongNumArgs(interp, 2, objv, "window ?-option value...?");
+	Tcl_WrongNumArgs(interp, 2, objv, "window ?-option value ...?");
 	return TCL_ERROR;
     }
 
@@ -1353,8 +1353,7 @@ GridSlavesCommand(
 		slavePtr->row+slavePtr->numRows-1 < row)) {
 	    continue;
 	}
-	Tcl_ListObjAppendElement(interp, res,
-		Tcl_NewStringObj(Tk_PathName(slavePtr->tkwin), -1));
+	Tcl_ListObjAppendElement(interp,res, TkNewWindowObj(slavePtr->tkwin));
     }
     Tcl_SetObjResult(interp, res);
     return TCL_OK;
@@ -2882,10 +2881,10 @@ ConfigureSlaves(
     int defaultRow = -1;
     int defaultColumn = 0;	/* Default column number */
     int defaultColumnSpan = 1;	/* Default number of columns */
-    char *lastWindow;		/* Use this window to base current row/col
+    const char *lastWindow;	/* Use this window to base current row/col
 				 * on */
     int numSkip;		/* Number of 'x' found */
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"-column", "-columnspan", "-in", "-ipadx", "-ipady",
 	"-padx", "-pady", "-row", "-rowspan", "-sticky", NULL
     };
@@ -2893,7 +2892,7 @@ ConfigureSlaves(
 	CONF_COLUMN, CONF_COLUMNSPAN, CONF_IN, CONF_IPADX, CONF_IPADY,
 	CONF_PADX, CONF_PADY, CONF_ROW, CONF_ROWSPAN, CONF_STICKY };
     int index;
-    char *string;
+    const char *string;
     char firstChar;
     int positionGiven;
 
@@ -3041,7 +3040,7 @@ ConfigureSlaves(
 
 	for (defaultColumnSpan = 1; j + defaultColumnSpan < numWindows;
 		defaultColumnSpan++) {
-	    char *string = Tcl_GetString(objv[j + defaultColumnSpan]);
+	    const char *string = Tcl_GetString(objv[j + defaultColumnSpan]);
 
 	    if (*string != REL_HORIZ) {
 		break;
@@ -3333,7 +3332,7 @@ ConfigureSlaves(
 	 */
 
 	for (width = 1; width + j < numWindows; width++) {
-	    char *string = Tcl_GetString(objv[j+width]);
+	    const char *string = Tcl_GetString(objv[j+width]);
 
 	    if (*string != REL_VERT) {
 		break;
@@ -3452,7 +3451,7 @@ StickyToString(
 
 static int
 StringToSticky(
-    char *string)
+    const char *string)
 {
     int sticky = 0;
     char c;

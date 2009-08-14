@@ -37,7 +37,7 @@
  * The following table defines the legal values for the -orient option.
  */
 
-static char *orientStrings[] = {
+static const char *const orientStrings[] = {
     "horizontal", "vertical", NULL
 };
 
@@ -47,7 +47,7 @@ enum orient { ORIENT_HORIZONTAL, ORIENT_VERTICAL };
  * The following table defines the legal values for the -stretch option.
  */
 
-static char *stretchStrings[] = {
+static const char *const stretchStrings[] = {
     "always", "first", "last", "middle", "never", NULL
 };
 
@@ -381,7 +381,7 @@ Tk_PanedWindowObjCmd(
     XSetWindowAttributes atts;
 
     if (objc < 2) {
-	Tcl_WrongNumArgs(interp, 1, objv, "pathName ?options?");
+	Tcl_WrongNumArgs(interp, 1, objv, "pathName ?-option value ...?");
 	return TCL_ERROR;
     }
 
@@ -493,7 +493,7 @@ Tk_PanedWindowObjCmd(
 	return TCL_ERROR;
     }
 
-    Tcl_SetStringObj(Tcl_GetObjResult(interp), Tk_PathName(pwPtr->tkwin), -1);
+    Tcl_SetObjResult(interp, TkNewWindowObj(pwPtr->tkwin));
     return TCL_OK;
 }
 
@@ -524,7 +524,7 @@ PanedWindowWidgetObjCmd(
 {
     PanedWindow *pwPtr = clientData;
     int result = TCL_OK;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"add", "cget", "configure", "forget", "identify", "panecget",
 	"paneconfigure", "panes", "proxy", "sash", NULL
     };
@@ -754,7 +754,7 @@ ConfigureSlaves(
     Tk_Window tkwin = NULL, ancestor, parent;
     Slave *slavePtr, **inserts, **newSlaves;
     Slave options;
-    char *arg;
+    const char *arg;
 
     /*
      * Find the non-window name arguments; these are the configure options for
@@ -1068,7 +1068,7 @@ PanedWindowSashCommand(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
-    static const char *sashOptionStrings[] = {
+    static const char *const sashOptionStrings[] = {
 	"coord", "dragto", "mark", "place", NULL
     };
     enum sashOptions {
@@ -1109,7 +1109,7 @@ PanedWindowSashCommand(
 
 	coords[0] = Tcl_NewIntObj(slavePtr->sashx);
 	coords[1] = Tcl_NewIntObj(slavePtr->sashy);
-	Tcl_SetListObj(Tcl_GetObjResult(interp), 2, coords);
+	Tcl_SetObjResult(interp, Tcl_NewListObj(2, coords));
 	break;
 
     case SASH_MARK:
@@ -1142,7 +1142,7 @@ PanedWindowSashCommand(
 	} else {
 	    coords[0] = Tcl_NewIntObj(pwPtr->slaves[sash]->markx);
 	    coords[1] = Tcl_NewIntObj(pwPtr->slaves[sash]->marky);
-	    Tcl_SetListObj(Tcl_GetObjResult(interp), 2, coords);
+	    Tcl_SetObjResult(interp, Tcl_NewListObj(2, coords));
 	}
 	break;
 
@@ -2369,7 +2369,8 @@ SetSticky(
     int flags)			/* Flags for the option, set Tk_SetOptions. */
 {
     int sticky = 0;
-    char c, *string, *internalPtr;
+    char c, *internalPtr;
+    const char *string;
 
     internalPtr = ComputeSlotAddress(recordPtr, internalOffset);
 
@@ -2759,7 +2760,7 @@ PanedWindowProxyCommand(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"coord", "forget", "place", NULL
     };
     enum options {
@@ -2787,7 +2788,7 @@ PanedWindowProxyCommand(
 
 	coords[0] = Tcl_NewIntObj(pwPtr->proxyx);
 	coords[1] = Tcl_NewIntObj(pwPtr->proxyy);
-	Tcl_SetListObj(Tcl_GetObjResult(interp), 2, coords);
+	Tcl_SetObjResult(interp, Tcl_NewListObj(2, coords));
 	break;
 
     case PROXY_FORGET:

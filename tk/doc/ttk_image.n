@@ -1,4 +1,3 @@
-'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 2004 Joe English
 '\"
@@ -80,3 +79,6 @@ style element create Button.button image \e
 ttk::intro(n), ttk::style(n), ttk_vsapi(n), image(n), photo(n)
 .SH KEYWORDS
 style, theme, appearance, pixmap theme, image
+'\" Local Variables:
+'\" mode: nroff
+'\" End:

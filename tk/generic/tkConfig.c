@@ -136,7 +136,7 @@ static int		SetOptionFromAny(Tcl_Interp *interp, Tcl_Obj *objPtr);
  * the internalPtr2 field points to the entry that matched.
  */
 
-Tcl_ObjType tkOptionObjType = {
+const Tcl_ObjType tkOptionObjType = {
     "option",			/* name */
     NULL,			/* freeIntRepProc */
     NULL,			/* dupIntRepProc */
@@ -712,7 +712,8 @@ DoObjConfig(
 	break;
     }
     case TK_OPTION_STRING: {
-	char *newStr, *value;
+	char *newStr;
+	const char *value;
 	int length;
 
 	if (nullOK && ObjectIsEmpty(valuePtr)) {
@@ -1123,7 +1124,7 @@ GetOptionFromObj(
     OptionTable *tablePtr)	/* Table in which to look up objPtr. */
 {
     Option *bestPtr;
-    char *name;
+    const char *name;
 
     /*
      * First, check to see if the object already has the answer cached.
@@ -1223,9 +1224,9 @@ SetOptionFromAny(
     Tcl_Interp *interp,		/* Used for error reporting if not NULL. */
     register Tcl_Obj *objPtr)	/* The object to convert. */
 {
-    Tcl_AppendToObj(Tcl_GetObjResult(interp),
+    Tcl_AppendResult(interp,
 	    "can't convert value to option except via GetOptionFromObj API",
-	    -1);
+	    NULL);
     return TCL_ERROR;
 }
 
@@ -1306,9 +1307,8 @@ Tk_SetOptions(
 
 	if (objc < 2) {
 	    if (interp != NULL) {
-		Tcl_AppendStringsToObj(Tcl_GetObjResult(interp),
-			"value for \"", Tcl_GetStringFromObj(*objv, NULL),
-			"\" missing", NULL);
+		Tcl_AppendResult(interp, "value for \"",
+			Tcl_GetStringFromObj(*objv, NULL), "\" missing",NULL);
 		goto error;
 	    }
 	}
@@ -1435,6 +1435,7 @@ Tk_RestoreSavedOptions(
 	if (specPtr->internalOffset >= 0) {
 	    register char *ptr = (char *) &savePtr->items[i].internalForm;
 
+	    CLANG_ASSERT(internalPtr);
 	    switch (specPtr->type) {
 	    case TK_OPTION_BOOLEAN:
 		*((int *) internalPtr) = *((int *) ptr);

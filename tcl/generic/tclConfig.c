@@ -73,12 +73,12 @@ Tcl_RegisterConfig(
     const char *pkgName,	/* Name of the package registering the
 				 * embedded configuration. ASCII, thus in
 				 * UTF-8 too. */
-    Tcl_Config *configuration,	/* Embedded configuration. */
+    const Tcl_Config *configuration,	/* Embedded configuration. */
     const char *valEncoding)	/* Name of the encoding used to store the
 				 * configuration values, ASCII, thus UTF-8. */
 {
     Tcl_DString cmdName;
-    Tcl_Config *cfg;
+    const Tcl_Config *cfg;
     Tcl_Encoding venc = Tcl_GetEncoding(NULL, valEncoding);
     QCCD *cdPtr = (QCCD *) ckalloc(sizeof(QCCD));
 
@@ -179,7 +179,7 @@ Tcl_RegisterConfig(
 
     if (Tcl_CreateObjCommand(interp, Tcl_DStringValue(&cmdName),
 	    QueryConfigObjCmd, cdPtr, QueryConfigDelete) == NULL) {
-        Tcl_Panic("%s: %s", "Tcl_RegisterConfig",
+	Tcl_Panic("%s: %s", "Tcl_RegisterConfig",
 		"Unable to create query command for package configuration");
     }
 
@@ -214,7 +214,7 @@ QueryConfigObjCmd(
     Tcl_Obj *pkgName = cdPtr->pkg;
     Tcl_Obj *pDB, *pkgDict, *val, *listPtr;
     int n, index;
-    static const char *subcmdStrings[] = {
+    static const char *const subcmdStrings[] = {
 	"get", "list", NULL
     };
     enum subcmds {
@@ -222,7 +222,7 @@ QueryConfigObjCmd(
     };
 
     if ((objc < 2) || (objc > 3)) {
-	Tcl_WrongNumArgs(interp, 1, objv, "subcommand ?argument?");
+	Tcl_WrongNumArgs(interp, 1, objv, "subcommand ?arg?");
 	return TCL_ERROR;
     }
     if (Tcl_GetIndexFromObj(interp, objv[1], subcmdStrings, "subcommand", 0,
@@ -233,12 +233,12 @@ QueryConfigObjCmd(
     pDB = GetConfigDict(interp);
     if (Tcl_DictObjGet(interp, pDB, pkgName, &pkgDict) != TCL_OK
 	    || pkgDict == NULL) {
-        /*
+	/*
 	 * Maybe a Tcl_Panic is better, because the package data has to be
 	 * present.
 	 */
 
-        Tcl_SetResult(interp, "package not known", TCL_STATIC);
+	Tcl_SetResult(interp, "package not known", TCL_STATIC);
 	return TCL_ERROR;
     }
 

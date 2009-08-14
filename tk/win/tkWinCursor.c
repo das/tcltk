@@ -32,6 +32,9 @@ typedef struct {
 #ifndef IDC_HAND
 #define IDC_HAND MAKEINTRESOURCE(32649)
 #endif
+#ifndef IDC_HELP
+#define IDC_HELP MAKEINTRESOURCE(32651)
+#endif
 
 /*
  * The table below is used to map from the name of a predefined cursor to its
@@ -39,7 +42,7 @@ typedef struct {
  */
 
 static struct CursorName {
-    char *name;
+    const char *name;
     LPCTSTR id;
 } cursorNames[] = {
     {"starting",		IDC_APPSTARTING},
@@ -62,6 +65,7 @@ static struct CursorName {
     {"watch",			IDC_WAIT},
     {"xterm",			IDC_IBEAM},
     {"hand2",			IDC_HAND},
+    {"question_arrow",		IDC_HELP},
     {NULL,			0}
 };
 
@@ -71,7 +75,7 @@ static struct CursorName {
 
 #define TK_DEFAULT_CURSOR	IDC_ARROW
 
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -171,7 +175,7 @@ TkGetCursorByName(
 	return (TkCursor *) cursorPtr;
     }
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -200,7 +204,7 @@ TkCreateCursorFromData(
 {
     return NULL;
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -224,7 +228,7 @@ TkpFreeCursor(
 {
     /* TkWinCursor *winCursorPtr = (TkWinCursor *) cursorPtr; */
 }
-
+
 /*
  *----------------------------------------------------------------------
  *
@@ -259,7 +263,7 @@ TkpSetCursor(
 	SetCursor(hcursor);
     }
 }
-
+
 /*
  * Local Variables:
  * mode: c

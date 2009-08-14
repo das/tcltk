@@ -131,6 +131,7 @@ else
 override CONFIGURE_ARGS := ${CONFIGURE_ARGS} --enable-xft
 VERSION			:= ${VERSION}-X11
 wish			:= ${wish}-X11
+override EMBEDDED_BUILD :=
 endif
 
 INSTALL_TARGETS		= install-binaries install-libraries
@@ -184,7 +185,7 @@ ${objdir}/Makefile: ${UNIX_DIR}/Makefile.in ${UNIX_DIR}/configure \
 	--mandir="${MANDIR}" --enable-threads --enable-framework \
 	--with-tcl="${TCL_DIR}" \
 	${CONFIGURE_ARGS} ${EXTRA_CONFIGURE_ARGS}; else ./config.status; fi
-ifneq (${TK_X11},)
+ifneq (${VERSION},${TCL_VERSION})
 	@cd "${OBJ_DIR}" && sed -e 's#/Versions/${TCL_VERSION}#/Versions/${VERSION}#' \
 	tkConfig.sh > tkConfig.sh.1 && mv -f tkConfig.sh.1 tkConfig.sh
 endif

@@ -163,6 +163,7 @@ TKOBJS = \
 	$(TMPDIR)\tkAtom.obj \
 	$(TMPDIR)\tkBind.obj \
 	$(TMPDIR)\tkBitmap.obj \
+	$(TMPDIR)\tkBusy.obj \
 	$(TMPDIR)\tkButton.obj \
 	$(TMPDIR)\tkCanvArc.obj \
 	$(TMPDIR)\tkCanvBmap.obj \
@@ -196,6 +197,7 @@ TKOBJS = \
 	$(TMPDIR)\tkImgGIF.obj \
 	$(TMPDIR)\tkImgPPM.obj \
 	$(TMPDIR)\tkImgPhoto.obj \
+	$(TMPDIR)\tkImgPhInstance.obj \
 	$(TMPDIR)\tkImgUtil.obj \
 	$(TMPDIR)\tkListbox.obj \
 	$(TMPDIR)\tkMacWinMenu.obj \

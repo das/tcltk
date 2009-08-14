@@ -15,7 +15,7 @@
 .SH NAME
 linsert \- Insert elements into a list
 .SH SYNOPSIS
-\fBlinsert \fIlist index element \fR?\fIelement element ...\fR?
+\fBlinsert \fIlist index \fR?\fIelement element ...\fR?
 .BE
 .SH DESCRIPTION
 .PP
@@ -31,6 +31,7 @@ arithmetic and indices relative to the end of the list.
 .PP
 Putting some values into a list, first indexing from the start and
 then indexing from the end, and then chaining them together:
+.PP
 .CS
 set oldList {the fox jumps over the dog}
 set midList [\fBlinsert\fR $oldList 1 quick]

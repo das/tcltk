@@ -1,4 +1,3 @@
-'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 1990-1994 The Regents of the University of California.
 '\" Copyright (c) 1994-1996 Sun Microsystems, Inc.
@@ -35,3 +34,6 @@ Documentation for \fBbgerror\fR is available as part of Tcl's
 documentation.
 .SH KEYWORDS
 background error, reporting
+'\" Local Variables:
+'\" mode: nroff
+'\" End:

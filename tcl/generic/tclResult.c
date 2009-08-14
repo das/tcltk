@@ -368,7 +368,7 @@ Tcl_DiscardResult(
 	if (statePtr->freeProc == TCL_DYNAMIC) {
 	    ckfree(statePtr->result);
 	} else {
-	    (*statePtr->freeProc)(statePtr->result);
+	    statePtr->freeProc(statePtr->result);
 	}
     }
 }
@@ -401,7 +401,6 @@ Tcl_SetResult(
 				 * a Tcl_FreeProc such as free. */
 {
     Interp *iPtr = (Interp *) interp;
-    int length;
     register Tcl_FreeProc *oldFreeProc = iPtr->freeProc;
     char *oldResult = iPtr->result;
 
@@ -410,7 +409,7 @@ Tcl_SetResult(
 	iPtr->result = iPtr->resultSpace;
 	iPtr->freeProc = 0;
     } else if (freeProc == TCL_VOLATILE) {
-	length = strlen(result);
+	int length = strlen(result);
 	if (length > TCL_RESULT_SIZE) {
 	    iPtr->result = (char *) ckalloc((unsigned) length+1);
 	    iPtr->freeProc = TCL_DYNAMIC;
@@ -420,7 +419,7 @@ Tcl_SetResult(
 	}
 	strcpy(iPtr->result, result);
     } else {
-	iPtr->result = result;
+	iPtr->result = (char *) result;
 	iPtr->freeProc = freeProc;
     }
 
@@ -434,7 +433,7 @@ Tcl_SetResult(
 	if (oldFreeProc == TCL_DYNAMIC) {
 	    ckfree(oldResult);
 	} else {
-	    (*oldFreeProc)(oldResult);
+	    oldFreeProc(oldResult);
 	}
     }
 
@@ -471,11 +470,12 @@ Tcl_GetStringResult(
      * result, then reset the object result.
      */
 
-    if (*(interp->result) == 0) {
+    Interp* iPtr = (Interp*) interp;
+    if (*(iPtr->result) == 0) {
 	Tcl_SetResult(interp, TclGetString(Tcl_GetObjResult(interp)),
 		TCL_VOLATILE);
     }
-    return interp->result;
+    return iPtr->result;
 }
 
 /*
@@ -525,7 +525,7 @@ Tcl_SetObjResult(
 	if (iPtr->freeProc == TCL_DYNAMIC) {
 	    ckfree(iPtr->result);
 	} else {
-	    (*iPtr->freeProc)(iPtr->result);
+	    iPtr->freeProc(iPtr->result);
 	}
 	iPtr->freeProc = 0;
     }
@@ -578,7 +578,7 @@ Tcl_GetObjResult(
 	    if (iPtr->freeProc == TCL_DYNAMIC) {
 		ckfree(iPtr->result);
 	    } else {
-		(*iPtr->freeProc)(iPtr->result);
+		iPtr->freeProc(iPtr->result);
 	    }
 	    iPtr->freeProc = 0;
 	}
@@ -860,7 +860,7 @@ Tcl_FreeResult(
 	if (iPtr->freeProc == TCL_DYNAMIC) {
 	    ckfree(iPtr->result);
 	} else {
-	    (*iPtr->freeProc)(iPtr->result);
+	    iPtr->freeProc(iPtr->result);
 	}
 	iPtr->freeProc = 0;
     }
@@ -898,7 +898,7 @@ Tcl_ResetResult(
 	if (iPtr->freeProc == TCL_DYNAMIC) {
 	    ckfree(iPtr->result);
 	} else {
-	    (*iPtr->freeProc)(iPtr->result);
+	    iPtr->freeProc(iPtr->result);
 	}
 	iPtr->freeProc = 0;
     }
@@ -1078,6 +1078,45 @@ Tcl_SetObjErrorCode(
     }
     iPtr->errorCode = errorObjPtr;
     Tcl_IncrRefCount(iPtr->errorCode);
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * Tcl_GetErrorLine --
+ *
+ * Results:
+ *
+ * Side effects:
+ *
+ *----------------------------------------------------------------------
+ */
+
+int
+Tcl_GetErrorLine(
+    Tcl_Interp *interp)
+{
+    return ((Interp *) interp)->errorLine;
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * Tcl_SetErrorLine --
+ *
+ * Results:
+ *
+ * Side effects:
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+Tcl_SetErrorLine(
+    Tcl_Interp *interp,
+    int value)
+{
+    ((Interp *) interp)->errorLine = value;
 }
 
 /*
@@ -1335,7 +1374,7 @@ TclMergeReturnOptions(
     Tcl_DictObjGet(NULL, returnOpts, keys[KEY_CODE], &valuePtr);
     if ((valuePtr != NULL)
 	    && (TCL_ERROR == TclGetIntFromObj(NULL, valuePtr, &code))) {
-	static const char *returnCodes[] = {
+	static const char *const returnCodes[] = {
 	    "ok", "error", "return", "break", "continue", NULL
 	};
 
@@ -1516,7 +1555,7 @@ Tcl_SetReturnOptions(
 /*
  *-------------------------------------------------------------------------
  *
- * TclTransferResult --
+ * Tcl_TransferResult --
  *
  *	Copy the result (and error information) from one interp to another.
  *	Used when one interp has caused another interp to evaluate a script
@@ -1542,7 +1581,7 @@ Tcl_SetReturnOptions(
  */
 
 void
-TclTransferResult(
+Tcl_TransferResult(
     Tcl_Interp *sourceInterp,	/* Interp whose result and error information
 				 * should be moved to the target interp.
 				 * After moving result, this interp's result

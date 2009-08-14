@@ -128,7 +128,7 @@ static const TkIntStubs tkIntStubs = {
     TkpRedirectKeyEvent, /* 73 */
     TkpSetMainMenubar, /* 74 */
     TkpUseWindow, /* 75 */
-    TkpWindowWasRecentlyDeleted, /* 76 */
+    NULL, /* 76 */
     TkQueueEventForAllChildren, /* 77 */
     TkReadBitmapFile, /* 78 */
     TkScrollWindow, /* 79 */
@@ -309,6 +309,29 @@ static const TkIntStubs tkIntStubs = {
     NULL, /* 155 */
     TkpTestembedCmd, /* 156 */
     TkpTesttextCmd, /* 157 */
+    TkSelGetSelection, /* 158 */
+    TkTextGetIndex, /* 159 */
+    TkTextIndexBackBytes, /* 160 */
+    TkTextIndexForwBytes, /* 161 */
+    TkTextMakeByteIndex, /* 162 */
+    TkTextPrintIndex, /* 163 */
+    TkTextSetMark, /* 164 */
+    TkTextXviewCmd, /* 165 */
+    TkTextChanged, /* 166 */
+    TkBTreeNumLines, /* 167 */
+    TkTextInsertDisplayProc, /* 168 */
+    TkStateParseProc, /* 169 */
+    TkStatePrintProc, /* 170 */
+    TkCanvasDashParseProc, /* 171 */
+    TkCanvasDashPrintProc, /* 172 */
+    TkOffsetParseProc, /* 173 */
+    TkOffsetPrintProc, /* 174 */
+    TkPixelParseProc, /* 175 */
+    TkPixelPrintProc, /* 176 */
+    TkOrientParseProc, /* 177 */
+    TkOrientPrintProc, /* 178 */
+    TkSmoothParseProc, /* 179 */
+    TkSmoothPrintProc, /* 180 */
 };
 
 static const TkIntPlatStubs tkIntPlatStubs = {
@@ -410,8 +433,8 @@ static const TkIntPlatStubs tkIntPlatStubs = {
 #endif /* AQUA */
 #if !(defined(__WIN32__) || defined(MAC_OSX_TK)) /* X11 */
     TkCreateXEventSource, /* 0 */
-    TkFreeWindowId, /* 1 */
-    TkInitXId, /* 2 */
+    NULL, /* 1 */
+    NULL, /* 2 */
     TkpCmapStressed, /* 3 */
     TkpSync, /* 4 */
     TkUnixContainerId, /* 5 */
@@ -420,7 +443,7 @@ static const TkIntPlatStubs tkIntPlatStubs = {
     TkpScanWindowId, /* 8 */
     TkWmCleanup, /* 9 */
     TkSendCleanup, /* 10 */
-    TkFreeXId, /* 11 */
+    NULL, /* 11 */
     TkpWmSetState, /* 12 */
     TkpTestsendCmd, /* 13 */
 #endif /* X11 */
@@ -714,7 +737,7 @@ static const TkStubs tkStubs = {
     Tk_CreateSelHandler, /* 41 */
     Tk_CreateWindow, /* 42 */
     Tk_CreateWindowFromPath, /* 43 */
-    Tk_DefineBitmap, /* 44 */
+    Tk_OldDefineBitmap, /* 44 */
     Tk_DefineCursor, /* 45 */
     Tk_DeleteAllBindings, /* 46 */
     Tk_DeleteBinding, /* 47 */
@@ -756,7 +779,7 @@ static const TkStubs tkStubs = {
     Tk_GetAtomName, /* 83 */
     Tk_GetBinding, /* 84 */
     Tk_GetBitmap, /* 85 */
-    Tk_GetBitmapFromData, /* 86 */
+    Tk_OldGetBitmapFromData, /* 86 */
     Tk_GetCapStyle, /* 87 */
     Tk_GetColor, /* 88 */
     Tk_GetColorByValue, /* 89 */
@@ -944,6 +967,8 @@ static const TkStubs tkStubs = {
     Tk_Interp, /* 271 */
     Tk_CreateOldImageType, /* 272 */
     Tk_CreateOldPhotoImageFormat, /* 273 */
+    Tk_DefineBitmap, /* 274 */
+    Tk_GetBitmapFromData, /* 275 */
 };
 
 /* !END!: Do not edit above this line. */

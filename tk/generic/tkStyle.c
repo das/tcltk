@@ -152,7 +152,7 @@ static int		SetStyleFromAny(Tcl_Interp *interp, Tcl_Obj *objPtr);
  * object points to the Style structure for the stylefont, or NULL.
  */
 
-static Tcl_ObjType styleObjType = {
+static const Tcl_ObjType styleObjType = {
     "style",			/* name */
     FreeStyleObjProc,		/* freeIntRepProc */
     DupStyleObjProc,		/* dupIntRepProc */
@@ -1497,7 +1497,7 @@ SetStyleFromAny(
     name = Tcl_GetString(objPtr);
     typePtr = objPtr->typePtr;
     if ((typePtr != NULL) && (typePtr->freeIntRepProc != NULL)) {
-	(*typePtr->freeIntRepProc)(objPtr);
+	typePtr->freeIntRepProc(objPtr);
     }
 
     objPtr->typePtr = &styleObjType;

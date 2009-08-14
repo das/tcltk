@@ -25,6 +25,8 @@
 static inline void	BumpGlobalEpoch(Tcl_Interp *interp, Class *classPtr);
 static Tcl_Command	FindCommand(Tcl_Interp *interp, Tcl_Obj *stringObj,
 			    Tcl_Namespace *const namespacePtr);
+static inline Class *	GetClassInOuterContext(Tcl_Interp *interp,
+			    Tcl_Obj *className, const char *errMsg);
 static inline int	InitDefineContext(Tcl_Interp *interp,
 			    Tcl_Namespace *namespacePtr, Object *oPtr,
 			    int objc, Tcl_Obj *const objv[]);
@@ -562,6 +564,13 @@ InitDefineContext(
     CallFrame *framePtr, **framePtrPtr = &framePtr;
     int result;
 
+    if (namespacePtr == NULL) {
+	Tcl_AppendResult(interp,
+		"cannot process definitions; support namespace deleted",
+		NULL);
+	return TCL_ERROR;
+    }
+
     /* framePtrPtr is needed to satisfy GCC 3.3's strict aliasing rules */
 
     result = TclPushStackFrame(interp, (Tcl_CallFrame **) framePtrPtr,
@@ -592,14 +601,54 @@ TclOOGetDefineCmdContext(
 {
     Interp *iPtr = (Interp *) interp;
 
-    if ((iPtr->framePtr == NULL)
-	    || (iPtr->framePtr->isProcCallFrame != FRAME_IS_OO_DEFINE)) {
+    if ((iPtr->varFramePtr == NULL)
+	    || (iPtr->varFramePtr->isProcCallFrame != FRAME_IS_OO_DEFINE)) {
 	Tcl_AppendResult(interp, "this command may only be called from within"
 		" the context of an ::oo::define or ::oo::objdefine command",
 		NULL);
 	return NULL;
     }
-    return (Tcl_Object) iPtr->framePtr->clientData;
+    return (Tcl_Object) iPtr->varFramePtr->clientData;
+}
+
+/*
+ * ----------------------------------------------------------------------
+ *
+ * GetClassInOuterContext --
+ *	Wrapper round Tcl_GetObjectFromObj to perform the lookup in the
+ *	context that called oo::define (or equivalent). Note that this may
+ *	have to go up multiple levels to get the level that we started doing
+ *	definitions at.
+ *
+ * ----------------------------------------------------------------------
+ */
+
+static inline Class *
+GetClassInOuterContext(
+    Tcl_Interp *interp,
+    Tcl_Obj *className,
+    const char *errMsg)
+{
+    Interp *iPtr = (Interp *) interp;
+    Object *oPtr;
+    CallFrame *savedFramePtr = iPtr->varFramePtr;
+
+    while (iPtr->varFramePtr->isProcCallFrame == FRAME_IS_OO_DEFINE) {
+	if (iPtr->varFramePtr->callerVarPtr == NULL) {
+	    Tcl_Panic("getting outer context when already in global context");
+	}
+	iPtr->varFramePtr = iPtr->varFramePtr->callerVarPtr;
+    }
+    oPtr = (Object *) Tcl_GetObjectFromObj(interp, className);
+    iPtr->varFramePtr = savedFramePtr;
+    if (oPtr == NULL) {
+	return NULL;
+    }
+    if (oPtr->classPtr == NULL) {
+	Tcl_AppendResult(interp, errMsg, NULL);
+	return NULL;
+    }
+    return oPtr->classPtr;
 }
 
 /*
@@ -664,7 +713,7 @@ TclOODefineObjCmd(
 	    Tcl_AppendObjToErrorInfo(interp, Tcl_ObjPrintf(
 		    "\n    (in definition script for object \"%.*s%s\" line %d)",
 		    (overflow ? limit : length), objName,
-		    (overflow ? "..." : ""), interp->errorLine));
+		    (overflow ? "..." : ""), Tcl_GetErrorLine(interp)));
 	}
     } else {
 	Tcl_Obj *objPtr, *obj2Ptr, **objs;
@@ -783,7 +832,7 @@ TclOOObjDefObjCmd(
 	    Tcl_AppendObjToErrorInfo(interp, Tcl_ObjPrintf(
 		    "\n    (in definition script for object \"%.*s%s\" line %d)",
 		    (overflow ? limit : length), objName,
-		    (overflow ? "..." : ""), interp->errorLine));
+		    (overflow ? "..." : ""), Tcl_GetErrorLine(interp)));
 	}
     } else {
 	Tcl_Obj *objPtr, *obj2Ptr, **objs;
@@ -903,7 +952,7 @@ TclOODefineSelfObjCmd(
 	    Tcl_AppendObjToErrorInfo(interp, Tcl_ObjPrintf(
 		    "\n    (in definition script for object \"%.*s%s\" line %d)",
 		    (overflow ? limit : length), objName,
-		    (overflow ? "..." : ""), interp->errorLine));
+		    (overflow ? "..." : ""), Tcl_GetErrorLine(interp)));
 	}
     } else {
 	Tcl_Obj *objPtr, *obj2Ptr, **objs;
@@ -982,7 +1031,8 @@ TclOODefineClassObjCmd(
     int objc,
     Tcl_Obj *const *objv)
 {
-    Object *oPtr, *o2Ptr;
+    Object *oPtr;
+    Class *clsPtr;
     Foundation *fPtr = TclOOGetFoundation(interp);
 
     /*
@@ -1012,13 +1062,9 @@ TclOODefineClassObjCmd(
 	Tcl_WrongNumArgs(interp, 1, objv, "className");
 	return TCL_ERROR;
     }
-    o2Ptr = (Object *) Tcl_GetObjectFromObj(interp, objv[1]);
-    if (o2Ptr == NULL) {
-	return TCL_ERROR;
-    }
-    if (o2Ptr->classPtr == NULL) {
-	Tcl_AppendResult(interp, "the class of an object must be a class",
-		NULL);
+    clsPtr = GetClassInOuterContext(interp, objv[1],
+	    "the class of an object must be a class");
+    if (clsPtr == NULL) {
 	return TCL_ERROR;
     }
 
@@ -1028,8 +1074,7 @@ TclOODefineClassObjCmd(
      * produce an error if any attempt is made to swap from one to the other.
      */
 
-    if ((oPtr->classPtr == NULL) == TclOOIsReachable(fPtr->classCls,
-	    o2Ptr->classPtr)) {
+    if ((oPtr->classPtr==NULL) == TclOOIsReachable(fPtr->classCls, clsPtr)) {
 	Tcl_AppendResult(interp, "may not change a ",
 		(oPtr->classPtr==NULL ? "non-" : ""), "class object into a ",
 		(oPtr->classPtr==NULL ? "" : "non-"), "class object", NULL);
@@ -1040,9 +1085,9 @@ TclOODefineClassObjCmd(
      * Set the object's class.
      */
 
-    if (oPtr->selfCls != o2Ptr->classPtr) {
+    if (oPtr->selfCls != clsPtr) {
 	TclOORemoveFromInstances(oPtr, oPtr->selfCls);
-	oPtr->selfCls = o2Ptr->classPtr;
+	oPtr->selfCls = clsPtr;
 	TclOOAddToInstances(oPtr, oPtr->selfCls);
 	if (oPtr->classPtr != NULL) {
 	    BumpGlobalEpoch(interp, oPtr->classPtr);
@@ -1305,6 +1350,9 @@ TclOODefineExportObjCmd(
 	if (isNew) {
 	    mPtr = (Method *) ckalloc(sizeof(Method));
 	    memset(mPtr, 0, sizeof(Method));
+	    mPtr->refCount = 1;
+	    mPtr->namePtr = objv[i];
+	    Tcl_IncrRefCount(objv[i]);
 	    Tcl_SetHashValue(hPtr, mPtr);
 	} else {
 	    mPtr = Tcl_GetHashValue(hPtr);
@@ -1510,23 +1558,17 @@ TclOODefineMixinObjCmd(
     mixins = TclStackAlloc(interp, sizeof(Class *) * (objc-1));
 
     for (i=1 ; i<objc ; i++) {
-	Object *o2Ptr;
+	Class *clsPtr = GetClassInOuterContext(interp, objv[i],
+		"may only mix in classes");
 
-	o2Ptr = (Object *) Tcl_GetObjectFromObj(interp, objv[i]);
-	if (o2Ptr == NULL) {
+	if (clsPtr == NULL) {
 	    goto freeAndError;
 	}
-	if (o2Ptr->classPtr == NULL) {
-	    Tcl_AppendResult(interp, "may only mix in classes; \"",
-		    TclGetString(objv[i]), "\" is not a class", NULL);
-	    goto freeAndError;
-	}
-	if (!isInstanceMixin &&
-		TclOOIsReachable(oPtr->classPtr,o2Ptr->classPtr)){
+	if (!isInstanceMixin && TclOOIsReachable(oPtr->classPtr, clsPtr)) {
 	    Tcl_AppendResult(interp, "may not mix a class into itself", NULL);
 	    goto freeAndError;
 	}
-	mixins[i-1] = o2Ptr->classPtr;
+	mixins[i-1] = clsPtr;
     }
 
     if (isInstanceMixin) {
@@ -1614,7 +1656,7 @@ TclOODefineSuperclassObjCmd(
     int objc,
     Tcl_Obj *const *objv)
 {
-    Object *oPtr, *o2Ptr;
+    Object *oPtr;
     Foundation *fPtr = TclOOGetFoundation(interp);
     Class **superclasses, *superPtr;
     int i, j;
@@ -1654,29 +1696,27 @@ TclOODefineSuperclassObjCmd(
      */
 
     for (i=0 ; i<objc-1 ; i++) {
-	o2Ptr = (Object *) Tcl_GetObjectFromObj(interp, objv[i+1]);
-	if (o2Ptr == NULL) {
-	    goto failedAfterAlloc;
-	}
-	if (o2Ptr->classPtr == NULL) {
-	    Tcl_AppendResult(interp, "only a class can be a superclass",NULL);
+	Class *clsPtr = GetClassInOuterContext(interp, objv[i+1],
+		"only a class can be a superclass");
+
+	if (clsPtr == NULL) {
 	    goto failedAfterAlloc;
 	}
 	for (j=0 ; j<i ; j++) {
-	    if (superclasses[j] == o2Ptr->classPtr) {
+	    if (superclasses[j] == clsPtr) {
 		Tcl_AppendResult(interp,
 			"class should only be a direct superclass once",NULL);
 		goto failedAfterAlloc;
 	    }
 	}
-	if (TclOOIsReachable(oPtr->classPtr, o2Ptr->classPtr)) {
+	if (TclOOIsReachable(oPtr->classPtr, clsPtr)) {
 	    Tcl_AppendResult(interp,
 		    "attempt to form circular dependency graph", NULL);
 	failedAfterAlloc:
 	    ckfree((char *) superclasses);
 	    return TCL_ERROR;
 	}
-	superclasses[i] = o2Ptr->classPtr;
+	superclasses[i] = clsPtr;
     }
 
     /*
@@ -1768,6 +1808,9 @@ TclOODefineUnexportObjCmd(
 	if (isNew) {
 	    mPtr = (Method *) ckalloc(sizeof(Method));
 	    memset(mPtr, 0, sizeof(Method));
+	    mPtr->refCount = 1;
+	    mPtr->namePtr = objv[i];
+	    Tcl_IncrRefCount(objv[i]);
 	    Tcl_SetHashValue(hPtr, mPtr);
 	} else {
 	    mPtr = Tcl_GetHashValue(hPtr);
@@ -1792,6 +1835,100 @@ TclOODefineUnexportObjCmd(
     return TCL_OK;
 }
 
+/*
+ * ----------------------------------------------------------------------
+ *
+ * TclOODefineVariablesObjCmd --
+ *	Implementation of the "variable" subcommand of the "oo::define" and
+ *	"oo::objdefine" commands.
+ *
+ * ----------------------------------------------------------------------
+ */
+
+int
+TclOODefineVariablesObjCmd(
+    ClientData clientData,
+    Tcl_Interp *interp,
+    int objc,
+    Tcl_Obj *const *objv)
+{
+    int isInstanceVars = (clientData != NULL);
+    Object *oPtr = (Object *) TclOOGetDefineCmdContext(interp);
+    Tcl_Obj *variableObj;
+    int i;
+
+    if (oPtr == NULL) {
+	return TCL_ERROR;
+    }
+    if (!isInstanceVars && !oPtr->classPtr) {
+	Tcl_AppendResult(interp, "attempt to misuse API", NULL);
+	return TCL_ERROR;
+    }
+
+    for (i=1 ; i<objc ; i++) {
+	const char *varName = Tcl_GetString(objv[i]);
+
+	if (strstr(varName, "::") != NULL) {
+	    Tcl_AppendResult(interp, "invalid declared variable name \"",
+		    varName, "\": must not contain namespace separators",
+		    NULL);
+	    return TCL_ERROR;
+	}
+	if (Tcl_StringMatch(varName, "*(*)")) {
+	    Tcl_AppendResult(interp, "invalid declared variable name \"",
+		    varName, "\": must not refer to an array element", NULL);
+	    return TCL_ERROR;
+	}
+    }
+    for (i=1 ; i<objc ; i++) {
+	Tcl_IncrRefCount(objv[i]);
+    }
+
+    if (!isInstanceVars) {
+	FOREACH(variableObj, oPtr->classPtr->variables) {
+	    Tcl_DecrRefCount(variableObj);
+	}
+	if (i != objc-1) {
+	    if (objc == 1) {
+		ckfree((char *) oPtr->classPtr->variables.list);
+	    } else if (i) {
+		oPtr->classPtr->variables.list = (Tcl_Obj **)
+			ckrealloc((char *) oPtr->classPtr->variables.list,
+			sizeof(Tcl_Obj *) * (objc-1));
+	    } else {
+		oPtr->classPtr->variables.list = (Tcl_Obj **)
+			ckalloc(sizeof(Tcl_Obj *) * (objc-1));
+	    }
+	}
+	if (objc > 1) {
+	    memcpy(oPtr->classPtr->variables.list, objv+1,
+		    sizeof(Tcl_Obj *) * (objc-1));
+	}
+	oPtr->classPtr->variables.num = objc-1;
+    } else {
+	FOREACH(variableObj, oPtr->variables) {
+	    Tcl_DecrRefCount(variableObj);
+	}
+	if (i != objc-1) {
+	    if (objc == 1) {
+		ckfree((char *) oPtr->variables.list);
+	    } else if (i) {
+		oPtr->variables.list = (Tcl_Obj **)
+			ckrealloc((char *) oPtr->variables.list,
+			sizeof(Tcl_Obj *) * (objc-1));
+	    } else {
+		oPtr->variables.list = (Tcl_Obj **)
+			ckalloc(sizeof(Tcl_Obj *) * (objc-1));
+	    }
+	}
+	if (objc > 1) {
+	    memcpy(oPtr->variables.list, objv+1, sizeof(Tcl_Obj *)*(objc-1));
+	}
+	oPtr->variables.num = objc-1;
+    }
+    return TCL_OK;
+}
+
 void
 Tcl_ClassSetConstructor(
     Tcl_Interp *interp,
@@ -1803,6 +1940,16 @@ Tcl_ClassSetConstructor(
     if (method != (Tcl_Method) clsPtr->constructorPtr) {
 	TclOODelMethodRef(clsPtr->constructorPtr);
 	clsPtr->constructorPtr = (Method *) method;
+
+	/*
+	 * Remember to invalidate the cached constructor chain for this class.
+	 * [Bug 2531577]
+	 */
+
+	if (clsPtr->constructorChainPtr) {
+	    TclOODeleteChain(clsPtr->constructorChainPtr);
+	    clsPtr->constructorChainPtr = NULL;
+	}
 	BumpGlobalEpoch(interp, clsPtr);
     }
 }
@@ -1818,6 +1965,10 @@ Tcl_ClassSetDestructor(
     if (method != (Tcl_Method) clsPtr->destructorPtr) {
 	TclOODelMethodRef(clsPtr->destructorPtr);
 	clsPtr->destructorPtr = (Method *) method;
+	if (clsPtr->destructorChainPtr) {
+	    TclOODeleteChain(clsPtr->destructorChainPtr);
+	    clsPtr->destructorChainPtr = NULL;
+	}
 	BumpGlobalEpoch(interp, clsPtr);
     }
 }

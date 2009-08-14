@@ -68,6 +68,14 @@ typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__HI__)));
 #if defined(__sun) && defined(__i386) && !defined(__GNUC__)
 #include <sunmath.h>
 #endif
+
+/*
+ * MIPS floating-point units need special settings in control registers
+ * to use gradual underflow as we expect.
+ */
+#if defined(__mips)
+#include <sys/fpu.h>
+#endif
 /*
  * HP's PA_RISC architecture uses 7ff4000000000000 to represent a quiet NaN.
  * Everyone else uses 7ff8000000000000. (Why, HP, why?)
@@ -90,7 +98,8 @@ static int maxpow10_wide;	/* The powers of ten that can be represented
 				 * exactly as wide integers. */
 static Tcl_WideUInt *pow10_wide;
 #define MAXPOW	22
-static double pow10vals[MAXPOW+1];	/* The powers of ten that can be represented
+static double pow10vals[MAXPOW+1];
+				/* The powers of ten that can be represented
 				 * exactly as IEEE754 doubles. */
 static int mmaxpow;		/* Largest power of ten that can be
 				 * represented exactly in a 'double'. */
@@ -369,6 +378,8 @@ TclParseNumber(
 		break;
 	    } else if (flags & TCL_PARSE_HEXADECIMAL_ONLY) {
 		goto zerox;
+	    } else if (flags & TCL_PARSE_BINARY_ONLY) {
+		goto zerob;
 	    } else if (flags & TCL_PARSE_OCTAL_ONLY) {
 		goto zeroo;
 	    } else if (isdigit(UCHAR(c))) {
@@ -395,9 +406,9 @@ TclParseNumber(
 	case ZERO:
 	    /*
 	     * Scanned a leading zero (perhaps with a + or -). Acceptable
-	     * inputs are digits, period, X, and E. If 8 or 9 is encountered,
+	     * inputs are digits, period, X, b, and E. If 8 or 9 is encountered,
 	     * the number can't be octal. This state and the OCTAL state
-	     * differ only in whether they recognize 'X'.
+	     * differ only in whether they recognize 'X' and 'b'.
 	     */
 
 	    acceptState = state;
@@ -416,6 +427,9 @@ TclParseNumber(
 	    if (c == 'b' || c == 'B') {
 		state = ZERO_B;
 		break;
+	    }
+	    if (flags & TCL_PARSE_BINARY_ONLY) {
+		goto zerob;
 	    }
 	    if (c == 'o' || c == 'O') {
 		explicitOctal = 1;
@@ -602,6 +616,7 @@ TclParseNumber(
 	    acceptPoint = p;
 	    acceptLen = len;
 	case ZERO_B:
+	zerob:
 	    if (c == '0') {
 		++numTrailZeros;
 		state = BINARY;
@@ -1155,6 +1170,7 @@ TclParseNumber(
 		Tcl_AppendToObj(msg, " (looks like invalid octal number)", -1);
 	    }
 	    Tcl_SetObjResult(interp, msg);
+	    Tcl_SetErrorCode(interp, "TCL", "VALUE", "NUMBER", NULL);
 	}
     }
 
@@ -1223,7 +1239,7 @@ AccumulateDecimalDigit(
 	     * number to a bignum and fall through into the bignum case.
 	     */
 
-	    TclBNInitBignumFromWideUInt (bignumRepPtr, w);
+	    TclBNInitBignumFromWideUInt(bignumRepPtr, w);
 	} else {
 	    /*
 	     * Wide multiplication.
@@ -1333,7 +1349,7 @@ MakeLowPrecisionDouble(
 		 * without special handling.
 		 */
 
-		retval = (double)(Tcl_WideInt)significand * pow10vals[ exponent ];
+		retval = (double)(Tcl_WideInt)significand * pow10vals[exponent];
 		goto returnValue;
 	    } else {
 		int diff = DBL_DIG - numSigDigs;
@@ -1686,8 +1702,8 @@ RefineApproximation(
      */
 
     if (mp_cmp_mag(&twoMd, &twoMv) == MP_LT) {
-        mp_clear(&twoMd);
-        mp_clear(&twoMv);
+	mp_clear(&twoMd);
+	mp_clear(&twoMv);
 	return approxResult;
     }
 
@@ -2156,6 +2172,14 @@ TclInitDoubleConversion(void)
 	double dv;
 	Tcl_WideUInt iv;
     } bitwhack;
+#endif
+
+#if defined(__mips)
+    union fpc_csr mipsCR;
+
+    mipsCR.fc_word = get_fpc_csr();
+    mipsCR.fc_struct.flush = 0;
+    set_fpc_csr(mipsCR.fc_word);
 #endif
 
     /*

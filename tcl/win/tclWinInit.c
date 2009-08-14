@@ -85,12 +85,12 @@ typedef struct {
 
 
 #define NUMPLATFORMS 4
-static char *platforms[NUMPLATFORMS] = {
+static const char *const platforms[NUMPLATFORMS] = {
     "Win32s", "Windows 95", "Windows NT", "Windows CE"
 };
 
 #define NUMPROCESSORS 11
-static char *processors[NUMPROCESSORS] = {
+static const char *const processors[NUMPROCESSORS] = {
     "intel", "mips", "alpha", "ppc", "shx", "arm", "ia64", "alpha64", "msil",
     "amd64", "ia32_on_win64"
 };
@@ -180,7 +180,7 @@ TclpInitLibraryPath(
 #define LIBRARY_SIZE	    32
     Tcl_Obj *pathPtr;
     char installLib[LIBRARY_SIZE];
-    char *bytes;
+    const char *bytes;
 
     pathPtr = Tcl_NewObj();
 
@@ -210,7 +210,7 @@ TclpInitLibraryPath(
 
     *encodingPtr = NULL;
     bytes = Tcl_GetStringFromObj(pathPtr, lengthPtr);
-    *valuePtr = ckalloc((unsigned int)(*lengthPtr)+1);
+    *valuePtr = ckalloc((unsigned)(*lengthPtr)+1);
     memcpy(*valuePtr, bytes, (size_t)(*lengthPtr)+1);
     Tcl_DecrRefCount(pathPtr);
 }
@@ -503,8 +503,8 @@ TclpSetVariables(
     OemId *oemId;
     OSVERSIONINFOA osInfo;
     Tcl_DString ds;
-    TCHAR szUserName[UNLEN+1];
-    DWORD dwUserNameLen = sizeof(szUserName);
+    WCHAR szUserName[UNLEN+1];
+    DWORD cchUserNameLen = UNLEN;
 
     Tcl_SetVar2Ex(interp, "tclDefaultLibrary", NULL,
 	    TclGetProcessGlobalValue(&defaultLibraryDir), TCL_GLOBAL_ONLY);
@@ -573,17 +573,26 @@ TclpSetVariables(
     /*
      * Initialize the user name from the environment first, since this is much
      * faster than asking the system.
+     * Note: cchUserNameLen is number of characters including nul terminator.
      */
 
     Tcl_DStringInit(&ds);
     if (TclGetEnv("USERNAME", &ds) == NULL) {
-	if (GetUserName(szUserName, &dwUserNameLen) != 0) {
-	    Tcl_WinTCharToUtf(szUserName, (int) dwUserNameLen, &ds);
+	if (tclWinProcs->getUserName((LPTSTR)szUserName, &cchUserNameLen) != 0) {
+	    int cbUserNameLen = cchUserNameLen - 1;
+	    if (tclWinProcs->useWide) cbUserNameLen *= sizeof(WCHAR);
+	    Tcl_WinTCharToUtf((LPTSTR)szUserName, cbUserNameLen, &ds);
 	}
     }
     Tcl_SetVar2(interp, "tcl_platform", "user", Tcl_DStringValue(&ds),
 	    TCL_GLOBAL_ONLY);
     Tcl_DStringFree(&ds);
+
+    /*
+     * Define what the platform PATH separator is. [TIP #315]
+     */
+
+    Tcl_SetVar2(interp, "tcl_platform","pathSeparator", ";", TCL_GLOBAL_ONLY);
 }
 
 /*

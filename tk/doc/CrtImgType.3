@@ -23,11 +23,12 @@ ClientData
 .sp
 \fBTk_InitImageArgs\fR(\fIinterp, argc, argvPtr\fR)
 .SH ARGUMENTS
-.AS Tk_ImageType *typePtrPtr
-.AP Tk_ImageType *typePtr in
+.AS "const Tk_ImageType" *typePtrPtr
+.AP "const Tk_ImageType" *typePtr in
 Structure that defines the new type of image.
-Must be static: a
+For Tk 8.4 and earlier this must be static: a
 pointer to this structure is retained by the image code.
+In Tk 8.5, this limitation was relaxed.
 .AP Tcl_Interp *interp in
 Interpreter in which image was created.
 .AP "const char" *name in
@@ -60,7 +61,7 @@ the name of the image type and pointers to five procedures provided
 by the image manager to deal with images of this type:
 .CS
 typedef struct Tk_ImageType {
-    char *\fIname\fR;
+    const char *\fIname\fR;
     Tk_ImageCreateProc *\fIcreateProc\fR;
     Tk_ImageGetProc *\fIgetProc\fR;
     Tk_ImageDisplayProc *\fIdisplayProc\fR;
@@ -110,10 +111,10 @@ an image of the new type.
 .CS
 typedef int \fBTk_ImageCreateProc\fR(
         Tcl_Interp *\fIinterp\fR,
-        char *\fIname\fR,
+        const char *\fIname\fR,
         int \fIobjc\fR,
         Tcl_Obj *const \fIobjv\fR[],
-        Tk_ImageType *\fItypePtr\fR,
+        const Tk_ImageType *\fItypePtr\fR,
         Tk_ImageMaster \fImaster\fR,
         ClientData *\fImasterDataPtr\fR);
 .CE

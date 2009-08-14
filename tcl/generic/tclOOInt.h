@@ -12,8 +12,21 @@
  * RCS: @(#) $Id$
  */
 
+#ifndef TCL_OO_INTERNAL_H
+#define TCL_OO_INTERNAL_H 1
+
 #include <tclInt.h>
 #include "tclOO.h"
+
+/*
+ * Hack to make things work with Objective C. Note that ObjC isn't really
+ * supported, but we don't want to to be actively hostile to it. [Bug 2163447]
+ */
+
+#ifdef __OBJC__
+#define Class	TclOOClass
+#define Object	TclOOObject
+#endif /* __OBJC__ */
 
 /*
  * Forward declarations.
@@ -76,7 +89,7 @@ typedef struct ProcedureMethod {
     ClientData clientData;
     TclOO_PmCDDeleteProc deleteClientdataProc;
     TclOO_PmCDCloneProc cloneClientdataProc;
-    ProcErrorProc errProc;	/* Replacement error handler. */
+    ProcErrorProc *errProc;	/* Replacement error handler. */
     TclOO_PreCallProc preCallProc;
 				/* Callback to allow for additional setup
 				 * before the method executes. */
@@ -104,13 +117,19 @@ typedef struct ProcedureMethod {
 #define USE_DECLARER_NS		0x80
 
 /*
- * Forwarded methods have the following extra information. It is a
- * single-field structure because this allows for future expansion without
- * changing vast amounts of code.
+ * Forwarded methods have the following extra information.
  */
 
 typedef struct ForwardMethod {
-    Tcl_Obj *prefixObj;
+    Tcl_Obj *prefixObj;		/* The list of values to use to replace the
+				 * object and method name with. Will be a
+				 * non-empty list. */
+    int fullyQualified;		/* If 1, the command name is fully qualified
+				 * and we should let the default Tcl mechanism
+				 * handle the command lookup because it is
+				 * more efficient. If 0, we need to do a
+				 * specialized lookup based on the current
+				 * object's namespace. */
 } ForwardMethod;
 
 /*
@@ -175,6 +194,7 @@ typedef struct Object {
     Tcl_ObjectMapMethodNameProc mapMethodNameProc;
 				/* Function to allow remapping of method
 				 * names. For itcl-ng. */
+    LIST_STATIC(Tcl_Obj *) variables;
 } Object;
 
 #define OBJECT_DELETED	1	/* Flag to say that an object has been
@@ -248,6 +268,7 @@ typedef struct Class {
 				 * object doesn't override with its own mixins
 				 * (and filters and method implementations for
 				 * when getting method chains). */
+    LIST_STATIC(Tcl_Obj *) variables;
 } Class;
 
 /*
@@ -422,6 +443,9 @@ MODULE_SCOPE int	TclOODefineSuperclassObjCmd(ClientData clientData,
 MODULE_SCOPE int	TclOODefineUnexportObjCmd(ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *const *objv);
+MODULE_SCOPE int	TclOODefineVariablesObjCmd(ClientData clientData,
+			    Tcl_Interp *interp, int objc,
+			    Tcl_Obj *const *objv);
 MODULE_SCOPE int	TclOODefineClassObjCmd(ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *const *objv);
@@ -478,26 +502,38 @@ MODULE_SCOPE int	TclOO_Object_VarName(ClientData clientData,
 MODULE_SCOPE void	TclOOAddToInstances(Object *oPtr, Class *clsPtr);
 MODULE_SCOPE void	TclOOAddToMixinSubs(Class *subPtr, Class *mixinPtr);
 MODULE_SCOPE void	TclOOAddToSubclasses(Class *subPtr, Class *superPtr);
+MODULE_SCOPE int	TclNRNewObjectInstance(Tcl_Interp *interp,
+			    Tcl_Class cls, const char *nameStr,
+			    const char *nsNameStr, int objc,
+			    Tcl_Obj *const *objv, int skip,
+			    Tcl_Object *objectPtr);
 MODULE_SCOPE void	TclOODeleteChain(CallChain *callPtr);
 MODULE_SCOPE void	TclOODeleteChainCache(Tcl_HashTable *tablePtr);
 MODULE_SCOPE void	TclOODeleteContext(CallContext *contextPtr);
 MODULE_SCOPE void	TclOODelMethodRef(Method *method);
 MODULE_SCOPE CallContext *TclOOGetCallContext(Object *oPtr,
-			    Tcl_Obj *methodNameObj, int flags);
+			    Tcl_Obj *methodNameObj, int flags,
+			    Tcl_Obj *cacheInThisObj);
 MODULE_SCOPE Foundation	*TclOOGetFoundation(Tcl_Interp *interp);
 MODULE_SCOPE Tcl_Obj *	TclOOGetFwdFromMethod(Method *mPtr);
 MODULE_SCOPE Proc *	TclOOGetProcFromMethod(Method *mPtr);
+MODULE_SCOPE Tcl_Obj *	TclOOGetMethodBody(Method *mPtr);
 MODULE_SCOPE int	TclOOGetSortedClassMethodList(Class *clsPtr,
 			    int flags, const char ***stringsPtr);
 MODULE_SCOPE int	TclOOGetSortedMethodList(Object *oPtr, int flags,
 			    const char ***stringsPtr);
 MODULE_SCOPE int	TclOOInit(Tcl_Interp *interp);
 MODULE_SCOPE void	TclOOInitInfo(Tcl_Interp *interp);
-MODULE_SCOPE int	TclOOInvokeContext(Tcl_Interp *const interp,
-			    CallContext *const contextPtr, int const objc,
-			    Tcl_Obj *const *const objv);
+MODULE_SCOPE int	TclOOInvokeContext(ClientData clientData,
+			    Tcl_Interp *interp, int objc,
+			    Tcl_Obj *const objv[]);
+MODULE_SCOPE int	TclNRObjectContextInvokeNext(Tcl_Interp *interp,
+			    Tcl_ObjectContext context, int objc,
+			    Tcl_Obj *const *objv, int skip);
 MODULE_SCOPE void	TclOONewBasicMethod(Tcl_Interp *interp, Class *clsPtr,
 			    const DeclaredClassMethod *dcm);
+MODULE_SCOPE int	TclOONRUpcatch(ClientData ignored, Tcl_Interp *interp,
+			    int objc, Tcl_Obj *const objv[]);
 MODULE_SCOPE Tcl_Obj *	TclOOObjectName(Tcl_Interp *interp, Object *oPtr);
 MODULE_SCOPE void	TclOORemoveFromInstances(Object *oPtr, Class *clsPtr);
 MODULE_SCOPE void	TclOORemoveFromMixinSubs(Class *subPtr,
@@ -506,6 +542,10 @@ MODULE_SCOPE void	TclOORemoveFromSubclasses(Class *subPtr,
 			    Class *superPtr);
 MODULE_SCOPE void	TclOOStashContext(Tcl_Obj *objPtr,
 			    CallContext *contextPtr);
+MODULE_SCOPE void	TclOOSetupVariableResolver(Tcl_Namespace *nsPtr);
+MODULE_SCOPE int	TclOOUpcatchCmd(ClientData ignored,
+			    Tcl_Interp *interp, int objc,
+			    Tcl_Obj *const objv[]);
 
 /*
  * Include all the private API, generated from tclOO.decls.
@@ -569,6 +609,8 @@ MODULE_SCOPE void	TclOOStashContext(Tcl_Obj *objPtr,
 	    ckfree((char *) (ptr));		\
 	}					\
     } while(0)
+
+#endif /* TCL_OO_INTERNAL_H */
 
 /*
  * Local Variables:

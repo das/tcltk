@@ -52,29 +52,13 @@ namespace eval ttk::theme::xpnative {
 	    -focusfill	[list {readonly focus} SystemHighlight] \
 	    ;
 
+	ttk::style configure TSpinbox -padding {2 0 14 0}
+	ttk::style map TSpinbox \
+	    -selectbackground [list !focus SystemWindow] \
+	    -selectforeground [list !focus SystemWindowText] \
+	    ;
+
 	ttk::style configure Toolbutton -padding {4 4}
 
-	# Vista requires some style modifications. There are some
-	# additional or different elements in use.
-	if {[tk windowingsystem] eq "win32"
-	    && [info exists tcl_platform(osVersion)]
-	    && $tcl_platform(osVersion) >= 6.0} {
-
-	    ttk::style element create Combobox.field vsapi \
-		COMBOBOX 2 {{} 1}
-	    ttk::style element create Combobox.border vsapi \
-		COMBOBOX 4 {disabled 4 focus 3 active 2 {} 1}
-	    ttk::style layout TCombobox {
-		Combobox.border -sticky nswe -border 0 -children {
-		    Combobox.downarrow -side right -sticky ns
-		    Combobox.padding -expand 1 -sticky nswe -children {
-			Combobox.focus -expand 1 -sticky nswe -children {
-			    Combobox.textarea -sticky nswe
-			}
-		    }
-		}
-	    }
-
-	}
     }
 }

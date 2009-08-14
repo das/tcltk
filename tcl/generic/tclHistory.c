@@ -123,8 +123,8 @@ Tcl_RecordAndEvalObj(
 
     result = Tcl_GetCommandInfo(interp, "history", &info);
 
-    if (result && (info.objProc == TclObjInterpProc)) {
-	Proc *procPtr = (Proc *)(info.objClientData);
+    if (result && (info.deleteProc == TclProcDeleteProc)) {
+	Proc *procPtr = (Proc *) info.objClientData;
 	call = (procPtr->cmdPtr->compileProc != TclCompileNoOp);
     }
 

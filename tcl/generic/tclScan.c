@@ -45,10 +45,10 @@ typedef struct CharSet {
  * Declarations for functions used only in this file.
  */
 
-static char *		BuildCharSet(CharSet *cset, char *format);
+static const char * BuildCharSet(CharSet *cset, const char *format);
 static int		CharInSet(CharSet *cset, int ch);
 static void		ReleaseCharSet(CharSet *cset);
-static int		ValidateFormat(Tcl_Interp *interp, char *format,
+static int		ValidateFormat(Tcl_Interp *interp, const char *format,
 			    int numVars, int *totalVars);
 
 /*
@@ -69,14 +69,14 @@ static int		ValidateFormat(Tcl_Interp *interp, char *format,
  *----------------------------------------------------------------------
  */
 
-static char *
+static const char *
 BuildCharSet(
     CharSet *cset,
-    char *format)		/* Points to first char of set. */
+    const char *format)		/* Points to first char of set. */
 {
     Tcl_UniChar ch, start;
     int offset, nranges;
-    char *end;
+    const char *end;
 
     memset(cset, 0, sizeof(CharSet));
 
@@ -252,7 +252,7 @@ ReleaseCharSet(
 static int
 ValidateFormat(
     Tcl_Interp *interp,		/* Current interpreter. */
-    char *format,		/* The format string. */
+    const char *format,		/* The format string. */
     int numVars,		/* The number of variables passed to the scan
 				 * command. */
     int *totalSubs)		/* The number of variables that will be
@@ -343,7 +343,7 @@ ValidateFormat(
 	 */
 
 	if ((ch < 0x80) && isdigit(UCHAR(ch))) {	/* INTL: "C" locale. */
-	    value = strtoul(format-1, &format, 10);	/* INTL: "C" locale. */
+	    value = strtoul(format-1, (char **) &format, 10);	/* INTL: "C" locale. */
 	    flags |= SCAN_WIDTH;
 	    format += Tcl_UtfToUniChar(format, &ch);
 	}
@@ -405,6 +405,7 @@ ValidateFormat(
 	case 'i':
 	case 'o':
 	case 'x':
+	case 'b':
 	    break;
 	case 'u':
 	    if (flags & SCAN_BIG) {
@@ -558,7 +559,7 @@ Tcl_ScanObjCmd(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
-    char *format;
+    const char *format;
     int numVars, nconversions, totalVars = -1;
     int objIndex, offset, i, result, code;
     long value;
@@ -575,7 +576,7 @@ Tcl_ScanObjCmd(
 
     if (objc < 3) {
 	Tcl_WrongNumArgs(interp, 1, objv,
-		"string format ?varName varName ...?");
+		"string format ?varName ...?");
 	return TCL_ERROR;
     }
 
@@ -675,7 +676,7 @@ Tcl_ScanObjCmd(
 	 */
 
 	if ((ch < 0x80) && isdigit(UCHAR(ch))) {	/* INTL: "C" locale. */
-	    width = (int) strtoul(format-1, &format, 10);/* INTL: "C" locale. */
+	    width = (int) strtoul(format-1, (char **) &format, 10);/* INTL: "C" locale. */
 	    format += Tcl_UtfToUniChar(format, &ch);
 	} else {
 	    width = 0;
@@ -731,6 +732,10 @@ Tcl_ScanObjCmd(
 	case 'x':
 	    op = 'i';
 	    parseFlag |= TCL_PARSE_HEXADECIMAL_ONLY;
+	    break;
+	case 'b':
+	    op = 'i';
+	    parseFlag |= TCL_PARSE_BINARY_ONLY;
 	    break;
 	case 'u':
 	    op = 'i';
@@ -959,7 +964,7 @@ Tcl_ScanObjCmd(
 		if (Tcl_GetDoubleFromObj(NULL, objPtr, &dvalue) != TCL_OK) {
 #ifdef ACCEPT_NAN
 		    if (objPtr->typePtr == &tclDoubleType) {
-			dValue = objPtr->internalRep.doubleValue;
+			dvalue = objPtr->internalRep.doubleValue;
 		    } else
 #endif
 		    {
@@ -1037,7 +1042,7 @@ Tcl_ScanObjCmd(
     }
     return code;
 }
-
+
 /*
  * Local Variables:
  * mode: c

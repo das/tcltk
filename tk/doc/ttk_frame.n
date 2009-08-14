@@ -1,4 +1,3 @@
-'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 2005 Joe English
 '\"
@@ -54,3 +53,6 @@ to change this.
 ttk::widget(n), ttk::labelframe(n), frame(n)
 .SH "KEYWORDS"
 widget, frame, container
+'\" Local Variables:
+'\" mode: nroff
+'\" End:

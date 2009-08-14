@@ -1,4 +1,3 @@
-'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 1991-1994 The Regents of the University of California.
 '\" Copyright (c) 1994-1996 Sun Microsystems, Inc.
@@ -443,7 +442,11 @@ Note: not all window managers support the notion of an icon window.
 \fBwm manage \fIwidget\fR
 .
 The \fIwidget\fR specified will become a stand alone top-level window.  The
-window will be decorated with the window managers title bar, etc.
+window will be decorated with the window managers title bar, etc. Only
+\fIframe\fR, \fIlabelframe\fR and \fItoplevel\fR widgets can be used
+with this command. Attempting to pass any other widget type will raise
+an error. Attempting to manage a \fItoplevel\fR widget is benign and
+achieves nothing. See also \fBGEOMETRY MANAGEMENT\fR.
 .TP
 \fBwm maxsize \fIwindow\fR ?\fIwidth height\fR?
 .
@@ -487,6 +490,13 @@ it to be ignored by the window manager;  among other things, this means
 that the window will not be reparented from the root window into a
 decorative frame and the user will not be able to manipulate the
 window using the normal window manager mechanisms.
+.RS
+.PP
+Note that the override-redirect flag is only guaranteed to be taken notice of
+when the window is first mapped or when mapped after the state is changed from
+withdrawn to normal. Some, but not all, platforms will take notice at
+additional times.
+.RE
 .TP
 \fBwm positionfrom \fIwindow\fR ?\fIwho\fR?
 .
@@ -755,3 +765,6 @@ set y [expr {([winfo screenheight .]\-[winfo height .msg])/2}]
 toplevel(n), winfo(n)
 .SH KEYWORDS
 aspect ratio, deiconify, focus model, geometry, grid, group, icon, iconify, increments, position, size, title, top-level window, units, window manager
+'\" Local Variables:
+'\" mode: nroff
+'\" End:

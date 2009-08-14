@@ -1,4 +1,3 @@
-'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 1998-2000 by Scriptics Corporation.
 '\" Copyright (c) 2003 ActiveState Corporation.
@@ -948,3 +947,6 @@ GrayText	WindowText
 options(n), Tk_GetColor(3)
 .SH KEYWORDS
 color, option
+'\" Local Variables:
+'\" mode: nroff
+'\" End:

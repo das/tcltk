@@ -1,4 +1,3 @@
-'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 1998-2000 by Scriptics Corporation.
 '\" All rights reserved.
@@ -55,3 +54,6 @@ if {$dir eq ""} {
 tk_getOpenFile(n), tk_getSaveFile(n)
 .SH KEYWORDS
 directory, selection, dialog, platform-specific
+'\" Local Variables:
+'\" mode: nroff
+'\" End:

@@ -28,7 +28,7 @@
  * used together with the "enum orient" declaration in tkScale.h.
  */
 
-static char *orientStrings[] = {
+static const char *const orientStrings[] = {
     "horizontal", "vertical", NULL
 };
 
@@ -37,7 +37,7 @@ static char *orientStrings[] = {
  * used together with the "enum state" declaration in tkScale.h.
  */
 
-static char *stateStrings[] = {
+static const char *const stateStrings[] = {
     "active", "disabled", "normal", NULL
 };
 
@@ -142,7 +142,7 @@ static const Tk_OptionSpec optionSpecs[] = {
  * scale widget command.
  */
 
-static const char *commandNames[] = {
+static const char *const commandNames[] = {
     "cget", "configure", "coords", "get", "identify", "set", NULL
 };
 
@@ -211,7 +211,7 @@ Tk_ScaleObjCmd(
     Tk_Window tkwin;
 
     if (objc < 2) {
-	Tcl_WrongNumArgs(interp, 1, objv, "pathName ?options?");
+	Tcl_WrongNumArgs(interp, 1, objv, "pathName ?-option value ...?");
 	return TCL_ERROR;
     }
 
@@ -303,7 +303,7 @@ Tk_ScaleObjCmd(
 	return TCL_ERROR;
     }
 
-    Tcl_SetResult(interp, Tk_PathName(scalePtr->tkwin), TCL_STATIC);
+    Tcl_SetObjResult(interp, TkNewWindowObj(scalePtr->tkwin));
     return TCL_OK;
 }
 
@@ -337,7 +337,7 @@ ScaleWidgetObjCmd(
     int index, result;
 
     if (objc < 2) {
-	Tcl_WrongNumArgs(interp, 1, objv, "option ?arg arg ...?");
+	Tcl_WrongNumArgs(interp, 1, objv, "option ?arg ...?");
 	return TCL_ERROR;
     }
     result = Tcl_GetIndexFromObj(interp, objv[1], commandNames,
@@ -357,9 +357,8 @@ ScaleWidgetObjCmd(
 		scalePtr->optionTable, objv[2], scalePtr->tkwin);
 	if (objPtr == NULL) {
 	    goto error;
-	} else {
-	    Tcl_SetObjResult(interp, objPtr);
 	}
+	Tcl_SetObjResult(interp, objPtr);
 	break;
     case COMMAND_CONFIGURE:
 	if (objc <= 3) {
@@ -368,17 +367,15 @@ ScaleWidgetObjCmd(
 		    (objc == 3) ? objv[2] : NULL, scalePtr->tkwin);
 	    if (objPtr == NULL) {
 		goto error;
-	    } else {
-		Tcl_SetObjResult(interp, objPtr);
 	    }
+	    Tcl_SetObjResult(interp, objPtr);
 	} else {
 	    result = ConfigureScale(interp, scalePtr, objc-2, objv+2);
 	}
 	break;
     case COMMAND_COORDS: {
-	int x, y ;
+	int x, y;
 	double value;
-	char buf[TCL_INTEGER_SPACE * 2];
 
 	if ((objc != 2) && (objc != 3)) {
 	    Tcl_WrongNumArgs(interp, 1, objv, "coords ?value?");
@@ -400,14 +397,12 @@ ScaleWidgetObjCmd(
 	    y = scalePtr->horizTroughY + scalePtr->width/2
 		    + scalePtr->borderWidth;
 	}
-	sprintf(buf, "%d %d", x, y);
-	Tcl_SetResult(interp, buf, TCL_VOLATILE);
+	Tcl_SetObjResult(interp, Tcl_ObjPrintf("%d %d", x, y));
 	break;
     }
     case COMMAND_GET: {
 	double value;
 	int x, y;
-	char buf[TCL_DOUBLE_SPACE];
 
 	if ((objc != 2) && (objc != 4)) {
 	    Tcl_WrongNumArgs(interp, 1, objv, "get ?x y?");
@@ -422,8 +417,7 @@ ScaleWidgetObjCmd(
 	    }
 	    value = TkScalePixelToValue(scalePtr, x, y);
 	}
-	sprintf(buf, scalePtr->format, value);
-	Tcl_SetResult(interp, buf, TCL_VOLATILE);
+	Tcl_SetObjResult(interp, Tcl_ObjPrintf(scalePtr->format, value));
 	break;
     }
     case COMMAND_IDENTIFY: {
@@ -1176,7 +1170,7 @@ ScaleVarProc(
     int flags)			/* Information about what happened. */
 {
     register TkScale *scalePtr = clientData;
-    char *resultStr;
+    const char *resultStr;
     double value;
     Tcl_Obj *valuePtr;
     int result;
@@ -1227,7 +1221,7 @@ ScaleVarProc(
     }
     TkEventuallyRedrawScale(scalePtr, REDRAW_SLIDER);
 
-    return resultStr;
+    return (char *) resultStr;
 }
 
 /*

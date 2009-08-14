@@ -15,16 +15,6 @@
 
 #include "tclWinInt.h"
 
-#ifndef TCL_NO_STACK_CHECK
-/*
- * The following functions implement stack depth checking
- */
-typedef struct ThreadSpecificData {
-    int *stackBound;		/* The current stack boundary. */
-} ThreadSpecificData;
-static Tcl_ThreadDataKey dataKey;
-#endif /* TCL_NO_STACK_CHECK */
-
 /*
  * The following data structures are used when loading the thunking library
  * for execing child processes under Win32s.
@@ -134,7 +124,8 @@ static TclWinProcs asciiProcs = {
     NULL, NULL, NULL, NULL, NULL, NULL,
     /* ReadConsole and WriteConsole */
     (BOOL (WINAPI *)(HANDLE, LPVOID, DWORD, LPDWORD, LPVOID)) ReadConsoleA,
-    (BOOL (WINAPI *)(HANDLE, const void*, DWORD, LPDWORD, LPVOID)) WriteConsoleA
+    (BOOL (WINAPI *)(HANDLE, const void*, DWORD, LPDWORD, LPVOID)) WriteConsoleA,
+    (BOOL (WINAPI *)(LPTSTR, LPDWORD)) GetUserNameA
 };
 
 static TclWinProcs unicodeProcs = {
@@ -192,29 +183,19 @@ static TclWinProcs unicodeProcs = {
     NULL, NULL, NULL, NULL, NULL, NULL,
     /* ReadConsole and WriteConsole */
     (BOOL (WINAPI *)(HANDLE, LPVOID, DWORD, LPDWORD, LPVOID)) ReadConsoleW,
-    (BOOL (WINAPI *)(HANDLE, const void*, DWORD, LPDWORD, LPVOID)) WriteConsoleW
+    (BOOL (WINAPI *)(HANDLE, const void*, DWORD, LPDWORD, LPVOID)) WriteConsoleW,
+    (BOOL (WINAPI *)(LPTSTR, LPDWORD))GetUserNameW
 };
 
 TclWinProcs *tclWinProcs;
 static Tcl_Encoding tclWinTCharEncoding;
 
-#ifdef HAVE_NO_SEH
-/*
- * Need to add noinline flag to DllMain declaration so that gcc -O3 does not
- * inline asm code into DllEntryPoint and cause a compile time error because
- * of redefined local labels.
- */
-
-BOOL APIENTRY		DllMain(HINSTANCE hInst, DWORD reason,
-			    LPVOID reserved) __attribute__ ((noinline));
-#else
 /*
  * The following declaration is for the VC++ DLL entry point.
  */
 
 BOOL APIENTRY		DllMain(HINSTANCE hInst, DWORD reason,
 			    LPVOID reserved);
-#endif /* HAVE_NO_SEH */
 
 /*
  * The following structure and linked list is to allow us to map between
@@ -287,10 +268,7 @@ DllEntryPoint(
  *	TRUE on sucess, FALSE on failure.
  *
  * Side effects:
- *	Establishes 32-to-16 bit thunk and initializes sockets library. This
- *	might call some sycronization functions, but MSDN documentation
- *	states: "Waiting on synchronization objects in DllMain can cause a
- *	deadlock."
+ *	Initializes most rudimentary Windows bits.
  *
  *----------------------------------------------------------------------
  */
@@ -301,101 +279,16 @@ DllMain(
     DWORD reason,		/* Reason this function is being called. */
     LPVOID reserved)		/* Not used. */
 {
-#ifdef HAVE_NO_SEH
-    EXCEPTION_REGISTRATION registration;
-#endif
-
     switch (reason) {
     case DLL_PROCESS_ATTACH:
 	DisableThreadLibraryCalls(hInst);
 	TclWinInit(hInst);
 	return TRUE;
 
-    case DLL_PROCESS_DETACH:
 	/*
-	 * Protect the call to Tcl_Finalize. The OS could be unloading us from
-	 * an exception handler and the state of the stack might be unstable.
+	 * DLL_PROCESS_DETACH is unnecessary as the user should call
+	 * Tcl_Finalize explicitly before unloading Tcl.
 	 */
-
-#ifdef HAVE_NO_SEH
-	__asm__ __volatile__ (
-
-	    /*
-	     * Construct an EXCEPTION_REGISTRATION to protect the call to
-	     * Tcl_Finalize
-	     */
-
-	    "leal	%[registration], %%edx"		"\n\t"
-	    "movl	%%fs:0,		%%eax"		"\n\t"
-	    "movl	%%eax,		0x0(%%edx)"	"\n\t" /* link */
-	    "leal	1f,		%%eax"		"\n\t"
-	    "movl	%%eax,		0x4(%%edx)"	"\n\t" /* handler */
-	    "movl	%%ebp,		0x8(%%edx)"	"\n\t" /* ebp */
-	    "movl	%%esp,		0xc(%%edx)"	"\n\t" /* esp */
-	    "movl	%[error],	0x10(%%edx)"	"\n\t" /* status */
-
-	    /*
-	     * Link the EXCEPTION_REGISTRATION on the chain
-	     */
-
-	    "movl	%%edx,		%%fs:0"		"\n\t"
-
-	    /*
-	     * Call Tcl_Finalize
-	     */
-
-	    "call	_Tcl_Finalize"			"\n\t"
-
-	    /*
-	     * Come here on a normal exit. Recover the EXCEPTION_REGISTRATION
-	     * and store a TCL_OK status
-	     */
-
-	    "movl	%%fs:0,		%%edx"		"\n\t"
-	    "movl	%[ok],		%%eax"		"\n\t"
-	    "movl	%%eax,		0x10(%%edx)"	"\n\t"
-	    "jmp	2f"				"\n"
-
-	    /*
-	     * Come here on an exception. Get the EXCEPTION_REGISTRATION that
-	     * we previously put on the chain.
-	     */
-
-	    "1:"					"\t"
-	    "movl	%%fs:0,		%%edx"		"\n\t"
-	    "movl	0x8(%%edx),	%%edx"		"\n"
-
-
-	    /*
-	     * Come here however we exited. Restore context from the
-	     * EXCEPTION_REGISTRATION in case the stack is unbalanced.
-	     */
-
-	    "2:"					"\t"
-	    "movl	0xc(%%edx),	%%esp"		"\n\t"
-	    "movl	0x8(%%edx),	%%ebp"		"\n\t"
-	    "movl	0x0(%%edx),	%%eax"		"\n\t"
-	    "movl	%%eax,		%%fs:0"		"\n\t"
-
-	    :
-	    /* No outputs */
-	    :
-	    [registration]	"m"	(registration),
-	    [ok]		"i"	(TCL_OK),
-	    [error]		"i"	(TCL_ERROR)
-	    :
-	    "%eax", "%ebx", "%ecx", "%edx", "%esi", "%edi", "memory"
-	    );
-
-#else /* HAVE_NO_SEH */
-	__try {
-	    Tcl_Finalize();
-	} __except (EXCEPTION_EXECUTE_HANDLER) {
-	    /* empty handler body. */
-	}
-#endif
-
-	break;
     }
 
     return TRUE;
@@ -520,78 +413,6 @@ TclWinNoBackslash(
     }
     return path;
 }
-
-/*
- *----------------------------------------------------------------------
- *
- * TclpGetStackParams --
- *
- *	Determine the stack params for the current thread: in which direction
- *	does the stack grow, and what is the stack lower (resp. upper) bound
- *	for safe invocation of a new command? This is used to cache the values
- *	needed for an efficient computation of TclpCheckStackSpace() when the
- *	interp is known.
- *
- * Results:
- *	Returns 1 if the stack grows down, in which case a stack lower bound
- *	is stored at stackBoundPtr. If the stack grows up, 0 is returned and
- *	an upper bound is stored at stackBoundPtr. If a bound cannot be
- *	determined NULL is stored at stackBoundPtr.
- *
- *----------------------------------------------------------------------
- */
-
-#ifndef TCL_NO_STACK_CHECK
-int
-TclpGetCStackParams(
-    int **stackBoundPtr)
-{
-    ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
-    SYSTEM_INFO si;		/* The system information, used to determine
-				 * the page size. */
-    MEMORY_BASIC_INFORMATION mbi;
-				/* The information about the memory area in
-				 * which the stack resides. */
-
-    if (!tsdPtr->stackBound
-	    || ((UINT_PTR)&tsdPtr < (UINT_PTR)tsdPtr->stackBound)) {
-	/* 
-	 * Either we haven't determined the stack bound in this thread, or
-	 * else we've overflowed the bound that we previously determined. We
-	 * need to find a new stack bound from Windows.
-	 */
-
-	GetSystemInfo(&si);
-	if (VirtualQuery((LPCVOID) &tsdPtr, &mbi, sizeof(mbi)) == 0) {
-	    /*
-	     * For some reason, the system didn't let us query the stack size.
-	     * Nevertheless, we got here and haven't blown up yet. Don't
-	     * update the calculated stack bound. If there is no calculated
-	     * stack bound yet, set it to the base of the current page of
-	     * stack.
-	     */
-
-	    if (!tsdPtr->stackBound) {
-		tsdPtr->stackBound = (int *)
-			((UINT_PTR)(&tsdPtr) & ~ (UINT_PTR)(si.dwPageSize-1));
-	    }
-	} else {
-	    /*
-	     * The allocation base of the stack segment has to be advanced by
-	     * one page (to allow for the guard page maintained in the C
-	     * runtime) and then by TCL_WIN_STACK_THRESHOLD (to allow for the
-	     * amount of stack that Tcl needs).
-	     */
-
-	    tsdPtr->stackBound = (int *)
-		    ((UINT_PTR)(mbi.AllocationBase)
-		    + (UINT_PTR)(si.dwPageSize) + TCL_WIN_STACK_THRESHOLD);
-	}
-    }
-    *stackBoundPtr = tsdPtr->stackBound;
-    return 1;
-}
-#endif
 
 /*
  *---------------------------------------------------------------------------
@@ -841,7 +662,7 @@ TclWinDriveLetterForVolMountPoint(
 	     * Try to read the volume mount point and see where it points.
 	     */
 
-	    if ((*tclWinProcs->getVolumeNameForVMPProc)((TCHAR *) drive,
+	    if (tclWinProcs->getVolumeNameForVMPProc((TCHAR *) drive,
 		    (TCHAR *) Target, 55) != 0) {
 		if (wcscmp((WCHAR *) dlIter->volumeName, Target) == 0) {
 		    /*
@@ -900,7 +721,7 @@ TclWinDriveLetterForVolMountPoint(
 	 * Try to read the volume mount point and see where it points.
 	 */
 
-	if ((*tclWinProcs->getVolumeNameForVMPProc)((TCHAR *) drive,
+	if (tclWinProcs->getVolumeNameForVMPProc((TCHAR *) drive,
 		(TCHAR *) Target, 55) != 0) {
 	    int alreadyStored = 0;
 

@@ -137,7 +137,7 @@ Tcl_LoadObjCmd(
     const char *symbols[4];
     Tcl_PackageInitProc **procPtrs[4];
     ClientData clientData;
-    char *p, *fullFileName, *packageName;
+    const char *p, *fullFileName, *packageName;
     Tcl_LoadHandle loadHandle;
     Tcl_FSUnloadFileProc *unLoadProcPtr = NULL;
     Tcl_UniChar ch;
@@ -179,7 +179,7 @@ Tcl_LoadObjCmd(
 
     target = interp;
     if (objc == 4) {
-	char *slaveIntName = Tcl_GetString(objv[3]);
+	const char *slaveIntName = Tcl_GetString(objv[3]);
 
 	target = Tcl_GetSlave(interp, slaveIntName);
 	if (target == NULL) {
@@ -292,7 +292,7 @@ Tcl_LoadObjCmd(
 		Tcl_Obj *splitPtr;
 		Tcl_Obj *pkgGuessPtr;
 		int pElements;
-		char *pkgGuess;
+		const char *pkgGuess;
 
 		/*
 		 * The platform-specific code couldn't figure out the module
@@ -460,7 +460,7 @@ Tcl_LoadObjCmd(
 	ipPtr->nextPtr = ipFirstPtr;
 	Tcl_SetAssocData(target, "tclLoad", LoadCleanupProc, ipPtr);
     } else {
-	TclTransferResult(target, code, interp);
+	Tcl_TransferResult(target, code, interp);
     }
 
   done:
@@ -505,8 +505,8 @@ Tcl_UnloadObjCmd(
     int i, index, code, complain = 1, keepLibrary = 0;
     int trustedRefCount = -1, safeRefCount = -1;
     const char *fullFileName = "";
-    char *packageName;
-    static const char *options[] = {
+    const char *packageName;
+    static const char *const options[] = {
 	"-nocomplain", "-keeplibrary", "--", NULL
     };
     enum options {
@@ -549,7 +549,7 @@ Tcl_UnloadObjCmd(
   endOfForLoop:
     if ((objc-i < 1) || (objc-i > 3)) {
 	Tcl_WrongNumArgs(interp, 1, objv,
-		"?switches? fileName ?packageName? ?interp?");
+		"?-switch ...? fileName ?packageName? ?interp?");
 	return TCL_ERROR;
     }
     if (Tcl_FSConvertToPathType(interp, objv[i]) != TCL_OK) {
@@ -581,7 +581,7 @@ Tcl_UnloadObjCmd(
 
     target = interp;
     if (objc - i == 3) {
-	char *slaveIntName = Tcl_GetString(objv[i + 2]);
+	const char *slaveIntName = Tcl_GetString(objv[i + 2]);
 
 	target = Tcl_GetSlave(interp, slaveIntName);
 	if (target == NULL) {
@@ -736,7 +736,7 @@ Tcl_UnloadObjCmd(
     }
     code = unloadProc(target, code);
     if (code != TCL_OK) {
-	TclTransferResult(target, code, interp);
+	Tcl_TransferResult(target, code, interp);
 	goto done;
     }
 
@@ -791,7 +791,9 @@ Tcl_UnloadObjCmd(
 
 	    if (unLoadProcPtr != NULL) {
 		Tcl_MutexLock(&packageMutex);
-		unLoadProcPtr(pkgPtr->loadHandle);
+		if ((pkgPtr->unloadProc != NULL) || (unLoadProcPtr == TclFSUnloadTempFile)) {
+		    unLoadProcPtr(pkgPtr->loadHandle);
+		}
 
 		/*
 		 * Remove this library from the loaded library cache.
@@ -870,8 +872,8 @@ Tcl_UnloadObjCmd(
 	 * Our result is the two reference counts.
 	 */
 
-	objPtr[0] = Tcl_NewIntObj(trustedRefCount);
-	objPtr[1] = Tcl_NewIntObj(safeRefCount);
+	TclNewIntObj(objPtr[0], trustedRefCount);
+	TclNewIntObj(objPtr[1], safeRefCount);
 	if (objPtr[0] == NULL || objPtr[1] == NULL) {
 	    if (objPtr[0]) {
 		Tcl_DecrRefCount(objPtr[0]);
@@ -880,7 +882,7 @@ Tcl_UnloadObjCmd(
 		Tcl_DecrRefCount(objPtr[1]);
 	    }
 	} else {
-	    resultObjPtr = Tcl_NewListObj(2, objPtr);
+	    TclNewListObj(resultObjPtr, 2, objPtr);
 	    if (resultObjPtr != NULL) {
 		Tcl_SetObjResult(interp, resultObjPtr);
 	    }
@@ -1016,7 +1018,7 @@ int
 TclGetLoadedPackages(
     Tcl_Interp *interp,		/* Interpreter in which to return information
 				 * or error message. */
-    char *targetName)		/* Name of target interpreter or NULL. If
+    const char *targetName)	/* Name of target interpreter or NULL. If
 				 * NULL, return info about all interps;
 				 * otherwise, just return info about this
 				 * interpreter. */
@@ -1144,8 +1146,11 @@ TclFinalizeLoad(void)
 	 */
 
 	if (pkgPtr->fileName[0] != '\0') {
-	    if (pkgPtr->unLoadProcPtr != NULL) {
-		pkgPtr->unLoadProcPtr(pkgPtr->loadHandle);
+	    Tcl_FSUnloadFileProc *unLoadProcPtr = pkgPtr->unLoadProcPtr;
+	    if ((unLoadProcPtr != NULL)
+		    && ((pkgPtr->unloadProc != NULL)
+		    || (unLoadProcPtr == TclFSUnloadTempFile))) {
+		unLoadProcPtr(pkgPtr->loadHandle);
 	    }
 	}
 #endif

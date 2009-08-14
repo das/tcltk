@@ -290,6 +290,7 @@ TKOBJS = \
 	$(TMP_DIR)\tkAtom.obj \
 	$(TMP_DIR)\tkBind.obj \
 	$(TMP_DIR)\tkBitmap.obj \
+	$(TMP_DIR)\tkBusy.obj \
 	$(TMP_DIR)\tkButton.obj \
 	$(TMP_DIR)\tkCanvArc.obj \
 	$(TMP_DIR)\tkCanvBmap.obj \
@@ -321,8 +322,10 @@ TKOBJS = \
 	$(TMP_DIR)\tkImage.obj \
 	$(TMP_DIR)\tkImgBmap.obj \
 	$(TMP_DIR)\tkImgGIF.obj \
+	$(TMP_DIR)\tkImgPNG.obj \
 	$(TMP_DIR)\tkImgPPM.obj \
 	$(TMP_DIR)\tkImgPhoto.obj \
+	$(TMP_DIR)\tkImgPhInstance.obj \
 	$(TMP_DIR)\tkImgUtil.obj \
 	$(TMP_DIR)\tkListbox.obj \
 	$(TMP_DIR)\tkMacWinMenu.obj \
@@ -423,7 +426,7 @@ CONFIG_DEFS     =-DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 \
 		 -DTTK_SQUARE_WIDGET=1 \
 !endif
 
-TK_DEFINES	=-DBUILD_ttk $(OPTDEFINES)  $(CONFIG_DEFS)
+TK_DEFINES	=-DBUILD_ttk $(OPTDEFINES)  $(CONFIG_DEFS) -Dinline=__inline
 
 #---------------------------------------------------------------------
 # Compile flags
@@ -469,7 +472,8 @@ BASE_CFLAGS	= $(cdebug) $(cflags) $(crt) $(TK_INCLUDES)
 TK_CFLAGS	= $(BASE_CFLAGS) $(TK_DEFINES)
 CON_CFLAGS	= $(cdebug) $(cflags) $(crt) -DCONSOLE
 WISH_CFLAGS	= $(BASE_CFLAGS) $(TK_DEFINES)
-STUB_CFLAGS     = $(cflags) $(cdebug) $(TK_DEFINES)
+### Stubs files should not be compiled with -GL
+STUB_CFLAGS     = $(cflags) $(cdebug:-GL=) $(TK_DEFINES)
 
 !if !$(STATIC_BUILD)
 TK_CFLAGS = $(TK_CFLAGS) -DUSE_TCL_STUBS

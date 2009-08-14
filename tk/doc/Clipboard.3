@@ -33,7 +33,7 @@ Conversion type for this clipboard item;  has same meaning as
 .AP Atom format in
 Representation to use when data is retrieved;  has same meaning as
 \fIformat\fR argument to \fBTk_CreateSelHandler\fR.
-.AP char *buffer in
+.AP "const char" *buffer in
 Null terminated string containing the data to be appended to the clipboard.
 .BE
 .SH DESCRIPTION
@@ -46,7 +46,8 @@ number of targets.
 \fBTk_ClipboardClear\fR claims the CLIPBOARD selection and frees any
 data items previously stored on the clipboard in this application.
 It normally returns \fBTCL_OK\fR, but if an error occurs it returns
-\fBTCL_ERROR\fR and leaves an error message in \fIinterp->result\fR.
+\fBTCL_ERROR\fR and leaves an error message in interpreter
+\fIinterp\fR's result.
 \fBTk_ClipboardClear\fR must be called before a sequence of
 \fBTk_ClipboardAppend\fR calls can be issued.
 .PP
@@ -61,8 +62,8 @@ currently owned by the application, either
 because \fBTk_ClipboardClear\fR has not been called or because
 ownership of the clipboard has changed since the last call to
 \fBTk_ClipboardClear\fR,
-\fBTk_ClipboardAppend\fR returns \fBTCL_ERROR\fR and leaves an error message in
-\fIinterp->result\fR.
+\fBTk_ClipboardAppend\fR returns \fBTCL_ERROR\fR and leaves an error
+message in the result of interpreter \fIinterp\fR.
 .PP
 In order to guarantee atomicity, no event handling should occur
 between \fBTk_ClipboardClear\fR and the following

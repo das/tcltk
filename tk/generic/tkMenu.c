@@ -99,9 +99,9 @@ TCL_DECLARE_MUTEX(menuMutex)
  * to update code in TkpMenuInit that changes the font string entry.
  */
 
-char *tkMenuStateStrings[] = {"active", "normal", "disabled", NULL};
+static const char *const menuStateStrings[] = {"active", "normal", "disabled", NULL};
 
-static const char *menuEntryTypeStrings[] = {
+static const char *const menuEntryTypeStrings[] = {
     "cascade", "checkbutton", "command", "radiobutton", "separator", NULL
 };
 
@@ -110,7 +110,7 @@ static const char *menuEntryTypeStrings[] = {
  * is used with the "enum compound" declaration in tkMenu.h
  */
 
-static char *compoundStrings[] = {
+static const char *const compoundStrings[] = {
     "bottom", "center", "left", "none", "right", "top", NULL
 };
 
@@ -157,7 +157,7 @@ static const Tk_OptionSpec tkBasicMenuEntryConfigSpecs[] = {
     {TK_OPTION_STRING_TABLE, "-state", NULL, NULL,
 	DEF_MENU_ENTRY_STATE,
 	-1, Tk_Offset(TkMenuEntry, state), 0,
-	(ClientData) tkMenuStateStrings},
+	(ClientData) menuStateStrings},
     {TK_OPTION_INT, "-underline", NULL, NULL,
 	DEF_MENU_ENTRY_UNDERLINE, -1, Tk_Offset(TkMenuEntry, underline)},
     {TK_OPTION_END}
@@ -227,7 +227,7 @@ static const Tk_OptionSpec tkTearoffEntryConfigSpecs[] = {
 	Tk_Offset(TkMenuEntry, borderPtr), -1, TK_OPTION_NULL_OK},
     {TK_OPTION_STRING_TABLE, "-state", NULL, NULL,
 	DEF_MENU_ENTRY_STATE, -1, Tk_Offset(TkMenuEntry, state), 0,
-	(ClientData) tkMenuStateStrings},
+	(ClientData) menuStateStrings},
     {TK_OPTION_END}
 };
 
@@ -241,7 +241,7 @@ static const Tk_OptionSpec *specsArray[] = {
  * Menu type strings for use with Tcl_GetIndexFromObj.
  */
 
-static const char *menuTypeStrings[] = {
+static const char *const menuTypeStrings[] = {
     "normal", "tearoff", "menubar", NULL
 };
 
@@ -310,7 +310,7 @@ static const Tk_OptionSpec tkMenuConfigSpecs[] = {
  * with MenuWidgetObjCmd.
  */
 
-static const char *menuOptions[] = {
+static const char *const menuOptions[] = {
     "activate", "add", "cget", "clone", "configure", "delete", "entrycget",
     "entryconfigure", "index", "insert", "invoke", "post", "postcascade",
     "type", "unpost", "xposition", "yposition", NULL
@@ -342,7 +342,7 @@ static void		DestroyMenuHashTable(ClientData clientData,
 static void		DestroyMenuInstance(TkMenu *menuPtr);
 static void		DestroyMenuEntry(char *memPtr);
 static int		GetIndexFromCoords(Tcl_Interp *interp, TkMenu *menuPtr,
-			    char *string, int *indexPtr);
+			    const char *string, int *indexPtr);
 static int		MenuDoYPosition(Tcl_Interp *interp,
 			    TkMenu *menuPtr, Tcl_Obj *objPtr);
 static int		MenuDoXPosition(Tcl_Interp *interp,
@@ -393,6 +393,13 @@ static Tk_ClassProcs menuClass = {
  *--------------------------------------------------------------
  */
 
+static void
+FreeOptionTables(
+    ClientData clientData)
+{
+    ckfree(clientData);
+}
+
 int
 TkCreateMenuCmd(
     Tcl_Interp *interp)		/* Interpreter we are creating the command
@@ -416,7 +423,8 @@ TkCreateMenuCmd(
     optionTablesPtr->entryOptionTables[CHECK_BUTTON_ENTRY] =
 	    Tk_CreateOptionTable(interp, specsArray[CHECK_BUTTON_ENTRY]);
 
-    Tcl_CreateObjCommand(interp, "menu", MenuCmd, optionTablesPtr, NULL);
+    Tcl_CreateObjCommand(interp, "menu", MenuCmd, optionTablesPtr,
+	    FreeOptionTables);
 
     if (Tcl_IsSafe(interp)) {
 	Tcl_HideCommand(interp, "menu", "menu");
@@ -454,12 +462,12 @@ MenuCmd(
     register TkMenu *menuPtr;
     TkMenuReferences *menuRefPtr;
     int i, index, toplevel;
-    char *windowName;
-    static const char *typeStringList[] = {"-type", NULL};
+    const char *windowName;
+    static const char *const typeStringList[] = {"-type", NULL};
     TkMenuOptionTables *optionTablesPtr = clientData;
 
     if (objc < 2) {
-	Tcl_WrongNumArgs(interp, 1, objv, "pathName ?options?");
+	Tcl_WrongNumArgs(interp, 1, objv, "pathName ?-option value ...?");
 	return TCL_ERROR;
     }
 
@@ -633,7 +641,7 @@ MenuCmd(
     	}
     }
 
-    Tcl_SetResult(interp, Tk_PathName(menuPtr->tkwin), TCL_STATIC);
+    Tcl_SetObjResult(interp, TkNewWindowObj(menuPtr->tkwin));
     return TCL_OK;
 }
 
@@ -668,7 +676,7 @@ MenuWidgetObjCmd(
     int option;
 
     if (objc < 2) {
-	Tcl_WrongNumArgs(interp, 1, objv, "option ?arg arg ...?");
+	Tcl_WrongNumArgs(interp, 1, objv, "option ?arg ...?");
 	return TCL_ERROR;
     }
     if (Tcl_GetIndexFromObj(interp, objv[1], menuOptions, "option", 0,
@@ -700,7 +708,7 @@ MenuWidgetObjCmd(
     }
     case MENU_ADD:
 	if (objc < 3) {
-	    Tcl_WrongNumArgs(interp, 2, objv, "type ?options?");
+	    Tcl_WrongNumArgs(interp, 2, objv, "type ?-option value ...?");
 	    goto error;
 	}
 
@@ -822,7 +830,7 @@ MenuWidgetObjCmd(
 	Tcl_Obj *resultPtr;
 
 	if (objc < 3) {
-	    Tcl_WrongNumArgs(interp, 2, objv, "index ?option value ...?");
+	    Tcl_WrongNumArgs(interp, 2, objv, "index ?-option value ...?");
 	    goto error;
 	}
 	if (TkGetMenuIndex(interp, menuPtr, objv[2], 0, &index) != TCL_OK) {
@@ -871,13 +879,13 @@ MenuWidgetObjCmd(
 	if (index < 0) {
 	    Tcl_SetResult(interp, "none", TCL_STATIC);
 	} else {
-	    Tcl_SetIntObj(Tcl_GetObjResult(interp), index);
+	    Tcl_SetObjResult(interp, Tcl_NewIntObj(index));
 	}
 	break;
     }
     case MENU_INSERT:
 	if (objc < 4) {
-	    Tcl_WrongNumArgs(interp, 2, objv, "index type ?options?");
+	    Tcl_WrongNumArgs(interp, 2, objv, "index type ?-option value ...?");
 	    goto error;
 	}
 	if (MenuAddOrInsert(interp,menuPtr,objv[2],objc-3,objv+3) != TCL_OK) {
@@ -959,8 +967,8 @@ MenuWidgetObjCmd(
 	if (menuPtr->entries[index]->type == TEAROFF_ENTRY) {
 	    Tcl_SetResult(interp, "tearoff", TCL_STATIC);
 	} else {
-	    Tcl_SetStringObj(Tcl_GetObjResult(interp),
-		    menuEntryTypeStrings[menuPtr->entries[index]->type], -1);
+	    Tcl_SetObjResult(interp, Tcl_NewStringObj(
+		    menuEntryTypeStrings[menuPtr->entries[index]->type], -1));
 	}
 	break;
     }
@@ -1467,7 +1475,7 @@ DestroyMenuEntry(
     if (((mePtr->type == CHECK_BUTTON_ENTRY)
 	    || (mePtr->type == RADIO_BUTTON_ENTRY))
 	    && (mePtr->namePtr != NULL)) {
-	char *varName = Tcl_GetString(mePtr->namePtr);
+	const char *varName = Tcl_GetString(mePtr->namePtr);
 
 	Tcl_UntraceVar(menuPtr->interp, varName,
 		TCL_GLOBAL_ONLY|TCL_TRACE_WRITES|TCL_TRACE_UNSETS,
@@ -1690,7 +1698,7 @@ PostProcessEntry(
 {
     TkMenu *menuPtr = mePtr->menuPtr;
     int index = mePtr->index;
-    char *name;
+    const char *name;
     Tk_Image image;
 
     /*
@@ -1776,10 +1784,6 @@ PostProcessEntry(
     	return TCL_ERROR;
     }
 
-    if (TkpConfigureMenuEntry(mePtr) != TCL_OK) {
-    	return TCL_ERROR;
-    }
-
     /*
      * Get the images for the entry, if there are any. Allocate the new images
      * before freeing the old ones, so that the reference counts don't go to
@@ -1787,7 +1791,7 @@ PostProcessEntry(
      */
 
     if (mePtr->imagePtr != NULL) {
-	char *imageString = Tcl_GetString(mePtr->imagePtr);
+	const char *imageString = Tcl_GetString(mePtr->imagePtr);
 
 	image = Tk_GetImage(menuPtr->interp, menuPtr->tkwin, imageString,
 		TkMenuImageProc, mePtr);
@@ -1802,7 +1806,7 @@ PostProcessEntry(
     }
     mePtr->image = image;
     if (mePtr->selectImagePtr != NULL) {
-	char *selectImageString = Tcl_GetString(mePtr->selectImagePtr);
+	const char *selectImageString = Tcl_GetString(mePtr->selectImagePtr);
 
 	image = Tk_GetImage(menuPtr->interp, menuPtr->tkwin, selectImageString,
 		TkMenuSelectImageProc, mePtr);
@@ -1820,7 +1824,7 @@ PostProcessEntry(
     if ((mePtr->type == CHECK_BUTTON_ENTRY)
 	    || (mePtr->type == RADIO_BUTTON_ENTRY)) {
 	Tcl_Obj *valuePtr;
-	char *name;
+	const char *name;
 
 	if (mePtr->namePtr == NULL) {
 	    if (mePtr->labelPtr == NULL) {
@@ -1854,8 +1858,8 @@ PostProcessEntry(
 	mePtr->entryFlags &= ~ENTRY_SELECTED;
 	if (valuePtr != NULL) {
 	    if (mePtr->onValuePtr != NULL) {
-		char *value = Tcl_GetString(valuePtr);
-		char *onValue = Tcl_GetString(mePtr->onValuePtr);
+		const char *value = Tcl_GetString(valuePtr);
+		const char *onValue = Tcl_GetString(mePtr->onValuePtr);
 
 		if (strcmp(value, onValue) == 0) {
 		    mePtr->entryFlags |= ENTRY_SELECTED;
@@ -1874,6 +1878,10 @@ PostProcessEntry(
 		    TCL_GLOBAL_ONLY|TCL_TRACE_WRITES|TCL_TRACE_UNSETS,
 		    MenuVarProc, mePtr);
 	}
+    }
+
+    if (TkpConfigureMenuEntry(mePtr) != TCL_OK) {
+	return TCL_ERROR;
     }
 
     return TCL_OK;
@@ -1917,7 +1925,7 @@ ConfigureMenuEntry(
     if ((mePtr->namePtr != NULL)
     	    && ((mePtr->type == CHECK_BUTTON_ENTRY)
 	    || (mePtr->type == RADIO_BUTTON_ENTRY))) {
-	char *name = Tcl_GetString(mePtr->namePtr);
+	const char *name = Tcl_GetString(mePtr->namePtr);
 
 	Tcl_UntraceVar(menuPtr->interp, name,
 		TCL_GLOBAL_ONLY|TCL_TRACE_WRITES|TCL_TRACE_UNSETS,
@@ -1975,7 +1983,7 @@ ConfigureMenuCloneEntries(
     int cascadeEntryChanged = 0;
     TkMenuReferences *oldCascadeMenuRefPtr, *cascadeMenuRefPtr = NULL;
     Tcl_Obj *oldCascadePtr = NULL;
-    char *newCascadeName;
+    const char *newCascadeName;
 
     /*
      * Cascades are kind of tricky here. This is special case #3 in the
@@ -1999,7 +2007,7 @@ ConfigureMenuCloneEntries(
     }
 
     if (mePtr->type == CASCADE_ENTRY) {
-	char *oldCascadeName;
+	const char *oldCascadeName;
 
 	if (mePtr->namePtr != NULL) {
 	    newCascadeName = Tcl_GetString(mePtr->namePtr);
@@ -2115,7 +2123,7 @@ TkGetMenuIndex(
     int *indexPtr)		/* Where to store converted index. */
 {
     int i;
-    char *string = Tcl_GetString(objPtr);
+    const char *string = Tcl_GetString(objPtr);
 
     if ((string[0] == 'a') && (strcmp(string, "active") == 0)) {
 	*indexPtr = menuPtr->active;
@@ -2154,12 +2162,12 @@ TkGetMenuIndex(
 	    *indexPtr = i;
 	    goto success;
 	}
-	Tcl_SetResult(interp, NULL, TCL_STATIC);
+	Tcl_ResetResult(interp);
     }
 
     for (i = 0; i < menuPtr->numEntries; i++) {
 	Tcl_Obj *labelPtr = menuPtr->entries[i]->labelPtr;
-	char *label = (labelPtr == NULL) ? NULL : Tcl_GetString(labelPtr);
+	const char *label = (labelPtr == NULL) ? NULL : Tcl_GetString(labelPtr);
 
 	if ((label != NULL) && (Tcl_StringMatch(label, string))) {
 	    *indexPtr = i;
@@ -2352,7 +2360,7 @@ MenuAddOrInsert(
 	index = menuPtr->numEntries;
     }
     if (index < 0) {
-	char *indexString = Tcl_GetString(indexPtr);
+	const char *indexString = Tcl_GetString(indexPtr);
 	Tcl_AppendResult(interp, "bad index \"", indexString, "\"", NULL);
 	return TCL_ERROR;
     }
@@ -2482,7 +2490,7 @@ MenuVarProc(
     TkMenuEntry *mePtr = clientData;
     TkMenu *menuPtr;
     const char *value;
-    char *name, *onValue;
+    const char *name, *onValue;
 
     if (flags & TCL_INTERP_DESTROYED) {
 	/*
@@ -2734,7 +2742,7 @@ CloneMenu(
 	Tcl_IncrRefCount(newObjv[1]);
 	if (Tk_BindtagsObjCmd(newMenuPtr->tkwin, newMenuPtr->interp, 2,
 		newObjv) == TCL_OK) {
-	    char *windowName;
+	    const char *windowName;
 	    Tcl_Obj *bindingsPtr =
 		    Tcl_DuplicateObj(Tcl_GetObjResult(newMenuPtr->interp));
 	    Tcl_Obj *elementPtr;
@@ -2916,11 +2924,12 @@ static int
 GetIndexFromCoords(
     Tcl_Interp *interp,		/* Interpreter of menu. */
     TkMenu *menuPtr,		/* The menu we are searching. */
-    char *string,		/* The @string we are parsing. */
+    const char *string,		/* The @string we are parsing. */
     int *indexPtr)		/* The index of the item that matches. */
 {
     int x, y, i;
-    char *p, *end;
+    const char *p;
+    char *end;
 
     TkRecomputeMenu(menuPtr);
     p = string + 1;
@@ -2956,7 +2965,7 @@ GetIndexFromCoords(
     return TCL_OK;
 
   error:
-    Tcl_SetResult(interp, NULL, TCL_STATIC);
+    Tcl_ResetResult(interp);
     return TCL_ERROR;
 }
 
@@ -3038,7 +3047,7 @@ TkNewMenuName(
     Tcl_CmdInfo cmdInfo;
     Tcl_HashTable *nameTablePtr = NULL;
     TkWindow *winPtr = (TkWindow *) menuPtr->tkwin;
-    char *parentName = Tcl_GetString(parentPtr);
+    const char *parentName = Tcl_GetString(parentPtr);
 
     if (winPtr->mainPtr != NULL) {
 	nameTablePtr = &(winPtr->mainPtr->nameTable);
@@ -3334,7 +3343,7 @@ TkGetMenuHashTable(
 TkMenuReferences *
 TkCreateMenuReferences(
     Tcl_Interp *interp,
-    char *pathName)		/* The path of the menu widget. */
+    const char *pathName)		/* The path of the menu widget. */
 {
     Tcl_HashEntry *hashEntryPtr;
     TkMenuReferences *menuRefPtr;
@@ -3378,7 +3387,7 @@ TkCreateMenuReferences(
 TkMenuReferences *
 TkFindMenuReferences(
     Tcl_Interp *interp,		/* The interp the menu is living in. */
-    char *pathName)		/* The path of the menu widget. */
+    const char *pathName)	/* The path of the menu widget. */
 {
     Tcl_HashEntry *hashEntryPtr;
     TkMenuReferences *menuRefPtr = NULL;
@@ -3417,7 +3426,7 @@ TkFindMenuReferencesObj(
     Tcl_Interp *interp,		/* The interp the menu is living in. */
     Tcl_Obj *objPtr)		/* The path of the menu widget. */
 {
-    char *pathName = Tcl_GetString(objPtr);
+    const char *pathName = Tcl_GetString(objPtr);
     return TkFindMenuReferences(interp, pathName);
 }
 

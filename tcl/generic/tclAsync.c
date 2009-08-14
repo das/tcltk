@@ -237,7 +237,7 @@ Tcl_AsyncInvoke(
 	}
 	asyncPtr->ready = 0;
 	Tcl_MutexUnlock(&tsdPtr->asyncMutex);
-	code = (*asyncPtr->proc)(asyncPtr->clientData, interp, code);
+	code = asyncPtr->proc(asyncPtr->clientData, interp, code);
 	Tcl_MutexLock(&tsdPtr->asyncMutex);
     }
     tsdPtr->asyncActive = 0;
@@ -306,7 +306,7 @@ Tcl_AsyncDelete(
 	    tsdPtr->firstHandler = asyncPtr->nextPtr;
 	} else {
 	    prevPtr->nextPtr = asyncPtr->nextPtr;
-        }
+	}
 	if (asyncPtr == tsdPtr->lastHandler) {
 	    tsdPtr->lastHandler = prevPtr;
 	}

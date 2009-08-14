@@ -46,9 +46,9 @@ HasStubSupport(
 	return iPtr->stubTable;
     }
 
-    interp->result =
-	    "This interpreter does not support stubs-enabled extensions.";
-    interp->freeProc = TCL_STATIC;
+    iPtr->result =
+	    (char *)"This interpreter does not support stubs-enabled extensions.";
+    iPtr->freeProc = TCL_STATIC;
     return NULL;
 }
 
@@ -173,7 +173,7 @@ TclTomMathInitializeStubs(
     const char *packageName = "tcl::tommath";
     const char *errMsg = NULL;
     ClientData pkgClientData = NULL;
-    const char *actualVersion = 
+    const char *actualVersion =
 	Tcl_PkgRequireEx(interp, packageName, version, exact, &pkgClientData);
     TclTomMathStubs *stubsPtr = pkgClientData;
 

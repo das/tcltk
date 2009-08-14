@@ -198,7 +198,7 @@ TclpDlopen(
     if (tclMacOSXDarwinRelease >= 8)
 #endif
     {
-	dlHandle = dlopen(nativePath, RTLD_NOW | RTLD_LOCAL);
+	dlHandle = dlopen(nativePath, RTLD_NOW | RTLD_GLOBAL);
 	if (!dlHandle) {
 	    /*
 	     * Let the OS loader examine the binary search path for whatever
@@ -208,7 +208,7 @@ TclpDlopen(
 
 	    fileName = Tcl_GetString(pathPtr);
 	    nativeFileName = Tcl_UtfToExternalDString(NULL, fileName, -1, &ds);
-	    dlHandle = dlopen(nativeFileName, RTLD_NOW | RTLD_LOCAL);
+	    dlHandle = dlopen(nativeFileName, RTLD_NOW | RTLD_GLOBAL);
 	}
 	if (dlHandle) {
 	    TclLoadDbgMsg("dlopen() successful");
@@ -629,14 +629,14 @@ TclpLoadMemory(
 	uint32_t ms = 0;
 #ifndef __LP64__
 	const struct mach_header *mh = NULL;
-	#define mh_size  sizeof(struct mach_header)
-	#define mh_magic MH_MAGIC
-	#define arch_abi 0
+#	define mh_size  sizeof(struct mach_header)
+#	define mh_magic MH_MAGIC
+#	define arch_abi 0
 #else
 	const struct mach_header_64 *mh = NULL;
-	#define mh_size  sizeof(struct mach_header_64)
-	#define mh_magic MH_MAGIC_64
-	#define arch_abi CPU_ARCH_ABI64
+#	define mh_size  sizeof(struct mach_header_64)
+#	define mh_magic MH_MAGIC_64
+#	define arch_abi CPU_ARCH_ABI64
 #endif
 
 	if ((size_t) codeSize >= sizeof(struct fat_header)

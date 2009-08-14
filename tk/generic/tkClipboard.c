@@ -29,7 +29,7 @@ static int		ClipboardWindowHandler(ClientData clientData,
 			    int offset, char *buffer, int maxBytes);
 static void		ClipboardLostSel(ClientData clientData);
 static int		ClipboardGetProc(ClientData clientData,
-			    Tcl_Interp *interp, char *portion);
+			    Tcl_Interp *interp, const char *portion);
 
 /*
  *----------------------------------------------------------------------
@@ -326,7 +326,7 @@ Tk_ClipboardAppend(
 				 * clipboard item, e.g. STRING or LENGTH. */
     Atom format,		/* Format in which the selection information
 				 * should be returned to the requestor. */
-    char *buffer)		/* NULL terminated string containing the data
+    const char *buffer)		/* NULL terminated string containing the data
 				 * to be added to the clipboard. */
 {
     TkWindow *winPtr = (TkWindow *) tkwin;
@@ -423,14 +423,14 @@ Tk_ClipboardObjCmd(
     Tcl_Obj *const objv[])	/* Argument strings. */
 {
     Tk_Window tkwin = (Tk_Window) clientData;
-    char *path = NULL;
+    const char *path = NULL;
     Atom selection;
-    static const char *optionStrings[] = { "append", "clear", "get", NULL };
+    static const char *const optionStrings[] = { "append", "clear", "get", NULL };
     enum options { CLIPBOARD_APPEND, CLIPBOARD_CLEAR, CLIPBOARD_GET };
     int index, i;
 
     if (objc < 2) {
-	Tcl_WrongNumArgs(interp, 1, objv, "option ?arg arg ...?");
+	Tcl_WrongNumArgs(interp, 1, objv, "option ?arg ...?");
 	return TCL_ERROR;
     }
 
@@ -442,10 +442,10 @@ Tk_ClipboardObjCmd(
     switch ((enum options) index) {
     case CLIPBOARD_APPEND: {
 	Atom target, format;
-	char *targetName = NULL;
-	char *formatName = NULL;
-	char *string;
-	static const char *appendOptionStrings[] = {
+	const char *targetName = NULL;
+	const char *formatName = NULL;
+	const char *string;
+	static const char *const appendOptionStrings[] = {
 	    "-displayof", "-format", "-type", NULL
 	};
 	enum appendOptions { APPEND_DISPLAYOF, APPEND_FORMAT, APPEND_TYPE };
@@ -493,7 +493,7 @@ Tk_ClipboardObjCmd(
 	    }
 	}
 	if (objc - i != 1) {
-	    Tcl_WrongNumArgs(interp, 2, objv, "?options? data");
+	    Tcl_WrongNumArgs(interp, 2, objv, "?-option value ...? data");
 	    return TCL_ERROR;
 	}
 	if (path != NULL) {
@@ -516,7 +516,7 @@ Tk_ClipboardObjCmd(
 		Tcl_GetString(objv[i]));
     }
     case CLIPBOARD_CLEAR: {
-	static const char *clearOptionStrings[] = { "-displayof", NULL };
+	static const char *const clearOptionStrings[] = { "-displayof", NULL };
 	enum clearOptions { CLEAR_DISPLAYOF };
 	int subIndex;
 
@@ -544,11 +544,11 @@ Tk_ClipboardObjCmd(
     }
     case CLIPBOARD_GET: {
 	Atom target;
-	char *targetName = NULL;
+	const char *targetName = NULL;
 	Tcl_DString selBytes;
 	int result;
-	char *string;
-	static const char *getOptionStrings[] = {
+	const char *string;
+	static const char *const getOptionStrings[] = {
 	    "-displayof", "-type", NULL
 	};
 	enum getOptions { APPEND_DISPLAYOF, APPEND_TYPE };
@@ -587,7 +587,7 @@ Tk_ClipboardObjCmd(
 	selection = Tk_InternAtom(tkwin, "CLIPBOARD");
 
 	if (objc - i > 1) {
-	    Tcl_WrongNumArgs(interp, 2, objv, "?options?");
+	    Tcl_WrongNumArgs(interp, 2, objv, "?-option value ...?");
 	    return TCL_ERROR;
 	} else if (objc - i == 1) {
 	    target = Tk_InternAtom(tkwin, Tcl_GetString(objv[i]));
@@ -704,7 +704,7 @@ ClipboardGetProc(
 				 * selection. */
     Tcl_Interp *interp,		/* Interpreter used for error reporting (not
 				 * used). */
-    char *portion)		/* New information to be appended. */
+    const char *portion)		/* New information to be appended. */
 {
     Tcl_DStringAppend((Tcl_DString *) clientData, portion, -1);
     return TCL_OK;

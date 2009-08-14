@@ -22,10 +22,8 @@
  * Custom option for handling "-orient"
  */
 
-static Tk_CustomOption orientOption = {
-    (Tk_OptionParseProc *) TkOrientParseProc,
-    TkOrientPrintProc,
-    NULL
+static const Tk_CustomOption orientOption = {
+    TkOrientParseProc, TkOrientPrintProc, (ClientData) NULL
 };
 
 /*
@@ -134,7 +132,7 @@ Tk_ScrollbarCmd(
 
     if (argc < 2) {
 	Tcl_AppendResult(interp, "wrong # args: should be \"",
-		argv[0], " pathName ?options?\"", NULL);
+		argv[0], " pathName ?-option value ...?\"", NULL);
 	return TCL_ERROR;
     }
 
@@ -196,7 +194,7 @@ Tk_ScrollbarCmd(
 	return TCL_ERROR;
     }
 
-    Tcl_SetResult(interp, Tk_PathName(scrollPtr->tkwin), TCL_STATIC);
+    Tcl_SetObjResult(interp, TkNewWindowObj(scrollPtr->tkwin));
     return TCL_OK;
 }
 
@@ -232,7 +230,7 @@ ScrollbarWidgetCmd(
 
     if (argc < 2) {
 	Tcl_AppendResult(interp, "wrong # args: should be \"",
-		argv[0], " option ?arg arg ...?\"", NULL);
+		argv[0], " option ?arg ...?\"", NULL);
 	return TCL_ERROR;
     }
     Tcl_Preserve(scrollPtr);
@@ -299,7 +297,6 @@ ScrollbarWidgetCmd(
     } else if ((c == 'd') && (strncmp(argv[1], "delta", length) == 0)) {
 	int xDelta, yDelta, pixels, length;
 	double fraction;
-	char buf[TCL_DOUBLE_SPACE];
 
 	if (argc != 4) {
 	    Tcl_AppendResult(interp, "wrong # args: should be \"",
@@ -324,12 +321,10 @@ ScrollbarWidgetCmd(
 	} else {
 	    fraction = ((double) pixels / (double) length);
 	}
-	sprintf(buf, "%g", fraction);
-	Tcl_SetResult(interp, buf, TCL_VOLATILE);
+	Tcl_SetObjResult(interp, Tcl_NewDoubleObj(fraction));
     } else if ((c == 'f') && (strncmp(argv[1], "fraction", length) == 0)) {
 	int x, y, pos, length;
 	double fraction;
-	char buf[TCL_DOUBLE_SPACE];
 
 	if (argc != 4) {
 	    Tcl_AppendResult(interp, "wrong # args: should be \"",
@@ -359,8 +354,7 @@ ScrollbarWidgetCmd(
 	} else if (fraction > 1.0) {
 	    fraction = 1.0;
 	}
-	sprintf(buf, "%g", fraction);
-	Tcl_SetResult(interp, buf, TCL_VOLATILE);
+	Tcl_SetObjResult(interp, Tcl_NewDoubleObj(fraction));
     } else if ((c == 'g') && (strncmp(argv[1], "get", length) == 0)) {
 	if (argc != 2) {
 	    Tcl_AppendResult(interp, "wrong # args: should be \"",
@@ -368,18 +362,19 @@ ScrollbarWidgetCmd(
 	    goto error;
 	}
 	if (scrollPtr->flags & NEW_STYLE_COMMANDS) {
-	    char first[TCL_DOUBLE_SPACE], last[TCL_DOUBLE_SPACE];
+	    Tcl_Obj *resObjs[2];
 
-	    Tcl_PrintDouble(interp, scrollPtr->firstFraction, first);
-	    Tcl_PrintDouble(interp, scrollPtr->lastFraction, last);
-	    Tcl_AppendResult(interp, first, " ", last, NULL);
+	    resObjs[0] = Tcl_NewDoubleObj(scrollPtr->firstFraction);
+	    resObjs[1] = Tcl_NewDoubleObj(scrollPtr->lastFraction);
+	    Tcl_SetObjResult(interp, Tcl_NewListObj(2, resObjs));
 	} else {
-	    char buf[TCL_INTEGER_SPACE * 4];
+	    Tcl_Obj *resObjs[4];
 
-	    sprintf(buf, "%d %d %d %d", scrollPtr->totalUnits,
-		    scrollPtr->windowUnits, scrollPtr->firstUnit,
-		    scrollPtr->lastUnit);
-	    Tcl_SetResult(interp, buf, TCL_VOLATILE);
+	    resObjs[0] = Tcl_NewIntObj(scrollPtr->totalUnits);
+	    resObjs[1] = Tcl_NewIntObj(scrollPtr->windowUnits);
+	    resObjs[2] = Tcl_NewIntObj(scrollPtr->firstUnit);
+	    resObjs[3] = Tcl_NewIntObj(scrollPtr->lastUnit);
+	    Tcl_SetObjResult(interp, Tcl_NewListObj(4, resObjs));
 	}
     } else if ((c == 'i') && (strncmp(argv[1], "identify", length) == 0)) {
 	int x, y, thing;

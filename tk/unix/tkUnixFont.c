@@ -21,7 +21,7 @@
  * The preferred font encodings.
  */
 
-static const char *encodingList[] = {
+static const char *const encodingList[] = {
     "iso8859-1", "jis0208", "jis0212", NULL
 };
 
@@ -139,9 +139,9 @@ typedef struct UnixFont {
  */
 
 typedef struct EncodingAlias {
-    char *realName;		/* The real name of the encoding to load if
+    const char *realName;	/* The real name of the encoding to load if
 				 * the provided name matched the pattern. */
-    char *aliasPattern;		/* Pattern for encoding name, of the form that
+    const char *aliasPattern;	/* Pattern for encoding name, of the form that
 				 * is acceptable to Tcl_StringMatch. */
 } EncodingAlias;
 
@@ -210,7 +210,7 @@ static SubFont *	CanUseFallback(UnixFont *fontPtr,
 			    const char *fallbackName, int ch,
 			    SubFont **fixSubFontPtrPtr);
 static SubFont *	CanUseFallbackWithAliases(UnixFont *fontPtr,
-			    char *fallbackName, int ch,
+			    const char *fallbackName, int ch,
 			    Tcl_DString *nameTriedPtr,
 			    SubFont **fixSubFontPtrPtr);
 static int		ControlUtfProc(ClientData clientData, const char *src,
@@ -847,8 +847,6 @@ TkpGetFontFamilies(
     Tcl_HashSearch search;
     Tcl_Obj *resultPtr, *strPtr;
 
-    resultPtr = Tcl_GetObjResult(interp);
-
     Tcl_InitHashTable(&familyTable, TCL_STRING_KEYS);
     nameList = ListFonts(Tk_Display(tkwin), "*", &numNames);
     for (i = 0; i < numNames; i++) {
@@ -876,11 +874,13 @@ TkpGetFontFamilies(
     XFreeFontNames(nameList);
 
     hPtr = Tcl_FirstHashEntry(&familyTable, &search);
+    resultPtr = Tcl_NewObj();
     while (hPtr != NULL) {
 	strPtr = Tcl_NewStringObj(Tcl_GetHashKey(&familyTable, hPtr), -1);
 	Tcl_ListObjAppendElement(NULL, resultPtr, strPtr);
 	hPtr = Tcl_NextHashEntry(&search);
     }
+    Tcl_SetObjResult(interp, resultPtr);
 
     Tcl_DeleteHashTable(&familyTable);
 }
@@ -913,7 +913,7 @@ TkpGetSubFonts(
     UnixFont *fontPtr;
     FontFamily *familyPtr;
 
-    resultPtr = Tcl_GetObjResult(interp);
+    resultPtr = Tcl_NewObj();
     fontPtr = (UnixFont *) tkfont;
     for (i = 0; i < fontPtr->numSubFonts; i++) {
 	familyPtr = fontPtr->subFontArray[i].familyPtr;
@@ -924,6 +924,7 @@ TkpGetSubFonts(
 	listPtr = Tcl_NewListObj(3, objv);
 	Tcl_ListObjAppendElement(NULL, resultPtr, listPtr);
     }
+    Tcl_SetObjResult(interp, resultPtr);
 }
 
 /*
@@ -1482,9 +1483,9 @@ CreateClosestFont(
 
     nameList = ListFontOrAlias(display, want.fa.family, &numNames);
     if (numNames == 0) {
-	char ***fontFallbacks;
+	const char *const *const *fontFallbacks;
 	int i, j;
-	char *fallback;
+	const char *fallback;
 
 	fontFallbacks = TkFontGetFallbacks();
 	for (i = 0; fontFallbacks[i] != NULL; i++) {
@@ -1968,7 +1969,11 @@ FindSubFontForChar(
 {
     int i, j, k, numNames;
     Tk_Uid faceName;
-    char *fallback, **aliases, **nameList, **anyFallbacks, ***fontFallbacks;
+    const char *fallback;
+    const char *const *aliases;
+    char **nameList;
+    const char *const *anyFallbacks;
+    const char *const *const *fontFallbacks;
     SubFont *subFontPtr;
     Tcl_DString ds;
 
@@ -2286,7 +2291,7 @@ static SubFont *
 CanUseFallbackWithAliases(
     UnixFont *fontPtr,		/* The font object that will own the new
 				 * screen font. */
-    char *faceName,		/* Desired face name for new screen font. */
+    const char *faceName,		/* Desired face name for new screen font. */
     int ch,			/* The Unicode character that the new screen
 				 * font must be able to display. */
     Tcl_DString *nameTriedPtr,	/* Records face names that have already been
@@ -2297,7 +2302,7 @@ CanUseFallbackWithAliases(
 				 * reallocate our subfont table. */
 {
     SubFont *subFontPtr;
-    char **aliases;
+    const char *const *aliases;
     int i;
 
     if (SeenName(faceName, nameTriedPtr) == 0) {
@@ -2356,7 +2361,7 @@ SeenName(
 	}
 	seen += strlen(seen) + 1;
     }
-    Tcl_DStringAppend(dsPtr, (char *) name, (int) (strlen(name) + 1));
+    Tcl_DStringAppend(dsPtr, name, (int) (strlen(name) + 1));
     return 0;
 }
 
@@ -2401,7 +2406,9 @@ CanUseFallback(
     Tk_Uid hateFoundry;
     const char *charset, *hateCharset;
     unsigned bestScore[2];
-    char **nameList, **nameListOrig, src[TCL_UTF_MAX];
+    char **nameList;
+    char **nameListOrig;
+    char src[TCL_UTF_MAX];
     FontAttributes want, got;
     Display *display;
     SubFont subFont;
@@ -2906,7 +2913,8 @@ ListFontOrAlias(
     int *numNamesPtr)		/* Filled with length of returned array, or 0
 				 * if no names were found. */
 {
-    char **nameList, **aliases;
+    char **nameList;
+    const char *const *aliases;
     int i;
 
     nameList = ListFonts(display, faceName, numNamesPtr);
@@ -2955,7 +2963,8 @@ IdentifySymbolEncodings(
     FontAttributes *faPtr)
 {
     int i, j;
-    char **aliases, **symbolClass;
+    const char *const *aliases;
+    const char *const *symbolClass;
 
     symbolClass = TkFontGetSymbolClass();
     for (i = 0; symbolClass[i] != NULL; i++) {
@@ -3007,6 +3016,283 @@ GetEncodingAlias(
 	aliasPtr++;
     }
     return name;
+}
+
+static inline XImage *
+GetImageOfText(
+    Display *display,		/* Display on which to draw. */
+    Drawable drawable,		/* Window or pixmap in which to draw. */
+    Tk_Font tkfont,		/* Font in which characters will be drawn. */
+    const char *source,		/* UTF-8 string to be displayed. Need not be
+				 * '\0' terminated. All Tk meta-characters
+				 * (tabs, control characters, and newlines)
+				 * should be stripped out of the string that
+				 * is passed to this function. If they are not
+				 * stripped out, they will be displayed as
+				 * regular printing characters. */
+    int numBytes,		/* Number of bytes in string. */
+    int *realWidthPtr, int *realHeightPtr)
+{
+    int width, height;
+    TkFont *fontPtr = (TkFont *) tkfont;
+    Pixmap bitmap;
+    GC bitmapGC;
+    XGCValues values;
+    XImage *image;
+
+    (void) Tk_MeasureChars(tkfont, source, numBytes, -1, 0, &width);
+    height = fontPtr->fm.ascent + fontPtr->fm.descent;
+
+    bitmap = Tk_GetPixmap(display, drawable, width, height, 1);
+    values.graphics_exposures = False;
+    values.foreground = BlackPixel(display, DefaultScreen(display));
+    bitmapGC = XCreateGC(display, bitmap, GCGraphicsExposures|GCForeground,
+	    &values);
+    XFillRectangle(display, bitmap, bitmapGC, 0, 0, width, height);
+
+    values.font = Tk_FontId(tkfont);
+    values.foreground = WhitePixel(display, DefaultScreen(display));
+    values.background = BlackPixel(display, DefaultScreen(display));
+    XChangeGC(display, bitmapGC, GCFont|GCForeground|GCBackground, &values);
+    Tk_DrawChars(display, bitmap, bitmapGC, tkfont, source, numBytes, 0,
+	    fontPtr->fm.ascent);
+    XFreeGC(display, bitmapGC);
+
+    image = XGetImage(display, bitmap, 0, 0, width, height, AllPlanes,
+	    ZPixmap);
+    Tk_FreePixmap(display, bitmap);
+
+    *realWidthPtr = width;
+    *realHeightPtr = height;
+    return image;
+}
+
+static inline XImage *
+InitDestImage(
+    Display *display,
+    Drawable drawable,
+    int width,
+    int height,
+    Pixmap *bitmapPtr)
+{
+    Pixmap bitmap;
+    XImage *image;
+    GC bitmapGC;
+    XGCValues values;
+
+    bitmap = Tk_GetPixmap(display, drawable, width, height, 1);
+    values.graphics_exposures = False;
+    values.foreground = BlackPixel(display, DefaultScreen(display));
+    bitmapGC = XCreateGC(display, bitmap, GCGraphicsExposures|GCForeground,
+	    &values);
+    XFillRectangle(display, bitmap, bitmapGC, 0, 0, width, height);
+    XFreeGC(display, bitmapGC);
+
+    image = XGetImage(display, bitmap, 0, 0, width, height, AllPlanes,
+	    ZPixmap);
+    *bitmapPtr = bitmap;
+    return image;
+}
+
+void
+TkpDrawAngledChars(
+    Display *display,		/* Display on which to draw. */
+    Drawable drawable,		/* Window or pixmap in which to draw. */
+    GC gc,			/* Graphics context for drawing characters. */
+    Tk_Font tkfont,		/* Font in which characters will be drawn;
+				 * must be the same as font used in GC. */
+    const char *source,		/* UTF-8 string to be displayed. Need not be
+				 * '\0' terminated. All Tk meta-characters
+				 * (tabs, control characters, and newlines)
+				 * should be stripped out of the string that
+				 * is passed to this function. If they are not
+				 * stripped out, they will be displayed as
+				 * regular printing characters. */
+    int numBytes,		/* Number of bytes in string. */
+    double x, double y,
+    double angle)
+{
+    if (angle == 0.0) {
+	Tk_DrawChars(display, drawable, gc, tkfont, source, numBytes, x, y);
+    } else {
+	double sinA = sin(angle * PI/180.0), cosA = cos(angle * PI/180.0);
+	int bufHeight, bufWidth, srcWidth, srcHeight, i, j, dx, dy;
+	Pixmap buf;
+	XImage *srcImage = GetImageOfText(display, drawable, tkfont, source,
+		numBytes, &srcWidth, &srcHeight);
+	XImage *dstImage;
+	enum {Q0=1,R1,Q1,R2,Q2,R3,Q3} quadrant;
+	GC bwgc, cpgc;
+	XGCValues values;
+	int ascent = ((TkFont *) tkfont)->fm.ascent;
+
+	/*
+	 * First, work out what quadrant we are operating in. We also handle
+	 * the rectilinear rotations as special cases. Conceptually, there's
+	 * also R0 (angle == 0.0) but that has been already handled as a
+	 * special case above.
+	 *
+	 *        R1
+	 *   Q1   |   Q0
+	 *        |
+	 * R2 ----+---- R0
+	 *        |
+	 *   Q2   |   Q3
+	 *        R3
+	 */
+
+	if (angle < 90.0) {
+	    quadrant = Q0;
+	} else if (angle == 90.0) {
+	    quadrant = R1;
+	} else if (angle < 180.0) {
+	    quadrant = Q1;
+	} else if (angle == 180.0) {
+	    quadrant = R2;
+	} else if (angle < 270.0) {
+	    quadrant = Q2;
+	} else if (angle == 270.0) {
+	    quadrant = R3;
+	} else {
+	    quadrant = Q3;
+	}
+
+	if (srcImage == NULL) {
+	    return;
+	}
+	bufWidth = srcWidth*fabs(cosA) + srcHeight*fabs(sinA);
+	bufHeight = srcHeight*fabs(cosA) + srcWidth*fabs(sinA);
+	dstImage = InitDestImage(display, drawable, bufWidth,bufHeight, &buf);
+	if (dstImage == NULL) {
+	    Tk_FreePixmap(display, buf);
+	    XDestroyImage(srcImage);
+	    return;
+	}
+
+	/*
+	 * Do the rotation, setting or resetting pixels in the destination
+	 * image dependent on whether the corresponding pixel (after rotation
+	 * to source image space) is set.
+	 */
+
+	for (i=0 ; i<srcWidth ; i++) {
+	    for (j=0 ; j<srcHeight ; j++) {
+		switch (quadrant) {
+		case Q0:
+		    dx = floor(i*cosA + j*sinA + 0.5);
+		    dy = floor(j*cosA + (srcWidth - i)*sinA + 0.5);
+		    break;
+		case R1:
+		    dx = j;
+		    dy = srcWidth - i;
+		    break;
+		case Q1:
+		    dx = floor((i - srcWidth)*cosA + j*sinA + 0.5);
+		    dy = floor((srcWidth-i)*sinA + (j-srcHeight)*cosA + 0.5);
+		    break;
+		case R2:
+		    dx = srcWidth - i;
+		    dy = srcHeight - j;
+		    break;
+		case Q2:
+		    dx = floor((i-srcWidth)*cosA + (j-srcHeight)*sinA + 0.5);
+		    dy = floor((j - srcHeight)*cosA - i*sinA + 0.5);
+		    break;
+		case R3:
+		    dx = srcHeight - j;
+		    dy = i;
+		    break;
+		default:
+		    dx = floor(i*cosA + (j - srcHeight)*sinA + 0.5);
+		    dy = floor(j*cosA - i*sinA + 0.5);
+		}
+
+		if (dx < 0 || dy < 0 || dx >= bufWidth || dy >= bufHeight) {
+		    continue;
+		}
+		XPutPixel(dstImage, dx, dy,
+			XGetPixel(dstImage,dx,dy) | XGetPixel(srcImage,i,j));
+	    }
+	}
+	XDestroyImage(srcImage);
+
+	/*
+	 * Schlep the data back to the Xserver.
+	 */
+
+	values.function = GXcopy;
+	values.foreground = WhitePixel(display, DefaultScreen(display));
+	values.background = BlackPixel(display, DefaultScreen(display));
+	bwgc = XCreateGC(display, buf, GCFunction|GCForeground|GCBackground,
+		&values);
+	XPutImage(display, buf, bwgc, dstImage, 0,0, 0,0, bufWidth,bufHeight);
+	XFreeGC(display, bwgc);
+	XDestroyImage(dstImage);
+
+	/*
+	 * Calculate where we want to draw the text.
+	 */
+
+	switch (quadrant) {
+	case Q0:
+	    dx = x;
+	    dy = y - srcWidth*sinA;
+	    break;
+	case R1:
+	    dx = x;
+	    dy = y - srcWidth;
+	    break;
+	case Q1:
+	    dx = x + srcWidth*cosA;
+	    dy = y + srcHeight*cosA - srcWidth*sinA;
+	    break;
+	case R2:
+	    dx = x - srcWidth;
+	    dy = y - srcHeight;
+	    break;
+	case Q2:
+	    dx = x + srcWidth*cosA + srcHeight*sinA;
+	    dy = y + srcHeight*cosA;
+	    break;
+	case R3:
+	    dx = x - srcHeight;
+	    dy = y;
+	    break;
+	default:
+	    dx = x + srcHeight*sinA;
+	    dy = y;
+	}
+
+	/*
+	 * Apply a correction to deal with the fact that we aren't told to
+	 * draw from our top-left corner but rather from the left-end of our
+	 * baseline.
+	 */
+
+	dx -= ascent*sinA;
+	dy -= ascent*cosA;
+
+	/*
+	 * Transfer the text to the screen. This is done by using it as a mask
+	 * and then drawing through that mask with the original drawing color.
+	 */
+
+	values.function = GXcopy;
+	values.fill_style = FillSolid;
+	values.clip_mask = buf;
+	values.clip_x_origin = dx;
+	values.clip_y_origin = dy;
+	cpgc = XCreateGC(display, drawable,
+		GCFunction|GCFillStyle|GCClipMask|GCClipXOrigin|GCClipYOrigin,
+		&values);
+	XCopyGC(display, gc, GCForeground, cpgc);
+	XFillRectangle(display, drawable, cpgc, dx, dy, bufWidth,
+		bufHeight);
+	XFreeGC(display, cpgc);
+
+	Tk_FreePixmap(display, buf);
+	return;
+    }
 }
 
 /*

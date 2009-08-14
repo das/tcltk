@@ -600,7 +600,7 @@ proc setTabs {tabList} {
 	    set relativeTo [expr {$state(leftMargin) \
 		    + ($state(offset) * $state(nestingLevel))}]
 	}
-	if {[regexp {^\w'(.*)'u$} $arg -> submatch]} {
+	if {[regexp {^\\w'([^']*)'u$} $arg -> submatch]} {
 	    # Magic factor!
 	    set distance [expr {[string length $submatch] * 86.4}]
 	} else {
@@ -711,6 +711,10 @@ proc char {name} {
 	{\(co} {
 	    textSetup
 	    puts -nonewline $file "\\'a9 "
+	}
+	{\(mi} {
+	    textSetup
+	    puts -nonewline $file "-"
 	}
 	{\(mu} {
 	    textSetup
@@ -975,6 +979,10 @@ proc getTwips {arg} {
     if {[scan $arg "%f%s" distance units] != 2} {
 	puts stderr "bad distance \"$arg\""
 	return 0
+    }
+    if {[string length $units] > 1} {
+	puts stderr "additional characters after unit \"$arg\""
+	set units [string index $units 0]
     }
     switch -- $units {
 	c	{

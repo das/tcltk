@@ -16,7 +16,7 @@
 #include "tkInt.h"
 
 typedef enum {TOP, BOTTOM, LEFT, RIGHT} Side;
-static const char *sideNames[] = {
+static const char *const sideNames[] = {
     "top", "bottom", "left", "right", NULL
 };
 
@@ -151,7 +151,7 @@ void
 TkPrintPadAmount(
     Tcl_Interp *interp,		/* The interpreter into which the result is
 				 * written. */
-    char *switchName,		/* One of "padx", "pady", "ipadx" or "ipady" */
+    const char *switchName,		/* One of "padx", "pady", "ipadx" or "ipady" */
     int halfSpace,		/* The left or top padding amount */
     int allSpace)		/* The total amount of padding */
 {
@@ -190,8 +190,8 @@ Tk_PackObjCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     Tk_Window tkwin = clientData;
-    char *argv2;
-    static const char *optionStrings[] = {
+    const char *argv2;
+    static const char *const optionStrings[] = {
 	/* after, append, before and unpack are deprecated */
 	"after", "append", "before", "unpack",
 	"configure", "forget", "info", "propagate", "slaves", NULL };
@@ -201,7 +201,7 @@ Tk_PackObjCmd(
     int index;
 
     if (objc >= 2) {
-	char *string = Tcl_GetString(objv[1]);
+	const char *string = Tcl_GetString(objv[1]);
 
 	if (string[0] == '.') {
 	    return ConfigureSlaves(interp, tkwin, objc-1, objv+1);
@@ -407,6 +407,7 @@ Tk_PackObjCmd(
     case PACK_SLAVES: {
 	Tk_Window master;
 	Packer *masterPtr, *slavePtr;
+	Tcl_Obj *resultObj;
 
 	if (objc != 3) {
 	    Tcl_WrongNumArgs(interp, 2, objv, "window");
@@ -415,11 +416,14 @@ Tk_PackObjCmd(
 	if (TkGetWindowFromObj(interp, tkwin, objv[2], &master) != TCL_OK) {
 	    return TCL_ERROR;
 	}
+	resultObj = Tcl_NewObj();
 	masterPtr = GetPacker(master);
 	for (slavePtr = masterPtr->slavePtr; slavePtr != NULL;
 		slavePtr = slavePtr->nextPtr) {
-	    Tcl_AppendElement(interp, Tk_PathName(slavePtr->tkwin));
+	    Tcl_ListObjAppendElement(NULL, resultObj,
+		    TkNewWindowObj(slavePtr->tkwin));
 	}
+	Tcl_SetObjResult(interp, resultObj);
 	break;
     }
     case PACK_UNPACK: {
@@ -889,9 +893,11 @@ XExpansion(
 	childWidth = Tk_ReqWidth(slavePtr->tkwin) + slavePtr->doubleBw
 		+ slavePtr->padX + slavePtr->iPadX;
 	if ((slavePtr->side == TOP) || (slavePtr->side == BOTTOM)) {
-	    curExpand = (cavityWidth - childWidth)/numExpand;
-	    if (curExpand < minExpand) {
-		minExpand = curExpand;
+	    if (numExpand) {
+		curExpand = (cavityWidth - childWidth)/numExpand;
+		if (curExpand < minExpand) {
+		    minExpand = curExpand;
+		}
 	    }
 	} else {
 	    cavityWidth -= childWidth;
@@ -900,9 +906,11 @@ XExpansion(
 	    }
 	}
     }
-    curExpand = cavityWidth/numExpand;
-    if (curExpand < minExpand) {
-	minExpand = curExpand;
+    if (numExpand) {
+	curExpand = cavityWidth/numExpand;
+	if (curExpand < minExpand) {
+	    minExpand = curExpand;
+	}
     }
     return (minExpand < 0) ? 0 : minExpand;
 }
@@ -944,9 +952,11 @@ YExpansion(
 	childHeight = Tk_ReqHeight(slavePtr->tkwin) + slavePtr->doubleBw
 		+ slavePtr->padY + slavePtr->iPadY;
 	if ((slavePtr->side == LEFT) || (slavePtr->side == RIGHT)) {
-	    curExpand = (cavityHeight - childHeight)/numExpand;
-	    if (curExpand < minExpand) {
-		minExpand = curExpand;
+	    if (numExpand) {
+		curExpand = (cavityHeight - childHeight)/numExpand;
+		if (curExpand < minExpand) {
+		    minExpand = curExpand;
+		}
 	    }
 	} else {
 	    cavityHeight -= childHeight;
@@ -955,9 +965,11 @@ YExpansion(
 	    }
 	}
     }
-    curExpand = cavityHeight/numExpand;
-    if (curExpand < minExpand) {
-	minExpand = curExpand;
+    if (numExpand) {
+	curExpand = cavityHeight/numExpand;
+	if (curExpand < minExpand) {
+	    minExpand = curExpand;
+	}
     }
     return (minExpand < 0) ? 0 : minExpand;
 }
@@ -1123,7 +1135,7 @@ PackAfter(
 	packPtr->flags |= OLD_STYLE;
 	for (index = 0 ; index < optionCount; index++) {
 	    Tcl_Obj *curOptPtr = options[index];
-	    char *curOpt = Tcl_GetStringFromObj(curOptPtr, &length);
+	    const char *curOpt = Tcl_GetStringFromObj(curOptPtr, &length);
 
 	    c = curOpt[0];
 
@@ -1447,8 +1459,8 @@ ConfigureSlaves(
     Packer *masterPtr, *slavePtr, *prevPtr, *otherPtr;
     Tk_Window other, slave, parent, ancestor;
     int i, j, numWindows, tmp, positionGiven;
-    char *string;
-    static const char *optionStrings[] = {
+    const char *string;
+    static const char *const optionStrings[] = {
 	"-after", "-anchor", "-before", "-expand", "-fill",
 	"-in", "-ipadx", "-ipady", "-padx", "-pady", "-side", NULL };
     enum options {

@@ -22,8 +22,8 @@ Tk_CreatePhotoImageFormat \- define new file format for photo images
 .sp
 \fBTk_CreatePhotoImageFormat\fR(\fIformatPtr\fR)
 .SH ARGUMENTS
-.AS Tk_PhotoImageFormat *formatPtr
-.AP Tk_PhotoImageFormat *formatPtr in
+.AS "const Tk_PhotoImageFormat" *formatPtr
+.AP "const Tk_PhotoImageFormat" *formatPtr in
 Structure that defines the new file format.
 .BE
 .SH DESCRIPTION
@@ -47,7 +47,7 @@ handler to deal with files and strings in this format.  The
 Tk_PhotoImageFormat structure contains the following fields:
 .CS
 typedef struct Tk_PhotoImageFormat {
-    char *\fIname\fR;
+    const char *\fIname\fR;
     Tk_ImageFileMatchProc *\fIfileMatchProc\fR;
     Tk_ImageStringMatchProc *\fIstringMatchProc\fR;
     Tk_ImageFileReadProc *\fIfileReadProc\fR;

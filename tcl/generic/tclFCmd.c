@@ -121,7 +121,7 @@ FileCopyRename(
     if ((objc - i) < 2) {
 	Tcl_AppendResult(interp, "wrong # args: should be \"",
 		TclGetString(objv[0]), " ", TclGetString(objv[1]),
-		" ?options? source ?source ...? target\"", NULL);
+		" ?-option value ...? source ?source ...? target\"", NULL);
 	return TCL_ERROR;
     }
 
@@ -351,12 +351,6 @@ TclFileDeleteCmd(
 	return TCL_ERROR;
     }
     i += 2;
-    if ((objc - i) < 1) {
-	Tcl_AppendResult(interp, "wrong # args: should be \"",
-		TclGetString(objv[0]), " ", TclGetString(objv[1]),
-		" ?options? file ?file ...?\"", NULL);
-	return TCL_ERROR;
-    }
 
     errfile = NULL;
     result = TCL_OK;
@@ -522,12 +516,13 @@ CopyRenameOneFile(
 	}
 
 	/*
-	 * Prevent copying or renaming a file onto itself. Under Windows, stat
-	 * always returns 0 for st_ino. However, the Windows-specific code
-	 * knows how to deal with copying or renaming a file on top of itself.
-	 * It might be a good idea to write a stat that worked.
+	 * Prevent copying or renaming a file onto itself. On Windows since
+	 * 8.5 we do get an inode number, however the unsigned short field is
+	 * insufficient to accept the Win32 API file id so it is truncated to
+	 * 16 bits and we get collisions. See bug #2015723.
 	 */
 
+#ifndef WIN32
 	if ((sourceStatBuf.st_ino != 0) && (targetStatBuf.st_ino != 0)) {
 	    if ((sourceStatBuf.st_ino == targetStatBuf.st_ino) &&
 		    (sourceStatBuf.st_dev == targetStatBuf.st_dev)) {
@@ -535,6 +530,7 @@ CopyRenameOneFile(
 		goto done;
 	    }
 	}
+#endif
 
 	/*
 	 * Prevent copying/renaming a file onto a directory and vice-versa.
@@ -948,14 +944,15 @@ TclFileAttrsCmd(
     Tcl_Obj *const objv[])	/* The command line objects. */
 {
     int result;
-    const char ** attributeStrings;
+    const char *const *attributeStrings;
+    const char **attributeStringsAllocated = NULL;
     Tcl_Obj *objStrings = NULL;
     int numObjStrings = -1;
     Tcl_Obj *filePtr;
 
     if (objc < 3) {
 	Tcl_WrongNumArgs(interp, 2, objv,
-		"name ?option? ?value? ?option value ...?");
+		"name ?-option value ...?");
 	return TCL_ERROR;
     }
 
@@ -1001,13 +998,14 @@ TclFileAttrsCmd(
 	if (Tcl_ListObjLength(interp, objStrings, &numObjStrings) != TCL_OK) {
 	    goto end;
 	}
-	attributeStrings = (const char **)
+	attributeStringsAllocated = (const char **)
 		TclStackAlloc(interp, (1+numObjStrings) * sizeof(char *));
 	for (index = 0; index < numObjStrings; index++) {
 	    Tcl_ListObjIndex(interp, objStrings, index, &objPtr);
-	    attributeStrings[index] = TclGetString(objPtr);
+	    attributeStringsAllocated[index] = TclGetString(objPtr);
 	}
-	attributeStrings[index] = NULL;
+	attributeStringsAllocated[index] = NULL;
+	attributeStrings = attributeStringsAllocated;
     }
     if (objc == 0) {
 	/*
@@ -1107,12 +1105,12 @@ TclFileAttrsCmd(
     result = TCL_OK;
 
   end:
-    if (numObjStrings != -1) {
+    if (attributeStringsAllocated != NULL) {
 	/*
 	 * Free up the array we allocated.
 	 */
 
-	TclStackFree(interp, (void *)attributeStrings);
+	TclStackFree(interp, (void *)attributeStringsAllocated);
 
 	/*
 	 * We don't need this object that was passed to us any more.

@@ -52,7 +52,7 @@ static int traceInitialized = 0;
  * existence of a procedure call frame to distinguish these.
  */
 
-InstructionDesc tclInstructionTable[] = {
+InstructionDesc const tclInstructionTable[] = {
     /* Name	      Bytes stackEffect #Opnds  Operand types */
     {"done",		  1,   -1,         0,	{OPERAND_NONE}},
 	/* Finish ByteCode execution and return stktop (top stack item) */
@@ -422,7 +422,7 @@ static void		RecordByteCodeStats(ByteCode *codePtr);
 static int		SetByteCodeFromAny(Tcl_Interp *interp,
 			    Tcl_Obj *objPtr);
 static int		FormatInstruction(ByteCode *codePtr,
-			    unsigned char *pc, Tcl_Obj *bufferObj);
+			    const unsigned char *pc, Tcl_Obj *bufferObj);
 static void		PrintSourceToObj(Tcl_Obj *appendObj,
 			    const char *stringPtr, int maxChars);
 /*
@@ -438,7 +438,7 @@ static void		EnterCmdWordData(ExtCmdLoc *eclPtr, int srcOffset,
  * procedures that can be invoked by generic object code.
  */
 
-Tcl_ObjType tclByteCodeType = {
+const Tcl_ObjType tclByteCodeType = {
     "bytecode",			/* name */
     FreeByteCodeInternalRep,	/* freeIntRepProc */
     DupByteCodeInternalRep,	/* dupIntRepProc */
@@ -482,7 +482,7 @@ TclSetByteCodeFromAny(
     Interp *iPtr = (Interp *) interp;
     CompileEnv compEnv;		/* Compilation environment structure allocated
 				 * in frame. */
-    register AuxData *auxDataPtr;
+    register const AuxData *auxDataPtr;
     LiteralEntry *entryPtr;
     register int i;
     int length, result = TCL_OK;
@@ -691,7 +691,7 @@ TclCleanupByteCode(
     int numLitObjects = codePtr->numLitObjects;
     int numAuxDataItems = codePtr->numAuxDataItems;
     register Tcl_Obj **objArrayPtr, *objPtr;
-    register AuxData *auxDataPtr;
+    register const AuxData *auxDataPtr;
     int i;
 #ifdef TCL_COMPILE_STATS
 
@@ -813,6 +813,8 @@ TclCleanupByteCode(
 		ckfree((char *) eclPtr->loc);
 	    }
 
+	    Tcl_DeleteHashTable (&eclPtr->litInfo);
+
 	    ckfree((char *) eclPtr);
 	    Tcl_DeleteHashEntry(hePtr);
 	}
@@ -861,6 +863,7 @@ TclInitCompileEnv(
     envPtr->source = stringPtr;
     envPtr->numSrcBytes = numBytes;
     envPtr->procPtr = iPtr->compiledProcPtr;
+    iPtr->compiledProcPtr = NULL;
     envPtr->numCommands = 0;
     envPtr->exceptDepth = 0;
     envPtr->maxExceptDepth = 0;
@@ -902,24 +905,74 @@ TclInitCompileEnv(
     envPtr->extCmdMapPtr->nloc = 0;
     envPtr->extCmdMapPtr->nuloc = 0;
     envPtr->extCmdMapPtr->path = NULL;
+    Tcl_InitHashTable(&envPtr->extCmdMapPtr->litInfo, TCL_ONE_WORD_KEYS);
 
-    if (invoker == NULL) {
-        /*
-	 * Initialize the compiler for relative counting.
+    if ((invoker == NULL) || (invoker->type == TCL_LOCATION_EVAL_LIST)) {
+	/*
+	 * Initialize the compiler for relative counting in case of a
+	 * dynamic context.
 	 */
 
 	envPtr->line = 1;
-	envPtr->extCmdMapPtr->type =
+	if (iPtr->evalFlags & TCL_EVAL_FILE) {
+	    iPtr->evalFlags &= ~TCL_EVAL_FILE;
+	    envPtr->extCmdMapPtr->type = TCL_LOCATION_SOURCE;
+
+	    if (iPtr->scriptFile) {
+		/*
+		 * Normalization here, to have the correct pwd. Should have
+		 * negligible impact on performance, as the norm should have
+		 * been done already by the 'source' invoking us, and it
+		 * caches the result.
+		 */
+
+		Tcl_Obj *norm = Tcl_FSGetNormalizedPath(interp, iPtr->scriptFile);
+
+		if (norm == NULL) {
+		    /*
+		     * Error message in the interp result. No place to put
+		     * it. And no place to serve the error itself to either.
+		     * Fake a path, empty string.
+		     */
+
+		    TclNewLiteralStringObj(envPtr->extCmdMapPtr->path, "");
+		} else {
+		    envPtr->extCmdMapPtr->path = norm;
+		}
+	    } else {
+		TclNewLiteralStringObj(envPtr->extCmdMapPtr->path, "");
+	    }
+
+	    Tcl_IncrRefCount(envPtr->extCmdMapPtr->path);
+	} else {
+	    envPtr->extCmdMapPtr->type =
 		(envPtr->procPtr ? TCL_LOCATION_PROC : TCL_LOCATION_BC);
+	}
     } else {
-        /*
+	/*
 	 * Initialize the compiler using the context, making counting absolute
 	 * to that context. Note that the context can be byte code execution.
 	 * In that case we have to fill out the missing pieces (line, path,
 	 * ...) which may make change the type as well.
 	 */
 
-	if ((invoker->nline <= word) || (invoker->line[word] < 0)) {
+	CmdFrame *ctxPtr;
+	int pc = 0;
+
+	ctxPtr = (CmdFrame *) TclStackAlloc(interp, sizeof(CmdFrame));
+	*ctxPtr = *invoker;
+
+	if (invoker->type == TCL_LOCATION_BC) {
+	    /*
+	     * Note: Type BC => ctx.data.eval.path    is not used.
+	     *			ctx.data.tebc.codePtr is used instead.
+	     */
+
+	    TclGetSrcInfoForPc(ctxPtr);
+	    pc = 1;
+	}
+
+	if ((ctxPtr->nline <= word) || (ctxPtr->line[word] < 0)) {
 	    /*
 	     * Word is not a literal, relative counting.
 	     */
@@ -927,46 +980,40 @@ TclInitCompileEnv(
 	    envPtr->line = 1;
 	    envPtr->extCmdMapPtr->type =
 		    (envPtr->procPtr ? TCL_LOCATION_PROC : TCL_LOCATION_BC);
-	} else {
-	    CmdFrame *ctxPtr;
-	    int pc = 0;
 
-	    ctxPtr = (CmdFrame *) TclStackAlloc(interp, sizeof(CmdFrame));
-	    *ctxPtr = *invoker;
-
-	    if (invoker->type == TCL_LOCATION_BC) {
+	    if (pc && (ctxPtr->type == TCL_LOCATION_SOURCE)) {
 		/*
-		 * Note: Type BC => ctx.data.eval.path    is not used.
-		 *                  ctx.data.tebc.codePtr is used instead.
+		 * The reference made by 'TclGetSrcInfoForPc' is dead.
 		 */
-
-		TclGetSrcInfoForPc(ctxPtr);
-		pc = 1;
+		Tcl_DecrRefCount(ctxPtr->data.eval.path);
 	    }
-
+	} else {
 	    envPtr->line = ctxPtr->line[word];
 	    envPtr->extCmdMapPtr->type = ctxPtr->type;
 
 	    if (ctxPtr->type == TCL_LOCATION_SOURCE) {
+		envPtr->extCmdMapPtr->path = ctxPtr->data.eval.path;
+
 		if (pc) {
 		    /*
 		     * The reference 'TclGetSrcInfoForPc' made is transfered.
 		     */
 
-		    envPtr->extCmdMapPtr->path = ctxPtr->data.eval.path;
 		    ctxPtr->data.eval.path = NULL;
 		} else {
 		    /*
 		     * We have a new reference here.
 		     */
 
-		    envPtr->extCmdMapPtr->path = ctxPtr->data.eval.path;
 		    Tcl_IncrRefCount(envPtr->extCmdMapPtr->path);
 		}
 	    }
-	    TclStackFree(interp, ctxPtr);
 	}
+
+	TclStackFree(interp, ctxPtr);
     }
+
+    envPtr->extCmdMapPtr->start = envPtr->line;
 
     envPtr->auxDataArrayPtr = envPtr->staticAuxDataArraySpace;
     envPtr->auxDataArrayNext = 0;
@@ -1143,7 +1190,7 @@ TclCompileScript(
     Namespace *cmdNsPtr;
     Command *cmdPtr;
     Tcl_Token *tokenPtr;
-    int bytesLeft, isFirstCmd, gotParse, wordIdx, currCmdIndex;
+    int bytesLeft, isFirstCmd, wordIdx, currCmdIndex;
     int commandLength, objIndex;
     Tcl_DString ds;
     /* TIP #280 */
@@ -1173,7 +1220,6 @@ TclCompileScript(
 
     p = script;
     bytesLeft = numBytes;
-    gotParse = 0;
     cmdLine = envPtr->line;
     do {
 	if (Tcl_ParseCommand(interp, p, bytesLeft, 0, parsePtr) != TCL_OK) {
@@ -1189,7 +1235,6 @@ TclCompileScript(
 	    TclCompileSyntaxError(interp, envPtr);
 	    break;
 	}
-	gotParse = 1;
 	if (parsePtr->numWords > 0) {
 	    int expand = 0;	/* Set if there are dynamic expansions to
 				 * handle */
@@ -1329,6 +1374,7 @@ TclCompileScript(
 
 		    if ((cmdPtr != NULL)
 			    && (cmdPtr->compileProc != NULL)
+			    && !(cmdPtr->nsPtr->flags&NS_SUPPRESS_COMPILATION)
 			    && !(cmdPtr->flags & CMD_HAS_EXEC_TRACES)
 			    && !(iPtr->flags & DONT_COMPILE_CMDS_INLINE)) {
 			int savedNumCmds = envPtr->numCommands;
@@ -1374,8 +1420,8 @@ TclCompileScript(
 			    update = 1;
 			}
 
-			code = (cmdPtr->compileProc)(interp, parsePtr,
-				cmdPtr, envPtr);
+			code = cmdPtr->compileProc(interp, parsePtr, cmdPtr,
+				envPtr);
 
 			if (code == TCL_OK) {
 			    if (update) {
@@ -1429,18 +1475,27 @@ TclCompileScript(
 			    tokenPtr[1].start, tokenPtr[1].size);
 		    if (cmdPtr != NULL) {
 			TclSetCmdNameObj(interp,
-			      envPtr->literalArrayPtr[objIndex].objPtr,cmdPtr);
+				envPtr->literalArrayPtr[objIndex].objPtr,
+				cmdPtr);
 		    }
 		    if ((wordIdx == 0) && (parsePtr->numWords == 1)) {
 			/*
 			 * Single word script: unshare the command name to
 			 * avoid shimmering between bytecode and cmdName
-			 * representations [Bug 458361]
+			 * representations. [Bug 458361]
 			 */
 
 			TclHideLiteral(interp, envPtr, objIndex);
 		    }
 		} else {
+		    /*
+		     * Simple argument word of a command. We reach this if and
+		     * only if the command word was not compiled for whatever
+		     * reason. Register the literal's location for use by
+		     * uplevel, etc. commands, should they encounter it
+		     * unmodified. We care only if the we are in a context
+		     * which already allows absolute counting.
+		     */
 		    objIndex = TclRegisterNewLiteral(envPtr,
 			    tokenPtr[1].start, tokenPtr[1].size);
 		}
@@ -1472,6 +1527,15 @@ TclCompileScript(
 		TclEmitOpcode(INST_INVOKE_EXPANDED, envPtr);
 		TclAdjustStackDepth((1-wordIdx), envPtr);
 	    } else if (wordIdx > 0) {
+		/*
+		 * Save PC -> command map for the TclArgumentBC* functions.
+		 */
+
+		int isnew;
+		Tcl_HashEntry* hePtr = Tcl_CreateHashEntry(&eclPtr->litInfo,
+			   (char*) (envPtr->codeNext - envPtr->codeStart), &isnew);
+		Tcl_SetHashValue(hePtr, INT2PTR(wlineat));
+
 		if (wordIdx <= 255) {
 		    TclEmitInstInt1(INST_INVOKE_STK1, wordIdx, envPtr);
 		} else {
@@ -1512,7 +1576,6 @@ TclCompileScript(
 
 	TclAdvanceLines(&cmdLine, parsePtr->commandStart, p);
 	Tcl_FreeParse(parsePtr);
-	gotParse = 0;
     } while (bytesLeft > 0);
 
     /*
@@ -1633,19 +1696,17 @@ TclCompileTokens(
 
 	    name = tokenPtr[1].start;
 	    nameBytes = tokenPtr[1].size;
-	    localVarName = -1;
-	    if (envPtr->procPtr != NULL) {
-		localVarName = 1;
-		for (i = 0, p = name;  i < nameBytes;  i++, p++) {
-		    if ((*p == ':') && (i < nameBytes-1) && (*(p+1) == ':')) {
-			localVarName = -1;
-			break;
-		    } else if ((*p == '(')
-			    && (tokenPtr->numComponents == 1)
-			    && (*(name + nameBytes - 1) == ')')) {
-			localVarName = 0;
-			break;
-		    }
+
+	    localVarName = 1;
+	    for (i = 0, p = name;  i < nameBytes;  i++, p++) {
+		if ((*p == ':') && (i < nameBytes-1) && (*(p+1) == ':')) {
+		    localVarName = -1;
+		    break;
+		} else if ((*p == '(')
+			&& (tokenPtr->numComponents == 1)
+			&& (*(name + nameBytes - 1) == ')')) {
+		    localVarName = 0;
+		    break;
 		}
 	    }
 
@@ -1863,8 +1924,8 @@ TclCompileExprWords(
  *
  * Side effects:
  *	Instructions are added to envPtr to execute a no-op at runtime. No
- *      result is pushed onto the stack: the compiler has to take care of this
- *      itself if the last compiled command is a NoOp.
+ *	result is pushed onto the stack: the compiler has to take care of this
+ *	itself if the last compiled command is a NoOp.
  *
  *----------------------------------------------------------------------
  */
@@ -2096,7 +2157,7 @@ TclFindCompiledLocal(
     int nameBytes,		/* Number of bytes in the name. */
     int create,			/* If 1, allocate a local frame entry for the
 				 * variable if it is new. */
-    CompileEnv *envPtr)	        /* Points to the current compile environment*/
+    CompileEnv *envPtr)		/* Points to the current compile environment*/
 {
     register CompiledLocal *localPtr;
     int localVar = -1;
@@ -2112,12 +2173,12 @@ TclFindCompiledLocal(
 
     if (procPtr == NULL) {
 	/*
-	 * Compiling a non-body script: give it read access to the LVT in the 
+	 * Compiling a non-body script: give it read access to the LVT in the
 	 * current localCache
 	 */
 
 	LocalCache *cachePtr = envPtr->iPtr->varFramePtr->localCachePtr;
-	char *localName;
+	const char *localName;
 	Tcl_Obj **varNamePtr;
 	int len;
 
@@ -2136,7 +2197,7 @@ TclFindCompiledLocal(
 	}
 	return -1;
     }
-    
+
     if (name != NULL) {
 	int localCt = procPtr->numCompiledLocals;
 
@@ -2417,7 +2478,7 @@ EnterCmdWordData(
 	size_t newElems = (currElems ? 2*currElems : 1);
 	size_t newBytes = newElems * sizeof(ECL);
 
-	eclPtr->loc = (ECL *) ckrealloc((char *)(eclPtr->loc), newBytes);
+	eclPtr->loc = (ECL *) ckrealloc((char *) eclPtr->loc, newBytes);
 	eclPtr->nloc = newElems;
     }
 
@@ -2431,7 +2492,7 @@ EnterCmdWordData(
     wordLine = line;
     for (wordIdx=0 ; wordIdx<numWords;
 	    wordIdx++, tokenPtr += tokenPtr->numComponents + 1) {
-        TclAdvanceLines(&wordLine, last, tokenPtr->start);
+	TclAdvanceLines(&wordLine, last, tokenPtr->start);
 	wwlines[wordIdx] =
 		(TclWordKnownAtCompileTime(tokenPtr, NULL) ? wordLine : -1);
 	ePtr->line[wordIdx] = wordLine;
@@ -2485,7 +2546,7 @@ TclCreateExceptRange(
 
 	if (envPtr->mallocedExceptArray) {
 	    envPtr->exceptArrayPtr = (ExceptionRange *)
-		    ckrealloc((char *)(envPtr->exceptArrayPtr), newBytes);
+		    ckrealloc((char *) envPtr->exceptArrayPtr, newBytes);
 	} else {
 	    /*
 	     * envPtr->exceptArrayPtr isn't a ckalloc'd pointer, so we must
@@ -2539,7 +2600,7 @@ int
 TclCreateAuxData(
     ClientData clientData,	/* The compilation auxiliary data to store in
 				 * the new aux data record. */
-    AuxDataType *typePtr,	/* Pointer to the type to attach to this
+    const AuxDataType *typePtr,	/* Pointer to the type to attach to this
 				 * AuxData */
     register CompileEnv *envPtr)/* Points to the CompileEnv for which a new
 				 * aux data structure is to be allocated. */
@@ -2562,7 +2623,7 @@ TclCreateAuxData(
 
 	if (envPtr->mallocedAuxDataArray) {
 	    envPtr->auxDataArrayPtr = (AuxData *)
-		    ckrealloc((char *)(envPtr->auxDataArrayPtr), newBytes);
+		    ckrealloc((char *) envPtr->auxDataArrayPtr, newBytes);
 	} else {
 	    /*
 	     * envPtr->auxDataArrayPtr isn't a ckalloc'd pointer, so we must
@@ -2650,7 +2711,7 @@ TclExpandJumpFixupArray(
 
     if (fixupArrayPtr->mallocedArray) {
 	fixupArrayPtr->fixup = (JumpFixup *)
-		ckrealloc((char *)(fixupArrayPtr->fixup), newBytes);
+		ckrealloc((char *) fixupArrayPtr->fixup, newBytes);
     } else {
 	/*
 	 * fixupArrayPtr->fixup isn't a ckalloc'd pointer, so we must
@@ -2890,7 +2951,7 @@ TclFixupForwardJump(
  *----------------------------------------------------------------------
  */
 
-void * /* == InstructionDesc* == */
+const void * /* == InstructionDesc* == */
 TclGetInstructionTable(void)
 {
     return &tclInstructionTable[0];
@@ -2917,7 +2978,7 @@ TclGetInstructionTable(void)
 
 void
 TclRegisterAuxDataType(
-    AuxDataType *typePtr)	/* Information about object type; storage must
+    const AuxDataType *typePtr)	/* Information about object type; storage must
 				 * be statically allocated (must live forever;
 				 * will not be deallocated). */
 {
@@ -2966,12 +3027,12 @@ TclRegisterAuxDataType(
  *----------------------------------------------------------------------
  */
 
-AuxDataType *
+const AuxDataType *
 TclGetAuxDataType(
-    char *typeName)		/* Name of AuxData type to look up. */
+    const char *typeName)		/* Name of AuxData type to look up. */
 {
     register Tcl_HashEntry *hPtr;
-    AuxDataType *typePtr = NULL;
+    const AuxDataType *typePtr = NULL;
 
     Tcl_MutexLock(&tableMutex);
     if (!auxDataTypeTableInitialized) {
@@ -2980,7 +3041,7 @@ TclGetAuxDataType(
 
     hPtr = Tcl_FindHashEntry(&auxDataTypeTable, typeName);
     if (hPtr != NULL) {
-	typePtr = (AuxDataType *) Tcl_GetHashValue(hPtr);
+	typePtr = (const AuxDataType *) Tcl_GetHashValue(hPtr);
     }
     Tcl_MutexUnlock(&tableMutex);
 
@@ -3109,7 +3170,7 @@ GetCmdLocEncodingSize(
 	}
 
 	srcDelta = (mapPtr[i].srcOffset - prevSrcOffset);
-	if ((-127 <= srcDelta) && (srcDelta <= 127)) {
+	if ((-127 <= srcDelta) && (srcDelta <= 127) && (srcDelta != -1)) {
 	    srcDeltaNext++;
 	} else {
 	    srcDeltaNext += 5;	 /* 1 byte for 0xFF, 4 for delta */
@@ -3217,7 +3278,7 @@ EncodeCmdLocMap(
     prevOffset = 0;
     for (i = 0;  i < numCmds;  i++) {
 	srcDelta = (mapPtr[i].srcOffset - prevOffset);
-	if ((-127 <= srcDelta) && (srcDelta <= 127)) {
+	if ((-127 <= srcDelta) && (srcDelta <= 127) && (srcDelta != -1)) {
 	    TclStoreInt1AtPtr(srcDelta, p);
 	    p++;
 	} else {
@@ -3301,7 +3362,7 @@ TclPrintByteCodeObj(
 int
 TclPrintInstruction(
     ByteCode *codePtr,		/* Bytecode containing the instruction. */
-    unsigned char *pc)		/* Points to first byte of instruction. */
+    const unsigned char *pc)		/* Points to first byte of instruction. */
 {
     Tcl_Obj *bufferObj;
     int numBytes;
@@ -3671,12 +3732,12 @@ TclDisassembleByteCodeObj(
 static int
 FormatInstruction(
     ByteCode *codePtr,		/* Bytecode containing the instruction. */
-    unsigned char *pc,		/* Points to first byte of instruction. */
+    const unsigned char *pc,	/* Points to first byte of instruction. */
     Tcl_Obj *bufferObj)		/* Object to append instruction info to. */
 {
     Proc *procPtr = codePtr->procPtr;
     unsigned char opCode = *pc;
-    register InstructionDesc *instDesc = &tclInstructionTable[opCode];
+    register const InstructionDesc *instDesc = &tclInstructionTable[opCode];
     unsigned char *codeStart = codePtr->codeStart;
     unsigned pcOffset = pc - codeStart;
     int opnd = 0, i, j, numBytes = 1;
@@ -3772,7 +3833,7 @@ FormatInstruction(
 	}
     }
     if (suffixObj) {
-	char *bytes;
+	const char *bytes;
 	int length;
 
 	Tcl_AppendToObj(bufferObj, "\t# ", -1);
@@ -3884,7 +3945,7 @@ RecordByteCodeStats(
     statsPtr->currentByteCodeBytes += (double) codePtr->structureSize;
 
     statsPtr->srcCount[TclLog2(codePtr->numSrcBytes)]++;
-    statsPtr->byteCodeCount[TclLog2((int)(codePtr->structureSize))]++;
+    statsPtr->byteCodeCount[TclLog2((int) codePtr->structureSize)]++;
 
     statsPtr->currentInstBytes += (double) codePtr->numCodeBytes;
     statsPtr->currentLitBytes += (double)

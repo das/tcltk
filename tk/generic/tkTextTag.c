@@ -25,7 +25,7 @@
  * a whole is not.
  */
 
-static char *wrapStrings[] = {
+static const char *const wrapStrings[] = {
     "char", "none", "word", "", NULL
 };
 
@@ -36,7 +36,7 @@ static char *wrapStrings[] = {
  * widget as a whole is not.
  */
 
-static char *tabStyleStrings[] = {
+static const char *const tabStyleStrings[] = {
     "tabular", "wordprocessor", "", NULL
 };
 
@@ -132,7 +132,7 @@ TkTextTagCmd(
 				 * parsed this command enough to know that
 				 * objv[1] is "tag". */
 {
-    static const char *tagOptionStrings[] = {
+    static const char *const tagOptionStrings[] = {
 	"add", "bind", "cget", "configure", "delete", "lower", "names",
 	"nextrange", "prevrange", "raise", "ranges", "remove", NULL
     };
@@ -146,7 +146,7 @@ TkTextTagCmd(
     TkTextIndex index1, index2;
 
     if (objc < 3) {
-	Tcl_WrongNumArgs(interp, 2, objv, "option ?arg arg ...?");
+	Tcl_WrongNumArgs(interp, 2, objv, "option ?arg ...?");
 	return TCL_ERROR;
     }
 
@@ -253,7 +253,7 @@ TkTextTagCmd(
 	if (objc == 6) {
 	    int append = 0;
 	    unsigned long mask;
-	    char *fifth = Tcl_GetString(objv[5]);
+	    const char *fifth = Tcl_GetString(objv[5]);
 
 	    if (fifth[0] == 0) {
 		return Tk_DeleteBinding(interp,
@@ -336,7 +336,7 @@ TkTextTagCmd(
 
 	if (objc < 4) {
 	    Tcl_WrongNumArgs(interp, 3, objv,
-		    "tagName ?option? ?value? ?option value ...?");
+		    "tagName ?-option? ?value? ?-option value ...?");
 	    return TCL_ERROR;
 	}
 	tagPtr = TkTextCreateTag(textPtr, Tcl_GetString(objv[3]), &newTag);
@@ -1686,7 +1686,7 @@ TagBindEvent(
     int numTags,		/* Number of relevant tags. */
     TkTextTag **tagArrayPtr)	/* Array of relevant tags. */
 {
-    #define NUM_BIND_TAGS 10
+#   define NUM_BIND_TAGS 10
     const char *nameArray[NUM_BIND_TAGS];
     const char **nameArrPtr;
     int i;

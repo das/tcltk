@@ -49,7 +49,7 @@ static Tk_OptionSpec ScrollbarOptionSpecs[] =
  * +++ Widget hooks.
  */
 
-static int 
+static void 
 ScrollbarInitialize(Tcl_Interp *interp, void *recordPtr)
 {
     Scrollbar *sb = recordPtr;
@@ -57,8 +57,6 @@ ScrollbarInitialize(Tcl_Interp *interp, void *recordPtr)
     sb->scrollbar.last = 1.0;
 
     TtkTrackElementState(&sb->core);
-
-    return TCL_OK;
 }
 
 static Ttk_Layout ScrollbarGetLayout(
@@ -80,7 +78,7 @@ static void ScrollbarDoLayout(void *recordPtr)
 {
     Scrollbar *sb = recordPtr;
     WidgetCore *corePtr = &sb->core;
-    Ttk_LayoutNode *thumb;
+    Ttk_Element thumb;
     Ttk_Box thumbBox;
     int thumbWidth, thumbHeight;
     double first, last, size;
@@ -94,11 +92,11 @@ static void ScrollbarDoLayout(void *recordPtr)
     /*
      * Locate thumb element, extract parcel and requested minimum size:
      */
-    thumb = Ttk_LayoutFindNode(corePtr->layout, "thumb");
+    thumb = Ttk_FindElement(corePtr->layout, "thumb");
     if (!thumb)	/* Something has gone wrong -- bail */
 	return;
 
-    sb->scrollbar.troughBox = thumbBox = Ttk_LayoutNodeParcel(thumb);
+    sb->scrollbar.troughBox = thumbBox = Ttk_ElementParcel(thumb);
     Ttk_LayoutNodeReqSize(
 	corePtr->layout, thumb, &thumbWidth,&thumbHeight);
 
@@ -120,7 +118,7 @@ static void ScrollbarDoLayout(void *recordPtr)
 	thumbBox.width = (int)(size * last) + minSize - (int)(size * first);
     }
     sb->scrollbar.minSize = minSize;
-    Ttk_PlaceLayoutNode(corePtr->layout, thumb, thumbBox);
+    Ttk_PlaceElement(corePtr->layout, thumb, thumbBox);
 }
 
 /*------------------------------------------------------------------------

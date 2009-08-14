@@ -164,7 +164,7 @@ enum labelanchor {
     LABELANCHOR_W, LABELANCHOR_WN, LABELANCHOR_WS
 };
 
-static char *labelAnchorStrings[] = {
+static const char *labelAnchorStrings[] = {
     "e", "en", "es", "n", "ne", "nw", "s", "se", "sw", "w", "wn", "ws",
     NULL
 };
@@ -283,7 +283,7 @@ static const Tk_OptionSpec labelframeOptSpec[] = {
  * Class names for widgets, indexed by FrameType.
  */
 
-static char *classNames[] = {"Frame", "Toplevel", "Labelframe"};
+static const char *const classNames[] = {"Frame", "Toplevel", "Labelframe"};
 
 /*
  * The following table maps from FrameType to the option template for that
@@ -305,7 +305,7 @@ static int		ConfigureFrame(Tcl_Interp *interp, Frame *framePtr,
 			    int objc, Tcl_Obj *const objv[]);
 static int		CreateFrame(ClientData clientData, Tcl_Interp *interp,
 			    int objc, Tcl_Obj *const argv[],
-			    enum FrameType type, char *appName);
+			    enum FrameType type, const char *appName);
 static void		DestroyFrame(char *memPtr);
 static void		DestroyFramePartly(Frame *framePtr);
 static void		DisplayFrame(ClientData clientData);
@@ -418,10 +418,10 @@ TkCreateFrame(
     ClientData clientData,	/* Either NULL or pointer to option table. */
     Tcl_Interp *interp,		/* Current interpreter. */
     int argc,			/* Number of arguments. */
-    char **argv,		/* Argument strings. */
+    const char *const *argv,	/* Argument strings. */
     int toplevel,		/* Non-zero means create a toplevel window,
 				 * zero means create a frame. */
-    char *appName)		/* Should only be non-NULL if there is no main
+    const char *appName)	/* Should only be non-NULL if there is no main
 				 * window associated with the interpreter.
 				 * Gives the base name to use for the new
 				 * application. */
@@ -450,7 +450,7 @@ CreateFrame(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[],	/* Argument objects. */
     enum FrameType type,	/* What widget type to create. */
-    char *appName)		/* Should only be non-NULL if there are no
+    const char *appName)		/* Should only be non-NULL if there are no
 				 * Main window associated with the
 				 * interpreter. Gives the base name to use for
 				 * the new application. */
@@ -467,7 +467,7 @@ CreateFrame(
     Visual *visual;
 
     if (objc < 2) {
-	Tcl_WrongNumArgs(interp, 1, objv, "pathName ?options?");
+	Tcl_WrongNumArgs(interp, 1, objv, "pathName ?-option value ...?");
 	return TCL_ERROR;
     }
 
@@ -556,6 +556,12 @@ CreateFrame(
     }
     if (newWin == NULL) {
 	goto error;
+    } else {
+	/*
+	 * Mark Tk frames as suitable candidates for [wm manage]
+	 */
+	TkWindow *winPtr = (TkWindow *)newWin;
+	winPtr->flags |= TK_WM_MANAGEABLE;
     }
     if (className == NULL) {
 	className = Tk_GetOption(newWin, "class", "Class");
@@ -667,7 +673,7 @@ CreateFrame(
     if (type == TYPE_TOPLEVEL) {
 	Tcl_DoWhenIdle(MapFrame, framePtr);
     }
-    Tcl_SetResult(interp, Tk_PathName(newWin), TCL_STATIC);
+    Tcl_SetObjResult(interp, TkNewWindowObj(newWin));
     return TCL_OK;
 
   error:
@@ -702,7 +708,7 @@ FrameWidgetObjCmd(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
-    static const char *frameOptions[] = {
+    static const char *const frameOptions[] = {
 	"cget", "configure", NULL
     };
     enum options {
@@ -714,7 +720,7 @@ FrameWidgetObjCmd(
     Tcl_Obj *objPtr;
 
     if (objc < 2) {
-	Tcl_WrongNumArgs(interp, 1, objv, "option ?arg arg ...?");
+	Tcl_WrongNumArgs(interp, 1, objv, "option ?arg ...?");
 	return TCL_ERROR;
     }
     if (Tcl_GetIndexFromObj(interp, objv[1], frameOptions, "option", 0,
@@ -754,7 +760,7 @@ FrameWidgetObjCmd(
 	     */
 
 	    for (i = 2; i < objc; i++) {
-		char *arg = Tcl_GetStringFromObj(objv[i], &length);
+		const char *arg = Tcl_GetStringFromObj(objv[i], &length);
 		if (length < 2) {
 		    continue;
 		}
@@ -934,9 +940,8 @@ ConfigureFrame(
 	    ckfree(oldMenuName);
 	}
 	return TCL_ERROR;
-    } else {
-	Tk_FreeSavedOptions(&savedOptions);
     }
+    Tk_FreeSavedOptions(&savedOptions);
 
     /*
      * A few of the options require additional processing.
@@ -1066,7 +1071,7 @@ FrameWorldChanged(
     GC gc;
     int anyTextLabel, anyWindowLabel;
     int bWidthLeft, bWidthRight, bWidthTop, bWidthBottom;
-    char *labelText;
+    const char *labelText;
 
     anyTextLabel = (framePtr->type == TYPE_LABELFRAME) &&
 	    (labelframePtr->textPtr != NULL) &&
@@ -1267,10 +1272,14 @@ ComputeFrameGeometry(
     if ((labelframePtr->labelAnchor >= LABELANCHOR_N) &&
 	    (labelframePtr->labelAnchor <= LABELANCHOR_SW)) {
 	maxWidth -= padding;
-	if (maxWidth < 1) maxWidth = 1;
+	if (maxWidth < 1) {
+	    maxWidth = 1;
+	}
     } else {
 	maxHeight -= padding;
-	if (maxHeight < 1) maxHeight = 1;
+	if (maxHeight < 1) {
+	    maxHeight = 1;
+	}
     }
     if (labelframePtr->labelBox.width > maxWidth) {
 	labelframePtr->labelBox.width = maxWidth;
@@ -1916,8 +1925,8 @@ FrameLostSlaveProc(
 }
 
 void
-TkMapTopFrame (tkwin)
-     Tk_Window tkwin;
+TkMapTopFrame(
+     Tk_Window tkwin)
 {
     Frame *framePtr = ((TkWindow*)tkwin)->instanceData;
     Tk_OptionTable optionTable;

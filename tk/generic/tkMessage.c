@@ -224,7 +224,7 @@ Tk_MessageObjCmd(
     Tk_Window tkwin;
 
     if (objc < 2) {
-	Tcl_WrongNumArgs(interp, 1, objv, "pathName ?options?");
+	Tcl_WrongNumArgs(interp, 1, objv, "pathName ?-option value ...?");
 	return TCL_ERROR;
     }
 
@@ -307,14 +307,14 @@ MessageWidgetObjCmd(
     Tcl_Obj *const objv[])	/* Argument strings. */
 {
     register Message *msgPtr = clientData;
-    static const char *optionStrings[] = { "cget", "configure", NULL };
+    static const char *const optionStrings[] = { "cget", "configure", NULL };
     enum options { MESSAGE_CGET, MESSAGE_CONFIGURE };
     int index;
     int result = TCL_OK;
     Tcl_Obj *objPtr;
 
     if (objc < 2) {
-	Tcl_WrongNumArgs(interp, 1, objv, "option ?arg arg ...?");
+	Tcl_WrongNumArgs(interp, 1, objv, "option ?arg ...?");
 	return TCL_ERROR;
     }
 

@@ -27,13 +27,13 @@ typedef struct SmoothAssocData {
 				 * option. */
 } SmoothAssocData;
 
-Tk_SmoothMethod tkBezierSmoothMethod = {
+const Tk_SmoothMethod tkBezierSmoothMethod = {
     "true",
     TkMakeBezierCurve,
     (void (*) (Tcl_Interp *interp, Tk_Canvas canvas, double *coordPtr,
 	    int numPoints, int numSteps)) TkMakeBezierPostscript,
 };
-static Tk_SmoothMethod tkRawSmoothMethod = {
+static const Tk_SmoothMethod tkRawSmoothMethod = {
     "raw",
     TkMakeRawCurve,
     (void (*) (Tcl_Interp *interp, Tk_Canvas canvas, double *coordPtr,
@@ -261,12 +261,7 @@ Tk_CanvasGetCoordFromObj(
 				 * form may be used here). */
     double *doublePtr)		/* Place to store converted coordinate. */
 {
-    if (Tk_GetMMFromObj(Canvas(canvas)->interp, Canvas(canvas)->tkwin, obj,
-	    doublePtr) != TCL_OK) {
-	return TCL_ERROR;
-    }
-    *doublePtr *= Canvas(canvas)->pixelsPerMM;
-    return TCL_OK;
+    return Tk_GetDoublePixelsFromObj(Canvas(canvas)->interp, Canvas(canvas)->tkwin, obj, doublePtr);
 }
 
 /*
@@ -457,7 +452,7 @@ Tk_CanvasTagsParseProc(
  *--------------------------------------------------------------
  */
 
-char *
+const char *
 Tk_CanvasTagsPrintProc(
     ClientData clientData,	/* Ignored. */
     Tk_Window tkwin,		/* Window containing canvas widget. */
@@ -475,7 +470,7 @@ Tk_CanvasTagsPrintProc(
     }
     if (itemPtr->numTags == 1) {
 	*freeProcPtr = NULL;
-	return (char *) itemPtr->tagPtr[0];
+	return (const char *) itemPtr->tagPtr[0];
     }
     *freeProcPtr = TCL_DYNAMIC;
     return Tcl_Merge(itemPtr->numTags, (const char **) itemPtr->tagPtr);
@@ -533,7 +528,7 @@ TkCanvasDashParseProc(
  *--------------------------------------------------------------
  */
 
-char *
+const char *
 TkCanvasDashPrintProc(
     ClientData clientData,	/* Ignored. */
     Tk_Window tkwin,		/* Window containing canvas widget. */
@@ -633,7 +628,7 @@ InitSmoothMethods(
 void
 Tk_CreateSmoothMethod(
     Tcl_Interp *interp,
-    Tk_SmoothMethod *smooth)
+    const Tk_SmoothMethod *smooth)
 {
     SmoothAssocData *methods, *typePtr2, *prevPtr, *ptr;
     methods = Tcl_GetAssocData(interp, "smoothMethod", NULL);
@@ -728,9 +723,9 @@ TkSmoothParseProc(
     char *widgRec,		/* Pointer to record for item. */
     int offset)			/* Offset into item. */
 {
-    register Tk_SmoothMethod **smoothPtr =
-	    (Tk_SmoothMethod **) (widgRec + offset);
-    Tk_SmoothMethod *smooth = NULL;
+    register const Tk_SmoothMethod **smoothPtr =
+	    (const Tk_SmoothMethod **) (widgRec + offset);
+    const Tk_SmoothMethod *smooth = NULL;
     int b;
     size_t length;
     SmoothAssocData *methods;
@@ -809,7 +804,7 @@ TkSmoothParseProc(
  *--------------------------------------------------------------
  */
 
-char *
+const char *
 TkSmoothPrintProc(
     ClientData clientData,	/* Ignored. */
     Tk_Window tkwin,		/* Window containing canvas widget. */
@@ -819,10 +814,10 @@ TkSmoothPrintProc(
 				 * information about how to reclaim storage
 				 * for return string. */
 {
-    register Tk_SmoothMethod **smoothPtr =
-	    (Tk_SmoothMethod **) (widgRec + offset);
+    register const Tk_SmoothMethod *smoothPtr =
+	    * (Tk_SmoothMethod **) (widgRec + offset);
 
-    return (*smoothPtr) ? (*smoothPtr)->name : "0";
+    return smoothPtr ? smoothPtr->name : "0";
 }
 /*
  *--------------------------------------------------------------
@@ -1127,12 +1122,10 @@ Tk_ConfigOutlineGC(
     if (mask && (dash->number != 0)) {
 	gcValues->line_style = LineOnOffDash;
 	gcValues->dash_offset = outline->offset;
-	if (dash->number >= 2) {
-	    gcValues->dashes = 4;
-	} else if (dash->number > 0) {
+	if (dash->number > 0) {
 	    gcValues->dashes = dash->pattern.array[0];
 	} else {
-	    gcValues->dashes = (char) (4 * width);
+	    gcValues->dashes = (char) (4 * width + 0.5);
 	}
 	mask |= GCLineStyle|GCDashList|GCDashOffset;
     }
@@ -1212,7 +1205,7 @@ Tk_ChangeOutlineGC(
     }
 
     if ((dash->number<-1) ||
-	    ((dash->number == -1) && (dash->pattern.array[1] != ','))) {
+	    ((dash->number == -1) && (dash->pattern.array[0] != ','))) {
 	char *q;
 	int i = -dash->number;
 
@@ -1263,7 +1256,7 @@ Tk_ChangeOutlineGC(
  *
  * Tk_ResetOutlineGC
  *
- *	Restores the GC to the situation before Tk_ChangeDashGC() was called.
+ *	Restores the GC to the situation before Tk_ChangeOutlineGC() was called.
  *	This function should be called just after the dashed item is drawn,
  *	because the GC is supposed to be read-only.
  *
@@ -1332,13 +1325,11 @@ Tk_ResetOutlineGC(
 
     if ((dash->number > 2) || (dash->number < -1) || (dash->number==2 &&
 	    (dash->pattern.array[0] != dash->pattern.array[1])) ||
-	    ((dash->number == -1) && (dash->pattern.array[1] != ','))) {
-	if (dash->number < 0) {
-	    dashList = (int) (4 * width + 0.5);
-	} else if (dash->number<3) {
+	    ((dash->number == -1) && (dash->pattern.array[0] != ','))) {
+    if (dash->number > 0) {
 	    dashList = dash->pattern.array[0];
 	} else {
-	    dashList = 4;
+	    dashList = (char) (4 * width + 0.5);
 	}
 	XSetDashes(Canvas(canvas)->display, outline->gc, outline->offset,
 		&dashList , 1);
@@ -1803,6 +1794,7 @@ TkCanvTranslatePath(
 		/*
 		 * The current vertex is to the left of xClip
 		 */
+
 		if (!inside) {
 		    /*
 		     * If the current vertex is on the left of xClip and one

@@ -156,8 +156,6 @@ TkpCloseDisplay(
 {
     TkSendCleanup(dispPtr);
 
-    TkFreeXId(dispPtr);
-
     TkWmCleanup(dispPtr);
 
 #ifdef TK_USE_INPUT_METHODS
@@ -289,6 +287,14 @@ TransferXEventsToTcl(
 
     while (QLength(display) > 0) {
 	XNextEvent(display, &event);
+#ifdef GenericEvent
+	if (event.type == GenericEvent) {
+	    xGenericEvent *xgePtr = (xGenericEvent *) &event;
+
+	    Tcl_Panic("Wild GenericEvent; panic! (extension=%d,evtype=%d)",
+		    xgePtr->extension, xgePtr->evtype);
+	}
+#endif
 	if (event.type != KeyPress && event.type != KeyRelease) {
 	    if (XFilterEvent(&event, None)) {
 		continue;

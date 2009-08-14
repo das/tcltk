@@ -79,6 +79,8 @@ static TkWinProcs asciiProcs = {
     (BOOL (WINAPI *)(HMENU hMenu, UINT uPosition, UINT uFlags,
 	    UINT uIDNewItem, LPCTSTR lpNewItem)) InsertMenuA,
     (int (WINAPI *)(HWND hWnd, LPCTSTR lpString, int nMaxCount)) GetWindowTextA,
+    (HWND (WINAPI *)(LPCTSTR lpClassName, LPCTSTR lpWindowName)) FindWindowA,
+    (int (WINAPI *)(HWND hwnd, LPTSTR lpClassName, int nMaxCount)) GetClassNameA,
 };
 
 static TkWinProcs unicodeProcs = {
@@ -97,6 +99,8 @@ static TkWinProcs unicodeProcs = {
     (BOOL (WINAPI *)(HMENU hMenu, UINT uPosition, UINT uFlags,
 	    UINT uIDNewItem, LPCTSTR lpNewItem)) InsertMenuW,
     (int (WINAPI *)(HWND hWnd, LPCTSTR lpString, int nMaxCount)) GetWindowTextW,
+    (HWND (WINAPI *)(LPCTSTR lpClassName, LPCTSTR lpWindowName)) FindWindowW,
+    (int (WINAPI *)(HWND hwnd, LPTSTR lpClassName, int nMaxCount)) GetClassNameW,
 };
 
 TkWinProcs *tkWinProcs;
@@ -1002,10 +1006,26 @@ GenerateXEvent(
     LPARAM lParam)
 {
     XEvent event;
-    TkWindow *winPtr = (TkWindow *)Tk_HWNDToWindow(hwnd);
+    TkWindow *winPtr;
     ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
 	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
+    if (message == WM_MOUSEWHEEL) {
+	POINTS rootPoint = MAKEPOINTS(lParam);
+	POINT pos;
+
+	/*
+	 * Redirect mousewheel events to the window containing the cursor.
+	 * That feels much less strange to users, and is how all the other
+	 * platforms work.
+	 */
+
+	pos.x = rootPoint.x;
+	pos.y = rootPoint.y;
+	hwnd = WindowFromPoint(pos);
+    }
+
+    winPtr = (TkWindow *) Tk_HWNDToWindow(hwnd);
     if (!winPtr || winPtr->window == None) {
 	return;
     }
@@ -1103,11 +1123,6 @@ GenerateXEvent(
 	break;
 
     case WM_MOUSEWHEEL:
-	/*
-	 * The mouse wheel event is closer to a key event than a mouse event
-	 * in that the message is sent to the window that has focus.
-	 */
-
     case WM_CHAR:
     case WM_UNICHAR:
     case WM_SYSKEYDOWN:

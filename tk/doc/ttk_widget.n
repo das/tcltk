@@ -1,4 +1,3 @@
-'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 2004 Joe English
 '\" 
@@ -235,6 +234,14 @@ state, and for buttons with \fB\-default active\fR.
 The widget's value is invalid.
 (Potential uses: scale widget value out of bounds, 
 entry widget value failed validation.)
+.TP
+\fBhover\fR
+The mouse cursor is within the widget.
+This is similar to the \fBactive\fP state;
+it is used in some themes for widgets that
+provide distinct visual feedback for
+the active widget in addition to the active element
+within the widget.
 .PP
 A \fIstate specification\fR or \fIstateSpec\fR is a list
 of state names, optionally prefixed with an exclamation point (!)
@@ -257,3 +264,6 @@ $b state !disabled
 ttk::intro(n), style(n)
 .SH KEYWORDS
 state, configure, option
+'\" Local Variables:
+'\" mode: nroff
+'\" End:

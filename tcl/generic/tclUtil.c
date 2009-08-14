@@ -80,7 +80,7 @@ static void		UpdateStringOfEndOffset(Tcl_Obj* objPtr);
  * integer, so no memory management is required for it.
  */
 
-Tcl_ObjType tclEndOffsetType = {
+const Tcl_ObjType tclEndOffsetType = {
     "end-offset",			/* name */
     NULL,				/* freeIntRepProc */
     NULL,				/* dupIntRepProc */
@@ -454,6 +454,9 @@ Tcl_SplitList(
 		&elSize, &brace);
 	length -= (list - prevList);
 	if (result != TCL_OK) {
+	    if (interp != NULL) {
+		Tcl_SetErrorCode(interp, "TCL", "VALUE", "LIST", NULL);
+	    }
 	    ckfree((char *) argv);
 	    return result;
 	}
@@ -1143,7 +1146,7 @@ Tcl_ConcatObj(
 {
     int allocSize, finalSize, length, elemLength, i;
     char *p;
-    char *element;
+    const char *element;
     char *concatStr;
     Tcl_Obj *objPtr, *resPtr;
 
@@ -1197,11 +1200,7 @@ Tcl_ConcatObj(
 		if (resPtr) {
 		    Tcl_ListObjReplace(NULL, resPtr, INT_MAX, 0, listc, listv);
 		} else {
-		    if (Tcl_IsShared(objPtr)) {
-			resPtr = TclListObjCopy(NULL, objPtr);
-		    } else {
-			resPtr = objPtr;
-		    }
+		    resPtr = TclListObjCopy(NULL, objPtr);
 		}
 	    }
 	}
@@ -1748,9 +1747,10 @@ TclByteArrayMatch(
 
 int
 TclStringMatchObj(
-    Tcl_Obj *strObj,	/* string object. */
-    Tcl_Obj *ptnObj,	/* pattern object. */
-    int flags)		/* Only TCL_MATCH_NOCASE should be passed or 0. */
+    Tcl_Obj *strObj,		/* string object. */
+    Tcl_Obj *ptnObj,		/* pattern object. */
+    int flags)			/* Only TCL_MATCH_NOCASE should be passed, or
+				 * 0. */
 {
     int match, length, plen;
 
@@ -1761,13 +1761,13 @@ TclStringMatchObj(
     trivial = nocase ? 0 : TclMatchIsTrivial(TclGetString(ptnObj));
      */
 
-    if ((strObj->typePtr == &tclStringType)) {
+    if ((strObj->typePtr == &tclStringType) || (strObj->typePtr == NULL)) {
 	Tcl_UniChar *udata, *uptn;
 
 	udata = Tcl_GetUnicodeFromObj(strObj, &length);
 	uptn  = Tcl_GetUnicodeFromObj(ptnObj, &plen);
 	match = TclUniCharMatch(udata, length, uptn, plen, flags);
-    } else if ((strObj->typePtr == &tclByteArrayType) && !flags) {
+    } else if (TclIsPureByteArray(strObj) && !flags) {
 	unsigned char *data, *ptn;
 
 	data = Tcl_GetByteArrayFromObj(strObj, &length);
@@ -2069,14 +2069,15 @@ Tcl_DStringResult(
     Tcl_DString *dsPtr)		/* Dynamic string that is to become the
 				 * result of interp. */
 {
+    Interp* iPtr = (Interp*) interp;
     Tcl_ResetResult(interp);
 
     if (dsPtr->string != dsPtr->staticSpace) {
-	interp->result = dsPtr->string;
-	interp->freeProc = TCL_DYNAMIC;
+	iPtr->result = dsPtr->string;
+	iPtr->freeProc = TCL_DYNAMIC;
     } else if (dsPtr->length < TCL_RESULT_SIZE) {
-	interp->result = ((Interp *) interp)->resultSpace;
-	strcpy(interp->result, dsPtr->string);
+	iPtr->result = iPtr->resultSpace;
+	strcpy(iPtr->result, dsPtr->string);
     } else {
 	Tcl_SetResult(interp, dsPtr->string, TCL_VOLATILE);
     }
@@ -2132,9 +2133,9 @@ Tcl_DStringGetResult(
 	    dsPtr->string = iPtr->result;
 	    dsPtr->spaceAvl = dsPtr->length+1;
 	} else {
-	    dsPtr->string = (char *) ckalloc((unsigned) (dsPtr->length+1));
+	    dsPtr->string = (char *) ckalloc((unsigned) dsPtr->length+1);
 	    memcpy(dsPtr->string, iPtr->result, (unsigned) dsPtr->length+1);
-	    (*iPtr->freeProc)(iPtr->result);
+	    iPtr->freeProc(iPtr->result);
 	}
 	dsPtr->spaceAvl = dsPtr->length+1;
 	iPtr->freeProc = NULL;
@@ -2143,7 +2144,7 @@ Tcl_DStringGetResult(
 	    dsPtr->string = dsPtr->staticSpace;
 	    dsPtr->spaceAvl = TCL_DSTRING_STATIC_SIZE;
 	} else {
-	    dsPtr->string = (char *) ckalloc((unsigned) (dsPtr->length + 1));
+	    dsPtr->string = (char *) ckalloc((unsigned) dsPtr->length+1);
 	    dsPtr->spaceAvl = dsPtr->length + 1;
 	}
 	memcpy(dsPtr->string, iPtr->result, (unsigned) dsPtr->length+1);
@@ -2426,13 +2427,13 @@ TclPrecTraceProc(
      */
 
     if (Tcl_IsSafe(interp)) {
-	return "can't modify precision from a safe interpreter";
+	return (char *)"can't modify precision from a safe interpreter";
     }
     value = Tcl_GetVar2Ex(interp, name1, name2, flags & TCL_GLOBAL_ONLY);
     if (value == NULL
 	    || Tcl_GetIntFromObj((Tcl_Interp*) NULL, value, &prec) != TCL_OK
 	    || prec < 0 || prec > TCL_MAX_PREC) {
-	return "improper value for precision";
+	return (char *)"improper value for precision";
     }
     *precisionPtr = prec;
     return NULL;
@@ -2561,7 +2562,8 @@ TclGetIntForIndex(
 				 * representing an index. */
 {
     int length;
-    char *opPtr, *bytes;
+    char *opPtr;
+    const char *bytes;
 
     if (TclGetIntFromObj(NULL, objPtr, indexPtr) == TCL_OK) {
 	return TCL_OK;
@@ -2622,7 +2624,7 @@ TclGetIntForIndex(
 
   parseError:
     if (interp != NULL) {
-	char *bytes = Tcl_GetString(objPtr);
+	const char *bytes = Tcl_GetString(objPtr);
 
 	/*
 	 * The result might not be empty; this resets it which should be both
@@ -2637,6 +2639,7 @@ TclGetIntForIndex(
 	    bytes += 4;
 	}
 	TclCheckBadOctal(interp, bytes);
+	Tcl_SetErrorCode(interp, "TCL", "VALUE", "INDEX", NULL);
     }
 
     return TCL_ERROR;
@@ -2704,7 +2707,7 @@ SetEndOffsetFromAny(
     Tcl_Obj *objPtr)		/* Pointer to the object to parse */
 {
     int offset;			/* Offset in the "end-offset" expression */
-    register char* bytes;	/* String rep of the object */
+    register const char* bytes;	/* String rep of the object */
     int length;			/* Length of the object's string rep */
 
     /*
@@ -2726,6 +2729,7 @@ SetEndOffsetFromAny(
 	    Tcl_ResetResult(interp);
 	    Tcl_AppendResult(interp, "bad index \"", bytes,
 		    "\": must be end?[+-]integer?", NULL);
+	    Tcl_SetErrorCode(interp, "TCL", "VALUE", "INDEX", NULL);
 	}
 	return TCL_ERROR;
     }
@@ -2760,6 +2764,7 @@ SetEndOffsetFromAny(
 	    Tcl_ResetResult(interp);
 	    Tcl_AppendResult(interp, "bad index \"", bytes,
 		    "\": must be end?[+-]integer?", NULL);
+	    Tcl_SetErrorCode(interp, "TCL", "VALUE", "INDEX", NULL);
 	}
 	return TCL_ERROR;
     }
@@ -3055,7 +3060,7 @@ TclGetProcessGlobalValue(
 	    Tcl_DStringLength(&native), &newValue);
 	    Tcl_DStringFree(&native);
 	    ckfree(pgvPtr->value);
-	    pgvPtr->value = ckalloc((unsigned int)
+	    pgvPtr->value = ckalloc((unsigned)
 		    Tcl_DStringLength(&newValue) + 1);
 	    memcpy(pgvPtr->value, Tcl_DStringValue(&newValue),
 		    (size_t) Tcl_DStringLength(&newValue) + 1);
@@ -3088,12 +3093,11 @@ TclGetProcessGlobalValue(
 	Tcl_MutexLock(&pgvPtr->mutex);
 	if ((NULL == pgvPtr->value) && (pgvPtr->proc)) {
 	    pgvPtr->epoch++;
-	    (*(pgvPtr->proc))(&pgvPtr->value, &pgvPtr->numBytes,
-		    &pgvPtr->encoding);
+	    pgvPtr->proc(&pgvPtr->value,&pgvPtr->numBytes,&pgvPtr->encoding);
 	    if (pgvPtr->value == NULL) {
 		Tcl_Panic("PGV Initializer did not initialize");
 	    }
-	    Tcl_CreateExitHandler(FreeProcessGlobalValue, (ClientData)pgvPtr);
+	    Tcl_CreateExitHandler(FreeProcessGlobalValue, pgvPtr);
 	}
 
 	/*
@@ -3104,10 +3108,10 @@ TclGetProcessGlobalValue(
 	hPtr = Tcl_CreateHashEntry(cacheMap,
 		(char *) INT2PTR(pgvPtr->epoch), &dummy);
 	Tcl_MutexUnlock(&pgvPtr->mutex);
-	Tcl_SetHashValue(hPtr, (ClientData) value);
+	Tcl_SetHashValue(hPtr, value);
 	Tcl_IncrRefCount(value);
     }
-    return (Tcl_Obj *) Tcl_GetHashValue(hPtr);
+    return Tcl_GetHashValue(hPtr);
 }
 
 /*
@@ -3272,31 +3276,50 @@ TclReToGlob(
     int *exactPtr)
 {
     int anchorLeft, anchorRight, lastIsStar;
-    char *dsStr, *dsStrStart, *msg;
-    const char *p, *strEnd;
+    char *dsStr, *dsStrStart;
+    const char *msg, *p, *strEnd;
 
     strEnd = reStr + reStrLen;
     Tcl_DStringInit(dsPtr);
 
     /*
-     * "***=xxx" == "*xxx*"
+     * "***=xxx" == "*xxx*", watch for glob-sensitive chars.
      */
 
     if ((reStrLen >= 4) && (memcmp("***=", reStr, 4) == 0)) {
-	if (exactPtr) {
-	    *exactPtr = 1;
+	/*
+	 * At most, the glob pattern has length 2*reStrLen + 2 to
+	 * backslash escape every character and have * at each end.
+	 */
+	Tcl_DStringSetLength(dsPtr, reStrLen + 2);
+	dsStr = dsStrStart = Tcl_DStringValue(dsPtr);
+	*dsStr++ = '*';
+	for (p = reStr + 4; p < strEnd; p++) {
+	    switch (*p) {
+	    case '\\': case '*': case '[': case ']': case '?':
+		/* Only add \ where necessary for glob */
+		*dsStr++ = '\\';
+		/* fall through */
+	    default:
+		*dsStr++ = *p;
+		break;
+	    }
 	}
-	Tcl_DStringAppend(dsPtr, reStr + 4, reStrLen - 4);
+	*dsStr++ = '*';
+	Tcl_DStringSetLength(dsPtr, dsStr - dsStrStart);
+	if (exactPtr) {
+	    *exactPtr = 0;
+	}
 	return TCL_OK;
     }
 
     /*
-     * Write to the ds directly without the function overhead.
-     * An equivalent glob pattern can be no more than reStrLen+2 in size.
+     * At most, the glob pattern has length reStrLen + 2 to account
+     * for possible * at each end.
      */
 
     Tcl_DStringSetLength(dsPtr, reStrLen + 2);
-    dsStrStart = Tcl_DStringValue(dsPtr);
+    dsStr = dsStrStart = Tcl_DStringValue(dsPtr);
 
     /*
      * Check for anchored REs (ie ^foo$), so we can use string equal if
@@ -3311,7 +3334,7 @@ TclReToGlob(
     p = reStr;
     anchorRight = 0;
     lastIsStar = 0;
-    dsStr = dsStrStart;
+
     if (*p == '^') {
 	anchorLeft = 1;
 	p++;

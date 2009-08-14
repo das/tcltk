@@ -31,7 +31,7 @@
 	TclEmitPush(TclRegisterNewLiteral((envPtr), (tokenPtr)[1].start, \
 		(tokenPtr)[1].size), (envPtr)); \
     } else { \
-        envPtr->line = mapPtr->loc[eclIndex].line[word]; \
+	envPtr->line = mapPtr->loc[eclIndex].line[word]; \
 	TclCompileTokens((interp), (tokenPtr)+1, (tokenPtr)->numComponents, \
 		(envPtr)); \
     }
@@ -71,7 +71,7 @@
 
 #define CompileTokens(envPtr, tokenPtr, interp) \
     TclCompileTokens((interp), (tokenPtr)+1, (tokenPtr)->numComponents, \
-            (envPtr));
+	    (envPtr));
 /*
  * Convenience macro for use when pushing literals. The ANSI C "prototype" for
  * this macro is:
@@ -187,21 +187,21 @@ static void		CompileReturnInternal(CompileEnv *envPtr,
  * The structures below define the AuxData types defined in this file.
  */
 
-AuxDataType tclForeachInfoType = {
+const AuxDataType tclForeachInfoType = {
     "ForeachInfo",		/* name */
     DupForeachInfo,		/* dupProc */
     FreeForeachInfo,		/* freeProc */
     PrintForeachInfo		/* printProc */
 };
 
-AuxDataType tclJumptableInfoType = {
+const AuxDataType tclJumptableInfoType = {
     "JumptableInfo",		/* name */
     DupJumptableInfo,		/* dupProc */
     FreeJumptableInfo,		/* freeProc */
     PrintJumptableInfo		/* printProc */
 };
 
-AuxDataType tclDictUpdateInfoType = {
+const AuxDataType tclDictUpdateInfoType = {
     "DictUpdateInfo",		/* name */
     DupDictUpdateInfo,		/* dupProc */
     FreeDictUpdateInfo,		/* freeProc */
@@ -425,7 +425,7 @@ TclCompileCatchCmd(
 	if (resultIndex < 0) {
 	    return TCL_ERROR;
 	}
-	
+
 	/* DKF */
 	if (parsePtr->numWords == 4) {
 	    optsNameTokenPtr = TokenAfter(resultNameTokenPtr);
@@ -3107,7 +3107,7 @@ TclCompileRegexpCmd(
     Tcl_Token *varTokenPtr;	/* Pointer to the Tcl_Token representing the
 				 * parse of the RE or string. */
     int i, len, nocase, exact, sawLast, simple;
-    char *str;
+    const char *str;
     DefineLineInformation;	/* TIP #280 */
 
     /*
@@ -3141,7 +3141,7 @@ TclCompileRegexpCmd(
 
 	    return TCL_ERROR;
 	}
-	str = (char *) varTokenPtr[1].start;
+	str = varTokenPtr[1].start;
 	len = varTokenPtr[1].size;
 	if ((len == 2) && (str[0] == '-') && (str[1] == '-')) {
 	    sawLast++;
@@ -3177,7 +3177,7 @@ TclCompileRegexpCmd(
     if (varTokenPtr->type == TCL_TOKEN_SIMPLE_WORD) {
 	Tcl_DString ds;
 
-	str = (char *) varTokenPtr[1].start;
+	str = varTokenPtr[1].start;
 	len = varTokenPtr[1].size;
 	/*
 	 * If it has a '-', it could be an incorrectly formed regexp command.
@@ -4911,7 +4911,7 @@ PushVarName(
     int *localIndexPtr,		/* Must not be NULL. */
     int *simpleVarNamePtr,	/* Must not be NULL. */
     int *isScalarPtr,		/* Must not be NULL. */
-    int line)                   /* Line the token starts on. */
+    int line)			/* Line the token starts on. */
 {
     register const char *p;
     const char *name, *elName;
@@ -5705,7 +5705,7 @@ TclCompileDivOpCmd(
  *
  * Results:
  * 	Returns the variable's index in the table of compiled locals if the
- *      tail is known at compile time, or -1 otherwise.
+ *	tail is known at compile time, or -1 otherwise.
  *
  * Side effects:
  *	None.
@@ -5840,7 +5840,7 @@ TclCompileUpvarCmd(
     tokenPtr = TokenAfter(parsePtr->tokenPtr);
     if(TclWordKnownAtCompileTime(tokenPtr, objPtr)) {
 	CallFrame *framePtr;
-	Tcl_ObjType *newTypePtr, *typePtr = objPtr->typePtr;
+	const Tcl_ObjType *newTypePtr, *typePtr = objPtr->typePtr;
 
 	/*
 	 * Attempt to convert to a level reference. Note that TclObjGetFrame
@@ -5914,7 +5914,7 @@ TclCompileUpvarCmd(
  *
  * Side effects:
  *	Instructions are added to envPtr to execute the "namespace upvar"
- *      command at runtime.
+ *	command at runtime.
  *
  *----------------------------------------------------------------------
  */
@@ -6213,6 +6213,20 @@ TclCompileEnsemble(
 	/*
 	 * Either not an ensemble or a mapping isn't installed. Crud. Too hard
 	 * to proceed.
+	 */
+
+	return TCL_ERROR;
+    }
+
+    /*
+     * Also refuse to compile anything that uses a formal parameter list for
+     * now, on the grounds that it is too complex.
+     */
+
+    if (Tcl_GetEnsembleParameterList(NULL, ensemble, &listObj) != TCL_OK
+	    || listObj != NULL) {
+	/*
+	 * Figuring out how to compile this has become too much. Bail out.
 	 */
 
 	return TCL_ERROR;

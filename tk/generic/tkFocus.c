@@ -70,14 +70,6 @@ typedef struct TkDisplayFocusInfo {
 } DisplayFocusInfo;
 
 /*
- * The following magic value is stored in the "send_event" field of FocusIn
- * and FocusOut events that are generated in this file. This allows us to
- * separate "real" events coming from the server from those that we generated.
- */
-
-#define GENERATED_EVENT_MAGIC	((Bool) 0x547321ac)
-
-/*
  * Debugging support...
  */
 
@@ -120,14 +112,14 @@ Tk_FocusObjCmd(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
-    static const char *focusOptions[] = {
+    static const char *const focusOptions[] = {
 	"-displayof", "-force", "-lastfor", NULL
     };
     Tk_Window tkwin = clientData;
     TkWindow *winPtr = clientData;
     TkWindow *newPtr, *focusWinPtr, *topLevelPtr;
     ToplevelFocusInfo *tlFocusPtr;
-    char *windowName;
+    const char *windowName;
     int index;
 
     /*
@@ -290,7 +282,7 @@ TkFocusFilterEvent(
      * pass the event through to Tk bindings.
      */
 
-    if (eventPtr->xfocus.send_event == GENERATED_EVENT_MAGIC) {
+    if (eventPtr->xfocus.send_event == GENERATED_FOCUS_EVENT_MAGIC) {
 	eventPtr->xfocus.send_event = 0;
 	return 1;
     }
@@ -908,7 +900,7 @@ GenerateFocusEvents(
     }
 
     event.xfocus.serial = LastKnownRequestProcessed(winPtr->display);
-    event.xfocus.send_event = GENERATED_EVENT_MAGIC;
+    event.xfocus.send_event = GENERATED_FOCUS_EVENT_MAGIC;
     event.xfocus.display = winPtr->display;
     event.xfocus.mode = NotifyNormal;
     TkInOutEvents(&event, sourcePtr, destPtr, FocusOut, FocusIn,
@@ -1059,8 +1051,8 @@ TkFocusFree(
  */
 
 void
-TkFocusSplit(winPtr)
-    TkWindow *winPtr;		/* Window is the new toplevel. Any focus point
+TkFocusSplit(
+    TkWindow *winPtr)		/* Window is the new toplevel. Any focus point
 				 * at or below window must be moved to this
 				 * new toplevel. */
 {
@@ -1113,7 +1105,7 @@ TkFocusSplit(winPtr)
      * See if current focusWin is child of the new toplevel.
      */
 
-    for (subWinPtr = tlFocusPtr->focusWinPtr; 
+    for (subWinPtr = tlFocusPtr->focusWinPtr;
 	    subWinPtr && subWinPtr != winPtr && subWinPtr != topLevelPtr;
 	    subWinPtr = subWinPtr->parentPtr) {
 	/* EMPTY */

@@ -1,4 +1,3 @@
-'\" -*- nroff -*-
 '\"
 '\" Copyright (c) 1990-1994 The Regents of the University of California.
 '\" Copyright (c) 1994-1996 Sun Microsystems, Inc.
@@ -290,3 +289,6 @@ This example shows a group of uncoupled checkbuttons.
 button(n), options(n), radiobutton(n), ttk::checkbutton(n)
 .SH KEYWORDS
 checkbutton, widget
+'\" Local Variables:
+'\" mode: nroff
+'\" End:
