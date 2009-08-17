@@ -246,6 +246,8 @@ typedef struct ThreadSpecificData {
 				 * performed. */
     int runLoopRunning;		/* True if this thread's Tcl runLoop is running */
     int runLoopNestingLevel;	/* Level of nested runLoop invocations */
+    int runLoopServicingEvents;	/* True if this thread's runLoop is servicing
+				 * tcl events */
     /* Must hold the notifierLock before accessing the following fields: */
     /* Start notifierLock section */
     int onList;			/* True if this thread is on the waitingList */
@@ -277,7 +279,7 @@ typedef struct ThreadSpecificData {
 				/* Any other thread alerts a notifier that an
 				 * event is ready to be processed by signaling
 				 * this CFRunLoopSource. */
-    CFRunLoopObserverRef runLoopObserver;
+    CFRunLoopObserverRef runLoopObserver, runLoopObserverTcl;
 				/* Adds/removes this thread from waitingList
 				 * when the CFRunLoop starts/stops. */
     CFRunLoopTimerRef runLoopTimer;
@@ -453,7 +455,7 @@ Tcl_InitNotifier(void)
 	CFRunLoopSourceRef runLoopSource;
 	CFRunLoopSourceContext runLoopSourceContext;
 	CFRunLoopObserverContext runLoopObserverContext;
-	CFRunLoopObserverRef runLoopObserver;
+	CFRunLoopObserverRef runLoopObserver, runLoopObserverTcl;
 
 	bzero(&runLoopSourceContext, sizeof(CFRunLoopSourceContext));
 	runLoopSourceContext.info = tsdPtr;
@@ -477,12 +479,21 @@ Tcl_InitNotifier(void)
 		    "CFRunLoopObserver");
 	}
 	CFRunLoopAddObserver(runLoop, runLoopObserver, kCFRunLoopCommonModes);
-	CFRunLoopAddObserver(runLoop, runLoopObserver,
+	runLoopObserverTcl = CFRunLoopObserverCreate(NULL,
+		kCFRunLoopEntry|kCFRunLoopExit|kCFRunLoopBeforeWaiting, TRUE,
+		LONG_MIN, UpdateWaitingListAndServiceEvents,
+		&runLoopObserverContext);
+	if (!runLoopObserverTcl) {
+	    Tcl_Panic("Tcl_InitNotifier: could not create "
+		    "CFRunLoopObserver");
+	}
+	CFRunLoopAddObserver(runLoop, runLoopObserverTcl,
 		tclEventsOnlyRunLoopMode);
 
 	tsdPtr->runLoop = runLoop;
 	tsdPtr->runLoopSource = runLoopSource;
 	tsdPtr->runLoopObserver = runLoopObserver;
+	tsdPtr->runLoopObserverTcl = runLoopObserverTcl;
 	tsdPtr->runLoopTimer = NULL;
 	tsdPtr->waitTime = CF_TIMEINTERVAL_FOREVER;
 	tsdPtr->tsdLock = SPINLOCK_INIT;
@@ -710,6 +721,9 @@ Tcl_FinalizeNotifier(
 	CFRunLoopObserverInvalidate(tsdPtr->runLoopObserver);
 	CFRelease(tsdPtr->runLoopObserver);
 	tsdPtr->runLoopObserver = NULL;
+	CFRunLoopObserverInvalidate(tsdPtr->runLoopObserverTcl);
+	CFRelease(tsdPtr->runLoopObserverTcl);
+	tsdPtr->runLoopObserverTcl = NULL;
 	if (tsdPtr->runLoopTimer) {
 	    CFRunLoopTimerInvalidate(tsdPtr->runLoopTimer);
 	    CFRelease(tsdPtr->runLoopTimer);
@@ -1150,9 +1164,8 @@ int
 Tcl_WaitForEvent(
     Tcl_Time *timePtr)		/* Maximum block time, or NULL. */
 {
-    int result, polling;
+    int result, polling, runLoopRunning;
     CFTimeInterval waitTime;
-    CFStringRef runLoopMode;
     SInt32 runLoopStatus;
     ThreadSpecificData *tsdPtr;
 
@@ -1206,16 +1219,12 @@ Tcl_WaitForEvent(
      * added to the common run loop modes might get lost.
      */
 
-    if (tsdPtr->runLoopRunning) {
-	runLoopMode = tclEventsOnlyRunLoopMode;
-    } else {
-	runLoopMode = kCFRunLoopDefaultMode;
-	tsdPtr->runLoopRunning = 1;
-    }
-    runLoopStatus = CFRunLoopRunInMode(runLoopMode, waitTime, TRUE);
-    if (runLoopMode == kCFRunLoopDefaultMode) {
-	tsdPtr->runLoopRunning = 0;
-    }
+    runLoopRunning = tsdPtr->runLoopRunning;
+    tsdPtr->runLoopRunning = 1;
+    runLoopStatus = CFRunLoopRunInMode(tsdPtr->runLoopServicingEvents ||
+	    runLoopRunning ? tclEventsOnlyRunLoopMode : kCFRunLoopDefaultMode,
+	    waitTime, TRUE);
+    tsdPtr->runLoopRunning = runLoopRunning;
 
     LOCK_NOTIFIER_TSD;
     tsdPtr->polling = 0;
@@ -1333,19 +1342,22 @@ UpdateWaitingListAndServiceEvents(
 {
     ThreadSpecificData *tsdPtr = (ThreadSpecificData*) info;
 
+    if (tsdPtr->sleeping) {
+	return;
+    }
     switch (activity) {
     case kCFRunLoopEntry:
 	tsdPtr->runLoopNestingLevel++;
-	if (tsdPtr->runLoopNestingLevel == 1 && !tsdPtr->sleeping &&
-		(tsdPtr->numFdBits > 0 || tsdPtr->polling)) {
+	if (tsdPtr->numFdBits > 0 || tsdPtr->polling) {
 	    LOCK_NOTIFIER;
-	    OnOffWaitingList(tsdPtr, 1, 1);
+	    if (!OnOffWaitingList(tsdPtr, 1, 1) && tsdPtr->polling) {
+	       write(triggerPipe, "", 1);
+	    }
 	    UNLOCK_NOTIFIER;
 	}
 	break;
     case kCFRunLoopExit:
-	if (tsdPtr->runLoopNestingLevel == 1 && !tsdPtr->sleeping &&
-		(tsdPtr->numFdBits > 0 || tsdPtr->polling)) {
+	if (tsdPtr->runLoopNestingLevel == 1) {
 	    LOCK_NOTIFIER;
 	    OnOffWaitingList(tsdPtr, 0, 1);
 	    UNLOCK_NOTIFIER;
@@ -1353,9 +1365,11 @@ UpdateWaitingListAndServiceEvents(
 	tsdPtr->runLoopNestingLevel--;
 	break;
     case kCFRunLoopBeforeWaiting:
-	if (!tsdPtr->sleeping && tsdPtr->runLoopTimer &&
+	if (tsdPtr->runLoopTimer && !tsdPtr->runLoopServicingEvents &&
 		(tsdPtr->runLoopNestingLevel > 1 || !tsdPtr->runLoopRunning)) {
+	    tsdPtr->runLoopServicingEvents = 1;
 	    while (Tcl_ServiceAll() && tsdPtr->waitTime == 0) {}
+	    tsdPtr->runLoopServicingEvents = 0;
 	}
 	break;
     default:
