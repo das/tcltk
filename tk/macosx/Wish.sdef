@@ -11,11 +11,29 @@
 	RCS: @(#) $Id$
 -->
 <dictionary title="Wish Terminology">
-	<suite name="Required Suite" code="reqd" description="Events that every application should support"/>
-	<suite name="Wish Suite" code="WIsH" description="Events for the Wish application">
-		<command name="do script" code="miscdosc" description="Execute a Tcl script">
-			<direct-parameter description="Script to execute" type="text"/>
-			<result description="Result" type="text"/>
+	<suite name="Standard Suite" code="reqd" description="Common commands for all applications.">
+		<command name="open" code="aevtodoc" description="Open a document.">
+			<direct-parameter description="The file(s) to be opened.">
+				<type type="file"/>
+				<type type="file" list="yes"/>
+			</direct-parameter>
+		</command>
+		<command name="print" code="aevtpdoc" description="Print a document.">
+			<direct-parameter description="The file(s) to be printed.">
+				<type type="file" list="yes"/>
+				<type type="specifier"/>
+			</direct-parameter>
+		</command>
+		<command name="quit" code="aevtquit" description="Quit the application."/>
+	</suite>
+	<suite name="Wish Suite" code="WIsH" description="Commands for the Wish application.">
+		<command name="do script" code="miscdosc" description="Execute a Tcl script.">
+			<direct-parameter description="Script to execute" type="text">
+				<type type="text"/>
+			</direct-parameter>
+			<result description="Result">
+				<type type="text"/>
+			</result>
 		</command>
 	</suite>
 </dictionary>
