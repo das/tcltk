@@ -1565,6 +1565,7 @@ TkMacOSXSetupDrawingContext(
 	    if (dontDraw) {
 		goto end;
 	    }
+	    [[view window] disableFlushWindow];
 	    dc.view = view;
 	    dc.context = [[NSGraphicsContext currentContext] graphicsPort];
 	    dc.portBounds = NSRectToCGRect([view bounds]);
@@ -1690,6 +1691,7 @@ TkMacOSXRestoreDrawingContext(
 {
     if (dcPtr->context) {
 	CGContextSynchronize(dcPtr->context);
+	[[dcPtr->view window] enableFlushWindow];
 	if (dcPtr->focusLocked) {
 	    [dcPtr->view unlockFocus];
 	} else {
