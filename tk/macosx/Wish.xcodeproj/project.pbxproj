@@ -2027,6 +2027,7 @@
 		F96D449808F272BA004A47F5 /* tclWinThrd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tclWinThrd.c; sourceTree = "<group>"; };
 		F96D449908F272BA004A47F5 /* tclWinThrd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tclWinThrd.h; sourceTree = "<group>"; };
 		F96D449A08F272BA004A47F5 /* tclWinTime.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tclWinTime.c; sourceTree = "<group>"; };
+		F97590AE1039A96200558A9A /* Wish.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.sdef; path = Wish.sdef; sourceTree = "<group>"; };
 		F976F6A70C325FB6005066D9 /* tkMacOSXPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tkMacOSXPrivate.h; sourceTree = "<group>"; };
 		F97AE7F10B65C1E900310EA2 /* Wish-Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Wish-Common.xcconfig"; sourceTree = "<group>"; };
 		F97AE82B0B65C69B00310EA2 /* Wish-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Wish-Release.xcconfig"; sourceTree = "<group>"; };
@@ -2587,6 +2588,7 @@
 				F95D8D4B0F1715610006B020 /* Tk.icns */,
 				F95D8D4C0F1715610006B020 /* Tk.tiff */,
 				F966BBF708F27A3C005CB29B /* Wish-Info.plist.in */,
+				F97590AE1039A96200558A9A /* Wish.sdef */,
 				F97AE7F10B65C1E900310EA2 /* Wish-Common.xcconfig */,
 				F97AE8330B65C87F00310EA2 /* Wish-Debug.xcconfig */,
 				F97AE82B0B65C69B00310EA2 /* Wish-Release.xcconfig */,
