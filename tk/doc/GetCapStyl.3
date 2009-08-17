@@ -26,11 +26,12 @@ const char *
 .AP Tcl_Interp *interp in
 Interpreter to use for error reporting.
 .AP "const char" *string in
-String containing name of cap style: one of
-.QW butt ,
-.QW projecting ,
+String containing name of cap style \- one of
+.QW \fBbutt\fR ,
+.QW \fBprojecting\fR ,
 or
-.QW round .
+.QW \fBround\fR
+\- or a unique abbreviation of one.
 .AP int *capPtr out
 Pointer to location in which to store X cap style corresponding to
 \fIstring\fR.

@@ -76,7 +76,7 @@ Tk_GetPixmap(
 
     if (newTwdPtr->bitmap.handle == NULL) {
 	static int repeatError = 0;
-	unsigned char *bits = NULL;
+	void *bits = NULL;
 	BITMAPINFO bitmapInfo;
 	HDC dc;
 
@@ -90,7 +90,7 @@ Tk_GetPixmap(
 	bitmapInfo.bmiHeader.biSizeImage = 0;
 	dc = GetDC(NULL);
 	newTwdPtr->bitmap.handle = CreateDIBSection(dc, &bitmapInfo,
-		DIB_RGB_COLORS, (void **) &bits, 0, 0);
+		DIB_RGB_COLORS, &bits, 0, 0);
 	ReleaseDC(NULL, dc);
 
 	/*
