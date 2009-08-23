@@ -479,6 +479,15 @@ Tcl_InitNotifier(void)
 		    "CFRunLoopObserver");
 	}
 	CFRunLoopAddObserver(runLoop, runLoopObserver, kCFRunLoopCommonModes);
+
+	/*
+	 * Create a second CFRunLoopObserver with the same callback as above
+	 * for the tclEventsOnlyRunLoopMode to ensure that the callback can be
+	 * re-entered via Tcl_ServiceAll() in the kCFRunLoopBeforeWaiting case
+	 * (CFRunLoop prevents observer callback re-entry of a given observer
+	 * instance).
+	 */
+
 	runLoopObserverTcl = CFRunLoopObserverCreate(NULL,
 		kCFRunLoopEntry|kCFRunLoopExit|kCFRunLoopBeforeWaiting, TRUE,
 		LONG_MIN, UpdateWaitingListAndServiceEvents,
@@ -1213,10 +1222,12 @@ Tcl_WaitForEvent(
     tsdPtr->runLoopSourcePerformed = 0;
 
     /*
-     * If the Tcl run loop is already running (e.g. if Tcl_WaitForEvent was
-     * called recursively), re-run it in a custom run loop mode containing only
-     * the source for the notifier thread, otherwise wakeups from other sources
-     * added to the common run loop modes might get lost.
+     * If the Tcl runloop is already running (e.g. if Tcl_WaitForEvent was
+     * called recursively) or is servicing events via the runloop observer,
+     * re-run it in a custom runloop mode containing only the source for the
+     * notifier thread, otherwise wakeups from other sources added to the
+     * common runloop modes might get lost or 3rd party event handlers might
+     * get called when they do not expect to be.
      */
 
     runLoopRunning = tsdPtr->runLoopRunning;
@@ -1655,7 +1666,7 @@ TclUnixWaitForFile(
 	    if (FD_ISSET(fd, &writableMask))  {
 		SET_BITS(result, TCL_WRITABLE);
 	    }
-	    if (FD_ISSET(fd, &exceptionalMask)) { 
+	    if (FD_ISSET(fd, &exceptionalMask)) {
 		SET_BITS(result, TCL_EXCEPTION);
 	    }
 	    result &= mask;
