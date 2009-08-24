@@ -1483,7 +1483,7 @@ test grid-15.2 {lost slave} -body {
     button .b
     grid .b -in .f
     set a [grid slaves .f]
-    pack .b
+    pack .b -in .f
     lappend a [grid slaves .f]
     grid .b -in .f
     lappend a [grid slaves .f]
