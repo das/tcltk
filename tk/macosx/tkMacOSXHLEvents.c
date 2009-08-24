@@ -541,7 +541,7 @@ ScriptHandler(
 
 	FSRef file;
 	theErr = AEGetParamPtr(event, keyDirectObject, typeFSRef, NULL, &file,
-	    size, NULL);
+		size, NULL);
 	if (theErr == noErr) {
 	    Tcl_DString scriptName;
 
@@ -563,7 +563,7 @@ ScriptHandler(
 
 	char *data = ckalloc(size + 1);
 	theErr = AEGetParamPtr(event, keyDirectObject, typeUTF8Text, NULL, data,
-	    size, NULL);
+		size, NULL);
 	if (theErr == noErr) {
 	    tclErr = Tcl_EvalEx(interp, data, size, TCL_EVAL_GLOBAL);
 	}
@@ -572,8 +572,8 @@ ScriptHandler(
 	 * Umm, don't recognize what we've got...
 	 */
 
-	sprintf(errString, "AEDoScriptHandler: invalid script type '%-4.4s',"
-		" must be 'alis' or coercable to 'utf8'",
+	sprintf(errString, "AEDoScriptHandler: invalid script type '%-4.4s', "
+		"must be 'alis' or coercable to 'utf8'",
 		(char*) &theDesc.descriptorType);
 	AEPutParamPtr(reply, keyErrorString, typeChar, errString,
 		strlen(errString));
