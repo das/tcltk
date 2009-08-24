@@ -791,6 +791,7 @@ typedef struct Tk_FakeWin {
     int internalBorderBottom;
     int minReqWidth;
     int minReqHeight;
+    char *dummy20;		/* geometryMaster */
 } Tk_FakeWin;
 
 /*
