@@ -18,10 +18,6 @@
 #include "tclInt.h"
 #undef Tcl_Panic
 
-#if defined(PURIFY) && defined(Tcl_Panic)
-#undef Tcl_Panic
-#endif
-
 /*
  * The panicProc variable contains a pointer to an application specific panic
  * procedure.
