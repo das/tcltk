@@ -488,28 +488,38 @@ if test $tk_aqua = no; then
     tk_oldLibs=$LIBS
     LIBS="$tk_oldLibs $XLIBSW"
     xss_header_found=no
-    AC_CHECK_HEADER(X11/extensions/scrnsaver.h, [
-	xss_header_found=yes
-    ],,[#include <X11/Xlib.h>])
     xss_lib_found=no
-    AC_CHECK_FUNC(XScreenSaverQueryInfo,,[
-	AC_CHECK_LIB(Xext, XScreenSaverQueryInfo, [
-	    XLIBSW="$XLIBSW -lXext"
-	    xss_lib_found=yes
-	], [
-	    AC_CHECK_LIB(Xss,XScreenSaverQueryInfo, [
-		if test "$tcl_cv_ld_weak_l" = yes; then
-		    # On Darwin, weak link libXss if possible,
-		    # as it is only available on Tiger or later.
-		    XLIBSW="$XLIBSW -Wl,-weak-lXss -lXext"
-		else
-		    XLIBSW="$XLIBSW -lXss -lXext"
-		fi
+    AC_MSG_CHECKING([whether to try to use XScreenSaver])
+    AC_ARG_ENABLE(xss,
+	AC_HELP_STRING([--enable-xss],
+	    [use XScreenSaver for activity timer (default: on)]),
+	[enable_xss=$enableval], [enable_xss=yes])
+    if test "$enable_xss" = "no" ; then
+	AC_MSG_RESULT([$enable_xss])
+    else
+	AC_MSG_RESULT([$enable_xss])
+	AC_CHECK_HEADER(X11/extensions/scrnsaver.h, [
+	    xss_header_found=yes
+	],,[#include <X11/Xlib.h>])
+	AC_CHECK_FUNC(XScreenSaverQueryInfo,,[
+	    AC_CHECK_LIB(Xext, XScreenSaverQueryInfo, [
+		XLIBSW="$XLIBSW -lXext"
 		xss_lib_found=yes
-	    ],, -lXext)
+	    ], [
+		AC_CHECK_LIB(Xss, XScreenSaverQueryInfo, [
+		    if test "$tcl_cv_ld_weak_l" = yes; then
+			# On Darwin, weak link libXss if possible,
+			# as it is only available on Tiger or later.
+			XLIBSW="$XLIBSW -Wl,-weak-lXss -lXext"
+		    else
+			XLIBSW="$XLIBSW -lXss -lXext"
+		    fi
+		    xss_lib_found=yes
+		],, -lXext)
+	    ])
 	])
-    ])
-    if test $xss_lib_found = yes -a $xss_header_found = yes; then
+    fi
+    if test $enable_xss = yes -a $xss_lib_found = yes -a $xss_header_found = yes; then
 	AC_DEFINE(HAVE_XSS, 1, [Is XScreenSaver available?])
     fi
     CFLAGS=$tk_oldCFlags
@@ -688,6 +698,7 @@ if test "$FRAMEWORK_BUILD" = "1" ; then
         EXTRA_INSTALL_BINARIES="$EXTRA_INSTALL_BINARIES"' && echo "Installing Wish.icns to $(BIN_INSTALL_DIR)/../Resources" && mkdir -p "$(BIN_INSTALL_DIR)/../Resources"'
 	if test $tk_aqua = yes; then
 	    EXTRA_INSTALL_BINARIES="$EXTRA_INSTALL_BINARIES"' && $(INSTALL_DATA) "$(MAC_OSX_DIR)/Tk.icns" "$(BIN_INSTALL_DIR)/../Resources/Wish.icns"'
+	    EXTRA_INSTALL_BINARIES="$EXTRA_INSTALL_BINARIES"' && echo "Installing Wish.sdef to $(BIN_INSTALL_DIR)/../Resources" && $(INSTALL_DATA) "$(MAC_OSX_DIR)/Wish.sdef" "$(BIN_INSTALL_DIR)/../Resources"'
 	else
 	    EXTRA_INSTALL_BINARIES="$EXTRA_INSTALL_BINARIES"' && $(INSTALL_DATA) "$(MAC_OSX_DIR)/Wish.icns" "$(BIN_INSTALL_DIR)/../Resources" && echo "Installing ${WISH_RSRC_FILE} to $(BIN_INSTALL_DIR)/../Resources" && $(INSTALL_DATA) "${WISH_RSRC_FILE}" "$(BIN_INSTALL_DIR)/../Resources"'
         fi
