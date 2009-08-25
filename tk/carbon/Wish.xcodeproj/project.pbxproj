@@ -837,7 +837,6 @@
 		F966BAA408F27A38005CB29B /* wm.n */ = {isa = PBXFileReference; explicitFileType = text.man; fileEncoding = 4; path = wm.n; sourceTree = "<group>"; };
 		F966BAA608F27A38005CB29B /* default.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = default.h; sourceTree = "<group>"; };
 		F966BAA708F27A38005CB29B /* ks_names.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ks_names.h; sourceTree = "<group>"; };
-		F966BAA808F27A38005CB29B /* prolog.ps */ = {isa = PBXFileReference; explicitFileType = text; fileEncoding = 4; path = prolog.ps; sourceTree = "<group>"; };
 		F966BAA908F27A39005CB29B /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		F966BAAA08F27A39005CB29B /* tk.decls */ = {isa = PBXFileReference; explicitFileType = text.script; fileEncoding = 4; path = tk.decls; sourceTree = "<group>"; };
 		F966BAAB08F27A39005CB29B /* tk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tk.h; sourceTree = "<group>"; };
@@ -2399,7 +2398,6 @@
 			children = (
 				F966BAA608F27A38005CB29B /* default.h */,
 				F966BAA708F27A38005CB29B /* ks_names.h */,
-				F966BAA808F27A38005CB29B /* prolog.ps */,
 				F966BAA908F27A39005CB29B /* README */,
 				F966BAAA08F27A39005CB29B /* tk.decls */,
 				F966BAAB08F27A39005CB29B /* tk.h */,

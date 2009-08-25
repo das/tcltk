@@ -1,3 +1,43 @@
+2009-08-24  Donal K. Fellows  <dkf@users.sf.net>
+
+	* library/msgbox.tcl (::tk::MessageBox): Correct bindings so that they
+	work with ttk::buttons. Reported by Hans-Christoph Steiner.
+
+2009-08-24  Daniel Steffen  <das@users.sourceforge.net>
+
+	* generic/tkInt.h: Annotate Tcl_Panic as noreturn for clang static
+	analyzer in PURIFY builds, replacing preprocessor/assert technique.
+
+	* generic/tkBind.c (HandleEventGenerate): Don't generate events for
+	windows that don't exist yet (fixes TkAqua testsuite crash).
+
+	* macosx/tkMacOSXWindowEvent.c: [Bug 2821084]: Allow WM_DELETE_WINDOW
+	handlers to prevent window closure by generating WM destroy event
+	earlier (from window delegate's -windowShouldClose:).
+
+	* macosx/tkMacOSXDraw.c (TkMacOSX{Setup,Restore}DrawingContext):
+	Disable window flushing during Tk drawing to avoid immediate flush of
+	NSView-based native widgets on draw. (fixes drawing performance issue
+	reported by Youness Alaoui on tcl-mac)
+
+	* macosx/tkMacOSXHLEvents.c (ScriptHandler):	Fix "do script" apple
+	* carbon/tkMacOSXHLEvents.c (ScriptHandler):	event handler issues
+	on recent OS X releases by using AE coercion to 'utf8' for text data
+	and to 'fsrf' for alias data. (reported by Youness Alaoui on tcl-mac)
+
+	* macosx/Wish.sdef (new file):		Install and enable sdef file
+	* macosx/Wish-Info.plist.in:		into Wish application bundle,
+	* macosx/Tk.xcode/project.pbxproj:	describing TkAqua apple event
+	* macosx/Tk.xcodeproj/project.pbxproj:	support for use by AppleScript.
+	* unix/Makefile.in:			(replaces functionality of
+	* unix/configure.in:			'aete' resource removed with
+						Cocoa port & fixes AppleScript
+						issues reported on tcl-mac)
+	* unix/configure: autoconf-2.59
+
+	* carbon/Wish.xcode/project.pbxproj:	Remove references to obsolete
+	* carbon/Wish.xcodeproj/project.pbxproj: prolog.ps file.
+
 2009-08-19  Peter Spjuth  <peter.spjuth@gmail.com>
 
 	* generic/tk.h
@@ -8,13 +48,13 @@
 	* generic/tkWindow.c
 	* tests/grid.test
 	* tests/packgrid.test
-	* tests/textIndex.test:	Give an error if grid and pack are used in the
-	same master. [Patch 2475855]
+	* tests/textIndex.test:	[Patch 2475855]: Give an error if grid and
+	pack are used in the same master.
 
 2009-08-14  Daniel Steffen  <das@users.sourceforge.net>
 
 	* macosx/tkMacOSXDraw.c: Avoid exception in XCopyArea() when copying
-	from toplevel that has never been mapped. (reported by Youness Alaoui
+	from toplevel that has never been mapped. (Reported by Youness Alaoui
 	on tcl-mac)
 
 	* macosx/tkMacOSXWm.c: Workaround for textured windows being draggable
@@ -22,19 +62,19 @@
 
 2009-08-10  Jan Nijtmans  <nijtmans@users.sf.net>
 
-	* win/tkWinPixmap.c:  Eliminate more gcc warnings
+	* win/tkWinPixmap.c: Eliminate more gcc warnings
 	* win/tkWinWm.c:
 	* win/tkWinTest.c
 
 2009-08-09  Jan Nijtmans  <nijtmans@users.sf.net>
 
-	* generic/ttk/ttkInit.c Eliminate gcc warning
+	* generic/ttk/ttkInit.c: Eliminate gcc warning
 	* generic/tkBind.c
 	* generic/tkText.c
 	* generic/tkUtil.c
-	* win/ttkWinXPTheme.c:  include <vssym32.h> only when available
-	* win/configure.in:     check for vssym32.h, available in newer SDK's
-	* win/configure         (regenerated)
+	* win/ttkWinXPTheme.c:	Include <vssym32.h> only when available
+	* win/configure.in:	check for vssym32.h, available in newer SDK's
+	* win/configure:	(regenerated)
 
 2009-08-08  Donal K. Fellows  <dkf@users.sf.net>
 
