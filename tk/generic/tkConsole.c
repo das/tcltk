@@ -13,7 +13,7 @@
  * RCS: @(#) $Id$
  */
 
-#include "tk.h"
+#include "tkInt.h"
 
 /*
  * Each console is associated with an instance of the ConsoleInfo struct.
@@ -720,6 +720,8 @@ ConsoleObjCmd(
 	    Tcl_ListObjAppendElement(NULL, cmd, objv[2]);
 	}
 	break;
+    default:
+	CLANG_ASSERT(0);
     }
 
     Tcl_IncrRefCount(cmd);
