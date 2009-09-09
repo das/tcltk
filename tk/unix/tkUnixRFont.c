@@ -421,7 +421,8 @@ TkpGetFontFromAttributes(
 
     /*
      * Hack to work around issues with weird issues with Xft/Xrender
-     * connection.
+     * connection. For details, see comp.lang.tcl thread starting from
+     * <adcc99ed-c73e-4efc-bb5d-e57a57a051e8@l35g2000pra.googlegroups.com>
      */
 
     if (!fontPtr) {
