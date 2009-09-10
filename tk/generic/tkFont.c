@@ -1188,15 +1188,20 @@ Tk_AllocFontFromObj(
 	     */
 
 	    fontPtr = TkpGetFontFromAttributes(NULL, tkwin, &fa);
-	    if (fontPtr == NULL) {
-		Tcl_AppendResult(interp, "failed to allocate font due to ",
-			"internal font engine problem", NULL);
-		if (isNew) {
-		    Tcl_DeleteHashEntry(cacheHashPtr);
-		}
-		return NULL;
-	    }
 	}
+    }
+
+    /*
+     * Detect the system font engine going wrong and fail more gracefully.
+     */
+
+    if (fontPtr == NULL) {
+	if (isNew) {
+	    Tcl_DeleteHashEntry(cacheHashPtr);
+	}
+	Tcl_AppendResult(interp, "failed to allocate font due to ",
+		"internal system font engine problem", NULL);
+	return NULL;
     }
 
     fontPtr->resourceRefCount = 1;
