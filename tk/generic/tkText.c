@@ -5561,6 +5561,7 @@ SearchCore(
 	    int maxExtraLines = 0;
 	    const char *startOfLine = Tcl_GetString(theLine);
 
+	    CLANG_ASSERT(pattern);
 	    do {
 		Tcl_UniChar ch;
 		const char *p;
