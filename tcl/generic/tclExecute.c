@@ -2295,6 +2295,7 @@ TclExecuteByteCode(
 	CADR(INST_REVERSE),		CADR(INST_REGEXP),
 	CADR(INST_EXIST_SCALAR),	CADR(INST_EXIST_ARRAY),
 	CADR(INST_EXIST_ARRAY_STK),	CADR(INST_EXIST_STK),
+	CADR(INST_NOP),			CADR(INST_RETURN_CODE_BRANCH),
     };
 #endif
 
@@ -2717,6 +2718,10 @@ TclExecuteByteCode(
 	    NEXT_INST_F(opnd, 0, -1);
 	}
 
+    CASE(INST_NOP):
+	pc += 1;
+	NEXT_INST();
+
     CASE(INST_DUP):
 	objResultPtr = OBJ_AT_TOS;
 	TRACE_WITH_OBJ(("=> "), objResultPtr);
@@ -3070,6 +3075,7 @@ TclExecuteByteCode(
 
     CASE(INST_INVOKE_EXPANDED):
 	{
+	    CLANG_ASSERT(auxObjList);
 	    objc = CURR_DEPTH
 		    - (ptrdiff_t) auxObjList->internalRep.twoPtrValue.ptr1;
 	    POP_AUX_OBJ();
@@ -4766,7 +4772,7 @@ TclExecuteByteCode(
 		if (o != NULL) {
 		    s2 = TclGetStringFromObj(o, &s2len);
 		} else {
-		    s2 = "";
+		    s2 = ""; s2len = 0;
 		}
 		if (s1len == s2len) {
 		    found = (strcmp(s1, s2) == 0);
@@ -7387,6 +7393,21 @@ TclExecuteByteCode(
 	TRACE_WITH_OBJ(("=> "), objResultPtr);
 	NEXT_INST_F(1, 0, 1);
 
+    CASE(INST_RETURN_CODE_BRANCH): {
+	int code;
+
+	if (TclGetIntFromObj(NULL, OBJ_AT_TOS, &code) != TCL_OK) {
+	    Tcl_Panic("INST_RETURN_CODE_BRANCH: TOS not a return code!");
+	}
+	if (code == TCL_OK) {
+	    Tcl_Panic("INST_RETURN_CODE_BRANCH: TOS is TCL_OK!");
+	}
+	if (code < TCL_ERROR || code > TCL_CONTINUE) {
+	    code = TCL_CONTINUE + 1;
+	}
+	NEXT_INST_F(2*code -1, 1, 0);
+    }
+
 /* TODO: normalize "valPtr" to "valuePtr" */
     {
 	int opnd, opnd2, allocateDict;
@@ -8174,6 +8195,7 @@ TclExecuteByteCode(
 		    (unsigned) CURR_DEPTH, (unsigned) 0);
 	    Tcl_Panic("TclExecuteByteCode execution failure: end stack top < start stack top");
 	}
+	CLANG_ASSERT(bcFramePtr);
     }
 
     oldBottomPtr = bottomPtr->prevBottomPtr;

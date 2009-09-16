@@ -1177,7 +1177,7 @@ TkFocusJoin(
 	tmpPtr = winPtr->mainPtr->tlFocusPtr;
 	winPtr->mainPtr->tlFocusPtr = tmpPtr->nextPtr;
 	ckfree((char *)tmpPtr);
-    } else {
+    } else if (winPtr && winPtr->mainPtr) {
 	for (tlFocusPtr = winPtr->mainPtr->tlFocusPtr; tlFocusPtr != NULL;
 		tlFocusPtr = tlFocusPtr->nextPtr) {
 	    if (tlFocusPtr->nextPtr &&
