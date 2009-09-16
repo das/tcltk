@@ -1013,6 +1013,7 @@ TkTextCreateTag(
 	tagPtr->textPtr = textPtr;
 	textPtr->refCount++;
     } else {
+	CLANG_ASSERT(hPtr);
 	Tcl_SetHashValue(hPtr, tagPtr);
     }
     tagPtr->optionTable =

@@ -8360,7 +8360,9 @@ FreeBaseChunk(
 	ciPtr->chars = NULL;
     }
 
-    Tcl_DStringFree(&((BaseCharInfo *) baseChunkPtr->clientData)->baseChars);
+    if (baseChunkPtr) {
+	Tcl_DStringFree(&((BaseCharInfo *) baseChunkPtr->clientData)->baseChars);
+    }
 }
 
 /*

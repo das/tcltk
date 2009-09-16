@@ -1347,7 +1347,6 @@ Tk_DestroyWindow(
 
     if (!(halfdeadPtr->flags & HD_DESTROY_COUNT)) {
 	halfdeadPtr->flags |= HD_DESTROY_COUNT;
-	dispPtr->destroyCount++;
     }
 
     while (winPtr->childList != NULL) {
@@ -1462,7 +1461,6 @@ Tk_DestroyWindow(
 	     * to do an explicit destroy of this X window.
 	     */
 
-	    dispPtr->lastDestroyRequest = NextRequest(winPtr->display);
 	    XDestroyWindow(winPtr->display, winPtr->window);
 	}
 #endif
@@ -1470,7 +1468,6 @@ Tk_DestroyWindow(
 		(char *) winPtr->window));
 	winPtr->window = None;
     }
-    dispPtr->destroyCount--;
     UnlinkWindow(winPtr);
     TkEventDeadWindow(winPtr);
     TkBindDeadWindow(winPtr);
@@ -1536,7 +1533,7 @@ Tk_DestroyWindow(
 		Tcl_CreateCommand(winPtr->mainPtr->interp, "send",
 			TkDeadAppCmd, NULL, NULL);
 		Tcl_UnlinkVar(winPtr->mainPtr->interp, "tk_strictMotif");
-                Tcl_UnlinkVar(winPtr->mainPtr->interp,
+		Tcl_UnlinkVar(winPtr->mainPtr->interp,
 			"::tk::AlwaysShowSelection");
 	    }
 
