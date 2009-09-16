@@ -832,7 +832,9 @@ GetIndex(
 	    if (tagPtr == textPtr->selTagPtr) {
 		tagName = "sel";
 	    } else {
-		tagName = Tcl_GetHashKey(&sharedPtr->tagTable, hPtr);
+		if (hPtr != NULL) {
+		    tagName = Tcl_GetHashKey(&sharedPtr->tagTable, hPtr);
+		}
 	    }
 	    Tcl_ResetResult(interp);
 	    Tcl_AppendResult(interp,
