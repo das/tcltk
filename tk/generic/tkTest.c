@@ -2125,6 +2125,7 @@ CustomOptionSet(
 
     if (value == NULL) {
 	objEmpty = 1;
+	CLANG_ASSERT(value);
     } else if ((*value)->bytes != NULL) {
 	objEmpty = ((*value)->length == 0);
     } else {
