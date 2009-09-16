@@ -303,6 +303,7 @@ Tk_GetVisual(
 	bestPtr = &visInfoList[i];
 	bestPrio = prio;
     }
+    CLANG_ASSERT(bestPtr);
     *depthPtr = bestPtr->depth;
     visual = bestPtr->visual;
     XFree((char *) visInfoList);

@@ -399,6 +399,13 @@ InstructionDesc const tclInstructionTable[] = {
 	 * stknext */
     {"existStk",	 1,    0,         0,	{OPERAND_NONE}},
 	/* Test if general variable exists; unparsed variable name is stktop*/
+    {"nop",		 1,    0,         0,	{OPERAND_NONE}},
+	/* Do nothing */
+    {"returnCodeBranch", 1,   -1,	  0,	{OPERAND_NONE}},
+	/* Jump to next instruction based on the return code on top of stack
+	 * ERROR: +1;	RETURN: +3;	BREAK: +5;	CONTINUE: +7;
+	 * Other non-OK: +9
+	 */
     {0}
 };
 
@@ -406,6 +413,8 @@ InstructionDesc const tclInstructionTable[] = {
  * Prototypes for procedures defined later in this file:
  */
 
+static ByteCode *	CompileSubstObj(Tcl_Interp *interp, Tcl_Obj *objPtr,
+			    int flags);
 static void		DupByteCodeInternalRep(Tcl_Obj *srcPtr,
 			    Tcl_Obj *copyPtr);
 static unsigned char *	EncodeCmdLocMap(CompileEnv *envPtr,
@@ -415,6 +424,7 @@ static void		EnterCmdExtentData(CompileEnv *envPtr,
 static void		EnterCmdStartData(CompileEnv *envPtr,
 			    int cmdNumber, int srcOffset, int codeOffset);
 static void		FreeByteCodeInternalRep(Tcl_Obj *objPtr);
+static void		FreeSubstCodeInternalRep(Tcl_Obj *objPtr);
 static int		GetCmdLocEncodingSize(CompileEnv *envPtr);
 #ifdef TCL_COMPILE_STATS
 static void		RecordByteCodeStats(ByteCode *codePtr);
@@ -445,6 +455,19 @@ const Tcl_ObjType tclByteCodeType = {
     DupByteCodeInternalRep,	/* dupIntRepProc */
     NULL,			/* updateStringProc */
     SetByteCodeFromAny		/* setFromAnyProc */
+};
+
+/*
+ * The structure below defines a bytecode Tcl object type to hold the
+ * compiled bytecode for the [subst]itution of Tcl values.
+ */
+
+static const Tcl_ObjType substCodeType = {
+    "substcode",		/* name */
+    FreeSubstCodeInternalRep,	/* freeIntRepProc */
+    DupByteCodeInternalRep,	/* dupIntRepProc - shared with bytecode */
+    NULL,			/* updateStringProc */
+    NULL,			/* setFromAnyProc */
 };
 
 /*
@@ -847,6 +870,144 @@ TclCleanupByteCode(
 
     TclHandleRelease(codePtr->interpHandle);
     ckfree((char *) codePtr);
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TclNRSubstObj --
+ *
+ *	Request substitution of a Tcl value by the NR stack.
+ *
+ * Results:
+ *	Returns TCL_OK.
+ *
+ * Side effects:
+ *	Compiles objPtr into bytecode that performs the substitutions as
+ *	governed by flags and places callbacks on the NR stack to execute
+ *	the bytecode and store the result in the interp.
+ *
+ *----------------------------------------------------------------------
+ */
+
+int
+TclNRSubstObj(
+    Tcl_Interp *interp,
+    Tcl_Obj *objPtr,
+    int flags)
+{
+    ByteCode *codePtr = CompileSubstObj(interp, objPtr, flags);
+
+    /* TODO: Confirm we do not need this. */
+    /* Tcl_ResetResult(interp); */
+    Tcl_NRAddCallback(interp, NRCallTEBC, INT2PTR(TCL_NR_BC_TYPE), codePtr,
+	    NULL, NULL);
+    return TCL_OK;
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * CompileSubstObj --
+ *
+ *	Compile a Tcl value into ByteCode implementing its substitution,
+ *	as governed by flags.
+ *
+ * Results:
+ *	A (ByteCode *) is returned pointing to the resulting ByteCode.
+ *	The caller must manage its refCount and arrange for a call to
+ *	TclCleanupByteCode() when the last reference disappears.
+ *
+ * Side effects:
+ *	The Tcl_ObjType of objPtr is changed to the "substcode" type,
+ *	and the ByteCode and governing flags value are kept in the internal
+ *	rep for faster operations the next time CompileSubstObj is called
+ *	on the same value.
+ *
+ *----------------------------------------------------------------------
+ */
+
+static ByteCode *
+CompileSubstObj(
+    Tcl_Interp *interp,
+    Tcl_Obj *objPtr,
+    int flags)
+{
+    Interp *iPtr = (Interp *) interp;
+    ByteCode *codePtr = NULL;
+
+    if (objPtr->typePtr == &substCodeType) {
+	Namespace *nsPtr = iPtr->varFramePtr->nsPtr;
+
+	codePtr = (ByteCode *) objPtr->internalRep.ptrAndLongRep.ptr;
+	if ((unsigned long)flags != objPtr->internalRep.ptrAndLongRep.value
+		|| ((Interp *) *codePtr->interpHandle != iPtr)
+		|| (codePtr->compileEpoch != iPtr->compileEpoch)
+		|| (codePtr->nsPtr != nsPtr)
+		|| (codePtr->nsEpoch != nsPtr->resolverEpoch)
+		|| (codePtr->localCachePtr !=
+		iPtr->varFramePtr->localCachePtr)) {
+	    FreeSubstCodeInternalRep(objPtr);
+	}
+    }
+    if (objPtr->typePtr != &substCodeType) {
+	CompileEnv compEnv;
+	int numBytes;
+	const char *bytes = Tcl_GetStringFromObj(objPtr, &numBytes);
+
+	/* TODO: Check for more TIP 280 */
+	TclInitCompileEnv(interp, &compEnv, bytes, numBytes, NULL, 0);
+
+	TclSubstCompile(interp, bytes, numBytes, flags, 1, &compEnv);
+
+	TclEmitOpcode(INST_DONE, &compEnv);
+	TclInitByteCodeObj(objPtr, &compEnv);
+	objPtr->typePtr = &substCodeType;
+	TclFreeCompileEnv(&compEnv);
+	codePtr = (ByteCode *) objPtr->internalRep.otherValuePtr;
+	objPtr->internalRep.ptrAndLongRep.ptr = codePtr;
+	objPtr->internalRep.ptrAndLongRep.value = flags;
+	if (iPtr->varFramePtr->localCachePtr) {
+	    codePtr->localCachePtr = iPtr->varFramePtr->localCachePtr;
+	    codePtr->localCachePtr->refCount++;
+	}
+	/* TODO: Debug printing? */
+    }
+    return codePtr;
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * FreeSubstCodeInternalRep --
+ *
+ *	Part of the substcode Tcl object type implementation. Frees the storage
+ *	associated with a substcode object's internal representation unless its
+ *	code is actively being executed.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	The substcode object's internal rep is marked invalid and its code gets
+ *	freed unless the code is actively being executed. In that case the
+ *	cleanup is delayed until the last execution of the code completes.
+ *
+ *----------------------------------------------------------------------
+ */
+
+static void
+FreeSubstCodeInternalRep(
+    register Tcl_Obj *objPtr)	/* Object whose internal rep to free. */
+{
+    register ByteCode *codePtr = objPtr->internalRep.ptrAndLongRep.ptr;
+
+    codePtr->refCount--;
+    if (codePtr->refCount <= 0) {
+	TclCleanupByteCode(codePtr);
+    }
+    objPtr->typePtr = NULL;
+    objPtr->internalRep.otherValuePtr = NULL;
 }
 
 /*
@@ -1277,6 +1438,17 @@ TclCompileScript(
 	    TclCompileSyntaxError(interp, envPtr);
 	    break;
 	}
+
+	/*
+	 * TIP #280: We have to count newlines before the command even
+	 * in the degenerate case when the command has no words.  (See
+	 * test info-30.33).  So make that counting here, and not in 
+	 * the (numWords > 0) branch below.
+	 */
+	TclAdvanceLines(&cmdLine, p, parsePtr->commandStart);
+	TclAdvanceContinuations(&cmdLine, &clNext,
+		parsePtr->commandStart - envPtr->source);
+
 	if (parsePtr->numWords > 0) {
 	    int expand = 0;	/* Set if there are dynamic expansions to
 				 * handle */
@@ -1361,9 +1533,6 @@ TclCompileScript(
 	     * 'wlines'.
 	     */
 
-	    TclAdvanceLines(&cmdLine, p, parsePtr->commandStart);
-	    TclAdvanceContinuations (&cmdLine, &clNext,
-				     parsePtr->commandStart - envPtr->source);
 	    EnterCmdWordData(eclPtr, parsePtr->commandStart - envPtr->source,
 		    parsePtr->tokenPtr, parsePtr->commandStart,
 		    parsePtr->commandSize, parsePtr->numWords, cmdLine,
@@ -1633,6 +1802,14 @@ TclCompileScript(
     } while (bytesLeft > 0);
 
     /*
+     * TIP #280: Bring the line counts in the CompEnv up to date.
+     *	See tests info-30.33,34,35 .
+     */
+
+    envPtr->line = cmdLine;
+    envPtr->clNext = clNext;
+
+    /*
      * If the source script yielded no instructions (e.g., if it was empty),
      * push an empty string as the command's result.
      *
@@ -1674,6 +1851,77 @@ TclCompileScript(
  */
 
 void
+TclCompileVarSubst(
+    Tcl_Interp *interp,
+    Tcl_Token *tokenPtr,
+    CompileEnv *envPtr)
+{
+    const char *p, *name = tokenPtr[1].start;
+    int nameBytes = tokenPtr[1].size;
+    int i, localVar, localVarName = 1;
+
+    /*
+     * Determine how the variable name should be handled: if it
+     * contains any namespace qualifiers it is not a local variable
+     * (localVarName=-1); if it looks like an array element and the
+     * token has a single component, it should not be created here
+     * [Bug 569438] (localVarName=0); otherwise, the local variable
+     * can safely be created (localVarName=1).
+     */
+
+    for (i = 0, p = name;  i < nameBytes;  i++, p++) {
+	if ((*p == ':') && (i < nameBytes-1) && (*(p+1) == ':')) {
+	    localVarName = -1;
+	    break;
+	} else if ((*p == '(')
+		&& (tokenPtr->numComponents == 1)
+		&& (*(name + nameBytes - 1) == ')')) {
+	    localVarName = 0;
+	    break;
+	}
+    }
+
+    /*
+     * Either push the variable's name, or find its index in the array
+     * of local variables in a procedure frame.
+     */
+
+    localVar = -1;
+    if (localVarName != -1) {
+	localVar = TclFindCompiledLocal(name, nameBytes, localVarName, envPtr);
+    }
+    if (localVar < 0) {
+	TclEmitPush(TclRegisterNewLiteral(envPtr, name, nameBytes), envPtr);
+    }
+
+    /*
+     * Emit instructions to load the variable.
+     */
+
+    TclAdvanceLines(&(envPtr->line), tokenPtr[1].start,
+	    tokenPtr[1].start + tokenPtr[1].size);
+
+    if (tokenPtr->numComponents == 1) {
+	if (localVar < 0) {
+	    TclEmitOpcode(INST_LOAD_SCALAR_STK, envPtr);
+	} else if (localVar <= 255) {
+	    TclEmitInstInt1(INST_LOAD_SCALAR1, localVar, envPtr);
+	} else {
+	    TclEmitInstInt4(INST_LOAD_SCALAR4, localVar, envPtr);
+	}
+    } else {
+	TclCompileTokens(interp, tokenPtr+2, tokenPtr->numComponents-1, envPtr);
+	if (localVar < 0) {
+	    TclEmitOpcode(INST_LOAD_ARRAY_STK, envPtr);
+	} else if (localVar <= 255) {
+	    TclEmitInstInt1(INST_LOAD_ARRAY1, localVar, envPtr);
+	} else {
+	    TclEmitInstInt4(INST_LOAD_ARRAY4, localVar, envPtr);
+	}
+    }
+}
+
+void
 TclCompileTokens(
     Tcl_Interp *interp,		/* Used for error and status reporting. */
     Tcl_Token *tokenPtr,	/* Pointer to first in an array of tokens to
@@ -1685,9 +1933,7 @@ TclCompileTokens(
     Tcl_DString textBuffer;	/* Holds concatenated chars from adjacent
 				 * TCL_TOKEN_TEXT, TCL_TOKEN_BS tokens. */
     char buffer[TCL_UTF_MAX];
-    const char *name, *p;
-    int numObjsToConcat, nameBytes, localVarName, localVar;
-    int length, i;
+    int i, numObjsToConcat, length;
     unsigned char *entryCodeNext = envPtr->codeNext;
 #define NUM_STATIC_POS 20
     int isLiteral, maxNumCL, numCL;
@@ -1731,6 +1977,8 @@ TclCompileTokens(
 	switch (tokenPtr->type) {
 	case TCL_TOKEN_TEXT:
 	    Tcl_DStringAppend(&textBuffer, tokenPtr->start, tokenPtr->size);
+	    TclAdvanceLines(&(envPtr->line), tokenPtr->start,
+		    tokenPtr->start + tokenPtr->size);
 	    break;
 
 	case TCL_TOKEN_BS:
@@ -1810,69 +2058,7 @@ TclCompileTokens(
 		Tcl_DStringFree(&textBuffer);
 	    }
 
-	    /*
-	     * Determine how the variable name should be handled: if it
-	     * contains any namespace qualifiers it is not a local variable
-	     * (localVarName=-1); if it looks like an array element and the
-	     * token has a single component, it should not be created here
-	     * [Bug 569438] (localVarName=0); otherwise, the local variable
-	     * can safely be created (localVarName=1).
-	     */
-
-	    name = tokenPtr[1].start;
-	    nameBytes = tokenPtr[1].size;
-
-	    localVarName = 1;
-	    for (i = 0, p = name;  i < nameBytes;  i++, p++) {
-		if ((*p == ':') && (i < nameBytes-1) && (*(p+1) == ':')) {
-		    localVarName = -1;
-		    break;
-		} else if ((*p == '(')
-			&& (tokenPtr->numComponents == 1)
-			&& (*(name + nameBytes - 1) == ')')) {
-		    localVarName = 0;
-		    break;
-		}
-	    }
-
-	    /*
-	     * Either push the variable's name, or find its index in the array
-	     * of local variables in a procedure frame.
-	     */
-
-	    localVar = -1;
-	    if (localVarName != -1) {
-		localVar = TclFindCompiledLocal(name, nameBytes, localVarName,
-			envPtr);
-	    }
-	    if (localVar < 0) {
-		TclEmitPush(TclRegisterNewLiteral(envPtr, name, nameBytes),
-			envPtr);
-	    }
-
-	    /*
-	     * Emit instructions to load the variable.
-	     */
-
-	    if (tokenPtr->numComponents == 1) {
-		if (localVar < 0) {
-		    TclEmitOpcode(INST_LOAD_SCALAR_STK, envPtr);
-		} else if (localVar <= 255) {
-		    TclEmitInstInt1(INST_LOAD_SCALAR1, localVar, envPtr);
-		} else {
-		    TclEmitInstInt4(INST_LOAD_SCALAR4, localVar, envPtr);
-		}
-	    } else {
-		TclCompileTokens(interp, tokenPtr+2,
-			tokenPtr->numComponents-1, envPtr);
-		if (localVar < 0) {
-		    TclEmitOpcode(INST_LOAD_ARRAY_STK, envPtr);
-		} else if (localVar <= 255) {
-		    TclEmitInstInt1(INST_LOAD_ARRAY1, localVar, envPtr);
-		} else {
-		    TclEmitInstInt4(INST_LOAD_ARRAY4, localVar, envPtr);
-		}
-	    }
+	    TclCompileVarSubst(interp, tokenPtr, envPtr);
 	    numObjsToConcat++;
 	    count -= tokenPtr->numComponents;
 	    tokenPtr += tokenPtr->numComponents;
