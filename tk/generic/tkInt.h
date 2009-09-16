@@ -399,10 +399,6 @@ typedef struct TkDisplay {
     int postCommandGeneration;
 
     /*
-     * Information used by tkOption.c only.
-     */
-
-    /*
      * Information used by tkPack.c only.
      */
 
@@ -471,42 +467,12 @@ typedef struct TkDisplay {
 				 * application name on each comm window. */
 
     /*
-     * Information used by tkXId.c only:
-     */
-
-    struct TkIdStack *idStackPtr;
-				/* First in list of chunks of free resource
-				 * identifiers, or NULL if there are no free
-				 * resources. */
-    XID (*defaultAllocProc) (Display *display);
-				/* Default resource allocator for display. */
-    struct TkIdStack *windowStackPtr;
-				/* First in list of chunks of window ids that
-				 * can't be reused right now. */
-    Tcl_TimerToken idCleanupScheduled;
-				/* If set, it means a call to WindowIdCleanup
-				 * has already been scheduled, 0 means it
-				 * hasn't. */
-
-    /*
      * Information used by tkUnixWm.c and tkWinWm.c only:
      */
 
     struct TkWmInfo *firstWmPtr;/* Points to first top-level window. */
     struct TkWmInfo *foregroundWmPtr;
 				/* Points to the foreground window. */
-
-    /*
-     * Information maintained by tkWindow.c for use later on by tkXId.c:
-     */
-
-    int destroyCount;		/* Number of Tk_DestroyWindow operations in
-				 * progress. */
-    unsigned long lastDestroyRequest;
-				/* Id of most recent XDestroyWindow request;
-				 * can re-use ids in windowStackPtr when
-				 * server has seen this request and event
-				 * queue is empty. */
 
     /*
      * Information used by tkVisual.c only:
@@ -983,19 +949,21 @@ MODULE_SCOPE Tcl_HashTable	tkPredefBitmapTable;
 #endif
 
 /*
- * Macros for clang static analyzer
+ * Support for Clang Static Analyzer <http://clang-analyzer.llvm.org>
  */
 
-#if defined(PURIFY) && defined(__clang__) && !defined(CLANG_ASSERT)
+#if defined(PURIFY) && defined(__clang__)
+#if __has_feature(attribute_analyzer_noreturn) && \
+	!defined(Tcl_Panic) && defined(Tcl_Panic_TCL_DECLARED)
+void Tcl_Panic(const char *, ...) __attribute__((analyzer_noreturn));
+#endif
+#if !defined(CLANG_ASSERT)
 #include <assert.h>
 #define CLANG_ASSERT(x) assert(x)
-#ifndef USE_TCL_STUBS
-EXTERN void Tcl_Panic(const char * format, ...)
-	__attribute__((analyzer_noreturn));
 #endif
 #elif !defined(CLANG_ASSERT)
 #define CLANG_ASSERT(x)
-#endif
+#endif /* PURIFY && __clang__ */
 
 /*
  * The following magic value is stored in the "send_event" field of FocusIn
