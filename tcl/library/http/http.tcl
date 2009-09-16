@@ -13,7 +13,7 @@
 package require Tcl 8.4
 # Keep this in sync with pkgIndex.tcl and with the install directories in
 # Makefiles
-package provide http 2.7.3
+package provide http 2.7.4
 
 namespace eval http {
     # Allow resourcing to not clobber existing data
@@ -1033,8 +1033,14 @@ proc http::Event {sock token} {
 		    content-type {
 			set state(type) [string trim [string tolower $value]]
 			# grab the optional charset information
-			regexp -nocase {charset\s*=\s*(\S+?);?} \
-			    $state(type) -> state(charset)
+			if {[regexp -nocase \
+				 {charset\s*=\s*\"((?:[^""]|\\\")*)\"} \
+				 $state(type) -> cs]} {
+			    set state(charset) [string map {{\"} \"} $cs]
+			} else {
+			    regexp -nocase {charset\s*=\s*(\S+?);?} \
+				$state(type) -> state(charset)
+			}
 		    }
 		    content-length {
 			set state(totalsize) [string trim $value]
