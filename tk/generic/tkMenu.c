@@ -2060,7 +2060,7 @@ ConfigureMenuCloneEntries(
     	}
 
 	if (cascadeEntryChanged && (mePtr->namePtr != NULL)) {
-	    if (cascadeMenuRefPtr->menuPtr != NULL) {
+	    if (cascadeMenuRefPtr && cascadeMenuRefPtr->menuPtr != NULL) {
 		Tcl_Obj *newObjv[2];
 		Tcl_Obj *newCloneNamePtr;
 		Tcl_Obj *pathNamePtr = Tcl_NewStringObj(
