@@ -552,15 +552,17 @@ TkpDisplayButton(
 	       	(butPtr->disabledFg != NULL)) {
 	    COLORREF oldFgColor = gc->foreground;
 
-	    gc->foreground = GetSysColor(COLOR_3DHILIGHT);
-	    Tk_DrawTextLayout(butPtr->display, pixmap, gc,
+	    if (gc->background == GetSysColor(COLOR_BTNFACE)) {
+		gc->foreground = GetSysColor(COLOR_3DHILIGHT);
+		Tk_DrawTextLayout(butPtr->display, pixmap, gc,
 		    butPtr->textLayout, x + textXOffset + 1,
 		    y + textYOffset + 1, 0, -1);
-	    Tk_UnderlineTextLayout(butPtr->display, pixmap, gc,
+		Tk_UnderlineTextLayout(butPtr->display, pixmap, gc,
 		    butPtr->textLayout, x + textXOffset + 1,
 		    y + textYOffset + 1,
 		    butPtr->underline);
-	    gc->foreground = oldFgColor;
+		gc->foreground = oldFgColor;
+	    }
 	}
 
 	Tk_DrawTextLayout(butPtr->display, pixmap, gc,
@@ -615,13 +617,15 @@ TkpDisplayButton(
 	    if ((butPtr->state == STATE_DISABLED) &&
 		    (butPtr->disabledFg != NULL)) {
 		COLORREF oldFgColor = gc->foreground;
-		gc->foreground = GetSysColor(COLOR_3DHILIGHT);
-		Tk_DrawTextLayout(butPtr->display, pixmap, gc,
+		if (gc->background == GetSysColor(COLOR_BTNFACE)) {
+		    gc->foreground = GetSysColor(COLOR_3DHILIGHT);
+		    Tk_DrawTextLayout(butPtr->display, pixmap, gc,
 		       	butPtr->textLayout,
 			x + 1, y + 1, 0, -1);
-		Tk_UnderlineTextLayout(butPtr->display, pixmap, gc,
+		    Tk_UnderlineTextLayout(butPtr->display, pixmap, gc,
 			butPtr->textLayout, x + 1, y + 1, butPtr->underline);
-		gc->foreground = oldFgColor;
+		    gc->foreground = oldFgColor;
+		}
 	    }
 	    Tk_DrawTextLayout(butPtr->display, pixmap, gc, butPtr->textLayout,
 		    x, y, 0, -1);
