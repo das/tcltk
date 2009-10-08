@@ -443,7 +443,7 @@ package require Tk 8.6
     #
     method Create {} {
 	ttk::frame $w
-	set hull [ttk::entry $w.cHull -takefocus 0]
+	set hull [ttk::entry $w.cHull -takefocus 0 -cursor {}]
 	set sbar [ttk::scrollbar $w.cHull.sbar -orient horizontal -takefocus 0]
 	catch {$sbar configure -highlightthickness 0}
 	set canvas [canvas $w.cHull.canvas -highlightthick 0 -takefocus 1 \
