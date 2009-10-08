@@ -227,7 +227,7 @@ proc ::tk::IconList_Create {w} {
     upvar ::tk::$w data
 
     ttk::frame $w
-    ttk::entry $w.cHull -takefocus 0
+    ttk::entry $w.cHull -takefocus 0 -cursor {}
     set data(sbar)   [ttk::scrollbar $w.cHull.sbar -orient horizontal -takefocus 0]
     catch {$data(sbar) configure -highlightthickness 0}
     set data(canvas) [canvas $w.cHull.canvas -highlightthick 0 \
