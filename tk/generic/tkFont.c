@@ -2376,8 +2376,13 @@ TkDrawAngledTextLayout(
 	    lastByte = Tcl_UtfAtIndex(chunkPtr->start, numDisplayChars);
 	    dx = cosA * (chunkPtr->x + drawX) + sinA * (chunkPtr->y);
 	    dy = -sinA * (chunkPtr->x + drawX) + cosA * (chunkPtr->y);
-	    TkpDrawAngledChars(display, drawable, gc, layoutPtr->tkfont,
-		    firstByte, lastByte - firstByte, x+dx, y+dy, angle);
+	    if (angle == 0.0) {
+		Tk_DrawChars(display, drawable, gc, layoutPtr->tkfont,
+			firstByte, lastByte - firstByte, x + dx, y + dy);
+	    } else {
+		TkpDrawAngledChars(display, drawable, gc, layoutPtr->tkfont,
+			firstByte, lastByte - firstByte, x+dx, y+dy, angle);
+	    }
 	}
 	firstChar -= chunkPtr->numChars;
 	lastChar -= chunkPtr->numChars;
