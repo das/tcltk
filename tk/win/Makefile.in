@@ -479,7 +479,7 @@ install-binaries: binaries
 	@echo "Creating package index $(PKG_INDEX)"; 
 	@$(RM) $(PKG_INDEX);
 	@(\
-	echo "if {[catch {package present Tcl 8.5.0-8.6}]} { return }";\
+	echo "if {[catch {package present Tcl 8.5.0}]} { return }";\
 	echo "package ifneeded Tk $(VERSION)$(PATCH_LEVEL)\
 		[list load [file join \$$dir .. .. bin $(TK_DLL_FILE)] Tk]";\
 	) > $(PKG_INDEX);
