@@ -881,7 +881,7 @@ clean:
 
 distclean: clean
 	rm -rf Makefile config.status config.cache config.log tkConfig.sh \
-		$(PACKAGE).* prototype tkConfig.h *.plist Tk.framework tk.pc
+		tkConfig.h *.plist Tk.framework tk.pc
 
 depend:
 	makedepend -- $(DEPEND_SWITCHES) -- $(SRCS)
