@@ -1955,6 +1955,21 @@ proc ::tcl::clock::ParseClockScanFormat {formatString locale} {
     append procBody $postcode
     append procBody [list set changeover [mc GREGORIAN_CHANGE_DATE]] \n
 
+    # Set up the time zone before doing anything with a default base date
+    # that might need a timezone to interpret it.
+
+    if { ![dict exists $fieldSet seconds] 
+	    && ![dict exists $fieldSet starDate] } {
+	if { [dict exists $fieldSet tzName] } {
+	    append procBody {
+		set timeZone [dict get $date tzName]
+	    }
+	}
+	append procBody {
+	    ::tcl::clock::SetupTimeZone $timeZone
+	}
+    }
+
     # Add code that gets Julian Day Number from the fields.
 
     append procBody [MakeParseCodeFromFields $fieldSet $DateParseActions]
@@ -1963,7 +1978,9 @@ proc ::tcl::clock::ParseClockScanFormat {formatString locale} {
 
     append procBody [MakeParseCodeFromFields $fieldSet $TimeParseActions]
 
-    # Assemble seconds, and convert local nominal time to UTC.
+    # Assemble seconds from the Julian day and second of the day.
+    # Convert to local time unless epoch seconds or stardate are
+    # being processed - they're always absolute
 
     if { ![dict exists $fieldSet seconds] 
          && ![dict exists $fieldSet starDate] } {
@@ -1978,17 +1995,10 @@ proc ::tcl::clock::ParseClockScanFormat {formatString locale} {
 		+ [dict get $date secondOfDay]
 	    }]
 	}
-    }
 
-    if { ![dict exists $fieldSet seconds] 
-	    && ![dict exists $fieldSet starDate] } {
-	if { [dict exists $fieldSet tzName] } {
-	    append procBody {
-		set timeZone [dict get $date tzName]
-	    }
-	}
+	# Finally, convert the date to local time
+
 	append procBody {
-	    ::tcl::clock::SetupTimeZone $timeZone
 	    set date [::tcl::clock::ConvertLocalToUTC $date[set date {}] \
 			  $TZData($timeZone) $changeover]
 	}
@@ -3789,11 +3799,16 @@ proc ::tcl::clock::ProcessPosixTimeZone { z } {
     }
 
     # Fill in defaults for European or US DST rules
+    # US start time is the second Sunday in March
+    # EU start time is the last Sunday in March
+    # US end time is the first Sunday in November.
+    # EU end time is the last Sunday in October
 
     if {
 	[dict get $z startDayOfYear] eq {} && [dict get $z startMonth] eq {}
     } then {
-	if {($stdHours>=0) && ($stdHours<=12)} {
+	if {($stdSignum * $stdHours>=0) && ($stdSignum * $stdHours<=12)} {
+	    # EU
 	    dict set z startWeekOfMonth 5
 	    if {$stdHours>2} {
 		dict set z startHours 2
@@ -3801,6 +3816,7 @@ proc ::tcl::clock::ProcessPosixTimeZone { z } {
 		dict set z startHours [expr {$stdHours+1}]
 	    }
 	} else {
+	    # US
 	    dict set z startWeekOfMonth 2
 	    dict set z startHours 2
 	}
@@ -3812,7 +3828,8 @@ proc ::tcl::clock::ProcessPosixTimeZone { z } {
     if {
 	[dict get $z endDayOfYear] eq {} && [dict get $z endMonth] eq {}
     } then {
-	if {($stdHours>=0) && ($stdHours<=12)} {
+	if {($stdSignum * $stdHours>=0) && ($stdSignum * $stdHours<=12)} {
+	    # EU
 	    dict set z endMonth 10
 	    dict set z endWeekOfMonth 5
 	    if {$stdHours>2} {
@@ -3821,6 +3838,7 @@ proc ::tcl::clock::ProcessPosixTimeZone { z } {
 		dict set z endHours [expr {$stdHours+2}]
 	    }
 	} else {
+	    # US
 	    dict set z endMonth 11
 	    dict set z endWeekOfMonth 1
 	    dict set z endHours 2
