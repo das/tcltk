@@ -543,7 +543,8 @@ CreateWidget(
 	Tcl_InitHashTable(&sharedPtr->imageTable, TCL_STRING_KEYS);
 	sharedPtr->undoStack = TkUndoInitStack(interp,0);
 	sharedPtr->undo = 1;
-	sharedPtr->isDirtyIncrement = 1;
+	sharedPtr->isDirty = 0;
+	sharedPtr->dirtyMode = TK_TEXT_DIRTY_NORMAL;
 	sharedPtr->autoSeparators = 1;
 	sharedPtr->lastEditMode = TK_TEXT_EDIT_OTHER;
 	sharedPtr->stateEpoch = 0;
@@ -4898,16 +4899,21 @@ TextEditUndo(
     }
 
     /*
-     * Turn off the undo feature while we revert a compound action. Note that
-     * the dirty counter counts backwards while we are undoing...
+     * Turn off the undo feature while we revert a compound action, setting
+     * the dirty handling mode to undo for the duration (unless it is
+     * 'fixed').
      */
 
     textPtr->sharedTextPtr->undo = 0;
-    textPtr->sharedTextPtr->isDirtyIncrement = -1;
+    if (textPtr->sharedTextPtr->dirtyMode != TK_TEXT_DIRTY_FIXED) {
+	textPtr->sharedTextPtr->dirtyMode = TK_TEXT_DIRTY_UNDO;
+    }
 
     status = TkUndoRevert(textPtr->sharedTextPtr->undoStack);
 
-    textPtr->sharedTextPtr->isDirtyIncrement = 1;
+    if (textPtr->sharedTextPtr->dirtyMode != TK_TEXT_DIRTY_FIXED) {
+	textPtr->sharedTextPtr->dirtyMode = TK_TEXT_DIRTY_NORMAL;
+    }
     textPtr->sharedTextPtr->undo = 1;
 
     return status;
@@ -4942,13 +4948,20 @@ TextEditRedo(
 
     /*
      * Turn off the undo feature temporarily while we revert a previously
-     * undone compound action.
+     * undone compound action, setting the dirty handling mode to redo for the
+     * duration (unless it is 'fixed').
      */
 
     textPtr->sharedTextPtr->undo = 0;
+    if (textPtr->sharedTextPtr->dirtyMode != TK_TEXT_DIRTY_FIXED) {
+	textPtr->sharedTextPtr->dirtyMode = TK_TEXT_DIRTY_REDO;
+    }
 
     status = TkUndoApply(textPtr->sharedTextPtr->undoStack);
 
+    if (textPtr->sharedTextPtr->dirtyMode != TK_TEXT_DIRTY_FIXED) {
+	textPtr->sharedTextPtr->dirtyMode = TK_TEXT_DIRTY_NORMAL;
+    }
     textPtr->sharedTextPtr->undo = 1;
     return status;
 }
@@ -5013,17 +5026,18 @@ TextEditCmd(
 	    }
 
 	    /*
-	     * Set or reset the dirty info, but trigger a Modified event only
-	     * if it has changed.  Ensure a rationalized value for the bit.
+	     * Set or reset the dirty info, and trigger a Modified event.
 	     */
 
 	    setModified = setModified ? 1 : 0;
 
 	    textPtr->sharedTextPtr->isDirty = setModified;
-	    if (textPtr->sharedTextPtr->modifiedSet != setModified) {
-		textPtr->sharedTextPtr->modifiedSet = setModified;
-		GenerateModifiedEvent(textPtr);
+	    if (setModified) {
+		textPtr->sharedTextPtr->dirtyMode = TK_TEXT_DIRTY_FIXED;
+	    } else {
+		textPtr->sharedTextPtr->dirtyMode = TK_TEXT_DIRTY_NORMAL;
 	    }
+	    GenerateModifiedEvent(textPtr);
 	}
 	break;
     case EDIT_REDO:
@@ -5191,7 +5205,7 @@ GenerateModifiedEvent(
  *
  * UpdateDirtyFlag --
  *
- *	Increases the dirtyness of the text widget
+ *	Updates the dirtyness of the text widget
  *
  * Results:
  *	None
@@ -5207,14 +5221,37 @@ UpdateDirtyFlag(
     TkSharedText *sharedTextPtr)/* Information about text widget. */
 {
     int oldDirtyFlag;
+    TkText *textPtr;
 
-    if (sharedTextPtr->modifiedSet) {
+    /*
+     * If we've been forced to be dirty, we stay dirty (until explicitly
+     * reset, of course).
+     */
+
+    if (sharedTextPtr->dirtyMode == TK_TEXT_DIRTY_FIXED) {
 	return;
     }
+
+    if (sharedTextPtr->isDirty < 0
+	    && sharedTextPtr->dirtyMode == TK_TEXT_DIRTY_NORMAL) {
+	/*
+	 * If dirty flag is negative, only redo operations can make it zero
+	 * again. If we do a normal operation, it can never become zero any
+	 * more (other than by explicit reset).
+	 */
+
+	sharedTextPtr->dirtyMode = TK_TEXT_DIRTY_FIXED;
+	return;
+    }
+
     oldDirtyFlag = sharedTextPtr->isDirty;
-    sharedTextPtr->isDirty += sharedTextPtr->isDirtyIncrement;
+    if (sharedTextPtr->dirtyMode == TK_TEXT_DIRTY_UNDO) {
+	sharedTextPtr->isDirty--;
+    } else {
+	sharedTextPtr->isDirty++;
+    }
+
     if (sharedTextPtr->isDirty == 0 || oldDirtyFlag == 0) {
-	TkText *textPtr;
 	for (textPtr = sharedTextPtr->peers; textPtr != NULL;
 		textPtr = textPtr->next) {
 	    GenerateModifiedEvent(textPtr);

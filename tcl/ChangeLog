@@ -1,3 +1,370 @@
+2009-11-05  Andreas Kupries  <andreask@activestate.com>
+
+	* library/safe.tcl: A series of patches which bring the SafeBase
+	up to date with code guidelines, Tcl's features, also eliminating
+	a number of inefficiencies along the way.
+	(1) Changed all procedure names to be fully qualified.
+	(2) Moved the procedures out of the namespace eval. Kept their
+	locations. IOW, broke the namespace eval apart into small sections
+	not covering the procedure definitions.
+	(3) Reindented the code. Just lots of whitespace
+	changes. Functionality unchanged.
+	(4) Moved the multiple namespace eval's around. Command export at
+	the top, everything else (var decls, argument parsing setup) at
+	the bottom.
+	(5) Moved the argument parsing setup into a procedure called when
+	the code is loaded. Easier management of temporary data.
+	(6) Replaced several uses of 'Set' with calls to the new procedure
+	'InterpState' and direct access to the per-slave state array.
+	(7) Replaced the remaining uses of 'Set' and others outside of the
+	path/token handling, and deleted a number of procedures related to
+	state array access which are not used any longer.
+	(8) Converted the path token system to cache normalized paths and
+	path <-> token conversions. Removed more procedures not used any
+	longer. Removed the test cases 4.3 and 4.4 from safe.test. They
+	were testing the now deleted command "InterpStateName".
+	(9) Changed the log command setup so that logging is compiled out
+	completely when disabled (default).
+	(10) Misc. cleanup. Inlined IsInterp into CheckInterp, its only
+	user. Consistent 'return -code error' for error reporting. Updated
+	to use modern features (lassign, in/ni, dicts). The latter are
+	used to keep a reverse path -> token map and quicker check of
+	existence.
+	(11) Fixed bug 2854929. Recurse into all subdirs under all TM root
+	dirs and put them on the access path.
+
+2009-11-02  Kevin B. Kenny  <kennykb@acm.org>
+
+	* library/tzdata/Asia/Novokuznetsk: New tzdata locale for
+	Kemerovo oblast', which now keeps Novosibirsk time and not
+	Kranoyarsk time.
+	* library/tzdata/Asia/Damascus: Syrian DST changes.
+	* library/tzdata/Asia/Hong_Kong: Hong Kong historic DST corrections.
+	Olson tzdata2009q.
+	
+2009-11-02  Donal K. Fellows  <dkf@users.sf.net>
+
+	* doc/object.n (DESCRIPTION): Substantive revision to make it clearer
+	what the fundamental semantics of an object actually are.
+
+2009-11-01  Joe Mistachkin  <joe@mistachkin.com>
+
+	* doc/Cancel.3: Minor cosmetic fixes.
+	* win/makefile.vc: Make htmlhelp target work again.  An extra set of
+	double quotes around the definition of the HTML help compiler tool
+	appears to be required.  Previously, there was one set of double
+	quotes around the definition of the tool and one around the actual
+	invocation.  This led to confusion because it was the only such tool
+	path to include double quotes around its invocation.  Also, it was
+	somewhat inflexible in the event that somebody needed to override the
+	tool command to include arguments.  Therefore, even though it may look
+	"wrong", there are now two double quotes on either side of the tool
+	path definition.  This fixes the problem that currently prevents the
+	htmlhelp target from building and maintains flexibility in case
+	somebody needs to override it via the command line or an environment
+	variable.
+
+2009-11-01  Joe English  <jenglish@users.sourceforge.net>
+
+	* doc/Eval.3, doc/Cancel.3: Move TIP#285 routines out of Eval.3 into
+	their own manpage.
+
+2009-10-31  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tclBasic.c (ExprRoundFunc): [Bug 2889593]: Correctly report
+	the expected number of arguments when generating an error for round().
+
+2009-10-30  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* tests/tcltest.test: When creating the notwritabledir we deny the
+	current user access to delete the file. We must grant this right when
+	we cleanup. Required on Windows 7 when the user does not automatically
+	have administrator rights.
+
+2009-10-29  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tcl.h:        Changed the typedef for the mp_digit type
+	from:
+		typedef unsigned long mp_digit;
+	to:
+		typedef unsigned int mp_digit;
+	For 32-bit builds where "long" and "int" are two names for the same
+	thing, this is no change at all.  For 64-bit builds, though, this
+	causes the dp[] array of an mp_int to be made up of 32-bit elements
+	instead of 64-bit elements.  This is a huge improvement because details
+	elsewhere in the mp_int implementation cause only 28 bits of each
+	element to be actually used storing number data.  Without this change
+	bignums are over 50% wasted space on 64-bit systems.  [Bug 2800740].
+
+	***POTENTIAL INCOMPATIBILITY***
+	For 64-bit builds, callers of routines with (mp_digit) or (mp_digit *)
+	arguments *will*, and callers of routines with (mp_int *) arguments
+	*may* suffer both binary and stubs incompatibilities with Tcl releases
+	8.5.0 - 8.5.7.  Such possibilities should be checked, and if such
+	incompatibilities are present, suitable [package require] requirements
+	on the Tcl release should be put in place to keep such built code
+	[load]-ing only in Tcl interps that are compatible.
+
+2009-10-29  Donal K. Fellows  <dkf@users.sf.net>
+
+	* tests/dict.test: Make variable-clean and simplify tests by utilizing
+	the fact that dictionaries have defined orders.
+
+	* generic/tclZlib.c (TclZlibCmd): Remove accidental C99-ism which
+	reportedly makes the AIX native compiler choke.
+
+2009-10-29  Kevin B. Kenny  <kennykb@acm.org>
+
+	* library/clock.tcl (LocalizeFormat):
+	* tests/clock.test (clock-67.1):
+	[Bug 2819334]: Corrected a problem where '%%' followed by a letter in
+	a format group could expand recursively: %%R would turn into %%H:%M:%S
+	
+2009-10-28  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclLiteral.c:	[Bug 2888044]: Fixed 2 bugs.
+	* tests/info.test:	First, as noted in the comments of the
+	TclCleanupLiteralTable routine, since the teardown of the intrep of
+	one Tcl_Obj can cause the teardown of others in the same table, the
+	full table cleanup must be done with care, but the code did not
+	contain the same care demanded in the comment.  Second, recent
+	additions to the info.test file had poor hygiene, leaving an array
+	variable ::a lying around, which breaks later interp.test tests during
+	a -singleproc 1 run of the test suite.
+
+2009-10-28  Kevin B. Kenny  <kennykb@acm.org>
+
+	* tests/fileName.test (fileName-20.[78]): Corrected poor test
+	hygiene (failure to save and restore the working directory) that
+	caused these two tests to fail on Windows (and [Bug 2806250] to be
+	reopened).
+
+2009-10-27  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclPathObj.c: [Bug 2884203]: Missing refcount on cached
+	normalized path caused crashes.
+
+2009-10-27  Kevin B. Kenny  <kennykb@acm.org>
+	
+	* library/clock.tcl (ParseClockScanFormat): [Bug 2886852]: Corrected a
+	problem where [clock scan] didn't load the timezone soon enough when
+	processing a time format that lacked a complete date.
+	* tests/clock.test (clock-66.1):
+	Added a test case for the above bug.
+	* library/tzdata/America/Argentina/Buenos_Aires:
+	* library/tzdata/America/Argentina/Cordoba:
+	* library/tzdata/America/Argentina/San_Luis:
+	* library/tzdata/America/Argentina/Tucuman: 
+	New DST rules for Argentina. (Olson's tzdata2009p.)
+
+2009-10-26  Don Porter  <dgp@users.sourceforge.net>
+
+	* unix/Makefile.in:	Remove $(PACKAGE).* and prototype from the
+	`make distclean` target.  Completes 2009-10-20 commit.
+
+2009-10-24  Kevin B. Kenny  <kennykb@acm.org>
+
+	* library/clock.tcl (ProcessPosixTimeZone): 
+	Corrected a regression in the fix to [Bug 2207436] that caused
+	[clock] to apply EU daylight saving time rules in the US.
+	Thanks to Karl Lehenbauer for reporting this regression.
+	* tests/clock.test (clock-52.4):
+	Added a regression test for the above bug.
+	* library/tzdata/Asia/Dhaka:
+	* library/tzdata/Asia/Karachi:
+	New DST rules for Bangladesh and Pakistan. (Olson's tzdata2009o.)
+	
+2009-10-23  Andreas Kupries  <andreask@activestate.com>
+
+	* generic/tclIO.c (FlushChannel): Skip OutputProc for low-level
+	0-length writes. When closing pipes which have already been closed
+	not skipping leads to spurious SIG_PIPE signals. Reported by
+	Mikhail Teterin <mi+thun@aldan.algebra.com>.
+
+2009-10-22  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tclOOBasic.c (TclOO_Object_VarName): [Bug 2883857]: Allow
+	the passing of array element names through this method.
+
+2009-10-21  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tclPosixStr.c: [Bug 2882561]: Work around oddity on Haiku OS
+	where SIGSEGV and SIGBUS are the same value.
+
+	* generic/tclTrace.c (StringTraceProc): [Bug 2881259]: Added back cast
+	to work around silly bug in MSVC's handling of auto-casting.
+
+2009-10-20  Don Porter  <dgp@users.sourceforge.net>
+
+	* unix/Makefile.in:	Removed the long outdated and broken targets
+	package-* that were for building Solaris packages.  Appears that the
+	pieces needed for these targets to function have never been present in
+	the current era of Tcl development and belong completely to Tcl
+	pre-history.
+
+2009-10-19  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclIO.c:      [Patch 2107634]: Revised ReadChars and
+	FilterInputBytes routines to permit reads to continue up to the string
+	limits of Tcl values.  Before revisions, large read attempts could
+	panic when as little as half the limiting value length was reached.
+	Thanks to Sean Morrison and Bob Parker for their roles in the fix.
+
+2009-10-18  Joe Mistachkin  <joe@mistachkin.com>
+
+	* generic/tclObj.c (TclDbDumpActiveObjects, TclDbInitNewObj)
+	(Tcl_DbIncrRefCount, Tcl_DbDecrRefCount, Tcl_DbIsShared):
+	[Bug 2871908]: Enforce separation of concerns between the lineCLPtr
+	and objThreadMap thread specific data members.
+
+2009-10-18  Joe Mistachkin  <joe@mistachkin.com>
+
+	* tests/thread.test (thread-4.[345]): [Bug 1565466]: Correct tests to
+	save their error state before the final call to threadReap just in case
+	it triggers an "invalid thread id" error.  This error can occur if one
+	or more of the target threads has exited prior to the attempt to send
+	it an asynchronous exit command.
+
+2009-10-17  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tclVar.c (UnsetVarStruct, TclDeleteNamespaceVars)
+	(TclDeleteCompiledLocalVars, DeleteArray): 
+	* generic/tclTrace.c (Tcl_UntraceVar2): [Bug 2629338]: Stop traces
+	that are deleted part way through (a feature used by tdom) from
+	causing freed memory to be accessed.
+
+2009-10-08  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tclDictObj.c (DictIncrCmd): [Bug 2874678]: Don't leak any
+	bignums when doing [dict incr] with a value.
+	* tests/dict.test (dict-19.3): Memory leak detection code.
+
+2009-10-07  Andreas Kupries  <andreask@activestate.com>
+
+	* generic/tclObj.c: [Bug 2871908]: Plug memory leaks of objThreadMap
+	and lineCLPtr hashtables.  Also make the names of the continuation
+	line information initialization and finalization functions more
+	consistent. Patch supplied by Joe Mistachkin <joe@mistachkin.com>.
+
+	* generic/tclIORChan.c (ErrnoReturn): Replace hardwired constant 11
+	with proper errno #define, EAGAIN. What was I thinking? The BSD's have
+	a different errno assignment and break with the hardwired number.
+	Reported by emiliano on the chat.
+
+2009-10-06  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclInterp.c (SlaveEval): Agressive stomping of internal reps
+	was added as part of the NRE patch of 2008-07-13.  This doesn't appear
+	to actually be needed, and it hurts quite a bit when large lists lose
+	their intreps and require reparsing.  Thanks to Ashok Nadkarni for
+	reporting the problem.
+
+	* generic/tclTomMathInt.h (new): Public header tclTomMath.h had
+	* generic/tclTomMath.h:	dependence on private headers, breaking use
+	* generic/tommath.h:	by extensions [Bug 1941434].
+
+2009-10-05  Andreas Kupries  <andreask@activestate.com>
+
+	* library/safe.tcl (AliasGlob): Fixed conversion of catch to
+	  try/finally, it had an 'on ok msg' branch missing, causing a
+	  silent error immediately, and bogus glob results, breaking
+	  search for Tcl modules.
+
+2009-10-04  Daniel Steffen  <das@users.sourceforge.net>
+
+	* macosx/tclMacOSXBundle.c:	Workaround CF memory managment bug in
+	* unix/tclUnixInit.c:		Mac OS X 10.4 & earlier. [Bug 2569449]
+
+2009-10-02  Kevin B. Kenny  <kennykb@acm.org>
+
+	* library/tzdata/Africa/Cairo:
+	* library/tzdata/Asia/Gaza:
+	* library/tzdata/Asia/Karachi:
+	* library/tzdata/Pacific/Apia:	Olson's tzdata2009n.
+
+2009-09-29  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclDictObj.c:		[Bug 2857044]: Updated freeIntRepProc
+	* generic/tclExecute.c:		routines so that they set the typePtr
+	* generic/tclIO.c:		field to NULL so that the Tcl_Obj is
+	* generic/tclIndexObj.c:	not left in an inconsistent state.
+	* generic/tclInt.h:
+	* generic/tclListObj.c:
+	* generic/tclNamesp.c:
+	* generic/tclOOCall.c:
+	* generic/tclObj.c:
+	* generic/tclPathObj.c:
+	* generic/tclProc.c:
+	* generic/tclRegexp.c:
+	* generic/tclStringObj.c:
+
+	* generic/tclAlloc.c:           Cleaned up various routines in the
+	* generic/tclCkalloc.c:         call stacks for memory allocation to
+	* generic/tclInt.h:             guarantee that any size values computed
+	* generic/tclThreadAlloc.c:     are within the domains of the routines
+	they get passed to.  [Bugs 2557696 and 2557796].
+
+2009-09-28  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclCmdMZ.c:	Replaced TclProcessReturn() calls with
+	* tests/error.test:	Tcl_SetReturnOptions() calls as a simple fix
+	for [Bug 2855247].  Thanks to Anton Kovalenko for the report and fix.
+	Additional fixes for other failures demonstrated by new tests.
+
+2009-09-27  Don Porter  <dgp@users.sourceforge.net>
+
+	* tests/error.test (error-15.8.*):	Coverage tests illustrating
+	flaws in the propagation of return options by [try].
+
+2009-09-26  Donal K. Fellows  <dkf@users.sf.net>
+
+	* unix/tclooConfig.sh, win/tclooConfig.sh: [Bug 2026844]: Added dummy
+	versions of tclooConfig.sh that make it easier to build extensions
+	against both Tcl8.5+TclOO-standalone and Tcl8.6.
+
+2009-09-24  Don Porter  <dgp@users.sourceforge.net>
+
+	TIP #356 IMPLEMENTATION
+
+	* generic/tcl.decls:	Promote internal routine TclNRSubstObj()
+	* generic/tclCmdMZ.c:	to public Tcl_NRSubstObj().  Still needs docs.
+	* generic/tclCompile.c:
+	* generic/tclInt.h:
+
+	* generic/tclDecls.h:	make genstubs
+	* generic/tclStubInit.c:
+
+2009-09-23  Miguel Sofer  <msofer@users.sf.net>
+
+	* doc/namespace.n: the description of [namespace unknown] failed
+	to mention [namespace path]: fixed. Thx emiliano.
+
+2009-09-21  Mo DeJong  <mdejong@users.sourceforge.net>
+
+	* tests/regexp.test: Added check for error message from
+	unbalanced [] in regexp. Added additional simple test cases
+	of basic regsub command.
+
+2009-09-21  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclCompile.c:	Correct botch in the conversion of
+	Tcl_SubstObj().  Thanks to Kevin Kenny for detection and report.
+
+2009-09-17  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclCompile.c:	Re-implement Tcl_SubstObj() as a simple
+	* generic/tclParse.c:	wrapper around TclNRSubstObj().  This has
+	* tests/basic.test:	the effect of caching compiled bytecode in
+	* tests/parse.test:	the value to be substituted.  Note that
+	Tcl_SubstObj() now exists only for extensions.  Tcl itself no longer
+	makes any use of it.  Note also that TclSubstTokens() is now reachable
+	only by Tcl_EvalEx() and Tcl_ParseVar() so tests aiming to test its
+	functioning needed adjustment to still have the intended effect.
+
+2009-09-16  Alexandre Ferrieux  <ferrieux@users.sourceforge.net>
+
+	* generic/tclObj.c:   Extended ::tcl::unsupported::representation.
+
 2009-09-11  Don Porter  <dgp@users.sourceforge.net>
 
 	* generic/tclBasic.c:	Completed the NR-enabling of [subst].
@@ -21,7 +388,7 @@
 2009-09-07  Don Porter  <dgp@users.sourceforge.net>
 
 	* generic/tclParse.c:	[Bug 2850901]: Corrected line counting error
-	* tests/into.test:	in multi-command script substitutions.  
+	* tests/into.test:	in multi-command script substitutions.
 
 2009-09-07  Daniel Steffen  <das@users.sourceforge.net>
 
