@@ -172,9 +172,11 @@ proc ::tk::dialog::file:: {type args} {
 	# Default type and name to first entry
 	set initialtype     [lindex $data(-filetypes) 0]
 	set initialTypeName [lindex $initialtype 0]
-	if {($data(-typevariable) ne "")
-		&& [uplevel 1 [list info exists $data(-typevariable)]]} {
-	    set initialTypeName [uplevel 1 [list set $data(-typevariable)]]
+	if {$data(-typevariable) ne ""} {
+	    upvar #0 $data(-typevariable) typeVariable
+	    if {[info exists typeVariable]} {
+		set initialTypeName $typeVariable
+	    }
 	}
 	foreach type $data(-filetypes) {
 	    set title  [lindex $type 0]
@@ -1133,8 +1135,8 @@ proc ::tk::dialog::file::Done {w {selectFilePath ""}} {
 	    && [info exists data(-filetypes)] && [llength $data(-filetypes)]
 	    && [info exists data(filterType)] && $data(filterType) ne ""
 	} then {
-	    upvar 4 $data(-typevariable) initialTypeName
-	    set initialTypeName [lindex $data(filterType) 0]
+	    upvar #0 $data(-typevariable) typeVariable
+	    set typeVariable [lindex $data(filterType) 0]
 	}
     }
     bind $data(okBtn) <Destroy> {}

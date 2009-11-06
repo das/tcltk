@@ -1,10 +1,159 @@
+2009-11-01  Joe Mistachkin  <joe@mistachkin.com>
+
+	* win/tkWinButton.c: [Bug 1739613]: The default width being stored
+	in TSD cannot be put into the process-wide options table.  This fix
+	allocates storage for the default width from the heap and frees it
+	using an exit handler.
+
+2009-11-01  Joe Mistachkin  <joe@mistachkin.com>
+
+	* doc/loadTk.n: minor fix for htmlhelp target.
+
+2009-11-01  Joe English  <jenglish@users.sourceforge.net>
+
+	* generic/ttk/ttkWidget.c, doc/ttk_widget.n:
+	Uniform, extensible syntax for [$w identify] methods:
+	[$w identify $component $x $y].  All ttk::* widgets support
+	[$w identify element $x $y]; widgets with other
+	identifiable parts may have additional subcommands.
+	* generic/ttk/ttkNotebook.c, doc/ttk_notebook.n:
+	Notebook widgets support [$nb identify tab].
+	* generic/ttk/ttkPanedwindow.c, doc/ttk_panedwindow.n:
+	Panedwindow widgets support [$w identify sash].
+	Older 2-argument form [$w identify $x $y] still supported,
+	though it does different things depending on the widget.
+
+2009-10-29  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* win/tkWinFont.c: [Bug 1825353]: This patch reverts a previous
+	attempt to fix tiny fonts on Russian Windows. It fixes the
+	issue by requesting a suitable fixed font instead of decoding the
+	system stock font.
+
+2009-10-26  Don Porter  <dgp@users.sourceforge.net>
+
+	* unix/Makefile.in:     Remove $(PACKAGE).* and prototype from the
+	`make distclean` target.  Completes 2009-10-20 commit.
+
+2009-10-25  Donal K. Fellows  <dkf@users.sf.net>
+
+	* unix/tkUnixColor.c (TkpGetColor): [Bug 2809525]: Impose a maximum
+	X11 color name length so that it becomes impossible to blow things up
+	that way.
+
+	* library/text.tcl: [Bug 1854913]: Stop <Delete> actions from ever
+	deleting backwards, even when the insertion cursor is "at the end" of
+	the text widget.
+
+2009-10-24  Donal K. Fellows  <dkf@users.sf.net>
+
+	* library/button.tcl, unix/tkUnixButton.c (TkpDisplayButton):
+	[Patch 1530276]: Make -selectcolor handling work better for both
+	checkbuttons and radiobuttons when they don't have indicators.
+
+2009-10-22  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tkText.c (CreateWidget, TextEditUndo, TextEditRedo)
+	(TextEditCmd, UpdateDirtyFlag): 
+	* generic/tkText.h: [Patch 1469210]: Corrected handling of marking as
+	dirty when inserting after an undo from a non-dirty state.
+
+	* win/tkWinDialog.c (GetFileNameA): Make the handling of the filter
+	index the same as in GetFileNameW.
+
+	* library/tkfbox.tcl (::tk::dialog::file::, Done): 
+	* library/xmfbox.tcl (MotifFDialog_FileTypes)
+	(MotifFDialog_ActivateSEnt): 
+	* macosx/tkMacOSXDialog.c (Tk_GetOpenFileObjCmd): 
+	* win/tkWinDialog.c (GetFileNameW, GetFileNameA): 
+	* doc/getOpenFile.n: [Patch 2168768]: Corrected handling of the
+	-typevariable option to be consistently global; it's the only way it
+	can work even close to the same on all platforms.
+
+	* macosx/ttkMacOSXTheme.c (RangeToFactor): [Bug 2883712]: Factor out
+	some common code and make sure that it is 64-bit correct.
+
+2009-10-21  Jan Nijtmans  <nijtmans@users.sf.net>
+
+	* win/Makefile.in:	[Bug 2875562]: Make sure that winMain.c and
+	* win/winMain.c:	tkAppInit.c are never compiled with stubs.
+	* unix/tkAppInit.c:
+
+2009-10-20  Don Porter  <dgp@users.sourceforge.net>
+
+	* unix/Makefile.in:	Compiling Tk no longer requires header files
+	* win/Makefile.in:	from the TCL_PLATFORM DIR.  Baby step in
+	pursuit of [Bug 1712098].  Also removed the long outdated and broken
+	targets package-* that were for building Solaris packages.  Appears
+	that the pieces needed for these targets to function have never been
+	present in the current era of Tcl development and belong completely
+	to Tcl pre-history.
+
+2009-10-20  Andreas Kupries  <andreask@activestate.com>
+
+	* library/msgs/pl.msg: Applied patch to Polish message catalog created
+	and submitted by Pawel Pawlak <morris@elysium.pl> (via JeffH).
+
+2009-10-18  Donal K. Fellows  <dkf@users.sf.net>
+
+	* doc/menu.n: Reorganized for readability, and added a note describing
+	some subtleties of the -variable entry configuration option following
+	some discussion with Joe Mistachkin.
+
+2009-10-10  Donal K. Fellows  <dkf@users.sf.net>
+
+	* unix/tkUnixRFont.c (InitFont, TkpGetFontFromAttributes)
+	(Tk_DrawChars, TkpDrawAngledChars): [Bug 1961455]: Draw underlines and
+	overstrikes when using Xft for font rendering.
+
+	* generic/tkFont.c (TkDrawAngledTextLayout): Optimize the zero-angle
+	case better.
+
+2009-10-08  Donal K. Fellows  <dkf@users.sf.net>
+
+	* library/iconlist.tcl (Create): [Patch 2870648]: Corrected cursor
+	used in file/directory dialogs.
+
+2009-10-07  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* library/ttk/vistaTheme.tcl: [Bug 2787164]: Fix size of dropdown
+	arrow on combobox and menubutton for Windows 7.
+
+2009-10-07  Donal K. Fellows  <dkf@users.sf.net>
+
+	* unix/tkUnixScrlbr.c (TkpComputeScrollbarGeometry): [Patch 2088597]:
+	Stop scrollbars from getting too small at the end.
+
+2009-10-05  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* win/tkWinButton.c: [Bug 2860827]: Avoid 3D effects with
+	user-specified backgrounds. The default disabled text is embossed on
+	Windows. But this looks poor when a non-default background color is in
+	use. This patch disables the embossed effect for buttons and labels
+	when the background is non- standard.
+
+2009-09-30  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* tests/winWm.test: [Bug 2799589]: Grab on deleted window.
+
+2009-09-25  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tkImgPhoto.c (ImgGetPhoto): Correct generation of grayscale
+	data from an image. Reported by Keith Vetter on comp.lang.tcl.
+
+2009-09-19  Peter Spjuth  <peter.spjuth@gmail.com>
+
+	* generic/tkGrid.c:	[Bug 2859912]: Bug fix in grid/pack collision
+	* generic/tkPack.c:	detect. Faulty slave was not properly blocked
+	* tests/packgrid.test:	from slave list.
+
 2009-09-14  Jeff Hobbs  <jeffh@ActiveState.com>
 
-	* generic/tkMenuDraw.c (TkPostSubmenu): Fix reposting of submenu in
-	* win/tkWinMenu.c (TkWinHandleMenuEvent): torn off Windows menu.
-	[Bug 873613]
-	(DrawMenuEntryArrow): Draw Win menu arrow after being torn
-	off. [Bug 873608]
+	* generic/tkMenuDraw.c (TkPostSubmenu): [Bug 873613]: Fix reposting of
+	* win/tkWinMenu.c (TkWinHandleMenuEvent): submenu in torn off Windows
+	menu.
+	(DrawMenuEntryArrow): [Bug 873608]: Draw Win menu arrow after being
+	torn off.
 
 2009-09-09  Donal K. Fellows  <dkf@users.sf.net>
 
@@ -21,13 +170,13 @@
 
 2009-09-07  Daniel Steffen  <das@users.sourceforge.net>
 
-	* generic/tkFocus.c:	fix potential null dereference flagged by clang
+	* generic/tkFocus.c:	Fix potential null dereference flagged by clang
 	* generic/tkMenu.c:	static analyzer.
 	* generic/tkTextBTree.c:
 	* generic/tkTextDisp.c:
 	* generic/tkTextIndex.c:
 
-	* generic/tkConsole.c:	silence false positives from clang static
+	* generic/tkConsole.c:	Silence false positives from clang static
 	* generic/tkTest.c:	analyzer about potential null dereference.
 	* generic/tkText.c:
 	* generic/tkTextBTree.c:
@@ -258,7 +407,7 @@
 2009-06-29  Daniel Steffen  <das@users.sourceforge.net>
 
 	Merge of TkAqua Cocoa port <http://github.com/das/tcltk/tree/de-carbon>
-	*** POTENTIAL INCOMPATIBILITY *** 
+	*** POTENTIAL INCOMPATIBILITY ***
 
 	* macosx/tkMacOSX.h:		Large-scale rewrite of TkAqua migrating
 	* macosx/tkMacOSXBitmap.c:	all use of deprecated Carbon API to
@@ -457,9 +606,9 @@
 
 	* library/images/lamp.svg: Added an SVG version of the Tk lamp and
 	* library/images/lamp.png: a pre-rendered PNG version.
-	* win/rc/wish.ico: Wish gets a new icon using the SVG lamp and the
-	* win/rc/tk.ico:   tk dll gets the tcl rendered feather. This
-	provides improved icons for Vista/Windows 7.
+	* win/rc/wish.ico: Wish gets a new icon using the SVG lamp and the tk
+	* win/rc/tk.ico:   dll gets the tcl rendered feather. This provides
+	improved icons for Vista/Windows 7.
 
 2009-05-05  Donal K. Fellows  <dkf@users.sf.net>
 
@@ -509,7 +658,7 @@
 
 2009-04-28  Jeff Hobbs  <jeffh@ActiveState.com>
 
-	* unix/tcl.m4, unix/configure (SC_CONFIG_CFLAGS): harden the check
+	* unix/tcl.m4, unix/configure (SC_CONFIG_CFLAGS): Harden the check
 	to add _r to CC on AIX with threads.
 
 2009-04-27  Donal K. Fellows  <dkf@users.sf.net>
@@ -564,38 +713,38 @@
 
 2009-04-10  Daniel Steffen  <das@users.sourceforge.net>
 
-	* unix/configure.in (Darwin):	use Darwin SUSv3 extensions if
+	* unix/configure.in (Darwin):	Use Darwin SUSv3 extensions if
 					available.
 	* unix/configure:		autoconf-2.59
 	* unix/tkConfig.h.in:		autoheader-2.59
 
-	* library/demos/filebox.tcl: only show "Motif Style Dialog"
+	* library/demos/filebox.tcl: Only show "Motif Style Dialog"
 	checkbutton on X11 windowingsystem.
 
 	* library/demos/widget: GOOBE: use ttk::cursor
 
-	* library/demos/knightstour.tcl: fix knightstour demo not running from
+	* library/demos/knightstour.tcl: Fix knightstour demo not running from
 	interactive wish.
 
-	* library/console.tcl (::tk::ConsoleInit): remove redundant TkAqua
+	* library/console.tcl (::tk::ConsoleInit): Remove redundant TkAqua
 	Quit menu item.
 
-	* generic/tkPointer.c (Tk_UpdatePointer): use all 5 buttons.
+	* generic/tkPointer.c (Tk_UpdatePointer): Use all 5 buttons.
 
-	* generic/tkMenu.c (PostProcessEntry): delay call to
+	* generic/tkMenu.c (PostProcessEntry): Delay call to
 	TkpConfigureMenuEntry() until all menu entry attributes are setup.
 
-	* library/menu.tcl (::tk::MbPost): fix error thrown in y position
+	* library/menu.tcl (::tk::MbPost): Fix error thrown in y position
 	computation with indicatoron.
 
 	* generic/tkMenubutton.c: s/DEF_BUTTON_JUSTIFY/DEF_MENUBUTTON_JUSTIFY/
 
-	* generic/tkUtil.c (TkBackgroundEvalObjv): use Tcl_BackgroundException
+	* generic/tkUtil.c (TkBackgroundEvalObjv): Use Tcl_BackgroundException
 
-	* generic/tkTextBTree.c (TkBTreeDeleteIndexRange): add bounds check
+	* generic/tkTextBTree.c (TkBTreeDeleteIndexRange): Add bounds check
 	to startEnd array access (fixes testsuite crash).
 
-	* tests/unixFont.test: only use xlsfonts with X11 windowingsystem.
+	* tests/unixFont.test: Only use xlsfonts with X11 windowingsystem.
 
 2009-04-10  Donal K. Fellows  <dkf@users.sf.net>
 
@@ -748,8 +897,8 @@
 
 2009-02-10  Jan Nijtmans  <nijtmans@users.sf.net>
 
-	* unix/tcl.m4: fix [Bug 2502365]: Building of head on HPUX is broken
-	when using the native CC.
+	* unix/tcl.m4: [Bug 2502365]: Building of head on HPUX was broken when
+	using the native CC.
 	* unix/configure (autoconf-2.59)
 
 2008-02-08  Joe English  <jenglish@users.sourceforge.net>
@@ -762,7 +911,7 @@
 
 2008-02-06  Daniel Steffen  <das@users.sourceforge.net>
 
-	* generic/tkImgPhInstance.c:	fix numerous leaks discovered with the
+	* generic/tkImgPhInstance.c:	Fix numerous leaks discovered with the
 	* generic/tkMenu.c:		Mac OS X Instruments.app Leaks tool.
 	* generic/tkText.c:
 	* generic/tkTextImage.c:
@@ -822,17 +971,17 @@
 	* unix/tcl.m4: Corrected a typo ($(SHLIB_VERSION) should be
 	${SHLIB_VERSION}).
 	* unix/configure: Autoconf 2.59
-	
+
 2009-01-19  Kevin B. Kenny  <kennykb@acm.org>
 
 	* unix/Makefile.in: Added a CONFIG_INSTALL_DIR parameter so that
 	* unix/tcl.m4:      distributors can control where tclConfig.sh goes.
 	Made the installation of 'ldAix' conditional upon actually being on an
 	AIX system. Allowed for downstream packagers to customize
-	SHLIB_VERSION on BSD-derived systems. 
+	SHLIB_VERSION on BSD-derived systems.
 	Thanks to Stuart Cassoff for [Patch 907924].
 	* unix/configure: Autoconf 2.59
-	
+
 2009-01-16  Don Porter  <dgp@users.sourceforge.net>
 
 	* generic/tk.h:		Bump patchlevel to 8.6b1.1 to distinguish
@@ -851,8 +1000,8 @@
 
 2009-01-13  Jan Nijtmans  <nijtmans@users.sf.net>
 
-	* unix/tcl.m4: fix [Bug 2502365]: Building of head on HPUX is broken
-	when using the native CC
+	* unix/tcl.m4: [Bug 2502365]: Building of head on HPUX was broken when
+	using the native CC
 	* unix/configure (autoconf-2.59)
 
 2009-01-13  Pat Thoyts  <patthoyts@users.sourceforge.net>
@@ -1074,8 +1223,8 @@
 	* macosx/tkMacOSXFont.h:
 	* macosx/Wish.xcodeproj/project.pbxproj:
 	* library/fontchooser.tcl (new):
-	* library/tclIndex:		
-	* library/msgs/de.msg:		
+	* library/tclIndex:
+	* library/msgs/de.msg:
 	* library/msgs/en.msg:
 	* tests/fontchooser.test (new):
 	* tests/winDialog.test:
@@ -1172,7 +1321,7 @@
 
 2008-12-04  Donal K. Fellows  <dkf@users.sf.net>
 
-	* doc/ttk_button.n, doc/ttk_checkbutton.n, doc/ttk_menubutton.n: 
+	* doc/ttk_button.n, doc/ttk_checkbutton.n, doc/ttk_menubutton.n:
 	* doc/ttk_radiobutton.n: Added mention of the Toolbutton style to all
 	widgets that can sensibly make use of it.
 
@@ -1211,7 +1360,7 @@
 
 2008-11-23  Pat Thoyts  <patthoyts@users.sourceforge.net>
 
-	* generic/tkBind.c:  [Bug 1389270] event generate silently ignored
+	* generic/tkBind.c:  [Bug 1389270]: event generate silently ignored
 	* generic/tkFocus.c: focus events. These can now be generated.
 	* generic/tkGrab.c:
 	* generic/tkInt.h:
@@ -1225,7 +1374,7 @@
 
 2008-11-22  Pat Thoyts  <patthoyts@users.sourceforge.net>
 
-	* library/ttk/combobox.tcl: [Bug 1939129,1991930] combobox dropdown
+	* library/ttk/combobox.tcl: [Bug 1939129,1991930]: combobox dropdown
 				    was drawn behind topmost toplevels.
 	* generic/tkCanvText.c:  Fixed up complaints from MSVC engendered
 	* generic/tkFont.c:      by the last commit. In particular replaced
@@ -1499,7 +1648,7 @@
 
 	* generic/tk.h:		Add "const" to a few struct member fields.
 	* generic/tkInt.h:	CONSTify TkPrintPadAmount
-	* generic/tkSelect.h:	move TkSelGetSelection to tkInt.decls
+	* generic/tkSelect.h:	Move TkSelGetSelection to tkInt.decls
 	* generic/tk.decls:	CONSTify Tk_ParseArgv
 	* generic/tkInt.decls:	CONSTify TkCreateFrame and TkCreateMainWindow
 	* generic/tkDecls.h:	(regenerated)
@@ -1513,7 +1662,7 @@
 	* generic/tkSelect.c:
 	* generic/tkVisual.c:
 	* generic/tkWindow.c:
-	* win/tkWinTest.c:	fix compilation under mingw32
+	* win/tkWinTest.c:	Fix compilation under mingw32
 
 2008-10-28  Joe English  <jenglish@users.sourceforge.net>
 
@@ -1521,7 +1670,7 @@
 	library/ttk/entry.tcl, library/ttk/paned.tcl, library/ttk/sizegrip.tcl,
 	library/treeview.tcl:
 	Add correct platform-specific cursors for OSX [Bug 2054562]
-	Expanded set of symbolic cursors.  Use correct cursor for 
+	Expanded set of symbolic cursors.  Use correct cursor for
 	ttk::entry and ttk::combobox widgets [Bug 1534835]
 
 2008-10-28  Don Porter  <dgp@users.sourceforge.net>

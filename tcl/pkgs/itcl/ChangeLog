@@ -1,5 +1,11 @@
 RCS: @(#) $Id$
 
+2009-09-26  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/itclBase.c, generic/itclBuiltin.c, generic/itclParse.c:
+	[Bug 2821935]: Change method of quoting multiline strings to work
+	around a limitation in the MSVC 6.0 compiler.
+
 2008-02-02 Arnulf P. Wiedemann <wiede@users.sf.net>
         * generic/itcl.h configure.in:
 	             bumped version to 4.0b3
