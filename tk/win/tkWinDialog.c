@@ -186,7 +186,7 @@ static int 		GetFileNameW(ClientData clientData,
 			    Tcl_Obj *const objv[], int isOpen);
 static int 		MakeFilter(Tcl_Interp *interp, Tcl_Obj *valuePtr,
 			    Tcl_DString *dsPtr, Tcl_Obj *initialPtr,
-			    int *index);
+			    int *indexPtr);
 static UINT APIENTRY	OFNHookProc(HWND hdlg, UINT uMsg, WPARAM wParam,
 			    LPARAM lParam);
 static UINT APIENTRY	OFNHookProcW(HWND hdlg, UINT uMsg, WPARAM wParam,
@@ -265,7 +265,7 @@ void
 TkWinDialogDebug(
     int debug)
 {
-    ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
+    ThreadSpecificData *tsdPtr =
 	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
     tsdPtr->debugFlag = debug;
@@ -297,7 +297,7 @@ Tk_ChooseColorObjCmd(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
-    Tk_Window tkwin, parent;
+    Tk_Window tkwin = clientData, parent;
     HWND hWnd;
     int i, oldMode, winCode, result;
     CHOOSECOLOR chooseColor;
@@ -326,8 +326,6 @@ Tk_ChooseColorObjCmd(
 	oldColor = RGB(0xa0, 0xa0, 0xa0);
 	inited = 1;
     }
-
-    tkwin = (Tk_Window) clientData;
 
     parent			= tkwin;
     chooseColor.lStructSize	= sizeof(CHOOSECOLOR);
@@ -455,7 +453,7 @@ ColorDlgHookProc(
     WPARAM wParam,		/* First message parameter. */
     LPARAM lParam)		/* Second message parameter. */
 {
-    ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
+    ThreadSpecificData *tsdPtr =
 	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
     const char *title;
     CHOOSECOLOR *ccPtr;
@@ -477,7 +475,7 @@ ColorDlgHookProc(
 	}
 	if (tsdPtr->debugFlag) {
 	    tsdPtr->debugInterp = (Tcl_Interp *) ccPtr->lpTemplateName;
-	    Tcl_DoWhenIdle(SetTkDialog, (ClientData) hDlg);
+	    Tcl_DoWhenIdle(SetTkDialog, hDlg);
 	}
 	return TRUE;
     }
@@ -573,11 +571,11 @@ GetFileNameW(
 {
     OPENFILENAMEW ofn;
     WCHAR file[TK_MULTI_MAX_PATH];
-    int filterIndex, result, winCode, oldMode, i, multi = 0;
-    const char *extension, *filter, *title;
-    Tk_Window tkwin;
+    int filterIndex = 0, result = TCL_ERROR, winCode, oldMode, i, multi = 0;
+    const char *extension = NULL, *filter = NULL, *title = NULL;
+    Tk_Window tkwin = clientData;
     HWND hWnd;
-    Tcl_Obj *filterObj, *initialTypeObj, *typeVariableObj;
+    Tcl_Obj *filterObj=NULL, *initialTypeObj=NULL, *typeVariableObj=NULL;
     Tcl_DString utfFilterString, utfDirString;
     Tcl_DString extString, filterString, dirString, titleString;
     Tcl_Encoding unicodeEncoding = TkWinGetUnicodeEncoding();
@@ -592,28 +590,18 @@ GetFileNameW(
 	"-multiple", "-parent", "-title", "-typevariable", NULL
     };
     const char *const *optionStrings;
-
     enum options {
 	FILE_DEFAULT,	FILE_TYPES,	FILE_INITDIR,	FILE_INITFILE,
 	FILE_MULTIPLE,	FILE_PARENT,	FILE_TITLE,     FILE_TYPEVARIABLE
     };
 
-    result = TCL_ERROR;
     file[0] = '\0';
+    Tcl_DStringInit(&utfFilterString);
+    Tcl_DStringInit(&utfDirString);
 
     /*
      * Parse the arguments.
      */
-
-    extension = NULL;
-    filter = NULL;
-    Tcl_DStringInit(&utfFilterString);
-    Tcl_DStringInit(&utfDirString);
-    tkwin = (Tk_Window) clientData;
-    title = NULL;
-    filterObj = NULL;
-    typeVariableObj = NULL;
-    initialTypeObj = NULL;
 
     if (open) {
 	optionStrings = openOptionStrings;
@@ -702,13 +690,14 @@ GetFileNameW(
 	    break;
 	case FILE_TYPEVARIABLE:
 	    typeVariableObj = valuePtr;
-	    initialTypeObj = Tcl_ObjGetVar2(interp, typeVariableObj, NULL, 0);
+	    initialTypeObj = Tcl_ObjGetVar2(interp, typeVariableObj, NULL,
+		    TCL_GLOBAL_ONLY);
 	    break;
 	}
     }
 
     if (MakeFilter(interp, filterObj, &utfFilterString, initialTypeObj,
-		    &filterIndex) != TCL_OK) {
+	    &filterIndex) != TCL_OK) {
 	goto end;
     }
     filter = Tcl_DStringValue(&utfFilterString);
@@ -732,11 +721,9 @@ GetFileNameW(
     } else {
 	ofn.Flags |= OFN_OVERWRITEPROMPT;
     }
-
     if (tsdPtr->debugFlag != 0) {
 	ofn.Flags |= OFN_ENABLEHOOK;
     }
-
     if (multi != 0) {
 	ofn.Flags |= OFN_ALLOWMULTISELECT;
     }
@@ -881,6 +868,7 @@ GetFileNameW(
 		    (char *) ofn.lpstrFile, &ds), NULL);
 	    Tcl_DStringFree(&ds);
 	}
+	result = TCL_OK;
 	if ((ofn.nFilterIndex > 0) &&
 		Tcl_GetCharLength(Tcl_GetObjResult(interp)) > 0 &&
 		typeVariableObj && filterObj) {
@@ -895,11 +883,11 @@ GetFileNameW(
 		    listObjv[ofn.nFilterIndex - 1], &count,
 		    &typeInfo) != TCL_OK) {
 		result = TCL_ERROR;
-	    } else {
-		Tcl_ObjSetVar2(interp, typeVariableObj, NULL, typeInfo[0], 0);
+	    } else if (Tcl_ObjSetVar2(interp, typeVariableObj, NULL,
+		    typeInfo[0], TCL_GLOBAL_ONLY|TCL_LEAVE_ERR_MSG) == NULL) {
+		result = TCL_ERROR;
 	    }
 	}
-	result = TCL_OK;
     } else {
 	/*
 	 * Use the CommDlgExtendedError() function to retrieve the error code.
@@ -967,7 +955,7 @@ OFNHookProcW(
     WPARAM wParam,		/* Message parameter */
     LPARAM lParam)		/* Message parameter */
 {
-    ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
+    ThreadSpecificData *tsdPtr =
 	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
     OPENFILENAMEW *ofnPtr;
 
@@ -984,7 +972,7 @@ OFNHookProcW(
 	if (ofnPtr != NULL) {
 	    hdlg = GetParent(hdlg);
 	    tsdPtr->debugInterp = (Tcl_Interp *) ofnPtr->lCustData;
-	    Tcl_DoWhenIdle(SetTkDialog, (ClientData) hdlg);
+	    Tcl_DoWhenIdle(SetTkDialog, hdlg);
 	    TkWinSetUserData(hdlg, NULL);
 	}
     }
@@ -1018,14 +1006,14 @@ GetFileNameA(
 {
     OPENFILENAME ofn;
     TCHAR file[TK_MULTI_MAX_PATH], savePath[MAX_PATH];
-    int filterIndex, result, winCode, oldMode, i, multi = 0;
-    const char *extension, *filter, *title;
-    Tk_Window tkwin;
+    int filterIndex = 0, result = TCL_ERROR, winCode, oldMode, i, multi = 0;
+    const char *extension = NULL, *filter = NULL, *title = NULL;
+    Tk_Window tkwin = clientData;
     HWND hWnd;
-    Tcl_Obj *filterObj, *initialTypeObj, *typeVariableObj;
+    Tcl_Obj *filterObj=NULL, *initialTypeObj=NULL, *typeVariableObj=NULL;
     Tcl_DString utfFilterString, utfDirString;
     Tcl_DString extString, filterString, dirString, titleString;
-    ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
+    ThreadSpecificData *tsdPtr =
 	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
     static const char *const saveOptionStrings[] = {
 	"-defaultextension", "-filetypes", "-initialdir", "-initialfile",
@@ -1036,28 +1024,18 @@ GetFileNameA(
 	"-multiple", "-parent", "-title", "-typevariable", NULL
     };
     const char *const *optionStrings;
-
     enum options {
 	FILE_DEFAULT,	FILE_TYPES,	FILE_INITDIR,	FILE_INITFILE,
 	FILE_MULTIPLE,	FILE_PARENT,	FILE_TITLE, FILE_TYPEVARIABLE
     };
 
-    result = TCL_ERROR;
     file[0] = '\0';
+    Tcl_DStringInit(&utfFilterString);
+    Tcl_DStringInit(&utfDirString);
 
     /*
      * Parse the arguments.
      */
-
-    extension = NULL;
-    filter = NULL;
-    Tcl_DStringInit(&utfFilterString);
-    Tcl_DStringInit(&utfDirString);
-    tkwin = (Tk_Window) clientData;
-    title = NULL;
-    filterObj = NULL;
-    typeVariableObj = NULL;
-    initialTypeObj = NULL;
 
     if (open) {
 	optionStrings = openOptionStrings;
@@ -1073,8 +1051,8 @@ GetFileNameA(
 	optionPtr = objv[i];
 	valuePtr = objv[i + 1];
 
-	if (Tcl_GetIndexFromObj(interp, optionPtr, optionStrings,
-		"option", 0, &index) != TCL_OK) {
+	if (Tcl_GetIndexFromObj(interp, optionPtr, optionStrings, "option", 0,
+		&index) != TCL_OK) {
 	    goto end;
 	}
 
@@ -1145,13 +1123,14 @@ GetFileNameA(
 	    break;
 	case FILE_TYPEVARIABLE:
 	    typeVariableObj = valuePtr;
-	    initialTypeObj = Tcl_ObjGetVar2(interp, typeVariableObj, NULL, 0);
+	    initialTypeObj = Tcl_ObjGetVar2(interp, typeVariableObj, NULL,
+		    TCL_GLOBAL_ONLY);
 	    break;
 	}
     }
 
     if (MakeFilter(interp, filterObj, &utfFilterString, initialTypeObj,
-		    &filterIndex) != TCL_OK) {
+	    &filterIndex) != TCL_OK) {
 	goto end;
     }
     filter = Tcl_DStringValue(&utfFilterString);
@@ -1165,7 +1144,6 @@ GetFileNameA(
     ofn.lpstrFilter = NULL;
     ofn.lpstrCustomFilter = NULL;
     ofn.nMaxCustFilter = 0;
-    ofn.nFilterIndex = 0;
     ofn.lpstrFile = (LPTSTR) file;
     ofn.nMaxFile = TK_MULTI_MAX_PATH;
     ofn.lpstrFileTitle = NULL;
@@ -1202,6 +1180,7 @@ GetFileNameA(
     Tcl_UtfToExternalDString(NULL, Tcl_DStringValue(&utfFilterString),
 	    Tcl_DStringLength(&utfFilterString), &filterString);
     ofn.lpstrFilter = (LPTSTR) Tcl_DStringValue(&filterString);
+    ofn.nFilterIndex = filterIndex;
 
     if (Tcl_DStringValue(&utfDirString)[0] != '\0') {
 	Tcl_UtfToExternalDString(NULL, Tcl_DStringValue(&utfDirString),
@@ -1331,6 +1310,7 @@ GetFileNameA(
 		    (char *) ofn.lpstrFile, &ds), NULL);
 	    Tcl_DStringFree(&ds);
 	}
+	result = TCL_OK;
 	if ((ofn.nFilterIndex > 0) &&
 		(Tcl_GetCharLength(Tcl_GetObjResult(interp)) > 0) &&
 		typeVariableObj && filterObj) {
@@ -1345,11 +1325,11 @@ GetFileNameA(
 		    listObjv[ofn.nFilterIndex - 1], &count,
 		    &typeInfo) != TCL_OK) {
 		result = TCL_ERROR;
-	    } else {
-		Tcl_ObjSetVar2(interp, typeVariableObj, NULL, typeInfo[0], 0);
+	    } else if (Tcl_ObjSetVar2(interp, typeVariableObj, NULL,
+		    typeInfo[0], TCL_GLOBAL_ONLY|TCL_LEAVE_ERR_MSG) == NULL) {
+		result = TCL_ERROR;
 	    }
 	}
-	result = TCL_OK;
     } else {
 	/*
 	 * Use the CommDlgExtendedError() function to retrieve the error code.
@@ -1417,7 +1397,7 @@ OFNHookProc(
     WPARAM wParam,		/* message parameter */
     LPARAM lParam)		/* message parameter */
 {
-    ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
+    ThreadSpecificData *tsdPtr =
 	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
     OPENFILENAME *ofnPtr;
 
@@ -1437,7 +1417,7 @@ OFNHookProc(
 		hdlg = GetParent(hdlg);
 	    }
 	    tsdPtr->debugInterp = (Tcl_Interp *) ofnPtr->lCustData;
-	    Tcl_DoWhenIdle(SetTkDialog, (ClientData) hdlg);
+	    Tcl_DoWhenIdle(SetTkDialog, hdlg);
 	    TkWinSetUserData(hdlg, NULL);
 	}
     }
@@ -1467,7 +1447,7 @@ MakeFilter(
     Tcl_Obj *valuePtr,		/* Value of the -filetypes option */
     Tcl_DString *dsPtr,		/* Filled with windows filter string. */
     Tcl_Obj *initialPtr,	/* Initial type name  */
-    int *index)			/* Index of initial type in filter string */
+    int *indexPtr)		/* Index of initial type in filter string */
 {
     char *filterStr;
     char *p;
@@ -1527,7 +1507,7 @@ MakeFilter(
 	 * twice the size of the string to format the filter
 	 */
 
-	filterStr = ckalloc((unsigned int) len * 3);
+	filterStr = ckalloc((unsigned) len * 3);
 
 	for (filterPtr = flist.filters, p = filterStr; filterPtr;
 		filterPtr = filterPtr->next) {
@@ -1535,12 +1515,14 @@ MakeFilter(
 	    FileFilterClause *clausePtr;
 
 	    /*
-	     * Check initial index for match, set index.
-	     * Filter index is 1 based so increment first
+	     * Check initial index for match, set *indexPtr. Filter index is 1
+	     * based so increment first
 	     */
+
 	    ix++;
-	    if (index && initial && (strcmp(initial, filterPtr->name) == 0)) {
-		*index = ix;
+	    if (indexPtr && initial
+		    && (strcmp(initial, filterPtr->name) == 0)) {
+		*indexPtr = ix;
 	    }
 
 	    /*
@@ -1564,8 +1546,8 @@ MakeFilter(
 			clausePtr=clausePtr->next) {
 		    GlobPattern *globPtr;
 
-		    for (globPtr=clausePtr->patterns; globPtr;
-			    globPtr=globPtr->next) {
+		    for (globPtr = clausePtr->patterns; globPtr;
+			    globPtr = globPtr->next) {
 			strcpy(p, sep);
 			p += strlen(sep);
 			strcpy(p, globPtr->pattern);
@@ -1683,15 +1665,14 @@ Tk_ChooseDirectoryObjCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     char path[MAX_PATH];
-    int oldMode, result, i;
+    int oldMode, result = TCL_ERROR, i;
     LPCITEMIDLIST pidl;		/* Returned by browser */
     BROWSEINFO bInfo;		/* Used by browser */
     CHOOSEDIRDATA cdCBData;	/* Structure to pass back and forth */
     LPMALLOC pMalloc;		/* Used by shell */
-
-    Tk_Window tkwin;
+    Tk_Window tkwin = clientData;
     HWND hWnd;
-    const char *utfTitle;		/* Title for window */
+    const char *utfTitle = NULL;/* Title for window */
     TCHAR saveDir[MAX_PATH];
     Tcl_DString titleString;	/* UTF Title */
     Tcl_DString initDirString;	/* Initial directory */
@@ -1707,14 +1688,9 @@ Tk_ChooseDirectoryObjCmd(
      * Initialize
      */
 
-    result = TCL_ERROR;
     path[0] = '\0';
-    utfTitle = NULL;
-
     ZeroMemory(&cdCBData, sizeof(CHOOSEDIRDATA));
     cdCBData.interp = interp;
-
-    tkwin = (Tk_Window) clientData;
 
     /*
      * Process the command line options
@@ -1801,10 +1777,10 @@ Tk_ChooseDirectoryObjCmd(
     }
 
     /*
-     * Set flags to add edit box, status text line and use the new ui.
-     * Allow override with magic variable (ignore errors in retrieval).
-     * See http://msdn.microsoft.com/en-us/library/bb773205(VS.85).aspx
-     * for possible flag values.
+     * Set flags to add edit box, status text line and use the new ui. Allow
+     * override with magic variable (ignore errors in retrieval). See
+     * http://msdn.microsoft.com/en-us/library/bb773205(VS.85).aspx for
+     * possible flag values.
      */
 
     bInfo.ulFlags = BIF_EDITBOX | BIF_STATUSTEXT | BIF_RETURNFSANCESTORS
@@ -1826,7 +1802,7 @@ Tk_ChooseDirectoryObjCmd(
     /*
      * Display dialog in background and process result. We look to give the
      * user a chance to change their mind on an invalid folder if mustexist is
-     * 0;
+     * 0.
      */
 
     oldMode = Tcl_SetServiceMode(TCL_SERVICE_ALL);
@@ -1894,8 +1870,8 @@ Tk_ChooseDirectoryObjCmd(
  *	entered.
  *
  * Results:
- *	Returns 0 to allow default processing of message, or 1 to
- *	tell default dialog function not to close.
+ *	Returns 0 to allow default processing of message, or 1 to tell default
+ *	dialog function not to close.
  *
  *----------------------------------------------------------------------
  */
@@ -1908,17 +1884,15 @@ ChooseDirectoryValidateProc(
     LPARAM lpData)
 {
     TCHAR selDir[MAX_PATH];
-    CHOOSEDIRDATA *chooseDirSharedData;
+    CHOOSEDIRDATA *chooseDirSharedData = (CHOOSEDIRDATA *) lpData;
     Tcl_DString initDirString;
     char string[MAX_PATH];
-    ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
+    ThreadSpecificData *tsdPtr =
 	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
-
-    chooseDirSharedData = (CHOOSEDIRDATA *)lpData;
 
     if (tsdPtr->debugFlag) {
 	tsdPtr->debugInterp = (Tcl_Interp *) chooseDirSharedData->interp;
-	Tcl_DoWhenIdle(SetTkDialog, (ClientData) hwnd);
+	Tcl_DoWhenIdle(SetTkDialog, hwnd);
     }
     chooseDirSharedData->utfRetDir[0] = '\0';
     switch (message) {
@@ -1933,11 +1907,12 @@ ChooseDirectoryValidateProc(
 	 */
 
 	if (Tcl_TranslateFileName(chooseDirSharedData->interp,
-		(char *)lParam, &initDirString) == NULL) {
+		(char *) lParam, &initDirString) == NULL) {
 	    /*
 	     * Should we expose the error (in the interp result) to the user
 	     * at this point?
 	     */
+
 	    chooseDirSharedData->utfRetDir[0] = '\0';
 	    return 1;
 	}
@@ -1948,9 +1923,9 @@ ChooseDirectoryValidateProc(
 	    LPTSTR lpFilePart[MAX_PATH];
 
 	    /*
-	     * Get the full path name to the user entry, at this point it
-	     * doesn't exist so see if it is supposed to. Otherwise just
-	     * return it.
+	     * Get the full path name to the user entry, at this point it does
+	     * not exist so see if it is supposed to. Otherwise just return
+	     * it.
 	     */
 
 	    GetFullPathName(string, MAX_PATH,
@@ -1967,9 +1942,10 @@ ChooseDirectoryValidateProc(
 	    }
 	} else {
 	    /*
-	     * Changed to new folder OK, return immediatly with the
-	     * current directory in utfRetDir.
+	     * Changed to new folder OK, return immediatly with the current
+	     * directory in utfRetDir.
 	     */
+
 	    GetCurrentDirectory(MAX_PATH, chooseDirSharedData->utfRetDir);
 	    return 0;
 	}
@@ -1977,9 +1953,9 @@ ChooseDirectoryValidateProc(
 
     case BFFM_SELCHANGED:
 	/*
-	 * Set the status window to the currently selected path and enable
-	 * the OK button if a file system folder, otherwise disable the OK
-	 * button for things like server names. Perhaps a new switch
+	 * Set the status window to the currently selected path and enable the
+	 * OK button if a file system folder, otherwise disable the OK button
+	 * for things like server names. Perhaps a new switch
 	 * -enablenonfolders can be used to allow non folders to be selected.
 	 *
 	 * Not called when user changes edit box directly.
@@ -2007,8 +1983,8 @@ ChooseDirectoryValidateProc(
 	SetCurrentDirectory(initDir);
 	if (*initDir == '\\') {
 	    /*
-	     * BFFM_SETSELECTION only understands UNC paths as pidls,
-	     * so convert path to pidl using IShellFolder interface.
+	     * BFFM_SETSELECTION only understands UNC paths as pidls, so
+	     * convert path to pidl using IShellFolder interface.
 	     */
 
 	    LPMALLOC pMalloc;
@@ -2027,7 +2003,7 @@ ChooseDirectoryValidateProc(
 			    Tcl_DStringValue(&ds), &ulCount,&pidlMain,&ulAttr))
 			    && (pidlMain != NULL)) {
 			SendMessage(hwnd, BFFM_SETSELECTION, FALSE,
-				(LPARAM)pidlMain);
+				(LPARAM) pidlMain);
 			pMalloc->lpVtbl->Free(pMalloc, pidlMain);
 		    }
 		    psfFolder->lpVtbl->Release(psfFolder);
@@ -2036,7 +2012,7 @@ ChooseDirectoryValidateProc(
 		pMalloc->lpVtbl->Release(pMalloc);
 	    }
 	} else {
-	    SendMessage(hwnd, BFFM_SETSELECTION, TRUE, (LPARAM)initDir);
+	    SendMessage(hwnd, BFFM_SETSELECTION, TRUE, (LPARAM) initDir);
 	}
 	SendMessage(hwnd, BFFM_ENABLEOK, 0, (LPARAM) 1);
 	break;
@@ -2071,7 +2047,7 @@ Tk_MessageBoxObjCmd(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
-    Tk_Window tkwin, parent;
+    Tk_Window tkwin = clientData, parent;
     HWND hWnd;
     Tcl_Obj *messageObj, *titleObj, *detailObj, *tmpObj;
     int defaultBtn, icon, type;
@@ -2085,12 +2061,10 @@ Tk_MessageBoxObjCmd(
 	MSG_DEFAULT,	MSG_DETAIL,	MSG_ICON,	MSG_MESSAGE,
 	MSG_PARENT,	MSG_TITLE,	MSG_TYPE
     };
-    ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
+    ThreadSpecificData *tsdPtr =
 	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
     (void) TkWinGetUnicodeEncoding();
-    tkwin = (Tk_Window) clientData;
-
     defaultBtn = -1;
     detailObj = NULL;
     icon = MB_ICONINFORMATION;
@@ -2244,8 +2218,8 @@ MsgBoxCBTProc(
     WPARAM wParam,
     LPARAM lParam)
 {
-    ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
-	Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
+    ThreadSpecificData *tsdPtr =
+	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
     if (nCode == HCBT_CREATEWND) {
 	/*
@@ -2256,10 +2230,11 @@ MsgBoxCBTProc(
 	 * that it's the one we want.
 	 */
 
-	LPCBT_CREATEWND lpcbtcreate = (LPCBT_CREATEWND)lParam;
+	LPCBT_CREATEWND lpcbtcreate = (LPCBT_CREATEWND) lParam;
 
 	if (WC_DIALOG == lpcbtcreate->lpcs->lpszClass) {
 	    HWND hwnd = (HWND) wParam;
+
 	    SendMessage(hwnd, WM_SETICON, ICON_SMALL,
 		    (LPARAM) tsdPtr->hSmallIcon);
 	    SendMessage(hwnd, WM_SETICON, ICON_BIG, (LPARAM) tsdPtr->hBigIcon);
@@ -2278,10 +2253,10 @@ MsgBoxCBTProc(
  *
  * SetTkDialog --
  *
- *	Records the HWND for a native dialog in the 'tk_dialog' variable
- *	so that the test-suite can operate on the correct dialog window.
- *	Use of this is enabled when a test program calls TkWinDialogDebug
- *	by calling the test command 'tkwinevent debug 1'
+ *	Records the HWND for a native dialog in the 'tk_dialog' variable so
+ *	that the test-suite can operate on the correct dialog window. Use of
+ *	this is enabled when a test program calls TkWinDialogDebug by calling
+ *	the test command 'tkwinevent debug 1'.
  *
  * ----------------------------------------------------------------------
  */
@@ -2290,7 +2265,7 @@ static void
 SetTkDialog(
     ClientData clientData)
 {
-    ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
+    ThreadSpecificData *tsdPtr =
 	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
     char buf[32];
 
@@ -2344,24 +2319,23 @@ GetFontObj(HDC hdc, LOGFONT *plf)
 
     resObj = Tcl_NewListObj(0, NULL);
     Tcl_ListObjAppendElement(NULL, resObj,
-	Tcl_NewStringObj(plf->lfFaceName, -1));
+	    Tcl_NewStringObj(plf->lfFaceName, -1));
     pt = -MulDiv(plf->lfHeight, 72, GetDeviceCaps(hdc, LOGPIXELSY));
     Tcl_ListObjAppendElement(NULL, resObj, Tcl_NewIntObj(pt));
     if (plf->lfWeight >= 700) {
-	Tcl_ListObjAppendElement(NULL, resObj,
-	    Tcl_NewStringObj("bold", -1));
+	Tcl_ListObjAppendElement(NULL, resObj, Tcl_NewStringObj("bold", -1));
     }
     if (plf->lfItalic) {
 	Tcl_ListObjAppendElement(NULL, resObj,
-	    Tcl_NewStringObj("italic", -1));
+		Tcl_NewStringObj("italic", -1));
     }
     if (plf->lfUnderline) {
 	Tcl_ListObjAppendElement(NULL, resObj,
-	    Tcl_NewStringObj("underline", -1));
+		Tcl_NewStringObj("underline", -1));
     }
     if (plf->lfStrikeOut) {
 	Tcl_ListObjAppendElement(NULL, resObj,
-	    Tcl_NewStringObj("overstrike", -1));
+		Tcl_NewStringObj("overstrike", -1));
     }
     return resObj;
 }
@@ -2371,12 +2345,13 @@ ApplyLogfont(Tcl_Interp *interp, Tcl_Obj *cmdObj, HDC hdc, LOGFONT *logfontPtr)
 {
     int objc;
     Tcl_Obj **objv, **tmpv;
+
     Tcl_ListObjGetElements(NULL, cmdObj, &objc, &objv);
-    tmpv = (Tcl_Obj **)ckalloc(sizeof(Tcl_Obj *) * (objc + 2));
+    tmpv = (Tcl_Obj **) ckalloc(sizeof(Tcl_Obj *) * (objc + 2));
     memcpy(tmpv, objv, sizeof(Tcl_Obj *) * objc);
     tmpv[objc] = GetFontObj(hdc, logfontPtr);
     TkBackgroundEvalObjv(interp, objc+1, tmpv, TCL_EVAL_GLOBAL);
-    ckfree((char *)tmpv);
+    ckfree((char *) tmpv);
 }
 
 /*
@@ -2384,9 +2359,8 @@ ApplyLogfont(Tcl_Interp *interp, Tcl_Obj *cmdObj, HDC hdc, LOGFONT *logfontPtr)
  *
  * HookProc --
  *
- *	Font selection hook. If the user selects Apply on the dialog, we
- *	call the applyProc script with the currently selected font as
- *	arguments.
+ *	Font selection hook. If the user selects Apply on the dialog, we call
+ *	the applyProc script with the currently selected font as arguments.
  *
  * ----------------------------------------------------------------------
  */
@@ -2404,25 +2378,26 @@ typedef struct HookData {
 static UINT_PTR CALLBACK
 HookProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    CHOOSEFONT *pcf = (CHOOSEFONT *)lParam;
+    CHOOSEFONT *pcf = (CHOOSEFONT *) lParam;
     HWND hwndCtrl;
     static HookData *phd = NULL;
-    ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
+    ThreadSpecificData *tsdPtr =
 	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
     if (WM_INITDIALOG == msg && lParam != 0) {
-	phd = (HookData *)pcf->lCustData;
+	phd = (HookData *) pcf->lCustData;
 	phd->hwnd = hwndDlg;
 	if (tsdPtr->debugFlag) {
 	    tsdPtr->debugInterp = (Tcl_Interp *) phd->interp;
-	    Tcl_DoWhenIdle(SetTkDialog, (ClientData) hwndDlg);
+	    Tcl_DoWhenIdle(SetTkDialog, hwndDlg);
 	}
 	if (phd->titleObj != NULL) {
 	    Tcl_DString title;
+
 	    Tcl_WinUtfToTChar(Tcl_GetString(phd->titleObj), -1, &title);
 	    if (Tcl_DStringLength(&title) > 0) {
 		tkWinProcs->setWindowText(hwndDlg,
-		    (LPCTSTR)Tcl_DStringValue(&title));
+			(LPCTSTR) Tcl_DStringValue(&title));
 	    }
 	    Tcl_DStringFree(&title);
 	}
@@ -2450,13 +2425,15 @@ HookProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam)
     }
 
     /*
-     * Handle apply button by calling the provided command script as
-     * a background evaluation (ie: errors dont come back here).
+     * Handle apply button by calling the provided command script as a
+     * background evaluation (ie: errors dont come back here).
      */
+
     if (WM_COMMAND == msg && LOWORD(wParam) == 1026) {
 	LOGFONT lf = {0};
 	HDC hdc = GetDC(hwndDlg);
-	SendMessage(hwndDlg, WM_CHOOSEFONT_GETLOGFONT, 0, (LPARAM)&lf);
+
+	SendMessage(hwndDlg, WM_CHOOSEFONT_GETLOGFONT, 0, (LPARAM) &lf);
 	if (phd && phd->cmdObj) {
 	    ApplyLogfont(phd->interp, phd->cmdObj, hdc, &lf);
 	}
@@ -2469,9 +2446,8 @@ HookProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 }
 
 /*
- * Helper for the FontchooserConfigure command to return the
- * current value of any of the options (which may be NULL in
- * the structure)
+ * Helper for the FontchooserConfigure command to return the current value of
+ * any of the options (which may be NULL in the structure)
  */
 
 enum FontchooserOption {
@@ -2483,46 +2459,41 @@ static Tcl_Obj *
 FontchooserCget(HookData *hdPtr, int optionIndex)
 {
     Tcl_Obj *resObj = NULL;
+
     switch(optionIndex) {
-	case FontchooserParent: {
-	    if (hdPtr->parentObj) {
-		resObj = hdPtr->parentObj;
-	    } else {
-		resObj = Tcl_NewStringObj(".", 1);
-	    }
-	    break;
+    case FontchooserParent:
+	if (hdPtr->parentObj) {
+	    resObj = hdPtr->parentObj;
+	} else {
+	    resObj = Tcl_NewStringObj(".", 1);
 	}
-	case FontchooserTitle: {
-	    if (hdPtr->titleObj) {
-		resObj = hdPtr->titleObj;
-	    } else {
-		resObj =  Tcl_NewStringObj("", 0);
-	    }
-	    break;
+	break;
+    case FontchooserTitle:
+	if (hdPtr->titleObj) {
+	    resObj = hdPtr->titleObj;
+	} else {
+	    resObj =  Tcl_NewStringObj("", 0);
 	}
-	case FontchooserFont: {
-	    if (hdPtr->fontObj) {
-		resObj = hdPtr->fontObj;
-	    } else {
-		resObj = Tcl_NewStringObj("", 0);
-	    }
-	    break;
-	}
-	case FontchooserCmd: {
-	    if (hdPtr->cmdObj) {
-		resObj = hdPtr->cmdObj;
-	    } else {
-		resObj = Tcl_NewStringObj("", 0);
-	    }
-	    break;
-	}
-	case FontchooserVisible: {
-	    resObj = Tcl_NewBooleanObj(hdPtr->hwnd && IsWindow(hdPtr->hwnd));
-	    break;
-	}
-	default: {
+	break;
+    case FontchooserFont:
+	if (hdPtr->fontObj) {
+	    resObj = hdPtr->fontObj;
+	} else {
 	    resObj = Tcl_NewStringObj("", 0);
 	}
+	break;
+    case FontchooserCmd:
+	if (hdPtr->cmdObj) {
+	    resObj = hdPtr->cmdObj;
+	} else {
+	    resObj = Tcl_NewStringObj("", 0);
+	}
+	break;
+    case FontchooserVisible:
+	resObj = Tcl_NewBooleanObj(hdPtr->hwnd && IsWindow(hdPtr->hwnd));
+	break;
+    default:
+	resObj = Tcl_NewStringObj("", 0);
     }
     return resObj;
 }
@@ -2532,8 +2503,8 @@ FontchooserCget(HookData *hdPtr, int optionIndex)
  *
  * FontchooserConfigureCmd --
  *
- *	Implementation of the 'tk fontchooser configure' ensemble command.
- *	See the user documentation for what it does.
+ *	Implementation of the 'tk fontchooser configure' ensemble command. See
+ *	the user documentation for what it does.
  *
  * Results:
  *	See the user documentation.
@@ -2551,7 +2522,7 @@ FontchooserConfigureCmd(
     int objc,
     Tcl_Obj *const objv[])
 {
-    Tk_Window tkwin = (Tk_Window)clientData;
+    Tk_Window tkwin = clientData;
     HookData *hdPtr = NULL;
     int i, r = TCL_OK;
     static const char *optionStrings[] = {
@@ -2561,12 +2532,13 @@ FontchooserConfigureCmd(
     hdPtr = Tcl_GetAssocData(interp, "::tk::fontchooser", NULL);
 
     /*
-     * with no arguments we return all the options in a dict
+     * With no arguments we return all the options in a dict.
      */
 
     if (objc == 1) {
 	Tcl_Obj *keyObj, *valueObj;
 	Tcl_Obj *dictObj = Tcl_NewDictObj();
+
 	for (i = 0; r == TCL_OK && optionStrings[i] != NULL; ++i) {
 	    keyObj = Tcl_NewStringObj(optionStrings[i], -1);
 	    valueObj = FontchooserCget(hdPtr, i);
@@ -2580,86 +2552,89 @@ FontchooserConfigureCmd(
 
     for (i = 1; i < objc; i += 2) {
 	int optionIndex, len;
+
 	if (Tcl_GetIndexFromObj(interp, objv[i], optionStrings,
 		"option", 0, &optionIndex) != TCL_OK) {
 	    return TCL_ERROR;
 	}
 	if (objc == 2) {
-	    /* if one option and no arg - return the current value */
+	    /*
+	     * If one option and no arg - return the current value.
+	     */
+
 	    Tcl_SetObjResult(interp, FontchooserCget(hdPtr, optionIndex));
 	    return TCL_OK;
 	}
 	if (i + 1 == objc) {
 	    Tcl_AppendResult(interp, "value for \"",
-		Tcl_GetString(objv[i]), "\" missing", NULL);
+		    Tcl_GetString(objv[i]), "\" missing", NULL);
 	    return TCL_ERROR;
 	}
 	switch (optionIndex) {
-	    case FontchooserVisible: {
-		const char *msg = "cannot change read-only option "
+	case FontchooserVisible: {
+	    const char *msg = "cannot change read-only option "
 		    "\"-visible\": use the show or hide command";
-		Tcl_SetObjResult(interp, Tcl_NewStringObj(msg, -1));
+
+	    Tcl_SetObjResult(interp, Tcl_NewStringObj(msg, -1));
+	    return TCL_ERROR;
+	}
+	case FontchooserParent: {
+	    Tk_Window parent = Tk_NameToWindow(interp,
+		    Tcl_GetString(objv[i+1]), tkwin);
+
+	    if (parent == None) {
 		return TCL_ERROR;
 	    }
-	    case FontchooserParent: {
-		Tk_Window parent = Tk_NameToWindow(interp,
-		    Tcl_GetString(objv[i+1]), tkwin);
-		if (parent == None) {
-		    return TCL_ERROR;
-		}
-		if (hdPtr->parentObj) {
-		    Tcl_DecrRefCount(hdPtr->parentObj);
-		}
-		hdPtr->parentObj = objv[i+1];
-		if (Tcl_IsShared(hdPtr->parentObj)) {
-		    hdPtr->parentObj = Tcl_DuplicateObj(hdPtr->parentObj);
-		}
-		Tcl_IncrRefCount(hdPtr->parentObj);
-		break;
+	    if (hdPtr->parentObj) {
+		Tcl_DecrRefCount(hdPtr->parentObj);
 	    }
-	    case FontchooserTitle: {
-		if (hdPtr->titleObj) {
-		    Tcl_DecrRefCount(hdPtr->titleObj);
-		}
-		hdPtr->titleObj = objv[i+1];
-		if (Tcl_IsShared(hdPtr->titleObj)) {
-		    hdPtr->titleObj = Tcl_DuplicateObj(hdPtr->titleObj);
-		}
-		Tcl_IncrRefCount(hdPtr->titleObj);
-		break;
+	    hdPtr->parentObj = objv[i+1];
+	    if (Tcl_IsShared(hdPtr->parentObj)) {
+		hdPtr->parentObj = Tcl_DuplicateObj(hdPtr->parentObj);
 	    }
-	    case FontchooserFont: {
-		if (hdPtr->fontObj) {
-		    Tcl_DecrRefCount(hdPtr->fontObj);
-		}
-		Tcl_GetStringFromObj(objv[i+1], &len);
-		if (len) {
-		    hdPtr->fontObj = objv[i+1];
-		    if (Tcl_IsShared(hdPtr->fontObj)) {
-			hdPtr->fontObj = Tcl_DuplicateObj(hdPtr->fontObj);
-		    }
-		    Tcl_IncrRefCount(hdPtr->fontObj);
-		} else {
-		    hdPtr->fontObj = NULL;
-		}
-		break;
+	    Tcl_IncrRefCount(hdPtr->parentObj);
+	    break;
+	}
+	case FontchooserTitle:
+	    if (hdPtr->titleObj) {
+		Tcl_DecrRefCount(hdPtr->titleObj);
 	    }
-	    case FontchooserCmd: {
-		if (hdPtr->cmdObj) {
-		    Tcl_DecrRefCount(hdPtr->cmdObj);
-		}
-		Tcl_GetStringFromObj(objv[i+1], &len);
-		if (len) {
-		    hdPtr->cmdObj = objv[i+1];
-		    if (Tcl_IsShared(hdPtr->cmdObj)) {
-			hdPtr->cmdObj = Tcl_DuplicateObj(hdPtr->cmdObj);
-		    }
-		    Tcl_IncrRefCount(hdPtr->cmdObj);
-		} else {
-		    hdPtr->cmdObj = NULL;
-		}
-		break;
+	    hdPtr->titleObj = objv[i+1];
+	    if (Tcl_IsShared(hdPtr->titleObj)) {
+		hdPtr->titleObj = Tcl_DuplicateObj(hdPtr->titleObj);
 	    }
+	    Tcl_IncrRefCount(hdPtr->titleObj);
+	    break;
+	case FontchooserFont:
+	    if (hdPtr->fontObj) {
+		Tcl_DecrRefCount(hdPtr->fontObj);
+	    }
+	    Tcl_GetStringFromObj(objv[i+1], &len);
+	    if (len) {
+		hdPtr->fontObj = objv[i+1];
+		if (Tcl_IsShared(hdPtr->fontObj)) {
+		    hdPtr->fontObj = Tcl_DuplicateObj(hdPtr->fontObj);
+		}
+		Tcl_IncrRefCount(hdPtr->fontObj);
+	    } else {
+		hdPtr->fontObj = NULL;
+	    }
+	    break;
+	case FontchooserCmd:
+	    if (hdPtr->cmdObj) {
+		Tcl_DecrRefCount(hdPtr->cmdObj);
+	    }
+	    Tcl_GetStringFromObj(objv[i+1], &len);
+	    if (len) {
+		hdPtr->cmdObj = objv[i+1];
+		if (Tcl_IsShared(hdPtr->cmdObj)) {
+		    hdPtr->cmdObj = Tcl_DuplicateObj(hdPtr->cmdObj);
+		}
+		Tcl_IncrRefCount(hdPtr->cmdObj);
+	    } else {
+		hdPtr->cmdObj = NULL;
+	    }
+	    break;
 	}
     }
     return TCL_OK;
@@ -2670,12 +2645,13 @@ FontchooserConfigureCmd(
  *
  * FontchooserShowCmd --
  *
- *	Implements the 'tk fontchooser show' ensemble command. The
- *	per-interp configuration data for the dialog is held in an interp
- *	associated structure.
- *	Calls the Win32 FontChooser API which provides a modal dialog.
- *	See HookProc where we make a few changes to the dialog and set
- *	some additional state.
+ *	Implements the 'tk fontchooser show' ensemble command. The per-interp
+ *	configuration data for the dialog is held in an interp associated
+ *	structure.
+ *
+ *	Calls the Win32 FontChooser API which provides a modal dialog. See
+ *	HookProc where we make a few changes to the dialog and set some
+ *	additional state.
  *
  * ----------------------------------------------------------------------
  */
@@ -2687,7 +2663,7 @@ FontchooserShowCmd(
     int objc,
     Tcl_Obj *const objv[])
 {
-    Tk_Window tkwin, parent;
+    Tk_Window tkwin = clientData, parent;
     CHOOSEFONT cf;
     LOGFONT lf;
     HDC hdc;
@@ -2696,9 +2672,10 @@ FontchooserShowCmd(
 
     hdPtr = Tcl_GetAssocData(interp, "::tk::fontchooser", NULL);
 
-    tkwin = parent = (Tk_Window) clientData;
+    parent = tkwin;
     if (hdPtr->parentObj) {
-	parent = Tk_NameToWindow(interp, Tcl_GetString(hdPtr->parentObj), tkwin);
+	parent = Tk_NameToWindow(interp, Tcl_GetString(hdPtr->parentObj),
+		tkwin);
 	if (parent == None) {
 	    return TCL_ERROR;
 	}
@@ -2716,7 +2693,7 @@ FontchooserShowCmd(
     cf.Flags = CF_SCREENFONTS | CF_EFFECTS | CF_ENABLEHOOK;
     cf.rgbColors = RGB(0,0,0);
     cf.lpfnHook = HookProc;
-    cf.lCustData = (INT_PTR)hdPtr;
+    cf.lCustData = (INT_PTR) hdPtr;
     hdPtr->interp = interp;
     hdPtr->parent = parent;
     hdc = GetDC(cf.hwndOwner);
@@ -2724,26 +2701,38 @@ FontchooserShowCmd(
     if (hdPtr->fontObj != NULL) {
 	TkFont *fontPtr;
 	Tk_Font f = Tk_AllocFontFromObj(interp, tkwin, hdPtr->fontObj);
+
 	if (f == NULL) {
 	    return TCL_ERROR;
 	}
-	fontPtr = (TkFont *)f;
+	fontPtr = (TkFont *) f;
 	cf.Flags |= CF_INITTOLOGFONTSTRUCT;
 	strncpy(lf.lfFaceName, Tk_GetUid(fontPtr->fa.family), LF_FACESIZE-1);
 	lf.lfFaceName[LF_FACESIZE-1] = 0;
 	lf.lfHeight = -MulDiv(TkFontGetPoints(tkwin, fontPtr->fa.size),
 	    GetDeviceCaps(hdc, LOGPIXELSY), 72);
-	if (fontPtr->fa.weight == TK_FW_BOLD) lf.lfWeight = FW_BOLD;
-	if (fontPtr->fa.slant != TK_FS_ROMAN) lf.lfItalic = TRUE;
-	if (fontPtr->fa.underline) lf.lfUnderline = TRUE;
-	if (fontPtr->fa.overstrike) lf.lfStrikeOut = TRUE;
+	if (fontPtr->fa.weight == TK_FW_BOLD) {
+	    lf.lfWeight = FW_BOLD;
+	}
+	if (fontPtr->fa.slant != TK_FS_ROMAN) {
+	    lf.lfItalic = TRUE;
+	}
+	if (fontPtr->fa.underline) {
+	    lf.lfUnderline = TRUE;
+	}
+	if (fontPtr->fa.overstrike) {
+	    lf.lfStrikeOut = TRUE;
+	}
 	Tk_FreeFont(f);
     }
 
     if (TCL_OK == r && hdPtr->cmdObj != NULL) {
 	int len = 0;
+
 	r = Tcl_ListObjLength(interp, hdPtr->cmdObj, &len);
-	if (len > 0) cf.Flags |= CF_APPLY;
+	if (len > 0) {
+	    cf.Flags |= CF_APPLY;
+	}
     }
 
     if (TCL_OK == r) {
@@ -2761,7 +2750,6 @@ FontchooserShowCmd(
     }
 
     ReleaseDC(cf.hwndOwner, hdc);
-
     return r;
 }
 
@@ -2770,10 +2758,10 @@ FontchooserShowCmd(
  *
  * FontchooserHideCmd --
  *
- *	Implementation of the 'tk fontchooser hide' ensemble. See the
- *	user documentation for details.
- *	As the Win32 FontChooser function is always modal all we do here
- *	is destroy the dialog
+ *	Implementation of the 'tk fontchooser hide' ensemble. See the user
+ *	documentation for details.
+ *	As the Win32 FontChooser function is always modal all we do here is
+ *	destroy the dialog
  *
  * ----------------------------------------------------------------------
  */
@@ -2786,6 +2774,7 @@ FontchooserHideCmd(
     Tcl_Obj *const objv[])
 {
     HookData *hdPtr = Tcl_GetAssocData(interp, "::tk::fontchooser", NULL);
+
     if (hdPtr->hwnd && IsWindow(hdPtr->hwnd)) {
 	EndDialog(hdPtr->hwnd, 0);
     }
@@ -2797,8 +2786,8 @@ FontchooserHideCmd(
  *
  * DeleteHookData --
  *
- *	Clean up the font chooser configuration data when the interp
- *	is destroyed.
+ *	Clean up the font chooser configuration data when the interp is
+ *	destroyed.
  *
  * ----------------------------------------------------------------------
  */
@@ -2807,15 +2796,20 @@ static void
 DeleteHookData(ClientData clientData, Tcl_Interp *interp)
 {
     HookData *hdPtr = clientData;
-    if (hdPtr->parentObj)
+
+    if (hdPtr->parentObj) {
 	Tcl_DecrRefCount(hdPtr->parentObj);
-    if (hdPtr->fontObj)
+    }
+    if (hdPtr->fontObj) {
 	Tcl_DecrRefCount(hdPtr->fontObj);
-    if (hdPtr->titleObj)
+    }
+    if (hdPtr->titleObj) {
 	Tcl_DecrRefCount(hdPtr->titleObj);
-    if (hdPtr->cmdObj)
+    }
+    if (hdPtr->cmdObj) {
 	Tcl_DecrRefCount(hdPtr->cmdObj);
-    ckfree((char *)hdPtr);
+    }
+    ckfree((char *) hdPtr);
 }
 
 /*
@@ -2840,8 +2834,8 @@ const TkEnsemble tkFontchooserEnsemble[] = {
 int
 TkInitFontchooser(Tcl_Interp *interp, ClientData clientData)
 {
-    HookData *hdPtr = NULL;
-    hdPtr = (HookData *)ckalloc(sizeof(HookData));
+    HookData *hdPtr = (HookData *) ckalloc(sizeof(HookData));
+
     memset(hdPtr, 0, sizeof(HookData));
     Tcl_SetAssocData(interp, "::tk::fontchooser", DeleteHookData, hdPtr);
     return TCL_OK;
