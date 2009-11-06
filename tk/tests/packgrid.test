@@ -97,6 +97,36 @@ test packgrid-1.6 {pack and grid in same master} -setup {
     destroy .g
 } -result {}
 
+test packgrid-1.7 {pack and grid in same master} -setup {
+    grid propagate . true
+    pack propagate . true
+    label .p -text PACK
+    label .g -text GRID
+} -body {
+    # Basic conflict should stop widget from being handled
+    grid .g
+    catch { pack .p }
+    pack slaves .
+} -cleanup {
+    destroy .p
+    destroy .g
+} -result {}
+
+test packgrid-1.8 {pack and grid in same master} -setup {
+    grid propagate . true
+    pack propagate . true
+    label .p -text PACK
+    label .g -text GRID
+} -body {
+    # Basic conflict should stop widget from being handled
+    pack .p
+    catch { grid .g }
+    grid slaves .
+} -cleanup {
+    destroy .p
+    destroy .g
+} -result {}
+
 test packgrid-2.1 {pack and grid in same master, change propagation} -setup {
     grid propagate . false
     pack propagate . true
