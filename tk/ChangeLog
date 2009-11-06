@@ -1,10 +1,124 @@
+2009-11-03  Don Porter  <dgp@users.sourceforge.net>
+
+	*** 8.5.8 TAGGED FOR RELEASE ***
+
+	* generic/tk.h:		Bump to 8.5.8 for release.
+	* library/tk.tcl:
+	* unix/configure.in:
+	* unix/tk.spec:
+	* win/configure.in:
+	* README:
+
+	* unix/configure:	autoconf-2.59
+	* win/configure:
+
+	* changes:	Updated for 8.5.8 release.
+
+2009-11-03  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* win/tkWinWm.c: [Bug 2891541] Permit normal behaviour on
+	Windows for a grabbed toplevel when it is the main window.
+
+2009-11-01  Joe Mistachkin  <joe@mistachkin.com>
+
+	* win/tkWinButton.c: [Bug 1739613]: The default width being stored
+	in TSD cannot be put into the process-wide options table.  This fix
+	allocates storage for the default width from the heap and frees it
+	using an exit handler.
+
+2009-10-29  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* win/tkWinFont.c: [Bug 1825353]: Backported patch for tiny
+	fixed font on Russian Windows systems.
+
+2009-10-25  Donal K. Fellows  <dkf@users.sf.net>
+
+	* unix/tkUnixColor.c (TkpGetColor): [Bug 2809525]: Impose a maximum
+	X11 color name length so that it becomes impossible to blow things up
+	that way.
+
+	* library/text.tcl: [Bug 1854913]: Stop <Delete> actions from ever
+	deleting backwards, even when the insertion cursor is "at the end" of
+	the text widget.
+
+2009-10-24  Donal K. Fellows  <dkf@users.sf.net>
+
+	* macosx/ttkMacOSXTheme.c (RangeToFactor, TrackElementDraw)
+	(PbarElementDraw): [Bug 2883712]: Corrected scaling of progress bars
+	and scales, and backported the fix for 64-bitness.
+
+	* library/button.tcl, unix/tkUnixButton.c (TkpDisplayButton):
+	[Patch 1530276]: Make -selectcolor handling work better for both
+	checkbuttons and radiobuttons when they don't have indicators.
+
+2009-10-22  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tkText.c (CreateWidget, TextEditUndo, TextEditRedo)
+	(TextEditCmd, UpdateDirtyFlag): 
+	* generic/tkText.h: [Patch 1469210]: Corrected handling of marking as
+	dirty when inserting after an undo from a non-dirty state.
+
+	* library/xmfbox.tcl (MotifFDialog_FileTypes)
+	(MotifFDialog_ActivateSEnt): 
+	* library/tkfbox.tcl (Done, ::tk::dialog::file::): 
+	* macosx/tkMacOSXDialog.c (Tk_GetOpenFileObjCmd): 
+	* win/tkWinDialog.c (GetFileNameW, GetFileNameA): 
+	* doc/getOpenFile.n: [Patch 2168768]: Corrected handling of the
+	-typevariable option to be consistently global; it's the only way it
+	can work even close to the same on all platforms.
+
+2009-10-15  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tkConsole.c:	Relax the runtime version requirements on Tcl
+	* generic/tkMain.c:	so that Tk 8.5.8 can [load] into Tcl 8.6 (and
+	* generic/tkWindow.c:	later 8.*) interps.  [Feature Request 2794032]
+	* library/tk.tcl
+	* unix/Makefile.in:
+	* win/Makefile.in:
+	* win/makefile.vc:
+
+2009-10-10  Donal K. Fellows  <dkf@users.sf.net>
+
+	* unix/tkUnixRFont.c (InitFont,TkpGetFontFromAttributes,Tk_DrawChars):
+	[Bug 1961455]: Draw underlines and overstrikes when using Xft for font
+	rendering.
+
+2009-10-08  Donal K. Fellows  <dkf@users.sf.net>
+
+	* library/tkfbox.tcl (::tk::IconList_Create): [Patch 2870648]:
+	Corrected cursor used in file/directory dialogs.
+
+2009-10-07  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* library/ttk/vistaTheme.tcl: [Bug 2787164]: Fix size of dropdown
+	arrow on combobox and menubutton for Windows 7.
+
+2009-10-07  Donal K. Fellows  <dkf@users.sf.net>
+
+	* unix/tkUnixScrlbr.c (TkpComputeScrollbarGeometry): [Patch 2088597]:
+	Stop scrollbars from getting too small at the end.
+
+2009-10-05  Don Porter  <dgp@users.sourceforge.net>
+
+	* changes:	Updated for 8.5.8 release.
+
+2009-10-05  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* win/tkWinButton.c: [Bug 2860827]: Backported patch avoiding 3D
+	effects with user-specified background.
+
+2009-09-25  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tkImgPhoto.c (ImgGetPhoto): Correct generation of grayscale
+	data from an image. Reported by Keith Vetter on comp.lang.tcl.
+
 2009-09-14  Jeff Hobbs  <jeffh@ActiveState.com>
 
-	* generic/tkMenuDraw.c (TkPostSubmenu): Fix reposting of submenu in
-	* win/tkWinMenu.c (TkWinHandleMenuEvent): torn off Windows menu.
-	[Bug 873613]
-	(DrawMenuEntryArrow): Draw Win menu arrow after being torn
-	off. [Bug 873608]
+	* generic/tkMenuDraw.c (TkPostSubmenu): [Bug 873613]: Fix reposting of
+	* win/tkWinMenu.c (TkWinHandleMenuEvent): submenu in torn off Windows
+	menu.
+	(DrawMenuEntryArrow): [Bug 873608]: Draw Win menu arrow after being
+	torn off.
 
 2009-09-10  Donal K. Fellows  <dkf@users.sf.net>
 

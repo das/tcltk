@@ -2566,6 +2566,7 @@ MODULE_SCOPE void	TclFinalizePreserve(void);
 MODULE_SCOPE void	TclFinalizeSynchronization(void);
 MODULE_SCOPE void	TclFinalizeThreadAlloc(void);
 MODULE_SCOPE void	TclFinalizeThreadData(void);
+MODULE_SCOPE void	TclFinalizeThreadObjects(void);
 MODULE_SCOPE double	TclFloor(mp_int *a);
 MODULE_SCOPE void	TclFormatNaN(double value, char *buffer);
 MODULE_SCOPE int	TclFSFileAttrIndex(Tcl_Obj *pathPtr,
@@ -3492,12 +3493,13 @@ MODULE_SCOPE Tcl_Mutex	tclObjMutex;
 #endif
 
 #else /* TCL_MEM_DEBUG */
-MODULE_SCOPE void	TclDbInitNewObj(Tcl_Obj *objPtr);
+MODULE_SCOPE void	TclDbInitNewObj(Tcl_Obj *objPtr, CONST char *file,
+			    int line);
 
 # define TclDbNewObj(objPtr, file, line) \
     TclIncrObjsAllocated(); \
     (objPtr) = (Tcl_Obj *) Tcl_DbCkalloc(sizeof(Tcl_Obj), (file), (line)); \
-    TclDbInitNewObj(objPtr); \
+    TclDbInitNewObj((objPtr), (file), (line)); \
     TCL_DTRACE_OBJ_CREATE(objPtr)
 
 # define TclNewObj(objPtr) \
@@ -3607,10 +3609,15 @@ MODULE_SCOPE void	TclDbInitNewObj(Tcl_Obj *objPtr);
  *----------------------------------------------------------------
  */
 
+#define TCL_MAX_TOKENS (int)(UINT_MAX / sizeof(Tcl_Token))
 #define TCL_MIN_TOKEN_GROWTH 50
 #define TclGrowTokenArray(tokenPtr, used, available, append, staticPtr)	\
 {									\
     int needed = (used) + (append);					\
+    if (needed > TCL_MAX_TOKENS) {					\
+	Tcl_Panic("max # of tokens for a Tcl parse (%d) exceeded",	\
+		TCL_MAX_TOKENS);					\
+    }									\
     if (needed > (available)) {						\
 	int allocated = 2 * needed;					\
 	Tcl_Token *oldPtr = (tokenPtr);					\
@@ -3618,10 +3625,16 @@ MODULE_SCOPE void	TclDbInitNewObj(Tcl_Obj *objPtr);
 	if (oldPtr == (staticPtr)) {					\
 	    oldPtr = NULL;						\
 	}								\
+	if (allocated > TCL_MAX_TOKENS) {				\
+	    allocated = TCL_MAX_TOKENS;					\
+	}								\
 	newPtr = (Tcl_Token *) attemptckrealloc( (char *) oldPtr,	\
 		(unsigned int) (allocated * sizeof(Tcl_Token)));	\
 	if (newPtr == NULL) {						\
 	    allocated = needed + (append) + TCL_MIN_TOKEN_GROWTH;	\
+	    if (allocated > TCL_MAX_TOKENS) {				\
+		allocated = TCL_MAX_TOKENS;				\
+	    }								\
 	    newPtr = (Tcl_Token *) ckrealloc( (char *) oldPtr,		\
 		    (unsigned int) (allocated * sizeof(Tcl_Token)));	\
 	}								\

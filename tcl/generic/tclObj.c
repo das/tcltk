@@ -54,6 +54,22 @@ Tcl_Mutex tclObjMutex;
 char tclEmptyString = '\0';
 char *tclEmptyStringRep = &tclEmptyString;
 
+#if defined(TCL_MEM_DEBUG) && defined(TCL_THREADS)
+/*
+ * Structure for tracking the source file and line number where a given Tcl_Obj
+ * was allocated.  We also track the pointer to the Tcl_Obj itself, for sanity
+ * checking purposes.
+ */
+
+typedef struct ObjData {
+    Tcl_Obj *objPtr;		/* The pointer to the allocated Tcl_Obj. */
+    CONST char *file;		/* The name of the source file calling this
+				 * function; used for debugging. */
+    int line;			/* Line number in the source file; used for
+				 * debugging. */
+} ObjData;
+#endif /* TCL_MEM_DEBUG && TCL_THREADS */
+
 /*
  * All static variables used in this file are collected into a single instance
  * of the following structure.  For multi-threaded implementations, there is
@@ -81,6 +97,7 @@ typedef struct ThreadSpecificData {
      * Thread local table that is used to check that a Tcl_Obj was not
      * allocated by some other thread.
      */
+
     Tcl_HashTable *objThreadMap;
 #endif /* TCL_MEM_DEBUG && TCL_THREADS */
 } ThreadSpecificData;
@@ -88,8 +105,8 @@ typedef struct ThreadSpecificData {
 static Tcl_ThreadDataKey dataKey;
 
 static void ContLineLocFree (char* clientData);
-static void TclThreadFinalizeObjects (ClientData clientData);
-static ThreadSpecificData* TclGetTables (void);
+static void TclThreadFinalizeContLines (ClientData clientData);
+static ThreadSpecificData* TclGetContLineTable (void);
 
 /*
  * Nested Tcl_Obj deletion management support
@@ -410,6 +427,49 @@ TclInitObjSubsystem(void)
 /*
  *----------------------------------------------------------------------
  *
+ * TclFinalizeThreadObjects --
+ *
+ *	This function is called by Tcl_FinalizeThread to clean up thread
+ *	specific Tcl_Obj information.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TclFinalizeThreadObjects(void)
+{
+#if defined(TCL_MEM_DEBUG) && defined(TCL_THREADS)
+    Tcl_HashEntry *hPtr;
+    Tcl_HashSearch hSearch;
+    ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
+    Tcl_HashTable *tablePtr = tsdPtr->objThreadMap;
+
+    if (tablePtr != NULL) {
+	for (hPtr = Tcl_FirstHashEntry(tablePtr, &hSearch);
+		hPtr != NULL; hPtr = Tcl_NextHashEntry(&hSearch)) {
+	    ObjData *objData = Tcl_GetHashValue(hPtr);
+
+	    if (objData != NULL) {
+		ckfree((char *) objData);
+	    }
+	}
+
+	Tcl_DeleteHashTable(tablePtr);
+	ckfree((char *) tablePtr);
+	tsdPtr->objThreadMap = NULL;
+    }
+#endif
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
  * TclFinalizeObjects --
  *
  *	This function is called by Tcl_Finalize to clean up all registered
@@ -447,7 +507,7 @@ TclFinalizeObjects(void)
 /*
  *----------------------------------------------------------------------
  *
- * TclGetTables --
+ * TclGetContLineTable --
  *
  *	This procedure is a helper which returns the thread-specific
  *	hash-table used to track continuation line information associated with
@@ -464,7 +524,7 @@ TclFinalizeObjects(void)
  */
 
 static ThreadSpecificData*
-TclGetTables()
+TclGetContLineTable()
 {
     /*
      * Initialize the hashtable tracking invisible continuation lines.  For
@@ -478,10 +538,7 @@ TclGetTables()
     if (!tsdPtr->lineCLPtr) {
 	tsdPtr->lineCLPtr = (Tcl_HashTable*) ckalloc (sizeof (Tcl_HashTable));
 	Tcl_InitHashTable(tsdPtr->lineCLPtr, TCL_ONE_WORD_KEYS);
-	Tcl_CreateThreadExitHandler (TclThreadFinalizeObjects,NULL);
-#if defined(TCL_MEM_DEBUG) && defined(TCL_THREADS)
-	tsdPtr->objThreadMap = NULL;
-#endif /* TCL_MEM_DEBUG && TCL_THREADS */
+	Tcl_CreateThreadExitHandler (TclThreadFinalizeContLines,NULL);
     }
     return tsdPtr;
 }
@@ -510,7 +567,7 @@ TclContinuationsEnter(Tcl_Obj* objPtr,
 		      int* loc)
 {
     int newEntry;
-    ThreadSpecificData *tsdPtr = TclGetTables();
+    ThreadSpecificData *tsdPtr = TclGetContLineTable();
     Tcl_HashEntry* hPtr =
 	Tcl_CreateHashEntry (tsdPtr->lineCLPtr, (char*) objPtr, &newEntry);
 
@@ -641,7 +698,7 @@ TclContinuationsEnterDerived(Tcl_Obj* objPtr, int start, int* clNext)
 void
 TclContinuationsCopy(Tcl_Obj* objPtr, Tcl_Obj* originObjPtr)
 {
-    ThreadSpecificData *tsdPtr = TclGetTables();
+    ThreadSpecificData *tsdPtr = TclGetContLineTable();
     Tcl_HashEntry* hPtr = Tcl_FindHashEntry (tsdPtr->lineCLPtr, (char*) originObjPtr);
 
     if (hPtr) {
@@ -673,7 +730,7 @@ TclContinuationsCopy(Tcl_Obj* objPtr, Tcl_Obj* originObjPtr)
 ContLineLoc*
 TclContinuationsGet(Tcl_Obj* objPtr)
 {
-    ThreadSpecificData *tsdPtr = TclGetTables();
+    ThreadSpecificData *tsdPtr = TclGetContLineTable();
     Tcl_HashEntry* hPtr = Tcl_FindHashEntry (tsdPtr->lineCLPtr, (char*) objPtr);
 
     if (hPtr) {
@@ -686,7 +743,7 @@ TclContinuationsGet(Tcl_Obj* objPtr)
 /*
  *----------------------------------------------------------------------
  *
- * TclThreadFinalizeObjects --
+ * TclThreadFinalizeContLines --
  *
  *	This procedure is a helper which releases all continuation line
  *	information currently known. It is run as a thread exit handler.
@@ -702,15 +759,15 @@ TclContinuationsGet(Tcl_Obj* objPtr)
  */
 
 static void
-TclThreadFinalizeObjects (ClientData clientData)
+TclThreadFinalizeContLines (ClientData clientData)
 {
     /*
      * Release the hashtable tracking invisible continuation lines.
      */
 
+    ThreadSpecificData *tsdPtr = TclGetContLineTable();
     Tcl_HashEntry *hPtr;
     Tcl_HashSearch hSearch;
-    ThreadSpecificData *tsdPtr = TclGetTables();
 
     for (hPtr = Tcl_FirstHashEntry(tsdPtr->lineCLPtr, &hSearch);
 	 hPtr != NULL;
@@ -725,6 +782,7 @@ TclThreadFinalizeObjects (ClientData clientData)
 	Tcl_DeleteHashEntry (hPtr);
     }
     Tcl_DeleteHashTable (tsdPtr->lineCLPtr);
+    ckfree((char *) tsdPtr->lineCLPtr);
     tsdPtr->lineCLPtr = NULL;
 }
 
@@ -919,6 +977,55 @@ Tcl_ConvertToType(
 }
 
 /*
+ *--------------------------------------------------------------
+ *
+ * TclDbDumpActiveObjects --
+ *
+ *	This function is called to dump all of the active Tcl_Obj structs this
+ *	allocator knows about.
+ *
+ * Results:
+ *	None.
+ *
+ * Side effects:
+ *	None.
+ *
+ *--------------------------------------------------------------
+ */
+
+void
+TclDbDumpActiveObjects(
+    FILE *outFile)
+{
+#if defined(TCL_MEM_DEBUG) && defined(TCL_THREADS)
+    Tcl_HashSearch hSearch;
+    Tcl_HashEntry *hPtr;
+    Tcl_HashTable *tablePtr;
+    ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
+
+    tablePtr = tsdPtr->objThreadMap;
+
+    if (tablePtr != NULL) {
+	fprintf(outFile, "total objects: %d\n", tablePtr->numEntries);
+	for (hPtr = Tcl_FirstHashEntry(tablePtr, &hSearch); hPtr != NULL;
+		hPtr = Tcl_NextHashEntry(&hSearch)) {
+	    ObjData *objData = Tcl_GetHashValue(hPtr);
+
+	    if (objData != NULL) {
+		fprintf(outFile,
+			"key = 0x%p, objPtr = 0x%p, file = %s, line = %d\n",
+			Tcl_GetHashKey(tablePtr, hPtr), objData->objPtr,
+			objData->file, objData->line);
+	    } else {
+		fprintf(outFile, "key = 0x%p\n",
+			Tcl_GetHashKey(tablePtr, hPtr));
+	    }
+	}
+    }
+#endif
+}
+
+/*
  *----------------------------------------------------------------------
  *
  * TclDbInitNewObj --
@@ -939,7 +1046,11 @@ Tcl_ConvertToType(
 #ifdef TCL_MEM_DEBUG
 void
 TclDbInitNewObj(
-    register Tcl_Obj *objPtr)
+    register Tcl_Obj *objPtr,
+    register CONST char *file,	/* The name of the source file calling this
+				 * function; used for debugging. */
+    register int line)		/* Line number in the source file; used for
+				 * debugging. */
 {
     objPtr->refCount = 0;
     objPtr->bytes = tclEmptyStringRep;
@@ -956,7 +1067,8 @@ TclDbInitNewObj(
 	Tcl_HashEntry *hPtr;
 	Tcl_HashTable *tablePtr;
 	int isNew;
-	ThreadSpecificData *tsdPtr = TclGetTables();
+	ObjData *objData;
+	ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
 
 	if (tsdPtr->objThreadMap == NULL) {
 	    tsdPtr->objThreadMap = (Tcl_HashTable *)
@@ -968,7 +1080,16 @@ TclDbInitNewObj(
 	if (!isNew) {
 	    Tcl_Panic("expected to create new entry for object map");
 	}
-	Tcl_SetHashValue(hPtr, NULL);
+
+	/*
+	 * Record the debugging information.
+	 */
+
+	objData = (ObjData *) ckalloc(sizeof(ObjData));
+	objData->objPtr = objPtr;
+	objData->file = file;
+	objData->line = line;
+	Tcl_SetHashValue(hPtr, objData);
     }
 #endif /* TCL_THREADS */
 }
@@ -3555,8 +3676,17 @@ Tcl_DbDecrRefCount(
 		    "Tcl_Obj allocated in another thread");
 	}
 
-	/* If the Tcl_Obj is going to be deleted, remove the entry */
-	if ((((objPtr)->refCount) - 1) <= 0) {
+	/*
+	 * If the Tcl_Obj is going to be deleted, remove the entry.
+	 */
+
+	if ((objPtr->refCount - 1) <= 0) {
+	    ObjData *objData = Tcl_GetHashValue(hPtr);
+
+	    if (objData != NULL) {
+		ckfree((char *) objData);
+	    }
+
 	    Tcl_DeleteHashEntry(hPtr);
 	}
     }
