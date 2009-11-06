@@ -1261,6 +1261,7 @@ PackAfter(
 		if (TkSetGeometryMaster(interp, masterPtr->tkwin, "pack")
 			!= TCL_OK) {
 		    Tk_ManageGeometry(tkwin, NULL, NULL);
+		    Unlink(packPtr);
 		    return TCL_ERROR;	
 		}
 		masterPtr->flags |= ALLOCED_MASTER;
@@ -1793,6 +1794,7 @@ ConfigureSlaves(
 	    if (TkSetGeometryMaster(interp, masterPtr->tkwin, "pack")
 		    != TCL_OK) {
 		Tk_ManageGeometry(slave, NULL, NULL);
+		Unlink(slavePtr);
 		return TCL_ERROR;	
 	    }
 	    masterPtr->flags |= ALLOCED_MASTER;
