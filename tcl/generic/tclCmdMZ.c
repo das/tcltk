@@ -3440,7 +3440,7 @@ TclNRSubstObjCmd(
     if (TclSubstOptions(interp, objc-2, objv+1, &flags) != TCL_OK) {
 	return TCL_ERROR;
     }
-    return TclNRSubstObj(interp, objv[objc-1], flags);
+    return Tcl_NRSubstObj(interp, objv[objc-1], flags);
 }
 
 /*
@@ -4348,12 +4348,8 @@ TryPostBody(
 		"\n    (\"%s\" body line %d)", TclGetString(cmdObj),
 		Tcl_GetErrorLine(interp)));
     }
-    if (handlersObj != NULL || finallyObj != NULL) {
-	options = Tcl_GetReturnOptions(interp, result);
-	Tcl_IncrRefCount(options);
-    } else {
-	options = NULL;
-    }
+    options = Tcl_GetReturnOptions(interp, result);
+    Tcl_IncrRefCount(options);
     Tcl_ResetResult(interp);
 
     /*
@@ -4496,14 +4492,10 @@ TryPostBody(
      * any temporary storage.
      */
 
-    if (options != NULL) {
-	result = TclProcessReturn(interp, result, 0, options);
-	Tcl_DecrRefCount(options);
-    }
-    if (resultObj != NULL) {
-	Tcl_SetObjResult(interp, resultObj);
-	Tcl_DecrRefCount(resultObj);
-    }
+    result = Tcl_SetReturnOptions(interp, options);
+    Tcl_DecrRefCount(options);
+    Tcl_SetObjResult(interp, resultObj);
+    Tcl_DecrRefCount(resultObj);
     return result;
 }
 
@@ -4565,7 +4557,7 @@ TryPostHandler(
      * any temporary storage.
      */
 
-    result = TclProcessReturn(interp, result, 0, options);
+    result = Tcl_SetReturnOptions(interp, options);
     Tcl_DecrRefCount(options);
     Tcl_SetObjResult(interp, resultObj);
     Tcl_DecrRefCount(resultObj);
@@ -4623,7 +4615,7 @@ TryPostFinal(
      * any temporary storage.
      */
 
-    result = TclProcessReturn(interp, result, 0, options);
+    result = Tcl_SetReturnOptions(interp, options);
     Tcl_DecrRefCount(options);
     if (resultObj != NULL) {
 	Tcl_SetObjResult(interp, resultObj);
