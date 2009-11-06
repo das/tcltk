@@ -3293,6 +3293,7 @@ ConfigureSlaves(
 	    if (TkSetGeometryMaster(interp, masterPtr->tkwin, "grid")
 		    != TCL_OK) {
 		Tk_ManageGeometry(slave, NULL, NULL);
+		Unlink(slavePtr);
 		return TCL_ERROR;
 	    }
 	    masterPtr->flags |= ALLOCED_MASTER;

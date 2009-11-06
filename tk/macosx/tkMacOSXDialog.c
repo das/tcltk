@@ -498,7 +498,12 @@ Tk_GetOpenFileObjCmd(
     }
     result = (returnCode != NSAlertErrorReturn) ? TCL_OK : TCL_ERROR;
     if (typeVariablePtr && result == TCL_OK) {
-	Tcl_SetVar(interp, Tcl_GetString(typeVariablePtr), "", 0);
+	/*
+	 * The -typevariable option is not really supported.
+	 */
+
+	Tcl_SetVar(interp, Tcl_GetString(typeVariablePtr), "",
+		TCL_GLOBAL_ONLY);
     }
 
   end:
