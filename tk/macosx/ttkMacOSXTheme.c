@@ -694,7 +694,7 @@ static void PbarElementDraw(
     Tcl_GetDoubleFromObj(NULL, pbar->valueObj, &value);
     Tcl_GetDoubleFromObj(NULL, pbar->maximumObj, &maximum);
     Tcl_GetIntFromObj(NULL, pbar->phaseObj, &phase);
-    factor = RangeToFactor(maximum)
+    factor = RangeToFactor(maximum);
 
     HIThemeTrackDrawInfo info = {
 	.version = 0,
