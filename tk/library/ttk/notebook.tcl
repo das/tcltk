@@ -32,7 +32,7 @@ proc ttk::notebook::ActivateTab {w tab} {
 	focus $w
     } else {
     	$w select $tab
-	update ;# needed so focus logic sees correct mapped/unmapped states
+	update idletasks ;# needed so focus logic sees correct mapped states
 	if {[set f [ttk::focusFirst [$w select]]] ne ""} {
 	    tk::TabToWindow $f
 	}
