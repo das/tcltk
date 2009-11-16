@@ -234,7 +234,7 @@ proc ttk::treeview::heading.drag {w x y} {
 proc ttk::treeview::heading.release {w} {
     variable State
     if {[lsearch -exact [$w heading $State(heading) state] pressed] >= 0} {
-	after idle [$w heading $State(heading) -command]
+	after 0 [$w heading $State(heading) -command]
     }
     $w heading $State(heading) state !pressed
 }
