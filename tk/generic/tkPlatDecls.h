@@ -25,6 +25,10 @@
  * in the generic/tk.decls script.
  */
 
+#ifdef __cplusplus
+#extern "C" {
+#endif
+
 /* !BEGIN!: Do not edit below this line. */
 
 /*
@@ -242,6 +246,10 @@ extern const TkPlatStubs *tkPlatStubsPtr;
 #endif /* defined(USE_TK_STUBS) && !defined(USE_TK_STUB_PROCS) */
 
 /* !END!: Do not edit above this line. */
+
+#ifdef __cplusplus
+}
+#endif
 
 #undef TCL_STORAGE_CLASS
 #define TCL_STORAGE_CLASS DLLIMPORT

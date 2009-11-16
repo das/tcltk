@@ -6099,27 +6099,26 @@ TclNREvalObjEx(
 
 		result = TclEvalEx(interp, script, numSrcBytes, flags,
 			ctxPtr->line[word], NULL, script);
+	    }
+	    if (pc && (ctxPtr->type == TCL_LOCATION_SOURCE)) {
+		/*
+		 * Death of SrcInfo reference.
+		 */
 
-		if (pc) {
-		    /*
-		     * Death of SrcInfo reference.
-		     */
-
-		    Tcl_DecrRefCount(ctxPtr->data.eval.path);
-		}
+		Tcl_DecrRefCount(ctxPtr->data.eval.path);
 	    }
 	    TclStackFree(interp, ctxPtr);
-
-	    /*
-	     * Now release the lock on the continuation line information, if
-	     * any, and restore the caller's settings.
-	     */
-
-	    if (iPtr->scriptCLLocPtr) {
-		Tcl_Release (iPtr->scriptCLLocPtr);
-	    }
-	    iPtr->scriptCLLocPtr = saveCLLocPtr;
 	}
+
+	/*
+	 * Now release the lock on the continuation line information, if any,
+	 * and restore the caller's settings.
+	 */
+
+	if (iPtr->scriptCLLocPtr) {
+	    Tcl_Release (iPtr->scriptCLLocPtr);
+	}
+	iPtr->scriptCLLocPtr = saveCLLocPtr;
 	TclDecrRefCount(objPtr);
 	return result;
     }
