@@ -2922,6 +2922,7 @@ Tcl_Close(
     ChannelState *statePtr;	/* State of real IO channel. */
     int result;			/* Of calling FlushChannel. */
     int flushcode;
+    int stickyError;
 
     if (chan == NULL) {
 	return TCL_OK;
@@ -2963,10 +2964,14 @@ Tcl_Close(
      * iso2022, the terminated escape sequence must write to the buffer.
      */
 
+    stickyError = 0;
+
     if ((statePtr->encoding != NULL) && (statePtr->curOutPtr != NULL)
 	    && (CheckChannelErrors(statePtr, TCL_WRITABLE) == 0)) {
 	statePtr->outputEncodingFlags |= TCL_ENCODING_END;
-	WriteChars(chanPtr, "", 0);
+	if (WriteChars(chanPtr, "", 0) < 0) {
+	    stickyError = Tcl_GetErrno();
+	}
 
 	/*
 	 * TIP #219, Tcl Channel Reflection API.
@@ -3045,6 +3050,14 @@ Tcl_Close(
 	result = EINVAL;
     }
 
+    if (stickyError != 0) {
+	Tcl_SetErrno(stickyError);
+	if (interp != NULL) {
+	    Tcl_SetObjResult(interp,
+			     Tcl_NewStringObj(Tcl_PosixError(interp), -1));
+	}
+	flushcode = -1;
+    }
     if ((flushcode != 0) || (result != 0)) {
 	return TCL_ERROR;
     }
@@ -8713,14 +8726,17 @@ CopyData(
 	    sizeb = DoWriteChars(outStatePtr->topChanPtr, buffer, sizeb);
 	}
 
-	if (inBinary || sameEncoding) {
-	    /*
-	     * Both read and write counted bytes.
-	     */
-
-	    size = sizeb;
-	} /* else: Read counted characters, write counted bytes, i.e.
-	   * size != sizeb */
+	/*
+	 * [Bug 2895565]. At this point 'size' still contains the number of
+	 * bytes or characters which have been read. We keep this to later to
+	 * update the totals and toRead information, see marker (UP) below. We
+	 * must not overwrite it with 'sizeb', which is the number of written
+	 * bytes or characters, and both EOL translation and encoding
+	 * conversion may have changed this number unpredictably in relation
+	 * to 'size' (It can be smaller or larger, in the latter case able to
+	 * drive toRead below -1, causing infinite looping). Completely
+	 * unsuitable for updating totals and toRead.
+	 */
 
 	if (sizeb < 0) {
 	writeError:
@@ -8742,7 +8758,7 @@ CopyData(
 	}
 
 	/*
-	 * Update the current byte count. Do it now so the count is valid
+	 * (UP) Update the current byte count. Do it now so the count is valid
 	 * before a return or break takes us out of the loop. The invariant at
 	 * the top of the loop should be that csPtr->toRead holds the number
 	 * of bytes left to copy.

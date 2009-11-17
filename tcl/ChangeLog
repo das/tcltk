@@ -1,6 +1,64 @@
-2009-11-03  Don Porter  <dgp@users.sourceforge.net>
+2009-11-12  Don Porter  <dgp@users.sourceforge.net>
 
 	*** 8.5.8 TAGGED FOR RELEASE ***
+
+	* changes:	Update for 8.5.8 release.
+
+	* generic/tclClock.c (TclClockInit):	Do not create [clock] support
+	commands in safe interps.
+
+	* tests/io.test:	New test io-53.11 to test for [Bug 2895565].
+
+2009-11-12  Andreas Kupries  <andreask@activestate.com>
+
+	* generic/tclIO.c (CopyData): [Bug 2895565]. Dropped bogosity
+	which used the number of _written_ bytes or character to update
+	the counters for the read bytes/characters. See last entry for the
+	test case.
+
+2009-11-11  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* tests/fCmd.test:     Fixed a number of issues for Vista
+	* tests/registry.test: and Win7 that are due to restricted
+	* tests/winFCmd.test:  permissions.
+
+2009-11-11  Don Porter  <dgp@users.sourceforge.net>
+
+	* library/http/http.tcl:	Update the URL syntax check to
+	RFC 3986 compliance on the subject of non-encoded question mark
+	characters.  [Bug 2891171].
+	
+	* library/http/pkgIndex.tcl:	Bump to http 2.7.5 to avoid any
+	* unix/Makefile.in:		confusion with snapshot "releases"
+	* win/Makefile.in:		that might be in ActiveTcl, etc.
+
+2009-11-11  Alexandre Ferrieux  <ferrieux@users.sourceforge.net>
+
+	* generic/tclIO.c: Backported fix for [Bug 2888099] (close discards
+	ENOSPC error) by saving the errno from the first of two
+	FlushChannel()s. Uneasy to test; might need specific channel drivers.
+	Four-hands with aku.
+
+2009-11-10  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclBasic.c:	Plug another leak in TCL_EVAL_DIRECT
+	evaluation.
+
+	* generic/tclObj.c:	Plug memory leak in TclContinuationsEnter().
+	[Bug 2895323]
+
+2009-11-09  Stuart Cassoff <stwo@users.sf.net>
+
+	* win/README: [bug 2459744]: Removed outdated Msys + Mingw info.
+
+2009-11-09  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclBasic.c (TclEvalObjEx):	Plug memory leak in 
+	TCL_EVAL_DIRECT evaluation.
+
+	* tests/info.test:	Resolve ambiguous resolution of variable "res".
+
+2009-11-03  Don Porter  <dgp@users.sourceforge.net>
 
 	* generic/tcl.h:	Bump to 8.5.8 for release.
 	* library/init.tcl:
