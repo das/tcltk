@@ -18,6 +18,12 @@
  */
 
 #define USE_OLD_IMAGE
+#ifndef USE_TCL_STUBS
+#   define USE_TCL_STUBS
+#endif
+#ifndef USE_TK_STUBS
+#   define USE_TK_STUBS
+#endif
 #include "tkInt.h"
 
 /*
