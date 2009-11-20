@@ -598,8 +598,8 @@ $(WISH): $(TK_LIB_FILE) $(TK_STUB_LIB_FILE) $(WISH_OBJS) wish.$(RES)
 tktest : $(TKTEST)
 
 $(TKTEST): $(TK_LIB_FILE) $(TKTEST_OBJS) wish.$(RES) $(CAT32)
-	$(CC) $(CFLAGS) $(TKTEST_OBJS) $(TK_LIB_FILE) \
-	$(TCL_STUB_LIB_FILE) $(TCL_LIB_FILE) $(LIBS) \
+	$(CC) $(CFLAGS) $(TKTEST_OBJS) $(TK_LIB_FILE) $(TK_STUB_LIB_FILE) \
+	$(TCL_LIB_FILE) $(TCL_STUB_LIB_FILE) $(LIBS) \
 	wish.$(RES) $(CC_EXENAME) $(LDFLAGS_WINDOW)
 
 # Msys make requires this next rule for some reason.
