@@ -657,7 +657,7 @@ $(WISHC): $(WISHOBJS) $(TKIMPLIB)
 
 
 $(TKTEST): $(TKTESTOBJS) $(TKIMPLIB)
-	$(link32) $(guilflags) -stack:2300000 -out:$@ $(guilibs) $(tcllibs) $**
+	$(link32) $(guilflags) -stack:2300000 -out:$@ $(guilibs) $(tcllibs) $(TKSTUBLIB) $**
 	$(_VC_MANIFEST_EMBED_EXE)
 
 
