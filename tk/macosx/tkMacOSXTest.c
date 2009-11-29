@@ -22,7 +22,6 @@
 
 static int		DebuggerCmd (ClientData dummy, Tcl_Interp *interp,
 			    int argc, const char **argv);
-MODULE_SCOPE int	TkplatformtestInit(Tcl_Interp *interp);
 
 /*
  *----------------------------------------------------------------------

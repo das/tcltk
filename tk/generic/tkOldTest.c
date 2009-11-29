@@ -84,7 +84,6 @@ static Tk_ImageType imageType = {
 
 static int              ImageCmd(ClientData dummy,
                             Tcl_Interp *interp, int argc, const char **argv);
-MODULE_SCOPE int	TkOldTestInit(Tcl_Interp *interp);
 
 
 /*

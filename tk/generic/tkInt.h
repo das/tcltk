@@ -1225,6 +1225,19 @@ MODULE_SCOPE int	TkUnsupported1ObjCmd(ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *const objv[]);
 
+/*
+ * For Tktest.
+ */
+MODULE_SCOPE int SquareObjCmd(ClientData clientData,
+			    Tcl_Interp *interp, int objc,
+			    Tcl_Obj * const objv[]);
+MODULE_SCOPE int	TkOldTestInit(Tcl_Interp *interp);
+#if !(defined(__WIN32__) || defined(MAC_OSX_TK))
+#define TkplatformtestInit(x) TCL_OK
+#else
+MODULE_SCOPE int	TkplatformtestInit(Tcl_Interp *interp);
+#endif
+
 #undef TCL_STORAGE_CLASS
 #define TCL_STORAGE_CLASS DLLIMPORT
 

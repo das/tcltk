@@ -42,7 +42,6 @@ static int		TestgetwindowinfoObjCmd(ClientData clientData,
 static int		TestwinlocaleObjCmd(ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *const objv[]);
-MODULE_SCOPE int	TkplatformtestInit(Tcl_Interp *interp);
 static Tk_GetSelProc		SetSelectionResult;
 
 

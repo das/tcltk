@@ -98,9 +98,6 @@ static const Tk_OptionSpec optionSpecs[] = {
  * Forward declarations for procedures defined later in this file:
  */
 
-int			SquareObjCmd(ClientData clientData,
-			    Tcl_Interp *interp, int objc,
-			    Tcl_Obj * const objv[]);
 static void		SquareDeletedProc(ClientData clientData);
 static int		SquareConfigure(Tcl_Interp *interp, Square *squarePtr);
 static void		SquareDestroy(char *memPtr);
