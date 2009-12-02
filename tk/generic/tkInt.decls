@@ -13,6 +13,8 @@
 # RCS: @(#) $Id$
 
 library tk
+
+##############################################################################
 
 # Define the unsupported generic interfaces.
 
@@ -568,7 +570,7 @@ declare 180 generic {
     char *TkSmoothPrintProc(ClientData clientData, Tk_Window tkwin,
 	    char *widgRec, int offset, Tcl_FreeProc **freeProcPtr)
 }
-
+
 ##############################################################################
 
 # Define the platform specific internal Tcl interface. These functions are
@@ -741,6 +743,13 @@ declare 34 win {
 }
 declare 35 win {
     int TkWinGetPlatformTheme(void)
+}
+
+# new for 8.6
+
+declare 36 win {
+    LRESULT CALLBACK TkWinChildProc(HWND hwnd,
+	    UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 ################################
@@ -1630,3 +1639,7 @@ declare 90 aqua {
 declare 91 aqua {
     int XSync(Display *display, Bool flag)
 }
+
+# Local Variables:
+# mode: tcl
+# End:
