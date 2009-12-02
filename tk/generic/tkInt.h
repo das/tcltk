@@ -862,7 +862,7 @@ typedef struct TkpClipMask {
  * Pointer to first entry in list of all displays currently known.
  */
 
-extern TkDisplay *tkDisplayList;
+MODULE_SCOPE TkDisplay *tkDisplayList;
 
 /*
  * Return values from TkGrabState:

@@ -783,6 +783,13 @@ declare 35 win {
     int TkWinGetPlatformTheme(void)
 }
 
+# new for 8.6
+
+declare 36 win {
+    LRESULT CALLBACK TkWinChildProc(HWND hwnd,
+	    UINT message, WPARAM wParam, LPARAM lParam)
+}
+
 ################################
 # Aqua specific functions
 
