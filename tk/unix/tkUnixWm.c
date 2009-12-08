@@ -6605,6 +6605,30 @@ GetMaxSize(
 /*
  *----------------------------------------------------------------------
  *
+ * TkSetTransientFor --
+ *
+ *	Set a Tk window to be transient with reference to a specified
+ *	parent or the toplevel ancestor if None is passed as parent.
+ *
+ *----------------------------------------------------------------------
+ */
+
+void
+TkSetTransientFor(Tk_Window tkwin, Tk_Window parent)
+{
+    if (parent == None) {
+	parent = Tk_Parent(tkwin);
+	while (!Tk_IsTopLevel(parent))
+	    parent = Tk_Parent(tkwin);
+    }
+    XSetTransientForHint(Tk_Display(tkwin),
+	((TkWindow *)tkwin)->wmInfoPtr->wrapperPtr->window,
+	((TkWindow *)parent)->wmInfoPtr->wrapperPtr->window);
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
  * TkpMakeMenuWindow --
  *
  *	Configure the window to be either a pull-down (or pop-up) menu, or as
@@ -6631,6 +6655,7 @@ TkpMakeMenuWindow(
     WmInfo *wmPtr;
     XSetWindowAttributes atts;
     TkWindow *wrapperPtr;
+    Atom atom;
 
     if (!Tk_HasWrapper(tkwin)) {
 	return;
@@ -6643,10 +6668,17 @@ TkpMakeMenuWindow(
     if (transient) {
 	atts.override_redirect = True;
 	atts.save_under = True;
+	atom = Tk_InternAtom((Tk_Window) tkwin, "_NET_WM_WINDOW_TYPE_DROPDOWN_MENU");
     } else {
 	atts.override_redirect = False;
 	atts.save_under = False;
+	atom = Tk_InternAtom((Tk_Window) tkwin, "_NET_WM_WINDOW_TYPE_MENU");
+	TkSetTransientFor(tkwin, NULL);
     }
+    XChangeProperty(Tk_Display(tkwin), wrapperPtr->window,
+	Tk_InternAtom((Tk_Window) tkwin, "_NET_WM_WINDOW_TYPE"),
+	XA_ATOM, 32, PropModeReplace,
+	(unsigned char *) &atom, 1);
 
     /*
      * The override-redirect and save-under bits must be set on the wrapper
