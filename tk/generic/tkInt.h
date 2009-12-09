@@ -772,7 +772,8 @@ typedef struct TkWindow {
      * Information used by tkGeometry.c for geometry management.
      */
 
-    const Tk_GeomMgr *geomMgrPtr; /* Information about geometry manager for this
+    const Tk_GeomMgr *geomMgrPtr;
+				/* Information about geometry manager for this
 				 * window. */
     ClientData geomData;	/* Argument for geometry manager functions. */
     int reqWidth, reqHeight;	/* Arguments from last call to
@@ -791,7 +792,8 @@ typedef struct TkWindow {
     struct TkWmInfo *wmInfoPtr;	/* For top-level windows (and also for special
 				 * Unix menubar and wrapper windows), points
 				 * to structure with wm-related info (see
-				 * tkWm.c). For other windows, this is NULL. */
+				 * tkWm.c). For other windows, this is
+				 * NULL. */
 
     /*
      * Information used by widget classes.
@@ -819,6 +821,14 @@ typedef struct TkWindow {
     int minReqHeight;		/* Minimum requested height. */
     char *geometryMaster;
 } TkWindow;
+
+/*
+ * Flags passed to TkpMakeMenuWindow's 'transient' argument.
+ */
+
+#define TK_MAKE_MENU_TEAROFF	0	/* Only non-transient case. */
+#define TK_MAKE_MENU_POPUP	1
+#define TK_MAKE_MENU_DROPDOWN	2
 
 /*
  * The following structure is used with TkMakeEnsemble to create ensemble
