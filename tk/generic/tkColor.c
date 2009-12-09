@@ -301,8 +301,11 @@ Tk_GetColorByValue(
 
     /*
      * First, check to see if there's already a mapping for this color name.
+     * Must clear the structure first; it's not tightly packed on 64-bit
+     * systems. [Bug 2911570]
      */
 
+    memset(&valueKey, 0, sizeof(ValueKey));
     valueKey.red = colorPtr->red;
     valueKey.green = colorPtr->green;
     valueKey.blue = colorPtr->blue;
