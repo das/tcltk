@@ -6686,7 +6686,7 @@ TkpMakeMenuWindow(
 	atts.save_under = True;
 	if (typeFlag == TK_MAKE_MENU_DROPDOWN) {
 	    atom = Tk_InternAtom((Tk_Window) tkwin,
-		    "_NET_WM_TYPE_DROPDOWN_MENU");
+		    "_NET_WM_WINDOW_TYPE_DROPDOWN_MENU");
 	} else {
 	    atom = Tk_InternAtom((Tk_Window) tkwin,
 		    "_NET_WM_WINDOW_TYPE_POPUP_MENU");
