@@ -365,6 +365,8 @@ addFormattedText {
     @@demo hscale	Horizontal scale
     @@demo vscale	Vertical scale
     @@new
+    @@demo ttkscale	Themed scale linked to a label with traces
+    @@new
     @@demo ttkprogress	Progress bar
 
     @@subtitle	Paned Windows and Notebooks
