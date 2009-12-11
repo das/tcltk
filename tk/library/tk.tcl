@@ -246,12 +246,8 @@ if {$tcl_platform(platform) eq "unix"} {
 # screen -		The name of the new screen.
 
 proc ::tk::ScreenChanged screen {
-    set x [string last . $screen]
-    if {$x > 0} {
-	set disp [string range $screen 0 [expr {$x - 1}]]
-    } else {
-	set disp $screen
-    }
+    # Extract the display name.
+    set disp [string range $screen 0 [string last . $screen]-1]
 
     # Ensure that namespace separators never occur in the display name (as
     # they cause problems in variable names). Double-colons exist in some VNC
