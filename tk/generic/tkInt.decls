@@ -783,7 +783,7 @@ declare 35 win {
     int TkWinGetPlatformTheme(void)
 }
 
-# new for 8.6
+# Exported through stub table since Tk 8.5.9
 
 declare 36 win {
     LRESULT CALLBACK TkWinChildProc(HWND hwnd,
