@@ -646,18 +646,18 @@ $(TKSTUBLIB): $(TKSTUBOBJS)
 	$(lib32) -nologo -out:$@ $**
 
 
-$(WISH): $(WISHOBJS) $(TKIMPLIB)
+$(WISH): $(WISHOBJS) $(TKSTUBLIB) $(TKIMPLIB)
 	$(link32) $(guilflags) -stack:2300000 -out:$@ $(guilibs) $(tcllibs) $**
 	$(_VC_MANIFEST_EMBED_EXE)
 
 
-$(WISHC): $(WISHOBJS) $(TKIMPLIB)
+$(WISHC): $(WISHOBJS) $(TKSTUBLIB) $(TKIMPLIB)
 	$(link32) $(conlflags) -stack:2300000 -out:$@ $(guilibs) $(tcllibs) $**
 	$(_VC_MANIFEST_EMBED_EXE)
 
 
-$(TKTEST): $(TKTESTOBJS) $(TKIMPLIB)
-	$(link32) $(guilflags) -stack:2300000 -out:$@ $(guilibs) $(tcllibs) $(TKSTUBLIB) $**
+$(TKTEST): $(TKTESTOBJS) $(TKSTUBLIB) $(TKIMPLIB)
+	$(link32) $(guilflags) -stack:2300000 -out:$@ $(guilibs) $(tcllibs) $**
 	$(_VC_MANIFEST_EMBED_EXE)
 
 
