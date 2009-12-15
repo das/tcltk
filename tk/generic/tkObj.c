@@ -1075,7 +1075,6 @@ TkRegisterObjTypes(void)
     Tcl_RegisterObjType(&tkCursorObjType);
     Tcl_RegisterObjType(&tkFontObjType);
     Tcl_RegisterObjType(&mmObjType);
-    Tcl_RegisterObjType(&tkOptionObjType);
     Tcl_RegisterObjType(&pixelObjType);
     Tcl_RegisterObjType(&tkStateKeyObjType);
     Tcl_RegisterObjType(&windowObjType);
