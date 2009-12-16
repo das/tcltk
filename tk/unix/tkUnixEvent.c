@@ -276,7 +276,12 @@ static void
 TransferXEventsToTcl(
     Display *display)
 {
-    XEvent event;
+    union {
+	XEvent x;
+#ifdef GenericEvent
+	xGenericEvent xge;
+#endif
+    } event;
 
     /*
      * Transfer events from the X event queue to the Tk event queue after XIM
@@ -286,21 +291,19 @@ TransferXEventsToTcl(
      */
 
     while (QLength(display) > 0) {
-	XNextEvent(display, &event);
+	XNextEvent(display, &event.x);
 #ifdef GenericEvent
-	if (event.type == GenericEvent) {
-	    xGenericEvent *xgePtr = (xGenericEvent *) &event;
-
+	if (event.x.type == GenericEvent) {
 	    Tcl_Panic("Wild GenericEvent; panic! (extension=%d,evtype=%d)",
-		    xgePtr->extension, xgePtr->evtype);
+		    event.xge.extension, event.xge.evtype);
 	}
 #endif
-	if (event.type != KeyPress && event.type != KeyRelease) {
-	    if (XFilterEvent(&event, None)) {
+	if (event.x.type != KeyPress && event.x.type != KeyRelease) {
+	    if (XFilterEvent(&event.x, None)) {
 		continue;
 	    }
 	}
-	Tk_QueueWindowEvent(&event, TCL_QUEUE_TAIL);
+	Tk_QueueWindowEvent(&event.x, TCL_QUEUE_TAIL);
     }
 }
 

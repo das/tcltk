@@ -2742,7 +2742,7 @@ GetListboxIndex(
 	char *end;
 
 	start = stringRep + 1;
-	strtol(start, &end, 0);
+	y = strtol(start, &end, 0);
 	if ((start == end) || (*end != ',')) {
 	    Tcl_AppendResult(interp, "bad listbox index \"", stringRep,
 		    "\": must be active, anchor, end, @x,y, or a number",
