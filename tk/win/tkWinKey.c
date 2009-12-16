@@ -81,7 +81,7 @@ static KeySym		KeycodeToKeysym(unsigned int keycode,
  *----------------------------------------------------------------------
  */
 
-char *
+const char *
 TkpGetString(
     TkWindow *winPtr,		/* Window where event occurred: needed to get
 				 * input context. */

@@ -2532,7 +2532,7 @@ ExpandPercents(
 	    goto doNumber;
 	case 'K':
 	    if (flags & KEY) {
-		char *name = TkKeysymToString(keySym);
+		const char *name = TkKeysymToString(keySym);
 
 		if (name != NULL) {
 		    string = name;
@@ -4504,7 +4504,7 @@ GetPatternString(
 	if (patPtr->detail.clientData != 0) {
 	    if ((patPtr->eventType == KeyPress)
 		    || (patPtr->eventType == KeyRelease)) {
-		char *string = TkKeysymToString(patPtr->detail.keySym);
+		const char *string = TkKeysymToString(patPtr->detail.keySym);
 
 		if (string != NULL) {
 		    Tcl_DStringAppend(dsPtr, string, -1);
@@ -4599,7 +4599,7 @@ TkStringToKeysym(
  *----------------------------------------------------------------------
  */
 
-char *
+const char *
 TkKeysymToString(
     KeySym keysym)
 {

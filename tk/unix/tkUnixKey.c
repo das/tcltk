@@ -90,7 +90,7 @@ Tk_SetCaretPos(
  *
  *----------------------------------------------------------------------
  */
-static char *
+static const char *
 TkpGetChar(
     XEvent *eventPtr,		/* KeyPress or KeyRelease event */
     Tcl_DString *dsPtr)		/* Initialized, empty string to hold result. */
@@ -135,7 +135,7 @@ TkpGetChar(
  *----------------------------------------------------------------------
  */
 
-char *
+const char *
 TkpGetString(
     TkWindow *winPtr,		/* Window where event occurred */
     XEvent *eventPtr,		/* X keyboard event. */
@@ -161,7 +161,7 @@ TkpGetString(
 
 	    Tcl_DStringSetLength(dsPtr, len);
 	    len = Xutf8LookupString(winPtr->inputContext, &eventPtr->xkey,
-		    Tcl_DStringValue(dsPtr), Tcl_DStringLength(dsPtr), 
+		    Tcl_DStringValue(dsPtr), Tcl_DStringLength(dsPtr),
 		    NULL, &status);
 	}
 	if ((status != XLookupChars) && (status != XLookupBoth)) {

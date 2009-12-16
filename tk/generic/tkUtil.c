@@ -856,14 +856,14 @@ TkComputeAnchor(
  *---------------------------------------------------------------------------
  */
 
-char *
+const char *
 TkFindStateString(
     const TkStateMap *mapPtr,	/* The state table. */
     int numKey)			/* The key to try to find in the table. */
 {
     for (; mapPtr->strKey!=NULL ; mapPtr++) {
 	if (numKey == mapPtr->numKey) {
-	    return (char *) mapPtr->strKey;
+	    return mapPtr->strKey;
 	}
     }
     return NULL;
