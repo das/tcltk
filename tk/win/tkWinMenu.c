@@ -1812,8 +1812,10 @@ DrawMenuEntryArrow(
 	gc->background = activeBgColor->pixel;
     }
 
-    gc->foreground = GetSysColor((mePtr->state == ENTRY_DISABLED) ?
-	    COLOR_GRAYTEXT : COLOR_MENUTEXT);
+    gc->foreground = GetSysColor((mePtr->state == ENTRY_DISABLED)
+	? COLOR_GRAYTEXT
+		: ((mePtr->state == ENTRY_ACTIVE)
+		? COLOR_HIGHLIGHTTEXT : COLOR_MENUTEXT));
 
     rect.top = y + GetSystemMetrics(SM_CYBORDER);
     rect.bottom = y + height - GetSystemMetrics(SM_CYBORDER);
