@@ -313,8 +313,9 @@ typedef struct TkDisplay {
 				 * multiple applications on the display have
 				 * the focus, this will refer to the innermost
 				 * window in the innermost application. This
-				 * information isn't used under Unix or
-				 * Windows, but it's needed on the Mac. */
+				 * information isn't used on Windows, but it's
+				 * needed on the Mac, and also on X11 when XIM
+				 * processing is being done. */
 
     /*
      * Information used by tkGC.c only:
