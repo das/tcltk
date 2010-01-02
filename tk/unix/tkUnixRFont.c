@@ -257,6 +257,7 @@ InitFont(
      */
     ftFont = GetFont(fontPtr, 0);
     fontPtr->font.fid = XLoadFont(Tk_Display(tkwin), "fixed");
+    fontPtr->font.fa.size = TkFontGetPoints(tkwin, fontPtr->font.fa.size);
     GetTkFontAttributes(ftFont, &fontPtr->font.fa);
     GetTkFontMetrics(ftFont, &fontPtr->font.fm);
 
@@ -570,6 +571,7 @@ TkpGetFontAttrsForChar(
 				/* Actual font used to render the character */
 
     GetTkFontAttributes(ftFont, faPtr);
+    faPtr->size = TkFontGetPoints(tkwin, faPtr->size);
     faPtr->underline = fontPtr->font.fa.underline;
     faPtr->overstrike = fontPtr->font.fa.overstrike;
 }
