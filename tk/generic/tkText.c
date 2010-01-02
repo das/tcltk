@@ -1914,7 +1914,7 @@ DestroyText(
 	for (hPtr = Tcl_FirstHashEntry(&sharedTextPtr->windowTable, &search);
 		hPtr != NULL; hPtr = Tcl_NextHashEntry(&search)) {
 	    TkTextEmbWindowClient *loop;
-	    TkTextSegment *ewPtr = (TkTextSegment *) Tcl_GetHashValue(hPtr);
+	    TkTextSegment *ewPtr = Tcl_GetHashValue(hPtr);
 
 	    loop = ewPtr->body.ew.clients;
 	    if (loop->textPtr == textPtr) {
@@ -1946,7 +1946,7 @@ DestroyText(
 
 	for (hPtr = Tcl_FirstHashEntry(&sharedTextPtr->tagTable, &search);
 		hPtr != NULL; hPtr = Tcl_NextHashEntry(&search)) {
-	    tagPtr = (TkTextTag *) Tcl_GetHashValue(hPtr);
+	    tagPtr = Tcl_GetHashValue(hPtr);
 
 	    /*
 	     * No need to use 'TkTextDeleteTag' since we've already removed
@@ -3024,7 +3024,7 @@ DeleteIndexRange(
 
 	for (i=0, hPtr=Tcl_FirstHashEntry(&sharedTextPtr->tagTable, &search);
 		hPtr != NULL; i++, hPtr = Tcl_NextHashEntry(&search)) {
-	    TkTextTag *tagPtr = (TkTextTag *) Tcl_GetHashValue(hPtr);
+	    TkTextTag *tagPtr = Tcl_GetHashValue(hPtr);
 
 	    TkBTreeTag(&index1, &index2, tagPtr, 0);
 	}
@@ -6422,9 +6422,8 @@ GetLineStartEnd(
 
     if (linePtr == NULL) {
 	return Tcl_NewObj();
-    } else {
-	return Tcl_NewIntObj(1+TkBTreeLinesTo(NULL, linePtr));
     }
+    return Tcl_NewIntObj(1 + TkBTreeLinesTo(NULL, linePtr));
 }
 
 /*
@@ -6589,9 +6588,9 @@ TkpTesttextCmd(
 	return TCL_ERROR;
     }
     if (info.isNativeObjectProc) {
-	textPtr = (TkText *) info.objClientData;
+	textPtr = info.objClientData;
     } else {
-	textPtr = (TkText *) info.clientData;
+	textPtr = info.clientData;
     }
     len = strlen(argv[2]);
     if (strncmp(argv[2], "byteindex", len) == 0) {

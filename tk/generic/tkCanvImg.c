@@ -321,7 +321,7 @@ ConfigureImage(
     }
     if (imgPtr->imageString != NULL) {
 	image = Tk_GetImage(interp, tkwin, imgPtr->imageString,
-		ImageChangedProc, (ClientData) imgPtr);
+		ImageChangedProc, imgPtr);
 	if (image == NULL) {
 	    return TCL_ERROR;
 	}
@@ -334,7 +334,7 @@ ConfigureImage(
     imgPtr->image = image;
     if (imgPtr->activeImageString != NULL) {
 	image = Tk_GetImage(interp, tkwin, imgPtr->activeImageString,
-		ImageChangedProc, (ClientData) imgPtr);
+		ImageChangedProc, imgPtr);
 	if (image == NULL) {
 	    return TCL_ERROR;
 	}
@@ -347,7 +347,7 @@ ConfigureImage(
     imgPtr->activeImage = image;
     if (imgPtr->disabledImageString != NULL) {
 	image = Tk_GetImage(interp, tkwin, imgPtr->disabledImageString,
-		ImageChangedProc, (ClientData) imgPtr);
+		ImageChangedProc, imgPtr);
 	if (image == NULL) {
 	    return TCL_ERROR;
 	}
@@ -851,7 +851,7 @@ ImageChangedProc(
 				 * 0). */
     int imgWidth, int imgHeight)/* New dimensions of image. */
 {
-    ImageItem *imgPtr = (ImageItem *) clientData;
+    ImageItem *imgPtr = clientData;
 
     /*
      * If the image's size changed and it's not anchored at its northwest

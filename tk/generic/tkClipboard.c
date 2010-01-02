@@ -599,7 +599,7 @@ Tk_ClipboardObjCmd(
 
 	Tcl_DStringInit(&selBytes);
 	result = Tk_GetSelection(interp, tkwin, selection, target,
-		ClipboardGetProc, (ClientData) &selBytes);
+		ClipboardGetProc, &selBytes);
 	if (result == TCL_OK) {
 	    Tcl_DStringResult(interp, &selBytes);
 	} else {

@@ -475,7 +475,7 @@ Tk_FontObjCmd(
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
     int index;
-    Tk_Window tkwin;
+    Tk_Window tkwin = clientData;
     TkFontInfo *fiPtr;
     static const char *const optionStrings[] = {
 	"actual",	"configure",	"create",	"delete",
@@ -487,7 +487,6 @@ Tk_FontObjCmd(
 	FONT_FAMILIES,	FONT_MEASURE,	FONT_METRICS,	FONT_NAMES
     };
 
-    tkwin = (Tk_Window) clientData;
     fiPtr = ((TkWindow *) tkwin)->mainPtr->fontInfoPtr;
 
     if (objc < 2) {

@@ -527,9 +527,7 @@ MessageWorldChanged(
     XGCValues gcValues;
     GC gc = None;
     Tk_FontMetrics fm;
-    Message *msgPtr;
-
-    msgPtr = (Message *) instanceData;
+    Message *msgPtr = instanceData;
 
     if (msgPtr->border != NULL) {
 	Tk_SetBackgroundFromBorder(msgPtr->tkwin, msgPtr->border);

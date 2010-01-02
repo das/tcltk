@@ -145,7 +145,7 @@ Tk_GetAtomName(
 	char *mustFree = NULL;
 
 	handler = Tk_CreateErrorHandler(dispPtr->display, BadAtom, -1, -1,
-		NULL, (ClientData) NULL);
+		NULL, NULL);
 	name = mustFree = XGetAtomName(dispPtr->display, atom);
 	if (name == NULL) {
 	    name = "?bad atom?";

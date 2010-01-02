@@ -1589,7 +1589,8 @@ PanedWindowReqProc(
 				 * window. */
 {
     Slave *slavePtr = clientData;
-    PanedWindow *pwPtr = (PanedWindow *) (slavePtr->masterPtr);
+    PanedWindow *pwPtr = (PanedWindow *) slavePtr->masterPtr;
+
     if (Tk_IsMapped(pwPtr->tkwin)) {
 	if (!(pwPtr->flags & RESIZE_PENDING)) {
 	    pwPtr->flags |= RESIZE_PENDING;

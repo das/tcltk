@@ -64,7 +64,7 @@ typedef struct StyleEngine {
     StyledElement *elements;	/* Table of widget element descriptors. Each
 				 * element is indexed by a unique system-wide
 				 * ID. Table grows dynamically as new elements
-				 * are registered. Malloc'd*/
+				 * are registered. Malloc'd. */
     struct StyleEngine *parentPtr;
 				/* Parent engine. Engines may be layered to
 				 * form a fallback chain, terminated by the

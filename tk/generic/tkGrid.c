@@ -664,7 +664,7 @@ GridForgetRemoveCommand(
 		slavePtr->flags = 0;
 		slavePtr->sticky = 0;
 	    }
-	    Tk_ManageGeometry(slave, NULL, (ClientData) NULL);
+	    Tk_ManageGeometry(slave, NULL, NULL);
 	    if (slavePtr->masterPtr->tkwin != Tk_Parent(slavePtr->tkwin)) {
 		Tk_UnmaintainGeometry(slavePtr->tkwin,
 			slavePtr->masterPtr->tkwin);
@@ -2410,7 +2410,7 @@ GetGrid(
 
     hPtr = Tcl_CreateHashEntry(&dispPtr->gridHashTable, (char*) tkwin, &isNew);
     if (!isNew) {
-	return (Gridder *) Tcl_GetHashValue(hPtr);
+	return Tcl_GetHashValue(hPtr);
     }
     gridPtr = (Gridder *) ckalloc(sizeof(Gridder));
     gridPtr->tkwin = tkwin;

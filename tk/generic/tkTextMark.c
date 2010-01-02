@@ -541,7 +541,7 @@ MarkLayoutProc(
      */
 
     chunkPtr->breakIndex = -1;
-    chunkPtr->clientData = (ClientData) textPtr;
+    chunkPtr->clientData = textPtr;
     return 1;
 }
 
@@ -582,7 +582,7 @@ TkTextInsertDisplayProc(
      * We have no need for the clientData.
      */
 
-    /* TkText *textPtr = (TkText *) chunkPtr->clientData; */
+    /* TkText *textPtr = chunkPtr->clientData; */
     TkTextIndex index;
     int halfWidth = textPtr->insertWidth/2;
     int rightSideWidth;

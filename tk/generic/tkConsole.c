@@ -673,10 +673,11 @@ ConsoleObjCmd(
     Tcl_Obj *const objv[])	/* Argument objects */
 {
     int index, result;
-    static const char *const options[] = {"eval", "hide", "show", "title", NULL};
+    static const char *const options[] = {
+	"eval", "hide", "show", "title", NULL};
     enum option {CON_EVAL, CON_HIDE, CON_SHOW, CON_TITLE};
     Tcl_Obj *cmd = NULL;
-    ConsoleInfo *info = (ConsoleInfo *) clientData;
+    ConsoleInfo *info = clientData;
     Tcl_Interp *consoleInterp = info->consoleInterp;
 
     if (objc < 2) {

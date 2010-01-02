@@ -1622,8 +1622,8 @@ Tk_BindEvent(
 		Tcl_Panic("Tk_BindEvent: missing command");
 	    }
 	    if (sourcePtr->eventProc == EvalTclBinding) {
-		ExpandPercents(winPtr, (char *) sourcePtr->clientData,
-			eventPtr, detail.keySym, &scripts);
+		ExpandPercents(winPtr, sourcePtr->clientData, eventPtr,
+			detail.keySym, &scripts);
 	    } else {
 		if (matchCount >= matchSpace) {
 		    PendingBinding *newPtr;

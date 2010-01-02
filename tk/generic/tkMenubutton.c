@@ -767,6 +767,7 @@ MenuButtonEventProc(
     XEvent *eventPtr)		/* Information about event. */
 {
     TkMenuButton *mbPtr = clientData;
+
     if ((eventPtr->type == Expose) && (eventPtr->xexpose.count == 0)) {
 	goto redraw;
     } else if (eventPtr->type == ConfigureNotify) {

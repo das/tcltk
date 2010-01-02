@@ -3774,7 +3774,7 @@ TkBTreeCheck(
 
     for (entryPtr=Tcl_FirstHashEntry(&treePtr->sharedTextPtr->tagTable,&search);
 	    entryPtr != NULL ; entryPtr = Tcl_NextHashEntry(&search)) {
-	tagPtr = (TkTextTag *) Tcl_GetHashValue(entryPtr);
+	tagPtr = Tcl_GetHashValue(entryPtr);
 	nodePtr = tagPtr->tagRootPtr;
 	if (nodePtr == NULL) {
 	    if (tagPtr->toggleCount != 0) {
