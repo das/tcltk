@@ -295,13 +295,13 @@ TransferXEventsToTcl(
     while (QLength(display) > 0) {
 	XNextEvent(display, &event);
 	w = None;
-	if (event.x.type == KeyPress || event.x.type == KeyRelease) {
+	if (event.type == KeyPress || event.type == KeyRelease) {
 	    TkDisplay *dispPtr;
 
 	    for (dispPtr = TkGetDisplayList(); ; dispPtr = dispPtr->nextPtr) {
 		if (dispPtr == NULL) {
 		    break;
-		} else if (dispPtr->display == event.x.xany.display) {
+		} else if (dispPtr->display == event.xany.display) {
 		    if (dispPtr->focusPtr != NULL) {
 			w = dispPtr->focusPtr->window;
 		    }
@@ -309,7 +309,7 @@ TransferXEventsToTcl(
 		}
 	    }
 	}
-	if (XFilterEvent(&event.x, w)) {
+	if (XFilterEvent(&event, w)) {
 	    continue;
 	}
 	Tk_QueueWindowEvent(&event, TCL_QUEUE_TAIL);
