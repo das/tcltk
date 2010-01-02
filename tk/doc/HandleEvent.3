@@ -20,7 +20,8 @@ Tk_HandleEvent \- invoke event handlers for window system events
 .SH ARGUMENTS
 .AS XEvent *eventPtr
 .AP XEvent *eventPtr in
-Pointer to X event to dispatch to relevant handler(s).
+Pointer to X event to dispatch to relevant handler(s). It is important
+that all unused fields of the structure be set to zero.
 .BE
 .SH DESCRIPTION
 .PP

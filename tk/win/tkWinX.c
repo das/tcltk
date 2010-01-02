@@ -1033,6 +1033,7 @@ GenerateXEvent(
 	return;
     }
 
+    memset(&event, 0, sizeof(XEvent));
     event.xany.serial = winPtr->display->request++;
     event.xany.send_event = False;
     event.xany.display = winPtr->display;
