@@ -3295,7 +3295,7 @@ Tk_TextLayoutToPostscript(
 		     * Normal ASCII character.
 		     */
 
-		    buf[used++] = ch;
+		    buf[used++] = (char) ch;
 		} else {
 		    char uindex[5];
 
