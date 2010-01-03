@@ -2208,7 +2208,8 @@ Tk_MessageBoxObjCmd(
 
     Tcl_DecrRefCount(tmpObj);
 
-    Tcl_SetResult(interp, TkFindStateString(buttonMap, winCode), TCL_STATIC);
+    Tcl_SetResult(interp,
+	    (char *)TkFindStateString(buttonMap, winCode), TCL_STATIC);
     return TCL_OK;
 }
 
