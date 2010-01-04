@@ -288,6 +288,6 @@ proc itemDrag {c x y} {
 # is invoked.
 
 proc butPress {w color} {
-    set i [$w create text 25c 18.1c -text "Ouch!!" -fill $color -anchor n]
+    set i [$w create text 25c 18.1c -text "Oooohhh!!" -fill $color -anchor n]
     after 500 "$w delete $i"
 }
