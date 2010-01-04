@@ -10,7 +10,7 @@ if {![info exists widgetDemo]} {
 
 package require Tk
 
-set w .fontchoice
+set w .fontchoose
 catch {destroy $w}
 toplevel $w
 wm title $w "Font Selection Dialog"
