@@ -2500,8 +2500,8 @@ GetScreenFont(
     memset(&lf, 0, sizeof(lf));
     lf.lfHeight		= -pixelSize;
     lf.lfWidth		= 0;
-    lf.lfEscapement	= (int) floor(angle * 10 + 0.5);
-    lf.lfOrientation	= (int) floor(angle * 10 + 0.5);
+    lf.lfEscapement	= ROUND16(angle * 10);
+    lf.lfOrientation	= ROUND16(angle * 10);
     lf.lfWeight = (faPtr->weight == TK_FW_NORMAL) ? FW_NORMAL : FW_BOLD;
     lf.lfItalic		= faPtr->slant;
     lf.lfUnderline	= faPtr->underline;

@@ -16,8 +16,6 @@
 #include "tkInt.h"
 #include "tkFont.h"
 
-#define ROUND16(x)	((short)((x) + 0.5))
-
 /*
  * The following structure is used to keep track of all the fonts that exist
  * in the current application. It must be stored in the TkMainInfo for the
