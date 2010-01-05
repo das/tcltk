@@ -192,7 +192,7 @@ typedef struct TkXLFDAttributes {
  * Helper macro. How to correctly round a double to a short.
  */
 
-#define ROUND16(x)	((short) round(x))
+#define ROUND16(x)	((short) floor((x) + 0.5))
 
 /*
  * Low-level API exported by generic code to platform-specific code.
