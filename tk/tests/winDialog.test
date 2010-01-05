@@ -168,7 +168,6 @@ test winDialog-1.7 {Tk_ChooseColorObjCmd: -parent} -constraints {
 
 test winDialog-2.1 {ColorDlgHookProc} -constraints {emptyTest nt} -body {}
 
-
 test winDialog-3.1 {Tk_GetOpenFileObjCmd} -constraints {
     nt testwinevent english
 } -body {
