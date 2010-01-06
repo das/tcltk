@@ -88,10 +88,10 @@ bind Text <ButtonRelease-1> {
 bind Text <Control-1> {
     %W mark set insert @%x,%y
 }
-bind Text <Left> {
+bind Text <<PrevChar>> {
     tk::TextSetCursor %W insert-1displayindices
 }
-bind Text <Right> {
+bind Text <<NextChar>> {
     tk::TextSetCursor %W insert+1displayindices
 }
 bind Text <Up> {
@@ -100,10 +100,10 @@ bind Text <Up> {
 bind Text <Down> {
     tk::TextSetCursor %W [tk::TextUpDownLine %W 1]
 }
-bind Text <Shift-Left> {
+bind Text <<SelectPrevChar>> {
     tk::TextKeySelect %W [%W index {insert - 1displayindices}]
 }
-bind Text <Shift-Right> {
+bind Text <<SelectNextChar>> {
     tk::TextKeySelect %W [%W index {insert + 1displayindices}]
 }
 bind Text <Shift-Up> {
@@ -112,10 +112,10 @@ bind Text <Shift-Up> {
 bind Text <Shift-Down> {
     tk::TextKeySelect %W [tk::TextUpDownLine %W 1]
 }
-bind Text <Control-Left> {
+bind Text <<PrevWord>> {
     tk::TextSetCursor %W [tk::TextPrevPos %W insert tcl_startOfPreviousWord]
 }
-bind Text <Control-Right> {
+bind Text <<NextWord>> {
     tk::TextSetCursor %W [tk::TextNextWord %W insert]
 }
 bind Text <Control-Up> {
@@ -124,10 +124,10 @@ bind Text <Control-Up> {
 bind Text <Control-Down> {
     tk::TextSetCursor %W [tk::TextNextPara %W insert]
 }
-bind Text <Shift-Control-Left> {
+bind Text <<SelectPrevWord>> {
     tk::TextKeySelect %W [tk::TextPrevPos %W insert tcl_startOfPreviousWord]
 }
-bind Text <Shift-Control-Right> {
+bind Text <<SelectNextWord>> {
     tk::TextKeySelect %W [tk::TextNextWord %W insert]
 }
 bind Text <Shift-Control-Up> {
@@ -155,16 +155,16 @@ bind Text <Control-Next> {
     %W xview scroll 1 page
 }
 
-bind Text <Home> {
+bind Text <<LineStart>> {
     tk::TextSetCursor %W {insert display linestart}
 }
-bind Text <Shift-Home> {
+bind Text <<SelectLineStart>> {
     tk::TextKeySelect %W {insert display linestart}
 }
-bind Text <End> {
+bind Text <<LineEnd>> {
     tk::TextSetCursor %W {insert display lineend}
 }
-bind Text <Shift-End> {
+bind Text <<SelectLineEnd>> {
     tk::TextKeySelect %W {insert display lineend}
 }
 bind Text <Control-Home> {
