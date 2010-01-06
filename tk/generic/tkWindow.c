@@ -508,7 +508,7 @@ GetScreen(
 	    dispPtr->lastEventTime = CurrentTime;
 	    dispPtr->bindInfoStale = 1;
 	    dispPtr->cursorFont = None;
-	    dispPtr->warpWindow = None;
+	    dispPtr->warpWindow = NULL;
 	    dispPtr->multipleAtom = None;
 
 	    /*

@@ -696,6 +696,22 @@ error:
 }
 #endif /* TK_USE_INPUT_METHODS */
 
+void
+TkpWarpPointer(
+    TkDisplay *dispPtr)
+{
+    Window w;			/* Which window to warp relative to. */
+
+    if (dispPtr->warpWindow != NULL) {
+	w = Tk_WindowId(dispPtr->warpWindow);
+    } else {
+	w = RootWindow(dispPtr->display,
+		Tk_ScreenNumber(dispPtr->warpMainwin));
+    }
+    XWarpPointer(dispPtr->display, None, w, 0, 0, 0, 0,
+	    (int) dispPtr->warpX, (int) dispPtr->warpY);
+}
+
 /*
  * Local Variables:
  * mode: c
