@@ -2902,9 +2902,15 @@ AsyncUpdateLineMetrics(
 	return;
     }
 
+    /*
+     * Reify where we end or all hell breaks loose with the calculations when
+     * we try to update. [Bug 2677890]
+     */
+
     lineNum = dInfoPtr->currentMetricUpdateLine;
-    if (lineNum == -1) {
-	dInfoPtr->lastMetricUpdateLine = 0;
+    if (dInfoPtr->lastMetricUpdateLine == -1) {
+	dInfoPtr->lastMetricUpdateLine =
+		TkBTreeNumLines(textPtr->sharedTextPtr->tree, textPtr);
     }
 
     /*
