@@ -117,6 +117,7 @@ proc ::tk::classic::restore_menu {args} {
     if {[tk windowingsystem] eq "x11"} {
 	option add *Menu.activeBorderWidth	2 $prio; # 1
 	option add *Menu.borderWidth		2 $prio; # 1
+        option add *Menu.clickToFocus		true $prio
     }
     if {[tk windowingsystem] ne "aqua"} {
 	option add *Menu.font		"TkDefaultFont" $prio; # "TkMenuFont"
