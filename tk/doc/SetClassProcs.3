@@ -20,7 +20,7 @@ Tk_SetClassProcs \- register widget specific procedures
 .AS Tk_ClassProc instanceData
 .AP Tk_Window tkwin in
 Token for window to modify.
-.AP Tk_ClassProcs *procs in
+.AP "const Tk_ClassProcs" *procs in
 Pointer to data structure containing widget specific procedures.
 The data structure pointed to by \fIprocs\fR must be static:
 Tk keeps a reference to it as long as the window exists.

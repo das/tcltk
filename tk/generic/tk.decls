@@ -929,7 +929,7 @@ declare 241 generic {
 }
 declare 242 generic {
     void Tk_SetClassProcs(Tk_Window tkwin,
-	    Tk_ClassProcs *procs, ClientData instanceData)
+	    const Tk_ClassProcs *procs, ClientData instanceData)
 }
 
 # New in 8.4a4

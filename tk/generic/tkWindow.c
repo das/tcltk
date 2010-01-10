@@ -2280,7 +2280,7 @@ Tk_SetClass(
 void
 Tk_SetClassProcs(
     Tk_Window tkwin,		/* Token for window to modify. */
-    Tk_ClassProcs *procs,	/* Class procs structure. */
+    const Tk_ClassProcs *procs,	/* Class procs structure. */
     ClientData instanceData)	/* Data to be passed to class functions. */
 {
     register TkWindow *winPtr = (TkWindow *) tkwin;

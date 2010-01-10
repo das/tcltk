@@ -802,7 +802,7 @@ typedef struct TkWindow {
      * Information used by widget classes.
      */
 
-    Tk_ClassProcs *classProcsPtr;
+    const Tk_ClassProcs *classProcsPtr;
     ClientData instanceData;
 
     /*
