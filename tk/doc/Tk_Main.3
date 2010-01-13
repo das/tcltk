@@ -62,6 +62,10 @@ for \fBTcl_AppInit\fR.
 \fBTk_Main\fR supports both an interactive mode and a startup script
 mode, with the file name and encoding of a startup script under the
 control of the \fBTcl_SetStartupScript\fR and \fBTcl_GetStartupScript\fR
-routines.
+routines. However it calls \fBTk_MainLoop\fR after processing any
+supplied script, and in interactive uses events registered with
+\fBTcl_CreateFileHandler\fR to process user input.
+.SH "SEE ALSO"
+Tcl_DoOneEvent(3)
 .SH KEYWORDS
 application-specific initialization, command-line arguments, main program
