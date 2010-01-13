@@ -436,9 +436,11 @@ static void		MigrateHashEntries(Tcl_HashTable *table,
  * that can be invoked from generic window code.
  */
 
-static Tk_ClassProcs listboxClass = {
+static const Tk_ClassProcs listboxClass = {
     sizeof(Tk_ClassProcs),	/* size */
     ListboxWorldChanged,	/* worldChangedProc */
+    NULL,					/* createProc */
+    NULL					/* modalProc */
 };
 
 /*

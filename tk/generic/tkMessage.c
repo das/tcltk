@@ -190,9 +190,11 @@ static void		DisplayMessage(ClientData clientData);
  * that can be invoked from generic window code.
  */
 
-static Tk_ClassProcs messageClass = {
+static const Tk_ClassProcs messageClass = {
     sizeof(Tk_ClassProcs),	/* size */
     MessageWorldChanged,	/* worldChangedProc */
+    NULL,					/* createProc */
+    NULL					/* modalProc */
 };
 
 /*

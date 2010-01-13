@@ -329,9 +329,11 @@ static void		MapFrame(ClientData clientData);
  * can be invoked from generic window code.
  */
 
-static Tk_ClassProcs frameClass = {
+static const Tk_ClassProcs frameClass = {
     sizeof(Tk_ClassProcs),	/* size */
-    FrameWorldChanged		/* worldChangedProc */
+    FrameWorldChanged,		/* worldChangedProc */
+    NULL,					/* createProc */
+    NULL					/* modalProc */
 };
 
 /*

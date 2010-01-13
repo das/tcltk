@@ -18,6 +18,18 @@
 #include "default.h"
 
 /*
+ * The structure below defines menubutton class behavior by means of
+ * procedures that can be invoked from generic window code.
+ */
+
+static const Tk_ClassProcs menubuttonClass = {
+    sizeof(Tk_ClassProcs),	/* size */
+    TkMenuButtonWorldChanged,	/* worldChangedProc */
+    NULL,					/* createProc */
+    NULL					/* modalProc */
+};
+
+/*
  * The following table defines the legal values for the -direction option. It
  * is used together with the "enum direction" declaration in tkMenubutton.h.
  */
@@ -236,7 +248,7 @@ Tk_MenubuttonObjCmd(
     Tk_SetClass(tkwin, "Menubutton");
     mbPtr = TkpCreateMenuButton(tkwin);
 
-    Tk_SetClassProcs(tkwin, &tkpMenubuttonClass, mbPtr);
+    Tk_SetClassProcs(tkwin, &menubuttonClass, mbPtr);
 
     /*
      * Initialize the data structure for the button.

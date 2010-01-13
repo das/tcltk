@@ -359,9 +359,11 @@ static void WidgetWorldChanged(ClientData clientData)
     TtkRedisplayWidget(corePtr);
 }
 
-static struct Tk_ClassProcs widgetClassProcs = {
-    sizeof(Tk_ClassProcs),
-    WidgetWorldChanged
+static Tk_ClassProcs widgetClassProcs = {
+    sizeof(Tk_ClassProcs),	/* size */
+    WidgetWorldChanged,	/* worldChangedProc */
+    NULL,					/* createProc */
+    NULL					/* modalProc */
 };
 
 /*

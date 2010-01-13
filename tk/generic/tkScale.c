@@ -177,9 +177,11 @@ static void		ScaleSetVariable(TkScale *scalePtr);
  * that can be invoked from generic window code.
  */
 
-static Tk_ClassProcs scaleClass = {
+static const Tk_ClassProcs scaleClass = {
     sizeof(Tk_ClassProcs),	/* size */
     ScaleWorldChanged,		/* worldChangedProc */
+    NULL,					/* createProc */
+    NULL					/* modalProc */
 };
 
 /*

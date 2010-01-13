@@ -448,9 +448,11 @@ static int		ComputeFormat(Spinbox *sbPtr);
  * that can be invoked from generic window code.
  */
 
-static Tk_ClassProcs entryClass = {
+static const Tk_ClassProcs entryClass = {
     sizeof(Tk_ClassProcs),	/* size */
     EntryWorldChanged,		/* worldChangedProc */
+    NULL,					/* createProc */
+    NULL					/* modalProc */
 };
 
 /*

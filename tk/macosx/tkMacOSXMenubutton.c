@@ -68,15 +68,6 @@ static const BoundsFix boundsFixes[] = {
 
 static void MenuButtonEventProc(ClientData clientData, XEvent *eventPtr);
 
-/*
- * The structure below defines menubutton class behavior by means of functions
- * that can be invoked from generic window code.
- */
-
-Tk_ClassProcs tkpMenubuttonClass = {
-    sizeof(Tk_ClassProcs),	/* size */
-    TkMenuButtonWorldChanged,	/* worldChangedProc */
-};
 
 /*
  *----------------------------------------------------------------------

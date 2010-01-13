@@ -373,9 +373,11 @@ static void		TkMenuCleanup(ClientData unused);
  * geometry proc to be called.
  */
 
-static Tk_ClassProcs menuClass = {
+static const Tk_ClassProcs menuClass = {
     sizeof(Tk_ClassProcs),	/* size */
-    MenuWorldChanged		/* worldChangedProc */
+    MenuWorldChanged,		/* worldChangedProc */
+    NULL,					/* createProc */
+    NULL					/* modalProc */
 };
 
 /*

@@ -2521,7 +2521,7 @@ GetScreenFont(
 	 * We can only store up to LF_FACESIZE wide characters
 	 */
 
-	if (Tcl_DStringLength(&ds) >= (LF_FACESIZE * sizeof(WCHAR))) {
+	if (Tcl_DStringLength(&ds) >= (int)(LF_FACESIZE * sizeof(WCHAR))) {
 	    Tcl_DStringSetLength(&ds, LF_FACESIZE);
 	}
 	src = (Tcl_UniChar *) Tcl_DStringValue(&ds);
@@ -2808,7 +2808,7 @@ LoadFontRanges(
     }
 
     n = GetFontData(hdc, cmapKey, 0, &cmapTable, sizeof(cmapTable));
-    if (n != GDI_ERROR) {
+    if (n != (int) GDI_ERROR) {
 	if (swapped) {
 	    SwapShort(&cmapTable.numTables);
 	}

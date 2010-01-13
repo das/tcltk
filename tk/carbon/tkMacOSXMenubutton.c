@@ -88,16 +88,6 @@ static void ComputeControlTitleParams(TkMenuButton *mbPtr,
 static void CompareControlTitleParams(ControlTitleParams *p1Ptr,
 	ControlTitleParams *p2Ptr, int *titleChanged, int *styleChanged);
 
-/*
- * The structure below defines menubutton class behavior by means of
- * procedures that can be invoked from generic window code.
- */
-
-Tk_ClassProcs tkpMenubuttonClass = {
-    sizeof(Tk_ClassProcs),	/* size */
-    TkMenuButtonWorldChanged,	/* worldChangedProc */
-};
-
 
 /*
  *----------------------------------------------------------------------

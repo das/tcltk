@@ -323,9 +323,11 @@ static Tk_Item *	TagSearchNext(TagSearch *searchPtr);
  * that can be invoked from generic window code.
  */
 
-static Tk_ClassProcs canvasClass = {
+static const Tk_ClassProcs canvasClass = {
     sizeof(Tk_ClassProcs),	/* size */
     CanvasWorldChanged,		/* worldChangedProc */
+    NULL,					/* createProc */
+    NULL					/* modalProc */
 };
 
 /*

@@ -66,7 +66,7 @@ static int	InterpreterObjCmd(ClientData clientData, Tcl_Interp *interp,
  * This structure describes the channel type structure for file based IO:
  */
 
-static Tcl_ChannelType consoleChannelType = {
+static const Tcl_ChannelType consoleChannelType = {
     "console",			/* Type name. */
     TCL_CHANNEL_VERSION_4,	/* v4 channel */
     ConsoleClose,		/* Close proc. */
@@ -83,6 +83,7 @@ static Tcl_ChannelType consoleChannelType = {
     NULL,			/* handler proc. */
     NULL,			/* wide seek proc */
     NULL,			/* thread action proc */
+    NULL
 };
 
 #ifdef __WIN32__
