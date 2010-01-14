@@ -12,7 +12,7 @@
 .BS
 '\" Note:  do not modify the .SH NAME line immediately below!
 .SH NAME
-tkvars \- Variables used or set by Tk
+geometry, tk_library, tk_patchLevel, tk_strictMotif, tk_version \- Variables used or set by Tk
 .BE
 .SH DESCRIPTION
 .PP
@@ -94,8 +94,17 @@ These variables are set by text widgets when they have debugging
 turned on.  The values written to these variables can be used to
 test or debug text widget operations.  These variables are mostly
 used by Tk's test suite.
+.SH "OTHER GLOBAL VARIABLES"
+The following variables are only guaranteed to exist in \fBwish\fR
+executables; the Tk library does not define them itself but many Tk
+environments do.
+.TP 6
+\fBgeometry\fR
+.
+If set, contains the user-supplied geometry specification to use for
+the main Tk window.
 .SH "SEE ALSO"
-package(n), tclvars(n)
+package(n), tclvars(n), wish(1)
 .SH KEYWORDS
 environment, text, variables, version
 '\" Local Variables:
