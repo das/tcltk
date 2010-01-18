@@ -89,7 +89,7 @@ static const Tk_OptionSpec tagOptionSpecs[] = {
     {TK_OPTION_STRING_TABLE, "-wrap", NULL, NULL,
 	NULL, -1, Tk_Offset(TkTextTag, wrapMode),
 	TK_OPTION_NULL_OK, (ClientData) wrapStrings, 0},
-    {TK_OPTION_END}
+    {TK_OPTION_END, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0}
 };
 
 /*

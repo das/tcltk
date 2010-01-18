@@ -62,6 +62,7 @@ Tk_PhotoImageFormat tkImgFmtPPM = {
     StringReadPPM,		/* stringReadProc */
     FileWritePPM,		/* fileWriteProc */
     StringWritePPM,		/* stringWriteProc */
+    NULL
 };
 
 /*

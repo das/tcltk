@@ -141,6 +141,7 @@ Tk_PhotoImageFormat tkImgFmtGIF = {
     StringReadGIF,	/* stringReadProc */
     FileWriteGIF,	/* fileWriteProc */
     NULL,		/* stringWriteProc */
+    NULL
 };
 
 #define INTERLACE		0x40

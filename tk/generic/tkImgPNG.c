@@ -274,7 +274,8 @@ Tk_PhotoImageFormat tkImgFmtPNG = {
     FileReadPNG,		/* fileReadProc */
     StringReadPNG,		/* stringReadProc */
     FileWritePNG,		/* fileWriteProc */
-    StringWritePNG		/* stringWriteProc */
+    StringWritePNG,		/* stringWriteProc */
+    NULL
 };
 
 /*

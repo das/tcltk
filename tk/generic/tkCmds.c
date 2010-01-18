@@ -62,15 +62,15 @@ MODULE_SCOPE const TkEnsemble tkFontchooserEnsemble[];
  */
 
 static const TkEnsemble tkCmdMap[] = {
-    {"appname",		AppnameCmd },
-    {"busy",		Tk_BusyObjCmd },
-    {"caret",		CaretCmd },
-    {"inactive",	InactiveCmd },
-    {"scaling",		ScalingCmd },
-    {"useinputmethods",	UseinputmethodsCmd },
-    {"windowingsystem",	WindowingsystemCmd },
+    {"appname",		AppnameCmd, NULL },
+    {"busy",		Tk_BusyObjCmd, NULL },
+    {"caret",		CaretCmd, NULL },
+    {"inactive",	InactiveCmd, NULL },
+    {"scaling",		ScalingCmd, NULL },
+    {"useinputmethods",	UseinputmethodsCmd, NULL },
+    {"windowingsystem",	WindowingsystemCmd, NULL },
     {"fontchooser",	NULL, tkFontchooserEnsemble},
-    {NULL}
+    {NULL, NULL, NULL}
 };
 
 /*
