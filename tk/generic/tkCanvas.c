@@ -1886,6 +1886,7 @@ ConfigureCanvas(
 {
     XGCValues gcValues;
     GC newGC;
+    Tk_State old_canvas_state=canvasPtr->canvas_state;
 
     if (Tk_ConfigureWidget(interp, canvasPtr->tkwin, configSpecs,
 	    objc, (CONST char **) objv, (char *) canvasPtr,
@@ -1914,6 +1915,27 @@ ConfigureCanvas(
 	Tk_FreeGC(canvasPtr->display, canvasPtr->pixmapGC);
     }
     canvasPtr->pixmapGC = newGC;
+
+    /*
+     * Reconfigure items to reflect changed state disabled/normal.
+     */
+
+    if ( old_canvas_state != canvasPtr->canvas_state ) {
+	Tk_Item *itemPtr;
+	int result;
+
+	for ( itemPtr = canvasPtr->firstItemPtr; itemPtr != NULL;
+	    	    	    itemPtr = itemPtr->nextPtr) {
+	    if ( itemPtr->state == TK_STATE_NULL ) {
+		result = (*itemPtr->typePtr->configProc)(canvasPtr->interp,
+			(Tk_Canvas) canvasPtr, itemPtr, 0, NULL,
+			TK_CONFIG_ARGV_ONLY);
+		if (result != TCL_OK) {
+		    Tcl_ResetResult(canvasPtr->interp);
+		}
+	    }
+	}
+    }
 
     /*
      * Reset the desired dimensions for the window.
