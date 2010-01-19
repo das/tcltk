@@ -330,6 +330,7 @@ proc ::tk::dialog::file::Create {w class} {
     global tk_library
 
     toplevel $w -class $class
+    if {[tk windowingsystem] eq "x11"} {wm attributes $w -type dialog}
     pack [ttk::frame $w.contents] -expand 1 -fill both
     #set w $w.contents
 

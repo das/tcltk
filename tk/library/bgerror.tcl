@@ -146,6 +146,8 @@ proc ::tk::dialog::error::bgerror err {
 
     if {$windowingsystem eq "aqua"} {
 	::tk::unsupported::MacWindowStyle style $dlg moveableAlert {}
+    } elseif {$windowingsystem eq "x11"} {
+	wm attributes $dlg -type dialog
     }
 
     ttk::frame $dlg.bot

@@ -271,8 +271,7 @@ proc ttk::combobox::PopdownWindow {cb} {
 
     if {![winfo exists $cb.popdown]} {
 	set poplevel [PopdownToplevel $cb.popdown]
-
-        set popdown [ttk::frame $poplevel.f -style ComboboxPopdownFrame]
+	set popdown [ttk::frame $poplevel.f -style ComboboxPopdownFrame]
 
 	$scrollbar $popdown.sb \
 	    -orient vertical -command [list $popdown.l yview]
@@ -310,6 +309,7 @@ proc ttk::combobox::PopdownToplevel {w} {
 	default -
 	x11 {
 	    $w configure -relief flat -borderwidth 0
+	    wm attributes $w -type combo
 	    wm overrideredirect $w true
 	}
 	win32 {
