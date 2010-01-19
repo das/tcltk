@@ -3561,7 +3561,11 @@ TagSearchScanExpr(
     while (searchPtr->stringIndex < searchPtr->stringLength) {
 	c = searchPtr->string[searchPtr->stringIndex++];
 
-	if (expr->allocated == expr->index) {
+	/*
+	 * Need two slots free at this point, not one. [Bug 2931374]
+	 */
+
+	if (expr->index >= expr->allocated-1) {
 	    expr->allocated += 15;
 	    if (expr->uids) {
 		expr->uids = (Tk_Uid *) ckrealloc((char *) expr->uids,
