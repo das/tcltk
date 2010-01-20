@@ -298,6 +298,7 @@ proc ttk::combobox::PopdownToplevel {w} {
 	default -
 	x11 {
 	    $w configure -relief solid -borderwidth 1
+	    wm attributes $w -type combo
 	    wm overrideredirect $w true
 	}
 	win32 {
