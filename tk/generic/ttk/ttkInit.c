@@ -185,7 +185,7 @@ Tk_OptionSpec ttkCoreOptionSpecs[] =
 	Tk_Offset(WidgetCore,styleObj), -1, 0,0,STYLE_CHANGED},
     {TK_OPTION_STRING, "-class", "", "", NULL,
 	Tk_Offset(WidgetCore,classObj), -1, 0,0,READONLY_OPTION},
-    {TK_OPTION_END}
+    {TK_OPTION_END, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0}
 };
 
 /*------------------------------------------------------------------------

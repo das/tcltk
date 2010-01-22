@@ -73,7 +73,7 @@ static Tk_OptionSpec TabOptionSpecs[] =
 	0,(ClientData)ttkCompoundStrings,GEOMETRY_CHANGED },
     {TK_OPTION_INT, "-underline", "underline", "Underline", "-1",
 	Tk_Offset(Tab,underlineObj), -1, 0,0,GEOMETRY_CHANGED },
-    {TK_OPTION_END}
+    {TK_OPTION_END, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0 }
 };
 
 static Tk_OptionSpec PaneOptionSpecs[] =

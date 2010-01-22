@@ -252,9 +252,9 @@ WinSendCom_GetIDsOfNames(
 
     if (rgDispId) {
 	hr = DISP_E_UNKNOWNNAME;
-	if (_wcsicmp(*rgszNames, L"Send") == 0) {
+	if (wcscasecmp(*rgszNames, L"Send") == 0) {
 	    *rgDispId = TKWINSENDCOM_DISPID_SEND, hr = S_OK;
-	} else if (_wcsicmp(*rgszNames, L"Async") == 0) {
+	} else if (wcscasecmp(*rgszNames, L"Async") == 0) {
 	    *rgDispId = TKWINSENDCOM_DISPID_ASYNC, hr = S_OK;
 	}
     }

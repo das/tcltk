@@ -5,6 +5,7 @@
  */
 
 #include <string.h>
+#include <stdio.h>
 #include <tk.h>
 #include "ttkTheme.h"
 #include "ttkWidget.h"
@@ -3212,7 +3213,7 @@ static Ttk_ElementOptionSpec TreeitemIndicatorOptions[] = {
 	Tk_Offset(TreeitemIndicator,sizeObj), "12" },
     { "-indicatormargins", TK_OPTION_STRING,
 	Tk_Offset(TreeitemIndicator,marginsObj), "2 2 4 2" },
-    {NULL}
+    { NULL, 0, 0, NULL }
 };
 
 static void TreeitemIndicatorSize(
@@ -3279,7 +3280,7 @@ static Ttk_ElementOptionSpec RowElementOptions[] = {
 	Tk_Offset(RowElement,backgroundObj), DEFAULT_BACKGROUND },
     { "-rownumber", TK_OPTION_INT,
 	Tk_Offset(RowElement,rowNumberObj), "0" },
-    {NULL}
+    { NULL, 0, 0, NULL }
 };
 
 static void RowElementDraw(

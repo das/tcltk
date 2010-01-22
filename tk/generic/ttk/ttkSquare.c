@@ -192,7 +192,7 @@ static Ttk_ElementOptionSpec SquareElementOptions[] =
     	"raised" },
     { "-width",  TK_OPTION_PIXELS, Tk_Offset(SquareElement,widthObj), "20"},
     { "-height", TK_OPTION_PIXELS, Tk_Offset(SquareElement,heightObj), "20"},
-    { NULL }
+    { NULL, 0, 0, NULL }
 };
 
 /*

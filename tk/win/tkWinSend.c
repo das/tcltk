@@ -843,7 +843,7 @@ Win32ErrorObj(
 
     if (lpBuffer == NULL) {
 	lpBuffer = sBuffer;
-	wsprintf(sBuffer, _T("Error Code: %08lX"), hrError);
+	wsprintf(sBuffer, (const char *)_T("Error Code: %08lX"), hrError);
     }
 
     if ((p = _tcsrchr(lpBuffer, _T('\r'))) != NULL) {
@@ -1034,7 +1034,7 @@ SendTrace(
     static char buffer[1024];
 
     va_start(args, format);
-    _vsnprintf(buffer, 1023, format, args);
+    vsnprintf(buffer, 1023, format, args);
     OutputDebugString(buffer);
     va_end(args);
 }

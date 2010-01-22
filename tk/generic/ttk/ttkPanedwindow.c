@@ -924,7 +924,7 @@ typedef struct {
 static Ttk_ElementOptionSpec SashElementOptions[] = {
     { "-sashthickness", TK_OPTION_INT,
 	    Tk_Offset(SashElement,thicknessObj), "5" },
-    {NULL}
+    { NULL, 0, 0, NULL }
 };
 
 static void SashElementSize(

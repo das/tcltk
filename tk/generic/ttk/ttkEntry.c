@@ -11,6 +11,7 @@
  */
 
 #include <string.h>
+#include <stdio.h>
 #include <tk.h>
 #include <X11/Xatom.h>
 
@@ -1946,7 +1947,7 @@ static Ttk_ElementOptionSpec TextareaElementOptions[] = {
 	Tk_Offset(TextareaElement,fontObj), DEF_ENTRY_FONT },
     { "-width", TK_OPTION_INT,
 	Tk_Offset(TextareaElement,widthObj), "20" },
-    {0,0,0}
+    { NULL, 0, 0, NULL }
 };
 
 static void TextareaElementSize(

@@ -14,7 +14,7 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkPort.h"
+#include "tkInt.h"
 
 /*
  * Values for "flags" field of Tk_ConfigSpec structures. Be sure to coordinate

@@ -19,8 +19,6 @@
 #include "tkWinInt.h"
 #include "tkMenu.h"
 
-#include <string.h>
-
 /*
  * The class of the window for popup menus.
  */

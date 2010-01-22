@@ -30,7 +30,12 @@
 #include <string.h>
 #include <limits.h>
 #include <fcntl.h>
-#include <io.h>
+#ifdef __CYGWIN__
+#   include <unistd.h>
+#   include <wchar.h>
+#else
+#   include <io.h>
+#endif
 
 /*
  * Need to block out this include for building extensions with MetroWerks
@@ -52,7 +57,15 @@
 #    define hypot _hypot
 #endif /* _MSC_VER */
 
-#ifndef __GNUC__
+#ifdef __CYGWIN__
+#   ifdef _UNICODE
+#       define _tcsrchr wcsrchr
+#   else
+#       define _tcsrchr strrchr
+
+#   endif
+#else
+#    define wcscasecmp _wcsicmp
 #    define strncasecmp strnicmp
 #    define strcasecmp stricmp
 #endif
@@ -116,14 +129,5 @@
 #define TkpDefineNativeBitmaps()
 #define TkpCreateNativeBitmap(display, source) None
 #define TkpGetNativeAppBitmap(display, name, w, h) None
-
-/*
- * Define timezone for gettimeofday.
- */
-
-struct timezone {
-    int tz_minuteswest;
-    int tz_dsttime;
-};
 
 #endif /* _WINPORT */
