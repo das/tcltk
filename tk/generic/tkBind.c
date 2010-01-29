@@ -2425,14 +2425,11 @@ ExpandPercents(
 	    } else if (flags & PROP) {
 		string = TkFindStateString(propNotify,
 			eventPtr->xproperty.state);
-		goto doString;
 	    } else if (flags & VISIBILITY) {
 		string = TkFindStateString(visNotify,
 			eventPtr->xvisibility.state);
-		goto doString;
-	    } else {
-		goto doString;
 	    }
+	    goto doString;
 	case 't':
 	    if (flags & KEY_BUTTON_MOTION_VIRTUAL) {
 		number = (int) eventPtr->xkey.time;
