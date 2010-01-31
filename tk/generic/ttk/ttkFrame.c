@@ -47,13 +47,13 @@ static Tk_OptionSpec FrameOptionSpecs[] = {
     WIDGET_INHERIT_OPTIONS(ttkCoreOptionSpecs)
 };
 
-static WidgetCommandSpec FrameCommands[] = {
-    { "configure",	TtkWidgetConfigureCommand },
-    { "cget",		TtkWidgetCgetCommand },
-    { "instate",	TtkWidgetInstateCommand },
-    { "state",  	TtkWidgetStateCommand },
-    { "identify",   TtkWidgetIdentifyCommand },
-    { NULL, NULL }
+static const Ttk_Ensemble FrameCommands[] = {
+    { "configure",	TtkWidgetConfigureCommand,0 },
+    { "cget",   	TtkWidgetCgetCommand,0 },
+    { "instate",	TtkWidgetInstateCommand,0 },
+    { "state",  	TtkWidgetStateCommand,0 },
+    { "identify",	TtkWidgetIdentifyCommand,0 },
+    { 0,0,0 }
 };
 
 /*

@@ -408,7 +408,21 @@ typedef enum { 		/* -orient option values */
 } Ttk_Orient;
 
 /*------------------------------------------------------------------------
- * +++ Stub table declarations:
+ * +++ Utilities.
+ */
+
+typedef struct TtkEnsemble {
+    const char *name;			/* subcommand name */
+    Tcl_ObjCmdProc *command; 		/* subcommand implementation, OR: */
+    const struct TtkEnsemble *ensemble;	/* subcommand ensemble */
+} Ttk_Ensemble;
+
+MODULE_SCOPE int Ttk_InvokeEnsemble(	/* Run an ensemble command */
+    const Ttk_Ensemble *commands, int cmdIndex,
+    void *clientData, Tcl_Interp *interp, int objc, Tcl_Obj *const objv[]);
+
+/*------------------------------------------------------------------------
+ * +++ Stub table declarations.
  */
 
 #include "ttkDecls.h"
