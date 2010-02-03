@@ -16,6 +16,10 @@
 #include "tkInt.h"
 #include "tkWinSendCom.h"
 
+#ifdef _MSC_VER
+#define vsnprintf _vsnprintf
+#endif
+
 /*
  * Should be defined in WTypes.h but mingw 1.0 is missing them.
  */
