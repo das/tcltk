@@ -240,9 +240,9 @@ MODULE_SCOPE Tk_OptionSpec ttkCoreOptionSpecs[];
  * String tables for widget resource specifications:
  */
 
-MODULE_SCOPE const char *ttkOrientStrings[];
-MODULE_SCOPE const char *ttkCompoundStrings[];
-MODULE_SCOPE const char *ttkDefaultStrings[];
+MODULE_SCOPE const char *const ttkOrientStrings[];
+MODULE_SCOPE const char *const ttkCompoundStrings[];
+MODULE_SCOPE const char *const ttkDefaultStrings[];
 
 /*
  * ... other option types...

@@ -33,7 +33,7 @@ typedef enum validateMode {
     VMODE_ALL, VMODE_KEY, VMODE_FOCUS, VMODE_FOCUSIN, VMODE_FOCUSOUT, VMODE_NONE
 } VMODE;
 
-static const char *validateStrings[] = {
+static const char *const validateStrings[] = {
     "all", "key", "focus", "focusin", "focusout", "none", NULL
 };
 
@@ -46,7 +46,7 @@ typedef enum validateReason {
     VALIDATE_FORCED
 } VREASON;
 
-static const char *validateReasonStrings[] = {
+static const char *const validateReasonStrings[] = {
     "key", "key", "focusin", "focusout", "forced", NULL
 };
 

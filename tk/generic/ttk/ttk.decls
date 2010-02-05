@@ -64,7 +64,7 @@ declare 10 current {
 }
 declare 11 current {
     Tcl_Obj *Ttk_NewStateSpecObj(
-    	unsigned int onbits,unsigned int offbits);
+    	unsigned int onbits, unsigned int offbits);
 }
 declare 12 current {
     Ttk_StateMap Ttk_GetStateMapFromObj(

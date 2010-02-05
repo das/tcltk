@@ -20,7 +20,7 @@
 
 #define DEFAULT_MIN_TAB_WIDTH 24
 
-static const char *TabStateStrings[] = { "normal", "disabled", "hidden", 0 };
+static const char *const TabStateStrings[] = { "normal", "disabled", "hidden", 0 };
 typedef enum {
     TAB_STATE_NORMAL, TAB_STATE_DISABLED, TAB_STATE_HIDDEN
 } TAB_STATE;
@@ -1046,7 +1046,7 @@ static int NotebookHideCommand(
 static int NotebookIdentifyCommand(
     void *recordPtr, Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
 {
-    static const char *whatTable[] = { "element", "tab", NULL };
+    static const char *const whatTable[] = { "element", "tab", NULL };
     enum { IDENTIFY_ELEMENT, IDENTIFY_TAB };
     int what = IDENTIFY_ELEMENT;
     Notebook *nb = recordPtr;

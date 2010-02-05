@@ -42,9 +42,9 @@ TtkInitializeStubs(
     const char *packageName = "Ttk";
     const char *errMsg = NULL;
     ClientData pkgClientData = NULL;
-    const char *actualVersion= Tcl_PkgRequireEx(
+    const char *actualVersion = Tcl_PkgRequireEx(
 	interp, packageName, version, exact, &pkgClientData);
-    TtkStubs *stubsPtr = pkgClientData;
+    const TtkStubs *stubsPtr = pkgClientData;
 
     if (!actualVersion) {
 	return NULL;

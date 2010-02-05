@@ -19,7 +19,7 @@
 enum {
     TTK_PROGRESSBAR_DETERMINATE, TTK_PROGRESSBAR_INDETERMINATE
 };
-static const char *ProgressbarModeStrings[] = {
+static const char *const ProgressbarModeStrings[] = {
     "determinate", "indeterminate", NULL
 };
 
