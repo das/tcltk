@@ -139,7 +139,7 @@ typedef struct TtkStubs {
     int magic;
     int epoch;
     int revision;
-    const struct TtkStubHooks *hooks;
+    struct TtkStubHooks *hooks;
 
     Ttk_Theme (*ttk_GetTheme) (Tcl_Interp *interp, const char *name); /* 0 */
     Ttk_Theme (*ttk_GetDefaultTheme) (Tcl_Interp *interp); /* 1 */

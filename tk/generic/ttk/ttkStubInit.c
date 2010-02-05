@@ -8,11 +8,11 @@
 #include "tk.h"
 #include "ttkTheme.h"
 
-MODULE_SCOPE const TtkStubs ttkConstStubs;
+MODULE_SCOPE const TtkStubs ttkStubs;
 
 /* !BEGIN!: Do not edit below this line. */
 
-const TtkStubs ttkConstStubs = {
+const TtkStubs ttkStubs = {
     TCL_STUB_MAGIC,
     TTK_STUBS_EPOCH,
     TTK_STUBS_REVISION,

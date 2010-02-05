@@ -1372,7 +1372,7 @@ static int StyleThemeCreateCmd(
     ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
 {
     StylePackageData *pkgPtr = clientData;
-    static const char *const optStrings[] =
+    static const char *optStrings[] =
     	 { "-parent", "-settings", NULL };
     enum { OP_PARENT, OP_SETTINGS };
     Ttk_Theme parentTheme = pkgPtr->defaultTheme, newTheme;

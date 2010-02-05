@@ -321,14 +321,14 @@ static Tk_OptionSpec HeadingOptionSpecs[] = {
 
 #define DEFAULT_SHOW	"tree headings"
 
-static const char *const showStrings[] = {
+static const char *showStrings[] = {
     "tree", "headings", NULL
 };
 
 static int GetEnumSetFromObj(
     Tcl_Interp *interp,
     Tcl_Obj *objPtr,
-    const char *const table[],
+    const char *table[],
     unsigned *resultPtr)
 {
     unsigned result = 0;
@@ -434,7 +434,7 @@ typedef struct {
 #define SCROLLCMD_CHANGED	(USER_MASK<<2)
 #define SHOW_CHANGED 		(USER_MASK<<3)
 
-static const char *const SelectModeStrings[] = { "none", "browse", "extended", NULL };
+static const char *SelectModeStrings[] = { "none", "browse", "extended", NULL };
 
 static Tk_OptionSpec TreeviewOptionSpecs[] = {
     WIDGET_TAKES_FOCUS,
@@ -1506,7 +1506,7 @@ typedef enum {
     REGION_CELL
 } TreeRegion;
 
-static const char *const regionStrings[] = {
+static const char *regionStrings[] = {
     "nothing", "heading", "separator", "tree", "cell", 0
 };
 
@@ -2253,7 +2253,7 @@ done:
 static int TreeviewIdentifyCommand(
     void *recordPtr, Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
 {
-    static const char *const submethodStrings[] =
+    static const char *submethodStrings[] =
 	 { "region", "item", "column", "row", "element", NULL };
     enum { I_REGION, I_ITEM, I_COLUMN, I_ROW, I_ELEMENT };
 
@@ -2910,7 +2910,7 @@ static int TreeviewSelectionCommand(
     enum {
 	SELECTION_SET, SELECTION_ADD, SELECTION_REMOVE, SELECTION_TOGGLE
     };
-    static const char *const selopStrings[] = {
+    static const char *selopStrings[] = {
 	"set", "add", "remove", "toggle", NULL
     };
 
