@@ -2212,7 +2212,7 @@ ParseFormat(
 {
     Tcl_Obj **objv = NULL;
     int objc = 0;
-    static const char *fmtOptions[] = {
+    static const char *const fmtOptions[] = {
 	"png", "-alpha", NULL
     };
     enum fmtOptions {

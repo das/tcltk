@@ -1783,7 +1783,7 @@ static FMFontStyle fontPanelFontStyle = -1;
 static FMFontSize fontPanelFontSize = 0;
 static FMFont fontPanelFontID = kInvalidFont;
 
-static const char *fontchooserOptionStrings[] = {
+static const char *const fontchooserOptionStrings[] = {
     "-parent", "-title", "-font", "-command",
     "-visible", NULL
 };

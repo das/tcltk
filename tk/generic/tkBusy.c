@@ -791,7 +791,7 @@ Tk_BusyObjCmd(
     Busy *busyPtr;
     Tcl_Obj *objPtr;
     int index, result = TCL_OK;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"cget", "configure", "current", "forget", "hold", "status", NULL
     };
     enum options {

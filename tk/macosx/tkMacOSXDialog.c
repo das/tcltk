@@ -1117,7 +1117,7 @@ static Tcl_Interp *fontchooserInterp = NULL;
 static NSFont *fontPanelFont = nil;
 static NSMutableDictionary *fontPanelFontAttributes = nil;
 
-static const char *fontchooserOptionStrings[] = {
+static const char *const fontchooserOptionStrings[] = {
     "-parent", "-title", "-font", "-command",
     "-visible", NULL
 };

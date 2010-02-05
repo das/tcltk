@@ -2718,7 +2718,7 @@ FontchooserConfigureCmd(
     Tk_Window tkwin = clientData;
     HookData *hdPtr = NULL;
     int i, r = TCL_OK;
-    static const char *optionStrings[] = {
+    static const char *const optionStrings[] = {
 	"-parent", "-title", "-font", "-command", "-visible", NULL
     };
 

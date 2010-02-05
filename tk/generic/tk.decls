@@ -128,7 +128,7 @@ declare 24 generic {
     void Tk_ClearSelection(Tk_Window tkwin, Atom selection)
 }
 declare 25 generic {
-    int Tk_ClipboardAppend(Tcl_Interp *interp,Tk_Window tkwin,
+    int Tk_ClipboardAppend(Tcl_Interp *interp, Tk_Window tkwin,
 	    Atom target, Atom format, const char *buffer)
 }
 declare 26 generic {
@@ -831,11 +831,11 @@ declare 217 generic {
 }
 
 #declare 218 generic {
-#    void Tk_CreateCanvasVisitor(Tcl_Interp *interp, VOID *typePtr)
+#    void Tk_CreateCanvasVisitor(Tcl_Interp *interp, void *typePtr)
 #}
 
 #declare 219 generic {
-#    VOID *Tk_GetCanvasVisitor(Tcl_Interp *interp, const char *name)
+#    void *Tk_GetCanvasVisitor(Tcl_Interp *interp, const char *name)
 #}
 
 declare 220 generic {
