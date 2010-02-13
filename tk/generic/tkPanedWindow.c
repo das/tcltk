@@ -2316,22 +2316,22 @@ GetSticky(
 				 * sticky value. */
 {
     int sticky = *(int *)(recordPtr + internalOffset);
-    static char buffer[5];
-    int count = 0;
+    char buffer[5];
+    char *p = &buffer[0];
 
     if (sticky & STICK_NORTH) {
-	buffer[count++] = 'n';
+	*p++ = 'n';
     }
     if (sticky & STICK_EAST) {
-	buffer[count++] = 'e';
+	*p++ = 'e';
     }
     if (sticky & STICK_SOUTH) {
-	buffer[count++] = 's';
+	*p++ = 's';
     }
     if (sticky & STICK_WEST) {
-	buffer[count++] = 'w';
+	*p++ = 'w';
     }
-    buffer[count] = '\0';
+    *p = '\0';
 
     return Tcl_NewStringObj(buffer, -1);
 }

@@ -155,7 +155,7 @@ GetPixelsFromObjEx(
     int result,fresh;
     double d;
     PixelRep *pixelPtr;
-    static double bias[] = {
+    static const double bias[] = {
 	1.0,	10.0,	25.4,	0.35278 /*25.4 / 72.0*/
     };
 
@@ -482,7 +482,7 @@ Tk_GetMMFromObj(
     int result;
     double d;
     MMRep *mmPtr;
-    static double bias[] = {
+    static const double bias[] = {
 	10.0,	25.4,	1.0,	0.35278 /*25.4 / 72.0*/
     };
 

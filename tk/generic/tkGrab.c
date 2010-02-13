@@ -141,7 +141,7 @@ typedef struct NewGrabWinEvent {
 
 #define ALL_BUTTONS \
 	(Button1Mask|Button2Mask|Button3Mask|Button4Mask|Button5Mask)
-static unsigned int buttonStates[] = {
+static const unsigned int buttonStates[] = {
     Button1Mask, Button2Mask, Button3Mask, Button4Mask, Button5Mask
 };
 

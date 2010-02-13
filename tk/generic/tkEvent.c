@@ -75,7 +75,7 @@ typedef struct TkWindowEvent {
  * Array of event masks corresponding to each X event:
  */
 
-static unsigned long realEventMasks[MappingNotify+1] = {
+static const unsigned long realEventMasks[MappingNotify+1] = {
     0,
     0,
     KeyPressMask,			/* KeyPress */
@@ -116,7 +116,7 @@ static unsigned long realEventMasks[MappingNotify+1] = {
     0					/* Mapping Notify */
 };
 
-static unsigned long virtualEventMasks[TK_LASTEVENT-VirtualEvent] = {
+static const unsigned long virtualEventMasks[TK_LASTEVENT-VirtualEvent] = {
     VirtualEventMask,			/* VirtualEvents */
     ActivateMask,			/* ActivateNotify */
     ActivateMask,			/* DeactivateNotify */

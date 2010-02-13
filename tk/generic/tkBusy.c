@@ -23,7 +23,7 @@
  * OSX/Aqua, that's nothing at all.
  */
 
-static Tk_OptionSpec busyOptionSpecs[] = {
+static const Tk_OptionSpec busyOptionSpecs[] = {
 #ifndef MAC_OSX_TK
     {TK_OPTION_CURSOR, "-cursor", "cursor", "Cursor",
 	DEF_BUSY_CURSOR, -1, Tk_Offset(Busy, cursor),

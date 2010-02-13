@@ -32,7 +32,7 @@
 
 #define ALL_BUTTONS \
 	(Button1Mask|Button2Mask|Button3Mask|Button4Mask|Button5Mask)
-static unsigned int buttonMasks[] = {
+static const unsigned int buttonMasks[] = {
     Button1Mask, Button2Mask, Button3Mask, Button4Mask, Button5Mask
 };
 #define ButtonMask(b) (buttonMasks[(b)-Button1])

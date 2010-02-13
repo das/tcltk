@@ -12,7 +12,7 @@
  * RCS: @(#) $Id$
  */
 
-#include "tkInt.h"
+#include "tkUnixInt.h"
 #include "tkColor.h"
 
 /*
