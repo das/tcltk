@@ -6749,7 +6749,7 @@ GetMaxSize(
  *----------------------------------------------------------------------
  */
 
-void
+static void
 TkSetTransientFor(Tk_Window tkwin, Tk_Window parent)
 {
     if (parent == None) {
