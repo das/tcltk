@@ -47,11 +47,11 @@
  * below should be made in the generic/tk.decls script.
  */
 
-MODULE_SCOPE const TkStubs tkConstStubs;
+MODULE_SCOPE const TkStubs tkStubs;
 
 /* !BEGIN!: Do not edit below this line. */
 
-static const TkIntStubs tkIntConstStubs = {
+static const TkIntStubs tkIntStubs = {
     TCL_STUB_MAGIC,
     NULL,
     TkAllocWindow, /* 0 */
@@ -336,7 +336,7 @@ static const TkIntStubs tkIntConstStubs = {
     TkSmoothPrintProc, /* 180 */
 };
 
-static const TkIntPlatStubs tkIntPlatConstStubs = {
+static const TkIntPlatStubs tkIntPlatStubs = {
     TCL_STUB_MAGIC,
     NULL,
 #ifdef __WIN32__ /* WIN */
@@ -452,7 +452,7 @@ static const TkIntPlatStubs tkIntPlatConstStubs = {
 #endif /* X11 */
 };
 
-static const TkIntXlibStubs tkIntXlibConstStubs = {
+static const TkIntXlibStubs tkIntXlibStubs = {
     TCL_STUB_MAGIC,
     NULL,
 #ifdef __WIN32__ /* WIN */
@@ -660,7 +660,7 @@ static const TkIntXlibStubs tkIntXlibConstStubs = {
 #endif /* AQUA */
 };
 
-static const TkPlatStubs tkPlatConstStubs = {
+static const TkPlatStubs tkPlatStubs = {
     TCL_STUB_MAGIC,
     NULL,
 #ifdef __WIN32__ /* WIN */
@@ -687,13 +687,13 @@ static const TkPlatStubs tkPlatConstStubs = {
 };
 
 static const TkStubHooks tkStubHooks = {
-    &tkPlatConstStubs,
-    &tkIntConstStubs,
-    &tkIntPlatConstStubs,
-    &tkIntXlibConstStubs
+    &tkPlatStubs,
+    &tkIntStubs,
+    &tkIntPlatStubs,
+    &tkIntXlibStubs
 };
 
-const TkStubs tkConstStubs = {
+const TkStubs tkStubs = {
     TCL_STUB_MAGIC,
     &tkStubHooks,
     Tk_MainLoop, /* 0 */

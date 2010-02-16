@@ -26,6 +26,9 @@ static const Tk_CustomOption orientOption = {
     TkOrientParseProc, TkOrientPrintProc, (ClientData) NULL
 };
 
+/* static space for "-width" default value */
+static char defScrollbarWidth[TCL_INTEGER_SPACE] = DEF_SCROLLBAR_WIDTH;
+
 /*
  * Information used for argv parsing.
  */
@@ -87,7 +90,7 @@ Tk_ConfigSpec tkpScrollbarConfigSpecs[] = {
 	DEF_SCROLLBAR_TROUGH_MONO, Tk_Offset(TkScrollbar, troughColorPtr),
 	TK_CONFIG_MONO_ONLY, NULL},
     {TK_CONFIG_PIXELS, "-width", "width", "Width",
-	DEF_SCROLLBAR_WIDTH, Tk_Offset(TkScrollbar, width), 0, NULL},
+	defScrollbarWidth, Tk_Offset(TkScrollbar, width), 0, NULL},
     {TK_CONFIG_END, NULL, NULL, NULL, NULL, 0, 0, NULL}
 };
 

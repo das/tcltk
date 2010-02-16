@@ -20,7 +20,7 @@
  * every application.
  */
 
-static Tk_ArgvInfo defaultTable[] = {
+static const Tk_ArgvInfo defaultTable[] = {
     {"-help",	TK_ARGV_HELP, NULL, NULL,
 	"Print summary of command-line options and abort"},
     {NULL,	TK_ARGV_END, NULL, NULL, NULL}

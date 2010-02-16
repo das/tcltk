@@ -25,7 +25,7 @@
 
 #define MAX_KEYCODE 145 /* VK_SCROLL is the last entry in our table below */
 
-static KeySym keymap[] = {
+static const KeySym keymap[] = {
     NoSymbol, NoSymbol, NoSymbol, XK_Cancel, NoSymbol,
     NoSymbol, NoSymbol, NoSymbol, XK_BackSpace, XK_Tab,
     NoSymbol, NoSymbol, XK_Clear, XK_Return, NoSymbol,
