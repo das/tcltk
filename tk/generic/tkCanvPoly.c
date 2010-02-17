@@ -76,7 +76,7 @@ static const Tk_CustomOption pixelOption = {
     TkPixelParseProc, TkPixelPrintProc, (ClientData) NULL
 };
 
-static Tk_ConfigSpec configSpecs[] = {
+static const Tk_ConfigSpec configSpecs[] = {
     {TK_CONFIG_CUSTOM, "-activedash", NULL, NULL,
 	NULL, Tk_Offset(PolygonItem, outline.activeDash),
 	TK_CONFIG_NULL_OK, &dashOption},

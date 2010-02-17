@@ -152,7 +152,7 @@ static Tcl_ThreadDataKey dataKey;
  * Information used for parsing configuration specifications:
  */
 
-static Tk_ConfigSpec configSpecs[] = {
+static const Tk_ConfigSpec configSpecs[] = {
     {TK_CONFIG_STRING, "-file", NULL, NULL,
 	 NULL, Tk_Offset(PhotoMaster, fileString), TK_CONFIG_NULL_OK, NULL},
     {TK_CONFIG_DOUBLE, "-gamma", NULL, NULL,

@@ -94,7 +94,7 @@ typedef struct TkPostscriptInfo {
  * canvas "postscript" command and fill in TkPostscriptInfo structures.
  */
 
-static Tk_ConfigSpec configSpecs[] = {
+static const Tk_ConfigSpec configSpecs[] = {
     {TK_CONFIG_STRING, "-colormap", NULL, NULL,
 	"", Tk_Offset(TkPostscriptInfo, colorVar), 0, NULL},
     {TK_CONFIG_STRING, "-colormode", NULL, NULL,

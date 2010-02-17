@@ -95,7 +95,7 @@ static const Tk_CustomOption offsetOption = {
     TkOffsetParseProc, TkOffsetPrintProc, (ClientData) (TK_OFFSET_RELATIVE)
 };
 
-static Tk_ConfigSpec configSpecs[] = {
+static const Tk_ConfigSpec configSpecs[] = {
     {TK_CONFIG_COLOR, "-activefill", NULL, NULL,
 	NULL, Tk_Offset(TextItem, activeColor), TK_CONFIG_NULL_OK, NULL},
     {TK_CONFIG_BITMAP, "-activestipple", NULL, NULL,

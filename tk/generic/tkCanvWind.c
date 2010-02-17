@@ -46,7 +46,7 @@ static const Tk_CustomOption tagsOption = {
     Tk_CanvasTagsParseProc, Tk_CanvasTagsPrintProc, (ClientData) NULL
 };
 
-static Tk_ConfigSpec configSpecs[] = {
+static const Tk_ConfigSpec configSpecs[] = {
     {TK_CONFIG_ANCHOR, "-anchor", NULL, NULL,
 	"center", Tk_Offset(WindowItem, anchor), TK_CONFIG_DONT_SET_DEFAULT, NULL},
     {TK_CONFIG_PIXELS, "-height", NULL, NULL,

@@ -108,7 +108,7 @@ Tk_ImageType tkBitmapImageType = {
  * Information used for parsing configuration specs:
  */
 
-static Tk_ConfigSpec configSpecs[] = {
+static const Tk_ConfigSpec configSpecs[] = {
     {TK_CONFIG_UID, "-background", NULL, NULL,
 	"", Tk_Offset(BitmapMaster, bgUid), 0, NULL},
     {TK_CONFIG_STRING, "-data", NULL, NULL,

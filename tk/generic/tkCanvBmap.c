@@ -49,7 +49,7 @@ static const Tk_CustomOption tagsOption = {
     Tk_CanvasTagsParseProc, Tk_CanvasTagsPrintProc, (ClientData) NULL
 };
 
-static Tk_ConfigSpec configSpecs[] = {
+static const Tk_ConfigSpec configSpecs[] = {
     {TK_CONFIG_COLOR, "-activebackground", NULL, NULL,
 	NULL, Tk_Offset(BitmapItem, activeBgColor), TK_CONFIG_NULL_OK, NULL},
     {TK_CONFIG_BITMAP, "-activebitmap", NULL, NULL,

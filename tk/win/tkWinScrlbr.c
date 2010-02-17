@@ -357,23 +357,13 @@ void
 UpdateScrollbarMetrics(void)
 {
     int arrowWidth = GetSystemMetrics(SM_CXVSCROLL);
-    const Tk_ConfigSpec *specPtr;
 
     hArrowWidth = GetSystemMetrics(SM_CXHSCROLL);
     hThumb = GetSystemMetrics(SM_CXHTHUMB);
     vArrowHeight = GetSystemMetrics(SM_CYVSCROLL);
     vThumb = GetSystemMetrics(SM_CYVTHUMB);
 
-    for (specPtr = tkpScrollbarConfigSpecs; specPtr->type != TK_CONFIG_END;
-	    specPtr++) {
-	/* Make sure that the default value belonging to the "-width"
-	 * option of TkScrollbar points to static non-const space,
-	 * otherwise the following sprintf results in a crash!
-	 */
-	if (specPtr->offset == Tk_Offset(TkScrollbar, width)) {
-	    sprintf((char *)specPtr->defValue, "%d", arrowWidth);
-	}
-    }
+    sprintf(tkDefScrollbarWidth, "%d", arrowWidth);
 }
 
 /*

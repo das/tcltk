@@ -116,7 +116,7 @@ static const Tk_CustomOption offsetOption = {
  * Information used for argv parsing.
  */
 
-static Tk_ConfigSpec configSpecs[] = {
+static const Tk_ConfigSpec configSpecs[] = {
     {TK_CONFIG_BORDER, "-background", "background", "Background",
 	DEF_CANVAS_BG_COLOR, Tk_Offset(TkCanvas, bgBorder),
 	TK_CONFIG_COLOR_ONLY, NULL},

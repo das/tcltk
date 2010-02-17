@@ -45,13 +45,6 @@ static ScrollbarMetrics metrics[2] = {
 };
 
 /*
- * This variable holds the default width for a scrollbar in string form for
- * use in a Tk_ConfigSpec.
- */
-
-static char defWidth[TCL_INTEGER_SPACE];
-
-/*
  * Declarations for functions defined in this file.
  */
 
@@ -189,7 +182,6 @@ UpdateScrollbarMetrics(void)
 	.trackInfo.scrollbar = {.viewsize = 1, .pressState = 0},
     };
     CGRect bounds;
-    Tk_ConfigSpec *specPtr;
 
     ChkErr(GetThemeMetric, kThemeMetricScrollBarWidth, &metrics[0].width);
     ChkErr(GetThemeMetric, kThemeMetricScrollBarMinThumbHeight,
@@ -212,13 +204,7 @@ UpdateScrollbarMetrics(void)
     metrics[1].minHeight = metrics[1].minThumbHeight +
 	    metrics[1].topArrowHeight + metrics[1].bottomArrowHeight;
 
-    sprintf(defWidth, "%d", (int)(metrics[0].width));
-    for (specPtr = tkpScrollbarConfigSpecs; specPtr->type != TK_CONFIG_END;
-	    specPtr++) {
-	if (specPtr->offset == Tk_Offset(TkScrollbar, width)) {
-	    specPtr->defValue = defWidth;
-	}
-    }
+    sprintf(tkDefScrollbarWidth, "%d", (int)(metrics[0].width));
 }
 
 /*

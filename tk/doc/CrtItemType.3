@@ -68,7 +68,7 @@ typedef struct Tk_ItemType {
     const char *\fIname\fR;
     int \fIitemSize\fR;
     Tk_ItemCreateProc *\fIcreateProc\fR;
-    Tk_ConfigSpec *\fIconfigSpecs\fR;
+    const Tk_ConfigSpec *\fIconfigSpecs\fR;
     Tk_ItemConfigureProc *\fIconfigProc\fR;
     Tk_ItemCoordProc *\fIcoordProc\fR;
     Tk_ItemDeleteProc *\fIdeleteProc\fR;

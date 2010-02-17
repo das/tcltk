@@ -145,14 +145,14 @@ structure for the \fB\-tags\fR option.   The code typically looks
 like this:
 .PP
 .CS
-static Tk_CustomOption tagsOption = {Tk_CanvasTagsParseProc,
+static const Tk_CustomOption tagsOption = {Tk_CanvasTagsParseProc,
     Tk_CanvasTagsPrintProc, (ClientData) NULL
 };
 
-static Tk_ConfigSpec configSpecs[] = {
+static const Tk_ConfigSpec configSpecs[] = {
     ...
-    {TK_CONFIG_CUSTOM, "\-tags", (char *) NULL, (char *) NULL,
-        (char *) NULL, 0, TK_CONFIG_NULL_OK, &tagsOption},
+    {TK_CONFIG_CUSTOM, "\-tags", NULL, NULL,
+        NULL, 0, TK_CONFIG_NULL_OK, &tagsOption},
     ...
 };
 .CE

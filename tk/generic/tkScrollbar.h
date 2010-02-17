@@ -164,16 +164,12 @@ typedef struct TkScrollbar {
 #define GOT_FOCUS		4
 
 /*
- * Declaration of scrollbar class functions structure.
+ * Declaration of scrollbar class functions structure
+ * and default scrollbar width, for use in configSpec.
  */
 
 MODULE_SCOPE const Tk_ClassProcs tkpScrollbarProcs;
-
-/*
- * Declaration of scrollbar configuration options.
- */
-
-MODULE_SCOPE Tk_ConfigSpec tkpScrollbarConfigSpecs[];
+MODULE_SCOPE char tkDefScrollbarWidth[TCL_INTEGER_SPACE];
 
 /*
  * Declaration of functions used in the implementation of the scrollbar

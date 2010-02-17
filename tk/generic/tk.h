@@ -1031,7 +1031,7 @@ typedef struct Tk_ItemType {
     Tk_ItemCreateProc *createProc;
 				/* Procedure to create a new item of this
 				 * type. */
-    Tk_ConfigSpec *configSpecs;	/* Pointer to array of configuration specs for
+    CONST86 Tk_ConfigSpec *configSpecs; /* Pointer to array of configuration specs for
 				 * this type. Used for returning configuration
 				 * info. */
     Tk_ItemConfigureProc *configProc;

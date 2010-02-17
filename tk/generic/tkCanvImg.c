@@ -52,7 +52,7 @@ static const Tk_CustomOption tagsOption = {
     Tk_CanvasTagsParseProc, Tk_CanvasTagsPrintProc, (ClientData) NULL
 };
 
-static Tk_ConfigSpec configSpecs[] = {
+static const Tk_ConfigSpec configSpecs[] = {
     {TK_CONFIG_STRING, "-activeimage", NULL, NULL,
 	NULL, Tk_Offset(ImageItem, activeImageString), TK_CONFIG_NULL_OK, NULL},
     {TK_CONFIG_ANCHOR, "-anchor", NULL, NULL,

@@ -27,12 +27,12 @@ int
 .sp
 \fBTk_FreeOptions(\fIspecs, widgRec, display, flags\fB)\fR
 .SH ARGUMENTS
-.AS Tk_ConfigSpec *widgRec in/out
+.AS char *widgRec in/out
 .AP Tcl_Interp *interp in
 Interpreter to use for returning error messages.
 .AP Tk_Window tkwin in
 Window used to represent widget (needed to set up X resources).
-.AP Tk_ConfigSpec *specs in
+.AP "const Tk_ConfigSpec" *specs in
 Pointer to table specifying legal configuration options for this
 widget.
 .AP int argc in
