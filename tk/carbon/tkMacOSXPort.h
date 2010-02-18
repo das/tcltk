@@ -125,7 +125,7 @@
  * The following functions are not used on the Mac, so we stub them out.
  */
 
-#define TkpButtonSetDefaults(specPtr) {}
+#define TkpButtonSetDefaults() {}
 #define TkpCmapStressed(tkwin,colormap) (0)
 #define TkpFreeColor(tkColPtr)
 #define TkSetPixmapColormap(p,c) {}
