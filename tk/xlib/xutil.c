@@ -71,6 +71,7 @@ XGetVisualInfo(
     int *nitems_return)
 {
     XVisualInfo *info = (XVisualInfo *) ckalloc(sizeof(XVisualInfo));
+
     info->visual = DefaultVisual(display, 0);
     info->visualid = info->visual->visualid;
     info->screen = 0;
