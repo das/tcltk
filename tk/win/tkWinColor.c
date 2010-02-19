@@ -63,13 +63,8 @@ static const SystemColorEntry sysColors[] = {
     {"Scrollbar",		COLOR_SCROLLBAR},
     {"Window",			COLOR_WINDOW},
     {"WindowFrame",		COLOR_WINDOWFRAME},
-    {"WindowText",		COLOR_WINDOWTEXT},
+    {"WindowText",		COLOR_WINDOWTEXT}
 };
-
-typedef struct ThreadSpecificData {
-    int ncolors;
-} ThreadSpecificData;
-static Tcl_ThreadDataKey dataKey;
 
 /*
  * Forward declarations for functions defined later in this file.
