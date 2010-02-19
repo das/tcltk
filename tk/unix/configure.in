@@ -149,7 +149,7 @@ AC_C_BIGENDIAN
 # search path to reflect this.
 #------------------------------------------------------------------------
 
-LIB_RUNTIME_DIR='${LIB_RUNTIME_DIR}'
+LIB_RUNTIME_DIR='$(libdir)'
 
 if test "$TCL_EXEC_PREFIX" != "$exec_prefix"; then
     LIB_RUNTIME_DIR="${LIB_RUNTIME_DIR}:${TCL_EXEC_PREFIX}/lib"
@@ -817,6 +817,7 @@ AC_SUBST(LOCALES)
 AC_SUBST(TK_WINDOWINGSYSTEM)
 AC_SUBST(TK_PKG_DIR)
 AC_SUBST(TK_LIBRARY)
+AC_SUBST(LIB_RUNTIME_DIR)
 AC_SUBST(PRIVATE_INCLUDE_DIR)
 AC_SUBST(HTML_DIR)
 
