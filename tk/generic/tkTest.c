@@ -124,8 +124,8 @@ typedef struct CBinding {
  * Header for trivial configuration command items.
  */
 
-#define ODD TK_CONFIG_USER_BIT
-#define EVEN (TK_CONFIG_USER_BIT << 1)
+#define ODD	TK_CONFIG_USER_BIT
+#define EVEN	(TK_CONFIG_USER_BIT << 1)
 
 enum {
     NONE,

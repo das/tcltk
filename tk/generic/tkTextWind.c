@@ -65,7 +65,7 @@ static void		EmbWinStructureProc(ClientData clientData,
 			    XEvent *eventPtr);
 static void		EmbWinUndisplayProc(TkText *textPtr,
 			    TkTextDispChunk *chunkPtr);
-static TkTextEmbWindowClient* EmbWinGetClient(const TkText *textPtr,
+static TkTextEmbWindowClient *EmbWinGetClient(const TkText *textPtr,
 			    TkTextSegment *ewPtr);
 
 /*
@@ -1365,7 +1365,7 @@ TkTextWindowIndex(
  *--------------------------------------------------------------
  */
 
-static TkTextEmbWindowClient*
+static TkTextEmbWindowClient *
 EmbWinGetClient(
     const TkText *textPtr,	/* Information about text widget. */
     TkTextSegment *ewPtr)	/* Segment containing embedded window. */

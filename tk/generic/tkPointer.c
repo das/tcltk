@@ -56,7 +56,7 @@ static Tcl_ThreadDataKey dataKey;
 
 static int		GenerateEnterLeave(TkWindow *winPtr, int x, int y,
 			    int state);
-static void		InitializeEvent(XEvent* eventPtr, TkWindow *winPtr,
+static void		InitializeEvent(XEvent *eventPtr, TkWindow *winPtr,
 			    int type, int x, int y, int state, int detail);
 static void		UpdateCursor(TkWindow *winPtr);
 

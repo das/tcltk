@@ -255,7 +255,7 @@ Tk_MenubuttonObjCmd(
      */
 
     mbPtr->tkwin = tkwin;
-    mbPtr->display = Tk_Display (tkwin);
+    mbPtr->display = Tk_Display(tkwin);
     mbPtr->interp = interp;
     mbPtr->widgetCmd = Tcl_CreateObjCommand(interp,
 	    Tk_PathName(mbPtr->tkwin), MenuButtonWidgetObjCmd, mbPtr,
