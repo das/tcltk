@@ -633,7 +633,7 @@ TestobjconfigObjCmd(
 				/* Holds pointers to option tables created by
 				 * commands below; indexed with same values as
 				 * "options" array. */
-    static Tk_ObjCustomOption CustomOption = {
+    static const Tk_ObjCustomOption CustomOption = {
 	"custom option",
 	CustomOptionSet,
 	CustomOptionGet,

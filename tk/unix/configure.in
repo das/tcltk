@@ -845,3 +845,7 @@ AC_CONFIG_FILES([
     tk.pc:../unix/tk.pc.in
 ])
 AC_OUTPUT
+
+dnl Local Variables:
+dnl mode: autoconf
+dnl End:

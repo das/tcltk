@@ -260,7 +260,7 @@ static const Tk_GeomMgr panedWindowMgrType = {
  * the custom "-sticky" option for slave windows.
  */
 
-static Tk_ObjCustomOption stickyOption = {
+static const Tk_ObjCustomOption stickyOption = {
     "sticky",			/* name */
     SetSticky,			/* setProc */
     GetSticky,			/* getProc */

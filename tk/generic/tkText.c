@@ -108,7 +108,7 @@ static void		RestoreLineStartEnd(ClientData clientData,
 			    char *oldInternalPtr);
 static int		ObjectIsEmpty(Tcl_Obj *objPtr);
 
-static Tk_ObjCustomOption lineOption = {
+static const Tk_ObjCustomOption lineOption = {
     "line",			/* name */
     SetLineStartEnd,		/* setProc */
     GetLineStartEnd,		/* getProc */
