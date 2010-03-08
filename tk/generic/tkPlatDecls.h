@@ -26,7 +26,7 @@
  */
 
 #ifdef __cplusplus
-#extern "C" {
+extern "C" {
 #endif
 
 /* !BEGIN!: Do not edit below this line. */
