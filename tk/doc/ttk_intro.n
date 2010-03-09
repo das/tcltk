@@ -21,7 +21,8 @@ the code implementing a widget's behavior from
 the code implementing its appearance.
 Widget class bindings are primarily responsible for
 maintaining the widget state and invoking callbacks;
-all aspects of the widgets appearance is
+all aspects of the widget's appearance are controlled by the style of
+the widget (i.e. the style of the elements of the widget).
 .SH "THEMES"
 A \fItheme\fR is a collection of elements and styles 
 that determine the look and feel of the widget set.
