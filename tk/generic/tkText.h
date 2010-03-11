@@ -964,6 +964,8 @@ MODULE_SCOPE const Tk_SegType tkTextLeftMarkType;
 MODULE_SCOPE const Tk_SegType tkTextRightMarkType;
 MODULE_SCOPE const Tk_SegType tkTextToggleOnType;
 MODULE_SCOPE const Tk_SegType tkTextToggleOffType;
+MODULE_SCOPE const Tk_SegType tkTextEmbWindowType;
+MODULE_SCOPE const Tk_SegType tkTextEmbImageType;
 
 /*
  * Convenience macros for use by B-tree clients which want to access pixel

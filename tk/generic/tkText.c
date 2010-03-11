@@ -4708,7 +4708,9 @@ DumpLine(
 			segPtr->body.chars + first, command, &index, what);
 	    }
 	} else if ((offset >= startByte)) {
-	    if ((what & TK_DUMP_MARK) && (segPtr->typePtr->name[0] == 'm')) {
+	    if ((what & TK_DUMP_MARK)
+		    && (segPtr->typePtr == &tkTextLeftMarkType
+		    || segPtr->typePtr == &tkTextRightMarkType)) {
 		const char *name;
 		TkTextMark *markPtr = (TkTextMark *) &segPtr->body;
 
@@ -4744,7 +4746,7 @@ DumpLine(
 			segPtr->body.toggle.tagPtr->name, command, &index,
 			what);
 	    } else if ((what & TK_DUMP_IMG) &&
-		    (segPtr->typePtr->name[0] == 'i')) {
+		    (segPtr->typePtr == &tkTextEmbImageType)) {
 		TkTextEmbImage *eiPtr = (TkTextEmbImage *)&segPtr->body;
 		const char *name = (eiPtr->name == NULL) ? "" : eiPtr->name;
 
@@ -4753,7 +4755,7 @@ DumpLine(
 		lineChanged = DumpSegment(textPtr, interp, "image", name,
 			command, &index, what);
 	    } else if ((what & TK_DUMP_WIN) &&
-		    (segPtr->typePtr->name[0] == 'w')) {
+		    (segPtr->typePtr == &tkTextEmbWindowType)) {
 		TkTextEmbWindow *ewPtr = (TkTextEmbWindow *)&segPtr->body;
 		const char *pathname;
 

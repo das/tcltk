@@ -56,7 +56,7 @@ static void		EmbImageProc(ClientData clientData, int x, int y,
  * The following structure declares the "embedded image" segment type.
  */
 
-static const Tk_SegType tkTextEmbImageType = {
+const Tk_SegType tkTextEmbImageType = {
     "image",			/* name */
     0,				/* leftGravity */
     NULL,			/* splitProc */

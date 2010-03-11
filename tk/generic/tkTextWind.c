@@ -72,7 +72,7 @@ static TkTextEmbWindowClient *EmbWinGetClient(const TkText *textPtr,
  * The following structure declares the "embedded window" segment type.
  */
 
-static const Tk_SegType tkTextEmbWindowType = {
+const Tk_SegType tkTextEmbWindowType = {
     "window",			/* name */
     0,				/* leftGravity */
     NULL,			/* splitProc */
