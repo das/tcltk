@@ -238,6 +238,7 @@ WISHOBJS = \
 !if $(TCL_USE_STATIC_PACKAGES)
 	$(TCLDDELIB) \
 	$(TCLREGLIB) \
+	$(TCLSTUBLIB) \
 !endif
 	$(TMP_DIR)\wish.res
 
