@@ -2503,9 +2503,9 @@ TkpDrawMenuEntry(
     int adjustedHeight = height - 2 * padY;
     TkWinDrawable memWinDraw;
     TkWinDCState dcState;
-    HBITMAP oldBitmap;
+    HBITMAP oldBitmap = NULL;
     Drawable d;
-    HDC memDc, menuDc;
+    HDC memDc = NULL, menuDc = NULL;
 
     /*
      * If the menu entry includes an image then draw the entry into a
@@ -2977,8 +2977,7 @@ MenuSelectEvent(
     TkMenu *menuPtr)		/* the menu we have selected. */
 {
     XVirtualEvent event;
-    POINTS rootPoint;
-    DWORD msgPos;
+    union {DWORD msgpos; POINTS point;} root;
 
     event.type = VirtualEvent;
     event.serial = menuPtr->display->request;
@@ -2990,10 +2989,9 @@ MenuSelectEvent(
     event.subwindow = None;
     event.time = TkpGetMS();
 
-    msgPos = GetMessagePos();
-    rootPoint = MAKEPOINTS(msgPos);
-    event.x_root = rootPoint.x;
-    event.y_root = rootPoint.y;
+    root.msgpos = GetMessagePos();
+    event.x_root = root.point.x;
+    event.y_root = root.point.y;
     event.state = TkWinGetModifierState();
     event.same_screen = 1;
     event.name = Tk_GetUid("MenuSelect");

@@ -39,6 +39,9 @@
 #ifndef WS_EX_TOOLWINDOW
 #define WS_EX_TOOLWINDOW	0x00000080L
 #endif
+#ifndef SPI_SETKEYBOARDCUES
+#define SPI_SETKEYBOARDCUES 0x100B
+#endif
 
 /*
  * The TkWinDCState is used to save the state of a device context so that it
