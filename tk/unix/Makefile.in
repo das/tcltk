@@ -679,7 +679,7 @@ demo:
 
 # This target can be used to run wish inside either gdb or insight
 gdb: ${WISH_EXE}
-	@echo "set env @LD_LIBRARY_PATH_VAR@=\"`pwd`:${TCL_BIN_DIR}:$${@LD_LIBRARY_PATH_VAR@}\"" > gdb.run
+	@echo "set env @LD_LIBRARY_PATH_VAR@=`pwd`:${TCL_BIN_DIR}:$${@LD_LIBRARY_PATH_VAR@}" > gdb.run
 	@echo "set env TCL_LIBRARY=@TCL_SRC_DIR@/library" >> gdb.run
 	@echo "set env TK_LIBRARY=@TK_SRC_DIR@/library" >> gdb.run
 	gdb ./${WISH_EXE} --command=gdb.run

@@ -418,7 +418,9 @@ fi
 #--------------------------------------------------------------------
 
 if test "x${x_libraries}" != "x"; then
+  if test "x${x_libraries}" != "xNONE"; then
     LIB_RUNTIME_DIR="${LIB_RUNTIME_DIR}:${x_libraries}"
+  fi
 fi
 if test "${TCL_LD_SEARCH_FLAGS}" = '-L${LIB_RUNTIME_DIR}'; then
     LIB_RUNTIME_DIR=`echo ${LIB_RUNTIME_DIR} |sed -e 's/:/ -L/g'`
