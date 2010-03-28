@@ -3114,10 +3114,110 @@ static int TreeviewTagHasCommand(
     }
 }
 
+/* + $tv tag names $tag
+ */
+static int TreeviewTagNamesCommand(
+    void *recordPtr, Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
+{
+    Treeview *tv = recordPtr;
+
+    if (objc != 3) {
+	Tcl_WrongNumArgs(interp, 3, objv, "");
+	return TCL_ERROR;
+    }
+
+    return Ttk_EnumerateTags(interp, tv->tree.tagTable);
+}
+
+/* + $tv tag add $tag $items
+ */
+static void AddTag(TreeItem *item, Ttk_Tag tag)
+{
+    if (Ttk_TagSetAdd(item->tagset, tag)) {
+	Tcl_DecrRefCount(item->tagsObj);
+	item->tagsObj = Ttk_NewTagSetObj(item->tagset);
+	Tcl_IncrRefCount(item->tagsObj);
+    }
+}
+
+static int TreeviewTagAddCommand(
+    void *recordPtr, Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
+{
+    Treeview *tv = recordPtr;
+    Ttk_Tag tag;
+    TreeItem **items;
+    int i;
+
+    if (objc != 5) {
+	Tcl_WrongNumArgs(interp, 3, objv, "tagName items");
+	return TCL_ERROR;
+    }
+
+    tag = Ttk_GetTagFromObj(tv->tree.tagTable, objv[3]);
+    items = GetItemListFromObj(interp, tv, objv[4]);
+
+    if (!items) {
+	return TCL_ERROR;
+    }
+
+    for (i=0; items[i]; ++i) {
+	AddTag(items[i], tag);
+    }
+
+    return TCL_OK;
+}
+
+/* + $tv tag remove $tag $items
+ */
+static void RemoveTag(TreeItem *item, Ttk_Tag tag)
+{
+    if (Ttk_TagSetRemove(item->tagset, tag)) {
+	Tcl_DecrRefCount(item->tagsObj);
+	item->tagsObj = Ttk_NewTagSetObj(item->tagset);
+	Tcl_IncrRefCount(item->tagsObj);
+    }
+}
+
+static int TreeviewTagRemoveCommand(
+    void *recordPtr, Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
+{
+    Treeview *tv = recordPtr;
+    Ttk_Tag tag;
+
+    if (objc < 4) {
+	Tcl_WrongNumArgs(interp, 3, objv, "tagName items");
+	return TCL_ERROR;
+    }
+
+    tag = Ttk_GetTagFromObj(tv->tree.tagTable, objv[3]);
+
+    if (objc == 5) {
+	TreeItem **items = GetItemListFromObj(interp, tv, objv[4]);
+	int i;
+
+	if (!items) {
+	    return TCL_ERROR;
+	}
+	for (i=0; items[i]; ++i) {
+	    RemoveTag(items[i], tag);
+	}
+    } else if (objc == 4) {
+	TreeItem *item = tv->tree.root;
+	while (item) {
+	    RemoveTag(item, tag);
+	    item=NextPreorder(item);
+	}
+    }
+    return TCL_OK;
+}
+
 static const Ttk_Ensemble TreeviewTagCommands[] = {
+    { "add",		TreeviewTagAddCommand,0 },
     { "bind",		TreeviewTagBindCommand,0 },
     { "configure",	TreeviewTagConfigureCommand,0 },
-    { "has", 		TreeviewTagHasCommand,0 },
+    { "has",		TreeviewTagHasCommand,0 },
+    { "names",		TreeviewTagNamesCommand,0 },
+    { "remove",		TreeviewTagRemoveCommand,0 },
     { 0,0,0 }
 };
 

@@ -215,18 +215,21 @@ MODULE_SCOPE Tcl_Obj *Ttk_TagOptionValue(
 MODULE_SCOPE int Ttk_EnumerateTagOptions(
     Tcl_Interp *, Ttk_TagTable, Ttk_Tag);
 
+MODULE_SCOPE int Ttk_EnumerateTags(Tcl_Interp *, Ttk_TagTable);
+
 MODULE_SCOPE int Ttk_ConfigureTag(
     Tcl_Interp *interp, Ttk_TagTable tagTable, Ttk_Tag tag,
     int objc, Tcl_Obj *const objv[]);
 
 MODULE_SCOPE Ttk_TagSet Ttk_GetTagSetFromObj(
     Tcl_Interp *interp, Ttk_TagTable, Tcl_Obj *objPtr);
+MODULE_SCOPE Tcl_Obj *Ttk_NewTagSetObj(Ttk_TagSet);
 
 MODULE_SCOPE void Ttk_FreeTagSet(Ttk_TagSet);
 
 MODULE_SCOPE int Ttk_TagSetContains(Ttk_TagSet, Ttk_Tag tag);
-MODULE_SCOPE void Ttk_TagSetAdd(Ttk_TagSet, Ttk_Tag tag);
-MODULE_SCOPE void Ttk_TagSetRemove(Ttk_TagSet, Ttk_Tag tag);
+MODULE_SCOPE int Ttk_TagSetAdd(Ttk_TagSet, Ttk_Tag tag);
+MODULE_SCOPE int Ttk_TagSetRemove(Ttk_TagSet, Ttk_Tag tag);
 
 MODULE_SCOPE void Ttk_TagSetValues(Ttk_TagTable, Ttk_TagSet, void *record);
 MODULE_SCOPE void Ttk_TagSetApplyStyle(Ttk_TagTable,Ttk_Style,Ttk_State,void*);
