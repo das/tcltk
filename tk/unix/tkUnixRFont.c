@@ -87,8 +87,17 @@ GetFont(
 	FcPattern *pat = FcFontRenderPrepare(0, fontPtr->pattern,
 		fontPtr->faces[i].source);
 	double s = sin(angle*PI/180.0), c = cos(angle*PI/180.0);
-	FcMatrix mat = {c, -s, s, c};
+	FcMatrix mat;
 	XftFont *ftFont;
+
+	/*
+	 * Initialize the matrix manually so this can compile with HP-UX cc
+	 * (which does not allow non-constant structure initializers). [Bug
+	 * 2978410]
+	 */
+
+	mat.xx = mat.yy = c;
+	mat.xy = -(mat.yx = s);
 
 	if (angle != 0.0) {
 	    FcPatternAddMatrix(pat, FC_MATRIX, &mat);
