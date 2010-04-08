@@ -12,13 +12,9 @@
  *
  * RCS: @(#) $Id$
  */
-
+#include <tchar.h>
 #include "tkInt.h"
 #include "tkWinSendCom.h"
-
-#ifdef _MSC_VER
-#define vsnprintf _vsnprintf
-#endif
 
 /*
  * Should be defined in WTypes.h but mingw 1.0 is missing them.
@@ -847,11 +843,11 @@ Win32ErrorObj(
 
     if (lpBuffer == NULL) {
 	lpBuffer = sBuffer;
-	wsprintf(sBuffer, (const char *)_T("Error Code: %08lX"), hrError);
+	wsprintf(sBuffer, TEXT("Error Code: %08lX"), hrError);
     }
 
-    if ((p = _tcsrchr(lpBuffer, _T('\r'))) != NULL) {
-	*p = _T('\0');
+    if ((p = _tcsrchr(lpBuffer, TEXT('\r'))) != NULL) {
+	*p = TEXT('\0');
     }
 
 #ifdef _UNICODE
@@ -1038,8 +1034,8 @@ SendTrace(
     static char buffer[1024];
 
     va_start(args, format);
-    vsnprintf(buffer, 1023, format, args);
-    OutputDebugString(buffer);
+    _vsnprintf(buffer, 1023, format, args);
+    OutputDebugStringA(buffer);
     va_end(args);
 }
 
