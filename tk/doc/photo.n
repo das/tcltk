@@ -398,8 +398,9 @@ Specifies the name of the image file format handler to be used to
 write the data to the file.  Specifically, this subcommand searches
 for the first handler whose name matches an initial substring of
 \fIformat-name\fR and which has the capability to write an image
-file.  If this option is not given, this subcommand uses the first
-handler that has the capability to write an image file.
+file.  If this option is not given, the format is guessed from
+the file extension. If that cannot be determined, this subcommand
+uses the first handler that has the capability to write an image file.
 .TP
 \fB\-from \fIx1 y1 x2 y2\fR
 .
