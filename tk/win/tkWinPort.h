@@ -22,6 +22,13 @@
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
 
+/*
+ *---------------------------------------------------------------------------
+ * The following sets of #includes and #ifdefs are required to get Tcl to
+ * compile under the windows compilers.
+ *---------------------------------------------------------------------------
+ */
+
 #include <wchar.h>
 #include <io.h>
 #include <stdlib.h>
@@ -45,7 +52,9 @@
 #include <time.h>
 
 #ifdef _MSC_VER
-#    define hypot _hypot
+#   ifndef hypot
+#	define hypot _hypot
+#   endif
 #endif /* _MSC_VER */
 
 /*
@@ -61,12 +70,20 @@
 #endif
 
 #ifdef __CYGWIN__
-#define _vsnprintf vsnprintf
-#define _wcsicmp wcscasecmp
+#   ifndef _vsnprintf
+#	define _vsnprintf vsnprintf
+#   endif
+#   ifndef _wcsicmp
+#	define _wcsicmp wcscasecmp
+#   endif
+#else
+#   ifndef strncasecmp
+#	define strncasecmp strnicmp
+#   endif
+#   ifndef strcasecmp
+#	define strcasecmp stricmp
+#   endif
 #endif
-
-#define strncasecmp strnicmp
-#define strcasecmp stricmp
 
 #define NBBY 8
 
