@@ -12,7 +12,7 @@
  * RCS: @(#) $Id$
  */
 
-#include <tkInt.h>
+#include "tkInt.h"
 
 /*
  * This value will be set to the number of colors in the color table

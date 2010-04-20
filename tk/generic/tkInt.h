@@ -17,12 +17,6 @@
 #ifndef _TKINT
 #define _TKINT
 
-#ifndef _TK
-#include "tk.h"
-#endif
-#ifndef _TCL
-#include "tcl.h"
-#endif
 #ifndef _TKPORT
 #include "tkPort.h"
 #endif

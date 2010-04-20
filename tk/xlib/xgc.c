@@ -14,7 +14,7 @@
  * RCS: @(#) $Id$
  */
 
-#include <tkInt.h>
+#include "tkInt.h"
 
 #if !defined(MAC_OSX_TK)
 #   include <X11/Xlib.h>
