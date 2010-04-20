@@ -19,7 +19,9 @@
 #ifndef _STDLIB
 #define _STDLIB
 
-#include <tcl.h>
+#ifndef _TCL
+#   include <tcl.h>
+#endif
 
 extern void		abort(void);
 extern double		atof(const char *string);

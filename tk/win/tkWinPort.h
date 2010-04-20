@@ -16,12 +16,6 @@
 #ifndef _WINPORT
 #define _WINPORT
 
-#include <X11/Xlib.h>
-#include <X11/cursorfont.h>
-#include <X11/keysym.h>
-#include <X11/Xatom.h>
-#include <X11/Xutil.h>
-
 /*
  *---------------------------------------------------------------------------
  * The following sets of #includes and #ifdefs are required to get Tcl to
@@ -68,6 +62,12 @@
 #	define _TCHAR_DEFINED
 #   endif
 #endif
+
+#include <X11/Xlib.h>
+#include <X11/cursorfont.h>
+#include <X11/keysym.h>
+#include <X11/Xatom.h>
+#include <X11/Xutil.h>
 
 #ifdef __CYGWIN__
 #   ifndef _vsnprintf

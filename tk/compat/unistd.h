@@ -18,7 +18,7 @@
 
 #include <sys/types.h>
 #ifndef _TCL
-#   include "tcl.h"
+#   include <tcl.h>
 #endif
 
 #ifndef NULL
