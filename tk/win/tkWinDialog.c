@@ -51,6 +51,10 @@
 #endif
 #endif /* BFFM_VALIDATEFAILED */
 
+#ifndef OPENFILENAME_SIZE_VERSION_400
+#define OPENFILENAME_SIZE_VERSION_400 76
+#endif
+
 /*
  * The following structure is used by the new Tk_ChooseDirectoryObjCmd to pass
  * data between it and its callback. Unqiue to Winodws platform.
