@@ -753,7 +753,7 @@ TkOvalToPoint(
 
 int
 TkOvalToArea(
-    register double *ovalPtr,	/* Points to coordinates definining the
+    register double *ovalPtr,	/* Points to coordinates defining the
 				 * bounding rectangle for the oval: x1, y1,
 				 * x2, y2. X1 must be less than x2 and y1 less
 				 * than y2. */

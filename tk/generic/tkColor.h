@@ -16,11 +16,6 @@
 
 #include "tkInt.h"
 
-#ifdef BUILD_tk
-#undef TCL_STORAGE_CLASS
-#define TCL_STORAGE_CLASS DLLEXPORT
-#endif
-
 /*
  * One of the following data structures is used to keep track of each color
  * that is being used by the application; typically there is a colormap entry
@@ -78,8 +73,5 @@ MODULE_SCOPE void	TkpFreeColor(TkColor *tkColPtr);
 #endif
 MODULE_SCOPE TkColor *	TkpGetColor(Tk_Window tkwin, Tk_Uid name);
 MODULE_SCOPE TkColor *	TkpGetColorByValue(Tk_Window tkwin, XColor *colorPtr);
-
-#undef TCL_STORAGE_CLASS
-#define TCL_STORAGE_CLASS DLLIMPORT
 
 #endif /* _TKCOLOR */

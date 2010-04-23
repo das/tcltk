@@ -23,11 +23,6 @@
 #include "tkUndo.h"
 #endif
 
-#ifdef BUILD_tk
-# undef TCL_STORAGE_CLASS
-# define TCL_STORAGE_CLASS DLLEXPORT
-#endif
-
 /*
  * The data structure below defines a single logical line of text (from
  * newline to newline, not necessarily what appears on one display line of the
@@ -489,7 +484,7 @@ typedef struct TkTextTabArray {
 } TkTextTabArray;
 
 /*
- * Enumeration definining the edit modes of the widget.
+ * Enumeration defining the edit modes of the widget.
  */
 
 typedef enum {
@@ -1146,9 +1141,6 @@ MODULE_SCOPE int	TkTextYviewCmd(TkText *textPtr, Tcl_Interp *interp,
 			    int objc, Tcl_Obj *const objv[]);
 MODULE_SCOPE void	TkTextWinFreeClient(Tcl_HashEntry *hPtr,
 			    TkTextEmbWindowClient *client);
-
-# undef TCL_STORAGE_CLASS
-# define TCL_STORAGE_CLASS DLLIMPORT
 
 #endif /* _TKTEXT */
 

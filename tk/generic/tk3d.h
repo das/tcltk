@@ -16,11 +16,6 @@
 
 #include "tkInt.h"
 
-#ifdef BUILD_tk
-# undef TCL_STORAGE_CLASS
-# define TCL_STORAGE_CLASS DLLEXPORT
-#endif
-
 /*
  * One of the following data structures is allocated for each 3-D border
  * currently in use. Structures of this type are indexed by borderTable, so
@@ -88,8 +83,5 @@ typedef struct TkBorder {
 MODULE_SCOPE TkBorder	*TkpGetBorder(void);
 MODULE_SCOPE void	TkpGetShadows(TkBorder *borderPtr, Tk_Window tkwin);
 MODULE_SCOPE void	TkpFreeBorder(TkBorder *borderPtr);
-
-# undef TCL_STORAGE_CLASS
-# define TCL_STORAGE_CLASS DLLIMPORT
 
 #endif /* _TK3D */

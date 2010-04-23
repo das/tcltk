@@ -16,11 +16,6 @@
 #ifndef _TKFONT
 #define _TKFONT
 
-#ifdef BUILD_tk
-#undef TCL_STORAGE_CLASS
-#define TCL_STORAGE_CLASS DLLEXPORT
-#endif
-
 /*
  * The following structure keeps track of the attributes of a font. It can be
  * used to keep track of either the desired attributes or the actual
@@ -227,8 +222,5 @@ MODULE_SCOPE TkFont *	TkpGetFontFromAttributes(TkFont *tkFontPtr,
 MODULE_SCOPE void	TkpGetFontFamilies(Tcl_Interp *interp,
 			    Tk_Window tkwin);
 MODULE_SCOPE TkFont *	TkpGetNativeFont(Tk_Window tkwin, const char *name);
-
-#undef TCL_STORAGE_CLASS
-#define TCL_STORAGE_CLASS DLLIMPORT
 
 #endif	/* _TKFONT */

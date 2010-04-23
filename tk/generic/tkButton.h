@@ -19,11 +19,6 @@
 #include "tkInt.h"
 #endif
 
-#ifdef BUILD_tk
-# undef TCL_STORAGE_CLASS
-# define TCL_STORAGE_CLASS DLLEXPORT
-#endif
-
 /*
  * Legal values for the "compound" field of TkButton records.
  */
@@ -325,8 +320,5 @@ MODULE_SCOPE void 	TkpDestroyButton(TkButton *butPtr);
 MODULE_SCOPE void	TkpDisplayButton(ClientData clientData);
 #endif
 MODULE_SCOPE int	TkInvokeButton(TkButton *butPtr);
-
-# undef TCL_STORAGE_CLASS
-# define TCL_STORAGE_CLASS DLLIMPORT
 
 #endif /* _TKBUTTON */

@@ -26,7 +26,7 @@ typedef struct {
 				/* Table defining configuration options
 				 * available for the listbox. */
     Tk_OptionTable itemAttrOptionTable;
-				/* Table definining configuration options
+				/* Table defining configuration options
 				 * available for listbox items. */
 } ListboxOptionTables;
 
