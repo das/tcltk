@@ -2130,26 +2130,18 @@ ReadIDAT(
     }
 
     /*
-     * Ensure that when we've got to the end of the compressed data, we've
+     * Ensure that if we've got to the end of the compressed data, we've
      * also got to the end of the compressed stream. This sanity check is
      * enforced by most PNG readers.
      */
 
-    if (!Tcl_ZlibStreamEof(pngPtr->stream)) {
-	Tcl_AppendResult(interp, "unfinalized data stream in PNG data", NULL);
-	return TCL_ERROR;
-    }
     if (chunkSz != 0) {
 	Tcl_AppendResult(interp,
 		"compressed data after stream finalize in PNG data", NULL);
 	return TCL_ERROR;
     }
 
-    if (CheckCRC(interp, pngPtr, crc) == TCL_ERROR) {
-	return TCL_ERROR;
-    }
-
-    return TCL_OK;
+    return CheckCRC(interp, pngPtr, crc);
 }
 
 /*
@@ -2456,9 +2448,9 @@ DecodePNG(
     Tcl_IncrRefCount(pngPtr->lastLineObj);
     pngPtr->thisLineObj = Tcl_NewObj();
     Tcl_IncrRefCount(pngPtr->thisLineObj);
+
     pngPtr->block.pixelPtr = (unsigned char *)
 	    attemptckalloc(pngPtr->blockLen);
-
     if (!pngPtr->block.pixelPtr) {
 	Tcl_SetResult(interp, "Memory allocation failed", TCL_STATIC);
 	return TCL_ERROR;
@@ -2501,6 +2493,17 @@ DecodePNG(
 		&crc) == TCL_ERROR) {
 	    return TCL_ERROR;
 	}
+    }
+
+    /*
+     * Ensure that we've got to the end of the compressed stream now that
+     * there are no more IDAT segments. This sanity check is enforced by most
+     * PNG readers.
+     */
+
+    if (!Tcl_ZlibStreamEof(pngPtr->stream)) {
+	Tcl_AppendResult(interp, "unfinalized data stream in PNG data", NULL);
+	return TCL_ERROR;
     }
 
     /*
