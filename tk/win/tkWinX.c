@@ -389,8 +389,8 @@ TkWinGetPlatformId(void)
 	if ((os.dwPlatformId == VER_PLATFORM_WIN32_NT) &&
 		(os.dwMajorVersion == 5 && os.dwMinorVersion == 1)) {
 	    HKEY hKey;
-	    LPCSTR szSubKey = TEXT("Control Panel\\Appearance");
-	    LPCSTR szCurrent = TEXT("Current");
+	    LPCTSTR szSubKey = TEXT("Control Panel\\Appearance");
+	    LPCTSTR szCurrent = TEXT("Current");
 	    DWORD dwSize = 200;
 	    char pBuffer[200];
 

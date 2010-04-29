@@ -908,7 +908,7 @@ InitWindowClass(
 	    initialized = 1;
 
 	    if (shgetfileinfoProc == NULL) {
-		HINSTANCE hInstance = LoadLibraryA("shell32");
+		HINSTANCE hInstance = LoadLibrary(TEXT("shell32"));
 
 		if (hInstance != NULL) {
 		    shgetfileinfoProc = (DWORD* (WINAPI *) (LPCTSTR pszPath,
@@ -919,7 +919,7 @@ InitWindowClass(
 		}
 	    }
 	    if (setLayeredWindowAttributesProc == NULL) {
-		HINSTANCE hInstance = LoadLibraryA("user32");
+		HINSTANCE hInstance = LoadLibrary(TEXT("user32"));
 
 		if (hInstance != NULL) {
 		    setLayeredWindowAttributesProc = (BOOL (WINAPI*)(HWND hwnd,
@@ -942,7 +942,7 @@ InitWindowClass(
 	    class.lpszClassName = (LPCTSTR) Tcl_DStringValue(&classString);
 	    class.lpfnWndProc = WmProc;
 	    if (titlebaricon == NULL) {
-		class.hIcon = LoadIcon(Tk_GetHINSTANCE(), "tk");
+		class.hIcon = LoadIcon(Tk_GetHINSTANCE(), TEXT("tk"));
 	    } else {
 		class.hIcon = GetIcon(titlebaricon, ICON_BIG);
 		if (class.hIcon == NULL) {

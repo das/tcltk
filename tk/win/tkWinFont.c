@@ -342,7 +342,7 @@ CreateNamedSystemLogFont(
     Tcl_Interp *interp,
     Tk_Window tkwin,
     const char* name,
-    LOGFONTA* logFontPtr)
+    LOGFONT* logFontPtr)
 {
     HFONT hFont;
     int r;
@@ -455,9 +455,9 @@ TkWinSetupSystemFonts(
      */
 
     {
-	LOGFONTA lfFixed = {
+	LOGFONT lfFixed = {
 	    0, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
-	    0, 0, DEFAULT_QUALITY, FIXED_PITCH | FF_MODERN, "" 
+	    0, 0, DEFAULT_QUALITY, FIXED_PITCH | FF_MODERN, TEXT("")
 	};
 	long pointSize, dpi;
 	HDC hdc = GetDC(NULL);
@@ -680,7 +680,7 @@ WinFontFamilyEnumProc(
     int fontType,		/* Type of font (not used). */
     LPARAM lParam)		/* Result object to hold result. */
 {
-    char *faceName = lfPtr->elfLogFont.lfFaceName;
+    TCHAR *faceName = lfPtr->elfLogFont.lfFaceName;
     Tcl_Obj *resultObj = (Tcl_Obj *) lParam;
     Tcl_DString faceString;
 

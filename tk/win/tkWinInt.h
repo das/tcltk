@@ -28,10 +28,6 @@
 #include "tkWin.h"
 #endif
 
-#ifndef _TKPORT
-#include "tkPort.h"
-#endif
-
 /*
  * Define constants missing from older Win32 SDK header files.
  */
@@ -123,8 +119,8 @@ typedef struct {
  * The following macros define the class names for Tk Window types.
  */
 
-#define TK_WIN_TOPLEVEL_CLASS_NAME "TkTopLevel"
-#define TK_WIN_CHILD_CLASS_NAME "TkChild"
+#define TK_WIN_TOPLEVEL_CLASS_NAME TEXT("TkTopLevel")
+#define TK_WIN_CHILD_CLASS_NAME TEXT("TkChild")
 
 /*
  * The following variable is a translation table between X gc functions and
@@ -147,11 +143,6 @@ MODULE_SCOPE int tkpWinBltModes[];
  */
 
 #include "tkIntPlatDecls.h"
-
-#ifdef BUILD_tk
-#undef TCL_STORAGE_CLASS
-#define TCL_STORAGE_CLASS DLLEXPORT
-#endif
 
 /*
  * Special proc needed as tsd accessor function between
@@ -207,9 +198,6 @@ typedef struct TkWinProcs {
 
 MODULE_SCOPE const TkWinProcs *tkWinProcs;
 
-#undef TCL_STORAGE_CLASS
-#define TCL_STORAGE_CLASS DLLIMPORT
-
 /*
  * The following allows us to cache these encoding for multiple functions.
  */
@@ -230,15 +218,15 @@ MODULE_SCOPE void		TkWinSetupSystemFonts(TkMainInfo *mainPtr);
  * The following is implemented in tkWinWm and used by tkWinEmbed.c
  */
 
-void			TkpWinToplevelWithDraw(TkWindow *winPtr);
-void			TkpWinToplevelIconify(TkWindow *winPtr);
-void			TkpWinToplevelDeiconify(TkWindow *winPtr);
-long			TkpWinToplevelIsControlledByWm(TkWindow *winPtr);
-long			TkpWinToplevelMove(TkWindow *winPtr, int x, int y);
-long			TkpWinToplevelOverrideRedirect(TkWindow *winPtr,
+MODULE_SCOPE void		TkpWinToplevelWithDraw(TkWindow *winPtr);
+MODULE_SCOPE void		TkpWinToplevelIconify(TkWindow *winPtr);
+MODULE_SCOPE void		TkpWinToplevelDeiconify(TkWindow *winPtr);
+MODULE_SCOPE long		TkpWinToplevelIsControlledByWm(TkWindow *winPtr);
+MODULE_SCOPE long		TkpWinToplevelMove(TkWindow *winPtr, int x, int y);
+MODULE_SCOPE long		TkpWinToplevelOverrideRedirect(TkWindow *winPtr,
 			    int reqValue);
-void			TkpWinToplevelDetachWindow(TkWindow *winPtr);
-int			TkpWmGetState(TkWindow *winPtr);
+MODULE_SCOPE void		TkpWinToplevelDetachWindow(TkWindow *winPtr);
+MODULE_SCOPE int		TkpWmGetState(TkWindow *winPtr);
 
 /*
  * The following functions are not present in old versions of Windows

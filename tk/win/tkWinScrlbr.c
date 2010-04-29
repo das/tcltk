@@ -226,7 +226,7 @@ CreateProc(
 		| SBS_HORZ | SBS_BOTTOMALIGN;
     }
 
-    scrollPtr->hwnd = CreateWindow("SCROLLBAR", NULL, style,
+    scrollPtr->hwnd = CreateWindow(TEXT("SCROLLBAR"), NULL, style,
 	    Tk_X(tkwin), Tk_Y(tkwin), Tk_Width(tkwin), Tk_Height(tkwin),
 	    parent, NULL, Tk_GetHINSTANCE(), NULL);
 

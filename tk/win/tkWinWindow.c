@@ -903,7 +903,6 @@ TkpMakeTransparentWindowExist(
     int style = WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
     DWORD exStyle = WS_EX_TRANSPARENT | WS_EX_TOPMOST;
 
-#define TK_WIN_CHILD_CLASS_NAME "TkChild"
     hWnd = CreateWindowEx(exStyle, TK_WIN_CHILD_CLASS_NAME, NULL, style,
 	    Tk_X(tkwin), Tk_Y(tkwin), Tk_Width(tkwin), Tk_Height(tkwin),
 	    hParent, NULL, Tk_GetHINSTANCE(), NULL);
