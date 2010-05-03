@@ -659,7 +659,7 @@ proc ::tk::CheckInvoke {w} {
 	# Additional logic to switch the "selected" colors around if necessary
 	# (when we're indicator-less).
 
-	if {![$w cget -indicatoron]} {
+	if {![$w cget -indicatoron] && [info exist Priv($w,selectcolor)]} {
 	    if {[$w cget -selectcolor] eq $Priv($w,aselectcolor)} {
 		$w configure -selectcolor $Priv($w,selectcolor)
 	    } else {
@@ -697,7 +697,7 @@ proc ::tk::CheckEnter {w} {
 
 	# Compute what the "selected and active" color should be.
 
-	if {![$w cget -indicatoron]} {
+	if {![$w cget -indicatoron] && [$w cget -selectcolor] ne ""} {
 	    set Priv($w,selectcolor) [$w cget -selectcolor]
 	    lassign [winfo rgb $w [$w cget -selectcolor]]      r1 g1 b1
 	    lassign [winfo rgb $w [$w cget -activebackground]] r2 g2 b2
