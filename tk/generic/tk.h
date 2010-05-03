@@ -55,7 +55,7 @@ extern "C" {
 #define TK_RELEASE_SERIAL	1
 
 #define TK_VERSION		"8.6"
-#define TK_PATCH_LEVEL		"8.6b1.1"
+#define TK_PATCH_LEVEL		"8.6b1.2"
 
 /*
  * A special definition used to allow this header file to be included from
