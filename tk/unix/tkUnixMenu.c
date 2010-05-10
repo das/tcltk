@@ -296,7 +296,7 @@ void
 TkpSetMainMenubar(
     Tcl_Interp *interp,
     Tk_Window tkwin,
-    char *menuName)
+    const char *menuName)
 {
     /*
      * Nothing to do.
@@ -1760,7 +1760,7 @@ TkpComputeStandardMenuGeometry(
 void
 TkpMenuNotifyToplevelCreate(
     Tcl_Interp *interp,		/* The interp the menu lives in. */
-    char *menuName)		/* The name of the menu to reconfigure. */
+    const char *menuName)	/* The name of the menu to reconfigure. */
 {
     /*
      * Nothing to do.

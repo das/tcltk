@@ -166,7 +166,7 @@ declare 32 generic {
 declare 33 generic {
     unsigned long Tk_CreateBinding(Tcl_Interp *interp,
 	    Tk_BindingTable bindingTable, ClientData object,
-	    const char *eventStr, const char *command, int append)
+	    const char *eventStr, const char *script, int append)
 }
 declare 34 generic {
     Tk_BindingTable Tk_CreateBindingTable(Tcl_Interp *interp)

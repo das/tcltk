@@ -3164,10 +3164,10 @@ void
 TkSetWindowMenuBar(
     Tcl_Interp *interp,		/* The interpreter the toplevel lives in. */
     Tk_Window tkwin,		/* The toplevel window. */
-    char *oldMenuName,		/* The name of the menubar previously set in
+    const char *oldMenuName, /* The name of the menubar previously set in
     				 * this toplevel. NULL means no menu was set
     				 * previously. */
-    char *menuName)		/* The name of the new menubar that the
+    const char *menuName)	/* The name of the new menubar that the
 				 * toplevel needs to be set to. NULL means
 				 * that their is no menu now. */
 {

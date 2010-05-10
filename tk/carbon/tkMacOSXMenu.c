@@ -2037,7 +2037,7 @@ void
 TkpSetMainMenubar(
     Tcl_Interp *interp,		/* The interpreter of the application */
     Tk_Window tkwin,		/* The frame we are setting up */
-    char *menuName)		/* The name of the menu to put in front. If
+    const char *menuName)	/* The name of the menu to put in front. If
 				 * NULL, use the default menu bar. */
 {
     TkWindow *winPtr = (TkWindow *) tkwin;
@@ -3941,7 +3941,7 @@ TkMacOSXClearMenubarActive(void)
 void
 TkpMenuNotifyToplevelCreate(
     Tcl_Interp *interp,		/* The interp the menu lives in. */
-    char *menuName)		/* The name of the menu to reconfigure. */
+    const char *menuName)	/* The name of the menu to reconfigure. */
 {
     /*
      * Nothing to do.
