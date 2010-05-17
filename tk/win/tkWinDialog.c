@@ -2037,6 +2037,13 @@ Tk_ChooseDirectoryObjCmd(
 	pidl = SHBrowseForFolder(&bInfo);
 
 	/*
+	 * This is a fix for Windows 2000, which seems to modify the folder name
+	 * buffer even when the dialog is canceled (in this case the buffer
+	 * contains garbage). See [Bug #3002230]
+	 */
+	path[0] = '\0';
+
+	/*
 	 * Null for cancel button or invalid dir, otherwise valid.
 	 */
 
