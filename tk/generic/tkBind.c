@@ -962,6 +962,10 @@ Tk_CreateBinding(
     unsigned long eventMask;
     char *newStr, *oldStr;
 
+    if (!*command) {
+	/* Silently ignore empty scripts -- see SF#3006842 */
+	return 1;
+    }
     psPtr = FindSequence(interp, &bindPtr->patternTable, object, eventString,
 	    1, 1, &eventMask);
     if (psPtr == NULL) {
@@ -1020,7 +1024,7 @@ Tk_CreateBinding(
 /*
  *---------------------------------------------------------------------------
  *
- * TkCreateBindingFunction --
+ * TkCreateBindingProcedure --
  *
  *	Add a C binding to a binding table, so that future calls to
  *	Tk_BindEvent may callback the function in the binding.
