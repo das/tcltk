@@ -44,8 +44,11 @@ proc ttk::deprecated'warning {old new} {
 
 ### Backward-compatibility.
 #
-
-package ifneeded tile 0.8.0 { package require Tk ; package provide tile 0.8.0 }
+#
+# Make [package require tile] an effective no-op;
+# see SF#3016598 for discussion.
+#
+package ifneeded tile 0.8.6 { package provide tile 0.8.6 }
 
 # ttk::panedwindow used to be named ttk::paned.  Keep the alias for now.
 #
@@ -144,7 +147,7 @@ ttk::LoadThemes; rename ::ttk::LoadThemes {}
 
 ### Select platform-specific default theme:
 #
-# Notes: 
+# Notes:
 #	+ On OSX, aqua theme is the default
 #	+ On Windows, xpnative takes precedence over winnative if available.
 #	+ On X11, users can use the X resource database to
