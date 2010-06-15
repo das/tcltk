@@ -1108,9 +1108,10 @@ static void		DeleteFontchooserData(ClientData clientData,
 
 MODULE_SCOPE const TkEnsemble tkFontchooserEnsemble[];
 const TkEnsemble tkFontchooserEnsemble[] = {
-    { "configure", FontchooserConfigureCmd },
-    { "show", FontchooserShowCmd },
-    { "hide", FontchooserHideCmd },
+    { "configure", FontchooserConfigureCmd, NULL },
+    { "show", FontchooserShowCmd, NULL },
+    { "hide", FontchooserHideCmd, NULL },
+    { NULL, NULL, NULL }
 };
 
 static Tcl_Interp *fontchooserInterp = NULL;
