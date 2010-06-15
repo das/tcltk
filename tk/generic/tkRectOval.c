@@ -45,19 +45,19 @@ typedef struct RectOvalItem  {
  */
 
 static const Tk_CustomOption stateOption = {
-    TkStateParseProc, TkStatePrintProc, (ClientData) 2
+    TkStateParseProc, TkStatePrintProc, INT2PTR(2)
 };
 static const Tk_CustomOption tagsOption = {
-    Tk_CanvasTagsParseProc, Tk_CanvasTagsPrintProc, (ClientData) NULL
+    Tk_CanvasTagsParseProc, Tk_CanvasTagsPrintProc, NULL
 };
 static const Tk_CustomOption dashOption = {
-    TkCanvasDashParseProc, TkCanvasDashPrintProc, (ClientData) NULL
+    TkCanvasDashParseProc, TkCanvasDashPrintProc, NULL
 };
 static const Tk_CustomOption offsetOption = {
-    TkOffsetParseProc, TkOffsetPrintProc, (ClientData) TK_OFFSET_RELATIVE
+    TkOffsetParseProc, TkOffsetPrintProc, INT2PTR(TK_OFFSET_RELATIVE)
 };
 static const Tk_CustomOption pixelOption = {
-    TkPixelParseProc, TkPixelPrintProc, (ClientData) NULL
+    TkPixelParseProc, TkPixelPrintProc, NULL
 };
 
 static const Tk_ConfigSpec configSpecs[] = {

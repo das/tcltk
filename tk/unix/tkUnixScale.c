@@ -73,7 +73,7 @@ void
 TkpDestroyScale(
     TkScale *scalePtr)
 {
-    Tcl_EventuallyFree((ClientData) scalePtr, TCL_DYNAMIC);
+    Tcl_EventuallyFree(scalePtr, TCL_DYNAMIC);
 }
 
 /*
@@ -549,9 +549,9 @@ TkpDisplayScale(
      * Invoke the scale's command if needed.
      */
 
-    Tcl_Preserve((ClientData) scalePtr);
+    Tcl_Preserve(scalePtr);
     if ((scalePtr->flags & INVOKE_COMMAND) && (scalePtr->command != NULL)) {
-	Tcl_Preserve((ClientData) interp);
+	Tcl_Preserve(interp);
 	sprintf(string, scalePtr->format, scalePtr->value);
 	result = Tcl_VarEval(interp, scalePtr->command, " ", string,
 		(char *) NULL);
@@ -559,14 +559,14 @@ TkpDisplayScale(
 	    Tcl_AddErrorInfo(interp, "\n    (command executed by scale)");
 	    Tcl_BackgroundException(interp, result);
 	}
-	Tcl_Release((ClientData) interp);
+	Tcl_Release(interp);
     }
     scalePtr->flags &= ~INVOKE_COMMAND;
     if (scalePtr->flags & SCALE_DELETED) {
-	Tcl_Release((ClientData) scalePtr);
+	Tcl_Release(scalePtr);
 	return;
     }
-    Tcl_Release((ClientData) scalePtr);
+    Tcl_Release(scalePtr);
 
 #ifndef TK_NO_DOUBLE_BUFFERING
     /*

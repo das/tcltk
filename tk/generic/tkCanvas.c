@@ -104,12 +104,11 @@ typedef struct TagSearch {
 
 static const Tk_CustomOption stateOption = {
     TkStateParseProc, TkStatePrintProc,
-    (ClientData) NULL		/* Only "normal" and "disabled". */
+    NULL		/* Only "normal" and "disabled". */
 };
 
 static const Tk_CustomOption offsetOption = {
-    TkOffsetParseProc, TkOffsetPrintProc,
-    (ClientData) TK_OFFSET_RELATIVE
+    TkOffsetParseProc, TkOffsetPrintProc, INT2PTR(TK_OFFSET_RELATIVE)
 };
 
 /*

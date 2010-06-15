@@ -73,7 +73,7 @@ TkpCreateScrollbar(
 
     Tk_CreateEventHandler(tkwin,
 	    ExposureMask|StructureNotifyMask|FocusChangeMask,
-	    TkScrollbarEventProc, (ClientData) scrollPtr);
+	    TkScrollbarEventProc, scrollPtr);
 
     return (TkScrollbar *) scrollPtr;
 }

@@ -130,7 +130,7 @@ TkpOpenDisplay(
     OpenIM(dispPtr);
 #endif
     Tcl_CreateFileHandler(ConnectionNumber(display), TCL_READABLE,
-	    DisplayFileProc, (ClientData) dispPtr);
+	    DisplayFileProc, dispPtr);
     return dispPtr;
 }
 
@@ -204,7 +204,7 @@ TkClipCleanup(
 		dispPtr->windowAtom);
 
 	Tk_DestroyWindow(dispPtr->clipWindow);
-	Tcl_Release((ClientData) dispPtr->clipWindow);
+	Tcl_Release(dispPtr->clipWindow);
 	dispPtr->clipWindow = NULL;
     }
 }
@@ -553,7 +553,7 @@ TkUnixDoOneXEvent(
 	index = fd/(NBBY*sizeof(fd_mask));
 	bit = ((fd_mask)1) << (fd%(NBBY*sizeof(fd_mask)));
 	if ((readMask[index] & bit) || (QLength(dispPtr->display) > 0)) {
-	    DisplayFileProc((ClientData)dispPtr, TCL_READABLE);
+	    DisplayFileProc(dispPtr, TCL_READABLE);
 	}
     }
     if (Tcl_ServiceEvent(TCL_WINDOW_EVENTS)) {

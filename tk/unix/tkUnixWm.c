@@ -613,7 +613,7 @@ TkWmNewWindow(
      * window manager.
      */
 
-    Tk_ManageGeometry((Tk_Window) winPtr, &wmMgrType, (ClientData) 0);
+    Tk_ManageGeometry((Tk_Window) winPtr, &wmMgrType, NULL);
 }
 
 /*

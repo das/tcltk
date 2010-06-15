@@ -23,7 +23,7 @@
  */
 
 static const Tk_CustomOption orientOption = {
-    TkOrientParseProc, TkOrientPrintProc, (ClientData) NULL
+    TkOrientParseProc, TkOrientPrintProc, NULL
 };
 
 /* non-const space for "-width" default value for scrollbars */

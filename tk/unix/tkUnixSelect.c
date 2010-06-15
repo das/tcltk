@@ -185,7 +185,7 @@ TkSelGetSelection(
      */
 
     retr.timeout = Tcl_CreateTimerHandler(1000, SelTimeoutProc,
-	    (ClientData) &retr);
+	    &retr);
     while (retr.result == -1) {
 	Tcl_DoOneEvent(0);
     }
@@ -663,14 +663,14 @@ TkSelEventProc(
 
 	    retrPtr->idleTime = 0;
 	    Tk_CreateEventHandler(tkwin, PropertyChangeMask, SelRcvIncrProc,
-		    (ClientData) retrPtr);
+		    retrPtr);
 	    XDeleteProperty(Tk_Display(tkwin), Tk_WindowId(tkwin),
 		    retrPtr->property);
 	    while (retrPtr->result == -1) {
 		Tcl_DoOneEvent(0);
 	    }
 	    Tk_DeleteEventHandler(tkwin, PropertyChangeMask, SelRcvIncrProc,
-		    (ClientData) retrPtr);
+		    retrPtr);
 	} else {
 	    Tcl_DString ds;
 
@@ -1163,7 +1163,7 @@ SelRcvIncrProc(
 	    goto done;
 	}
 	interp = retrPtr->interp;
-	Tcl_Preserve((ClientData) interp);
+	Tcl_Preserve(interp);
 
 	if (type == retrPtr->winPtr->dispPtr->compoundTextAtom) {
 	    encoding = Tcl_GetEncoding(NULL, "iso2022");
@@ -1194,7 +1194,7 @@ SelRcvIncrProc(
 	     */
 
 	    retrPtr->result = TCL_OK;
-	    Tcl_Release((ClientData) interp);
+	    Tcl_Release(interp);
 	    goto done;
 	} else {
 	    src = propInfo;
@@ -1237,7 +1237,7 @@ SelRcvIncrProc(
 
 	result = retrPtr->proc(retrPtr->clientData, interp,
 		Tcl_DStringValue(dstPtr));
-	Tcl_Release((ClientData) interp);
+	Tcl_Release(interp);
 
 	/*
 	 * Copy any unused data into the destination buffer so we can pick it
@@ -1372,7 +1372,7 @@ IncrTimeoutProc(
 	incrPtr->numIncrs = 0;
     } else {
 	incrPtr->timeout = Tcl_CreateTimerHandler(1000, IncrTimeoutProc,
-		(ClientData) incrPtr);
+		incrPtr);
     }
 }
 

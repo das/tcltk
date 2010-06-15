@@ -210,8 +210,7 @@ TkStylePkgInit(
      * Create the default system style.
      */
 
-    Tk_CreateStyle(NULL, (Tk_StyleEngine) tsdPtr->defaultEnginePtr,
-	    (ClientData) 0);
+    Tk_CreateStyle(NULL, (Tk_StyleEngine) tsdPtr->defaultEnginePtr, NULL);
 
     tsdPtr->nbInit++;
 }
