@@ -1470,7 +1470,6 @@ Tk_DestroyWindow(
     }
     UnlinkWindow(winPtr);
     TkEventDeadWindow(winPtr);
-    TkBindDeadWindow(winPtr);
 #ifdef TK_USE_INPUT_METHODS
     if (winPtr->inputContext != NULL) {
 	XDestroyIC(winPtr->inputContext);

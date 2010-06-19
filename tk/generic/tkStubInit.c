@@ -57,7 +57,7 @@ static const TkIntStubs tkIntStubs = {
     TkAllocWindow, /* 0 */
     TkBezierPoints, /* 1 */
     TkBezierScreenPoints, /* 2 */
-    TkBindDeadWindow, /* 3 */
+    NULL, /* 3 */
     TkBindEventProc, /* 4 */
     TkBindFree, /* 5 */
     TkBindInit, /* 6 */
@@ -65,7 +65,7 @@ static const TkIntStubs tkIntStubs = {
     TkClipInit, /* 8 */
     TkComputeAnchor, /* 9 */
     TkCopyAndGlobalEval, /* 10 */
-    TkCreateBindingProcedure, /* 11 */
+    NULL, /* 11 */
     TkCreateCursorFromData, /* 12 */
     TkCreateFrame, /* 13 */
     TkCreateMainWindow, /* 14 */

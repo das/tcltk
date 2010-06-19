@@ -100,14 +100,6 @@ typedef struct TkBindInfo_ *TkBindInfo;
 typedef struct Busy *TkBusy;
 
 /*
- * Function types.
- */
-
-typedef int (TkBindEvalProc)(ClientData clientData, Tcl_Interp *interp,
-	XEvent *eventPtr, Tk_Window tkwin, KeySym keySym);
-typedef void (TkBindFreeProc)(ClientData clientData);
-
-/*
  * One of the following structures is maintained for each cursor in use in the
  * system. This structure is used by tkCursor.c and the various system-
  * specific cursor files.

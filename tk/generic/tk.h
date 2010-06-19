@@ -833,9 +833,6 @@ typedef struct Tk_FakeWin {
  *				embedded application), and both the containing
  *				and embedded halves are associated with
  *				windows in this particular process.
- * TK_DEFER_MODAL:		1 means that this window has deferred a modal
- *				loop until all of the bindings for the current
- *				event have been invoked.
  * TK_WRAPPER:			1 means that this window is the extra wrapper
  *				window created around a toplevel to hold the
  *				menubar under Unix. See tkUnixWm.c for more
@@ -872,7 +869,6 @@ typedef struct Tk_FakeWin {
 #define TK_EMBEDDED		0x100
 #define TK_CONTAINER		0x200
 #define TK_BOTH_HALVES		0x400
-#define TK_DEFER_MODAL		0x800
 #define TK_WRAPPER		0x1000
 #define TK_REPARENTED		0x2000
 #define TK_ANONYMOUS_WINDOW	0x4000
