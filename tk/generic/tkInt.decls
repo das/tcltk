@@ -58,10 +58,8 @@ declare 9 generic {
     void TkComputeAnchor(Tk_Anchor anchor, Tk_Window tkwin, int padX, int padY,
 	    int innerWidth, int innerHeight, int *xPtr, int *yPtr)
 }
-declare 10 generic {
-    int TkCopyAndGlobalEval(Tcl_Interp *interp, const char *script)
-}
 #
+# Slot 10 unused (WAS: TkCopyAndGlobalEval)
 # Slot 11 unused (WAS: TkCreateBindingProcedure)
 #
 declare 12 generic {
