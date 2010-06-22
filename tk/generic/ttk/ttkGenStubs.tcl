@@ -297,7 +297,7 @@ proc genStubs::addPlatformGuard {plat text} {
 
 proc genStubs::emitSlots {name textVar} {
     upvar $textVar text
-    forAllStubs $name makeSlot noGuard text {"    void *reserved$i;\n"}
+    forAllStubs $name makeSlot noGuard text {"    void (*reserved$i)(void);\n"}
     return
 }
 
