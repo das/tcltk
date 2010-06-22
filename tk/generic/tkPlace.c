@@ -205,11 +205,12 @@ static void		UnlinkSlave(Slave *slavePtr);
 
 int
 Tk_PlaceObjCmd(
-    ClientData clientData,	/* NULL. */
+    ClientData clientData,	/* Interpreter main window. */
     Tcl_Interp *interp,		/* Current interpreter. */
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
+    Tk_Window main_win = clientData;
     Tk_Window tkwin;
     Slave *slavePtr;
     TkDisplay *dispPtr;
@@ -237,7 +238,7 @@ Tk_PlaceObjCmd(
      */
 
     if (Tcl_GetString(objv[1])[0] == '.') {
-	if (TkGetWindowFromObj(interp, Tk_MainWindow(interp), objv[1],
+	if (TkGetWindowFromObj(interp, main_win, objv[1],
 		&tkwin) != TCL_OK) {
 	    return TCL_ERROR;
 	}
@@ -261,7 +262,7 @@ Tk_PlaceObjCmd(
      * possible additional arguments.
      */
 
-    if (TkGetWindowFromObj(interp, Tk_MainWindow(interp), objv[2],
+    if (TkGetWindowFromObj(interp, main_win, objv[2],
 	    &tkwin) != TCL_OK) {
 	return TCL_ERROR;
     }
