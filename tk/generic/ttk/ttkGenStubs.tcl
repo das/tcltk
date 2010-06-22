@@ -297,7 +297,7 @@ proc genStubs::addPlatformGuard {plat text} {
 
 proc genStubs::emitSlots {name textVar} {
     upvar $textVar text
-    forAllStubs $name makeSlot noGuard text {"    void (*reserved$i)(void);\n"}
+    forAllStubs $name makeSlot noGuard text {"    void *reserved$i;\n"}
     return
 }
 
@@ -789,7 +789,7 @@ proc genStubs::emitInit {name textVar} {
     }
     foreach intf [array names interfaces] {
 	if {[info exists hooks($intf)]} {
-	    if {$name in $hooks($intf)} {
+	    if {0<=[lsearch -exact $hooks($intf) $name]} {
 		set root 0
 		break;
 	    }

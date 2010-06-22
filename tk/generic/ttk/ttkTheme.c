@@ -1730,8 +1730,7 @@ void Ttk_StylePkgInit(Tcl_Interp *interp)
      */
     Tcl_CreateObjCommand(interp, "::ttk::style", StyleObjCmd, pkgPtr, 0);
 
-    nsPtr = Tcl_FindNamespace(interp, "::ttk", (Tcl_Namespace *) NULL,
-	    TCL_LEAVE_ERR_MSG);
+    nsPtr = Tcl_FindNamespace(interp, "::ttk", NULL, TCL_LEAVE_ERR_MSG);
     Tcl_Export(interp, nsPtr, "style", 0 /* dontResetList */);
 
     Ttk_RegisterElementFactory(interp, "from", Ttk_CloneElement, 0);
