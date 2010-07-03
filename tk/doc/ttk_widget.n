@@ -256,7 +256,7 @@ $b instate {pressed !disabled} { .b invoke }
 $b state !disabled
 .CE
 .SH "SEE ALSO"
-ttk::intro(n), style(n)
+ttk::intro(n), ttk::style(n)
 .SH KEYWORDS
 state, configure, option
 '\" Local Variables:
