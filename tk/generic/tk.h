@@ -1478,8 +1478,8 @@ typedef struct Tk_ElementSpec {
 #define Tk_Release		Tcl_Release
 
 /* Removed Tk_Main, use macro instead */
-#define Tk_Main(argc, argv, proc) \
-    Tk_MainEx(argc, argv, proc, Tcl_CreateInterp())
+#define Tk_Main(argc, argv, proc) Tk_MainEx(argc, argv, proc, \
+	(Tcl_FindExecutable(argv[0]), (Tcl_CreateInterp)()))
 
 const char *		Tk_InitStubs(Tcl_Interp *interp, const char *version,
 				int exact);

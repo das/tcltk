@@ -3098,5 +3098,11 @@ extern const TkStubs *tkStubsPtr;
 #undef TCL_STORAGE_CLASS
 #define TCL_STORAGE_CLASS DLLIMPORT
 
+/* Functions that don't belong in the stub table */
+#undef Tk_MainEx
+#undef Tk_Init
+#undef Tk_SafeInit
+#undef Tk_CreateConsoleWindow
+
 #endif /* _TKDECLS */
 
