@@ -704,7 +704,9 @@ proc ::tk::CheckEnter {w} {
 	    set Priv($w,aselectcolor) \
 		[format "#%04x%04x%04x" [expr {($r1+$r2)/2}] \
 		     [expr {($g1+$g2)/2}] [expr {($b1+$b2)/2}]]
-	    if {[set ::[$w cget -variable]] eq [$w cget -onvalue]} {
+	    # use uplevel to work with other var resolvers
+	    if {[uplevel #0 [list set [$w cget -variable]]]
+		 eq [$w cget -onvalue]} {
 		$w configure -selectcolor $Priv($w,aselectcolor)
 	    }
 	}
