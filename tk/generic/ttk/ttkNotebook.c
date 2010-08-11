@@ -1241,9 +1241,6 @@ static void NotebookCleanup(void *recordPtr)
     Notebook *nb = recordPtr;
 
     Ttk_DeleteManager(nb->notebook.mgr);
-    Tk_DeleteOptionTable(nb->notebook.tabOptionTable);
-    Tk_DeleteOptionTable(nb->notebook.paneOptionTable);
-
     if (nb->notebook.tabLayout)
 	Ttk_FreeLayout(nb->notebook.tabLayout);
 }

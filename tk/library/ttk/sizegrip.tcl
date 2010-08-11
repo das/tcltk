@@ -37,7 +37,7 @@ proc ttk::sizegrip::Press {W X Y} {
     #	If a negative X or Y position was specified for [wm geometry],
     #   just bail out -- there's no way to handle this cleanly.
     #
-    if {[scan [wm geometry $top] "%dx%d+%d+%d" width height _x _y] != 4} {
+    if {[scan [wm geometry $top] "%dx%d+%d+%d" width height x y] != 4} {
 	return;
     }
 
@@ -56,6 +56,8 @@ proc ttk::sizegrip::Press {W X Y} {
     set State(pressY) $Y
     set State(width)  $width
     set State(height) $height
+    set State(x)      $x
+    set State(y)      $y
     set State(pressed) 1
 }
 
@@ -66,7 +68,8 @@ proc ttk::sizegrip::Drag {W X Y} {
     set h [expr {$State(height) + ($Y - $State(pressY))/$State(heightInc)}]
     if {$w <= 0} { set w 1 }
     if {$h <= 0} { set h 1 }
-    wm geometry $State(toplevel) ${w}x${h}
+    set x $State(x) ; set y $State(y)
+    wm geometry $State(toplevel) ${w}x${h}+${x}+${y}
 }
 
 proc ttk::sizegrip::Release {W X Y} {
