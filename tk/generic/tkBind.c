@@ -3789,7 +3789,7 @@ HandleEventGenerate(
      * Don't generate events for windows that don't exist yet.
      */
 
-    if (!event.xany.window) {
+    if (!event.general.xany.window) {
 	goto done;
     }
 
