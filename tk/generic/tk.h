@@ -1359,11 +1359,6 @@ struct Tk_PhotoImageFormat {
 				 * currently known. Filled in by Tk, not by
 				 * image format handler. */
 };
-
-#ifdef USE_OLD_IMAGE
-#define Tk_CreateImageType		Tk_CreateOldImageType
-#define Tk_CreatePhotoImageFormat	Tk_CreateOldPhotoImageFormat
-#endif /* USE_OLD_IMAGE */
 
 /*
  *----------------------------------------------------------------------
@@ -1523,6 +1518,13 @@ typedef int (Tk_SelectionProc) (ClientData clientData, int offset,
 
 #include "tkDecls.h"
 
+#ifdef USE_OLD_IMAGE
+#undef Tk_CreateImageType
+#define Tk_CreateImageType		Tk_CreateOldImageType
+#undef Tk_CreatePhotoImageFormat
+#define Tk_CreatePhotoImageFormat	Tk_CreateOldPhotoImageFormat
+#endif /* USE_OLD_IMAGE */
+
 /*
  *----------------------------------------------------------------------
  *
