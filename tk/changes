@@ -6722,4 +6722,6 @@ in screen distances, reducing precision loss (ferrieux)
 
 2010-08-03 (bug fix) entry validation compat with Itcl scope (hobbs)
 
---- Released 8.5.9, August 13, 2010 --- See ChangeLog for details ---
+2010-08-12 (bug fix)[2585265] text <Delete>,<Backspace> note selection (fellows)
+
+--- Released 8.5.9, August 31, 2010 --- See ChangeLog for details ---

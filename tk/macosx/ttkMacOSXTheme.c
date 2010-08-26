@@ -523,6 +523,57 @@ static Ttk_ElementSpec ComboboxElementSpec = {
 };
 
 /*----------------------------------------------------------------------
+ * +++ Spinbuttons.
+ *
+ * From Apple HIG, part III, section "Controls", "The Stepper Control":
+ * there should be 2 pixels of space between the stepper control
+ * (AKA IncDecButton, AKA "little arrows") and the text field it modifies.
+ */
+
+static Ttk_Padding SpinbuttonMargins = {2,0,2,0};
+static void SpinButtonElementSize(
+    void *clientData, void *elementRecord, Tk_Window tkwin,
+    int *widthPtr, int *heightPtr, Ttk_Padding *paddingPtr)
+{
+    SInt32 s;
+
+    ChkErr(GetThemeMetric, kThemeMetricLittleArrowsWidth, &s);
+    *widthPtr = s + Ttk_PaddingWidth(SpinbuttonMargins);
+    ChkErr(GetThemeMetric, kThemeMetricLittleArrowsHeight, &s);
+    *heightPtr = s + Ttk_PaddingHeight(SpinbuttonMargins);
+}
+
+static void SpinButtonElementDraw(
+    void *clientData, void *elementRecord, Tk_Window tkwin,
+    Drawable d, Ttk_Box b, Ttk_State state)
+{
+    CGRect bounds = BoxToRect(d, Ttk_PadBox(b, SpinbuttonMargins));
+    /* @@@ can't currently distinguish PressedUp (== Pressed) from PressedDown;
+     * ignore this bit for now [see #2219588]
+     */
+    const HIThemeButtonDrawInfo info = {
+	.version = 0,
+	.state = Ttk_StateTableLookup(ThemeStateTable, state & ~TTK_STATE_PRESSED),
+	.kind = kThemeIncDecButton,
+	.value = Ttk_StateTableLookup(ButtonValueTable, state),
+	.adornment = kThemeAdornmentNone,
+    };
+
+    BEGIN_DRAWING(d)
+    ChkErr(HIThemeDrawButton, &bounds, &info, dc.context, HIOrientation, NULL);
+    END_DRAWING
+}
+
+static Ttk_ElementSpec SpinButtonElementSpec = {
+    TK_STYLE_VERSION_2,
+    sizeof(NullElement),
+    TtkNullElementOptions,
+    SpinButtonElementSize,
+    SpinButtonElementDraw
+};
+
+
+/*----------------------------------------------------------------------
  * +++ DrawThemeTrack-based elements --
  * Progress bars and scales. (See also: <<NOTE-TRACKS>>)
  */
@@ -1042,6 +1093,11 @@ TTK_LAYOUT("Tab",
 	    TTK_NODE("Notebook.label", TTK_EXPAND|TTK_FILL_BOTH))))
 
 /* Progress bars -- track only */
+TTK_LAYOUT("TSpinbox",
+    TTK_NODE("Spinbox.spinbutton", TTK_PACK_RIGHT|TTK_STICK_E)
+    TTK_GROUP("Spinbox.field", TTK_EXPAND|TTK_FILL_X,
+	TTK_NODE("Spinbox.textarea", TTK_EXPAND|TTK_FILL_X)))
+
 TTK_LAYOUT("TProgressbar",
     TTK_NODE("Progressbar.track", TTK_EXPAND|TTK_FILL_BOTH))
 
@@ -1090,6 +1146,8 @@ static int AquaTheme_Init(Tcl_Interp *interp)
 	&ButtonElementSpec, &BevelButtonParams);
     Ttk_RegisterElementSpec(themePtr, "Menubutton.button",
 	&ButtonElementSpec, &PopupButtonParams);
+    Ttk_RegisterElementSpec(themePtr, "Spinbox.spinbutton",
+    	&SpinButtonElementSpec, 0);
     Ttk_RegisterElementSpec(themePtr, "Combobox.button",
 	&ComboboxElementSpec, 0);
     Ttk_RegisterElementSpec(themePtr, "Treeitem.indicator",
@@ -1102,6 +1160,7 @@ static int AquaTheme_Init(Tcl_Interp *interp)
 
     Ttk_RegisterElementSpec(themePtr, "Labelframe.border",&GroupElementSpec,0);
     Ttk_RegisterElementSpec(themePtr, "Entry.field",&EntryElementSpec,0);
+    Ttk_RegisterElementSpec(themePtr, "Spinbox.field",&EntryElementSpec,0);
 
     Ttk_RegisterElementSpec(themePtr, "separator",&SeparatorElementSpec,0);
     Ttk_RegisterElementSpec(themePtr, "hseparator",&SeparatorElementSpec,0);
