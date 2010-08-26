@@ -46,7 +46,7 @@ int Ttk_GetCompoundFromObj(
  * Legal values for the -orient option.
  * See also: enum Ttk_Orient.
  */
-CONST char *ttkOrientStrings[] = {
+const char *ttkOrientStrings[] = {
     "horizontal", "vertical", NULL
 };
 
@@ -259,7 +259,7 @@ static void RegisterThemes(Tcl_Interp *interp)
  * Ttk initialization.
  */
 
-extern TtkStubs ttkStubs;
+extern const TtkStubs ttkStubs;
 
 MODULE_SCOPE int
 Ttk_Init(Tcl_Interp *interp)
@@ -276,7 +276,7 @@ Ttk_Init(Tcl_Interp *interp)
 
     Ttk_PlatformInit(interp);
 
-    Tcl_PkgProvideEx(interp, "Ttk", TTK_PATCH_LEVEL, (void*)&ttkStubs);
+    Tcl_PkgProvideEx(interp, "Ttk", TTK_PATCH_LEVEL, (ClientData)&ttkStubs);
 
     return TCL_OK;
 }

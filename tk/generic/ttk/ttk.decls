@@ -34,7 +34,7 @@ declare 5 current {
 }
 
 declare 6 current {
-    Ttk_ElementImpl Ttk_RegisterElement(
+    Ttk_ElementClass *Ttk_RegisterElement(
 	Tcl_Interp *interp,
 	Ttk_Theme theme,
 	const char *elementName,
