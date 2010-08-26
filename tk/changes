@@ -6724,4 +6724,6 @@ in screen distances, reducing precision loss (ferrieux)
 
 2010-08-12 (bug fix)[2585265] text <Delete>,<Backspace> note selection (fellows)
 
+2010-08-25 (feature)[3053320] update Ttk to tile 0.8.6 feature set (hobbs)
+
 --- Released 8.5.9, August 31, 2010 --- See ChangeLog for details ---
