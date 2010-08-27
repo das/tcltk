@@ -677,6 +677,14 @@ gdb: wish@EXEEXT@
 	gdb ./wish@EXEEXT@ --command=gdb.run
 	rm gdb.run
 
+VALGRINDARGS=--tool=memcheck --num-callers=8 --leak-resolution=high --leak-check=yes --show-reachable=yes -v
+
+valgrind: tktest@EXEEXT@
+	$(SHELL_ENV) valgrind $(VALGRINDARGS) ./tktest@EXEEXT@ $(TEST_DIR)/all.tcl -geometry +0+0 -singleproc 1 $(TESTFLAGS)
+
+valgrindshell: tktest@EXEEXT@
+	$(SHELL_ENV) valgrind $(VALGRINDARGS) ./tktest@EXEEXT@ $(SCRIPT)
+
 INSTALL_TARGETS = install-binaries install-libraries install-demos install-doc @EXTRA_INSTALL@
 
 install: $(INSTALL_TARGETS)
