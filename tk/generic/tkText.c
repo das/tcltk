@@ -4649,17 +4649,17 @@ DumpLine(
 	int currentSize = segPtr->size;
 
 	if ((what & TK_DUMP_TEXT) && (segPtr->typePtr == &tkTextCharType) &&
-		(offset + segPtr->size > startByte)) {
-	    int last = segPtr->size;	/* Index of last char in seg. */
+		(offset + currentSize > startByte)) {
+	    int last = currentSize;	/* Index of last char in seg. */
 	    int first = 0;		/* Index of first char in seg. */
 
-	    if (offset + segPtr->size > endByte) {
+	    if (offset + currentSize > endByte) {
 		last = endByte - offset;
 	    }
 	    if (startByte > offset) {
 		first = startByte - offset;
 	    }
-	    if (last != segPtr->size) {
+	    if (last != currentSize) {
 		/*
 		 * To avoid modifying the string in place we copy over just
 		 * the segment that we want. Since DumpSegment can modify the
@@ -4768,7 +4768,7 @@ DumpLine(
 	    } else {
 		while ((newOffset < endByte) && (newOffset < offset)
 			&& (newSegPtr != NULL)) {
-		    newOffset += segPtr->size;
+		    newOffset += currentSize;
 		    newSegPtr = newSegPtr->nextPtr;
 		    if (segPtr == newSegPtr) {
 			break;
