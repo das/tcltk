@@ -1,6 +1,32 @@
-2010-08-29  Donal K. Fellows  <dkf@users.sf.net>
+2010-09-01  Don Porter  <dgp@users.sourceforge.net>
 
 	*** 8.5.9 TAGGED FOR RELEASE ***
+
+	* changes:	Update for 8.5.9 release.
+
+2010-09-01  Andreas Kupries  <andreask@activestate.com>
+
+	* generic/tclExecute.c: [Bug 3057639]. Applied patch by Jeff to
+	* generic/tclVar.c: make the behaviour of lappend in bytecompiled
+	* tests/append.test: mode consistent with direct-eval and 'append'
+	* tests/appendComp.test: generally. Added tests (append*-9.*)
+	showing the difference.
+	***POTENTIAL INCOMPATIBILITY***
+
+2010-09-01  Donal K. Fellows  <dkf@users.sf.net>
+
+	* tools/tcltk-man2html.tcl: Improve handling of cross-links for
+	options between Ttk manual pages.
+
+	* doc/Tcl.n: Avoid nroff hazards when generating documentation.
+
+2010-08-31  Andreas Kupries  <andreask@activestate.com>
+
+	* win/tcl.m4: Applied patch by Jeff fixing issues with the
+	manifest handling on Win64.
+	* win/configure: Regenerated.
+
+2010-08-29  Donal K. Fellows  <dkf@users.sf.net>
 
 	* doc/dict.n: [Bug 3046999]: Corrected cross reference to array
 	manpage to refer to (correct) existing subcommand.
