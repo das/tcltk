@@ -2830,6 +2830,7 @@ static int TreeviewSeeCommand(
 	    parent->openObj = unshare(parent->openObj);
 	    Tcl_SetBooleanObj(parent->openObj, 1);
 	    parent->state |= TTK_STATE_OPEN;
+	    TtkRedisplayWidget(&tv->core);
 	}
     }
 
