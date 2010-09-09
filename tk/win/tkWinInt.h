@@ -196,7 +196,7 @@ typedef struct TkWinProcs {
     int (WINAPI *getClassName)(HWND, LPTSTR, int);
 } TkWinProcs;
 
-MODULE_SCOPE const TkWinProcs *tkWinProcs;
+MODULE_SCOPE const TkWinProcs *const tkWinProcs;
 
 /*
  * The following allows us to cache these encoding for multiple functions.
