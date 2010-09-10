@@ -12,6 +12,12 @@
  * RCS: @(#) $Id$
  */
 
+/* TODO: This file does not compile in UNICODE mode.
+ * See [Freq 2965056]: Windows build with -DUNICODE
+ */
+#undef UNICODE
+#undef _UNICODE
+
 /* Make sure this file is never compiled with Stubs! */
 #undef USE_TCL_STUBS
 #undef USE_TK_STUBS

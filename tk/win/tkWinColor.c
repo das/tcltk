@@ -12,6 +12,12 @@
  * RCS: @(#) $Id$
  */
 
+/* TODO: This file does not compile in UNICODE mode.
+ * See [Freq 2965056]: Windows build with -DUNICODE
+ */
+#undef UNICODE
+#undef _UNICODE
+
 #include "tkWinInt.h"
 #include "tkColor.h"
 

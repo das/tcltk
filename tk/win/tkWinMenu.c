@@ -13,6 +13,12 @@
  * RCS: @(#) $Id$
  */
 
+/* TODO: This file does not compile in UNICODE mode.
+ * See [Freq 2965056]: Windows build with -DUNICODE
+ */
+#undef UNICODE
+#undef _UNICODE
+
 #define WINVER        0x0500   /* Requires Windows 2K definitions */
 #define _WIN32_WINNT  0x0500
 #define OEMRESOURCE

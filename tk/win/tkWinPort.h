@@ -54,13 +54,11 @@
 /*
  *  Pull in the typedef of TCHAR for windows.
  */
-#if !defined(_TCHAR_DEFINED)
-#   include <tchar.h>
-#   ifndef _TCHAR_DEFINED
-	/* Borland seems to forget to set this. */
-	typedef _TCHAR TCHAR;
-#	define _TCHAR_DEFINED
-#   endif
+#include <tchar.h>
+#ifndef _TCHAR_DEFINED
+    /* Borland seems to forget to set this. */
+    typedef _TCHAR TCHAR;
+#   define _TCHAR_DEFINED
 #endif
 
 #include <X11/Xlib.h>

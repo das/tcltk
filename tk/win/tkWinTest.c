@@ -14,12 +14,16 @@
  * RCS: @(#) $Id$
  */
 
-#ifndef USE_TCL_STUBS
-#   define USE_TCL_STUBS
-#endif
-#ifndef USE_TK_STUBS
-#   define USE_TK_STUBS
-#endif
+/* TODO: This file does not compile in UNICODE mode.
+ * See [Freq 2965056]: Windows build with -DUNICODE
+ */
+#undef UNICODE
+#undef _UNICODE
+
+#undef USE_TCL_STUBS
+#define USE_TCL_STUBS
+#undef USE_TK_STUBS
+#define USE_TK_STUBS
 #include "tkWinInt.h"
 
 HWND tkWinCurrentDialog;
