@@ -19,8 +19,6 @@
 #undef UNICODE
 #undef _UNICODE
 
-#define WINVER        0x0500   /* Requires Windows 2K definitions */
-#define _WIN32_WINNT  0x0500
 #define OEMRESOURCE
 #include "tkWinInt.h"
 #include "tkMenu.h"

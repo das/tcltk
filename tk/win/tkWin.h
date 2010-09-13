@@ -20,14 +20,14 @@
  * the SystemParametersInfo API doesn't like to receive structures that
  * are larger than it expects which affects the font assignements.
  *
- * WINVER = 0x0410 means Windows 98 and above
+ * WINVER = 0x0500 means Windows 2000 and above
  */
 
 #ifndef WINVER
-#define WINVER 0x0410
+#define WINVER 0x0500
 #endif
-#ifndef _WIN32_WINDOWS
-#define _WIN32_WINDOWS 0x0410
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0500
 #endif
 
 #ifndef _TK
