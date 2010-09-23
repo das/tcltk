@@ -211,7 +211,25 @@ proc genStubs::declare {args} {
     if {$index > $stubs($curName,lastNum)} {
 	set stubs($curName,lastNum) $index
     }
+    return
+}
 
+# genStubs::export --
+#
+#	This function is used in the declarations file to declare a symbol
+#	that is exported from the library but is not in the stubs table.
+#
+# Arguments:
+#	decl		The C function declaration, or {} for an undefined
+#			entry.
+#
+# Results:
+#	None.
+
+proc genStubs::export {args} {
+    if {[llength $args] != 1} {
+	puts stderr "wrong # args: export $args"
+    }
     return
 }
 
