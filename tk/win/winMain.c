@@ -20,9 +20,6 @@
 #undef UNICODE
 #undef _UNICODE
 
-/* Make sure this file is never compiled with Stubs! */
-#undef USE_TCL_STUBS
-#undef USE_TK_STUBS
 #include "tk.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -95,7 +92,7 @@ _tWinMain(
     int argc;
     TCHAR *p;
 
-    Tcl_SetPanicProc(WishPanic);
+    (Tcl_SetPanicProc)(WishPanic);
 
     /*
      * Create the console channels and install them as the standard channels.
@@ -164,7 +161,7 @@ int
 Tcl_AppInit(
     Tcl_Interp *interp)		/* Interpreter for application. */
 {
-    if (Tcl_Init(interp) == TCL_ERROR) {
+    if ((Tcl_Init)(interp) == TCL_ERROR) {
 	goto error;
     }
     if (Tk_Init(interp) == TCL_ERROR) {
@@ -236,7 +233,7 @@ Tcl_AppInit(
 
 error:
     MessageBeep(MB_ICONEXCLAMATION);
-    MessageBoxA(NULL, Tcl_GetStringResult(interp), "Error in Wish",
+    MessageBoxA(NULL, (Tcl_GetStringResult)(interp), "Error in Wish",
 	    MB_ICONSTOP | MB_OK | MB_TASKMODAL | MB_SETFOREGROUND);
     ExitProcess(1);
 
@@ -305,7 +302,7 @@ _tmain(
     int argc,
     TCHAR **argv)
 {
-    Tcl_SetPanicProc(WishPanic);
+    (Tcl_SetPanicProc)(WishPanic);
 
     /*
      * Set up the default locale to be standard "C" locale so parsing is
