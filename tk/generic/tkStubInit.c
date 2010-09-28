@@ -40,6 +40,12 @@
 
 MODULE_SCOPE const TkStubs tkStubs;
 
+/*
+ * Remove macro that might interfere with the definition below.
+ */
+
+#undef Tk_MainEx
+
 /* !BEGIN!: Do not edit below this line. */
 
 static const TkIntStubs tkIntStubs = {

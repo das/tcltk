@@ -19,6 +19,7 @@ library tk
 # Define the unsupported generic interfaces.
 
 interface tkInt
+scspec EXTERN
 
 # Declare each of the functions in the unsupported internal Tcl interface.
 # These interfaces are allowed to changed between versions. Use at your own

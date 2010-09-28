@@ -22,6 +22,7 @@ library tk
 
 interface tk
 hooks {tkPlat tkInt tkIntPlat tkIntXlib}
+scspec EXTERN
 
 # Declare each of the functions in the public Tk interface.  Note that
 # the an index should never be reused for a different function in order
