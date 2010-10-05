@@ -13,8 +13,6 @@
  * RCS: @(#) $Id$
  */
 
-#undef UNICODE
-#undef _UNICODE
 #include "tkWinInt.h"
 
 /*
@@ -1366,12 +1364,12 @@ GetTranslatedKey(
     xkey->nbytes = 0;
 
     while ((xkey->nbytes < XMaxTransChars)
-	    && PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE)) {
+	    && PeekMessageA(&msg, NULL, 0, 0, PM_NOREMOVE)) {
 	if ((msg.message != WM_CHAR) && (msg.message != WM_SYSCHAR)) {
 	    break;
 	}
 
-	GetMessage(&msg, NULL, 0, 0);
+	GetMessageA(&msg, NULL, 0, 0);
 
 	/*
 	 * If this is a normal character message, we may need to strip off the
