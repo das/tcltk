@@ -13,6 +13,8 @@
  * RCS: @(#) $Id$
  */
 
+#undef UNICODE
+#undef _UNICODE
 #include "tkWinInt.h"
 
 /*
@@ -57,16 +59,16 @@
 
 static const TkWinProcs unicodeProcs = {
     1,
-    (LRESULT (WINAPI *)(WNDPROC, HWND, UINT, WPARAM, LPARAM)) CallWindowProc,
-    (LRESULT (WINAPI *)(HWND, UINT, WPARAM, LPARAM)) DefWindowProc,
-    (ATOM (WINAPI *)(const WNDCLASS *)) RegisterClass,
-    (BOOL (WINAPI *)(HWND, LPCTSTR)) SetWindowText,
+    (LRESULT (WINAPI *)(WNDPROC, HWND, UINT, WPARAM, LPARAM)) CallWindowProcW,
+    (LRESULT (WINAPI *)(HWND, UINT, WPARAM, LPARAM)) DefWindowProcW,
+    (ATOM (WINAPI *)(const WNDCLASS *)) RegisterClassW,
+    (BOOL (WINAPI *)(HWND, LPCTSTR)) SetWindowTextW,
     (HWND (WINAPI *)(DWORD, LPCTSTR, LPCTSTR, DWORD, int, int,
-	    int, int, HWND, HMENU, HINSTANCE, LPVOID)) CreateWindowEx,
-    (BOOL (WINAPI *)(HMENU, UINT, UINT, UINT, LPCTSTR)) InsertMenu,
-    (int (WINAPI *)(HWND, LPCTSTR, int)) GetWindowText,
-    (HWND (WINAPI *)(LPCTSTR, LPCTSTR)) FindWindow,
-    (int (WINAPI *)(HWND, LPTSTR, int)) GetClassName,
+	    int, int, HWND, HMENU, HINSTANCE, LPVOID)) CreateWindowExW,
+    (BOOL (WINAPI *)(HMENU, UINT, UINT, UINT, LPCTSTR)) InsertMenuW,
+    (int (WINAPI *)(HWND, LPCTSTR, int)) GetWindowTextW,
+    (HWND (WINAPI *)(LPCTSTR, LPCTSTR)) FindWindowW,
+    (int (WINAPI *)(HWND, LPTSTR, int)) GetClassNameW,
 };
 
 const TkWinProcs *const tkWinProcs = &unicodeProcs;
