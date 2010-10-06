@@ -12,12 +12,6 @@
  * RCS: @(#) $Id$
  */
 
-/* TODO: This file does not compile in UNICODE mode.
- * See [Freq 2965056]: Windows build with -DUNICODE
- */
-#undef UNICODE
-#undef _UNICODE
-
 #include "tkWinInt.h"
 
 /*
@@ -108,12 +102,12 @@ Tk_GetPixmap(
 	    LPVOID lpMsgBuf;
 
 	    repeatError = 1;
-	    if (FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
+	    if (FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER |
 		    FORMAT_MESSAGE_FROM_SYSTEM|FORMAT_MESSAGE_IGNORE_INSERTS,
 		    NULL, GetLastError(),
 		    MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-		    (LPTSTR) &lpMsgBuf, 0, NULL)) {
-		MessageBox(NULL, (LPCTSTR) lpMsgBuf,
+		    (LPSTR) &lpMsgBuf, 0, NULL)) {
+		MessageBoxA(NULL, (LPCSTR) lpMsgBuf,
 			"Tk_GetPixmap: Error from CreateDIBSection",
 			MB_OK | MB_ICONINFORMATION);
 		LocalFree(lpMsgBuf);

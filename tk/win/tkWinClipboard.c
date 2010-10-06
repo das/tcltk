@@ -12,12 +12,6 @@
  * RCS: @(#) $Id$
  */
 
-/* TODO: This file does not compile in UNICODE mode.
- * See [Freq 2965056]: Windows build with -DUNICODE
- */
-#undef UNICODE
-#undef _UNICODE
-
 #include "tkWinInt.h"
 #include "tkSelect.h"
 
@@ -112,7 +106,7 @@ TkSelGetSelection(
 	     */
 
 	    locale = LANGIDFROMLCID(*((int*)data));
-	    GetLocaleInfo(locale, LOCALE_IDEFAULTANSICODEPAGE,
+	    GetLocaleInfoA(locale, LOCALE_IDEFAULTANSICODEPAGE,
 		    Tcl_DStringValue(&ds)+2, Tcl_DStringLength(&ds)-2);
 	    GlobalUnlock(handle);
 

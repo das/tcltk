@@ -11,12 +11,6 @@
  * RCS: @(#) $Id$
  */
 
-/* TODO: This file does not compile in UNICODE mode.
- * See [Freq 2965056]: Windows build with -DUNICODE
- */
-#undef UNICODE
-#undef _UNICODE
-
 #include "tkWinInt.h"
 
 /*
@@ -145,7 +139,7 @@ TkGetCursorByName(
 	    ckfree((char *) cursorPtr);
 	    return NULL;
 	}
-	cursorPtr->winCursor = LoadCursorFromFile(&(argv[0][1]));
+	cursorPtr->winCursor = LoadCursorFromFileA(&(argv[0][1]));
     } else {
 	/*
 	 * Check for the cursor in the system cursor set.
@@ -164,7 +158,7 @@ TkGetCursorByName(
 	     * one of our application resources.
 	     */
 
-	    cursorPtr->winCursor = LoadCursor(Tk_GetHINSTANCE(), argv[0]);
+	    cursorPtr->winCursor = LoadCursorA(Tk_GetHINSTANCE(), argv[0]);
 	} else {
 	    cursorPtr->system = 1;
 	}
