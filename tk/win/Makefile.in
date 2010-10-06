@@ -706,7 +706,10 @@ genstubs:
 	$(TCL_EXE) "$(TCL_TOOL_DIR)\genStubs.tcl" \
 	    "$(GENERIC_DIR_NATIVE)" \
 	    "$(GENERIC_DIR_NATIVE)\tk.decls" \
-            "$(GENERIC_DIR_NATIVE)\tkInt.decls"
+	    "$(GENERIC_DIR_NATIVE)\tkInt.decls"
+	$(TCL_EXE) "$(TTK_DIR)/ttkGenStubs.tcl" \
+	    "$(TTK_DIR)" \
+	    "$(TTK_DIR)/ttk.decls"
 
 #
 # The list of all the targets that do not correspond to real files. This stops
