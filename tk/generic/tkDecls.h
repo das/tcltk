@@ -1729,14 +1729,18 @@ extern const TkStubs *tkStubsPtr;
 
 /* !END!: Do not edit above this line. */
 
-#undef TCL_STORAGE_CLASS
-#define TCL_STORAGE_CLASS DLLIMPORT
-
 /* Functions that don't belong in the stub table */
 #undef Tk_MainEx
 #undef Tk_Init
 #undef Tk_SafeInit
 #undef Tk_CreateConsoleWindow
 
-#endif /* _TKDECLS */
+#if defined(_WIN32) && defined(UNICODE)
+EXTERN void Tk_MainExW(int, TCHAR **, Tcl_AppInitProc *, Tcl_Interp *);
+#   define Tk_MainEx Tk_MainExW
+#endif
 
+#undef TCL_STORAGE_CLASS
+#define TCL_STORAGE_CLASS DLLIMPORT
+
+#endif /* _TKDECLS */

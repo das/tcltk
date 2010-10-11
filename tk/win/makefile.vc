@@ -331,6 +331,7 @@ TKOBJS = \
 	$(TMP_DIR)\tkListbox.obj \
 	$(TMP_DIR)\tkMacWinMenu.obj \
 	$(TMP_DIR)\tkMain.obj \
+	$(TMP_DIR)\tkMain2.obj \
 	$(TMP_DIR)\tkMenu.obj \
 	$(TMP_DIR)\tkMenubutton.obj \
 	$(TMP_DIR)\tkMenuDraw.obj \
@@ -797,6 +798,9 @@ $(TMP_DIR)\winMain.obj: $(WINDIR)\winMain.c
 	$(cc32) $(WISH_CFLAGS) \
 	    -DTCL_USE_STATIC_PACKAGES=$(TCL_USE_STATIC_PACKAGES) \
 	    -Fo$@ $?
+
+$(TMP_DIR)\tkMain2.obj: $(GENERICDIR)\tkMain.c
+	$(cc32) -DBUILD_tk $(TK_CFLAGS) -DTK_ASCII_MAIN -Fo$@ $?
 
 # The following objects are part of the stub library and should not
 # be built as DLL objects but none of the symbols should be exported
