@@ -698,8 +698,7 @@ ReconfigureWindowsMenu(
 	    }
 	}
 	if (!systemMenu) {
-	    tkWinProcs->insertMenu(winMenuHdl, 0xFFFFFFFF, flags,
-		    itemID, lpNewItem);
+	    InsertMenu(winMenuHdl, 0xFFFFFFFF, flags, itemID, lpNewItem);
 	}
 	Tcl_DStringFree(&translatedText);
 	if (itemText != NULL) {
@@ -969,7 +968,7 @@ TkWinEmbeddedMenuProc(
 	break;
 
     case WM_SETTINGCHANGE:
-	if (wParam == SPI_SETNONCLIENTMETRICS 
+	if (wParam == SPI_SETNONCLIENTMETRICS
 		|| wParam == SPI_SETKEYBOARDCUES) {
 	    SetDefaults(0);
 	}
