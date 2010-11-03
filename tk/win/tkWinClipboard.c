@@ -295,7 +295,7 @@ TkWinClipboardRender(
      * encoding before placing it on the clipboard.
      */
 
-    if (TkWinGetPlatformId() != VER_PLATFORM_WIN32_WINDOWS) {
+#ifdef UNICODE
 	Tcl_DStringInit(&ds);
 	Tcl_UtfToUniCharDString(rawText, -1, &ds);
 	ckfree(rawText);
@@ -311,7 +311,7 @@ TkWinClipboardRender(
 	GlobalUnlock(handle);
 	Tcl_DStringFree(&ds);
 	SetClipboardData(CF_UNICODETEXT, handle);
-    } else {
+#else
 	Tcl_UtfToExternalDString(NULL, rawText, -1, &ds);
 	ckfree(rawText);
 	handle = GlobalAlloc(GMEM_MOVEABLE|GMEM_DDESHARE,
@@ -326,7 +326,7 @@ TkWinClipboardRender(
 	GlobalUnlock(handle);
 	Tcl_DStringFree(&ds);
 	SetClipboardData(CF_TEXT, handle);
-    }
+#endif
 }
 
 /*

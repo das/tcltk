@@ -3256,17 +3256,11 @@ SetDefaults(
      * only way to ensure menu items line up, and is not documented.
      */
 
-    if (TkWinGetPlatformId() >= VER_PLATFORM_WIN32_WINDOWS) {
-	indicatorDimensions[0] = GetSystemMetrics(SM_CYMENUCHECK);
-	indicatorDimensions[1] = ((GetSystemMetrics(SM_CXFIXEDFRAME) +
-		GetSystemMetrics(SM_CXBORDER)
-		+ GetSystemMetrics(SM_CXMENUCHECK) + 7) & 0xFFF8)
-		- GetSystemMetrics(SM_CXFIXEDFRAME);
-    } else {
-	DWORD dimensions = GetMenuCheckMarkDimensions();
-	indicatorDimensions[0] = HIWORD(dimensions);
-	indicatorDimensions[1] = LOWORD(dimensions);
-    }
+    indicatorDimensions[0] = GetSystemMetrics(SM_CYMENUCHECK);
+    indicatorDimensions[1] = ((GetSystemMetrics(SM_CXFIXEDFRAME) +
+	    GetSystemMetrics(SM_CXBORDER)
+	    + GetSystemMetrics(SM_CXMENUCHECK) + 7) & 0xFFF8)
+	    - GetSystemMetrics(SM_CXFIXEDFRAME);
 
     /*
      * Accelerators used to be always underlines until Win2K when a system
