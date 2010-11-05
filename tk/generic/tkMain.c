@@ -21,9 +21,14 @@
  * TK_ASCII_MAIN defined. This way both Tk_MainEx and Tk_MainExW
  * can be implemented, sharing the same source code.
  */
-#ifndef TK_ASCII_MAIN
-#   undef UNICODE
-#   undef _UNICODE
+#if defined(TK_ASCII_MAIN)
+#   ifdef UNICODE
+#	undef UNICODE
+#	undef _UNICODE
+#   else
+#	define UNICODE
+#	define _UNICODE
+#   endif
 #endif
 
 #include <ctype.h>
