@@ -6877,4 +6877,8 @@ name to select image format (fellows)
 
 2010-11-03 windows build with -UNICODE (nijtmans)
 
+2010-11-05 Message catalogs reworked to use unicode copyright char (nijtmans)
+
+2010-11-06 Message catalogs resorted, updates to NL (nijtmans)
+
 --- Released 8.6b2, November 15, 2010 --- See ChangeLog for details ---
