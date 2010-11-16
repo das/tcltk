@@ -59,6 +59,10 @@
 	typedef _TCHAR TCHAR;
 #	define _TCHAR_DEFINED
 #   endif
+#   if defined(_MSC_VER) && defined(__STDC__)
+	/* VS2005 SP1 misses this. See [Bug #3110161] */
+	typedef _TCHAR TCHAR;
+#   endif
 #endif
 
 #ifdef __CYGWIN__
