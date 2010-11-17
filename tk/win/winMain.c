@@ -18,6 +18,12 @@
 /* On mingw32 and cygwin this doesn't work */
 #   undef UNICODE
 #   undef _UNICODE
+#elif defined(UNICODE)
+/* workaround for bug in some versions of mingw32-w64 */
+#   undef _tWinMain
+#   define _tWinMain wWinMain
+#   undef __targv
+#   define __targv __wargv
 #endif
 
 #include "tk.h"
@@ -85,7 +91,7 @@ int APIENTRY
 _tWinMain(
     HINSTANCE hInstance,
     HINSTANCE hPrevInstance,
-    LPWSTR lpszCmdLine,
+    LPTSTR lpszCmdLine,
     int nCmdShow)
 {
     TCHAR **argv;
