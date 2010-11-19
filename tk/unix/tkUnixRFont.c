@@ -123,7 +123,7 @@ GetFont(
 	     * proceed at this point.
 	     */
 
-	    Tcl_Panic("Cannot find a usable font.");
+	    Tcl_Panic("Cannot find a usable font");
 	}
 
 	if (angle == 0.0) {

@@ -1860,7 +1860,7 @@ Tk_ConfigureWindow(
 	winPtr->changes.border_width = valuePtr->border_width;
     }
     if (valueMask & (CWSibling|CWStackMode)) {
-	Tcl_Panic("Can't set sibling or stack mode from Tk_ConfigureWindow.");
+	Tcl_Panic("Can't set sibling or stack mode from Tk_ConfigureWindow");
     }
 
     if (winPtr->window != None) {

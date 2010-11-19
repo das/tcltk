@@ -1211,7 +1211,7 @@ DestroyMenuInstance(
 	    }
 	}
     } else if (menuPtr->nextInstancePtr != NULL) {
-	Tcl_Panic("Attempting to delete master menu when there are still clones.");
+	Tcl_Panic("Attempting to delete master menu when there are still clones");
     }
 
     /*
@@ -2480,7 +2480,7 @@ MenuAddOrInsert(
 		menuRefPtr = TkFindMenuReferencesObj(menuListPtr->interp,
 			newCascadePtr);
 		if (menuRefPtr == NULL) {
-		    Tcl_Panic("CloneMenu failed inside of MenuAddOrInsert.");
+		    Tcl_Panic("CloneMenu failed inside of MenuAddOrInsert");
 		}
 		newObjv[0] = menuNamePtr;
 		newObjv[1] = newCascadePtr;

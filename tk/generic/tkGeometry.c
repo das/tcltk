@@ -373,7 +373,7 @@ TkFreeGeometryMaster(
 
     if (winPtr->geometryMaster != NULL &&
 	    strcmp(winPtr->geometryMaster, master) != 0) {
-	Tcl_Panic("Trying to free %s from geometry manager %s.",
+	Tcl_Panic("Trying to free %s from geometry manager %s",
 		winPtr->geometryMaster, master);
     }
     if (winPtr->geometryMaster != NULL) {

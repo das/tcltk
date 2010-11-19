@@ -761,7 +761,7 @@ TkImgPhotoInstanceSetSize(
 		(masterPtr->height > 0) ? masterPtr->height: 1,
 		instancePtr->visualInfo.depth);
 	if (!newPixmap) {
-	    Tcl_Panic("Fail to create pixmap with Tk_GetPixmap in TkImgPhotoInstanceSetSize.\n");
+	    Tcl_Panic("Fail to create pixmap with Tk_GetPixmap in TkImgPhotoInstanceSetSize");
 	}
 
 	/*

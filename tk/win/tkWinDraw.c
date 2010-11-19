@@ -585,7 +585,7 @@ TkPutImage(
 	ckfree((char *) infoPtr);
     }
     if (!bitmap) {
-	Tcl_Panic("Fail to allocate bitmap\n");
+	Tcl_Panic("Fail to allocate bitmap");
 	DeleteDC(dcMem);
     	TkWinReleaseDrawableDC(d, dc, &state);
 	return;

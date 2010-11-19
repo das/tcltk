@@ -2939,7 +2939,7 @@ TkBTreeNextTag(
 		}
 		searchPtr->linesLeft -= nodePtr->numLines;
 		if (nodePtr->nextPtr == NULL) {
-		    Tcl_Panic("TkBTreeNextTag found incorrect tag summary info.");
+		    Tcl_Panic("TkBTreeNextTag found incorrect tag summary info");
 		}
 	    }
 	nextChild:
@@ -3157,7 +3157,7 @@ TkBTreePrevTag(
 		continue;
 	    }
 	    if (prevNodePtr == NULL) {
-		Tcl_Panic("TkBTreePrevTag found incorrect tag summary info.");
+		Tcl_Panic("TkBTreePrevTag found incorrect tag summary info");
 	    }
 	    searchPtr->linesLeft -= linesSkipped;
 	    nodePtr = prevNodePtr;
