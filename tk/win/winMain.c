@@ -35,13 +35,13 @@ extern Tcl_PackageInitProc Dde_SafeInit;
 #ifdef TCL_BROKEN_MAINARGS
 static void setargv(int *argcPtr, TCHAR ***argvPtr);
 #endif
+extern void TkpDisplayWarning(const char *, const char *);
 
 /*
  * Forward declarations for procedures defined later in this file:
  */
 
 static void WishPanic(const char *format, ...);
-
 static BOOL consoleRequired = TRUE;
 
 /*
@@ -277,15 +277,11 @@ WishPanic(
 {
     va_list argList;
     char buf[1024];
-    Tcl_DString ds;
 
     MessageBeep(MB_ICONEXCLAMATION);
     va_start(argList, format);
     vsprintf(buf, format, argList);
-    Tcl_WinUtfToTChar(buf, -1, &ds);
-    MessageBox(NULL, (TCHAR *)Tcl_DStringValue(&ds), TEXT("Error in Wish"),
-	    MB_ICONSTOP | MB_OK | MB_TASKMODAL | MB_SETFOREGROUND);
-    Tcl_DStringFree(&ds);
+	TkpDisplayWarning(buf, "Error in Wish");
 #ifdef _MSC_VER
     DebugBreak();
 #endif
