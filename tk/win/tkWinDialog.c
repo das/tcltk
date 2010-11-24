@@ -1026,7 +1026,10 @@ OFNHookProcW(
 	    dirsize = SendMessageW(hdlg, CDM_GETFOLDERPATH, 0, 0);
 	    buffersize = (selsize + dirsize + 1) * 2;
 
-	    if (selsize > 1) {
+	    /*
+	     * Just empty the buffer if dirsize indicates an error [Bug 3071836]
+	     */
+	    if ((selsize > 1) && (dirsize > 0)) {
 		if (ofnData->dynFileBufferSize < buffersize) {
 		    buffer = (WCHAR *) ckrealloc((char *) buffer, buffersize);
 		    ofnData->dynFileBufferSize = buffersize;
@@ -1572,7 +1575,10 @@ OFNHookProcA(
 	    dirsize = SendMessage(hdlg, CDM_GETFOLDERPATH, 0, 0);
 	    buffersize = selsize + dirsize + 1;
 
-	    if (selsize > 1) {
+	    /*
+	     * Just empty the buffer if dirsize indicates an error [Bug 3071836]
+	     */
+	    if ((selsize > 1) && (dirsize > 0)) {
 		if (ofnData->dynFileBufferSize < buffersize) {
 		    buffer = ckrealloc(buffer, buffersize);
 		    ofnData->dynFileBufferSize = buffersize;
