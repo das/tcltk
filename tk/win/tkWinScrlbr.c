@@ -248,7 +248,7 @@ CreateProc(
 
     scrollPtr->lastVertical = scrollPtr->info.vertical;
     scrollPtr->oldProc = (WNDPROC)SetWindowLongPtr(scrollPtr->hwnd,
-	    GWLP_WNDPROC, (INT_PTR) ScrollbarProc);
+	    GWLP_WNDPROC, (LONG_PTR) ScrollbarProc);
     window = Tk_AttachHWND(tkwin, scrollPtr->hwnd);
 
     UpdateScrollbar(scrollPtr);
@@ -293,7 +293,7 @@ TkpDisplayScrollbar(
     if (scrollPtr->lastVertical != scrollPtr->info.vertical) {
 	HWND hwnd = Tk_GetHWND(Tk_WindowId(tkwin));
 
-	SetWindowLongPtr(hwnd, GWLP_WNDPROC, (INT_PTR) scrollPtr->oldProc);
+	SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR) scrollPtr->oldProc);
 	DestroyWindow(hwnd);
 
 	CreateProc(tkwin, Tk_WindowId(Tk_Parent(tkwin)),
