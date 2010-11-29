@@ -213,7 +213,10 @@ TkpScanWindowId(
     Window *idPtr)		/* Place to store converted result. */
 {
     Tk_Window tkwin;
-    Window number, *numberPtr = &number;
+    union {
+	HWND hwnd;
+	int number;
+    } win;
 
     /*
      * We want sscanf for the 64-bit check, but if that doesn't work, then
@@ -222,13 +225,13 @@ TkpScanWindowId(
 
     if (
 #ifdef _WIN64
-	    (sscanf(string, "0x%p", &number) != 1) &&
+	    (sscanf(string, "0x%p", &win.hwnd) != 1) &&
 #endif
-	    Tcl_GetInt(interp, string, (int *) numberPtr) != TCL_OK) {
+	    Tcl_GetInt(interp, string, &win.number) != TCL_OK) {
 	return TCL_ERROR;
     }
 
-    tkwin = Tk_HWNDToWindow((HWND) number);
+    tkwin = Tk_HWNDToWindow(win.hwnd);
     if (tkwin) {
 	*idPtr = Tk_WindowId(tkwin);
     } else {
