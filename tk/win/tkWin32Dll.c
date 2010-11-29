@@ -90,12 +90,21 @@ DllEntryPoint(
  *	Always TRUE.
  *
  * Side effects:
- *	This might call some sycronization functions, but MSDN documentation
+ *	This might call some synchronization functions, but MSDN documentation
  *	states: "Waiting on synchronization objects in DllMain can cause a
  *	deadlock."
  *
  *----------------------------------------------------------------------
  */
+
+#if defined(HAVE_NO_SEH) && defined(_WIN64)
+/* A little trick to make the assembler code below
+ * compile on Win64 with gcc: It appears that Win64
+ * does not decorate compiled functions with "_"
+ */
+static void _TkFinalize(ClientData clientData) __attribute__((used));
+static void _TkFinalize(ClientData clientData) {TkFinalize(clientData);}
+#endif
 
 BOOL APIENTRY
 DllMain(
