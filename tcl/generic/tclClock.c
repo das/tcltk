@@ -256,6 +256,15 @@ TclClockInit(
     int i;
 
     /*
+     * Safe interps get [::clock] as alias to a master, so do not need their
+     * own copies of the support routines.
+     */
+
+    if (Tcl_IsSafe(interp)) {
+	return;
+    }
+
+    /*
      * Create the client data, which is a refcounted literal pool.
      */
 
@@ -1504,7 +1513,7 @@ GetJulianDayFromEraYearMonthDay(
 	fields->julianDay = JDAY_1_JAN_1_CE_JULIAN - 1
 		+ fields->dayOfMonth
 		+ daysInPriorMonths[year%4 == 0][month - 1]
-		+ (365 * ym1)
+		+ (ONE_YEAR * ym1)
 	        + ym1o4;
     }
 }
