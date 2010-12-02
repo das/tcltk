@@ -3021,7 +3021,7 @@ GetEncodingAlias(
 /*
  *---------------------------------------------------------------------------
  *
- * TkpDrawAngledChars --
+ * TkDrawAngledChars --
  *
  *	Draw some characters at an angle. This is awkward here because we have
  *	no reliable way of drawing any characters at an angle in classic X11;
@@ -3117,7 +3117,7 @@ InitDestImage(
 }
 
 void
-TkpDrawAngledChars(
+TkDrawAngledChars(
     Display *display,		/* Display on which to draw. */
     Drawable drawable,		/* Window or pixmap in which to draw. */
     GC gc,			/* Graphics context for drawing characters. */

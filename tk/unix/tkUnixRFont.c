@@ -837,7 +837,7 @@ Tk_DrawChars(
 /*
  *---------------------------------------------------------------------------
  *
- * TkpDrawAngledChars --
+ * TkDrawAngledChars --
  *
  *	Draw some characters at an angle. This would be simple code, except
  *	Xft has bugs with cumulative errors in character positioning which are
@@ -854,7 +854,7 @@ Tk_DrawChars(
  */
 
 void
-TkpDrawAngledChars(
+TkDrawAngledChars(
     Display *display,		/* Display on which to draw. */
     Drawable drawable,		/* Window or pixmap in which to draw. */
     GC gc,			/* Graphics context for drawing characters. */

@@ -524,7 +524,7 @@ Tk_FontObjCmd(
 	    s = Tcl_GetString(objv[n]);
 	    if (s[0] == '-' && s[1] != '-') {
 		optPtr = objv[n];
-		++n;
+		n++;
 	    } else {
 		optPtr = NULL;
 	    }
@@ -536,7 +536,7 @@ Tk_FontObjCmd(
 
 	if (n < objc) {
 	    if (!strcmp(Tcl_GetString(objv[n]), "--")) {
-		++n;
+		n++;
 	    }
 	}
 
@@ -546,7 +546,7 @@ Tk_FontObjCmd(
 
 	if (n < objc) {
 	    charPtr = objv[n];
-	    ++n;
+	    n++;
 	}
 
 	/*
@@ -2370,7 +2370,7 @@ TkDrawAngledTextLayout(
 			firstByte, lastByte - firstByte,
 			(int)(x + dx), (int)(y + dy));
 	    } else {
-		TkpDrawAngledChars(display, drawable, gc, layoutPtr->tkfont,
+		TkDrawAngledChars(display, drawable, gc, layoutPtr->tkfont,
 			firstByte, lastByte - firstByte, x+dx, y+dy, angle);
 	    }
 	}

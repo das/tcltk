@@ -613,6 +613,27 @@ declare 180 {
     CONST86 char *TkSmoothPrintProc(ClientData clientData, Tk_Window tkwin,
 	    char *widgRec, int offset, Tcl_FreeProc **freeProcPtr)
 }
+
+# Angled text API, exposed for Emiliano Gavilan's RBC work.
+declare 181 {
+    void TkDrawAngledTextLayout(Display *display, Drawable drawable, GC gc,
+	    Tk_TextLayout layout, int x, int y, double angle, int firstChar,
+	    int lastChar);
+}
+declare 182 {
+    void TkUnderlineAngledTextLayout(Display *display, Drawable drawable,
+	    GC gc, Tk_TextLayout layout, int x, int y, double angle,
+	    int underline);
+}
+declare 183 {
+    int TkIntersectAngledTextLayout(Tk_TextLayout layout, int x, int y,
+	    int width, int height, double angle);
+}
+declare 184 {
+    void TkDrawAngledChars(Display *display,Drawable drawable, GC gc,
+	    Tk_Font tkfont, const char *source, int numBytes, double x,
+	    double y, double angle);
+}
 
 ##############################################################################
 
@@ -968,7 +989,7 @@ declare 51 aqua {
 declare 53 aqua {
     unsigned long TkpGetMS(void)
 }
-
+
 ##############################################################################
 
 # Define the platform specific internal Xlib interfaces. These functions are
