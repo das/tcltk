@@ -1473,9 +1473,13 @@ typedef struct Tk_ElementSpec {
 #define Tk_Release		Tcl_Release
 
 /* Removed Tk_Main, use macro instead */
+#ifdef _WIN32
+#define Tk_Main(argc, argv, proc) Tk_MainEx(argc, argv, proc, \
+	(Tcl_FindExecutable(0), (Tcl_CreateInterp)()))
+#else
 #define Tk_Main(argc, argv, proc) Tk_MainEx(argc, argv, proc, \
 	(Tcl_FindExecutable(argv[0]), (Tcl_CreateInterp)()))
-
+#endif
 const char *		Tk_InitStubs(Tcl_Interp *interp, const char *version,
 				int exact);
 EXTERN const char *	Tk_PkgInitStubsCheck(Tcl_Interp *interp,
