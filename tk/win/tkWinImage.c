@@ -303,8 +303,7 @@ XGetImageZPixmap(
     BOOL ret;
 
     if (format != ZPixmap) {
-	TkpDisplayWarning(
-		"XGetImageZPixmap: only ZPixmap types are implemented",
+	TkpDisplayWarning("Only ZPixmap types are implemented",
 		"XGetImageZPixmap Failure");
 	return NULL;
     }
