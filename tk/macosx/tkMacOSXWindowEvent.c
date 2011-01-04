@@ -48,6 +48,8 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
 #endif
 #endif
 
+extern NSString *opaqueTag;
+
 @implementation TKApplication(TKWindowEvent)
 
 - (void) windowActivation: (NSNotification *) notification
@@ -924,8 +926,13 @@ ExposeRestrictProc(
 {
     NSWindow *w = [self window];
 
-    return (w && (([w styleMask] & NSTexturedBackgroundWindowMask) ||
-	    ![w isOpaque]) ? NO : YES);
+    if (opaqueTag != NULL) {
+      return YES;
+	} else {
+
+     return (w && (([w styleMask] & NSTexturedBackgroundWindowMask) ||
+    	    ![w isOpaque]) ? NO : YES);
+    }
 }
 
 - (BOOL) wantsDefaultClipping
