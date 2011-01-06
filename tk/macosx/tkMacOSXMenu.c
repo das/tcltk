@@ -753,6 +753,7 @@ TkpPostMenu(
     NSPopUpButtonCell *popUpButtonCell = [[NSPopUpButtonCell alloc]
 	    initTextCell:@"" pullsDown:NO];
 
+    [popUpButtonCell setAltersStateOfSelectedItem:NO];
     [popUpButtonCell setMenu:menu];
     [popUpButtonCell selectItem:nil];
     [popUpButtonCell performClickWithFrame:frame inView:view];
