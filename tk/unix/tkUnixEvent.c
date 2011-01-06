@@ -647,7 +647,7 @@ OpenIM(
     }
 
     if ((XGetIMValues(dispPtr->inputMethod, XNQueryInputStyle, &stylePtr,
-	    NULL) != NULL) || (stylePtr == NULL)) {
+	    (void *) NULL) != NULL) || (stylePtr == NULL)) {
 	goto error;
     }
 

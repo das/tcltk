@@ -339,7 +339,7 @@ CreateXIC(
 	preedit_attlist = XVaCreateNestedList(0,
 		XNSpotLocation, &spot,
 		XNFontSet, dispPtr->inputXfs,
-		NULL);
+		(void *) NULL);
     }
 
     winPtr->inputContext = XCreateIC(dispPtr->inputMethod,
@@ -347,7 +347,7 @@ CreateXIC(
 	    XNClientWindow, winPtr->window,
 	    XNFocusWindow, winPtr->window,
 	    preedit_attname, preedit_attlist,
-	    NULL);
+	    (void *) NULL);
 
     if (preedit_attlist) {
 	XFree(preedit_attlist);
@@ -362,7 +362,7 @@ CreateXIC(
     /*
      * Adjust the window's event mask if the IM requires it.
      */
-    XGetICValues(winPtr->inputContext, XNFilterEvents, &im_event_mask, NULL);
+    XGetICValues(winPtr->inputContext, XNFilterEvents, &im_event_mask, (void *) NULL);
     if ((winPtr->atts.event_mask & im_event_mask) != im_event_mask) {
 	winPtr->atts.event_mask |= im_event_mask;
 	XSelectInput(winPtr->display, winPtr->window, winPtr->atts.event_mask);
