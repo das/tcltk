@@ -884,7 +884,7 @@ TkpMeasureCharsInContext(
     CFRelease(typesetter);
     [attributedString release];
     [string release];
-    length = lround(width - offset);
+    length = ceil(width - offset);
     fit = (Tcl_UtfAtIndex(source, index) - source) - rangeStart;
 done:
 #ifdef TK_MAC_DEBUG_FONTS
