@@ -345,10 +345,7 @@ GenerateUpdates(
 	return 0;
     }
     HIShapeGetBounds(damageRgn, &damageBounds);
-    if (!Tk_IsTopLevel(winPtr)) {
-	ChkErr(TkMacOSHIShapeUnion, boundsRgn, updateRgn, updateRgn);
-	HIShapeGetBounds(updateRgn, updateBounds);
-    }
+   
     CFRelease(damageRgn);
     CFRelease(boundsRgn);
 
