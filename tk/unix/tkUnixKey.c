@@ -66,10 +66,10 @@ Tk_SetCaretPos(
 
 	spot.x = dispPtr->caret.x;
 	spot.y = dispPtr->caret.y + dispPtr->caret.height;
-	preedit_attr = XVaCreateNestedList(0, XNSpotLocation, &spot, NULL);
+	preedit_attr = XVaCreateNestedList(0, XNSpotLocation, &spot, (void *) NULL);
 	XSetICValues(winPtr->inputContext,
 		XNPreeditAttributes, preedit_attr,
-		NULL);
+		(void *) NULL);
 	XFree(preedit_attr);
     }
 #endif

@@ -93,7 +93,7 @@ GetFont(
 	    ftFont = XftFontOpen(fontPtr->display, fontPtr->screen,
 			FC_FAMILY, FcTypeString, "sans",
 			FC_SIZE, FcTypeDouble, 12.0,
-			NULL);
+			(void *) NULL);
 	}
 	if (!ftFont) {
 	    /*
