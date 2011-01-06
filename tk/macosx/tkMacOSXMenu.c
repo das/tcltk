@@ -665,6 +665,16 @@ TkpConfigureMenuEntry(
 	}
     }
     [menuItem setSubmenu:submenu];
+
+    /*Disabling parent menu disables entries; we must re-enable the entries here.*/
+    NSArray *itemArray = [submenu itemArray];
+    
+    if ([menuItem isEnabled]) {
+	    for (NSMenuItem *item in itemArray) {
+		    [item setEnabled:YES];
+	    }
+	}
+
     return TCL_OK;
 }
 
