@@ -51,7 +51,7 @@ AC_CHECK_TOOL(RANLIB, ranlib)
 AC_CHECK_TOOL(RC, windres)
 
 #--------------------------------------------------------------------
-# Checks to see if the make progam sets the $MAKE variable.
+# Checks to see if the make program sets the $MAKE variable.
 #--------------------------------------------------------------------
 
 AC_PROG_MAKE_SET
