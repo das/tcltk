@@ -254,7 +254,7 @@ proc ::tk::MessageBox {args} {
     toplevel $w -class Dialog -bg $bg
     wm title $w $data(-title)
     wm iconname $w Dialog
-    wm protocol $w WM_DELETE_WINDOW { }
+    wm protocol $w WM_DELETE_WINDOW [list $w.$cancel invoke]
 
     # Message boxes should be transient with respect to their parent so that
     # they always stay on top of the parent window.  But some window managers
