@@ -917,7 +917,7 @@ Tk_SelectionObjCmd(clientData, interp, objc, objv)
 		cmdInfoPtr->byteOffset = 0;
 		cmdInfoPtr->buffer[0] = '\0';
 		cmdInfoPtr->cmdLength = cmdLength;
-		strcpy(cmdInfoPtr->command, string);
+		memcpy(cmdInfoPtr->command, string, cmdLength + 1);
 		Tk_CreateSelHandler(tkwin, selection, target, HandleTclCommand,
 			(ClientData) cmdInfoPtr, format);
 	    }
@@ -1016,7 +1016,7 @@ Tk_SelectionObjCmd(clientData, interp, objc, objv)
 	    lostPtr = (LostCommand *) ckalloc((unsigned) (sizeof(LostCommand)
 		    -3 + cmdLength));
 	    lostPtr->interp = interp;
-	    strcpy(lostPtr->command, script);
+	    memcpy(lostPtr->command, script, cmdLength + 1);
 	    Tk_OwnSelection(tkwin, selection, LostSelection,
 		    (ClientData) lostPtr);
 	    return TCL_OK;

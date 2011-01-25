@@ -4586,7 +4586,7 @@ TkTextCharLayoutProc(textPtr, indexPtr, segPtr, byteOffset, maxX, maxBytes,
 	    (sizeof(CharInfo) - 3 + bytesThatFit));
     chunkPtr->clientData = (ClientData) ciPtr;
     ciPtr->numBytes = bytesThatFit;
-    strncpy(ciPtr->chars, p, (size_t) bytesThatFit);
+    memcpy(ciPtr->chars, p, (size_t) bytesThatFit);
     if (p[bytesThatFit - 1] == '\n') {
 	ciPtr->numBytes--;
     }
